@@ -50,6 +50,17 @@
         </record>
 
         <!-- Stock Report View -->
+        <record model="ir.ui.view" id="view_template_property_form_stock_account">
+            <field name="name">view.template.property.form.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_tooltip']" position="after">
+                    <field name="lot_valuated" invisible="tracking == 'none'" widget="confirm_boolean"/>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product_product_stock_tree_inherit_stock_account">
             <field name="name">product.product.stock.list.inherit.stock.account</field>
             <field name="model">product.product</field>

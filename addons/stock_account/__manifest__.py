@@ -22,6 +22,9 @@ Dashboard / Reports for Warehouse Management includes:
     'depends': ['stock', 'account'],
     'category': 'Hidden',
     'sequence': 16,
+    'demo': [
+        'data/stock_account_demo.xml',
+    ],
     'data': [
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
@@ -33,6 +36,7 @@ Dashboard / Reports for Warehouse Management includes:
         'views/stock_valuation_layer_views.xml',
         'views/stock_quant_views.xml',
         'views/product_views.xml',
+        'views/stock_lot_views.xml',
         'wizard/stock_request_count.xml',
         'wizard/stock_valuation_layer_revaluation_views.xml',
         'wizard/stock_quantity_history.xml',
@@ -43,7 +47,7 @@ Dashboard / Reports for Warehouse Management includes:
     'post_init_hook': '_configure_journals',
     'assets': {
         'web.assets_backend': [
-            'stock_account/static/src/stock_account_forecasted/*',
+            'stock_account/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

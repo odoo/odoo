@@ -32,20 +32,24 @@ class StockQuant(models.Model):
     def _compute_value(self):
         """ (Product.value_svl / Product.quantity_svl) * quant.quantity, i.e. average unit cost * on hand qty
         """
-        self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity'])
+        self.fetch(['company_id', 'location_id', 'owner_id', 'product_id', 'quantity', 'lot_id'])
+        self.value = 0
         for quant in self:
             quant.currency_id = quant.company_id.currency_id
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
                     quant._should_exclude_for_valuation() or\
                     float_is_zero(quant.quantity, precision_rounding=quant.product_id.uom_id.rounding):
-                quant.value = 0
                 continue
-            quantity = quant.product_id.with_company(quant.company_id).quantity_svl
+            if quant.product_id.lot_valuated:
+                quantity = quant.lot_id.with_company(quant.company_id).quantity_svl
+                value_svl = quant.lot_id.with_company(quant.company_id).value_svl
+            else:
+                quantity = quant.product_id.with_company(quant.company_id).quantity_svl
+                value_svl = quant.product_id.with_company(quant.company_id).value_svl
             if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
-                quant.value = 0.0
                 continue
-            quant.value = quant.quantity * quant.product_id.with_company(quant.company_id).value_svl / quantity
+            quant.value = quant.quantity * value_svl / quantity
 
     def _read_group_select(self, aggregate_spec, query):
         # flag value as aggregatable, and manually sum the values from the

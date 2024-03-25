@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import _, fields, models, tools
+from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
 from collections import defaultdict
@@ -36,6 +37,7 @@ class StockValuationLayer(models.Model):
     reference = fields.Char(related='stock_move_id.reference')
     price_diff_value = fields.Float('Invoice value correction with invoice currency')
     warehouse_id = fields.Many2one('stock.warehouse', string="Receipt WH", compute='_compute_warehouse_id', search='_search_warehouse_id')
+    lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', check_company=True, index=True)
 
     def init(self):
         tools.create_index(
@@ -202,3 +204,61 @@ class StockValuationLayer(models.Model):
             new_valuation = unit_cost * new_valued_qty
 
         return new_valued_qty, new_valuation
+
+    def _change_standart_price_accounting_entries(self, new_price):
+        # Handle account moves.
+        product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self.product_id}
+        company_id = self.env.company
+        am_vals_list = []
+        for layer in self:
+            product = layer.product_id
+            value = layer.value
+
+            if not product.is_storable or product.valuation != 'real_time':
+                continue
+
+            # Sanity check.
+            if not product_accounts[product.id].get('expense'):
+                raise UserError(_('You must set a counterpart account on your product category.'))
+            if not product_accounts[product.id].get('stock_valuation'):
+                raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
+
+            if value < 0:
+                debit_account_id = product_accounts[product.id]['expense'].id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
+            else:
+                debit_account_id = product_accounts[product.id]['stock_valuation'].id
+                credit_account_id = product_accounts[product.id]['expense'].id
+
+            name = _(
+                '%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s',
+                user=self.env.user.name,
+                previous=layer.lot_id.standard_price if layer.lot_id else product.standard_price,
+                new_price=new_price,
+                record=layer.lot_id.display_name or product.display_name
+            )
+            move_vals = {
+                'journal_id': product_accounts[product.id]['stock_journal'].id,
+                'company_id': company_id.id,
+                'ref': product.default_code,
+                'stock_valuation_layer_ids': [(6, None, [layer.id])],
+                'move_type': 'entry',
+                'line_ids': [(0, 0, {
+                    'name': name,
+                    'account_id': debit_account_id,
+                    'debit': abs(value),
+                    'credit': 0,
+                    'product_id': product.id,
+                }), (0, 0, {
+                    'name': name,
+                    'account_id': credit_account_id,
+                    'debit': 0,
+                    'credit': abs(value),
+                    'product_id': product.id,
+                })],
+            }
+            am_vals_list.append(move_vals)
+
+        account_moves = self.env['account.move'].sudo().create(am_vals_list)
+        if account_moves:
+            account_moves._post()

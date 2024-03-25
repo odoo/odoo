@@ -9,6 +9,7 @@
                         <group>
                             <field name="create_date" string="Date" />
                             <field name="product_id" />
+                            <field name="lot_id" invisible="not lot_id"/>
                             <field name="stock_move_id" invisible="not stock_move_id" />
                         </group>
                     </group>
@@ -55,6 +56,7 @@
                 <field name="account_move_id" optional="hide" groups="account.group_account_user"/>
                 <button name="action_open_journal_entry" groups="account.group_account_user" type="object" title="Journal Entry" icon="fa-book" invisible="not account_move_id"/>
                 <field name="product_id" />
+                <field name="lot_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="quantity" string="Quantity" optional="show" sum="Total Moved Quantity"/>
                 <field name="remaining_qty" type="measure" optional="hide" sum="Total Remaining Quantity"/>
@@ -68,6 +70,9 @@
                     <field name="cost_method" invisible="1"/>
                     <field name="quantity_svl" invisible="1"/>
                     <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" invisible="cost_method == 'standard' or quantity_svl &lt;= 0" />
+                </groupby>
+                <groupby name="lot_id">
+                    <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object"/>
                 </groupby>
             </list>
         </field>
@@ -146,6 +151,7 @@
                 <filter string="Has Remaining Qty" name="has_remaining_qty" domain="[('remaining_qty', '>', 0)]"/>
                 <group expand='0' string='Group by...'>
                     <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                    <filter string='Lot/Serial Number' name="group_by_lot_id" context="{'group_by': 'lot_id'}"/>
                     <filter string='Product Category' name="group_by_categ_id" context="{'group_by': 'categ_id'}"/>
                     <filter string='Date' name="group_by_created_date" context="{'group_by': 'create_date'}"/>
                     <filter string='Company' name="group_by_company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>

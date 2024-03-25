@@ -278,7 +278,7 @@ class AccountMoveLine(models.Model):
             'description': self.move_id.name and '%s - %s' % (self.move_id.name, self.product_id.name) or self.product_id.name,
         }
         return {
-            **self.product_id._prepare_in_svl_vals(quantity, unit_cost),
+            **self.product_id._prepare_in_svl_vals(quantity, unit_cost, corrected_layer.lot_id),
             **common_svl_vals,
             'stock_valuation_layer_id': corrected_layer.id,
             'price_diff_value': self.currency_id.round(pdiff * quantity),

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero, format_list
@@ -15,6 +17,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
     def default_get(self, default_fields):
         res = super().default_get(default_fields)
         context = self.env.context
+        if res.get('lot_id'):
+            lot = self.env['stock.lot'].browse(res['lot_id']).exists()
+            if lot:
+                res['product_id'] = lot.product_id.id
         if context.get('active_model') == 'stock.valuation.layer':
             # coming from action button "Adjust Valuation" in valuation layer list view
             active_ids = context.get('active_ids')
@@ -44,6 +50,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
     adjusted_layer_ids = fields.Many2many('stock.valuation.layer', string="Valuation Layers", help="Valuations layers being adjusted")
     product_id = fields.Many2one('product.product', "Related product", required=True, check_company=True)
+    lot_id = fields.Many2one('stock.lot', "Related lot/serial number", check_company=True)
     property_valuation = fields.Selection(related='product_id.categ_id.property_valuation')
     product_uom_name = fields.Char("Unit of Measure", related='product_id.uom_id.name')
     current_value_svl = fields.Float("Current Value", compute='_compute_current_value_svl')
@@ -67,15 +74,18 @@ class StockValuationLayerRevaluation(models.TransientModel):
             else:
                 reval.new_value_by_qty = 0.0
 
-    @api.depends('product_id.quantity_svl', 'product_id.value_svl', 'adjusted_layer_ids')
+    @api.depends('product_id.quantity_svl', 'product_id.value_svl', 'adjusted_layer_ids', 'lot_id')
     def _compute_current_value_svl(self):
         for reval in self:
-            if not reval.adjusted_layer_ids:
-                reval.current_quantity_svl = reval.product_id.quantity_svl
-                reval.current_value_svl = reval.product_id.value_svl
-            else:
+            if reval.adjusted_layer_ids:
                 reval.current_quantity_svl = sum(reval.adjusted_layer_ids.mapped('remaining_qty'))
                 reval.current_value_svl = sum(reval.adjusted_layer_ids.mapped('remaining_value'))
+            if reval.lot_id:
+                reval.current_quantity_svl = reval.lot_id.quantity_svl
+                reval.current_value_svl = reval.lot_id.value_svl
+            else:
+                reval.current_quantity_svl = reval.product_id.quantity_svl
+                reval.current_value_svl = reval.product_id.value_svl
 
     def action_validate_revaluation(self):
         """ Adjust the valuation of layers `self.adjusted_layer_ids` for
@@ -94,49 +104,84 @@ class StockValuationLayerRevaluation(models.TransientModel):
             raise UserError(_("The added value doesn't have any impact on the stock valuation"))
 
         product_id = self.product_id.with_company(self.company_id)
-        layers_with_qty = self.env['stock.valuation.layer'].search([
+        lot_id = self.lot_id.with_company(self.company_id)
+
+        remaining_domain = [
             ('product_id', '=', product_id.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', self.company_id.id),
-        ])
+        ]
+        if lot_id:
+            remaining_domain.append(('lot_id', '=', lot_id.id))
+        layers_with_qty = self.env['stock.valuation.layer'].search(remaining_domain)
         adjusted_layers = self.adjusted_layer_ids or layers_with_qty
-        qty_to_adjust = sum(adjusted_layers.mapped('remaining_qty'))
-        value_change_to_apply = self.added_value
-        unit_value_change = self.currency_id.round(self.added_value / qty_to_adjust)
-        # adjust all layers by the unit value change per unit, except the last layer which gets
-        # whatever is left. This avoids rounding issues e.g. $10 on 3 products => 3.33, 3.33, 3.34
-        for layer in adjusted_layers:
-            if layer != adjusted_layers[-1]:
-                value_change = unit_value_change * layer.remaining_qty
-                layer.remaining_value += value_change
-                value_change_to_apply -= value_change
-            else:
-                layer.remaining_value += value_change_to_apply
-
-            if float_compare(layer.remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
-                raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be used to correct a specific transfer.'))
 
         description = _("Manual Stock Valuation: %s.", self.reason or _("No Reason Given"))
         # Update the stardard price in case of AVCO/FIFO
         cost_method = product_id.categ_id.property_cost_method
         if cost_method in ['average', 'fifo']:
-            previous_cost = product_id.standard_price
+            previous_cost = lot_id.standard_price if lot_id else product_id.standard_price
             total_product_qty = sum(layers_with_qty.mapped('remaining_qty'))
-            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / total_product_qty
-            description += _(
-                " Product cost updated from %(previous)s to %(new_cost)s.",
-                previous=previous_cost,
-                new_cost=product_id.standard_price
-            )
+            if lot_id:
+                lot_id.with_context(disable_auto_svl=True).standard_price += self.added_value / total_product_qty
+            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / product_id.quantity_svl
+            if self.lot_id:
+                description += _(
+                    " lot/serial number cost updated from %(previous)s to %(new_cost)s.",
+                    previous=previous_cost,
+                    new_cost=lot_id.standard_price
+                )
+            else:
+                description += _(
+                    " Product cost updated from %(previous)s to %(new_cost)s.",
+                    previous=previous_cost,
+                    new_cost=product_id.standard_price
+                )
 
-        previous_value_svl = self.current_value_svl
-        revaluation_layer = self.env['stock.valuation.layer'].create({
+        revaluation_svl_vals = {
             'company_id': self.company_id.id,
             'product_id': product_id.id,
             'description': description,
             'value': self.added_value,
+            'lot_id': self.lot_id.id,
             'quantity': 0,
-        })
+        }
+
+        qty_by_lots = defaultdict(float)
+
+        remaining_qty = sum(adjusted_layers.mapped('remaining_qty'))
+        remaining_value = self.added_value
+        remaining_value_unit_cost = self.currency_id.round(remaining_value / remaining_qty)
+
+        # adjust all layers by the unit value change per unit, except the last layer which gets
+        # whatever is left. This avoids rounding issues e.g. $10 on 3 products => 3.33, 3.33, 3.34
+        for svl in adjusted_layers:
+            if product_id.lot_valuated and not lot_id:
+                qty_by_lots[svl.lot_id.id] += svl.remaining_qty
+            if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
+                taken_remaining_value = remaining_value
+            else:
+                taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
+            if float_compare(svl.remaining_value + taken_remaining_value, 0, precision_rounding=self.product_id.uom_id.rounding) < 0:
+                raise UserError(_('The value of a stock valuation layer cannot be negative. Landed cost could be use to correct a specific transfer.'))
+
+            svl.remaining_value += taken_remaining_value
+            remaining_value -= taken_remaining_value
+            remaining_qty -= svl.remaining_qty
+
+        previous_value_svl = self.current_value_svl
+
+        if qty_by_lots:
+            vals = revaluation_svl_vals.copy()
+            total_qty = sum(adjusted_layers.mapped('remaining_qty'))
+            revaluation_svl_vals = []
+            for lot, qty in qty_by_lots.items():
+                value = self.added_value * qty / total_qty
+                revaluation_svl_vals.append(
+                    dict(vals, value=value, lot_id=lot)
+                )
+
+        revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':
@@ -163,27 +208,27 @@ class StockValuationLayerRevaluation(models.TransientModel):
             adjusted_layer_descriptions = [f"{layer.reference} (id: {layer.id})" for layer in self.adjusted_layer_ids]
             move_description += _("\nAffected valuation layers: %s", format_list(self.env, adjusted_layer_descriptions))
 
-        move_vals = {
+        move_vals = [{
             'journal_id': self.account_journal_id.id or accounts['stock_journal'].id,
             'company_id': self.company_id.id,
             'ref': _("Revaluation of %s", product_id.display_name),
-            'stock_valuation_layer_ids': [(6, None, [revaluation_layer.id])],
+            'stock_valuation_layer_ids': [(6, None, [svl.id])],
             'date': self.date or fields.Date.today(),
             'move_type': 'entry',
             'line_ids': [(0, 0, {
                 'name': move_description,
                 'account_id': debit_account_id,
-                'debit': abs(self.added_value),
+                'debit': abs(svl.value),
                 'credit': 0,
-                'product_id': product_id.id,
+                'product_id': svl.product_id.id,
             }), (0, 0, {
                 'name': move_description,
                 'account_id': credit_account_id,
                 'debit': 0,
-                'credit': abs(self.added_value),
-                'product_id': product_id.id,
+                'credit': abs(svl.value),
+                'product_id': svl.product_id.id,
             })],
-        }
+        } for svl in revaluation_svl]
         account_move = self.env['account.move'].create(move_vals)
         account_move._post()
 
