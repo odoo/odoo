@@ -77,6 +77,7 @@
                                     <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-paperclip"/></button>
                                 </t>
                             </FileUploader>
+                            <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
                         </div>
                         <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn fa fa-expand m-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
