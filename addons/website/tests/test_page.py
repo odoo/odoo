@@ -543,6 +543,33 @@ class WithContext(HttpCase):
         self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
         self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")
 
+    def test_page_generic_diverged_url(self):
+        """ When a generic page is COW and the new COW has its url changed, the
+        generic should not be reachable anymore even if the COW page has a
+        different URL. Note that they will both still share the same key.
+        """
+        Page = self.env['website.page']
+        specific_arch = '<div>website 1 content</div>'
+        generic_page = self.page
+        generic_page.arch = '<div>content</div>'
+
+        specific_page = Page.search([('url', '=', self.page.url), ('website_id', '=', 1)])
+        self.assertFalse(specific_page, "For this test, the specific page should not exist yet")
+
+        # COW a generic page
+        generic_page.view_id.with_context(website_id=1).save(specific_arch, xpath='/div')
+        specific_page = Page.search([('url', '=', self.page.url), ('website_id', '=', 1)])
+        self.assertEqual(specific_page.arch.replace('\n', ''), specific_arch)
+        self.assertEqual(generic_page.arch, '<div>content</div>')
+        # Change the URL of the specific page
+        specific_page.url = '/page_1_specific'
+        # Check that the generic page is not reachable anymore
+        r = self.url_open(specific_page.url)
+        self.assertEqual(r.status_code, 200, "Specific should be reachable")
+        r = self.url_open(generic_page.url)
+        self.assertEqual(r.status_code, 404, "Generic should not be reachable")
+
+
 @tagged('-at_install', 'post_install')
 class TestNewPage(common.TransactionCase):
     def test_new_page_used_key(self):
