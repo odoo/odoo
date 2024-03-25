@@ -89,25 +89,15 @@ class Product(models.Model):
 
     def _get_contextual_price_tax_selection(self):
         self.ensure_one()
-        price = self._get_contextual_price()
+        fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(self.env.user.partner_id)
+        fiscal_position_sudo = self.env['account.fiscal.position'].sudo().browse(fpos_id)
         product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id in self.env.company.parent_ids)
-        if product_taxes:
-            website = self.env['website'].get_current_website()
-            fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(self.env.user.partner_id)
-            fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
-
-            price = self._get_tax_included_unit_price(
-                website.company_id,
-                website.currency_id,
-                fields.Date.context_today(self),
-                'sale',
-                fiscal_position=fiscal_position,
-                product_price_unit=price,
-                product_currency=website.currency_id,
-            )
-            line_tax_type = website.show_line_subtotals_tax_selection
-            tax_display = "total_included" if line_tax_type == "tax_included" else "total_excluded"
-
-            taxes = fiscal_position.map_tax(product_taxes)
-            price = taxes.compute_all(price, product=self, partner=self.env['res.partner'])[tax_display]
-        return price
+        return self.env['product.template']._price_with_tax_computed(
+            self._get_contextual_price(),
+            product_taxes,
+            fiscal_position_sudo.map_tax(product_taxes),
+            self.env.company.id,
+            self.env['product.template']._get_contextual_pricelist().currency_id or self.env.company.currency_id,
+            self,
+            self.env.user.partner_id,
+        )
