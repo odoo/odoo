@@ -21,7 +21,6 @@ function compileChatter(node, params) {
         threadModel: params.resModel,
         threadId: params.resId,
         projectSharingId: params.projectSharingId,
-        has_activities: false,
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter", "pt-2");
