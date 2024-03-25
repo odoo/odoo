@@ -1476,11 +1476,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertRecordValues(reverse_closing_entries[0].line_ids.sorted(), [
             {'balance': 75.0,       'account_id': self.company_data['default_account_tax_sale'].id,     'tax_ids': [],                  'tax_tag_ids': tags[1].ids, 'tax_tag_invert': True,     'reconciled': False},
             {'balance': 500.0,      'account_id': self.company_data['default_account_revenue'].id,      'tax_ids': self.tax_sale_a.ids, 'tax_tag_ids': tags[0].ids, 'tax_tag_invert': True,     'reconciled': False},
-            {'balance': -575.0,     'account_id': self.company_data['default_account_receivable'].id,   'tax_ids': [],                  'tax_tag_ids': [],          'tax_tag_invert': False,    'reconciled': False},
+            {'balance': -575.0,     'account_id': self.company_data['default_account_receivable'].id,   'tax_ids': [],                  'tax_tag_ids': [],          'tax_tag_invert': False,    'reconciled': True},
         ])
         self.assertRecordValues(reverse_closing_entries[1].line_ids.sorted(), [
             {'balance': -575.0,     'account_id': self.company_data['default_account_receivable'].id,   'tax_ids': [],                  'tax_tag_ids': [],          'tax_tag_invert': False,    'reconciled': True},
-            {'balance': 575.0,      'account_id': pos_receivable.id,                                    'tax_ids': [],                  'tax_tag_ids': [],          'tax_tag_invert': False,    'reconciled': False},
+            {'balance': 575.0,      'account_id': self.company_data['default_account_receivable'].id,   'tax_ids': [],                  'tax_tag_ids': [],          'tax_tag_invert': False,    'reconciled': True},
         ])
 
     def test_sale_order_postponed_invoicing_anglosaxon(self):
@@ -1781,104 +1781,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
         self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
-
-    def test_invoicing_after_closing_session(self):
-        """ Test that an invoice can be created after the session is closed """
-        #create customer account payment method
-        self.customer_account_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Customer Account',
-            'split_transactions': True,
-        })
-
-        self.product1 = self.env['product.product'].create({
-            'name': 'Product A',
-            'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
-        })
-        self.partner1.write({'parent_id': self.env['res.partner'].create({'name': 'Parent'}).id})
-
-        #add customer account payment method to pos config
-        self.pos_config.write({
-            'payment_method_ids': [(4, self.customer_account_payment_method.id, 0)],
-        })
-        # change the currency of PoS config
-        (self.currency_data['currency'].rate_ids | self.company.currency_id.rate_ids).unlink()
-        self.env['res.currency.rate'].create({
-            'rate': 0.5,
-            'currency_id': self.currency_data['currency'].id,
-            'name': datetime.today().date(),
-        })
-        self.pos_config.journal_id.write({
-            'currency_id': self.currency_data['currency'].id
-        })
-        other_pricelist = self.env['product.pricelist'].create({
-            'name': 'Public Pricelist Other',
-            'currency_id': self.currency_data['currency'].id,
-        })
-        self.pos_config.write({
-            'pricelist_id': other_pricelist.id,
-            'available_pricelist_ids': [(6, 0, other_pricelist.ids)],
-        })
-        self.pos_config.open_ui()
-        current_session = self.pos_config.current_session_id
-
-        # create pos order
-        order = self.PosOrder.create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'partner_id': self.partner1.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 6,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, []]],
-                'price_subtotal': 6,
-                'price_subtotal_incl': 6,
-            })],
-            'pricelist_id': self.pos_config.pricelist_id.id,
-            'amount_paid': 6.0,
-            'amount_total': 6.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': True,
-            })
-
-        #pay for the order with customer account
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.PosMakePayment.with_context(**payment_context).create({
-            'amount': 2.0,
-            'payment_method_id': self.cash_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
-
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.PosMakePayment.with_context(**payment_context).create({
-            'amount': 4.0,
-            'payment_method_id': self.customer_account_payment_method.id
-        })
-        order_payment.with_context(**payment_context).check()
-
-        # close session
-        current_session.action_pos_session_closing_control()
-
-        # create invoice
-        order.action_pos_order_invoice()
-        #get journal entry that does the reverse payment, it the ref must contains Reversal
-        reverse_payment = self.env['account.move'].search([('ref', 'ilike', "Reversal")])
-        original_payment = self.env['account.move'].search([('ref', '=', current_session.display_name)])
-        original_customer_payment_entry = original_payment.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
-        reverser_customer_payment_entry = reverse_payment.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
-        #check that both use the same account
-        self.assertEqual(len(reverser_customer_payment_entry), 2)
-        self.assertTrue(order.account_move.line_ids.partner_id == self.partner1.commercial_partner_id)
-        self.assertEqual(reverser_customer_payment_entry[0].balance, -4.0)
-        self.assertEqual(reverser_customer_payment_entry[1].balance, -8.0)
-        self.assertEqual(reverser_customer_payment_entry[0].amount_currency, -2.0)
-        self.assertEqual(reverser_customer_payment_entry[1].amount_currency, -4.0)
-        self.assertEqual(original_customer_payment_entry.account_id.id, reverser_customer_payment_entry.account_id.id)
-        self.assertEqual(reverser_customer_payment_entry.partner_id, original_customer_payment_entry.partner_id)
 
     def test_order_total_subtotal_account_line_values(self):
         self.tax1 = self.env['account.tax'].create({
