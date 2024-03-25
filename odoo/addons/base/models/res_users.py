@@ -1361,6 +1361,7 @@ class GroupsImplied(models.Model):
             if user_ids:
                 # delegate addition of users to add implied groups
                 group.write({'users': user_ids})
+        self.env.registry.clear_cache('groups')
         return groups
 
     def write(self, values):
@@ -1389,6 +1390,13 @@ class GroupsImplied(models.Model):
                           WHERE i.gid = %(gid)s
                 """, dict(gid=group.id))
             self._check_one_user_type()
+        if 'implied_ids' in values:
+            self.env.registry.clear_cache('groups')
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env.registry.clear_cache('groups')
         return res
 
     def _apply_group(self, implied_group):
@@ -1418,7 +1426,7 @@ class GroupsImplied(models.Model):
                     {'users': [Command.unlink(user.id) for user in users_to_unlink]})
 
     @api.model
-    @tools.ormcache()
+    @tools.ormcache(cache='groups')
     def _get_group_definitions(self):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')

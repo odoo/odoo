@@ -2234,13 +2234,25 @@ class IrModelData(models.Model):
             vals['name'] = "%s_%s" % (model.name, rand)
         return vals_list
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if any(vals.get('model') == 'res.groups' for vals in vals_list):
+            self.env.registry.clear_cache('groups')
+        return res
+
     def write(self, values):
         self.env.registry.clear_cache()  # _xmlid_lookup
-        return super().write(values)
+        res = super().write(values)
+        if values.get('model') == 'res.groups':
+            self.env.registry.clear_cache('groups')
+        return res
 
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
         self.env.registry.clear_cache()  # _xmlid_lookup
+        if self and any(data.model == 'res.groups' for data in self.exists()):
+            self.env.registry.clear_cache('groups')
         return super(IrModelData, self).unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
@@ -2312,6 +2324,9 @@ class IrModelData(models.Model):
 
         # update loaded_xmlids
         self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
+
+        if any(row[2] == 'res.groups' for row in rows):
+            self.env.registry.clear_cache('groups')
 
     # NOTE: this method is overriden in web_studio; if you need to make another
     #  override, make sure it is compatible with the one that is there.
