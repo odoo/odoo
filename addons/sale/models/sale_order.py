@@ -155,7 +155,7 @@ class SaleOrder(models.Model):
         store=True, readonly=False, precompute=True, check_company=True,
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
             "The default value comes from the customer.",
-        domain="[('company_id', '=', company_id)]")
+    )
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string="Payment Terms",
