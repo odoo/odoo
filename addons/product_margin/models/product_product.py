@@ -38,7 +38,7 @@ class ProductProduct(models.Model):
     normal_cost = fields.Float(compute='_compute_product_margin_fields_values', string='Normal Cost',
         help="Sum of Multiplication of Cost price and quantity of Vendor Bills")
     total_margin = fields.Float(compute='_compute_product_margin_fields_values', string='Total Margin',
-        help="Turnover - Standard price")
+        help="Turnover - Total cost")
     expected_margin = fields.Float(compute='_compute_product_margin_fields_values', string='Expected Margin',
         help="Expected Sale - Normal Cost")
     total_margin_rate = fields.Float(compute='_compute_product_margin_fields_values', string='Total Margin Rate(%)',
