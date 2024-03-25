@@ -1460,34 +1460,48 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             case "ArrowUp":
             case "ArrowDown": {
                 const input = ev.currentTarget;
-                let value = parseFloat(input.value || input.placeholder);
-                if (isNaN(value)) {
-                    value = 0.0;
+                let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
+                if (!parts) {
+                    parts = [input.value || input.placeholder];
                 }
-                let step = parseFloat(params.step);
-                if (isNaN(step)) {
-                    step = 1.0;
+                if (parts.length > 1 && !('min' in params)) {
+                    // No negative for composite values.
+                    params['min'] = 0;
                 }
+                const newValue = parts.map(part => {
+                    let value = parseFloat(part);
+                    if (isNaN(value)) {
+                        value = 0.0;
+                    }
+                    let step = parseFloat(params.step);
+                    if (isNaN(step)) {
+                        step = 1.0;
+                    }
 
-                const increasing = ev.key === "ArrowUp";
-                const hasMin = ('min' in params);
-                const hasMax = ('max' in params);
+                    const increasing = ev.key === "ArrowUp";
+                    const hasMin = ('min' in params);
+                    const hasMax = ('max' in params);
 
-                // If value already at min and trying to decrease, do nothing
-                if (!increasing && hasMin && Math.abs(value - params.min) < 0.001) {
+                    // If value already at min and trying to decrease, do nothing
+                    if (!increasing && hasMin && Math.abs(value - params.min) < 0.001) {
+                        return value;
+                    }
+                    // If value already at max and trying to increase, do nothing
+                    if (increasing && hasMax && Math.abs(value - params.max) < 0.001) {
+                        return value;
+                    }
+
+                    // If trying to decrease/increase near min/max, we still need to
+                    // bound the produced value and immediately show the user.
+                    value += (increasing ? step : -step);
+                    value = hasMin ? Math.max(params.min, value) : value;
+                    value = hasMax ? Math.min(value, params.max) : value;
+                    return this._floatToStr(value);
+                }).join(" ");
+                if (newValue === (input.value || input.placeholder)) {
                     return;
                 }
-                // If value already at max and trying to increase, do nothing
-                if (increasing && hasMax && Math.abs(value - params.max) < 0.001) {
-                    return;
-                }
-
-                // If trying to decrease/increase near min/max, we still need to
-                // bound the produced value and immediately show the user.
-                value += (increasing ? step : -step);
-                value = hasMin ? Math.max(params.min, value) : value;
-                value = hasMax ? Math.min(value, params.max) : value;
-                input.value = this._floatToStr(value);
+                input.value = newValue;
 
                 // We need to know if the change event will be triggered or not.
                 // Change is triggered if there has been a "natural" input event
