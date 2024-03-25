@@ -774,6 +774,7 @@ class HrExpense(models.Model):
         })
         return {
             **self.sheet_id._prepare_move_vals(),
+            'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
             'ref': self.name,
             'journal_id': journal.id,
             'move_type': 'entry',
