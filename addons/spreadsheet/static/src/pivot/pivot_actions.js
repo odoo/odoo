@@ -1,7 +1,8 @@
 // @ts-check
 
 import { navigateTo } from "../actions/helpers";
-import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
+import { helpers } from "@odoo/o-spreadsheet";
+const { getFirstPivotFunction, getNumberOfPivotFunctions } = helpers;
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
@@ -13,7 +14,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivot = env.model.getters.getPivot(pivotId);
     await pivot.load();
     const { model } = pivot.definition;
-    const { actionXmlId } = env.model.getters.getPivotDefinition(pivotId);
+    const { actionXmlId } = env.model.getters.getPivotCoreDefinition(pivotId);
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
     const domain = pivot.getPivotCellDomain(argsDomain);
     const name = await pivot.getModelLabel();
@@ -51,7 +52,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
         argsDomain !== undefined &&
         cell &&
         cell.isFormula &&
-        getNumberOfPivotFormulas(cell.compiledFormula.tokens) === 1
+        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1
     );
 };
 

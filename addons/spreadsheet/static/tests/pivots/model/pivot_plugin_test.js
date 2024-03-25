@@ -25,11 +25,10 @@ import { session } from "@web/session";
 import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { Model } from "@odoo/o-spreadsheet";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
-import { PIVOT_TABLE_CONFIG } from "@spreadsheet/helpers/constants";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-const { DEFAULT_LOCALE } = spreadsheet.constants;
+const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can get a pivotId from cell formula", async function (assert) {
@@ -713,7 +712,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             },
         };
         const model = await createModelWithDataSource({ spreadsheetData });
-        assert.deepEqual(model.getters.getPivotDefinition(1).sortedColumn, {
+        assert.deepEqual(model.getters.getPivotCoreDefinition(1).sortedColumn, {
             measure: "probability",
             order: "asc",
             groupId: [[], [1]],
@@ -986,47 +985,55 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, []);
         assert.strictEqual(getCellValue(model, "B4"), 11);
         model.dispatch("UPDATE_ODOO_PIVOT_DOMAIN", {
             pivotId,
             domain: [["foo", "in", [55]]],
         });
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, [
+            ["foo", "in", [55]],
+        ]);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
         model.dispatch("REQUEST_UNDO");
         await waitForDataLoaded(model);
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, []);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), 11);
         model.dispatch("REQUEST_REDO");
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, [
+            ["foo", "in", [55]],
+        ]);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
     });
 
     QUnit.test("can edit pivot domain with UPDATE_PIVOT", async (assert) => {
         const { model, pivotId } = await createSpreadsheetWithPivot();
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, []);
         assert.strictEqual(getCellValue(model, "B4"), 11);
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 domain: [["foo", "in", [55]]],
             },
         });
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, [
+            ["foo", "in", [55]],
+        ]);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
         model.dispatch("REQUEST_UNDO");
         await waitForDataLoaded(model);
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, []);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, []);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), 11);
         model.dispatch("REQUEST_REDO");
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).domain, [["foo", "in", [55]]]);
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).domain, [
+            ["foo", "in", [55]],
+        ]);
         await waitForDataLoaded(model);
         assert.strictEqual(getCellValue(model, "B4"), "");
     });
@@ -1036,7 +1043,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const result = model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
             },
         });
         assert.strictEqual(result.isSuccessful, false);
@@ -1055,22 +1062,22 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can edit pivot groups", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
         const [pivotId] = model.getters.getPivotIds();
-        let definition = model.getters.getPivotDefinition(pivotId);
+        let definition = model.getters.getPivotCoreDefinition(pivotId);
         assert.deepEqual(definition.columns, [{ name: "foo" }]);
         assert.deepEqual(definition.rows, [{ name: "bar" }]);
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 columns: [],
                 rows: [],
             },
         });
-        definition = model.getters.getPivotDefinition(pivotId);
+        definition = model.getters.getPivotCoreDefinition(pivotId);
         assert.deepEqual(definition.columns, []);
         assert.deepEqual(definition.rows, []);
         model.dispatch("REQUEST_UNDO");
-        definition = model.getters.getPivotDefinition(pivotId);
+        definition = model.getters.getPivotCoreDefinition(pivotId);
         assert.deepEqual(definition.columns, [{ name: "foo" }]);
         assert.deepEqual(definition.rows, [{ name: "bar" }]);
     });
@@ -1191,8 +1198,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(model.getters.getPivotIds().length, 2);
 
         assert.deepEqual(
-            model.getters.getPivotDefinition(pivotIds[1]),
-            model.getters.getPivotDefinition(pivotId)
+            model.getters.getPivotCoreDefinition(pivotIds[1]),
+            model.getters.getPivotCoreDefinition(pivotId)
         );
 
         assert.deepEqual(model.getters.getPivotFieldMatching(pivotId, "42"), matching);
@@ -1203,8 +1210,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const { model, pivotId } = await createSpreadsheetWithPivot();
         model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "second" });
         model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "third" });
-        assert.deepEqual(model.getters.getPivotDefinition("second").formulaId, "2");
-        assert.deepEqual(model.getters.getPivotDefinition("third").formulaId, "3");
+        assert.deepEqual(model.getters.getPivotCoreDefinition("second").formulaId, "2");
+        assert.deepEqual(model.getters.getPivotCoreDefinition("third").formulaId, "3");
     });
 
     QUnit.test("Cannot duplicate unknown pivot", async (assert) => {
@@ -1273,7 +1280,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 measures: [{ name: "probability", aggregator: "sum" }],
             },
         });
@@ -1282,7 +1289,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 measures: [{ name: "foo", aggregator: "sum" }],
             },
         });
@@ -1308,7 +1315,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             model.dispatch("UPDATE_PIVOT", {
                 pivotId,
                 pivot: {
-                    ...model.getters.getPivotDefinition(pivotId),
+                    ...model.getters.getPivotCoreDefinition(pivotId),
                     measures: [{ name: "product_id" }], // no aggregator specified
                 },
             });
@@ -1331,7 +1338,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 measures: [{ name: "probability", aggregator: "count_distinct" }],
             },
         });
@@ -1356,11 +1363,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 columns: [{ name: "foo", order: "asc" }],
             },
         });
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).columns, [
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).columns, [
             { name: "foo", order: "asc" },
         ]);
         await nextTick();
@@ -1368,7 +1375,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 columns: [{ name: "foo" }],
             },
         });
@@ -1392,7 +1399,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 columns: [
                     { name: "date", granularity: "year", order: "asc" },
                     { name: "date", granularity: "month", order: "desc" },
@@ -1446,11 +1453,11 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         model.dispatch("UPDATE_PIVOT", {
             pivotId,
             pivot: {
-                ...model.getters.getPivotDefinition(pivotId),
+                ...model.getters.getPivotCoreDefinition(pivotId),
                 columns: [{ name: "date", granularity: "day" }],
             },
         });
-        assert.deepEqual(model.getters.getPivotDefinition(pivotId).columns, [
+        assert.deepEqual(model.getters.getPivotCoreDefinition(pivotId).columns, [
             { name: "date", granularity: "day" },
         ]);
         await nextTick();

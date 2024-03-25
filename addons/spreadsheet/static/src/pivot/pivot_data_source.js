@@ -6,16 +6,19 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { OdooPivotModel } from "./pivot_model";
-import { EvaluationError } from "@odoo/o-spreadsheet";
+import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
-import { PivotRuntimeDefinition } from "./pivot_runtime";
-import { pivotTimeAdapter } from "./pivot_time_adapters";
+
+const { pivotRegistry } = registries;
+const { pivotTimeAdapter } = helpers;
+
 /**
  * @typedef {import("@spreadsheet").Pivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("./pivot_runtime").PivotMeasure} PivotMeasure
  * @typedef {import("@spreadsheet").WebPivotModelParams} WebPivotModelParams
  * @typedef {import("@spreadsheet").Fields} Fields
  * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
+ * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
  * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
  */
 
@@ -256,6 +259,12 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._context = definition.context;
         /** @type {string} */
         this._model = definition.model;
+        /** @type {SortedColumn} */
+        this._sortedColumn = definition.sortedColumn;
+    }
+
+    get sortedColumn() {
+        return this._sortedColumn;
     }
 
     get domain() {
@@ -297,3 +306,8 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         };
     }
 }
+
+pivotRegistry.add("ODOO", {
+    cls: OdooPivot,
+    definition: OdooPivotRuntimeDefinition,
+});

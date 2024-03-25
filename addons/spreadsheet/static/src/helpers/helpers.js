@@ -15,25 +15,6 @@ export function intersect(a, b) {
 }
 
 /**
- * Given an object of form {"1": {...}, "2": {...}, ...} get the maximum ID used
- * in this object
- * If the object has no keys, return 0
- *
- * @param {object} o an object for which the keys are an ID
- *
- * @returns {number}
- */
-export function getMaxObjectId(o) {
-    const keys = Object.keys(o);
-    if (!keys.length) {
-        return 0;
-    }
-    const nums = keys.map((id) => parseInt(id, 10));
-    const max = Math.max(...nums);
-    return max;
-}
-
-/**
  * Convert a spreadsheet date representation to an odoo
  * server formatted date
  *

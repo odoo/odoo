@@ -5,12 +5,12 @@ import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { pivotTimeAdapter } from "../pivot_time_adapters";
+import { helpers } from "@odoo/o-spreadsheet";
 
 const { DateTime } = luxon;
+const { pivotTimeAdapter } = helpers;
 
 /**
- * @typedef {import("./pivot_core_plugin").OdooPivotDefinition} OdooPivotDefinition
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
  */
