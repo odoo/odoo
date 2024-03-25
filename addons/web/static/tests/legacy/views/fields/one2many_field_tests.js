@@ -523,6 +523,39 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
+    QUnit.test(
+        'O2M with buttons with attr "special" in dialog close the dialog',
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="bar"/>
+                        </tree>
+                        <form>
+                            <field name="bar"/>
+                            <footer>
+                                <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                            </footer>
+                        </form>
+                    </field>
+                </form>`,
+            });
+
+            await addRow(target);
+            assert.containsOnce(target, ".o_dialog");
+
+            assert.strictEqual(document.querySelector(".modal .btn").innerText, "Cancel");
+
+            await click(target, ".modal .btn");
+            assert.containsNone(target, ".o_dialog");
+        }
+    );
+
     QUnit.test("O2M modal buttons are disabled on click", async function (assert) {
         // Records in an o2m can have a m2o pointing to themselves.
         // In that case, a domain evaluation on that field followed by name_search
@@ -14655,16 +14688,16 @@ QUnit.module("Fields", (hooks) => {
                     if (args.method === "onchange") {
                         if (onchangeCount === 1) {
                             // partner turtles onchange for the new x2m record
-                            assert.strictEqual(args.model, 'partner');
+                            assert.strictEqual(args.model, "partner");
                             assert.deepEqual(Object.keys(args.args[1]), ["turtles"]);
                             assert.strictEqual(args.args[1].turtles[0][0], 0);
-                            assert.deepEqual(args.args[2], ['turtles']);
+                            assert.deepEqual(args.args[2], ["turtles"]);
                         } else if (onchangeCount === 2) {
                             // x2m record removed, empty list of commands expected
-                            assert.strictEqual(args.model, 'partner');
+                            assert.strictEqual(args.model, "partner");
                             assert.deepEqual(Object.keys(args.args[1]), ["turtles"]);
                             assert.deepEqual(args.args[1].turtles, []);
-                            assert.deepEqual(args.args[2], ['turtles']);
+                            assert.deepEqual(args.args[2], ["turtles"]);
                         }
                         onchangeCount++;
                     }
