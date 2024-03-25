@@ -336,7 +336,7 @@ class Post(models.Model):
             # add karma for posting new questions
             if not post.parent_id and post.state == 'active':
                 post.create_uid.sudo()._add_karma(post.forum_id.karma_gen_question_new, post, _('Ask a new question'))
-        posts.post_notification()
+        posts.sudo()._notify_state_update()
         return posts
 
     def unlink(self):
@@ -442,7 +442,7 @@ class Post(models.Model):
     # BUSINESS
     # ----------------------------------------------------------------------
 
-    def post_notification(self):
+    def _notify_state_update(self):
         for post in self:
             tag_partners = post.tag_ids.sudo().mapped('message_partner_ids')
 
@@ -526,7 +526,7 @@ class Post(models.Model):
         })
         return True
 
-    def validate(self):
+    def _validate(self):
         for post in self:
             if not post.can_moderate:
                 raise AccessError(_('%d karma required to validate a post.', post.forum_id.karma_moderate))
@@ -542,17 +542,17 @@ class Post(models.Model):
                 'active': True,
                 'moderator_id': self.env.user.id,
             })
-            post.post_notification()
+            post.sudo()._notify_state_update()
         return True
 
-    def refuse(self):
+    def _refuse(self):
         for post in self:
             if not post.can_moderate:
                 raise AccessError(_('%d karma required to refuse a post.', post.forum_id.karma_moderate))
             post.moderator_id = self.env.user
         return True
 
-    def flag(self):
+    def _flag(self):
         res = []
         for post in self:
             if not post.can_flag:
@@ -574,7 +574,7 @@ class Post(models.Model):
                 res.append({'error': 'post_non_flaggable'})
         return res
 
-    def mark_as_offensive(self, reason_id):
+    def _mark_as_offensive(self, reason_id):
         for post in self:
             if not post.can_moderate:
                 raise AccessError(_('%d karma required to mark a post as offensive.', post.forum_id.karma_moderate))
@@ -602,7 +602,7 @@ class Post(models.Model):
 
         reason_id = self.env.ref('website_forum.reason_8').id
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
-        return spams.mark_as_offensive(reason_id)
+        return spams._mark_as_offensive(reason_id)
 
     def vote(self, upvote=True):
         self.ensure_one()

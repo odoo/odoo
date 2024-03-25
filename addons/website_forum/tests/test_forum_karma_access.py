@@ -279,12 +279,12 @@ class TestForumKarma(TestForumCommon):
 
         # portal user flags a post: not allowed, unsufficient karma
         with self.assertRaises(AccessError):
-            post.with_user(self.user_portal).flag()
+            post.with_user(self.user_portal)._flag()
 
         # portal user flags a post: ok if enough karma
         self.user_portal.karma = KARMA['flag']
         post.state = 'active'
-        post.with_user(self.user_portal).flag()
+        post.with_user(self.user_portal)._flag()
         self.assertEqual(post.state, 'flagged', 'website_forum: wrong state when flagging a post')
 
     def test_mark_a_post_as_offensive(self):
@@ -297,13 +297,13 @@ class TestForumKarma(TestForumCommon):
 
         # portal user mark a post as offensive: not allowed, unsufficient karma
         with self.assertRaises(AccessError):
-            post.with_user(self.user_portal).mark_as_offensive(12)
+            post.with_user(self.user_portal)._mark_as_offensive(12)
 
         # portal user mark a post as offensive
         self.user_portal.karma = KARMA['moderate']
         post.state = 'flagged'
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).mark_as_offensive(12)
+        post.with_user(self.user_portal)._mark_as_offensive(12)
         self.assertEqual(post.state, 'offensive', 'website_forum: wrong state when marking a post as offensive')
         self.assertEqual(post.create_uid.karma, init_karma + KARMA['gen_ans_flag'], 'website_forum: wrong karma when marking a post as offensive')
 
@@ -317,13 +317,13 @@ class TestForumKarma(TestForumCommon):
 
         # portal user validate a post: not allowed, unsufficient karma
         with self.assertRaises(AccessError):
-            post.with_user(self.user_portal).refuse()
+            post.with_user(self.user_portal)._refuse()
 
         # portal user validate a pending post
         self.user_portal.karma = KARMA['moderate']
         post.state = 'pending'
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).refuse()
+        post.with_user(self.user_portal)._refuse()
         self.assertEqual(post.moderator_id, self.user_portal, 'website_forum: wrong moderator_id when refusing')
         self.assertEqual(post.create_uid.karma, init_karma, 'website_forum: wrong karma when refusing a post')
 
@@ -349,27 +349,27 @@ class TestForumKarma(TestForumCommon):
 
         # portal user validate a post: not allowed, unsufficient karma
         with self.assertRaises(AccessError):
-            post.with_user(self.user_portal).validate()
+            post.with_user(self.user_portal)._validate()
 
         # portal user validate a pending post
         self.user_portal.karma = KARMA['moderate']
         post.state = 'pending'
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal)._validate()
         self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after pending')
         self.assertEqual(post.create_uid.karma, init_karma + KARMA['gen_que_new'], 'website_forum: wrong karma when validate a post after pending')
 
         # portal user validate a flagged post: ok if enough karma
         self.user_portal.karma = KARMA['moderate']
         post.state = 'flagged'
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal)._validate()
         self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after flagged')
 
         # portal user validate an offensive post: ok if enough karma
         self.user_portal.karma = KARMA['moderate']
         post.state = 'offensive'
         init_karma = post.create_uid.karma
-        post.with_user(self.user_portal).validate()
+        post.with_user(self.user_portal)._validate()
         self.assertEqual(post.state, 'active', 'website_forum: wrong state when validate a post after offensive')
 
     def test_vote(self):
