@@ -538,6 +538,8 @@ class HolidaysRequest(models.Model):
         employee_leaves = self.filtered('employee_id')
         employees_by_dates_calendar = defaultdict(lambda: self.env['hr.employee'])
         for leave in employee_leaves:
+            if not leave.date_from or not leave.date_to:
+                continue
             employees_by_dates_calendar[(leave.date_from, leave.date_to, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('time_type', '=', 'leave'),
