@@ -1417,6 +1417,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 )
         leave_sudo = self.sudo()
         leave_sudo.state = 'cancel'
+        leave_sudo.activity_update()
         leave_sudo._post_leave_cancel()
 
     def _post_leave_cancel(self):
@@ -1572,7 +1573,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                         })
             elif holiday.state == 'validate':
                 to_do |= holiday
-            elif holiday.state == 'refuse':
+            elif holiday.state in ['refuse', 'cancel']:
                 to_clean |= holiday
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
