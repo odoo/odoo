@@ -628,7 +628,7 @@
                 background-color: $color-subtle;
             }
 
-            &.o_event_hatched:not(.o_event_dot):not(.fc-day-grid-event), &.o_event_hatched.fc-day-grid-event .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
+            &.o_event_hatched:not(.o_event_dot):not(.fc-day-grid-event):not(.fc-time-grid-event), &.o_event_hatched .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
                 background: repeating-linear-gradient(
                     45deg,
                     RGBA(to-rgb($color), .3),
