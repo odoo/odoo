@@ -137,7 +137,7 @@ export class OdooPivotModel extends PivotModel {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const group = JSON.stringify([rows, cols]);
         const values = this.data.measurements[group];
-        return (values && values[0][measure]) || "";
+        return (values && values[0][measure]) ?? "";
     }
 
     /**
