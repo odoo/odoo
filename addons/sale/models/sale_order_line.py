@@ -495,7 +495,6 @@ class SaleOrderLine(models.Model):
                 price = line._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     price,
-                    line.currency_id or line.order_id.currency_id,
                     product_taxes=line.product_id.taxes_id.filtered(
                         lambda tax: tax.company_id == line.env.company
                     ),

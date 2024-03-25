@@ -189,10 +189,8 @@ class ProductProduct(models.Model):
         if product_taxes and fiscal_position:
             product_price_unit = self._get_tax_included_unit_price_from_price(
                 product_price_unit,
-                currency,
                 product_taxes,
                 fiscal_position=fiscal_position,
-                is_refund_document=is_refund_document,
             )
 
         # Apply currency rate.
@@ -201,12 +199,10 @@ class ProductProduct(models.Model):
 
         return product_price_unit
 
-    @api.model  # the product is optional for `compute_all`
     def _get_tax_included_unit_price_from_price(
-        self, product_price_unit, currency, product_taxes,
+        self, product_price_unit, product_taxes,
         fiscal_position=None,
         product_taxes_after_fp=None,
-        is_refund_document=False,
     ):
         if not product_taxes:
             return product_price_unit
@@ -221,7 +217,7 @@ class ProductProduct(models.Model):
         new_taxes_data = product_taxes_after_fp._convert_to_dict_for_taxes_computation()
         product_values = product_taxes._eval_taxes_computation_turn_to_product_values(
             original_taxes_data + new_taxes_data,
-            product=product,
+            product=self,
         )
         product_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
             price_unit=product_price_unit,
