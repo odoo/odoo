@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import _, api, models
 from odoo.tools import float_compare, float_is_zero
+from odoo.exceptions import UserError
 
 
 class StockMoveLine(models.Model):
@@ -24,7 +25,7 @@ class StockMoveLine(models.Model):
             diff = move.product_uom._compute_quantity(move_line.quantity, move.product_id.uom_id)
             if float_is_zero(diff, precision_rounding=rounding):
                 continue
-            self._create_correction_svl(move, diff)
+            move_line._create_correction_svl(move, diff)
         if analytic_move_to_recompute:
             self.env['stock.move'].browse(
                 analytic_move_to_recompute)._account_analytic_entry_move()
@@ -48,7 +49,35 @@ class StockMoveLine(models.Model):
                 if float_is_zero(diff, precision_rounding=rounding):
                     continue
                 self._create_correction_svl(move, diff)
-        res = super(StockMoveLine, self).write(vals)
+        new_lot = False
+        if 'lot_id' in vals:
+            new_lot = vals.get('lot_id')
+        if 'quant_id' in vals:
+            new_quant = vals.get('quant_id')
+            new_lot = self.env['stock.quant'].browse(new_quant).lot_id.id
+        if new_lot:
+            # remove quantity of old lot
+            for move_line in self:
+                if move_line.state != 'done':
+                    continue
+                move = move_line.move_id
+                rounding = move.product_id.uom_id.rounding
+                diff = move.product_uom._compute_quantity(move_line.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                if float_is_zero(diff, precision_rounding=rounding):
+                    continue
+                self._create_correction_svl(move, -diff)
+        res = super().write(vals)
+        if new_lot:
+            # add quantity of new lot
+            for move_line in self:
+                if move_line.state != 'done':
+                    continue
+                move = move_line.move_id
+                rounding = move.product_id.uom_id.rounding
+                diff = move.product_uom._compute_quantity(vals.get('quantity', move_line.quantity), move.product_id.uom_id, rounding_method='HALF-UP')
+                if float_is_zero(diff, precision_rounding=rounding):
+                    continue
+                self._create_correction_svl(move, diff)
         if analytic_move_to_recompute:
             self.env['stock.move'].browse(analytic_move_to_recompute)._account_analytic_entry_move()
         return res
@@ -59,23 +88,30 @@ class StockMoveLine(models.Model):
         analytic_move_to_recompute._account_analytic_entry_move()
         return res
 
+    def _action_done(self):
+        for line in self:
+            if not line.lot_id and not line.lot_name and line.product_id.lot_valuated:
+                raise UserError(_("Lot/Serial number is mandatory for product valuated by lot"))
+        return super()._action_done()
+
     # -------------------------------------------------------------------------
     # SVL creation helpers
     # -------------------------------------------------------------------------
-    @api.model
     def _create_correction_svl(self, move, diff):
+        lot = self.lot_id if self.product_id.lot_valuated else False
+        qty = (lot, abs(diff))
         stock_valuation_layers = self.env['stock.valuation.layer']
-        if move._is_in() and diff > 0 or move._is_out() and diff < 0:
-            move.product_price_update_before_done(forced_qty=diff)
-            stock_valuation_layers |= move._create_in_svl(forced_quantity=abs(diff))
+        if (move._is_in() and diff > 0) or (move._is_out() and diff < 0):
+            move.product_price_update_before_done(forced_qty=(lot, diff))
+            stock_valuation_layers |= move._create_in_svl(forced_quantity=qty)
             if move.product_id.cost_method in ('average', 'fifo'):
                 move.product_id._run_fifo_vacuum(move.company_id)
-        elif move._is_in() and diff < 0 or move._is_out() and diff > 0:
-            stock_valuation_layers |= move._create_out_svl(forced_quantity=abs(diff))
-        elif move._is_dropshipped() and diff > 0 or move._is_dropshipped_returned() and diff < 0:
-            stock_valuation_layers |= move._create_dropshipped_svl(forced_quantity=abs(diff))
-        elif move._is_dropshipped() and diff < 0 or move._is_dropshipped_returned() and diff > 0:
-            stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=abs(diff))
+        elif (move._is_in() and diff < 0) or (move._is_out() and diff > 0):
+            stock_valuation_layers |= move._create_out_svl(forced_quantity=qty)
+        elif (move._is_dropshipped() and diff > 0) or (move._is_dropshipped_returned() and diff < 0):
+            stock_valuation_layers |= move._create_dropshipped_svl(forced_quantity=qty)
+        elif (move._is_dropshipped() and diff < 0) or (move._is_dropshipped_returned() and diff > 0):
+            stock_valuation_layers |= move._create_dropshipped_returned_svl(forced_quantity=qty)
 
         stock_valuation_layers._validate_accounting_entries()
 

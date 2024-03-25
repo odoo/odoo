@@ -240,6 +240,7 @@ class AccountMoveLine(models.Model):
         copy=False,
         index="btree_not_null",
     )
+    lot_id = fields.Many2one('stock.lot', string='Lot/Serial Number', domain="[('product_id', '=', product_id)]")
 
     def _compute_account_id(self):
         super()._compute_account_id()

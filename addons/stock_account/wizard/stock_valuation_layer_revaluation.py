@@ -14,6 +14,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
     @api.model
     def default_get(self, default_fields):
         res = super().default_get(default_fields)
+        if res.get('lot_id'):
+            lot = self.env['stock.lot'].browse(res['lot_id'])
+            if lot:
+                res['product_id'] = lot.product_id.id
         if res.get('product_id'):
             product = self.env['product.product'].browse(res['product_id'])
             if product.categ_id.property_cost_method == 'standard':
@@ -29,10 +33,11 @@ class StockValuationLayerRevaluation(models.TransientModel):
     currency_id = fields.Many2one('res.currency', "Currency", related='company_id.currency_id', required=True)
 
     product_id = fields.Many2one('product.product', "Related product", required=True, check_company=True)
+    lot_id = fields.Many2one('stock.lot', "Related lot/serial number", check_company=True)
     property_valuation = fields.Selection(related='product_id.categ_id.property_valuation')
     product_uom_name = fields.Char("Unit of Measure", related='product_id.uom_id.name')
-    current_value_svl = fields.Float("Current Value", related="product_id.value_svl")
-    current_quantity_svl = fields.Float("Current Quantity", related="product_id.quantity_svl")
+    current_value_svl = fields.Float("Current Value", compute="_compute_current_value")
+    current_quantity_svl = fields.Float("Current Quantity", compute="_compute_current_value")
 
     added_value = fields.Monetary("Added value", required=True)
     new_value = fields.Monetary("New value", compute='_compute_new_value')
@@ -52,6 +57,16 @@ class StockValuationLayerRevaluation(models.TransientModel):
             else:
                 reval.new_value_by_qty = 0.0
 
+    @api.depends('lot_id', 'product_id')
+    def _compute_current_value(self):
+        for reval in self:
+            if reval.lot_id:
+                reval.current_value_svl = reval.lot_id.value_svl
+                reval.current_quantity_svl = reval.lot_id.quantity_svl
+            else:
+                reval.current_value_svl = reval.product_id.value_svl
+                reval.current_quantity_svl = reval.product_id.quantity_svl
+
     def action_validate_revaluation(self):
         """ Revaluate the stock for `self.product_id` in `self.company_id`.
 
@@ -66,12 +81,16 @@ class StockValuationLayerRevaluation(models.TransientModel):
             raise UserError(_("The added value doesn't have any impact on the stock valuation"))
 
         product_id = self.product_id.with_company(self.company_id)
+        lot_id = self.lot_id.with_company(self.company_id)
 
-        remaining_svls = self.env['stock.valuation.layer'].search([
+        remaining_domain = [
             ('product_id', '=', product_id.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', self.company_id.id),
-        ])
+        ]
+        if lot_id:
+            remaining_domain.append(('lot_id', '=', lot_id.id))
+        remaining_svls = self.env['stock.valuation.layer'].search(remaining_domain)
 
         # Create a manual stock valuation layer
         if self.reason:
@@ -79,16 +98,24 @@ class StockValuationLayerRevaluation(models.TransientModel):
         else:
             description = _("Manual Stock Valuation: No Reason Given.")
         if product_id.categ_id.property_cost_method == 'average':
-            description += _(
-                " Product cost updated from %(previous)s to %(new_cost)s.",
-                previous=product_id.standard_price,
-                new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
-            )
+            if self.lot_id:
+                description += _(
+                    " lot/serial number cost updated from %(previous)s to %(new_cost)s.",
+                    previous=lot_id.standard_price,
+                    new_cost=lot_id.standard_price + self.added_value / self.current_quantity_svl
+                )
+            else:
+                description += _(
+                    "product cost updated from %(previous)s to %(new_cost)s.",
+                    previous=product_id.standard_price,
+                    new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
+                )
         revaluation_svl_vals = {
             'company_id': self.company_id.id,
             'product_id': product_id.id,
             'description': description,
             'value': self.added_value,
+            'lot_id': self.lot_id.id,
             'quantity': 0,
         }
 
@@ -112,7 +139,9 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         # Update the stardard price in case of AVCO/FIFO
         if product_id.categ_id.property_cost_method in ['average', 'fifo']:
-            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+            if lot_id:
+                lot_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / product_id.quantity_svl
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':
@@ -145,6 +174,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 'debit': abs(self.added_value),
                 'credit': 0,
                 'product_id': product_id.id,
+                'lot_id': lot_id.id,
             }), (0, 0, {
                 'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
                     user=self.env.user.name,
@@ -156,6 +186,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 'debit': 0,
                 'credit': abs(self.added_value),
                 'product_id': product_id.id,
+                'lot_id': lot_id.id,
             })],
         }
         account_move = self.env['account.move'].create(move_vals)
