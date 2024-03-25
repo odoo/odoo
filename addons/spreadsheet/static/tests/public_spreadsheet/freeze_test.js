@@ -8,8 +8,10 @@ import { createSpreadsheetWithPivot } from "../utils/pivot";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
-import { pivotRegistry } from "@spreadsheet/pivot/plugins/pivot_registry";
-import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
+import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/pivot_data_source";
+import { registries } from "@odoo/o-spreadsheet";
+
+const { pivotRegistry } = registries;
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
@@ -30,7 +32,10 @@ QUnit.module("freezing spreadsheet", {}, function () {
 
     QUnit.test("Pivot with a type different of ODOO is not converted", async function (assert) {
         // Add a pivot with a type different of ODOO
-        pivotRegistry.add("NEW_KIND_OF_PIVOT", OdooPivot);
+        pivotRegistry.add("NEW_KIND_OF_PIVOT", {
+            cls: OdooPivot,
+            definition: OdooPivotRuntimeDefinition,
+        });
         const spreadsheetData = {
             pivots: {
                 1: {

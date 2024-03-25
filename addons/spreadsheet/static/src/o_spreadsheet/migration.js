@@ -1,11 +1,10 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { parseDimension } from "@spreadsheet/pivot/pivot_helpers";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-const { load, tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
+const { load, tokenize, parse, convertAstNodes, astToFormula, helpers } = spreadsheet;
 const { corePluginRegistry } = spreadsheet.registries;
-
+const { parseDimension } = helpers;
 export const ODOO_VERSION = 11;
 
 const MAP_V1 = {
