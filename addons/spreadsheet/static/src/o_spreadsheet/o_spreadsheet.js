@@ -16546,14 +16546,19 @@
         children: [allFunctionListMenuBuilder],
     };
     function allFunctionListMenuBuilder() {
-        const fnNames = functionRegistry.getKeys();
+        const fnNames = functionRegistry.getKeys().filter((key) => !functionRegistry.get(key).hidden);
         return createFormulaFunctions(fnNames);
     }
     const categoriesFunctionListMenuBuilder = () => {
         const functions = functionRegistry.content;
-        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
+        const categories = [
+            ...new Set(functionRegistry
+                .getAll()
+                .filter((fn) => !fn.hidden)
+                .map((fn) => fn.category)),
+        ].filter(isDefined$1);
         return categories.sort().map((category, i) => {
-            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category && !functions[key].hidden);
             return {
                 name: category,
                 children: createFormulaFunctions(functionsInCategory),
@@ -20213,6 +20218,9 @@
                     el?.focus({ preventScroll: true });
                 }
             }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
+            owl.onWillUnmount(() => {
+                this.props.onFigureDeleted();
+            });
         }
         clickAnchor(dirX, dirY, ev) {
             this.props.onClickAnchor(dirX, dirY, ev);
@@ -20231,6 +20239,7 @@
                     this.props.onFigureDeleted();
                     ev.stopPropagation();
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
                 case "ArrowDown":
                 case "ArrowLeft":
@@ -20251,6 +20260,7 @@
                     });
                     ev.stopPropagation();
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
             }
         }
@@ -21058,6 +21068,10 @@
             owl.onPatched(() => {
                 if (!this.isKeyStillDown) {
                     this.processContent();
+                }
+                // Required because typing '=SUM' and double-clicking another cell leaves ShowProvider and ShowDescription true
+                if (this.env.model.getters.getEditionMode() === "inactive") {
+                    this.processTokenAtCursor();
                 }
             });
         }
@@ -41680,6 +41694,7 @@
                     this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
                     this.gridSelection.anchor.zone = this.getters.expandZone(sheetId, this.gridSelection.anchor.zone);
                     this.setSelectionMixin(this.gridSelection.anchor, this.gridSelection.zones);
+                    this.selectedFigureId = null;
                     break;
             }
             /** Any change to the selection has to be  reflected in the selection processor. */
@@ -48048,9 +48063,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.29';
-    __info__.date = '2024-03-15T12:11:02.769Z';
-    __info__.hash = 'd86234a';
+    __info__.version = '16.3.30';
+    __info__.date = '2024-03-25T11:03:02.925Z';
+    __info__.hash = '0d2ee33';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
