@@ -2783,6 +2783,73 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'date': one_day_ago,   'debit': 25,    'credit': 0,    'reconciled': True},
         ])
 
+    def test_pdiff_lot_valuation(self):
+        """
+        use a product valuated by lot.
+        Receipt some lots in the same purchase order, validate the picking
+        create the bill with a price different from the PO. Check every layers
+        for the lots have their own price difference correction layer.
+        """
+
+        self.cat.property_cost_method = 'average'
+        product = self.env['product.product'].create({
+            'name': 'product1',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': self.cat.id,
+            'lot_valuated': True,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 3.0,
+                    'product_uom': product.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'taxes_id': False,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        i = 1
+        for line in receipt.move_ids.move_line_ids:
+            line.write({
+                'lot_name': 'lot_' + str(i),
+                'quantity': 1,
+            })
+            i += 1
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+        lots = receipt.move_line_ids.lot_id
+        self.assertEqual(receipt.state, 'done')
+
+        for lot in lots:
+            self.assertEqual(lot.standard_price, 100)
+
+        layers = receipt.move_ids.stock_valuation_layer_ids
+        self.assertEqual(layers.mapped('value'), [100, 100, 100])
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.line_ids.price_unit = 150
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        for lot in lots:
+            self.assertEqual(lot.standard_price, 150)
+
+        pdiff_layers = layers.stock_valuation_layer_ids
+        self.assertRecordValues(pdiff_layers, [
+            # pylint: disable=bad-whitespace
+            {'quantity': 0, 'lot_id': lots[0].id, 'value': 50},
+            {'quantity': 0, 'lot_id': lots[1].id, 'value': 50},
+            {'quantity': 0, 'lot_id': lots[2].id, 'value': 50},
+        ])
+
     def test_purchase_with_backorders_and_return_and_price_changes(self):
         """
         When you have multiples receipts associated to a Purchase Order, with 1 bill for each receipt,

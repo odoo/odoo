@@ -36,6 +36,8 @@
 
         <record id="product.product_product_20" model="product.product">
             <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+            <field name="tracking">lot</field>
+            <field name="lot_valuated">1</field>
         </record>
 
         <record id="purchase_order_8" model="purchase.order">
@@ -50,6 +52,13 @@
                     'name': obj().env.ref('product.product_product_25').partner_ref,
                     'price_unit': 286.80,
                     'product_qty': 20.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_20'),
+                    'name': obj().env.ref('product.product_product_20').partner_ref,
+                    'price_unit': 120.00,
+                    'product_qty': 10.0,
                     'product_uom': ref('uom.product_uom_unit'),
                     'date_planned': DateTime.today()}),
             ]"/>
