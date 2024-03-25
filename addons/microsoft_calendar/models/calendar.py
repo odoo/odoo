@@ -70,6 +70,13 @@ class Meeting(models.Model):
         outlook_connected = self.env.user._get_microsoft_calendar_token()
         return outlook_connected and self.env.user.sudo().microsoft_synchronization_stopped is False
 
+    def _skip_send_mail_status_update(self):
+        """If microsoft calendar is not syncing, don't send a mail."""
+        user_id = self._get_event_user_m()
+        if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
+            return True
+        return super()._skip_send_mail_status_update()
+
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
