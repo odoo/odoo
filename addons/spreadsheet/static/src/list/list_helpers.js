@@ -1,7 +1,9 @@
 /** @odoo-module */
 // @ts-check
 
-import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
+import { helpers } from "@odoo/o-spreadsheet";
+
+const { getFunctionsFromTokens } = helpers;
 
 /** @typedef {import("@odoo/o-spreadsheet").Token} Token */
 
@@ -14,7 +16,7 @@ import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
  * @returns {number}
  */
 export function getNumberOfListFormulas(tokens) {
-    return getOdooFunctions(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"]).length;
+    return getFunctionsFromTokens(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"]).length;
 }
 
 /**
@@ -25,5 +27,5 @@ export function getNumberOfListFormulas(tokens) {
  * @returns {import("../helpers/odoo_functions_helpers").OdooFunctionDescription|undefined}
  */
 export function getFirstListFunction(tokens) {
-    return getOdooFunctions(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"])[0];
+    return getFunctionsFromTokens(tokens, ["ODOO.LIST", "ODOO.LIST.HEADER"])[0];
 }

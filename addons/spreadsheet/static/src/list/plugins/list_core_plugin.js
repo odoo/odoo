@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { getMaxObjectId } from "../../helpers/helpers";
+import { helpers } from "@odoo/o-spreadsheet";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
@@ -10,6 +10,8 @@ import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { Domain } from "@web/core/domain";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+
+const { getMaxObjectId } = helpers;
 
 /**
  * @typedef {Object} ListDefinition
