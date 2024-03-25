@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.addons.account.models.chart_template import code_translations
+from odoo.tools.translate import code_translation
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from odoo.addons.account.models.chart_template import TEMPLATE_MODELS
 from odoo.addons.account.tests.common import instantiate_accountman
@@ -687,7 +687,7 @@ class TestChartTemplate(TransactionCase):
         with patch.object(AccountChartTemplate, '_get_chart_template_mapping', side_effect=local_get_mapping, autospec=True):
             with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
                 with patch.object(AccountChartTemplate, '_post_load_data', wraps=test_post_load_data):
-                    with patch.object(code_translations, 'python_translations', mock_python_translations):
+                    with patch.object(code_translations, 'get_python_translations', mock_python_translations):
                         self.env['account.chart.template'].try_loading('translation', company=company, install_demo=False)
 
         # Check translations
