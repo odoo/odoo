@@ -209,7 +209,7 @@ patch(MockServer.prototype, {
             context
         );
         if (kwargs.author_id === this.pyEnv.currentPartnerId) {
-            this._mockDiscussChannel_SetLastSeenMessage([channel.id], messageData.id);
+            this._mockDiscussChannel_SetLastSeenMessage([channel.id], messageData.id, false);
         }
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
@@ -929,7 +929,7 @@ patch(MockServer.prototype, {
      * @param {integer[]} ids
      * @param {integer} message_id
      */
-    _mockDiscussChannel_SetLastSeenMessage(ids, message_id) {
+    _mockDiscussChannel_SetLastSeenMessage(ids, message_id, notify = true) {
         const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(ids[0]);
         if (memberOfCurrentUser) {
             this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
@@ -937,18 +937,20 @@ patch(MockServer.prototype, {
                 seen_message_id: message_id,
             });
         }
-        const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "in", ids]]);
-        const [partner, guest] = this._mockResPartner__getCurrentPersona();
-        let target = guest ?? partner;
-        if (this._mockDiscussChannel__typesAllowingSeenInfos().includes(channel.channel_type)) {
-            target = channel;
+        if (notify) {
+            const [channel] = this.pyEnv["discuss.channel"].searchRead([["id", "in", ids]]);
+            const [partner, guest] = this._mockResPartner__getCurrentPersona();
+            let target = guest ?? partner;
+            if (this._mockDiscussChannel__typesAllowingSeenInfos().includes(channel.channel_type)) {
+                target = channel;
+            }
+            this.pyEnv["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
+                channel_id: channel.id,
+                id: memberOfCurrentUser?.id,
+                last_message_id: message_id,
+                [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
+            });
         }
-        this.pyEnv["bus.bus"]._sendone(target, "discuss.channel.member/seen", {
-            channel_id: channel.id,
-            id: memberOfCurrentUser?.id,
-            last_message_id: message_id,
-            [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner.id,
-        });
     },
     /**
      * Simulates `_types_allowing_seen_infos` on `discuss.channel`.
