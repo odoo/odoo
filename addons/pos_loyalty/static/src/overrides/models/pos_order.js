@@ -4,12 +4,8 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { Mutex } from "@web/core/utils/concurrency";
 import { loyaltyIdsGenerator } from "./pos_store";
 
-const mutex = new Mutex(); // Used for sequential cache updates
-const updateRewardsMutex = new Mutex();
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
 }
@@ -53,10 +49,6 @@ function computeFreeQuantity(numberItems, n, m) {
     const y = x + (factor + 1) * m;
     const adjustment = x <= charged && charged < y ? charged - x : 0;
     return Math.floor(free + adjustment);
-}
-
-function inverted(fn) {
-    return (arg) => !fn(arg);
 }
 
 patch(PosOrder, {
@@ -133,7 +125,6 @@ patch(PosOrder.prototype, {
                     delete this.uiState.couponPointChanges[key];
                 }
             }
-            this._updateRewards();
         }
     },
     wait_for_push_order() {
@@ -223,7 +214,6 @@ patch(PosOrder.prototype, {
                 }
             }
         }
-        this._updateRewards();
     },
     _resetPrograms() {
         this.uiState.disabledRewards = new Set();
@@ -233,77 +223,6 @@ patch(PosOrder.prototype, {
             rewardLine.delete();
         }
         this.update({ code_activated_coupon_ids: [["clear"]] });
-        this._updateRewards();
-    },
-    _updateRewards() {
-        // Calls are not expected to take some time besides on the first load + when loyalty programs are made applicable
-        if (this.models["loyalty.program"].length === 0) {
-            return;
-        }
-
-        updateRewardsMutex.exec(() => {
-            return this._updateLoyaltyPrograms().then(async () => {
-                // Try auto claiming rewards
-                const claimableRewards = this.getClaimableRewards(false, false, true);
-                let changed = false;
-                for (const { coupon_id, reward } of claimableRewards) {
-                    if (
-                        reward.program_id.reward_ids.length === 1 &&
-                        !reward.program_id.is_nominative &&
-                        (reward.reward_type !== "product" ||
-                            (reward.reward_type == "product" && !reward.multi_product))
-                    ) {
-                        this._applyReward(reward, coupon_id);
-                        changed = true;
-                    }
-                }
-                // Rewards may impact the number of points gained
-                if (changed) {
-                    await this._updateLoyaltyPrograms();
-                }
-                this._updateRewardLines();
-            });
-        });
-    },
-    async _updateLoyaltyPrograms() {
-        await this._checkMissingCoupons();
-        await this._updatePrograms();
-    },
-    /**
-     * Checks that all 'existing' coupons are in our cache, and if not load/update them.
-     */
-    //FIXME use of pos
-    async _checkMissingCoupons() {
-        // This function must stay sequential to avoid potential concurrency errors.
-        await mutex.exec(async () => {
-            if (!this.invalidCoupons) {
-                return;
-            }
-            this.invalidCoupons = false;
-            const allCoupons = [];
-            for (const pe of Object.values(this.uiState.couponPointChanges)) {
-                if (pe.coupon_id > 0) {
-                    allCoupons.push(pe.coupon_id);
-                }
-            }
-            allCoupons.push(...this.code_activated_coupon_ids.map((coupon) => coupon.id));
-            const couponsToFetch = allCoupons.filter(
-                (elem) => !this.models["loyalty.card"].get(elem)
-            );
-            if (couponsToFetch.length) {
-                await this.pos.fetchCoupons([["id", "in", couponsToFetch]], couponsToFetch.length);
-                // Remove coupons that could not be loaded from the db
-                // TODO JCB: The following commented code doesn't seem to be necessary. Code activated coupons will always come from the backend.
-                // this.uiState.codeActivatedCoupons = this.uiState.codeActivatedCoupons.filter(
-                //     (coupon) => this.pos.couponCache[coupon.id]
-                // );
-                this.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(this.uiState.couponPointChanges).filter(([k, pe]) =>
-                        this.models["loyalty.card"].get(pe.coupon_id)
-                    )
-                );
-            }
-        });
     },
     /**
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
@@ -359,88 +278,10 @@ patch(PosOrder.prototype, {
         }
     },
     /**
-     * Update our couponPointChanges, meaning the points/coupons each program give etc.
-     */
-    async _updatePrograms() {
-        const changesPerProgram = {};
-        const programsToCheck = new Set();
-        // By default include all programs that are considered 'applicable'
-        for (const program of this.models["loyalty.program"].getAll()) {
-            if (this._programIsApplicable(program)) {
-                programsToCheck.add(program.id);
-            }
-        }
-        for (const pe of Object.values(this.uiState.couponPointChanges)) {
-            if (!changesPerProgram[pe.program_id]) {
-                changesPerProgram[pe.program_id] = [];
-                programsToCheck.add(pe.program_id);
-            }
-            changesPerProgram[pe.program_id].push(pe);
-        }
-        for (const coupon of this.code_activated_coupon_ids) {
-            programsToCheck.add(coupon.program_id.id);
-        }
-        const programs = [...programsToCheck].map((programId) =>
-            this.models["loyalty.program"].get(programId)
-        );
-        const pointsAddedPerProgram = this.pointsForPrograms(programs);
-        for (const program of this.models["loyalty.program"].getAll()) {
-            // Future programs may split their points per unit paid (gift cards for example), consider a non applicable program to give no points
-            const pointsAdded = this._programIsApplicable(program)
-                ? pointsAddedPerProgram[program.id]
-                : [];
-            // For programs that apply to both (loyalty) we always add a change of 0 points, if there is none, since it makes it easier to
-            //  track for claimable rewards, and makes sure to load the partner's loyalty card.
-            if (program.is_nominative && !pointsAdded.length && this.get_partner()) {
-                pointsAdded.push({ points: 0 });
-            }
-            const oldChanges = changesPerProgram[program.id] || [];
-            // Update point changes for those that exist
-            for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
-                Object.assign(oldChanges[idx], pointsAdded[idx]);
-            }
-            if (pointsAdded.length < oldChanges.length) {
-                const removedIds = oldChanges.map((pe) => pe.coupon_id);
-                this.uiState.couponPointChanges = Object.fromEntries(
-                    Object.entries(this.uiState.couponPointChanges).filter(([k, pe]) => {
-                        return !removedIds.includes(pe.coupon_id);
-                    })
-                );
-            } else if (pointsAdded.length > oldChanges.length) {
-                for (const pa of pointsAdded.splice(oldChanges.length)) {
-                    const coupon = await this._couponForProgram(program);
-                    this.uiState.couponPointChanges[coupon.id] = {
-                        points: pa.points,
-                        program_id: program.id,
-                        coupon_id: coupon.id,
-                        barcode: pa.barcode,
-                        appliedRules: pointsForProgramsCountedRules[program.id],
-                    };
-                }
-            }
-        }
-
-        // Also remove coupons from code_activated_coupon_ids if their program applies_on current orders and the program does not give any points
-        const toUnlink = this.code_activated_coupon_ids.filter(
-            inverted((coupon) => {
-                const program = coupon.program_id;
-                if (
-                    program.applies_on === "current" &&
-                    pointsAddedPerProgram[program.id].length === 0
-                ) {
-                    return false;
-                }
-                return true;
-            })
-        );
-        this.update({ code_activated_coupon_ids: [["unlink", ...toUnlink]] });
-    },
-    /**
      * @typedef {{ won: number, spend: number, total: number, balance: number, name: string}} LoyaltyPoints
      * @typedef {{ couponId: number, program: object, points: LoyaltyPoints}} LoyaltyStat
      * @returns {Array<LoyaltyStat>}
      */
-    // FIXME use of pos
     getLoyaltyPoints() {
         // map: couponId -> LoyaltyPoints
         const loyaltyPoints = {};
@@ -566,28 +407,6 @@ patch(PosOrder.prototype, {
             }
         }
         return points;
-    },
-    /**
-     * Depending on the program type returns a new (local) instance of coupon or tries to retrieve the coupon in case of loyalty cards.
-     * Existing coupons are put in a cache which is also used to fetch the coupons.
-     *
-     * @param {object} program
-     */
-    // FIXME use of pos
-    async _couponForProgram(program) {
-        if (program.is_nominative) {
-            return this.pos.fetchLoyaltyCard(program.id, this.get_partner().id);
-        }
-        // This type of coupons don't need to really exist up until validating the order, so no need to cache
-        return this.models["loyalty.card"].create({
-            id: loyaltyIdsGenerator(),
-            code: null,
-            program_id: program,
-            partner_id: this.partner_id,
-            points: 0,
-            // TODO JCB: make the date work.
-            // expiration_date: new Date(),
-        });
     },
     _programIsApplicable(program) {
         if (
@@ -925,7 +744,7 @@ patch(PosOrder.prototype, {
     },
     /**
      * TODO JCB: make the second parameter not id, but the loyalty.card object itself.
-     * Applies a reward to the order, `_updateRewards` is expected to be called right after.
+     * Applies a reward to the order, `pos.updateRewards` is expected to be called right after.
      *
      * @param {loyalty.reward} reward
      * @param {Integer} coupon_id
@@ -981,20 +800,6 @@ patch(PosOrder.prototype, {
         return true;
     },
 
-    // set_orderline_options(line, options) {
-    //     super.set_orderline_options(...arguments);
-    //     if (options && options.is_reward_line) {
-    //         line.is_reward_line = options.is_reward_line;
-    //         line.reward_id = options.reward_id;
-    //         line.reward_product_id = options.reward_product_id;
-    //         line.coupon_id = options.coupon_id;
-    //         line.reward_identifier_code = options.reward_identifier_code;
-    //         line.points_cost = options.points_cost;
-    //         line.uiState.price_type = "automatic";
-    //     }
-    //     line.giftBarcode = options.giftBarcode;
-    //     line.giftCardId = options.giftCardId;
-    // },
     /**
      * @param {loyalty.reward} reward
      * @returns the discountable and discountable per tax for this discount on order reward.
@@ -1437,107 +1242,6 @@ patch(PosOrder.prototype, {
                 reward_identifier_code: _newRandomRewardCode(),
             },
         ];
-    },
-    /**
-     * Full routine for activating a code for the order.
-     * If only one more reward is claimable after activating the code, that reward is claimed
-     *  directly, to avoid more steps than necessary.
-     * If more rewards are claimable, the employee will have to manually select the reward
-     *  in the reward selection menu.
-     *
-     * @param {String} code
-     * @returns true if everything went right, error message if not.
-     */
-    // FIXME use of pos
-    async _activateCode(code) {
-        const rule = this.models["loyalty.rule"].find((rule) => {
-            return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
-        });
-        let claimableRewards = null;
-        let coupon = null;
-        if (rule) {
-            const program_pricelists = rule.program_id.pricelist_ids;
-            if (
-                program_pricelists.length > 0 &&
-                (!this.pricelist_id || !program_pricelists.includes(this.pricelist_id.id))
-            ) {
-                return _t("That promo code program requires a specific pricelist.");
-            }
-            if (this.uiState.codeActivatedProgramRules.includes(rule.id)) {
-                return _t("That promo code program has already been activated.");
-            }
-            this.uiState.codeActivatedProgramRules.push(rule.id);
-            await this._updateLoyaltyPrograms();
-            claimableRewards = this.getClaimableRewards(false, rule.program_id.id);
-        } else {
-            if (this.code_activated_coupon_ids.find((coupon) => coupon.code === code)) {
-                return _t("That coupon code has already been scanned and activated.");
-            }
-            const customerId = this.get_partner() ? this.get_partner().id : false;
-            const { successful, payload } = await this.pos.data.call(
-                "pos.config",
-                "use_coupon_code",
-                [
-                    [this.config.id],
-                    code,
-                    this.date_order,
-                    customerId,
-                    this.pricelist_id ? this.pricelist_id.id : false,
-                ]
-            );
-            if (successful) {
-                // Allow rejecting a gift card that is not yet paid.
-                const program = this.models["loyalty.program"].get(payload.program_id);
-                if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const confirmed = await ask(this.pos.env.services.dialog, {
-                        title: _t("Unpaid gift card"),
-                        body: _t(
-                            "This gift card is not linked to any order. Do you really want to apply its reward?"
-                        ),
-                    });
-                    if (!confirmed) {
-                        return _t("Unpaid gift card rejected.");
-                    }
-                }
-                // TODO JCB: It's possible that the coupon is already loaded. We should check for that.
-                //   - At the moment, creating a new one with existing id creates a duplicate.
-                coupon = this.models["loyalty.card"].create({
-                    id: payload.coupon_id,
-                    code: code,
-                    program_id: this.models["loyalty.program"].get(payload.program_id),
-                    partner_id: this.models["res.partner"].get(payload.partner_id),
-                    points: payload.points,
-                    // TODO JCB: make the expiration_date work.
-                    // expiration_date: payload.expiration_date,
-                });
-                this.update({ code_activated_coupon_ids: [["link", coupon]] });
-                await this._updateLoyaltyPrograms();
-                claimableRewards = this.getClaimableRewards(coupon.id);
-            } else {
-                return payload.error_message;
-            }
-        }
-        if (claimableRewards && claimableRewards.length === 1) {
-            if (
-                claimableRewards[0].reward.reward_type !== "product" ||
-                !claimableRewards[0].reward.multi_product
-            ) {
-                this._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
-                this._updateRewards();
-            }
-        }
-        if (!rule && this.lines.length === 0 && coupon) {
-            return _t(
-                "Gift Card: %s\nBalance: %s",
-                code,
-                this.env.utils.formatCurrency(coupon.balance)
-            );
-        }
-        return true;
-    },
-    // FIXME use of pos
-    async activateCode(code) {
-        return await this._activateCode(code);
     },
     isProgramsResettable() {
         const array = [

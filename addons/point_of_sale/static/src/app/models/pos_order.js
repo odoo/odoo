@@ -52,12 +52,6 @@ export class PosOrder extends Base {
         };
     }
 
-    get pos() {
-        //REVIEW - will this works with self order ?
-        //NOTE - The goal is to avoid to use pos from models
-        return this.models["pos.store"].getFirst().pos;
-    }
-
     get user() {
         return this.models["res.users"].getFirst();
     }

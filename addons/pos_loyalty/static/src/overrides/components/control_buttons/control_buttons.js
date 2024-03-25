@@ -88,7 +88,7 @@ patch(ControlButtons.prototype, {
                         body: result,
                     });
                 }
-                order._updateRewards();
+                this.pos.updateRewards();
             }
         }
     },
@@ -99,7 +99,7 @@ patch(ControlButtons.prototype, {
             getPayload: async (code) => {
                 code = code.trim();
                 if (code !== "") {
-                    const res = await this.pos.get_order().activateCode(code);
+                    const res = await this.pos.activateCode(code);
                     if (res !== true) {
                         this.notification.add(res, { type: "danger" });
                     }
@@ -182,7 +182,7 @@ patch(ControlButtons.prototype, {
                 // Returned an error
                 this.notification.add(result);
             }
-            order._updateRewards();
+            this.pos.updateRewards();
             return result;
         }
     },

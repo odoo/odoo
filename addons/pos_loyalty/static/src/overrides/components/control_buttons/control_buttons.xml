@@ -21,7 +21,7 @@
             </t>
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
                 <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
-                    t-on-click="() => this.pos.get_order()._resetPrograms()" t-if="!props.wrapped">
+                    t-on-click="() => this.pos.resetPrograms()" t-if="!props.wrapped">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>
             </t>
