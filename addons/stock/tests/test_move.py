@@ -6312,3 +6312,56 @@ class StockMove(TransactionCase):
             line_form.lot_ids.add(sn01)
         picking = picking_form.save()
         self.assertEqual(picking.move_ids_without_package.lot_ids, sn01)
+
+    def test_validate_separate_picking(self):
+        """
+            The purpose is to check that we are not taking
+            into account lines that are not picked.
+        """
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_storage_categories').id)]})
+
+        child_location = self.stock_location.child_ids[0]
+        in_type = self.env.ref('stock.picking_type_in')
+
+        in_type.show_operations = True
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': in_type.id,
+        })
+
+        move_line_untracked, move_line_tracked = self.env['stock.move'].create([
+            {
+                'name': self.product.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 1.0,
+                'picking_id': receipt.id,
+            },
+            {
+                'name': self.product_lot.name,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_id': self.product_lot.id,
+                'product_uom': self.product_lot.uom_id.id,
+                'product_uom_qty': 1.0,
+                'picking_id': receipt.id,
+            }
+        ])
+
+        move_line_untracked.write({
+            'location_dest_id': child_location.id,
+            'quantity': 1,
+            'picked': True,
+        })
+        move_line_tracked.write({
+            'location_dest_id': child_location.id,
+            'quantity': 1,
+            'picked': False,
+        })
+
+        receipt.action_confirm()
+        receipt.button_validate()
