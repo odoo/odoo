@@ -1,5 +1,5 @@
 import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
-import { shallowEqual } from "@web/core/utils/objects";
+import { pick, shallowEqual } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
@@ -65,7 +65,7 @@ function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_CO
     if (!sizes || !sizes.length) {
         return [];
     }
-    const bufferSize = span * bufferCoef;
+    const bufferSize = Math.round(span * bufferCoef);
     const bufferStart = start - bufferSize;
     const bufferEnd = start + span + bufferSize;
 
@@ -106,14 +106,12 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
     onChange ||= () => comp.render();
 
     const current = { scroll: { left: 0, top: 0, ...initialScroll } };
-    let columnsIndexes;
-    let rowsIndexes;
     const computeColumnsIndexes = () => {
         return getIndexes({
             sizes: current.summedColumnsWidths,
             start: current.scroll.left,
             span: window.innerWidth,
-            prevStartIndex: columnsIndexes?.[0],
+            prevStartIndex: current.columnsIndexes?.[0],
             bufferCoef,
         });
     };
@@ -122,24 +120,24 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
             sizes: current.summedRowsHeights,
             start: current.scroll.top,
             span: window.innerHeight,
-            prevStartIndex: rowsIndexes?.[0],
+            prevStartIndex: current.rowsIndexes?.[0],
             bufferCoef,
         });
     };
     const throttledCompute = useThrottleForAnimation(() => {
-        const changed = {};
+        const changed = [];
         const columnsVisibleIndexes = computeColumnsIndexes();
-        if (!shallowEqual(columnsVisibleIndexes, columnsIndexes)) {
-            columnsIndexes = columnsVisibleIndexes;
-            changed.columnsIndexes = columnsVisibleIndexes;
+        if (!shallowEqual(columnsVisibleIndexes, current.columnsIndexes)) {
+            current.columnsIndexes = columnsVisibleIndexes;
+            changed.push("columnsIndexes");
         }
         const rowsVisibleIndexes = computeRowsIndexes();
-        if (!shallowEqual(rowsVisibleIndexes, rowsIndexes)) {
-            rowsIndexes = rowsVisibleIndexes;
-            changed.rowsIndexes = rowsVisibleIndexes;
+        if (!shallowEqual(rowsVisibleIndexes, current.rowsIndexes)) {
+            current.rowsIndexes = rowsVisibleIndexes;
+            changed.push("rowsIndexes");
         }
-        if (Object.keys(changed).length) {
-            onChange(changed);
+        if (changed.length) {
+            onChange(pick(current, ...changed));
         }
     });
     const scrollListener = (/** @type {Event & { target: Element }} */ ev) => {
@@ -157,20 +155,20 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
     useExternalListener(window, "resize", () => throttledCompute());
     return {
         get columnsIndexes() {
-            return columnsIndexes;
+            return current.columnsIndexes;
         },
         get rowsIndexes() {
-            return rowsIndexes;
+            return current.rowsIndexes;
         },
         setColumnsWidths(widths) {
             let acc = 0;
             current.summedColumnsWidths = widths.map((w) => (acc += w));
-            columnsIndexes = computeColumnsIndexes();
+            current.columnsIndexes = computeColumnsIndexes();
         },
         setRowsHeights(heights) {
             let acc = 0;
             current.summedRowsHeights = heights.map((h) => (acc += h));
-            rowsIndexes = computeRowsIndexes();
+            current.rowsIndexes = computeRowsIndexes();
         },
     };
 }
