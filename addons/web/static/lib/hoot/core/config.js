@@ -135,6 +135,18 @@ export const CONFIG_SCHEMA = {
         parse: parseBoolean(true),
     },
     /**
+     * Determines the order of the tests execution.
+     *
+     * - fifo: tests will be run sequentially as declared in the file system.
+     * - lifo: tests will be run sequentially in the reverse order.
+     * - random: shuffles tests and suites within their parent suite.
+     * @default "fifo"
+     */
+    order: {
+        default: "fifo",
+        parse: parseString(""),
+    },
+    /**
      * Environment in which the test runner is running. This parameter is used to
      * determine the default value of other parameters, namely:
      *  - the user agent;
@@ -147,15 +159,7 @@ export const CONFIG_SCHEMA = {
         parse: parseString(""),
     },
     /**
-     * Determines the seed from which random numbers will be generated. If truthy,
-     * tests and suites will be shuffled within their parent suite.
-     *
-     * If set without a seed (= without URL value):
-     *  -> the seed will be randomly generated and tests/suites will be shuffled accordingly
-     * If set with a seed (= with a given URL value):
-     *  -> tests/suites will be shuffled using the seed
-     * If not set (= 0):
-     *  -> tests/suites will be run sequentially as declared in the file system
+     * Determines the seed from which random numbers will be generated.
      * @default 0
      */
     random: {

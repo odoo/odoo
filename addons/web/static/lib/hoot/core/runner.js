@@ -753,7 +753,17 @@ export class TestRunner {
             return included;
         });
 
-        return this.config.random ? shuffle(filteredJobs) : filteredJobs;
+        switch (this.config.order) {
+            case "fifo": {
+                return filteredJobs;
+            }
+            case "lifo": {
+                return filteredJobs.reverse();
+            }
+            case "random": {
+                return shuffle(filteredJobs);
+            }
+        }
     }
 
     /**
