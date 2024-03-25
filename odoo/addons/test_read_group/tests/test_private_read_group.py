@@ -959,3 +959,8 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             Model._read_group([], [], ['user_ids:array_agg'])
+
+    def test_many2many_compute_not_groupable(self):
+        Model = self.env['test_read_group.related_bar']
+        field_info = Model.fields_get(['computed_base_ids'], ['groupable'])
+        self.assertFalse(field_info['computed_base_ids']['groupable'])

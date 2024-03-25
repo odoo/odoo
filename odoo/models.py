@@ -1947,7 +1947,7 @@ class BaseModel(metaclass=MetaModel):
             sql_expr = self._read_group_groupby_properties(fname, property_name, query)
 
         elif property_name:
-            raise ValueError(f"Relation cannot be traverse expected for property field: {groupby_spec!r}")
+            raise ValueError(f"Property access on non-property field: {groupby_spec!r}")
 
         elif granularity and field.type not in ('datetime', 'date', 'properties'):
             raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
@@ -1957,6 +1957,8 @@ class BaseModel(metaclass=MetaModel):
             if field.related and not field.store:
                 __, field, alias = self._traverse_related_sql(alias, field, query)
 
+            if not field.store:
+                raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
             # special case for many2many fields: prepare a query on the comodel
             # in order to reuse the mechanism _apply_ir_rules, then inject the
             # query as an extra condition of the left join
