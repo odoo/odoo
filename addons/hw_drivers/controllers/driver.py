@@ -7,6 +7,7 @@ import logging
 import os
 import subprocess
 import time
+from zlib import adler32
 
 from odoo import http, tools
 
@@ -78,7 +79,19 @@ class DriverController(http.Controller):
         """
         Downloads the log file
         """
-        if tools.config['logfile']:
-            return http.Stream.from_path(tools.config['logfile']).get_response(
+        log_path = tools.config['logfile']
+        if log_path:
+            check = adler32(log_path.encode())
+            stat = os.stat(log_path)
+            # intentionally don't use Stream.from_path as the path used is not in the addons path
+            # for instance, for the iot-box it will be in /var/log/odoo
+            return http.Stream(
+                    type='path',
+                    path=log_path,
+                    download_name=os.path.basename(log_path),
+                    etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
+                    last_modified=stat.st_mtime,
+                    size=stat.st_size,
+                ).get_response(
                 mimetype='text/plain', as_attachment=True
             )
