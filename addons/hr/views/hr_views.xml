@@ -39,6 +39,7 @@
             id="hr_menu_hr_reports"
             name="Reporting"
             parent="menu_hr_root"
+            groups="group_hr_user"
             sequence="95"/>
 
         <menuitem
@@ -81,7 +82,7 @@
                 id="menu_hr_department_kanban"
                 action="hr_department_kanban_action"
                 parent="menu_hr_root"
-                groups="group_hr_user"/>
+                groups="base.group_user"/>
 
             <menuitem
                 id="menu_hr_work_location_tree"

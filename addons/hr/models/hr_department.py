@@ -21,7 +21,9 @@ class Department(models.Model):
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
-    total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee')
+    has_read_access = fields.Boolean(search="_search_has_read_access", store=False, export_string_translation=False)
+    total_employee = fields.Integer(compute='_compute_total_employee', string='Total Employee',
+        export_string_translation=False)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     plan_ids = fields.One2many('mail.activity.plan', 'department_id')
     plans_count = fields.Integer(compute='_compute_plan_count')
@@ -37,6 +39,17 @@ class Department(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = record.name
+
+    def _search_has_read_access(self, operator, value):
+        supported_operators = ["="]
+        if operator not in supported_operators or not isinstance(value, bool):
+            raise NotImplementedError()
+        if not value:
+            return [(1, "=", 0)]
+        if self.env['hr.employee'].check_access_rights('read', raise_exception=False):
+            return [(1, "=", 1)]
+        departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
+        return [('id', 'child_of', departments_ids)]
 
     @api.model
     def name_create(self, name):
@@ -57,7 +70,7 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
         result = {department.id: count for department, count in emp_data}
         for department in self:
             department.total_employee = result.get(department.id, 0)
@@ -136,6 +149,28 @@ class Department(models.Model):
         action = self.env['ir.actions.actions']._for_xml_id('hr.mail_activity_plan_action')
         action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
         return action
+
+    def action_employee_from_department(self):
+        if self.env['hr.employee'].check_access_rights('read', raise_exception=False):
+            res_model = "hr.employee"
+            search_view_id = self.env.ref('hr.view_employee_filter').id
+        else:
+            res_model = "hr.employee.public"
+            search_view_id = self.env.ref('hr.hr_employee_public_view_search').id
+        return {
+            'name': _("Employees"),
+            'type': 'ir.actions.act_window',
+            'res_model': res_model,
+            'view_mode': 'tree,kanban,form',
+            'search_view_id': [search_view_id, 'search'],
+            'context': {
+                'searchpanel_default_department_id': self.id,
+                'default_department_id': self.id,
+                'search_default_group_department': 1,
+                'search_default_department_id': self.id,
+                'expand': 1
+            },
+        }
 
     def get_children_department_ids(self):
         return self.env['hr.department'].search([('id', 'child_of', self.ids)])
