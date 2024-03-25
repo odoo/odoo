@@ -306,17 +306,13 @@ test("Current user that is a follower should be considered as such", async () =>
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestion", { count: 6 }); // FIXME: should be 4, but +2 extra with Hermit / Public User
+    await contains(".o-mail-Composer-suggestion", { count: 5 }); // FIXME: should be 3, but +2 extra with Hermit / Public User
     await contains(".o-mail-Composer-suggestion", {
         text: "Mitchell Admin",
         before: [".o-mail-Composer-suggestion", { text: "Person B(b@test.com)" }],
     });
     await contains(".o-mail-Composer-suggestion", {
         text: "Person B(b@test.com)",
-        before: [".o-mail-Composer-suggestion", { text: "OdooBot" }],
-    });
-    await contains(".o-mail-Composer-suggestion", {
-        text: "OdooBot",
         before: [".o-mail-Composer-suggestion", { text: "Person A(a@test.com)" }],
     });
 });
