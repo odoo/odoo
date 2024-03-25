@@ -3011,6 +3011,46 @@ class StockMove(TransactionCase):
         self.assertAlmostEqual(move_pack_cust.quantity, 1.0)
         self.assertEqual(move_pack_cust.state, 'partially_available')
 
+    def test_tracked_backorder(self):
+        """
+            create a receipt for a tracked product and another
+            recieve only the other product confirm picking and
+            create a backorder for the tracked product
+        """
+        picking_reciept = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'state': 'draft',
+        })
+        move_tracked = self.env['stock.move'].create({
+            'name': 'tracked',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_reciept.id,
+        })
+        move_untracked = self.env['stock.move'].create({
+            'name': 'untracked',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_reciept.id,
+        })
+
+        move_tracked.picked = False
+        move_untracked.picked = True
+
+        res_dict_for_back_order = picking_reciept.button_validate()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
+        backorder_wizard.process()
+
+        self.assertEqual(picking_reciept.backorder_ids.move_ids.product_id, self.product_serial)
+
     def test_use_reserved_move_line_1(self):
         """ Test that _free_reservation work when quantity is only available on
         reserved move lines.
