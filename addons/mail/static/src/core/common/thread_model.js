@@ -41,12 +41,7 @@ export class Thread extends Record {
     static new(data) {
         const thread = super.new(data);
         Record.onChange(thread, ["state"], () => {
-            if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {
-                this.store.ChatWindow.insert({
-                    folded: thread.state === "folded",
-                    thread,
-                });
-            }
+            this.env.services["mail.chat_window"].updateThreadDisplay(thread);
         });
         return thread;
     }

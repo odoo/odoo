@@ -57,8 +57,7 @@ test("fold", async () => {
     await contains(".o-discuss-ChannelSelector");
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector", { count: 0 });
-    await click(".o-mail-ChatWindow-command[title='Open']");
-    await contains(".o-discuss-ChannelSelector");
+    await contains(".o-mail-ChatWindow", { count: 0 });
 });
 
 test('open chat from "new message" chat window should open chat in place of this "new message" chat window', async () => {

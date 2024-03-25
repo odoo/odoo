@@ -9,7 +9,9 @@ export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 
 export const CHAT_WINDOW_INBETWEEN_WIDTH = 5;
 export const CHAT_WINDOW_WIDTH = 360; // same value as $o-mail-ChatWindow-width
 export const CHAT_WINDOW_HIDDEN_WIDTH = 55;
-
+export const CHAT_BUBBLE_SIZE = 56; // same value as $o-mail-ChatBubble-medium
+export const CHAT_BUBBLE_PADDING = 20; // container has 10px padding, multiply by 2 for left and right together.
+export const CHAT_BUBBLE_LIMIT = 7;
 export class ChatWindowService {
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -31,30 +33,37 @@ export class ChatWindowService {
         this.ui = services.ui;
     }
 
-    notifyState(chatWindow) {
-        if (this.ui.isSmall || chatWindow.thread?.isTransient) {
+    notifyState(target) {
+        if (this.ui.isSmall || target.thread?.isTransient) {
             return;
         }
-        if (chatWindow.thread?.model === "discuss.channel") {
-            chatWindow.thread.foldStateCount++;
+        if (target.thread?.model === "discuss.channel") {
+            target.thread.foldStateCount++;
             return rpc(
                 "/discuss/channel/fold",
                 {
-                    channel_id: chatWindow.thread.id,
-                    state: chatWindow.thread.state,
-                    state_count: chatWindow.thread.foldStateCount,
+                    channel_id: target.thread.id,
+                    state: target.thread.state,
+                    state_count: target.thread.foldStateCount,
                 },
                 { shadow: true }
             );
         }
     }
 
-    open(thread, replaceNewMessageChatWindow) {
-        const chatWindow = this.store.ChatWindow.insert({
-            folded: false,
-            thread,
-            replaceNewMessageChatWindow,
-        });
+    open(thread, replaceNewMessageChatWindow, { openMessagingMenuOnClose } = {}) {
+        const chatWindow = this.store.ChatWindow.insert(
+            assignDefined(
+                {
+                    folded: false,
+                    replaceNewMessageChatWindow,
+                    thread,
+                },
+                {
+                    openMessagingMenuOnClose,
+                }
+            )
+        );
         chatWindow.autofocus++;
         if (thread) {
             thread.state = "open";
@@ -87,13 +96,14 @@ export class ChatWindowService {
     }
 
     get maxVisible() {
+        const chatBubblesWidth = CHAT_BUBBLE_SIZE + CHAT_BUBBLE_PADDING;
         const startGap = this.ui.isSmall
             ? 0
             : this.hidden.length > 0
             ? CHAT_WINDOW_END_GAP_WIDTH + CHAT_WINDOW_HIDDEN_WIDTH
             : CHAT_WINDOW_END_GAP_WIDTH;
         const endGap = this.ui.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
-        const available = browser.innerWidth - startGap - endGap;
+        const available = browser.innerWidth - startGap - endGap - chatBubblesWidth;
         const maxAmountWithoutHidden = Math.max(
             1,
             Math.floor(available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH))
@@ -112,11 +122,12 @@ export class ChatWindowService {
     }
 
     toggleFold(chatWindow) {
+        if (!chatWindow.thread) {
+            return this.closeNewMessage();
+        }
         chatWindow.folded = !chatWindow.folded;
         const thread = chatWindow.thread;
-        if (thread) {
-            thread.state = chatWindow.folded ? "folded" : "open";
-        }
+        thread.state = chatWindow.folded ? "folded" : "open";
         this.notifyState(chatWindow);
     }
 
@@ -154,10 +165,38 @@ export class ChatWindowService {
         await this._onClose(chatWindow, options);
         chatWindow.delete();
     }
-    async _onClose(chatWindow, { notifyState = true } = {}) {
+    async _onClose(target, { notifyState = true } = {}) {
         if (notifyState) {
-            this.notifyState(chatWindow);
+            this.notifyState(target);
         }
+    }
+
+    async closeBubble(bubble, options = {}) {
+        bubble.thread.state = "closed";
+        await this._onClose(bubble, options);
+        bubble.delete();
+    }
+
+    updateThreadDisplay(thread) {
+        if (!this.store.usingChatBubbles) {
+            return this.store.ChatWindow.insert({
+                thread,
+                folded: thread.state === "folded",
+            });
+        }
+        if (thread.state === "open" && !this.ui.isSmall) {
+            this.store.ChatBubble.get({ thread })?.delete();
+            this.store.ChatWindow.insert({ thread });
+        }
+        if (thread.state === "folded") {
+            this.store.ChatWindow.get({ thread })?.delete();
+            this.store.ChatBubble.insert({ thread });
+        }
+    }
+
+    get chatBubbleLimit() {
+        const chatBubbleSpace = CHAT_BUBBLE_SIZE + CHAT_BUBBLE_PADDING;
+        return Math.min(CHAT_BUBBLE_LIMIT, Math.floor(browser.innerHeight / chatBubbleSpace));
     }
 }
 

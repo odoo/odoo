@@ -35,6 +35,7 @@ export class ThreadService {
         this.messageService = services["mail.message"];
         this.personaService = services["mail.persona"];
         this.outOfFocusService = services["mail.out_of_focus"];
+        this.chatWindowService = services["mail.chat_window"];
     }
 
     async fetchChannelMembers(thread) {
@@ -768,7 +769,10 @@ export class ThreadService {
             return;
         }
         if (notify) {
-            this.store.ChatWindow.insert({ thread });
+            const chatWindow = this.store.ChatWindow.get({ thread });
+            if (!chatWindow) {
+                thread.state = "folded";
+            }
             this.outOfFocusService.notify(message, thread);
         }
     }
