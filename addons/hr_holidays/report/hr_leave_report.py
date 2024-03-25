@@ -34,6 +34,7 @@ class LeaveReport(models.Model):
     date_from = fields.Datetime('Start Date', readonly=True)
     date_to = fields.Datetime('End Date', readonly=True)
     company_id = fields.Many2one('res.company', string="Company", readonly=True)
+    has_department_manager_access = fields.Boolean(search="_search_has_department_manager_access", compute="_compute_has_department_manager_access")
 
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report')
@@ -97,3 +98,26 @@ class LeaveReport(models.Model):
             'res_id': self.leave_id.id if self.leave_id else self.allocation_id.id,
             'res_model': 'hr.leave' if self.leave_id else 'hr.leave.allocation',
         }
+
+    def _search_has_department_manager_access(self, operator, value):
+        supported_operators = ["!=", "="]
+        if operator not in supported_operators or not isinstance(value, bool):
+            raise NotImplementedError()
+        return [
+                '|',
+                    ('employee_id.user_id', '=', self.env.user.id),
+                    ('employee_id.department_id', 'child_of',
+                        self.env['hr.department']._search([('manager_id', 'in', self.env.user.employee_ids.ids)])
+                    ),
+                ]
+
+    def _compute_has_department_manager_access(self):
+        employees = self.env['hr.employee'].search([
+                '|',
+                    ('user_id', '=', self.env.user.id),
+                    ('department_id', 'child_of',
+                        self.env['hr.department']._search([('manager_id', 'in', self.env.user.employee_ids.ids)])
+                    ),
+                ])
+        for report in self:
+            report.has_department_manager_access = report.employee_id in employees

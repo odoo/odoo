@@ -17,7 +17,7 @@
                         <div class="o_hierarchy_node_body d-flex flex-column">
                             <field name="manager_id" class="pt-1 ps-1" widget="many2one_avatar" />
                             <div>
-                                <button class="btn btn-link" name="%(hr.act_employee_from_department)d" type="action">
+                                <button class="btn btn-link" name="action_employee_from_department" type="object">
                                     <t t-out="record.total_employee.raw_value"/> Employees
                                 </button>
                             </div>
