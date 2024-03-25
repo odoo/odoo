@@ -288,3 +288,16 @@ test("onChange", async () => {
     expect([]).toVerifySteps();
     expect([comp.virtualGrid.rowsIndexes, comp.virtualGrid.columnsIndexes]).not.toEqual(actualGrid);
 });
+
+test("when scrolling to the bottom right then updating to smaller rows and columns", async () => {
+    const comp = await mountOnFixture(getTestComponent());
+    scroll(".scrollable", { top: MAX_SCROLL_TOP, left: MAX_SCROLL_LEFT });
+    await animationFrame();
+    expect(comp.virtualGrid.rowsIndexes).toEqual([190, 199]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
+
+    comp.virtualGrid.setRowsHeights([1, 2, 3]);
+    comp.virtualGrid.setColumnsWidths([1, 2, 3]);
+    expect(comp.virtualGrid.rowsIndexes).toEqual([0, 2]);
+    expect(comp.virtualGrid.columnsIndexes).toEqual([0, 2]);
+});
