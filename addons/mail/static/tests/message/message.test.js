@@ -101,6 +101,27 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message-content", { text: "edited message" });
 });
 
+test("Can edit message comment in chatter (mobile)", async () => {
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains("button", { text: "Discard editing" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    await click("button[aria-label='Save editing']");
+    await contains(".o-mail-Message-content", { text: "edited message" });
+});
+
 test("Cursor is at end of composer input on edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
