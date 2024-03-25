@@ -49,6 +49,16 @@ export class PartnerEditor extends Component {
             country_id: partner.country_id && partner.country_id.id,
             property_product_pricelist: this.setDefaultPricelist(partner),
         });
+        // Provides translated terms used in the view
+        this.partnerDetailsFields = {
+            'Street': _t('Street'),
+            'City': _t('City'),
+            'Zip': _t('Zip'),
+            'Email': _t('Email'),
+            'Phone': _t('Phone'),
+            'Mobile': _t('Mobile'),
+            'Barcode': _t('Barcode')
+        };
         this.confirm = useAsyncLockedMethod(this.confirm);
     }
     // FIXME POSREF naming
