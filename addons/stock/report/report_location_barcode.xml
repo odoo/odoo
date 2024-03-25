@@ -35,7 +35,18 @@
 
 <template id="report_location_barcode">
     <t t-set="title">Locations</t>
-    <t t-call="stock.report_generic_barcode"/>
+    <t t-set="paperformat" t-value="env.ref('stock.action_report_location_barcode').get_paperformat()"/>
+    <t t-if="paperformat.orientation != 'Landscape'">
+        <t t-call="stock.report_generic_barcode"/>
+    </t>
+    <t t-else="">
+        <t t-call="web.html_container">
+            <div t-foreach="[o for o in docs if o.barcode]" t-as="o" class="page article">
+                <h2 style="text-align: center; font-size: 1.25rem; white-space: nowrap"><span t-esc="o.name"/></h2>
+                <div t-field="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 200, 'height': 60}"/>
+            </div>
+        </t>
+    </t>
 </template>
 </data>
 </odoo>
