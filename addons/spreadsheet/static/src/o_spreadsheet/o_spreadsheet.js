@@ -20434,6 +20434,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (!this.isKeyStillDown) {
                     this.processContent();
                 }
+                // Required because typing '=SUM' and double-clicking another cell leaves ShowProvider and ShowDescription true
+                if (this.env.model.getters.getEditionMode() === "inactive") {
+                    this.processTokenAtCursor();
+                }
             });
         }
         // ---------------------------------------------------------------------------
@@ -43290,9 +43294,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.35';
-    __info__.date = '2024-03-15T12:10:24.721Z';
-    __info__.hash = '5cba28b';
+    __info__.version = '16.0.36';
+    __info__.date = '2024-03-25T10:54:14.110Z';
+    __info__.hash = '2c2117b';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
