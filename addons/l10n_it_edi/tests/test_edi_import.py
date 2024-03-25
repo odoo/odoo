@@ -47,12 +47,28 @@ class TestItEdiImport(TestItEdi):
         https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml
         """
         self._assert_import_invoice('IT01234567890_FPR01.xml', [{
+            'move_type': 'in_invoice',
             'invoice_date': fields.Date.from_string('2014-12-18'),
             'amount_untaxed': 5.0,
             'amount_tax': 1.1,
             'invoice_line_ids': [{
                 'quantity': 5.0,
                 'price_unit': 1.0,
+                'debit': 5.0,
+            }],
+        }])
+
+    def test_receive_negative_vendor_bill(self):
+        """ Same vendor bill as test_receive_vendor_bill but negative unit price """
+        self._assert_import_invoice('IT01234567890_FPR02.xml', [{
+            'move_type': 'in_invoice',
+            'invoice_date': fields.Date.from_string('2014-12-18'),
+            'amount_untaxed': -5.0,
+            'amount_tax': -1.1,
+            'invoice_line_ids': [{
+                'quantity': 5.0,
+                'price_unit': -1.0,
+                'credit': 5.0,
             }],
         }])
 
