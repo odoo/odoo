@@ -107,6 +107,10 @@ class Attendee(models.Model):
         """
         if force_send:
             force_send_limit = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail_force_send_limit', 100))
+        notified_attendees = self
+        for event, attendees in self.grouped('event_id').items():
+            if event._skip_send_mail_status_update():
+                notified_attendees -= attendees
         if isinstance(mail_template, str):
             raise ValueError('Template should be a template record, not an XML ID anymore.')
         if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
@@ -116,10 +120,10 @@ class Attendee(models.Model):
             return False
 
         # get ics file for all meetings
-        ics_files = self.mapped('event_id')._get_ics_file()
+        ics_files = notified_attendees.event_id._get_ics_file()
 
         mail_messages = self.env['mail.message']
-        for attendee in self:
+        for attendee in notified_attendees:
             if attendee.email and attendee._should_notify_attendee():
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
@@ -147,7 +151,7 @@ class Attendee(models.Model):
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]
-                mail_messages |= attendee.event_id.with_context(no_document=True).sudo().message_notify(
+                mail_messages += attendee.event_id.with_context(no_document=True).sudo().message_notify(
                     email_from=attendee.event_id.user_id.email_formatted or self.env.user.email_formatted,
                     author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,
@@ -158,7 +162,7 @@ class Attendee(models.Model):
                     force_send=False,
                 )
         # batch sending at the end
-        if force_send and len(self) < force_send_limit:
+        if force_send and len(notified_attendees) < force_send_limit:
             mail_messages.sudo().mail_ids.send_after_commit()
 
     def _should_notify_attendee(self):

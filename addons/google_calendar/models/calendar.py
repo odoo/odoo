@@ -107,6 +107,13 @@ class Meeting(models.Model):
                 raise ValidationError(_("The following event can only be updated by the organizer "
                                         "according to the event permissions set on Google Calendar."))
 
+    def _skip_send_mail_status_update(self):
+        """If a google calendar is not syncing with the user, don't send a mail."""
+        user_id = self._get_event_user()
+        if user_id.is_google_calendar_synced() and user_id.res_users_settings_id._is_google_calendar_valid():
+            return True
+        return super()._skip_send_mail_status_update()
+
     def _get_sync_domain(self):
         # in case of full sync, limit to a range of 1y in past and 1y in the future by default
         ICP = self.env['ir.config_parameter'].sudo()
