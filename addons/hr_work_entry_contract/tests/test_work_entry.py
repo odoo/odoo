@@ -6,6 +6,8 @@ from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 import pytz
 
+from odoo.exceptions import ValidationError
+from odoo.tests import Form
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 from odoo.addons.hr_work_entry_contract.tests.common import TestWorkEntryBase
@@ -242,3 +244,19 @@ class TestWorkEntry(TestWorkEntryBase):
         hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 1))
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_employee.id)])
         self.assertEqual(work_entries[0].date_start, datetime(2023, 7, 31, 23, 0))
+
+    def test_work_entry_employee_without_contract(self):
+        """ Test work entries by creating an employee without contract which leads to trigger a constraint. """
+        new_employee = self.env['hr.employee'].create({
+            'name': 'New employee'
+        })
+        work_entry = Form(self.env['hr.work.entry'])
+        work_entry.date_start = self.start
+        work_entry.employee_id = new_employee
+        work_entry.work_entry_type_id = self.work_entry_type_leave
+        work_entry.date_stop = self.end
+
+        with self.assertRaises(ValidationError):
+            work_entry.save()
+        self.assertEqual(work_entry.employee_id.id, new_employee.id)
+        self.assertEqual(work_entry.duration, 0.0)
