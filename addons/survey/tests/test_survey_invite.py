@@ -40,11 +40,13 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         bad_cases = [
             {},  # empty
             {   # no question
-                'question_and_page_ids': [Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1})]
+                'question_and_page_ids': [Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1})],
+                'session_code': '100000',
             }, {
                 # scored without positive score obtainable
                 'scoring_type': 'scoring_with_answers',
                 'question_and_page_ids': [Command.create({'question_type': 'numerical_box', 'title': 'Q0', 'sequence': 1})],
+                'session_code': '100001',
             }, {
                 # scored without positive score obtainable from simple choice
                 'scoring_type': 'scoring_with_answers',
@@ -56,13 +58,15 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                         Command.create({'value': '2', 'answer_score': 0}),
                     ],
                 })],
+                'session_code': '100002',
             }, {
                 # closed
                 'active': False,
                 'question_and_page_ids': [
                     Command.create({'is_page': True, 'question_type': False, 'title': 'P0', 'sequence': 1}),
                     Command.create({'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})
-                ]
+                ],
+                'session_code': '100003',
              },
         ]
         good_cases = [
@@ -72,6 +76,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                 'question_and_page_ids': [
                     Command.create({'question_type': 'numerical_box', 'title': 'Q0', 'sequence': 1, 'answer_score': 1}),
                 ],
+                'session_code': '100004',
             }, {
                 # scored with positive score obtainable from simple choice
                 'scoring_type': 'scoring_with_answers',
@@ -91,7 +96,9 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
                             Command.create({'value': '1', 'answer_score': 0}),
                             Command.create({'value': '2', 'answer_score': 1}),
                         ],
-                    })],
+                    }),
+                ],
+                'session_code': '100005',
             },
         ]
         surveys = self.env['survey.survey'].with_user(self.survey_manager).create([
