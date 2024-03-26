@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="account.ActionableErrors">
-        <t t-if="this.props.record.data[this.props.name]">
-            <div class="mb-2">
+        <t t-if="this.sortedActionableErrors">
+            <div class="mb-2 border rounded-2 overflow-hidden">
                 <t t-foreach="this.sortedActionableErrors" t-as="error" t-key="error">
                     <t t-set="level" t-value="error_value.level || 'warning'"/>
-                    <div t-att-class="`alert alert-${level} m-0`" role="alert">
+                    <div t-att-class="`alert alert-${level} m-0 p-1 ps-3 rounded-0`" role="alert">
                         <div t-att-name="error">
                             <t t-out="error_value.message"/>
                             <a class="fw-bold"
