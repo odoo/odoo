@@ -142,20 +142,20 @@ class Project(models.Model):
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
         defaults = self.default_get(['allow_timesheets', 'analytic_account_id'])
-        for vals in vals_list:
-            allow_timesheets = vals.get('allow_timesheets', defaults.get('allow_timesheets'))
-            analytic_account_id = vals.get('analytic_account_id', defaults.get('analytic_account_id'))
-            if allow_timesheets and not analytic_account_id:
-                analytic_account = self._create_analytic_account_from_values(vals)
-                vals['analytic_account_id'] = analytic_account.id
+        analytic_accounts_vals = [vals for vals in vals_list if
+            vals.get('allow_timesheets', defaults.get('allow_timesheets'))
+            and not vals.get('analytic_account_id', defaults.get('analytic_account_id'))
+        ]
+        analytic_accounts = self.env['account.analytic.account'].create(self._get_values_analytic_account_batch(analytic_accounts_vals))
+        for vals, analytic_account in zip(analytic_accounts_vals, analytic_accounts):
+            vals['analytic_account_id'] = analytic_account.id
         return super().create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet
         if values.get('allow_timesheets') and not values.get('analytic_account_id'):
-            for project in self:
-                if not project.analytic_account_id:
-                    project._create_analytic_account()
+            project_new_account = self.filtered(lambda project: not project.analytic_account_id)
+            project_new_account._create_analytic_account()
         return super(Project, self).write(values)
 
     @api.depends('is_internal_project', 'company_id')
