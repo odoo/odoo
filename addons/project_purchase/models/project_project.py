@@ -29,8 +29,8 @@ class Project(models.Model):
 
     def action_open_project_purchase_orders(self):
         purchase_orders = self.env['purchase.order.line'].search(
-            [('analytic_distribution', 'in', self.analytic_account_id.ids)],
-        )
+            [('analytic_distribution', 'in', self.analytic_account_id.ids)]
+        ).order_id
         action_window = {
             'name': _('Purchase Orders'),
             'type': 'ir.actions.act_window',
@@ -43,7 +43,7 @@ class Project(models.Model):
         }
         if len(purchase_orders) == 1:
             action_window['views'] = [[False, 'form']]
-            action_window['res_id'] = purchase_orders[0].id
+            action_window['res_id'] = purchase_orders.id
         return action_window
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
