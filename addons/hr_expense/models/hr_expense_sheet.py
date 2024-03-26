@@ -202,7 +202,7 @@ class HrExpenseSheet(models.Model):
         string='Attachments of expenses',
     )
     message_main_attachment_id = fields.Many2one(compute='_compute_main_attachment', store=True)
-    accounting_date = fields.Date(string="Accounting Date", compute='_compute_accounting_date', store=True)
+    accounting_date = fields.Date(string="Expense Report Date", help="Specify the bill date of the related vendor bill.")
     account_move_ids = fields.One2many(
         string="Journal Entries",
         comodel_name='account.move', inverse_name='expense_sheet_id', readonly=True,
@@ -369,11 +369,6 @@ class HrExpenseSheet(models.Model):
     def _compute_nb_account_move(self):
         for sheet in self:
             sheet.nb_account_move = len(sheet.account_move_ids)
-
-    @api.depends('account_move_ids.date')
-    def _compute_accounting_date(self):
-        for sheet in self.filtered('account_move_ids'):
-            sheet.accounting_date = sheet.account_move_ids[:1].date
 
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
@@ -672,6 +667,7 @@ class HrExpenseSheet(models.Model):
 
     def _do_reset_approval(self):
         self.sudo().write({'approval_state': False})
+        self.accounting_date = False
         self.activity_update()
 
     def _do_refuse(self, reason):
@@ -695,6 +691,8 @@ class HrExpenseSheet(models.Model):
         own_account_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'own_account')
         company_account_sheets = self - own_account_sheets
 
+        for sheet in own_account_sheets:
+            sheet.accounting_date = sheet.accounting_date or sheet._calculate_default_accounting_date()
         moves = self.env['account.move'].create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
         # Set the main attachment on the moves directly to avoid recomputing the
         # `register_as_main_attachment` on the moves which triggers the OCR again
@@ -720,11 +718,37 @@ class HrExpenseSheet(models.Model):
         )
         draft_moves.unlink()
 
+    def _calculate_default_accounting_date(self):
+        """
+        Calculate the default accounting date for the expenses paid by employees
+        """
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        start_month = fields.Date.start_of(today, "month")
+        end_month = fields.Date.end_of(today, "month")
+        most_recent_expense = max(self.expense_line_ids.mapped('date')) or today
+
+        if most_recent_expense > end_month:
+            return most_recent_expense
+
+        if most_recent_expense >= start_month:
+            return today
+
+        lock_date = self.company_id._get_user_fiscal_lock_date()
+
+        return min(
+            max(
+                fields.Date.end_of(most_recent_expense, "month"),
+                fields.Date.end_of(fields.Date.add(lock_date, months=1), "month")
+            ),
+            today
+        )
+
     def _prepare_bills_vals(self):
         self.ensure_one()
+
         return {
             **self._prepare_move_vals(),
-            'invoice_date': self.accounting_date or fields.Date.context_today(self),
             'journal_id': self.journal_id.id,
             'ref': self.name,
             'move_type': 'in_invoice',
@@ -740,13 +764,23 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_move_vals(self):
         self.ensure_one()
-        return {
+        to_return = {
             # force the name to the default value, to avoid an eventual 'default_name' in the context
             # to set it to '' which cause no number to be given to the account.move when posted.
             'name': '/',
-            'date': self.accounting_date or max(self.expense_line_ids.mapped('date')) or fields.Date.context_today(self),
             'expense_sheet_id': self.id,
         }
+
+        most_recent_expense = max(self.expense_line_ids.mapped('date'))
+        today = fields.Date.context_today(self)
+
+        if self.payment_mode == 'company_account':
+            to_return['date'] = most_recent_expense or today
+            to_return['invoice_date'] = today
+        else:
+            to_return['invoice_date'] = self.accounting_date
+
+        return to_return
 
     def _validate_analytic_distribution(self):
         for line in self.expense_line_ids:

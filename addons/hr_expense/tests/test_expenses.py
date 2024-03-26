@@ -2,6 +2,7 @@
 
 import base64
 from datetime import date
+
 from freezegun import freeze_time
 
 from odoo import Command, fields
@@ -16,6 +17,7 @@ class TestExpenses(TestExpenseCommon):
     #############################################
     #  Test Expense flows
     #############################################
+    @freeze_time("2021-12-12")
     def test_expense_main_flow(self):
         """
         Test the main flows of expense
@@ -29,7 +31,7 @@ class TestExpenses(TestExpenseCommon):
             - Unlinking payments reverts to approved state
             - Cannot delete an analytic account if linked to an expense
         """
-        # pylint: disable=bad-whitespace
+
         self.expense_employee.user_partner_id.property_supplier_payment_term_id = self.env.ref('account.account_payment_term_30days')
         expense_sheet_by_employee = self.create_expense_report({
             'name': 'Expense for John Smith',
@@ -118,11 +120,12 @@ class TestExpenses(TestExpenseCommon):
         # Generate a payment for 'company_account' (and its move(s)) and a vendor bill for 'own_account'
         expense_sheets.action_sheet_move_create()
         self.assertRecordValues(expense_sheets, [
-            {'state': 'post', 'payment_state': 'not_paid', 'accounting_date': date(2021, 10, 10)},
-            {'state': 'done', 'payment_state': 'paid',     'accounting_date': date(2021, 10, 12)},  # Set to paid as move is posted directly
+            {'state': 'post', 'payment_state': 'not_paid',    'accounting_date': date(2021, 10, 10)},
+            # Expense sheet paid by company don't use accounting date since they are already paid and posted directly
+            {'state': 'done', 'payment_state': 'paid',        'accounting_date': False},
         ])
         self.assertRecordValues(expense_sheets.expense_line_ids, [
-            {'payment_mode': 'own_account',     'state': 'approved'},  # vv
+            {'payment_mode': 'own_account',     'state': 'approved'},
             {'payment_mode': 'own_account',     'state': 'approved'},  # As the payment is not done yet those are still in "approved"
             {'payment_mode': 'company_account', 'state': 'done'},
             {'payment_mode': 'company_account', 'state': 'done'},
@@ -132,15 +135,16 @@ class TestExpenses(TestExpenseCommon):
         self.assertRecordValues(expense_sheet_by_employee.account_move_ids, [{
             'amount_total': 1760.00,
             'ref': 'Expense for John Smith',
-            'date': date(2021, 10, 10),
+            'date': date(2021, 10, 31),  # End of month since it is from a previous month computed by account.move
+            'invoice_date': date(2021, 10, 10),
             'invoice_date_due': date(2021, 11, 9),  # The due date is the one set for the partner
             'partner_id': expected_partner_id
         },
         ])
         # One payment per expense if 'company_account'
         self.assertRecordValues(expense_sheet_by_company.account_move_ids, [
-            {'amount_total': 160.00,    'ref': 'PB 160 + 2*15% 2', 'date': date(2021, 10, 12), 'partner_id': False},
-            {'amount_total': 1000.00,   'ref': 'PC 1000 + 15%',    'date': date(2021, 10, 11), 'partner_id': False},
+            {'amount_total':   160.00, 'ref': 'PB 160 + 2*15% 2', 'date': date(2021, 10, 12), 'partner_id': False},
+            {'amount_total':  1000.00, 'ref': 'PC 1000 + 15%',    'date': date(2021, 10, 11), 'partner_id': False},
         ])
         tax_account_id = self.company_data['default_account_tax_purchase'].id
         default_account_payable_id = self.company_data['default_account_payable'].id
@@ -150,23 +154,24 @@ class TestExpenses(TestExpenseCommon):
         # One payment per expense
         self.assertRecordValues(expense_sheets.account_move_ids.line_ids, [
             # own_account expense sheet move
-            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: PB 160 + 2*15%',   'date': date(2021, 10, 10)},
-            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: PA 2*800 + 15%',   'date': date(2021, 10, 10)},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 10)},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                         'date': date(2021, 10, 10)},
-            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 10)},
-            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                'date': date(2021, 10, 10)},
+            # Invoice date should be the one set as accounting date in the expense sheet
+            {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: PB 160 + 2*15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':  1391.30, 'account_id': self.expense_account.id,    'name': 'expense_employee: PA 2*800 + 15%',   'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                         'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance':   208.70, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
+            {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
 
             # company_account expense 2 move
-            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12)},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                'date': date(2021, 10, 12)},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                         'date': date(2021, 10, 12)},
-            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12)},
+            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                         'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
+            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
 
             # company_account expense 1 move
-            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11)},
-            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 11)},
-            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11)},
+            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
+            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
+            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
         ])
 
         # Own_account partial payment
@@ -559,26 +564,243 @@ class TestExpenses(TestExpenseCommon):
         expense_employee_2.employee_id = self.expense_employee.id
         self.assertEqual(expense_employee_2.sheet_id.id, False, 'Sheet should be unlinked from the expense')
 
-    def test_expenses_corner_case_with_tax_and_lock_date(self):
-        """ Test that when creating an expense move in a locked period still works but its accounting date is the current day """
-        self.env.company.tax_lock_date = '2022-01-01'
-
+    def test_computation_expense_report_date_based_most_recent_expense_today(self):
+        """
+            Test the accounting date if the most recent expense is today
+            The accounting date should then be today
+        """
         expense_sheet = self.create_expense_report({
             'name': 'Expense for John Smith',
-            'accounting_date': '2020-01-01',
-            'expense_line_ids': [Command.create({
-                'employee_id': self.expense_employee.id,
-                'product_id': self.product_a.id,
-                'price_unit': 1000.00,
-                'date': '2020-01-02',
-            })],
+            'expense_line_ids': [
+                Command.create({
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'date': '2022-01-25',
+                }),
+                Command.create({
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.00,
+                    'date': '2022-01-20',
+                })
+            ],
         })
-
         expense_sheet.action_submit_sheet()
         with freeze_time(self.frozen_today):
             expense_sheet.action_approve_expense_sheets()
             expense_sheet.action_sheet_move_create()
-        self.assertEqual(expense_sheet.accounting_date, self.frozen_today)
+
+        self.assertEqual(expense_sheet.accounting_date, fields.Date.from_string('2022-01-25'))
+
+    def test_computation_expense_report_date_based_user_input(self):
+        """
+            Test the accounting date if the accounting date is from the form
+            The accounting date should then not be changed
+        """
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'accounting_date': '2024-03-10',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2022-01-25',
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+        with freeze_time(self.frozen_today):
+            expense_sheet.action_approve_expense_sheets()
+            expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet.accounting_date, fields.Date.from_string('2024-03-10'))
+
+    def test_computation_expense_report_date_with_most_recent_expense_within_month_early(self):
+        """
+            Test the accounting date if the most recent expense is within this month but earlier than today
+            The accounting date should then be today
+        """
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2022-01-01',
+            })],
+        })
+
+        expense_sheet.action_submit_sheet()
+
+        with freeze_time(self.frozen_today):
+            expense_sheet.action_approve_expense_sheets()
+            expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet.accounting_date, fields.Date.from_string('2022-01-25'))
+
+    def test_computation_expense_report_date_with_most_recent_expense_within_month_later(self):
+        """
+            Test the accounting date if the most recent expense is within this month but after today
+            The accounting date should then be today
+        """
+        expense_sheet_2 = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2022-01-29',
+            })],
+        })
+        expense_sheet_2.action_submit_sheet()
+
+        with freeze_time(self.frozen_today):
+            expense_sheet_2.action_approve_expense_sheets()
+            expense_sheet_2.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet_2.accounting_date, fields.Date.from_string('2022-01-25'))
+
+    def test_computation_expense_report_date_with_most_recent_expense_last_month(self):
+        """
+            Test the accounting date if the most recent expense is before this month and there is no lock date
+            The accounting date should then be the last day of the mst recent expense month
+        """
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2021-12-20',
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+
+        with freeze_time(self.frozen_today):
+            expense_sheet.action_approve_expense_sheets()
+            expense_sheet.action_sheet_move_create()
+
+        # no lock date so defaults to last day of month of the most recent expense
+        self.assertEqual(expense_sheet.accounting_date, fields.Date.from_string('2021-12-31'))
+
+        expense_sheet_2 = self.create_expense_report({
+            'name': 'Expense for John Smith 2',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2022-01-25',
+            })],
+        })
+        expense_sheet_2.action_submit_sheet()
+
+        with freeze_time('2022-02-25'):
+            expense_sheet_2.action_approve_expense_sheets()
+            expense_sheet_2.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet_2.accounting_date, fields.Date.from_string('2022-01-31'))
+
+    def test_computation_expense_report_date_with_most_recent_expense_last_month_with_lock_date(self):
+        """
+           Test the accounting date if the most recent expense is before this month and there is a lock date
+           The accounting date should then be the min(max(of the last day of most recent expense month AND last day of month after lock date) AND today)
+       """
+        self.env.company.fiscalyear_lock_date = '2021-12-31'
+
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2021-12-20',
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+
+        with freeze_time(self.frozen_today):
+            expense_sheet.action_approve_expense_sheets()
+            expense_sheet.action_sheet_move_create()
+
+        # today
+        self.assertEqual(expense_sheet.accounting_date, fields.Date.from_string('2022-01-25'))
+
+        expense_sheet_2 = self.create_expense_report({
+            'name': 'Expense for John Smith 2',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2022-01-25',
+            })],
+        })
+        expense_sheet_2.action_submit_sheet()
+
+        with freeze_time("2022-02-25"):
+            expense_sheet_2.action_approve_expense_sheets()
+            expense_sheet_2.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet_2.accounting_date, fields.Date.from_string('2022-01-31'))
+
+        # another lock date
+        self.env.company.fiscalyear_lock_date = '2022-01-1'
+
+        expense_sheet_3 = self.create_expense_report({
+            'name': 'Expense for John Smith 3',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1400.00,
+                'date': '2021-12-19',
+            })],
+        })
+        expense_sheet_3.action_submit_sheet()
+
+        with freeze_time(self.frozen_today):
+            expense_sheet_3.action_approve_expense_sheets()
+            expense_sheet_3.action_sheet_move_create()
+
+        # today
+        self.assertEqual(expense_sheet_3.accounting_date, fields.Date.from_string('2022-01-25'))
+
+        expense_sheet_4 = self.create_expense_report({
+            'name': 'Expense for John Smith 4',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1200.00,
+                'date': '2022-01-19',
+            })],
+        })
+        expense_sheet_4.action_submit_sheet()
+
+        with freeze_time("2022-02-25"):
+            expense_sheet_4.action_approve_expense_sheets()
+            expense_sheet_4.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet_4.accounting_date, fields.Date.from_string('2022-02-25'))
+
+    def test_accounting_date_reset_after_draft_reset(self):
+        """
+        Test that the accounting date is reset to False when we reset the sheet to draft
+        """
+        expense_sheet = self.create_expense_report({
+            'name': 'Expense for John Smith',
+            'expense_line_ids': [Command.create({
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'price_unit': 1000.00,
+                'date': '2021-12-20',
+            })],
+        })
+        expense_sheet.action_submit_sheet()
+        self.assertEqual(expense_sheet.state, 'submit', "The expense sheet must be submitted")
+        expense_sheet.action_approve_expense_sheets()
+        self.assertEqual(expense_sheet.state, 'approve', "The expense sheet must be approved")
+        expense_sheet.action_sheet_move_create()
+        expense_sheet.action_reset_expense_sheets()
+        self.assertEqual(expense_sheet.state, 'draft', "The expense sheet must be reset to draft")
+        self.assertEqual(expense_sheet.accounting_date, False, "Accounting date must be reset when expense report is reset to draft")
 
     def test_corner_case_defaults_values_from_product(self):
         """ As soon as you set a product, the expense name, uom, taxes and account are set according to the product. """

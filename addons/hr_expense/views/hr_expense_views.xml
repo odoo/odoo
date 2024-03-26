@@ -855,7 +855,7 @@
                             <field name="user_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
                             <field name="accounting_date"
                                    groups="account.group_account_invoice,account.group_account_readonly"
-                                   invisible="state not in ['approve', 'post', 'done']"
+                                   invisible="state not in ['approve', 'post', 'done'] or payment_mode == 'company_account'"
                                    readonly="not is_editable"/>
                         </group>
                     </group>
