@@ -284,7 +284,10 @@ class Website(models.Model):
         return pricelist
 
     def sale_product_domain(self):
-        return expression.AND([self._product_domain(), self.get_current_website().website_domain()])
+        website_domain = self.get_current_website().website_domain()
+        if not self.env.user._is_internal():
+            website_domain = expression.AND([website_domain, [('is_published', '=', True)]])
+        return expression.AND([self._product_domain(), website_domain])
 
     def _product_domain(self):
         return [('sale_ok', '=', True)]
