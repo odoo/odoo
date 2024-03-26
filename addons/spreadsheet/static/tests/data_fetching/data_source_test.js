@@ -79,6 +79,6 @@ QUnit.module("spreadsheet data source", {}, () => {
         assert.verifySteps(["notify-from-promise"]);
         assert.ok(dataSource._isFullyLoaded);
         assert.notOk(dataSource._isValid);
-        assert.equal(dataSource._loadErrorMessage, "Ya done!");
+        assert.equal(dataSource._loadError.message, "Ya done!");
     });
 });
