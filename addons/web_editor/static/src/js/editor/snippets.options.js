@@ -4588,6 +4588,7 @@ registry.sizing = SnippetOptionWidget.extend({
 
         let resizeValues = this._getSize();
         this.$handles.on('mousedown', function (ev) {
+            const mousedownTime = ev.timeStamp;
             ev.preventDefault();
             isMobile = weUtils.isMobileView(self.$target[0]);
 
@@ -4741,7 +4742,7 @@ registry.sizing = SnippetOptionWidget.extend({
                     $handle.addClass('o_active');
                 }
             };
-            const iframeWindowMouseUp = function () {
+            const iframeWindowMouseUp = function (ev) {
                 $iframeWindow.off("mousemove", iframeWindowMouseMove);
                 $iframeWindow.off("mouseup", iframeWindowMouseUp);
                 $iframeWindow[0].document.body.classList.remove(cursor);
@@ -4769,7 +4770,24 @@ registry.sizing = SnippetOptionWidget.extend({
                 resizeResolve();
                 self.trigger_up("enable_loading_effect");
 
+                // Check whether there has been a resizing.
                 if (directions.every(dir => dir.begin === dir.current)) {
+                    const mouseupTime = ev.timeStamp;
+                    // Mouse held duration in milliseconds.
+                    const mouseHeldDuration = mouseupTime - mousedownTime;
+                    // If no resizing happened and if the mouse was pressed less
+                    // than 500 ms, we assume that the user wanted to click on
+                    // the element behind the handle.
+                    if (mouseHeldDuration < 500) {
+                        // Find the first element behind the overlay.
+                        const sameCoordinatesEls = self.ownerDocument
+                            .elementsFromPoint(ev.pageX, ev.pageY);
+                        const toBeClickedEl = sameCoordinatesEls
+                            .find(el => !el.closest("#oe_manipulators"));
+                        if (toBeClickedEl) {
+                            toBeClickedEl.click();
+                        }
+                    }
                     return;
                 }
 
