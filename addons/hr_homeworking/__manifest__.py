@@ -13,9 +13,6 @@
         'views/res_users.xml',
         'wizard/homework_location_wizard.xml',
     ],
-    'demo': [
-        'data/hr_homeworking_demo.xml',
-    ],
     'installable': True,
     'assets': {
         'web.assets_backend': [
