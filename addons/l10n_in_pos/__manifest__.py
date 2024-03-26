@@ -13,6 +13,7 @@
     ],
     'data': [
         'views/pos_order_line_views.xml',
+        'data/pos_bill_data.xml',
     ],
     'demo': [
         'data/product_demo.xml',

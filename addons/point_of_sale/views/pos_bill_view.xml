@@ -23,7 +23,8 @@
             <tree string="Bills" create="1" delete="1" editable="bottom">
                 <field name="name" />
                 <field name="value" />
-                <field name="pos_config_ids" widget="many2many_tags" placeholder="ALL POS" />
+                <field name="for_all_config" />
+                <field name="pos_config_ids" widget="many2many_tags" readonly="for_all_config" />
             </tree>
         </field>
     </record>
