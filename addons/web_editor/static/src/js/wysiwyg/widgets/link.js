@@ -103,7 +103,7 @@ export class Link extends Component {
      */
     async start() {
         this._setSelectOptionFromLink();
-
+        this.buttonOptsCollapseEl = this.linkComponentWrapperRef.el.querySelector('#o_link_dialog_button_opts_collapse');
         this._updateOptionsUI();
 
         this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
