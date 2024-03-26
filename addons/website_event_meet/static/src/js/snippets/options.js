@@ -22,8 +22,10 @@ options.registry.WebsiteEvent.include({
      * @see this.selectClass for parameters
      */
     allowRoomCreation(previewMode, widgetValue, params) {
-        this.orm.write("event.event", [this.eventId], {
+        return this.orm.write("event.event", [this.eventId], {
             meeting_room_allow_creation: widgetValue,
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
