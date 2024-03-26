@@ -37,18 +37,18 @@ registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", {
             Dialog.confirm("Open session"),
             // Pay the 5$ gift card.
             ProductScreen.clickDisplayedProduct("Gift Card"),
-            TextInputPopup.inputText("044123456"),
+            TextInputPopup.inputText("043123456"),
             Dialog.confirm(),
             PosLoyalty.orderTotalIs("5.00"),
             PosLoyalty.finalizeOrder("Cash", "5"),
             // Partially use the gift card. (4$)
             ProductScreen.addOrderline("Desk Pad", "2", "2", "4.0"),
-            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             // Use the remaining of the gift card. (5$ - 4$ = 1$)
             ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
-            PosLoyalty.enterCode("044123456"),
+            PosLoyalty.enterCode("043123456"),
             PosLoyalty.orderTotalIs("35.00"),
             PosLoyalty.finalizeOrder("Cash", "35"),
         ].flat(),
