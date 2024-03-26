@@ -32,6 +32,7 @@ import {
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -608,6 +609,7 @@ test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", async ()
 });
 
 test("new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
@@ -690,6 +692,7 @@ test("new message separator is shown in chat window of chat on receiving new mes
 });
 
 test("chat window should open when receiving a new DM", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -718,6 +721,7 @@ test("chat window should open when receiving a new DM", async () => {
 });
 
 test("chat window should not open when receiving a new DM from odoobot", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ partner_id: serverState.odoobotId });
     const channelId = pyEnv["discuss.channel"].create({

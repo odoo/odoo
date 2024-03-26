@@ -12,6 +12,7 @@ import {
 import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { actionService } from "@web/webclient/actions/action_service";
+import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -307,6 +308,7 @@ test("thread notifications are re-ordered on receiving a new message", async () 
 });
 
 test("messaging menu counter should ignore unread messages in channels that are unpinned", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["discuss.channel"].create({ name: "General" });
