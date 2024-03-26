@@ -558,9 +558,21 @@ export class PosStore extends Reactive {
     }
 
     setSelectedCategory(categoryId) {
+<<<<<<< HEAD
         if (categoryId === this.selectedCategory?.id) {
+||||||| parent of 4bd67253ebe1 (temp)
+        if (categoryId === this.selectedCategoryId) {
+=======
+        if (this.selectedCategoryId && categoryId === this.selectedCategoryId) {
+>>>>>>> 4bd67253ebe1 (temp)
             if (this.selectedCategory.parent_id) {
+<<<<<<< HEAD
                 this.selectedCategory = this.selectedCategory.parent_id;
+||||||| parent of 4bd67253ebe1 (temp)
+                this.selectedCategoryId = this.selectedCategoryId.parent_id.id;
+=======
+                this.selectedCategoryId = this.selectedCategory.parent_id.id;
+>>>>>>> 4bd67253ebe1 (temp)
             } else {
                 this.selectedCategory = this.models["pos.category"].get(0);
             }
