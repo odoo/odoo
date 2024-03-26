@@ -21,10 +21,12 @@ class PosOrder(models.Model):
         result = super().sync_from_ui(orders)
 
         if self.env.context.get('table_ids'):
+            order_ids = [order['id'] for order in result['pos.order']]
             table_orders = self.search([
                 "&",
                 ('table_id', 'in', self.env.context['table_ids']),
-                ('state', '=', 'draft')
+                ('state', '=', 'draft'),
+                ('id', 'not in', order_ids)
             ])
 
             if len(table_orders) > 0:
