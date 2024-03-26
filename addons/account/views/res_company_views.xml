@@ -15,6 +15,16 @@
                     <field name="message_ids"/>
                 </div>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="chart_template" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="chart_template or not country_id">
+                    Localization features are available for this country:
+                    <button name="action_config_account"
+                            type="object"
+                            string="Go to Configuration Now"
+                            class="btn btn-link p-0 align-baseline"/>
+                </div>
+            </xpath>
         </field>
     </record>
 

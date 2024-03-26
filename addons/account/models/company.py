@@ -399,6 +399,17 @@ class ResCompany(models.Model):
 
         return super(ResCompany, self).write(values)
 
+    def action_config_account(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.config.settings',
+            'view_mode': 'form',
+            'context': {
+                'module': 'account',
+                'default_company_id': self.id,
+            },
+        }
+
     @api.model
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar or from the Financial configuration menu."""

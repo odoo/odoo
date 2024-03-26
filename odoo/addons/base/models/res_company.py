@@ -73,6 +73,7 @@ class Company(models.Model):
     color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
     layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
+    # TODO: Remove uninstalled_l10n_module_ids in master
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique!')
@@ -219,9 +220,6 @@ class Company(models.Model):
         mapping = dict(self.env.cr.fetchall())
         for company in self:
             company.uninstalled_l10n_module_ids = self.env['ir.module.module'].browse(mapping.get(company.country_id.id))
-
-    def install_l10n_modules(self):
-        return self.uninstalled_l10n_module_ids.button_immediate_install()
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
