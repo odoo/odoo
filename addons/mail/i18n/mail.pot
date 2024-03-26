@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:36+0000\n"
-"PO-Revision-Date: 2024-02-12 10:36+0000\n"
+"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"PO-Revision-Date: 2024-03-26 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,12 @@ msgid ""
 "%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
+msgid "%(recipientCount)s more"
 msgstr ""
 
 #. module: mail
@@ -330,6 +336,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
+msgid ""
+"<i class=\"fa fa-cogs fa-fw me-2\" role=\"img\" aria-label=\"Steps count\" "
+"title=\"Steps count\"/>"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 msgstr ""
@@ -426,11 +439,6 @@ msgstr ""
 msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
-msgid "<strong>Original note:</strong>"
 msgstr ""
 
 #. module: mail
@@ -599,12 +607,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.xml:0
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
-#: model:ir.actions.act_window,name:mail.mail_activity_action
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__template_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_ids
-#: model:ir.ui.menu,name:mail.menu_mail_activities
+#: model:ir.ui.menu,name:mail.menu_mail_activities_section
 #: model:mail.message.subtype,name:mail.mt_activities
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -616,7 +623,7 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
-msgid "Activities To Generate"
+msgid "Activities To Create"
 msgstr ""
 
 #. module: mail
@@ -651,6 +658,12 @@ msgid "Activity Mixin"
 msgstr ""
 
 #. module: mail
+#: model:ir.actions.act_window,name:mail.mail_activity_action
+#: model:ir.ui.menu,name:mail.menu_mail_activities
+msgid "Activity Overview"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
 msgid "Activity Plan"
 msgstr ""
@@ -680,6 +693,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_type_id
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
 msgstr ""
@@ -692,6 +706,11 @@ msgid "Activity Type Icon"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
+msgid "Activity Type Name"
+msgstr ""
+
+#. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -701,6 +720,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan_template
 msgid "Activity plan template"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
+msgid ""
+"Activity plans are used to assign a list of activities in just a few clicks\n"
+"                    (e.g. \"Onboarding\", \"Prospect Follow-up\", \"Project Milestone Meeting\", ...)"
 msgstr ""
 
 #. module: mail
@@ -781,11 +807,6 @@ msgid "Add a new %(document)s or send an email to %(email_link)s"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
-msgid "Add a new plan"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid "Add an email address to the blacklist"
 msgstr ""
@@ -851,6 +872,11 @@ msgid "Advanced Options"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
+msgid "After Plan Date"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__account_journal__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__account_move__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__account_payment__activity_exception_decoration__warning
@@ -863,6 +889,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__warning
@@ -1089,6 +1116,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__model_id
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Applies to"
 msgstr ""
 
@@ -1174,15 +1203,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__responsible_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_user_id
 msgid "Assigned to"
-msgstr ""
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_activity.py:0
-#: code:addons/mail/models/mail_activity.py:0
-msgid ""
-"Assigned user %s has no access to the document and is not able to handle "
-"this activity."
 msgstr ""
 
 #. module: mail
@@ -1285,6 +1305,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__group_public_id
 msgid "Authorized Group"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__group_ids
+msgid "Authorized Groups"
 msgstr ""
 
 #. module: mail
@@ -1418,6 +1443,11 @@ msgstr ""
 msgid ""
 "Batch log cannot support attachments or tracking values on more than 1 "
 "document"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__before_plan_date
+msgid "Before Plan Date"
 msgstr ""
 
 #. module: mail
@@ -1637,28 +1667,51 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mail
-#: model:ir.model,name:mail.model_mail_shortcode
-msgid "Canned Response / Shortcode"
+#: model:ir.model,name:mail.model_mail_canned_response
+msgid "Canned Response"
 msgstr ""
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.mail_shortcode_action
+#: model:res.groups,name:mail.group_mail_canned_response_admin
+msgid "Canned Response Administrator"
+msgstr ""
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.mail_canned_response_action
 #: model:ir.ui.menu,name:mail.menu_canned_responses
 msgid "Canned Responses"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_search
+#: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Canned Responses Search"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
+#: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
+msgid "Canned response"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_canned_response__source
+msgid ""
+"Canned response that will automatically be substituted with longer content "
+"in your messages. Type ':' followed by the name of your shortcut (e.g. "
+":hello) to use in your messages."
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
+msgid "Canned responses"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid ""
 "Canned responses allow you to insert prewritten responses in\n"
-"                your messages by typing <i>:shortcut</i>. The shortcut is\n"
-"                replaced directly in your message, so that you can still edit\n"
-"                it before sending."
+"                    your messages by typing <i>:shortcut</i>. The shortcut is\n"
+"                    replaced directly in your message, so that you can still edit\n"
+"                    it before sending."
 msgstr ""
 
 #. module: mail
@@ -2117,8 +2170,19 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__last_interest_dt
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
-"this channel for this partner. This includes: creating, joining, pinning, "
-"and new message posted."
+"this channel for this user. This includes: creating, joining, pinning"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
+msgid ""
+"Contains the date and time of the last interesting event that happened in "
+"this channel. This updates itself when new message posted."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_discuss_channel_member__unpin_dt
+msgid "Contains the date and time when the channel was unpinned by the user."
 msgstr ""
 
 #. module: mail
@@ -2130,7 +2194,7 @@ msgid "Content"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
+#: model:ir.model.fields,help:mail.field_mail_canned_response__substitution
 msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
@@ -2147,6 +2211,15 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
 msgid "Conversation Fold State"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/fetchmail.py:0
+#: code:addons/mail/models/fetchmail.py:0
+msgid ""
+"Couldn't get your emails. Check out the error message below for more info:\n"
+"%s"
 msgstr ""
 
 #. module: mail
@@ -2195,8 +2268,13 @@ msgid "Create a new Mail Template"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
+#: model_terms:ir.actions.act_window,help:mail.mail_canned_response_action
 msgid "Create a new canned response"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
+msgid "Create an Activity Plan"
 msgstr ""
 
 #. module: mail
@@ -2243,6 +2321,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_uid
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_uid
@@ -2257,7 +2336,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_uid
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__create_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__create_uid
@@ -2283,6 +2361,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__create_date
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__create_date
@@ -2295,7 +2374,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__create_date
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_template__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__create_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__create_date
@@ -2307,7 +2385,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/thread_service_patch.js:0
+#: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "Creating a new record..."
 msgstr ""
 
@@ -2492,6 +2570,11 @@ msgid "Default Summary"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
+msgid "Default Summary:"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
 msgid "Default User"
 msgstr ""
@@ -2501,6 +2584,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_defaults
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_defaults
 msgid "Default Values"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Default deadline for the activities..."
 msgstr ""
 
 #. module: mail
@@ -2553,6 +2641,7 @@ msgid "Delay after releasing push-to-talk"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_unit
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_unit
 msgid "Delay units"
 msgstr ""
@@ -2606,9 +2695,9 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__description
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_description
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__description
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__description
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Description"
 msgstr ""
@@ -2625,6 +2714,16 @@ msgstr ""
 msgid ""
 "Determines how the channel will be displayed by default when opening it from"
 " its invitation link. No value means display text (no voice/video)."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
+msgid "Determines if the canned response can be edited by the current user"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
+msgid "Determines if the canned_response is currently shared with other users"
 msgstr ""
 
 #. module: mail
@@ -2707,6 +2806,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__display_name
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_followers__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__display_name
@@ -2724,7 +2824,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__display_name
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__display_name
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__display_name
@@ -3237,6 +3336,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_exception_decoration__danger
@@ -3428,6 +3528,11 @@ msgid "Favorites"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
+msgid "Feedback:"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Fetch Now"
 msgstr ""
@@ -3467,11 +3572,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_groups
-msgid "Field Groups"
 msgstr ""
 
 #. module: mail
@@ -3601,6 +3701,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
 #: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
@@ -4035,6 +4136,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__id
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__id
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__id
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_followers__id
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__id
@@ -4052,7 +4154,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__id
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__id
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__id
 #: model:ir.model.fields,field_description:mail.field_mail_template__id
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__id
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__id
@@ -4087,6 +4188,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_exception_icon
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__icon
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__icon
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_icon
@@ -4377,6 +4479,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.notification_preview
 msgid "Internal communication:"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_count
+msgid "Interval"
 msgstr ""
 
 #. module: mail
@@ -4766,6 +4873,7 @@ msgid "Last Fetched"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
 msgid "Last Interest"
 msgstr ""
@@ -4796,6 +4904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_uid
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_uid
@@ -4810,7 +4919,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_uid
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__write_uid
@@ -4835,6 +4943,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__write_date
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_guest__write_date
@@ -4849,7 +4958,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__write_date
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_template__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__write_date
@@ -4860,7 +4968,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__last_used
 msgid "Last Used"
 msgstr ""
 
@@ -4870,8 +4978,8 @@ msgid "Last seen date"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__last_used
-msgid "Last time this shortcode was used"
+#: model:ir.model.fields,help:mail.field_mail_canned_response__last_used
+msgid "Last time this canned_response was used"
 msgstr ""
 
 #. module: mail
@@ -5286,6 +5394,7 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree_without_record_access
 msgid "Mark as Done"
 msgstr ""
@@ -5609,6 +5718,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__res_model
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_search
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Model"
 msgstr ""
@@ -5685,6 +5795,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "My Templates"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
+msgid "My canned responses"
 msgstr ""
 
 #. module: mail
@@ -6093,6 +6208,13 @@ msgid "Number of Actions"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__delay_count
+msgid ""
+"Number of days/week/month before executing the action after or before the "
+"scheduled plan date."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
 msgid ""
 "Number of days/week/month before executing the action. It allows to plan the"
@@ -6357,6 +6479,11 @@ msgid "Original message was deleted"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.message_activity_done
+msgid "Original note:"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
@@ -6412,6 +6539,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__overdue
@@ -6600,6 +6728,11 @@ msgid "Phonecall"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+msgid "Pick an Activity Plan to launch"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_patch.js:0
 msgid "Pin"
@@ -6638,7 +6771,7 @@ msgid "Plan Available"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date_deadline
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_date
 msgid "Plan Date"
 msgstr ""
 
@@ -6648,8 +6781,7 @@ msgid "Plan Name"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_plan__assignation_summary
-#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_assignation_summary
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_summary
 msgid "Plan Summary"
 msgstr ""
 
@@ -6673,6 +6805,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__planned
@@ -7906,28 +8039,19 @@ msgid "Share Screen"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
+msgid "Shared canned responses"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:mail.field_mail_message__description
 msgid "Short description"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
-#: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_tree
-msgid "Shortcodes"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__source
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
 msgid "Shortcut"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_shortcode__source
-msgid ""
-"Shortcut that will automatically be substituted with longer content in your "
-"messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
-"use in your messages."
 msgstr ""
 
 #. module: mail
@@ -8227,7 +8351,7 @@ msgid "Subscribe Recipients"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
+#: model:ir.model.fields,field_description:mail.field_mail_canned_response__substitution
 msgid "Substitution"
 msgstr ""
 
@@ -8859,6 +8983,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_contract__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_log_services__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__fleet_vehicle_model__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__hr_applicant__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__hr_contract__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__hr_employee__activity_state__today
@@ -8980,6 +9105,7 @@ msgid "Translation Failure"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
 msgid "Trigger"
 msgstr ""
@@ -9129,6 +9255,12 @@ msgid "Unfollow"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Unit"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_plan_template__delay_unit
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
 msgstr ""
@@ -9177,6 +9309,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 msgid "Unpin Message"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
+msgid "Unpin date"
 msgstr ""
 
 #. module: mail
@@ -9524,12 +9661,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-msgid "View image"
 msgstr ""
 
 #. module: mail
@@ -9997,6 +10128,11 @@ msgid "after previous activity deadline"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
+msgid "alias"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "alias %(name)s: %(error)s"
@@ -10083,6 +10219,7 @@ msgid "created this channel."
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__days
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
 msgid "days"
 msgstr ""
@@ -10193,11 +10330,23 @@ msgid "e.g. Contact"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_tree
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "e.g. Discuss Proposal"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "e.g. Discuss proposal"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
+msgid "e.g. Log a note"
 msgstr ""
 
 #. module: mail
@@ -10213,7 +10362,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "e.g. domain.com"
+msgid "e.g. mycompany.com"
 msgstr ""
 
 #. module: mail
@@ -10340,6 +10489,7 @@ msgid "model %s does not accept document creation"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__months
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__months
 msgid "months"
 msgstr ""
@@ -10524,6 +10674,7 @@ msgid "websocket message handling"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_unit__weeks
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr ""
