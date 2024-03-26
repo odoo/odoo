@@ -232,6 +232,9 @@
         <td class="text-center" name="move_line_lot_quantity">
             <span t-field="move_line.quantity"/>
             <span t-field="move_line.product_uom_id"/>
+            <span t-if="move_line.move_id.product_packaging_id" groups="product.group_stock_packaging">
+                (<span t-field="move_line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move_line.move_id.product_packaging_id.display_name"/>)
+            </span>
         </td>
     </template>
     <template id="stock_report_delivery_aggregated_move_lines">
