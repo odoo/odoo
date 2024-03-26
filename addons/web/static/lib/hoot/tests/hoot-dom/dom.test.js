@@ -456,6 +456,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             // :first, :last, :only & :eq
             expectSelector(".title:first").toEqualNodes(".title", { index: 0 });
             expectSelector(".title:last").toEqualNodes(".title", { index: -1 });
+            expectSelector(".title:eq(-1)").toEqualNodes(".title", { index: -1 });
             expectSelector("main:only").toEqualNodes("main");
             expectSelector(".title:only").toEqualNodes("");
             expectSelector(".title:eq(1)").toEqualNodes(".title", { index: 1 });
