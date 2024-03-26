@@ -357,16 +357,20 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
+        const partner_id = this.env.user?.partner_id ?? false;
+        const guest_id = this.env.cookie.get("dgid") ?? false;
         const [reaction] = MailMessageReaction.search_read([
             ["content", "=", content],
             ["message_id", "=", id],
-            ["partner_id", "=", this.env.user.partner_id],
+            ["partner_id", "=", partner_id],
+            ["guest_id", "=", guest_id],
         ]);
         if (action === "add" && !reaction) {
             MailMessageReaction.create({
                 content,
                 message_id: id,
-                partner_id: this.env.user.partner_id,
+                partner_id,
+                guest_id,
             });
         }
         if (action === "remove" && reaction) {
@@ -377,7 +381,7 @@ export class MailMessage extends models.ServerModel {
             ["content", "=", content],
         ]);
         const guest = MailGuest._get_guest_from_context();
-        const [partner] = ResPartner.read(this.env.user.partner_id);
+        const [partner] = ResPartner.read(serverState.partnerId);
         const result = {
             id,
             reactions: [

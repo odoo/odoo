@@ -17,8 +17,10 @@ export class IrWebSocket extends models.ServerModel {
 
         const imStatusNotifications = this._get_im_status(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "mail.record/insert", imStatusNotifications);
+            if (this.env.user) {
+                const [partner] = ResPartner.read(this.env.user.partner_id);
+                BusBus._sendone(partner, "mail.record/insert", imStatusNotifications);
+            }
         }
     }
 

@@ -197,6 +197,9 @@ class MockServerBaseEnvironment {
 
     set uid(newUid) {
         serverState.userId = newUid;
+        if (this.user) {
+            serverState.partnerId = this.user.partner_id;
+        }
     }
 
     get user() {
@@ -1065,7 +1068,7 @@ export function logout() {
         env.cookie.delete("authenticated_user_sid");
     }
     env.cookie.delete("sid");
-    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.PUBLIC_USER_ID]], {
+    const [publicUser] = env["res.users"]._filter([["id", "=", serverState.publicUserId]], {
         active_test: false,
     });
     authenticate(publicUser.login, publicUser.password);

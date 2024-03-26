@@ -1001,11 +1001,12 @@ test("out-of-focus notif on needaction message in channel", async () => {
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
+    const adminId = serverState.partnerId;
     withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "@Michell Admin",
-                partner_ids: [serverState.partnerId],
+                partner_ids: [adminId],
                 message_type: "comment",
             },
             thread_id: channelId,

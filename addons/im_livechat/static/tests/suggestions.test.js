@@ -36,7 +36,7 @@ test("Suggestions are shown after delimiter was used in text (:)", async () => {
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
 
-test.skip("Cannot mention other channels in a livechat", async () => {
+test("Cannot mention other channels in a livechat", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         {

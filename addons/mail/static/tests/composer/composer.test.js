@@ -858,7 +858,7 @@ test('display canned response suggestions on typing ":"', async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -881,7 +881,7 @@ test("select a canned response suggestion", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -905,7 +905,7 @@ test("select a canned response suggestion with some text", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -930,7 +930,7 @@ test("add an emoji after a canned response", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -956,7 +956,7 @@ test("Canned response can be inserted from the bus", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -981,7 +981,7 @@ test("Canned response can be updated from the bus", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
@@ -1009,7 +1009,7 @@ test("Canned response can be deleted from the bus", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: serverState.partnerId }],
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
     });
