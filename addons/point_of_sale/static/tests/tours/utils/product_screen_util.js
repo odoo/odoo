@@ -26,13 +26,49 @@ export function clickReview() {
         mobile: true,
     };
 }
-export function clickDisplayedProduct(name) {
-    return [
+/**
+ * Generates a sequence of actions to click on a displayed product, with optional additional
+ * checks based on specific needs such as the next quantity and the next price.
+ *
+ * @param {string} name The name of the product to click on.
+ * @param {boolean} [isCheckNeed=false] Indicates whether additional checks are necessary after clicking.
+ * @param {string|null} [nextQuantity=null] The next quantity of the product, used in additional checks if specified.
+ * @param {string|null} [nextPrice=null] The next price of the product, used in additional checks if specified.
+ * @returns {Object[]} An array of objects describing the steps to follow
+ *
+ * @example
+ * // Example usage for clicking on a product without additional checks.
+ * clickDisplayedProduct('Gala Apple');
+ *
+ * // Example usage for clicking on a product with checks if the product has been added to the order.
+ * clickDisplayedProduct('Gala Apple', true);
+ *
+ * // Example usage for clicking on a product with checks if the product has been added to the order and
+ * // what should be the quantity after adding to the order.
+ * clickDisplayedProduct('Gala Apple', true, "5.0");
+ *
+ * // Example usage for clicking on a product with checks if the product has been added to the order and
+ * // what should be the quantity and price after adding to the order.
+ * clickDisplayedProduct('Gala Apple', true, "5.0", "2.99");
+ */
+export function clickDisplayedProduct(
+    name,
+    isCheckNeed = false,
+    nextQuantity = null,
+    nextPrice = null
+) {
+    const step = [
         {
             content: `click product '${name}'`,
             trigger: `article.product .product-content .product-name:contains("${name}")`,
         },
     ];
+
+    if (isCheckNeed) {
+        step.push(...selectedOrderlineHas(name, nextQuantity, nextPrice));
+    }
+
+    return step;
 }
 export function clickOrderline(productName, quantity = "1.0") {
     return [
@@ -74,7 +110,7 @@ export function clickShowProductsMobile() {
  *
  * @param {...String} keys space-separated numpad keys
  */
-export function pressNumpad(...keys) {
+export function clickNumpad(...keys) {
     return inLeftSide(keys.map(Numpad.click));
 }
 export function clickPayButton(shouldCheck = true) {
@@ -118,19 +154,19 @@ export function clickCustomer(name) {
     return [PartnerList.clickPartner(name), goBackToMainScreen()];
 }
 export function clickRefund() {
-    return [clickReview(), controlButtonMore(), controlButton("Refund")];
+    return [clickReview(), clickControlButtonMore(), clickControlButton("Refund")];
 }
 export function controlButtonTrigger(name = "") {
     return `.control-buttons button:contains("${name}")`;
 }
-export function controlButton(name) {
+export function clickControlButton(name) {
     return {
         content: `click ${name} button`,
         trigger: controlButtonTrigger(name),
     };
 }
 
-export function controlButtonMore() {
+export function clickControlButtonMore() {
     return [
         {
             content: "click more button",
@@ -144,16 +180,47 @@ export function controlButtonMore() {
         },
     ];
 }
+/**
+ * Selects a given price list in the user interface. This function is designed to be used to select a specific price list.
+ *
+ * @param {string} name - The name of the price list to be selected. This parameter is used to identify the target element in the
+ * user interface. required.
+ * @param {boolean} [isCheckNeedSelectedBeforeClick=false] - A boolean that determines whether the function should check
+ * if a specific item is selected before proceeding to select the price list. Useful for ensuring the user interface state
+ * is correct before performing an action.
+ * @param {string|null} [nameToCheck=null] - The name of the item to check if it is selected before proceeding to select the price
+ * list. If this parameter is not provided (null), the `name` parameter will be used for the check.
+ *
+ * @example
+ * // Select a price list named "Standard Rate" without prior check
+ * clickPriceList("Standard Rate");
+ *
+ * @example
+ * // Select a price list named "Discount Pricelist" after verifying that "Public Pricelist" is selected
+ * clickPriceList("Discount Pricelist", true, "Public Pricelist");
+ *
+ * @example
+ * // Select a price list named "Discount Rate" after verifying that "Discount Rate" is selected
+ * clickPriceList("Discount Rate", true);
+ */
+export function clickPriceList(name, isCheckNeedSelectedBeforeClick = false, nameToCheck = null) {
+    const step = [...clickControlButtonMore(), { trigger: ".o_pricelist_button" }];
 
-export function selectPriceList(name) {
-    return inLeftSide([
-        ...controlButtonMore(),
-        { trigger: ".o_pricelist_button" },
-        {
-            content: `select price list '${name}'`,
-            trigger: `.selection-item:contains("${name}")`,
-        },
-    ]);
+    if (isCheckNeedSelectedBeforeClick) {
+        const triggerName = nameToCheck || name;
+        step.push({
+            content: `verify pricelist ${triggerName} is set and selected`,
+            trigger: `.selection-item.selected:contains('${triggerName}')`,
+            run: function () {},
+        });
+    }
+
+    step.push({
+        content: `select price list '${name}'`,
+        trigger: `.selection-item:contains("${name}")`,
+    });
+
+    return inLeftSide(step);
 }
 export function enterOpeningAmount(amount) {
     return [
@@ -164,10 +231,24 @@ export function enterOpeningAmount(amount) {
         },
     ];
 }
-export function changeFiscalPosition(name) {
-    return [
+/**
+ * Clicks on the given fiscal position in the user interface.
+ *
+ * @param {string} name - The name of the fiscal position to click. This parameter is used to identify the target element in the user interface.
+ * @param {boolean} checkIsNeeded - A boolean indicating whether additional verification is needed after clicking on the fiscal position. If `true`, the function will verify that the fiscal position has been correctly applied to the order.
+ *
+ * @example
+ * // Clicks on the "No Tax" fiscal position without additional verification
+ * clickFiscalPosition("No Tax");
+ *
+ * @example
+ * // Clicks on the "No Tax" fiscal position and verifies that it has been applied
+ * clickFiscalPosition("No Tax", true);
+ */
+export function clickFiscalPosition(name, checkIsNeeded = false) {
+    const step = [
         clickReview(),
-        ...controlButtonMore(),
+        ...clickControlButtonMore(),
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
@@ -176,12 +257,29 @@ export function changeFiscalPosition(name) {
             content: "fiscal position screen is shown",
             trigger: `.selection-item:contains("${name}")`,
         },
-        {
-            content: "go back to the products",
-            trigger: ".pos-rightheader .floor-button",
-            mobile: true,
-        },
     ];
+
+    if (checkIsNeeded) {
+        step.push(
+            ...clickControlButtonMore(),
+            {
+                content: "the fiscal position " + name + " has been set to the order",
+                trigger: `.modal-body .control-buttons button.o_fiscal_position_button:contains("${name}")`,
+                run: function () {},
+            },
+            {
+                ...Dialog.cancel(),
+            }
+        );
+    }
+
+    step.push({
+        content: "go back to the products",
+        trigger: ".pos-rightheader .floor-button",
+        mobile: true,
+    });
+
+    return step;
 }
 export function closeWithCashAmount(val) {
     return [
@@ -358,15 +456,15 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
         val
             .toString()
             .split("")
-            .flatMap((key) => pressNumpad(mapKey(key)));
+            .flatMap((key) => clickNumpad(mapKey(key)));
     res.push(...selectedOrderlineHas(productName, "1.00"));
     if (unitPrice) {
         res.push(
             ...[
-                pressNumpad("Price"),
+                clickNumpad("Price"),
                 modeIsActive("Price"),
                 numpadWrite(unitPrice),
-                pressNumpad("Qty"),
+                clickNumpad("Qty"),
                 modeIsActive("Qty"),
             ].flat()
         );
@@ -380,8 +478,8 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 export function addCustomerNote(note) {
     return inLeftSide(
         [
-            controlButtonMore(),
-            controlButton("Customer Note"),
+            clickControlButtonMore(),
+            clickControlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),
         ].flat()
@@ -416,6 +514,41 @@ export function closePos() {
             content: "close the Point of Sale frontend",
             trigger: ".close-pos-popup .button:contains('Discard')",
             run: function () {}, //it's a check,
+        },
+    ];
+}
+
+export function finishOrder() {
+    return [
+        {
+            content: "validate the order",
+            trigger: ".payment-screen .button.next.highlight:visible",
+            mobile: false,
+        },
+        {
+            content: "validate the order",
+            trigger: ".payment-screen .btn-switchpane:contains('Validate')",
+            mobile: true,
+        },
+        {
+            content: "verify that the order has been successfully sent to the backend",
+            trigger: ".js_connected:visible",
+            isCheck: true,
+        },
+        {
+            content: "click Next Order",
+            trigger: ".receipt-screen .button.next.highlight:visible",
+            mobile: false,
+        },
+        {
+            content: "Click Next Order",
+            trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
+            mobile: true,
+        },
+        {
+            content: "check if we left the receipt screen",
+            trigger: ".pos-content div:not(:has(.receipt-screen))",
+            run: function () {},
         },
     ];
 }

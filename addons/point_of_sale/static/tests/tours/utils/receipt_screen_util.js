@@ -85,11 +85,6 @@ export function emailIsSuccessful() {
         },
     ];
 }
-
-export function nextOrder() {
-    return [...isShown(), ...clickNextOrder()];
-}
-
 export function trackingMethodIsLot() {
     return [
         {

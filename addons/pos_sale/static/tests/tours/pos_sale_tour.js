@@ -18,10 +18,10 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
-            ProductScreen.pressNumpad("Qty", "2"), // Change the quantity of the product to 2
+            ProductScreen.clickNumpad("Qty", "2"), // Change the quantity of the product to 2
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 2),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -37,13 +37,13 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             // The second item in the list is the first sale.order.
             ProductScreen.selectNthOrder(2),
             ProductScreen.selectedOrderlineHas("product1", 1),
             ProductScreen.totalAmountIs("10.00"),
 
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             // The first item in the list is the second sale.order.
             // Selecting the 2nd sale.order should use a new order,
             // therefore, the total amount will change.
@@ -58,16 +58,15 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.clickOrderline("Product A", "1"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickOrderline("Product B", "1"),
-            ProductScreen.pressNumpad("Qty", "0"),
+            ProductScreen.clickNumpad("Qty", "0"),
             ProductScreen.selectedOrderlineHas("Product B", "0.00"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
         ].flat(),
@@ -78,7 +77,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.downPaymentFirstOrder(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -93,7 +92,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
                 withClass: ".selected",
                 quantity: "1.0",
             }),
-            ProductScreen.pressNumpad("1"),
+            ProductScreen.clickNumpad("1"),
             TicketScreen.confirmRefund(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -107,7 +106,7 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.totalAmountIs(40),
             ProductScreen.clickPayButton(),
@@ -122,12 +121,11 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
         ].flat(),
@@ -138,7 +136,7 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
@@ -151,7 +149,7 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.checkCustomerNotes("Customer note 2--Customer note 3"),
             ProductScreen.clickPayButton(),
@@ -167,7 +165,7 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
