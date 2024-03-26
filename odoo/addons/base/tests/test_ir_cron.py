@@ -263,6 +263,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
     def test_cron_null_interval(self):
         self.cron.interval_number = 0
+        self.cron.flush_recordset()
         with self.assertLogs('odoo.addons.base.models.ir_cron', 'ERROR'):
             self.cron._process_job(get_db_name(), self.env.cr, self.cron.read(load=False)[0])
         self.cron.invalidate_recordset(['active'])
