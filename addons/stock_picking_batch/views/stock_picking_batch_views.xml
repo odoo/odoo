@@ -183,6 +183,10 @@
             <search string="Search Batch Transfer">
                 <field name="name" string="Batch Transfer"/>
                 <field name="picking_type_id" invisible="1"/>
+                <field name="product_id"/>
+                <field name="lot_id"/>
+                <field name="picking_ids" string="Transfer"/>
+                <field name="package_id" string="Package" filter_domain="['|', ('package_id', 'ilike', self), ('picking_ids.move_line_ids.result_package_id', 'ilike', self)]"/>
                 <field name="user_id"/>
                 <filter name="to_do_transfers" string="To Do" domain="['&amp;',('user_id', 'in', [uid, False]),('state','not in',['done','cancel'])]"/>
                 <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
