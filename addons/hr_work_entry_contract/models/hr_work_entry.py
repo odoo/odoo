@@ -116,7 +116,7 @@ class HrWorkEntry(models.Model):
             date_stop = work_entry.date_stop
             calendar = work_entry.contract_id.resource_calendar_id
             employee = work_entry.contract_id.employee_id
-            result[work_entry.id] = mapped_contract_data[(date_start, date_stop)][calendar][employee.id]['hours']
+            result[work_entry.id] = mapped_contract_data[(date_start, date_stop)][calendar][employee.id]['hours'] if calendar else 0.0
         return result
 
     @api.model
