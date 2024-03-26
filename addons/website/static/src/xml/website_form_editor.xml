@@ -51,12 +51,6 @@
 
     <t t-name="website.form_label_content">
         <span class="s_website_form_label_content" t-esc="field.string"/>
-        <t t-if="field.required or field.modelRequired">
-            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-esc="' ' + field.formatInfo.mark"/>
-        </t>
-        <t t-else="">
-            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-esc="' ' + field.formatInfo.mark"/>
-        </t>
     </t>
 
     <t t-name="website.form_field_description">

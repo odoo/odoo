@@ -743,8 +743,8 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
 }, () => editContactUs([
     {
         content: "Change a random option",
-        trigger: '[data-set-mark] input',
-        run: "edit ** && click body",
+        trigger: '[data-css-property="width"][data-apply-to=".s_website_form_label"] input',
+        run: "edit 210 && click body",
     }, {
         content: "Check that the recipient email is correct",
         trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -895,9 +895,8 @@ registerWebsitePreviewTour('website_form_contactus_change_random_option', {
 }, () => editContactUs([
     {
         content: "Change a random option",
-        trigger: '[data-set-mark] input',
-        // TODO: remove && click body
-        run: "edit ** && click body",
+        trigger: '[data-css-property="width"][data-apply-to=".s_website_form_label"] input',
+        run: "edit 210 && click body",
     },
 ]));
 
