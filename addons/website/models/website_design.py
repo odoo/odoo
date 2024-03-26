@@ -69,6 +69,7 @@ class WebsiteDesign(models.Model):
     headings__margin__bottom = fields.Char(string='Headings Margin Bottom', default='0.5rem')
 
     footer__scrolltop = fields.Boolean(string='Footer Scrolltop', default=False)
+    header__font__size = fields.Char(string='Header Font Size', default='1rem')
 
     body__line__height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
