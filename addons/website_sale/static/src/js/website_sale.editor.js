@@ -431,6 +431,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this._rpc({
             route: '/shop/config/product',
             params: {
@@ -638,6 +639,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1
+        // TODO this should be awaited somehow
         this._rpc({
             route: '/shop/config/product',
             params: {
@@ -811,6 +813,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Removes all extra-images from the product.
      */
     clearImages: function () {
+        // TODO this should be awaited
         this._rpc({
             route: `/shop/product/clear-images`,
             params: {
@@ -918,6 +921,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
      * @see this.selectClass for params
      */
     setDisplayType: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this._rpc({
             route: '/shop/config/attribute',
             params: {
@@ -983,6 +987,7 @@ options.registry.ReplaceMedia.include({
      * 
      */
     async setPosition(previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this._rpc({
             route: '/shop/product/resequence-image',
             params: {
