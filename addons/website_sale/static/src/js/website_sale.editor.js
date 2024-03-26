@@ -220,6 +220,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             sequence: widgetValue,
@@ -424,6 +425,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1
+        // TODO this should be awaited somehow
         rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             x: x,
@@ -644,6 +646,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Removes all extra-images from the product.
      */
     clearImages: function () {
+        // TODO this should be awaited
         rpc(`/shop/product/clear-images`, {
             model: this.mode,
             product_product_id: this.productProductID,
@@ -742,6 +745,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
      * @see this.selectClass for params
      */
     setDisplayType: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         rpc('/shop/config/attribute', {
             attribute_id: this.attributeID,
             display_type: widgetValue,
@@ -804,6 +808,7 @@ options.registry.ReplaceMedia.include({
      *
      */
     async setPosition(previewMode, widgetValue, params) {
+        // TODO this should be awaited
         rpc('/shop/product/resequence-image', {
             image_res_model: this.recordModel,
             image_res_id: this.recordId,
