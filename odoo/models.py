@@ -620,7 +620,7 @@ class BaseModel(metaclass=MetaModel):
     """Allow One2many and Many2many Commands targeting this model in an environment using `sudo()` or `with_user()`.
     By disabling this flag, security-sensitive models protect themselves
     against malicious manipulation of One2many or Many2many fields
-    through an environment using `sudo` or a more priviledged user.
+    through an environment using `sudo` or a more privileged user.
     """
 
     _depends = frozendict()
@@ -2650,10 +2650,10 @@ class BaseModel(metaclass=MetaModel):
         lazy_groupby = groupby[:1] if lazy else groupby
 
         # Compatibility layer with _read_group, it should be remove in the second part of the refactoring
-        # - Modify `groupby` default value 'month' into specifique groupby specification
+        # - Modify `groupby` default value 'month' into specific groupby specification
         # - Modify `fields` into aggregates specification of _read_group
         # - Modify the order to be compatible with the _read_group specification
-        annoted_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
+        annotated_groupby = {}  # Key as the name in the result, value as the explicit groupby specification
         for group_spec in lazy_groupby:
             field_name, property_name, granularity = parse_read_group_spec(group_spec)
             if field_name not in self._fields:
@@ -2662,11 +2662,11 @@ class BaseModel(metaclass=MetaModel):
             if property_name and field.type != 'properties':
                 raise ValueError(f"Property name {property_name!r} has to be used on a property field.")
             if field.type in ('date', 'datetime'):
-                annoted_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
+                annotated_groupby[group_spec] = f"{field_name}:{granularity or 'month'}"
             else:
-                annoted_groupby[group_spec] = group_spec
+                annotated_groupby[group_spec] = group_spec
 
-        annoted_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
+        annotated_aggregates = {  # Key as the name in the result, value as the explicit aggregate specification
             f"{lazy_groupby[0].split(':')[0]}_count" if lazy and len(lazy_groupby) == 1 else '__count': '__count',
         }
         for field_spec in fields:
@@ -2678,35 +2678,35 @@ class BaseModel(metaclass=MetaModel):
             name, func, fname = match.groups()
 
             if fname:  # Manage this kind of specification : "field_min:min(field)"
-                annoted_aggregates[name] = f"{fname}:{func}"
+                annotated_aggregates[name] = f"{fname}:{func}"
                 continue
             if func:  # Manage this kind of specification : "field:min"
-                annoted_aggregates[name] = f"{name}:{func}"
+                annotated_aggregates[name] = f"{name}:{func}"
                 continue
 
             if name not in self._fields:
                 raise ValueError(f"Invalid field {name!r} on model {self._name!r}")
             field = self._fields[name]
-            if field.base_field.store and field.base_field.column_type and field.aggregator and field_spec not in annoted_groupby:
-                annoted_aggregates[name] = f"{name}:{field.aggregator}"
+            if field.base_field.store and field.base_field.column_type and field.aggregator and field_spec not in annotated_groupby:
+                annotated_aggregates[name] = f"{name}:{field.aggregator}"
 
         if orderby:
             new_terms = []
             for order_term in orderby.split(','):
                 order_term = order_term.strip()
-                for key_name, annoted in itertools.chain(reversed(annoted_groupby.items()), annoted_aggregates.items()):
+                for key_name, annotated in itertools.chain(reversed(annotated_groupby.items()), annotated_aggregates.items()):
                     key_name = key_name.split(':')[0]
                     if order_term.startswith(f'{key_name} ') or key_name == order_term:
-                        order_term = order_term.replace(key_name, annoted)
+                        order_term = order_term.replace(key_name, annotated)
                         break
                 new_terms.append(order_term)
             orderby = ','.join(new_terms)
         else:
-            orderby = ','.join(annoted_groupby.values())
+            orderby = ','.join(annotated_groupby.values())
 
-        rows = self._read_group(domain, annoted_groupby.values(), annoted_aggregates.values(), offset=offset, limit=limit, order=orderby)
+        rows = self._read_group(domain, annotated_groupby.values(), annotated_aggregates.values(), offset=offset, limit=limit, order=orderby)
         rows_dict = [
-            dict(zip(itertools.chain(annoted_groupby, annoted_aggregates), row))
+            dict(zip(itertools.chain(annotated_groupby, annotated_aggregates), row))
             for row in rows
         ]
 
@@ -2720,7 +2720,7 @@ class BaseModel(metaclass=MetaModel):
             # TODO Shouldn't be possible with a limit
             rows_dict = self._read_group_fill_temporal(
                 rows_dict, lazy_groupby,
-                annoted_aggregates, **fill_temporal,
+                annotated_aggregates, **fill_temporal,
             )
 
         if lazy_groupby and lazy:
@@ -2731,7 +2731,7 @@ class BaseModel(metaclass=MetaModel):
             # TODO Shouldn't be possible with a limit or the limit should be in account
             rows_dict = self._read_group_fill_results(
                 domain, lazy_groupby[0],
-                annoted_aggregates, rows_dict, read_group_order=orderby,
+                annotated_aggregates, rows_dict, read_group_order=orderby,
             )
 
         for row in rows_dict:
