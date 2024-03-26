@@ -101,8 +101,8 @@
                     </div>
                 </div>
                 <t t-set-slot="footer">
-                    <button class="btn btn-primary" t-on-click="this.onSave">Insert</button>
-                    <button class="btn btn-secondary" t-on-click="this.onDiscard">Discard</button>
+                    <button class="btn btn-primary" t-on-click="this.onSave" data-hotkey="c">Apply</button>
+                    <button class="btn btn-secondary" t-on-click="this.onDiscard" data-hotkey="j">Discard</button>
                 </t>
             </div>
         </Dialog>
