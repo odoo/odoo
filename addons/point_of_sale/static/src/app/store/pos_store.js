@@ -608,9 +608,9 @@ export class PosStore extends Reactive {
     }
 
     setSelectedCategory(categoryId) {
-        if (categoryId === this.selectedCategoryId) {
+        if (this.selectedCategoryId && categoryId === this.selectedCategoryId) {
             if (this.selectedCategory.parent_id) {
-                this.selectedCategoryId = this.selectedCategoryId.parent_id.id;
+                this.selectedCategoryId = this.selectedCategory.parent_id.id;
             } else {
                 this.selectedCategoryId = 0;
             }
