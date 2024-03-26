@@ -308,6 +308,8 @@ class AccountChartTemplate(models.AbstractModel):
                                 'noupdate': True,
                             }])
 
+                    if 'reconcile' in values:
+                        del values['reconcile']
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
