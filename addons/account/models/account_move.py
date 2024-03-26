@@ -4482,6 +4482,22 @@ class AccountMove(models.Model):
         composer = self.env['account.move.send'].create(composer_vals)
         return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
 
+    def _get_invoice_legal_documents(self):
+        """ Return existing attachments or a temporary Pro Forma pdf. """
+        self.ensure_one()
+        if self.invoice_pdf_report_id:
+            attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
+        else:
+            content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': True})
+            attachments = self.env['ir.attachment'].new({
+                'raw': content,
+                'name': self._get_invoice_proforma_pdf_report_filename(),
+                'mimetype': 'application/pdf',
+                'res_model': self._name,
+                'res_id': self.id,
+            })
+        return attachments
+
     def get_invoice_pdf_report_attachment(self):
         if len(self) < 2 and self.invoice_pdf_report_id:
             # if the Send & Print succeeded
