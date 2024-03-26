@@ -7597,33 +7597,16 @@ registry.ImageTools = ImageHandlerOption.extend({
     async _initializeImage() {
         const _super = this._super.bind(this);
         let img = this._getImg();
-
-        // Check first if the `src` and eventual `data-original-src` attributes
-        // are correct (i.e. the await are not rejected), as they may have been
-        // wrongly hardcoded in some templates.
-        let checkedAttribute = 'src';
+        // Check first if the `src` is correct (i.e. the await is not rejected),
+        // as it may have been wrongly hardcoded in some templates.
         try {
-            await loadImage(img.src);
-            if (img.dataset.originalSrc) {
-                checkedAttribute = 'originalSrc';
-                await loadImage(img.dataset.originalSrc);
-            }
+            await this._loadImage(img.src);
         } catch {
-            if (checkedAttribute === 'src') {
-                // If `src` does not exist, replace the image by a placeholder.
-                Object.keys(img.dataset).forEach(key => delete img.dataset[key]);
-                img.dataset.mimetype = 'image/png';
-                const newSrc = '/web/image/web.image_placeholder';
-                img = await loadImage(newSrc, img);
-                return this._loadImageInfo(newSrc);
-            } else {
-                // If `data-original-src` does not exist, remove the `data-
-                // original-*` attributes (they will be set correctly afterwards
-                // in `_loadImageInfo`).
-                delete img.dataset.originalId;
-                delete img.dataset.originalSrc;
-                delete img.dataset.originalMimetype;
-            }
+            // If `src` does not exist, replace the image by a placeholder.
+            this.imageData.mimetype = "image/png";
+            const newSrc = "/web/image/web.image_placeholder";
+            img = await this._loadImage(newSrc, img);
+            return this._loadImageInfo(newSrc);
         }
 
         let match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
