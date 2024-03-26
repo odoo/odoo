@@ -22,9 +22,9 @@ options.registry.WebsiteEvent.include({
      * @see this.selectClass for parameters
      */
     allowRoomCreation(previewMode, widgetValue, params) {
-        this.orm.write("event.event", [this.eventId], {
+        return this.orm.write("event.event", [this.eventId], {
             meeting_room_allow_creation: widgetValue,
-        }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+        });
     },
 
     //--------------------------------------------------------------------------
