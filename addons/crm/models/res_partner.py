@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
+
 
 
 class Partner(models.Model):
@@ -67,9 +69,10 @@ class Partner(models.Model):
         This function returns an action that displays the opportunities from partner.
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
-        action['context'] = {'active_test': False}
+        action['context'] = {}
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
             action['domain'] = [('partner_id', '=', self.id)]
+        action['domain'] = expression.AND([action['domain'], [('active', 'in', [True, False])]])
         return action
