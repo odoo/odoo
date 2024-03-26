@@ -163,9 +163,9 @@ QUnit.module('partner_autocomplete', {
             }
             else if (route === "/web/dataset/call_kw/res.partner/enrich_company") {
                 return Promise.resolve({
-                    "partner_gid": 1,
-                    "website": "firstcompany.com",
-                    "name": "First company",
+                    "partner_gid": args.args[1],
+                    "website": args.args[0],
+                    "name": args.args[1] === 1 ? "First company" : "Second company",
                     'logo': false,
                     "ignored": false,
                     "vat": "Some VAT number",
@@ -399,5 +399,54 @@ QUnit.module('partner_autocomplete', {
             8,
             "Clearbit and Odoo autocomplete options should be shown"
         );
+    });
+
+    QUnit.test("Partner autocomplete : onChange should not disturb option selection", async function (assert) {
+        await makeView(makeViewParams);
+
+        // Set company type to Company
+        await editSelect(target, "[name='company_type'] > select", '"company"');
+
+        const input = target.querySelector("[name='name'] .dropdown input");
+        const autocompleteContainer = input.parentElement;
+
+        await click(input, null);
+        await editInputNoChangeEvent(input, "company");
+        assert.containsN(
+            autocompleteContainer,
+            ".o-autocomplete--dropdown-item",
+            6,
+            "Clearbit and Odoo autocomplete options should be shown"
+        );
+        // Click on the second option (include realistic events) - "Second company"
+        await triggerEvent(
+            target.querySelectorAll(".o-autocomplete--dropdown-item")[1],
+            "",
+            "pointerdown"
+        );
+        await triggerEvent(
+            target.querySelectorAll(".o-autocomplete--dropdown-item")[1],
+            "",
+            "mousedown"
+        );
+        await triggerEvent(input, "", "change");
+        await triggerEvent(input, "", "blur");
+        await click(target.querySelectorAll(".o-autocomplete--dropdown-item")[1], "");
+
+        // Check that the fields have been filled
+        const expectedValues = {
+            "website": "secondcompany.com",
+            "name": "Second company",
+            "vat": "Some VAT number",
+            "street": "Some street",
+            "city": "Some city",
+            "zip": "1234",
+            "phone": "+0123456789",
+            "country_id": "United States",
+            "state_id": "California (US)",
+        };
+        for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
+            assert.strictEqual(target.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be filled`);
+        }
     });
 });
