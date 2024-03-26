@@ -9,7 +9,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, convert
 from odoo.service.common import exp_version
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 
 
 class PosSession(models.Model):
@@ -145,7 +145,10 @@ class PosSession(models.Model):
                 'fields': ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color']
             },
             'pos.bill': {
-                'domain': ['|', ('id', 'in', config_id.default_bill_ids.ids), ('pos_config_ids', '=', False)],
+                'domain': OR([
+                    [('id', 'in', config_id.default_bill_ids.ids), ('for_all_config', '=', False)],
+                    [('for_all_config', '=', True)]
+                ]),
                 'fields': ['id', 'name', 'value']
             },
             'product.product': {
