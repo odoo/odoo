@@ -536,7 +536,7 @@ export class MockServer {
             const pure = options.pure || routeOptions.pure;
             const result = await routeFn.call(this, request, routeParams);
             // mockCallKw will throw if no method is found, if it didn't we hit a method that returns nothing
-            if (result !== undefined || route.startsWith("/web/dataset/call_kw")) {
+            if (result !== undefined || routeFn === this.mockCallKw) {
                 if (pure) {
                     return result;
                 }
@@ -1018,7 +1018,7 @@ export function onRpc(method, callback, options) {
 export function stepAllNetworkCalls() {
     onRpc("/*", async function (request) {
         const route = new URL(request.url).pathname;
-        if (route === "/web/dataset/call_kw") {
+        if (route.startsWith("/web/dataset/call_kw/")) {
             const {
                 params: { method },
             } = await request.json();

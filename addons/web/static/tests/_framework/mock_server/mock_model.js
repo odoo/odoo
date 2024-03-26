@@ -2725,7 +2725,7 @@ export class Model extends Array {
                         const [modelName, id] = getReferenceValue(record[fieldName]);
                         record[fieldName] = {};
                         if (relatedFields && Object.keys(relatedFields).length) {
-                            const result = this.web_read(id, {
+                            const result = this.env[modelName].web_read(id, {
                                 specification: relatedFields,
                                 context: spec[fieldName].context,
                             });
