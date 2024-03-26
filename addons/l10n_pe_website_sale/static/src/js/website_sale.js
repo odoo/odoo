@@ -1,9 +1,9 @@
 /** @odoo-module **/
-import {WebsiteSale} from "@website_sale/js/website_sale";
+import websiteSaleAddress from "@website_sale/js/address";
 import { rpc } from "@web/core/network/rpc";
 
-WebsiteSale.include({
-    events: Object.assign({}, WebsiteSale.prototype.events, {
+websiteSaleAddress.include({
+    events: Object.assign({}, websiteSaleAddress.prototype.events, {
         "change select[name='state_id']": "_onChangeState",
         "change select[name='city_id']": "_onChangeCity",
     }),
