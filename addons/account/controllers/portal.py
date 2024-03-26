@@ -132,10 +132,8 @@ class PortalAccount(CustomerPortal):
             return request.redirect('/my')
 
         if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
-            # Send & Print wizard with only the 'download' checkbox to get the official attachment(s)
-            template = request.env.ref(invoice_sudo._get_mail_template())
-            attachment_ids = invoice_sudo._generate_pdf_and_send_invoice(template, bypass_download=True, checkbox_send_mail=False, checkbox_download=True)
-            attachments = request.env['ir.attachment'].browse(attachment_ids)
+            # Download the official attachment(s) or a Pro Forma invoice
+            attachments = invoice_sudo._get_invoice_legal_documents()
             if len(attachments) > 1:
                 filename = invoice_sudo._get_invoice_report_filename(extension='zip')
                 zip_content = attachments.sudo()._build_zip_from_attachments()
