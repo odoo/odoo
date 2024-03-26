@@ -4,12 +4,15 @@ import {
     contains,
     defineMailModels,
     onRpcBefore,
+    openDiscuss,
     start,
     startServer,
     step,
 } from "../mail_test_helpers";
-import { mockService, serverState } from "@web/../tests/web_test_helpers";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 import { presenceService } from "@bus/services/presence_service";
+import { rpc } from "@web/core/network/rpc";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -25,8 +28,15 @@ test("Spaces in notifications are not encoded", async () => {
         isOdooFocused: () => false,
     }));
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
+    const bobUserId = pyEnv["res.users"].create({ name: "bob" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+    });
     await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
@@ -36,15 +46,13 @@ test("Spaces in notifications are not encoded", async () => {
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
-    // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
-        id: channelId,
-        message: {
-            body: "Hello world!",
-            id: 126,
-            model: "discuss.channel",
-            res_id: channelId,
-        },
-    });
+    await openDiscuss();
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "Hello world!", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
     await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello world!" });
 });
