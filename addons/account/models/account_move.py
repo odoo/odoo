@@ -3838,7 +3838,8 @@ class AccountMove(models.Model):
             }[self.move_type]
             name += ' '
         if not self.name or self.name == '/':
-            name += '(* %s)' % str(self.id)
+            if self.id:
+                name += '(* %s)' % str(self.id)
         else:
             name += self.name
             if self.env.context.get('input_full_display_name'):
