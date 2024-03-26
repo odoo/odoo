@@ -46,6 +46,8 @@ import { Test } from "./test";
  *  message?: string;
  * }} ExpectOptions
  *
+ * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
+ * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
@@ -85,13 +87,7 @@ const {
     Array: { isArray: $isArray },
     Boolean,
     Error,
-    Object: {
-        assign: $assign,
-        create: $create,
-        fromEntries: $fromEntries,
-        entries: $entries,
-        keys: $keys,
-    },
+    Object: { assign: $assign, fromEntries: $fromEntries, entries: $entries, keys: $keys },
     Promise,
     TypeError,
     performance,
@@ -279,11 +275,6 @@ const errors = (expected) => {
     ensureArguments([[expected, "integer"]]);
 
     currentResult.expectedErrors = expected;
-};
-
-/** @type {(typeof Matchers)["extend"]} */
-const extend = (matcher) => {
-    return Matchers.extend(matcher);
 };
 
 /**
@@ -482,7 +473,6 @@ export function makeExpect(params) {
     const enrichedExpect = $assign(expect, {
         assertions,
         errors,
-        extend,
         step,
     });
     const expectHooks = {
@@ -520,11 +510,6 @@ export class Assertion {
  * @template [Async=false]
  */
 export class Matchers {
-    /** @type {Record<string, (...args: any[]) => MatcherSpecifications>} */
-    static registry = $create(null);
-
-    /** @type {A} */
-    #actual = null;
     /** @type {R} */
     #received = null;
     #headless = false;
@@ -544,18 +529,6 @@ export class Matchers {
         this.#received = received;
         this.#headless = headless;
         this.#modifiers = modifiers;
-
-        for (const [fnName, fn] of $entries(this.constructor.registry)) {
-            const resolve = this.#resolve.bind(this);
-            const saveStack = this.#saveStack.bind(this);
-            this[fnName] = {
-                [fnName](...args) {
-                    saveStack();
-                    const result = fn(...args);
-                    return resolve({ ...result, name: fnName });
-                },
-            }[fnName];
-        }
     }
 
     //-------------------------------------------------------------------------
@@ -1805,25 +1778,6 @@ export class Matchers {
         if (!this.#headless) {
             currentStack = new Error().stack;
         }
-    }
-
-    /**
-     * Extends the available matchers methods with a given function.
-     *
-     * @param {(...args: any[]) => MatcherSpecifications<any>} matcher
-     */
-    static extend(matcher) {
-        ensureArguments([[matcher, "function"]]);
-
-        const { name } = matcher;
-        if (!name) {
-            throw new TypeError(`matcher must be a named function`);
-        }
-        if (this.registry[name]) {
-            throw new HootError(`a matcher with the name "${name}" already exists`);
-        }
-
-        this.registry[name] = matcher;
     }
 }
 
