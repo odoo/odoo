@@ -2685,7 +2685,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             if name not in self._fields:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+                raise ValueError(f"Invalid field {name!r} on model {self._name!r}")
             field = self._fields[name]
             if field.base_field.store and field.base_field.column_type and field.aggregator and field_spec not in annoted_groupby:
                 annoted_aggregates[name] = f"{name}:{field.aggregator}"

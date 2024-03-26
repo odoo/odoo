@@ -61,3 +61,8 @@ class TestEmptyDate(common.TransactionCase):
             'date': 'December 1916',
             'value': 7,
         }])
+
+    def test_field_error(self):
+        Model = self.env['test_read_group.aggregate']
+        with self.assertRaisesRegex(ValueError, "Invalid field 'not_another_field' on model 'test_read_group.aggregate'"):
+            Model.read_group([], ['value', 'not_another_field'], ['partner_id', 'not_a_field'])
