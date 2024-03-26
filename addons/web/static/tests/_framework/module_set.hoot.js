@@ -207,6 +207,7 @@ const DEFAULT_MOCKS = {
     // Fixed modules
     "@web/core/template_inheritance": makeFixedFactory,
     "web.assets_unit_tests_setup.bundle.xml": makeFixedFactory,
+    "im_livechat.embed_assets_unit_tests_setup.bundle.xml": makeFixedFactory,
     // Other mocks
     "@web/core/browser/browser": mockBrowserFactory,
     "@web/core/templates": makeTemplateFactory,
@@ -321,6 +322,10 @@ export async function describeSuite(entryPoints, params) {
             subLoader.startModule(testModuleName);
         });
     }
+}
+
+export function clearServerModelCache() {
+    serverModelCache.clear();
 }
 
 /**

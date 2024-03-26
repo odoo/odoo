@@ -616,7 +616,8 @@ test("Reaction summary", async () => {
         "Foo, Bar, FooBar and 1 other person have reacted with 😅",
     ];
     for (const [idx, name] of partnerNames.entries()) {
-        const userId = pyEnv["res.users"].create({ name });
+        const partner_id = pyEnv["res.partner"].create({ name });
+        const userId = pyEnv["res.users"].create({ partner_id });
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await withUser(userId, async () => {
             await click("[title='Add a Reaction']");

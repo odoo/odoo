@@ -3,8 +3,9 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { Discuss } from "@mail/core/common/discuss";
 import { patch } from "@web/core/utils/patch";
+import { MockResponse } from "@web/../lib/hoot/mock/network";
+import { loadBundle } from "@web/core/assets";
 
 /**
  * @template [T={}]
@@ -34,6 +35,7 @@ async function get_session(request) {
         persisted,
         context = {},
     } = await parseRequestParams(request);
+    previous_operator_id = parseInt(previous_operator_id);
     let country_id;
     // don't use the anonymous name if the user is logged in
     if (this.env.user && !ResUsers._is_public(this.env.uid)) {
@@ -41,10 +43,12 @@ async function get_session(request) {
     } else {
         // simulate geoip
         const countryCode = context.mockedCountryCode;
-        const country = ResCountry._filter([["code", "=", countryCode]])[0];
-        if (country) {
-            country_id = country.id;
-            anonymous_name = anonymous_name + " (" + country.name + ")";
+        if (countryCode) {
+            const country = ResCountry._filter([["code", "=", countryCode]])[0];
+            if (country) {
+                country_id = country.id;
+                anonymous_name = anonymous_name + " (" + country.name + ")";
+            }
         }
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
@@ -118,7 +122,6 @@ async function visitor_leave_session(request) {
     }
     DiscussChannel._close_livechat_session(channel);
 }
-
 registerRoute("/im_livechat/feedback", feedback);
 /** @type {RouteCallback} */
 async function feedback(request) {
@@ -128,7 +131,7 @@ async function feedback(request) {
     const RatingRating = this.env["rating.rating"];
 
     const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = Discuss.search_read([["id", "=", channel_id]]);
+    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     if (!channel) {
         return false;
     }
@@ -177,6 +180,13 @@ registerRoute("/im_livechat/email_livechat_transcript", email_livechat_transcrip
 /** @type {RouteCallback} */
 async function email_livechat_transcript(request) {
     return true;
+}
+
+registerRoute("/im_livechat/emoji_bundle", get_emoji_bundle);
+/** @type {RouteCallback} */
+async function get_emoji_bundle(request) {
+    await loadBundle("web.assets_emoji");
+    return new MockResponse();
 }
 
 patch(mailDataHelpers, {

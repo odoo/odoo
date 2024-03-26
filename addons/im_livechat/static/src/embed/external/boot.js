@@ -1,6 +1,5 @@
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { makeShadow, makeRoot } from "@im_livechat/embed/common/boot_helpers";
-import { serverUrl } from "@im_livechat/embed/common/livechat_data";
 
 import { mount, whenReady } from "@odoo/owl";
 
@@ -12,7 +11,7 @@ import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 
 (async function boot() {
-    session.origin = serverUrl;
+    session.origin = session.livechatData.serverUrl;
     await whenReady();
     const mainComponentsRegistry = registry.category("main_components");
     mainComponentsRegistry.add("LivechatRoot", { Component: LivechatButton });

@@ -7,6 +7,7 @@ import {
     isKwargs,
 } from "@web/../tests/_framework/mock_server/mock_server_utils";
 import { authenticate, logout } from "@web/../tests/_framework/mock_server/mock_server";
+import { session } from "@web/session";
 
 export const DISCUSS_ACTION_ID = 104;
 
@@ -47,7 +48,7 @@ export const parseModelParams = (params, ...argNames) => {
 };
 
 /** @param {import("./mock_model").MailGuest} guest */
-const authenticateGuest = (guest) => {
+export const authenticateGuest = (guest) => {
     const { env } = MockServer;
     /** @type {import("mock_models").ResUsers} */
     const ResUsers = env["res.users"];
@@ -58,6 +59,7 @@ const authenticateGuest = (guest) => {
     env.cookie.set("dgid", guest.id);
     authenticate(publicUser.login, publicUser.password);
     env.uid = serverState.publicUserId;
+    session.user_id = false;
 };
 
 /**
@@ -72,7 +74,9 @@ export async function withGuest(guestId, fn) {
     const MailGuest = env["mail.guest"];
     const currentUser = env.user;
     const [targetGuest] = MailGuest._filter([["id", "=", guestId]], { active_test: false });
+    const OLD_SESSION_USER_ID = session.user_id;
     authenticateGuest(targetGuest);
+    session.user_id = false;
     let result;
     try {
         result = await fn();
@@ -83,6 +87,7 @@ export async function withGuest(guestId, fn) {
             logout();
             env.cookie.delete("dgid");
         }
+        session.user_id = OLD_SESSION_USER_ID;
     }
     return result;
 }

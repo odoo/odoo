@@ -1,10 +1,14 @@
-import { serverState, webModels } from "@web/../tests/web_test_helpers";
+import { fields, serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { DISCUSS_ACTION_ID } from "../mail_mock_server";
 
 export class ResUsers extends webModels.ResUsers {
+    im_status = fields.Char({ default: "online" });
+
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data() {
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsersSettings} */
@@ -36,14 +40,14 @@ export class ResUsers extends webModels.ResUsers {
                 },
                 settings: ResUsersSettings.res_users_settings_format(userSettings.id),
             });
-        } else if (this.env.currentGuest) {
-            // AKU FIXME: no such things as env.currentGuest
+        } else if (this.env.cookie.get("dgid")) {
+            const [guest] = MailGuest.read(this.env.cookie.get("dgid"));
             Object.assign(res.Store, {
                 self: {
-                    id: this.env.currentGuest.id,
-                    name: this.env.currentGuest.name,
+                    id: guest.id,
+                    name: guest.name,
                     type: "guest",
-                    write_date: this.env.currentGuest.write_date,
+                    write_date: guest.write_date,
                 },
             });
         }
