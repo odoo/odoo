@@ -268,7 +268,12 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        product_template.product_variant_ids[-1].active = False
+        # Archive (Small, Black, Brand B) variant
+        product_template._get_variant_for_combination(
+            product_template.attribute_line_ids.product_template_value_ids.filtered(
+                lambda ptav: ptav.product_attribute_value_id.sequence == 2
+            )
+        ).action_archive()
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
 
