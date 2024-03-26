@@ -374,9 +374,6 @@ patch(MockServer.prototype, {
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
-                if (message.author_id === this.pyEnv.currentPartnerId) {
-                    this._mockDiscussChannel_ChannelSeen(ids, message.id);
-                }
             }
         }
         this.pyEnv["bus.bus"]._sendmany(notifications);
