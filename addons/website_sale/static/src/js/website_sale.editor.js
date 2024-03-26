@@ -216,7 +216,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
-        rpc('/shop/config/product', {
+        return rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             sequence: widgetValue,
         }).then(() => this._reloadEditable());
@@ -411,6 +411,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1
+        // TODO this should be awaited somehow
         rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             x: x,
@@ -619,7 +620,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Removes all extra-images from the product.
      */
     clearImages: function () {
-        rpc(`/shop/product/clear-images`, {
+        return rpc(`/shop/product/clear-images`, {
             model: this.mode,
             product_product_id: this.productProductID,
             product_template_id: this.productTemplateID,
@@ -714,7 +715,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
      * @see this.selectClass for params
      */
     setDisplayType: function (previewMode, widgetValue, params) {
-        rpc('/shop/config/attribute', {
+        return rpc('/shop/config/attribute', {
             attribute_id: this.attributeID,
             display_type: widgetValue,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
@@ -776,7 +777,7 @@ options.registry.ReplaceMedia.include({
      *
      */
     async setPosition(previewMode, widgetValue, params) {
-        rpc('/shop/product/resequence-image', {
+        return rpc('/shop/product/resequence-image', {
             image_res_model: this.recordModel,
             image_res_id: this.recordId,
             move: widgetValue,
