@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 import re
 
 from odoo import http, _
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
+
 from odoo.addons.web.controllers import home as web_home
+
+_logger = logging.getLogger(__name__)
 
 TRUSTED_DEVICE_COOKIE = 'td_id'
 TRUSTED_DEVICE_AGE = 90*86400 # 90 days expiration
@@ -72,8 +76,22 @@ class Home(web_home.Home):
 
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
         request.session.touch()
-        return request.render('auth_totp.auth_totp_form', {
+        response = request.render('auth_totp.auth_totp_form', {
             'user': user,
             'error': error,
             'redirect': redirect,
         })
+
+        if response.status_code == 200 and response.qcontext['user']._mfa_type() == 'totp_mail':
+            assert request.session.pre_uid and not request.session.uid, \
+                "The user must still be in the pre-authentication phase"
+
+            # Send the email containing the code to the user inbox
+            try:
+                response.qcontext['user']._send_totp_mail_code()
+            except (AccessDenied, UserError) as e:
+                response.qcontext['error'] = str(e)
+            except Exception as e:
+                _logger.exception('Unable to send TOTP email')
+                response.qcontext['error'] = str(e)
+        return response

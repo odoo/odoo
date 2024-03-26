@@ -134,3 +134,11 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
         self.assertEqual(data['result']['uid'], None)
+
+    def test_totp_invite_administration(self):
+        # TODO: Make this work if no demo data + hr installed
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
+        self.start_tour('/web', 'totp_admin_invite', login='admin')
+        self.start_tour('/web', 'totp_admin_self_invite', login='admin')
