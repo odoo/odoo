@@ -7,7 +7,7 @@ import {
     getNextFocusableElement,
     getNodeValue,
     getPreviousFocusableElement,
-    getRect,
+    getNodeRect,
     getWindow,
     isCheckable,
     isEditable,
@@ -304,7 +304,7 @@ const getPosition = (element, options) => {
         return toEventPosition(posX, posY, position);
     }
 
-    const { x, y, width, height } = getRect(element);
+    const { x, y, width, height } = getNodeRect(element);
     let clientX = x;
     let clientY = y;
 

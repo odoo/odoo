@@ -1,8 +1,10 @@
 /** @odoo-module alias=@odoo/hoot-dom default=false */
 
 /**
+ * @typedef {import("./helpers/dom").Dimensions} Dimensions
  * @typedef {import("./helpers/dom").Position} Position
  * @typedef {import("./helpers/dom").QueryOptions} QueryOptions
+ * @typedef {import("./helpers/dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("./helpers/dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("./helpers/dom").Target} Target
  *
@@ -19,7 +21,6 @@ export {
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
-    getRect,
     isDisplayed,
     isEditable,
     isEventTarget,
@@ -31,12 +32,14 @@ export {
     queryAll,
     queryAllAttributes,
     queryAllProperties,
+    queryAllRects,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
     queryFirst,
     queryLast,
     queryOne,
+    queryRect,
     queryText,
     queryValue,
     registerPseudoClass,

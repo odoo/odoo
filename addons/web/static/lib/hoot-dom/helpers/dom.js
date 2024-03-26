@@ -35,6 +35,10 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  * }} QueryOptions
  *
  * @typedef {{
+ *  trimPadding?: boolean;
+ * }} QueryRectOptions
+ *
+ * @typedef {{
  *  raw?: boolean;
  * }} QueryTextOptions
  *
@@ -235,7 +239,7 @@ const isNodeVisible = (node) => {
 
     // Check size (width & height)
     if (typeof element.getBoundingClientRect === "function") {
-        const { width, height } = getRect(element);
+        const { width, height } = getNodeRect(element);
         visible = width > 0 && height > 0;
     }
 
@@ -947,6 +951,36 @@ export function getNodeValue(node) {
 
 /**
  * @param {Node} node
+ * @param {QueryRectOptions} [options]
+ */
+export function getNodeRect(node, options) {
+    if (!isElement(node)) {
+        return new DOMRect();
+    }
+
+    const rect = node.getBoundingClientRect();
+    const parentFrame = getParentFrame(node);
+    if (parentFrame) {
+        const parentRect = getNodeRect(parentFrame);
+        rect.x -= parentRect.x;
+        rect.y -= parentRect.y;
+    }
+
+    if (!options?.trimPadding) {
+        return rect;
+    }
+
+    const style = getStyle(node);
+    const { x, y, width, height } = rect;
+    const [pl, pr, pt, pb] = ["left", "right", "top", "bottom"].map((side) =>
+        pixelValueToNumber(style.getPropertyValue(`padding-${side}`))
+    );
+
+    return new DOMRect(x + pl, y + pt, width - (pl + pr), height - (pt + pb));
+}
+
+/**
+ * @param {Node} node
  * @param {QueryTextOptions} [options]
  * @returns {string}
  */
@@ -997,43 +1031,6 @@ export function getPreviousFocusableElement(parent) {
     const focusableEls = getFocusableElements(parent);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
-}
-
-/**
- * Returns the bounding {@link DOMRect} of a given node (or an empty one if none is given).
- * This helper is a bit different than the native {@link Element.getBoundingClientRect}:
- * - rects take their positions relative to the top window element (instead of their
- *  parent `<iframe>` if any);
- * - they can be trimmed to remove padding with the `trimPadding` option.
- *
- * @param {Node} node
- * @param {{ trimPadding?: boolean }} [options]
- * @returns {DOMRect}
- */
-export function getRect(node, options) {
-    if (!isElement(node)) {
-        return new DOMRect();
-    }
-
-    const rect = node.getBoundingClientRect();
-    const parentFrame = getParentFrame(node);
-    if (parentFrame) {
-        const parentRect = getRect(parentFrame);
-        rect.x -= parentRect.x;
-        rect.y -= parentRect.y;
-    }
-
-    if (!options?.trimPadding) {
-        return rect;
-    }
-
-    const style = getStyle(node);
-    const { x, y, width, height } = rect;
-    const [pl, pr, pt, pb] = ["left", "right", "top", "bottom"].map((side) =>
-        pixelValueToNumber(style.getPropertyValue(`padding-${side}`))
-    );
-
-    return new DOMRect(x + pl, y + pt, width - (pl + pr), height - (pt + pb));
 }
 
 /**
@@ -1559,6 +1556,23 @@ export function queryAllProperties(target, property, options) {
 
 /**
  * Performs a {@link queryAll} with the given arguments and returns a list of the
+ * {@link DOMRect} of the matching nodes.
+ *
+ * There are a few differences with the native {@link Element.getBoundingClientRect}:
+ * - rects take their positions relative to the top window element (instead of their
+ *  parent `<iframe>` if any);
+ * - they can be trimmed to remove padding with the `trimPadding` option.
+ *
+ * @param {Target} target
+ * @param {QueryOptions & QueryRectOptions} [options]
+ * @returns {DOMRect[]}
+ */
+export function queryAllRects(target, options) {
+    return queryAll(target, options).map(getNodeRect);
+}
+
+/**
+ * Performs a {@link queryAll} with the given arguments and returns a list of the
  * *texts* of the matching nodes.
  *
  * @param {Target} target
@@ -1625,6 +1639,23 @@ export function queryOne(target, options) {
         );
     }
     return queryAll(target, { exact: 1, ...options })[0];
+}
+
+/**
+ * Performs a {@link queryOne} with the given arguments and returns the {@link DOMRect}
+ * of the matching node.
+ *
+ * There are a few differences with the native {@link Element.getBoundingClientRect}:
+ * - rects take their positions relative to the top window element (instead of their
+ *  parent `<iframe>` if any);
+ * - they can be trimmed to remove padding with the `trimPadding` option.
+ *
+ * @param {Target} target
+ * @param {QueryOptions & QueryRectOptions} [options]
+ * @returns {DOMRect}
+ */
+export function queryRect(target, options) {
+    return getNodeRect(queryOne(target, options), options);
 }
 
 /**

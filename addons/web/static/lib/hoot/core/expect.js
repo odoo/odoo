@@ -6,12 +6,15 @@ import {
     getNodeAttribute,
     getNodeText,
     getNodeValue,
+    getNodeRect,
     getStyle,
     isCheckable,
     isDisplayed,
     isEmpty,
+    isNode,
     isVisible,
     queryAll,
+    queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
 import { isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
@@ -48,6 +51,7 @@ import { Test } from "./test";
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").Position} Position
+ * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
@@ -1533,6 +1537,62 @@ export class Matchers {
                     details.push([Markup.text("Diff:"), Markup.diff(value, propValue)]);
                 }
                 return details;
+            },
+        });
+    }
+
+    /**
+     * Expects the {@link DOMRect} of the received {@link Target} to match the given
+     * `rect` object.
+     *
+     * The `rect` object can either be:
+     * - a {@link DOMRect} object,
+     * - a CSS selector string (to get the rect of the *only* matching element),
+     * - a node.
+     *
+     * If the resulting `rect` value is a node, then both nodes' rects will be compared.
+     *
+     * @param {Partial<DOMRect> | Target} rect
+     * @param {ExpectOptions & QueryRectOptions} options
+     * @example
+     *  expect("button").toHaveRect({ x: 20, width: 100, height: 50 });
+     * @example
+     *  expect("button").toHaveRect(".container");
+     */
+    toHaveRect(rect, options) {
+        this.#saveStack();
+
+        ensureArguments([
+            [rect, ["object", "string", "node", "node[]"]],
+            [options, ["object", null]],
+        ]);
+
+        let refRect;
+        if (typeof rect === "string" || isNode(rect)) {
+            refRect = queryRect(rect, options);
+        } else {
+            refRect = rect;
+        }
+
+        const entries = $entries(refRect);
+        return this.#resolve({
+            name: "toHaveRect",
+            acceptedType: ["string", "node", "node[]"],
+            transform: queryAll,
+            predicate: each((node) => {
+                const nodeRect = getNodeRect(node, options);
+                return entries.every(([key, value]) => strictEqual(nodeRect[key], value));
+            }),
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `%elements% have the expected DOM rect of ${formatHumanReadable(rect)}`
+                    : `expected %elements% to have the given DOM rect`),
+            details: (actual) => {
+                return [
+                    [Markup.green("Expected:"), rect],
+                    [Markup.red("Received:"), getNodeRect(actual[0], options)],
+                ];
             },
         });
     }

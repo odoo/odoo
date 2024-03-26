@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import { getActiveElement, getParentFrame } from "../../../hoot-dom/helpers/dom";
+import { getActiveElement, getParentFrame, queryAllRects } from "../../../hoot-dom/helpers/dom";
 import { click } from "../../../hoot-dom/helpers/events";
 import {
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
-    getRect,
     isDisplayed,
     isEditable,
     isEventTarget,
@@ -15,6 +14,7 @@ import {
     queryAll,
     queryAllTexts,
     queryOne,
+    queryRect,
     waitFor,
     waitForNone,
     waitUntil,
@@ -71,22 +71,6 @@ const makeIframe = (document, root) => {
         iframe.srcdoc = "<body></body>";
         (root || document.body).appendChild(iframe);
     });
-};
-
-/**
- * @param {Partial<DOMRect>} dimensions
- * @param {string} [className]
- */
-const makeSquare = (dimensions, className) => {
-    const style = Object.entries({ width: 30, height: 30, ...dimensions })
-        .map(([k, v]) => `${k}:${v}px`)
-        .join(";");
-    return /* html */ `
-        <div
-            class="absolute ${className}"
-            style="${style}"
-        ></div>
-    `;
 };
 
 const waitForIframes = () =>
@@ -240,23 +224,6 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         click(".input");
 
         expect(getPreviousFocusableElement()).toHaveClass("button");
-    });
-
-    test("getRect", async () => {
-        await mountOnFixture(/* xml */ `
-            <div class="root relative">
-                ${makeSquare({ left: 10, top: 20, padding: 5 }, "target")}
-            </div>
-        `);
-
-        const root = queryOne(".root");
-        const { x, y } = getRect(root);
-        const target = root.querySelector(".target");
-
-        expect(getRect(target)).toEqual(new DOMRect(x + 10, y + 20, 30, 30));
-        expect(getRect(queryOne(".target"), { trimPadding: true })).toEqual(
-            new DOMRect(x + 15, y + 25, 20, 20)
-        );
     });
 
     test("isEditable", async () => {
@@ -430,7 +397,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(["test"]).toVerifySteps();
     });
 
-    describe("queryAll", () => {
+    describe("query", () => {
         test("native selectors", async () => {
             await mountOnFixture(FULL_HTML_TEMPLATE);
 
@@ -835,6 +802,19 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             ).toThrow(); // nested :has statements
         });
 
+        test("queryAllRects", async () => {
+            await mountOnFixture(/* xml */ `
+                <div style="width: 40px; height: 60px;" />
+                <div style="width: 20px; height: 10px;" />
+            `);
+
+            expect(queryAllRects("div")).toEqual(
+                queryAll("div").map((el) => el.getBoundingClientRect())
+            );
+            expect(queryAllRects("div:first")).toEqual([new DOMRect({ width: 40, height: 60 })]);
+            expect(queryAllRects("div:last")).toEqual([new DOMRect({ width: 20, height: 10 })]);
+        });
+
         test("queryAllTexts", async () => {
             await mountOnFixture(FULL_HTML_TEMPLATE);
 
@@ -849,6 +829,28 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
             expect(() => queryOne(".title")).toThrow();
             expect(() => queryOne(".title", { exact: 2 })).toThrow();
+        });
+
+        test("queryRect", async () => {
+            await mountOnFixture(/* xml */ `
+                <div class="container">
+                    <div class="rect" style="width: 40px; height: 60px;" />
+                </div>
+            `);
+
+            expect(".rect").toHaveRect(".container"); // same rect as parent
+            expect(".rect").toHaveRect({ width: 40, height: 60 });
+            expect(queryRect(".rect")).toEqual(queryOne(".rect").getBoundingClientRect());
+            expect(queryRect(".rect")).toEqual(new DOMRect({ width: 40, height: 60 }));
+        });
+
+        test("queryRect with trimPadding", async () => {
+            await mountOnFixture(/* xml */ `
+                <div style="width: 40px; height: 60px; padding: 5px; margin: 6px" />
+            `);
+
+            expect("div").toHaveRect({ width: 50, height: 70 }); // with padding
+            expect("div").toHaveRect({ width: 40, height: 60 }, { trimPadding: true });
         });
 
         test.skip("performance against jQuery", async () => {
