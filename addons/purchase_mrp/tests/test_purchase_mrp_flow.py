@@ -961,8 +961,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         po.button_confirm()
 
         receipt = po.picking_ids
-        receipt.move_line_ids[0].qty_done = 4
-        receipt.move_line_ids[1].qty_done = 2
+        receipt.move_line_ids[0].quantity = 4
+        receipt.move_line_ids[1].quantity = 2
         action = receipt.button_validate()
         wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
         wizard.process()
