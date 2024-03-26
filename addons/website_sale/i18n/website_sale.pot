@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-27 04:56+0000\n"
-"PO-Revision-Date: 2024-02-27 04:56+0000\n"
+"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"PO-Revision-Date: 2024-03-26 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -339,7 +339,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
-msgid "<span>Show on product page</span>"
+msgid "<span>Publish on website</span>"
 msgstr ""
 
 #. module: website_sale
@@ -425,11 +425,6 @@ msgid ""
 "</tbody>\n"
 "</table>\n"
 "            "
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<u class=\"h5\">Documents</u>"
 msgstr ""
 
 #. module: website_sale
@@ -896,12 +891,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "You can't use a video as the product's main image."
 msgstr ""
 
 #. module: website_sale
@@ -1550,6 +1539,11 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 msgid ""
@@ -2177,7 +2171,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Main image"
+msgid "Main Image"
 msgstr ""
 
 #. module: website_sale
@@ -2699,7 +2693,6 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_product_pricelist
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
@@ -2784,6 +2777,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_add
 msgid "Product Name"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
+msgid "Product Names"
 msgstr ""
 
 #. module: website_sale
@@ -2890,11 +2888,6 @@ msgid "Product Views History"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
-msgid "Product names"
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Product not found"
@@ -2959,6 +2952,11 @@ msgstr ""
 #: code:addons/website_sale/models/product_image.py:0
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
+msgid "Publish on website"
 msgstr ""
 
 #. module: website_sale
@@ -3269,7 +3267,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Search bar"
+msgid "Search Bar"
 msgstr ""
 
 #. module: website_sale
@@ -3427,22 +3425,17 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Show Empty"
+msgid "Show B2B Fields"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Show b2b Fields"
+msgid "Show Empty"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
 msgid "Show on Ecommerce"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
-msgid "Show on product page"
 msgstr ""
 
 #. module: website_sale
@@ -4184,6 +4177,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "You can't use a video as the product's main image."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4311,6 +4310,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
 msgstr ""
 
 #. module: website_sale
