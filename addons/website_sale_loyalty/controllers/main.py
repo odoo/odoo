@@ -92,7 +92,9 @@ class WebsiteSale(main.WebsiteSale):
                 coupon = coupon_
                 if code == coupon.code and (
                     (program_sudo.trigger == 'with_code' and program_sudo.program_type != 'promo_code')
-                    or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
+                    or (program_sudo.trigger == 'auto'
+                        and program_sudo.applies_on == 'future'
+                        and program_sudo.program_type not in ('ewallet', 'loyalty'))
                 ):
                     return self.pricelist(code)
         if coupon:
