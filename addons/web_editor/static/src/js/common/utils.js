@@ -87,14 +87,6 @@ const DEFAULT_PALETTE = {
     '5': '#383E45',
 };
 /**
- * Set of all the data attributes relative to the background images.
- */
-const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
-    "original_id", "original_src", "mimetype", "resize_width", "gl_filter", "quality", "bg_src",
-    "filter_options",
-    "mimetype_before_conversion",
-]);
-/**
  * Set of the image options to keep on the DOM.
  */
 const DATASET_IMAGE_OPTIONS = new Set([
@@ -431,24 +423,6 @@ function _getColorClass(el, colorNames, prefix) {
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
 /**
- * Add one or more new attributes related to background images in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
- *
- * @param {...string} newAttributes The new attributes to add in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
- */
-function _addBackgroundImageAttributes(...newAttributes) {
-    BACKGROUND_IMAGE_ATTRIBUTES.add(...newAttributes);
-}
-/**
- * Check if an attribute is in the BACKGROUND_IMAGE_ATTRIBUTES set.
- *
- * @param {string} attribute The attribute that has to be checked.
- */
-function _isBackgroundImageAttribute(attribute) {
-    return BACKGROUND_IMAGE_ATTRIBUTES.has(attribute);
-}
-/**
  * Checks if an option is in the DATASET_IMAGE_OPTIONS set.
  *
  * @param {string} option The option that has to be checked.
@@ -600,8 +574,6 @@ export default {
     getColorClass: _getColorClass,
     setEditableWindow: _setEditableWindow,
     setEditableDocument: _setEditableDocument,
-    addBackgroundImageAttributes: _addBackgroundImageAttributes,
-    isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
     isMobileView: _isMobileView,
     getLinkLabel: _getLinkLabel,

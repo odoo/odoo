@@ -3562,7 +3562,7 @@ export class Wysiwyg extends Component {
             // Generate alternate sizes and format for reports.
             altData = {};
             const image = document.createElement('img');
-            image.src = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
+            image.src = imgSrc;
             await new Promise(resolve => image.addEventListener('load', resolve));
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
@@ -3589,7 +3589,7 @@ export class Wysiwyg extends Component {
                 res_model: resModel,
                 res_id: parseInt(resId),
                 res_field: resField,
-                data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
+                data: imgSrc.split(',')[1],
                 alt_data: altData,
                 mimetype: (isBackground ? imageData.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
                 name: (imageData.file_name ? imageData.file_name : null),
@@ -3603,7 +3603,6 @@ export class Wysiwyg extends Component {
             parts.url = `url('${newAttachmentSrc}')`;
             const combined = weUtils.backgroundImagePartsToCss(parts);
             $(el).css('background-image', combined);
-            delete el.dataset.bgSrc;
         } else {
             el.setAttribute('src', newAttachmentSrc);
             // Also update carousel thumbnail.

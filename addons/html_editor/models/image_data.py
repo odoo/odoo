@@ -18,7 +18,6 @@ class ImageData(models.Model):
     resize_width = fields.Char(help='The width of the image')
     gl_filter = fields.Char(help='The name of the filter applied on the image')
     quality = fields.Integer(default=75, help='The quality of the image')
-    bg_src = fields.Char()
     filter_options = fields.Char(help='The values of the custom filter applied on the image')
     # Shape options
     shape = fields.Char(help='The name of the shape applied on the image')
@@ -54,7 +53,7 @@ class ImageData(models.Model):
 
         """
         return self._get_removable_option_names() + [
-            'original_src', 'mimetype', 'mimetype_before_conversion', 'bg_src', 'filter_options',
+            'original_src', 'mimetype', 'mimetype_before_conversion', 'filter_options',
         ]
 
     def _get_removable_option_names(self):
