@@ -241,7 +241,10 @@ export class AutoComplete extends Component {
             this.close();
         }
     }
-    onInputChange() {
+    onInputChange(ev) {
+        if (this.ignoreBlur) {
+            ev.stopImmediatePropagation();
+        }
         this.props.onChange({
             inputValue: this.inputRef.el.value,
         });
