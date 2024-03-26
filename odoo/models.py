@@ -852,7 +852,12 @@ class BaseModel(metaclass=MetaModel):
         or table query.
         """
         table_query = self._table_query
-        table_sql = SQL(f"({table_query})") if table_query else SQL.identifier(self._table)
+        if table_query and isinstance(table_query, SQL):
+            table_sql = SQL("(%s)", table_query)
+        elif table_query:
+            table_sql = SQL(f"({table_query})")
+        else:
+            table_sql = SQL.identifier(self._table)
         if not self._depends:
             return table_sql
 
