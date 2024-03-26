@@ -43,8 +43,6 @@ class WebsiteDesign(models.Model):
     btn_border_radius = fields.Char(string='Button Border Radius', default='1rem')
     btn_border_radius_sm = fields.Char(string='Button Border Radius SM', default='0.3rem')
     btn_border_radius_lg = fields.Char(string='Button Border Radius LG', default='2rem')
-    # btn-border-width is not customizable via the theme option but there are themes that use it.
-    # Shouldn't we delete it ?
 
     input_padding_y = fields.Char(string='Input Padding Y', default='6px')
     input_padding_x = fields.Char(string='Input Padding X', default='12px')
@@ -64,6 +62,8 @@ class WebsiteDesign(models.Model):
     headings_margin_top = fields.Char(string='Headings Margin Top', default='0')
     headings_margin_bottom = fields.Char(string='Headings Margin Bottom', default='0.5rem')
 
+    footer_scrolltop = fields.Boolean(string='Footer Scrolltop', default=False)
+
     body_line_height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
     # base font size or forced to a specific value.
@@ -82,6 +82,8 @@ class WebsiteDesign(models.Model):
         for key in vals:
             if self._fields[key].comodel_name == 'website.design.option' and isinstance(vals[key], str):
                 vals[key] = self.env['website.design.option'].browse(int(vals[key]))
+            elif self._fields[key].type == 'boolean' and isinstance(vals[key], str):
+                vals[key] = vals[key] == 'true'
         res = super().write(vals)
         for record in self:
             record._customize_design_variables(vals.copy())
@@ -151,6 +153,8 @@ class WebsiteDesign(models.Model):
             if self._fields[key].comodel_name == 'website.design.option':
                 # Compute the value of the design option.
                 vals[key] = vals[key].value
+            if self._fields[key].type == 'boolean':
+                vals[key] = 'true' if vals[key] else 'false'
             # As python variable names cannot contains dashes, we replace them
             # by double underscores.
             res[key.replace('_', '-')] = vals[key]
