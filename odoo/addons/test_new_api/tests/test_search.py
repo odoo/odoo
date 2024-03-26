@@ -1065,3 +1065,17 @@ class TestFlushSearch(TransactionCase):
         self.env['test_new_api.custom.table_query'].invalidate_model()
         child.quantity = 25
         self.assertEqual(self.env['test_new_api.custom.table_query'].search([]).sum_quantity, 25)
+
+    def test_depends_with_table_query_model_sql(self):
+        parent = self.env['test_new_api.any.parent'].create({'name': 'parent'})
+        child = self.env['test_new_api.any.child'].create({
+            'parent_id': parent.id,
+            'quantity': 10,
+            'tag_ids': [Command.create({'name': 'tag1'})]
+        })
+
+        self.assertEqual(self.env['test_new_api.custom.table_query_sql'].search([]).sum_quantity, 10)
+        # _depends doesn't invalidate the cache of the model, should it ?
+        self.env['test_new_api.custom.table_query_sql'].invalidate_model()
+        child.quantity = 25
+        self.assertEqual(self.env['test_new_api.custom.table_query_sql'].search([]).sum_quantity, 25)
