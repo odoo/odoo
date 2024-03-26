@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.clickControlButton("Quotation/Order"),
             ProductScreen.selectFirstOrder(),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPayButton(),

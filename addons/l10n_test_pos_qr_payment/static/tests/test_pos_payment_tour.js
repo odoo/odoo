@@ -27,8 +27,7 @@ function addProductandPay() {
         ProductScreen.clickPayButton(),
 
         PaymentScreen.totalIs("48"),
-        PaymentScreen.clickPaymentMethod("QR Code"),
-        PaymentScreen.selectedPaymentlineHas("QR Code", "48"),
+        PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
         {
             content: "Display QR Code Payment dialog",
             trigger: ".button.send_payment_request.highlight",
@@ -81,8 +80,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
             ProductScreen.clickCustomer("AAA Partner Swiss"),
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("48"),
-            PaymentScreen.clickPaymentMethod("QR Code"),
-            PaymentScreen.selectedPaymentlineHas("QR Code", "48"),
+            PaymentScreen.clickPaymentMethod("QR Code", true, { amount: "48" }),
             {
                 content: "Display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",

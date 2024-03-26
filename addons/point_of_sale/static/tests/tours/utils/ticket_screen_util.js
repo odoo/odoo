@@ -177,12 +177,6 @@ export function invoicePrinted() {
         },
     ];
 }
-export function partnerIs(name) {
-    return inLeftSide({
-        trigger: `.ticket-screen .set-partner:contains("${name}")`,
-        isCheck: true,
-    });
-}
 export function toRefundTextContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
