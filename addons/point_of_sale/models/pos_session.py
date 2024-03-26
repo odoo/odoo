@@ -359,12 +359,6 @@ class PosSession(models.Model):
         # pos_config adaptation
         if len(models_to_load) == 0 or 'pos.config' in models_to_load:
             config = response['data']['pos.config'][0]
-            response['data']['pos.config'][0]['use_proxy'] = config['is_posbox'] and (
-                config['iface_electronic_scale'] or
-                config['iface_print_via_proxy'] or
-                config['iface_scan_via_proxy'] or
-                config['iface_customer_facing_display_via_proxy']
-            )
 
             if not self.config_id.use_pricelist:
                 response['data']['pos.config'][0]['pricelist_id'] = False

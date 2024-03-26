@@ -153,12 +153,22 @@ export class PosStore extends Reactive {
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
         await this.initServerData();
-        if (this.config.use_proxy) {
+        if (this.useProxy()) {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
         this.preloadImages();
         this.showScreen("ProductScreen");
+    }
+
+    useProxy() {
+        return (
+            this.config.is_posbox &&
+            (this.config.iface_electronic_scale ||
+                this.config.iface_print_via_proxy ||
+                this.config.iface_scan_via_proxy ||
+                this.config.iface_customer_facing_display_via_proxy)
+        );
     }
 
     async initServerData() {
