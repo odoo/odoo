@@ -64,6 +64,7 @@ const closestBlock = OdooEditorLib.closestBlock;
 const getRangePosition = OdooEditorLib.getRangePosition;
 const getCursorDirection = OdooEditorLib.getCursorDirection;
 const DIRECTIONS = OdooEditorLib.DIRECTIONS;
+const childNodeIndex = OdooEditorLib.childNodeIndex;
 
 function getJqueryFromDocument(doc) {
     if (doc.defaultView && doc.defaultView.$) {
@@ -1471,8 +1472,8 @@ export class Wysiwyg extends Component {
                     this.odooEditor.historyUnpauseSteps();
                     this.odooEditor.historyStep();
                     const link = data.linkDialog.$link[0];
-                    setSelection(link, 0, link, link.childNodes.length, false);
-                    link.focus();
+                    const linkIndex = childNodeIndex(link);
+                    setSelection(link.parentElement, linkIndex+1, link.parentElement, linkIndex+1, false);
                 },
                 onClose: () => {
                     this.odooEditor.historyUnpauseSteps();
