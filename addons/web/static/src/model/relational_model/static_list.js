@@ -623,15 +623,12 @@ export class StaticList extends DataPoint {
             const lastRecordIndex = this.limit + this.offset;
             const firstRecordIndex = lastRecordIndex - nbMissingRecords;
             const nextRecordIds = this._currentIds.slice(firstRecordIndex, lastRecordIndex);
+            for (const id of this._getResIdsToLoad(nextRecordIds)) {
+                const record = this._createRecordDatapoint({ id }, { dontApplyCommands: true });
+                recordsToLoad.push(record);
+            }
             for (const id of nextRecordIds) {
-                if (this._cache[id]) {
-                    this.records.push(this._cache[id]);
-                } else {
-                    // id isn't in the cache, so we know it's not a virtual id
-                    const record = this._createRecordDatapoint({ id }, { dontApplyCommands: true });
-                    this.records.push(record);
-                    recordsToLoad.push(record);
-                }
+                this.records.push(this._cache[id]);
             }
         }
         if (recordsToLoad.length || reload) {
