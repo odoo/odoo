@@ -48,11 +48,11 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.clickCustomer("Partner Test 1"),
 
             // check that you cannot change the quantity of a combo product
-            ...ProductScreen.pressNumpad("2"),
+            ...ProductScreen.clickNumpad("2"),
             Dialog.confirm(),
 
             // check that removing a combo product removes all the combo products
-            ...ProductScreen.pressNumpad("⌫"),
+            ...ProductScreen.clickNumpad("⌫"),
             ...ProductScreen.orderIsEmpty(),
 
             ...ProductScreen.clickDisplayedProduct("Office Combo"),

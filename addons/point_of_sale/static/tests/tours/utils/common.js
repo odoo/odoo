@@ -42,3 +42,13 @@ export function elementDoesNotExist(selector) {
         isCheck: true,
     };
 }
+
+export function waitForLoading() {
+    return [
+        {
+            content: "waiting for loading to finish",
+            trigger: "body:not(:has(.loader))",
+            run: function () {},
+        },
+    ];
+}

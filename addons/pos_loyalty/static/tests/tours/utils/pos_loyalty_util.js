@@ -23,7 +23,7 @@ export function selectRewardLine(rewardName) {
 }
 export function enterCode(code) {
     return [
-        ProductScreen.controlButton("Enter Code"),
+        ProductScreen.clickControlButton("Enter Code"),
         TextInputPopup.inputText(code),
         Dialog.confirm(),
     ];
@@ -33,7 +33,7 @@ export function clickEWalletButton(text = "eWallet") {
 }
 export function claimReward(rewardName) {
     return [
-        ProductScreen.controlButton("Reward"),
+        ProductScreen.clickControlButton("Reward"),
         {
             content: "select reward",
             // There should be description because a program always has a name.
@@ -96,11 +96,11 @@ export function finalizeOrder(paymentMethod, amount) {
     return [
         ...ProductScreen.clickPayButton(),
         ...PaymentScreen.clickPaymentMethod(paymentMethod),
-        ...PaymentScreen.pressNumpad([...amount].join(" ")),
+        ...PaymentScreen.clickNumpad([...amount].join(" ")),
         ...PaymentScreen.clickValidate(),
         ...ReceiptScreen.clickNextOrder(),
     ];
 }
 export function removeRewardLine(name) {
-    return [selectRewardLine(name), ProductScreen.pressNumpad("⌫"), Dialog.confirm()].flat();
+    return [selectRewardLine(name), ProductScreen.clickNumpad("⌫"), Dialog.confirm()].flat();
 }
