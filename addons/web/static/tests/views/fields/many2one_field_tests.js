@@ -3215,6 +3215,7 @@ QUnit.module("Fields", (hooks) => {
         // select a new value then cancel the creation of the new one --> restore the previous
         await click(target, ".o_field_widget[name=product_id] input");
         await click(target.querySelector(".ui-menu-item"));
+        await triggerEvent(target, ".o_field_many2one input", "blur");
         assert.strictEqual(
             target.querySelector(".o_field_many2one input").value,
             "xphone",
