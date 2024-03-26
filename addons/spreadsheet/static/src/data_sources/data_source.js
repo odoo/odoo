@@ -41,8 +41,7 @@ export class LoadableDataSource {
         this._loadPromise = undefined;
         this._isFullyLoaded = false;
         this._isValid = true;
-        /** @type {string} */
-        this._loadErrorMessage = "";
+        this._loadError = undefined;
     }
 
     get _orm() {
@@ -68,12 +67,15 @@ export class LoadableDataSource {
         if (!this._loadPromise) {
             this._isFullyLoaded = false;
             this._isValid = true;
-            this._loadErrorMessage = "";
+            this._loadError = undefined;
             this._loadPromise = this._concurrency
                 .add(this._load())
                 .catch((e) => {
                     this._isValid = false;
-                    this._loadErrorMessage = e instanceof RPCError ? e.data.message : e.message;
+                    this._loadError = Object.assign(
+                        new EvaluationError(e instanceof RPCError ? e.data.message : e.message),
+                        { cause: e }
+                    );
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
@@ -109,9 +111,9 @@ export class LoadableDataSource {
         }
         if (!this._isValid) {
             if (throwOnError) {
-                throw new EvaluationError(this._loadErrorMessage);
+                throw this._loadError;
             }
-            return { value: CellErrorType.GenericError, message: this._loadErrorMessage };
+            return { value: CellErrorType.GenericError, message: this._loadError.message };
         }
     }
 
