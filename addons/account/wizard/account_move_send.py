@@ -305,6 +305,10 @@ class AccountMoveSend(models.Model):
         """
         self.ensure_one()
 
+    def _get_invoice_pdf_report_template(self):
+        """To override to set a custom pdf template."""
+        return 'account.account_invoices'
+
     def _prepare_invoice_pdf_report(self, invoice, invoice_data):
         """ Prepare the pdf report for the invoice passed as parameter.
 
@@ -316,7 +320,7 @@ class AccountMoveSend(models.Model):
         if invoice.invoice_pdf_report_id:
             return
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+        content, _report_format = self.env['ir.actions.report']._render(self._get_invoice_pdf_report_template(), invoice.ids)
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,
@@ -335,7 +339,7 @@ class AccountMoveSend(models.Model):
         """
         self.ensure_one()
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
+        content, _report_format = self.env['ir.actions.report']._render(self._get_invoice_pdf_report_template(), invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content,

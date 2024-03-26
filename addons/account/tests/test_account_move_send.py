@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -880,3 +881,36 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.create_send_and_print(invoice_draft)
         with self.assertRaises(UserError):
             self.create_send_and_print(invoice_posted + invoice_draft)
+
+    def test_custom_invoice_template(self):
+        """ Test that another template can be used by overriding _get_invoice_pdf_report_template. """
+        def _get_invoice_pdf_report_template(self):
+            return 'account.test_custom_report'
+
+        self.env['ir.actions.report']._load_records([{
+            'xml_id': 'account.test_custom_report',
+            'values': {
+                'name': 'test custom report send and print',
+                'report_name': 'account.test_custom_template',
+                'report_type': 'qweb-pdf',
+                'model': 'account.move',
+            },
+        }])
+        self.env['ir.ui.view']._load_records([{
+            'xml_id': 'account.test_custom_template',
+            'values': {
+                'type': 'qweb',
+                'name': 'account.test_custom_template',
+                'arch': '''
+                    <p>turlututu</p>
+                ''',
+            }
+        }])
+
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+        with patch('odoo.addons.account.wizard.account_move_send.AccountMoveSend._get_invoice_pdf_report_template', _get_invoice_pdf_report_template):
+            wizard.action_send_and_print()
+
+        self.assertTrue(bool(invoice.invoice_pdf_report_id))
+        self.assertEqual(base64.b64decode(invoice.invoice_pdf_report_file), b"<p>turlututu</p>")
