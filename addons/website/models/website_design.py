@@ -43,8 +43,7 @@ class WebsiteDesign(models.Model):
     btn__border__radius = fields.Char(string='Button Border Radius', default='6.4px')
     btn__border__radius__sm = fields.Char(string='Button Border Radius SM', default='4.8px')
     btn__border__radius__lg = fields.Char(string='Button Border Radius LG', default='32px')
-    # btn-border-width is not customizable via the theme option but there are themes that use it.
-    # Shouldn't we delete it ?
+    btn__border__width = fields.Char(string='Button Border Width', default='2px')
 
     input__padding__y = fields.Char(string='Input Padding Y', default='6px')
     input__padding__x = fields.Char(string='Input Padding X', default='12px')
