@@ -1184,6 +1184,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
 });
 
 test("should auto-pin chat when receiving a new DM", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1729,6 +1730,7 @@ test("composer state: attachments save and restore", async () => {
 });
 
 test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         name: "General",

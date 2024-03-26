@@ -20,6 +20,7 @@ describe.current.tags("desktop");
 defineLivechatModels();
 
 test("add livechat in the sidebar on visitor sending first message", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     const countryId = pyEnv["res.country"].create({ code: "be", name: "Belgium" });
