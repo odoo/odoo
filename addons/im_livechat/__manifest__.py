@@ -77,19 +77,11 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',
-            ('remove', 'im_livechat/static/tests/legacy/**/*'),
             ('remove', 'im_livechat/static/tests/embed/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
         ],
         'im_livechat.qunit_embed_suite': [
             'im_livechat/static/tests/embed/**/*',
-        ],
-        'web.tests_assets': [
-            'im_livechat/static/tests/legacy/helpers/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'im_livechat/static/tests/legacy/**/*',
-            ('remove', 'im_livechat/static/tests/legacy/helpers/**/*'),
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
@@ -136,12 +128,25 @@ Help your customers with this chat, and analyse their feedback.
             ('include', 'im_livechat.assets_embed_external'),
             'im_livechat/static/src/embed/cors/**/*',
         ],
-        'im_livechat.embed_test_assets': [
-            ('include', 'web.tests_assets'),
-            ('remove', 'web/static/tests/legacy/mock_server_tests.js'),
+        'im_livechat.embed_assets_unit_tests_setup': [
+            ('include', 'web.assets_unit_tests_setup'),
             ('remove', 'im_livechat/static/**'),
-            'im_livechat/static/tests/legacy/helpers/**',
-            ('include', 'im_livechat.assets_embed_core'),
+            ('include', 'im_livechat.assets_embed_external'),
+            ('remove', 'im_livechat/static/src/embed/external/boot.js'),
+            'web/static/src/core/browser/title_service.js',
+            'web/static/tests/web_test_helpers.js',
+            'bus/static/tests/bus_test_helpers.js',
+            'mail/static/tests/mail_test_helpers.js',
+            'mail/static/tests/mail_test_helpers_contains.js',
+            'im_livechat/static/tests/livechat_test_helpers.js',
+            'bus/static/tests/mock_server/**/*',
+            'mail/static/tests/mock_server/**/*',
+            'im_livechat/static/tests/mock_server/**/*',
+            'bus/static/tests/mock_websocket.js',
+        ],
+        'im_livechat.embed_assets_unit_tests': [
+            'web/static/tests/_framework/**/*',
+            'im_livechat/static/tests/embed/**/*',
         ],
     },
     'license': 'LGPL-3',

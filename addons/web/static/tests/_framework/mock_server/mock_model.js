@@ -1095,7 +1095,7 @@ const updateComodelRelationalFields = (model, record, originalRecord) => {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
         const inverseFieldName =
-            field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[coModel._name];
+            field.inverse_fname_by_model_name && field.inverse_fname_by_model_name[coModel?._name];
         if (!inverseFieldName) {
             // field has no inverse, skip it.
             continue;
