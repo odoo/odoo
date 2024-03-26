@@ -864,29 +864,26 @@ class Project(models.Model):
         return False
 
     @api.model
-    def _create_analytic_account_from_values(self, values):
-        company = self.env['res.company'].browse(values.get('company_id', False))
+    def _get_values_analytic_account_batch(self, project_vals):
         project_plan_id = int(self.env['ir.config_parameter'].sudo().get_param('analytic.analytic_plan_projects'))
 
         if not project_plan_id:
             project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
             project_plan_id = project_plan.id
+        companies = self.env['res.company'].browse([val.get('company_id', False) for val in project_vals])
 
-        analytic_account = self.env['account.analytic.account'].create({
-            'name': values.get('name', _('Unknown Analytic Account')),
+        return [{
+            'name': val.get('name', _('Unknown Analytic Account')),
             'company_id': company.id,
-            'partner_id': values.get('partner_id'),
+            'partner_id': val.get('partner_id'),
             'plan_id': project_plan_id,
-        })
-        return analytic_account
+        } for val, company in zip(project_vals, companies)]
 
     def _create_analytic_account(self):
-        for project in self:
-            project.analytic_account_id = self._create_analytic_account_from_values({
-                'company_id': project.company_id.id,
-                'name': project.name,
-                'partner_id': project.partner_id.id
-            })
+        analytic_accounts_values = self._get_values_analytic_account_batch(self._read_format(['name', 'company_id', 'partner_id'], None))
+        analytic_accounts = self.env['account.analytic.account'].create(analytic_accounts_values)
+        for project, analytic_account in zip(self, analytic_accounts):
+            project.analytic_account_id = analytic_account
 
     def _get_projects_to_make_billable_domain(self):
         return [('partner_id', '!=', False)]
