@@ -481,7 +481,7 @@ export class DiscussChannel extends models.ServerModel {
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
             DiscussChannelMember.write([memberOfCurrentUser.id], {
-                unpin_dt: pinned ? false : serializeDateTime(today())
+                unpin_dt: pinned ? false : serializeDateTime(today()),
             });
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
@@ -786,7 +786,7 @@ export class DiscussChannel extends models.ServerModel {
         });
         const messageData = MailThread.message_post.call(this, [id], kwargs);
         if (kwargs.author_id === this.env.user?.partner_id) {
-            this._set_last_seen_message([channel.id], messageData.id);
+            this._set_last_seen_message([channel.id], messageData.id, false);
         }
         // simulate compute of message_unread_counter
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
@@ -974,13 +974,14 @@ export class DiscussChannel extends models.ServerModel {
     /**
      * @param {number[]} ids
      * @param {number} message_id
+     * @param {boolean} [notify=true]
      */
-    _set_last_seen_message(ids, message_id) {
-        const kwargs = parseModelParams(arguments, "ids", "message_id");
+    _set_last_seen_message(ids, message_id, notify) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id", "notify");
         ids = kwargs.ids;
         delete kwargs.ids;
         message_id = kwargs.message_id;
-
+        notify = kwargs.notify ?? true;
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannelMember} */
@@ -995,18 +996,20 @@ export class DiscussChannel extends models.ServerModel {
                 seen_message_id: message_id,
             });
         }
-        const [channel] = this.search_read([["id", "in", ids]]);
-        const [partner, guest] = ResPartner._get_current_persona();
-        let target = guest ?? partner;
-        if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
-            target = channel;
+        if (notify) {
+            const [channel] = this.search_read([["id", "in", ids]]);
+            const [partner, guest] = ResPartner._get_current_persona();
+            let target = guest ?? partner;
+            if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
+                target = channel;
+            }
+            BusBus._sendone(target, "discuss.channel.member/seen", {
+                channel_id: channel.id,
+                id: memberOfCurrentUser?.id,
+                last_message_id: message_id,
+                [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner?.id,
+            });
         }
-        BusBus._sendone(target, "discuss.channel.member/seen", {
-            channel_id: channel.id,
-            id: memberOfCurrentUser?.id,
-            last_message_id: message_id,
-            [guest ? "guest_id" : "partner_id"]: guest?.id ?? partner?.id,
-        });
     }
 
     _types_allowing_seen_infos() {

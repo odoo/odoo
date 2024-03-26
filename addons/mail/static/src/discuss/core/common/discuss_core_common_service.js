@@ -245,6 +245,15 @@ export class DiscussCoreCommon {
             this.threadService.markAsRead(channel);
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message });
+        const authorMember = channel.channelMembers.find(({ persona }) =>
+            persona?.eq(message.author)
+        );
+        if (authorMember) {
+            authorMember.seen_message_id = message;
+        }
+        if (authorMember?.eq(channel.selfMember)) {
+            this.threadService.updateSeen(authorMember.thread, message.id);
+        }
     }
 }
 
