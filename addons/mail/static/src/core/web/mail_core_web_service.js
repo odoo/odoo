@@ -39,10 +39,10 @@ export class MailCoreWeb {
                 const alreadyInNeedaction = message?.in(message.thread.needactionMessages);
                 message = this.store.Message.insert(payload, { html: true });
                 const inbox = this.store.discuss.inbox;
-                if (message.notIn(inbox.messages)) {
+                if (message.notIn(inbox.messagesListed)) {
                     inbox.counter++;
                 }
-                inbox.messages.add(message);
+                inbox.messagesListed.add(message);
                 if (!alreadyInNeedaction) {
                     message.thread.message_needaction_counter++;
                 }
@@ -73,12 +73,12 @@ export class MailCoreWeb {
                     if (index >= 0) {
                         message.needaction_partner_ids.splice(index, 1);
                     }
-                    inbox.messages.delete({ id: messageId });
+                    inbox.messagesListed.delete({ id: messageId });
                     const history = this.store.discuss.history;
-                    history.messages.add(message);
+                    history.messagesListed.add(message);
                 }
                 inbox.counter = needaction_inbox_counter;
-                if (inbox.counter > inbox.messages.length) {
+                if (inbox.counter > inbox.messagesListed.length) {
                     this.threadService.fetchMoreMessages(inbox);
                 }
             });

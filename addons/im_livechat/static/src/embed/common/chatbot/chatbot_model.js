@@ -70,7 +70,7 @@ export class Chatbot extends Record {
             { html: true }
         );
         if (this.currentStep.message) {
-            this.thread.messages.add(this.currentStep.message);
+            this.thread.messagesListed.add(this.currentStep.message);
         }
     }
 
@@ -162,7 +162,7 @@ export class Chatbot extends Record {
             channel_id: this.thread.id,
         });
         if (message) {
-            this.thread.messages.add({ ...message, body: markup(message.body) });
+            this.thread.messagesListed.add({ ...message, body: markup(message.body) });
         }
         return success;
     }

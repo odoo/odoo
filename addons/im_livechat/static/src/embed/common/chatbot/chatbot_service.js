@@ -92,7 +92,7 @@ export class ChatBotService {
         if (!this.livechatService.thread) {
             return;
         }
-        this.livechatService.thread.messages.add(message);
+        this.livechatService.thread.messagesListed.add(message);
         this.chatbot.restart();
         this._triggerNextStep();
     }

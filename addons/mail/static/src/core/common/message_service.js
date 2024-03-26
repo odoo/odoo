@@ -54,7 +54,7 @@ export class MessageService {
     async delete(message) {
         if (message.isStarred) {
             this.store.discuss.starred.counter--;
-            this.store.discuss.starred.messages.delete(message);
+            this.store.discuss.starred.messagesListed.delete(message);
         }
         message.body = "";
         message.attachments = [];
@@ -130,7 +130,7 @@ export class MessageService {
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.store.discuss.starred.counter = 0;
-        this.store.discuss.starred.messages = [];
+        this.store.discuss.starred.messagesListed = [];
         await this.orm.call("mail.message", "unstar_all");
     }
 

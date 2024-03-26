@@ -96,11 +96,14 @@ export class ThreadService {
         }
     }
 
+    /**
+     * @param {import("models").Thread} thread
+     */
     updateSeen(thread, lastSeen = thread.newestPersistentNotEmptyOfAllMessage) {
-        const lastReadIndex = thread.messages.findIndex((message) => message.eq(lastSeen));
+        const lastReadIndex = thread.messagesListed.findIndex((message) => message.eq(lastSeen));
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
-        for (const message of thread.messages.slice(lastReadIndex + 1)) {
+        for (const message of thread.messagesListed.slice(lastReadIndex + 1)) {
             if (message.isNeedaction) {
                 newNeedactionCounter++;
             }
@@ -212,7 +215,9 @@ export class ThreadService {
             if (after === undefined) {
                 startIndex = 0;
             } else {
-                const afterIndex = thread.messages.findIndex((message) => message.id === after);
+                const afterIndex = thread.messagesListed.findIndex(
+                    (message) => message.id === after
+                );
                 if (afterIndex === -1) {
                     // there might have been a jump to message during RPC fetch.
                     // Abort feeding messages as to not put holes in message list.
@@ -221,7 +226,7 @@ export class ThreadService {
                     startIndex = afterIndex + 1;
                 }
             }
-            const alreadyKnownMessages = new Set(thread.messages.map((m) => m.id));
+            const alreadyKnownMessages = new Set(thread.messagesListed.map((m) => m.id));
             const filtered = fetched.filter(
                 (message) =>
                     !alreadyKnownMessages.has(message.id) &&
@@ -229,7 +234,7 @@ export class ThreadService {
                         message.id < thread.oldestPersistentMessage.id ||
                         message.id > thread.newestPersistentMessage.id)
             );
-            thread.messages.splice(startIndex, 0, ...filtered);
+            thread.messagesListed.splice(startIndex, 0, ...filtered);
             Object.assign(thread, {
                 loadOlder:
                     after === undefined && fetched.length === FETCH_LIMIT
@@ -248,10 +253,11 @@ export class ThreadService {
      * messages around the message to jump to if required, and update the thread
      * messages accordingly.
      *
+     * @param {import("models").Thread} thread
      * @param {import("models").Message} [messageId] if not provided, load around newest message
      */
     async loadAround(thread, messageId) {
-        if (!thread.messages.some(({ id }) => id === messageId)) {
+        if (!thread.messagesListed.some(({ id }) => id === messageId)) {
             thread.isLoaded = false;
             thread.scrollTop = undefined;
             const { messages } = await rpc(this.getFetchRoute(thread), {
@@ -259,7 +265,9 @@ export class ThreadService {
                 around: messageId,
             });
             thread.isLoaded = true;
-            thread.messages = this.store.Message.insert(messages.reverse(), { html: true });
+            thread.messagesListed = this.store.Message.insert(messages.reverse(), {
+                html: true,
+            });
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
@@ -291,21 +299,23 @@ export class ThreadService {
         try {
             const fetched = await this.fetchMessages(thread, { after, before });
             if (
-                (after !== undefined && !thread.messages.some((message) => message.id === after)) ||
-                (before !== undefined && !thread.messages.some((message) => message.id === before))
+                (after !== undefined &&
+                    !thread.messagesListed.some((message) => message.id === after)) ||
+                (before !== undefined &&
+                    !thread.messagesListed.some((message) => message.id === before))
             ) {
                 // there might have been a jump to message during RPC fetch.
                 // Abort feeding messages as to not put holes in message list.
                 return;
             }
-            const alreadyKnownMessages = new Set(thread.messages.map(({ id }) => id));
+            const alreadyKnownMessages = new Set(thread.messagesListed.map(({ id }) => id));
             const messagesToAdd = fetched.filter(
                 (message) => !alreadyKnownMessages.has(message.id)
             );
             if (epoch === "older") {
-                thread.messages.unshift(...messagesToAdd);
+                thread.messagesListed.unshift(...messagesToAdd);
             } else {
-                thread.messages.push(...messagesToAdd);
+                thread.messagesListed.push(...messagesToAdd);
             }
             if (fetched.length < FETCH_LIMIT) {
                 if (epoch === "older") {
@@ -316,8 +326,8 @@ export class ThreadService {
                         ({ id }) => !alreadyKnownMessages.has(id)
                     );
                     if (missingMessages.length > 0) {
-                        thread.messages.push(...missingMessages);
-                        thread.messages.sort((m1, m2) => m1.id - m2.id);
+                        thread.messagesListed.push(...missingMessages);
+                        thread.messagesListed.sort((m1, m2) => m1.id - m2.id);
                     }
                 }
             }
@@ -622,7 +632,7 @@ export class ThreadService {
                 },
                 { html: true }
             );
-            thread.messages.push(tmpMsg);
+            thread.messagesListed.push(tmpMsg);
             if (thread.selfMember) {
                 thread.selfMember.seen_message_id = tmpMsg;
             }
@@ -636,7 +646,7 @@ export class ThreadService {
             data.temporary_id = null;
         }
         const message = this.store.Message.insert(data, { html: true });
-        thread.messages.add(message);
+        thread.messagesListed.add(message);
         if (thread.selfMember?.seen_message_id?.id < message.id) {
             thread.selfMember.seen_message_id = message;
         }
@@ -783,15 +793,15 @@ export class ThreadService {
     _enrichMessagesWithTransient(thread) {
         for (const message of thread.transientMessages) {
             if (message.id < thread.oldestPersistentMessage && !thread.loadOlder) {
-                thread.messages.unshift(message);
+                thread.messagesListed.unshift(message);
             } else if (message.id > thread.newestPersistentMessage && !thread.loadNewer) {
-                thread.messages.push(message);
+                thread.messagesListed.push(message);
             } else {
-                let afterIndex = thread.messages.findIndex((msg) => msg.id > message.id);
+                let afterIndex = thread.messagesListed.findIndex((msg) => msg.id > message.id);
                 if (afterIndex === -1) {
-                    afterIndex = thread.messages.length + 1;
+                    afterIndex = thread.messagesListed.length + 1;
                 }
-                thread.messages.splice(afterIndex - 1, 0, message);
+                thread.messagesListed.splice(afterIndex - 1, 0, message);
             }
         }
     }

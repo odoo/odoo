@@ -60,7 +60,7 @@ export class Thread extends Record {
     uuid;
     /** @type {string} */
     model;
-    allMessages = Record.many("Message", {
+    messages = Record.many("Message", {
         inverse: "thread",
     });
     /** @type {boolean} */
@@ -208,7 +208,7 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messages = Record.many("Message");
+    messagesListed = Record.many("Message");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -433,18 +433,17 @@ export class Thread extends Record {
         return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
     }
 
-    /** @returns {import("models").Message | undefined} */
     get newestMessage() {
-        return [...this.messages].reverse().find((msg) => !msg.isEmpty);
+        return [...this.messagesListed].reverse().find((msg) => !msg.isEmpty);
     }
 
     get newestPersistentMessage() {
-        return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
+        return [...this.messagesListed].reverse().find((msg) => Number.isInteger(msg.id));
     }
 
     newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
         compute() {
-            const allPersistentMessages = this.allMessages.filter(
+            const allPersistentMessages = this.messages.filter(
                 (message) => Number.isInteger(message.id) && !message.isEmpty
             );
             allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
@@ -453,7 +452,7 @@ export class Thread extends Record {
     });
 
     get oldestPersistentMessage() {
-        return this.messages.find((msg) => Number.isInteger(msg.id));
+        return this.messagesListed.find((msg) => Number.isInteger(msg.id));
     }
 
     onPinStateUpdated() {}
@@ -470,7 +469,7 @@ export class Thread extends Record {
     }
 
     get isEmpty() {
-        return !this.messages.some((message) => !message.isEmpty);
+        return !this.messagesListed.some((message) => !message.isEmpty);
     }
 
     offlineMembers = Record.many("ChannelMember", {
@@ -482,11 +481,11 @@ export class Thread extends Record {
     });
 
     get nonEmptyMessages() {
-        return this.messages.filter((message) => !message.isEmpty);
+        return this.messagesListed.filter((message) => !message.isEmpty);
     }
 
     get persistentMessages() {
-        return this.messages.filter((message) => !message.is_transient);
+        return this.messagesListed.filter((message) => !message.is_transient);
     }
 
     get prefix() {

@@ -49,11 +49,11 @@ export class MailCoreCommon {
                     if (starred) {
                         starredBox.counter++;
                         message.starredPersonas.add(this.store.self);
-                        starredBox.messages.add(message);
+                        starredBox.messagesListed.add(message);
                     } else {
                         starredBox.counter--;
                         message.starredPersonas.delete(this.store.self);
-                        starredBox.messages.delete(message);
+                        starredBox.messagesListed.delete(message);
                     }
                 }
             });

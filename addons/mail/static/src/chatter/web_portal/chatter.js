@@ -252,8 +252,8 @@ export class Chatter extends Component {
         this.state.thread.name = webRecord?.data?.display_name || undefined;
         this.attachmentUploader.thread = this.state.thread;
         if (threadId === false) {
-            if (this.state.thread.messages.length === 0) {
-                this.state.thread.messages.push({
+            if (this.state.thread.messagesListed.length === 0) {
+                this.state.thread.messagesListed.push({
                     id: this.messageService.getNextTemporaryId(),
                     author: this.store.self,
                     body: _t("Creating a new record..."),

@@ -54,20 +54,18 @@ export class DiscussCoreCommon {
                         starredCounter++;
                     }
                 }
-                this.store.discuss.starred.messages = filteredStarredMessages;
+                this.store.discuss.starred.messagesListed = filteredStarredMessages;
                 this.store.discuss.starred.counter -= starredCounter;
-                this.store.discuss.inbox.messages = this.store.discuss.inbox.messages.filter(
-                    (msg) => !msg.thread?.eq(thread)
-                );
+                this.store.discuss.inbox.messagesListed =
+                    this.store.discuss.inbox.messagesListed.filter((msg) => !msg.thread?.eq(thread));
                 this.store.discuss.inbox.counter -= thread.message_needaction_counter;
-                this.store.discuss.history.messages = this.store.discuss.history.messages.filter(
-                    (msg) => !msg.thread?.eq(thread)
-                );
+                this.store.discuss.history.messagesListed =
+                    this.store.discuss.history.messagesListed.filter((msg) => !msg.thread?.eq(thread));
                 this.threadService.closeChatWindow?.(thread);
                 if (thread.eq(this.store.discuss.thread)) {
                     this.threadService.setDiscussThread(this.store.discuss.inbox);
                 }
-                thread.messages.splice(0, thread.messages.length);
+                thread.messagesListed.splice(0, thread.messagesListed.length);
                 thread.delete();
             });
             this.busService.subscribe("discuss.channel/new_message", (payload, metadata) =>
@@ -87,7 +85,7 @@ export class DiscussCoreCommon {
                     },
                     { html: true }
                 );
-                message.thread.messages.push(message);
+                message.thread.messagesListed.push(message);
                 message.thread.transientMessages.push(message);
             });
             this.busService.subscribe("discuss.channel/unpin", (payload) => {
@@ -197,9 +195,9 @@ export class DiscussCoreCommon {
         let message = this.store.Message.get(messageData.id);
         const alreadyInNeedaction = message?.in(message.thread?.needactionMessages);
         message = this.store.Message.insert(messageData, { html: true });
-        if (message.notIn(channel.messages)) {
+        if (message.notIn(channel.messagesListed)) {
             if (!channel.loadNewer) {
-                channel.messages.push(message);
+                channel.messagesListed.push(message);
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
