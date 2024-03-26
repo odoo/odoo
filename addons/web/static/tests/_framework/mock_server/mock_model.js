@@ -190,7 +190,7 @@ const convertToOnChange = (model, values, specification) => {
             }
         } else if (field.type === "reference" && val) {
             const [modelName, id] = getReferenceValue(val);
-            const result = model.web_read(id, {
+            const result = model.env[modelName].web_read(id, {
                 specification: specification[fname].fields || {},
             });
             values[fname] = { ...result[0], id: { id, model: modelName } };
@@ -742,8 +742,6 @@ const orderByField = (model, orderBy, records) => {
  * }} params
  */
 const parseView = (model, params) => {
-    const isNodeProcessed = (node) => processedNodes.some((n) => n.isSameNode(node));
-
     const processedNodes = params.processedNodes || [];
     const { arch } = params;
     const level = params.level || 0;
@@ -762,7 +760,7 @@ const parseView = (model, params) => {
     const isEditable = editable && isViewEditable(doc, model._name);
 
     traverseElement(doc, (node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
+        if (node.nodeType !== Node.ELEMENT_NODE) {
             return false;
         }
         ["required", "readonly", "invisible", "column_invisible"].forEach((attr) => {
@@ -783,12 +781,12 @@ const parseView = (model, params) => {
             if (!field) {
                 throw fieldNotFoundError(model._name, fieldName);
             }
-        } else if (isGroupby && !isNodeProcessed(node)) {
+        } else if (isGroupby && !processedNodes.includes(node)) {
             const groupbyName = node.getAttribute("name");
             fieldNodes[groupbyName] = { node };
             groupbyNodes[groupbyName] = node;
         }
-        if (isGroupby && !isNodeProcessed(node)) {
+        if (isGroupby && !processedNodes.includes(node)) {
             return false;
         }
         return !isField;
@@ -2725,7 +2723,7 @@ export class Model extends Array {
                         const [modelName, id] = getReferenceValue(record[fieldName]);
                         record[fieldName] = {};
                         if (relatedFields && Object.keys(relatedFields).length) {
-                            const result = this.web_read(id, {
+                            const result = this.env[modelName].web_read(id, {
                                 specification: relatedFields,
                                 context: spec[fieldName].context,
                             });
@@ -2754,7 +2752,7 @@ export class Model extends Array {
                             const relResIds = record[fieldName];
                             let relRecords = relResIds.map((resId) => allRelRecords[resId]);
                             if (order) {
-                                relRecords = orderByField(getRelation(field), order);
+                                relRecords = orderByField(getRelation(field), order, relRecords);
                             }
                             if (limit) {
                                 relRecords = relRecords.map((r, i) =>
