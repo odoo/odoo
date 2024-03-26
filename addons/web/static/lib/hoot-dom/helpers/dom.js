@@ -707,8 +707,8 @@ customPseudoClasses
         if (!$isInteger(index)) {
             throw selectorError("eq", `expected index to be an integer (got ${content})`);
         }
-        return function eq(node, i) {
-            return i === index;
+        return function eq(node, i, nodes) {
+            return index < 0 ? i === nodes.length + index : i === index;
         };
     })
     .set("first", () => {
