@@ -921,17 +921,9 @@
          data-selector="#wrapwrap > header nav.navbar"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <we-select string="Mobile Alignment"
-                   data-name="header_mobile_alignment_opt"
-                   data-variable="hamburger-position-mobile"
-                   data-reload="/">
-            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center"
-                       data-customize-website-variable="'center'">Center</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right"
-                       data-customize-website-variable="'right'">Right</we-button>
-        </we-select>
+        <we-designoptionselector string="Mobile Alignment"
+                                 data-variable="hamburger__position__mobile"
+                                 data-reload="/"/>
 
         <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
 

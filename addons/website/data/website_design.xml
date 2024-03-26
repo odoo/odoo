@@ -216,6 +216,24 @@
             <field name="value">right</field>
             <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_default_align_right'), ref('website.template_header_hamburger_align_right'), ref('website.template_header_boxed_align_right'), ref('website.template_header_stretch_align_right'), ref('website.template_header_search_align_right'), ref('website.template_header_sales_one_align_right'), ref('website.template_header_sales_two_align_right'), ref('website.template_header_sales_four_align_right'), ref('website.template_header_sidebar_align_right')])]"/>
         </record>
+        <!-- Header Mobile Alignement Options -->
+        <record id="design_option_hamburgerpositionmobile_left" model="website.design.option">
+            <field name="name">hamburger__position__mobile</field>
+            <field name="display_name">Left</field>
+            <field name="value">left</field>
+        </record>
+        <record id="design_option_hamburgerpositionmobile_center" model="website.design.option">
+            <field name="name">hamburger__position__mobile</field>
+            <field name="display_name">Center</field>
+            <field name="value">center</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_mobile_align_center'), ref('website.template_header_hamburger_mobile_align_center')])]"/>
+        </record>
+        <record id="design_option_hamburgerpositionmobile_right" model="website.design.option">
+            <field name="name">hamburger__position__mobile</field>
+            <field name="display_name">Right</field>
+            <field name="value">right</field>
+            <field name="views_to_activate" eval="[(6, 0, [ref('website.template_header_mobile_align_right'), ref('website.template_header_hamburger_mobile_align_right')])]"/>
+        </record>
         <!-- Footer Template Options -->
         <record id="design_option_footertemplate_default" model="website.design.option">
             <field name="name">footer__template</field>
