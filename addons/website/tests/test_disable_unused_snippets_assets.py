@@ -115,7 +115,7 @@ HOMEPAGE_UP_TO_DATE = """
     <div id="wrap" class="oe_structure oe_empty">
       <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
         <div class="container">
-          <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-model_name="mail.mail">
+          <form action="/website_form/" method="post" enctype="multipart/form-data" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-model_name="mail.mail">
           </form>
         </div>
       </section>
