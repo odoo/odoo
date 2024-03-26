@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpcWithEnv } from "@mail/utils/common/misc";
-import { tick } from "@odoo/hoot-mock";
+import { tick, mockDate } from "@odoo/hoot-mock";
 import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -63,6 +63,7 @@ test("Known user with country", async () => {
 });
 
 test("Do not show channel when visitor is typing", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
