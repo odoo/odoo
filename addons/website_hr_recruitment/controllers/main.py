@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
@@ -317,7 +316,7 @@ class WebsiteHrRecruitment(http.Controller):
             'message': message
         }
 
-    @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public")
+    @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
     def check_recent_application(self, field, value, job_id):
         Applicant = http.request.env['hr.applicant'].sudo()
         search_domain = self._build_search_domain(field, value)
@@ -329,6 +328,7 @@ class WebsiteHrRecruitment(http.Controller):
             }
 
         applications = Applicant.search(search_domain + [
+            ('job_id.website_id', 'in', [http.request.website.id, False]),
             '|',
                 ('application_status', '=', 'ongoing'),
                 '&',
