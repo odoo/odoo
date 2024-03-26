@@ -40,7 +40,7 @@ import markupsafe
 import passlib.utils
 import pytz
 import werkzeug.utils
-from lxml import etree
+from lxml import etree, objectify
 
 import odoo
 import odoo.addons
@@ -61,6 +61,9 @@ SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.Com
 
 # Configure default global parser
 etree.set_default_parser(etree.XMLParser(resolve_entities=False))
+default_parser = etree.XMLParser(resolve_entities=False, remove_blank_text=True)
+default_parser.set_element_class_lookup(objectify.ObjectifyElementClassLookup())
+objectify.set_default_parser(default_parser)
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
