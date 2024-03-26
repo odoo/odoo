@@ -370,6 +370,7 @@ export class FloorScreen extends Component {
             await this.pos.transferTable(table);
         } else {
             try {
+                this.pos.tableSyncing = true;
                 await this.pos.setTable(table);
             } catch (e) {
                 if (!(e instanceof ConnectionLostError)) {
@@ -377,6 +378,8 @@ export class FloorScreen extends Component {
                 }
                 // Reject error in a separate stack to display the offline popup, but continue the flow
                 Promise.reject(e);
+            } finally {
+                this.pos.tableSyncing = false;
             }
         }
         const orders = this.pos.getTableOrders(table.id);

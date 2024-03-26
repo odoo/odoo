@@ -31,6 +31,7 @@ patch(PosStore.prototype, {
         this.floorPlanStyle = "default";
         this.isEditMode = false;
         this.isTableToMerge = false;
+        this.tableSyncing = false;
         await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
@@ -192,8 +193,12 @@ patch(PosStore.prototype, {
         }
 
         return {
-            orderToCreate: orderToCreate.filter((o) => context.table_ids.includes(o.table_id.id)),
-            orderToUpdate: orderToUpdate.filter((o) => context.table_ids.includes(o.table_id.id)),
+            orderToCreate: orderToCreate.filter(
+                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+            ),
+            orderToUpdate: orderToUpdate.filter(
+                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+            ),
         };
     },
     async getServerOrders() {
