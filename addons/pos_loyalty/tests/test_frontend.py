@@ -497,6 +497,11 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
+        # set the nomenclature to GS1
+        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        self.main_pos_config.company_id.write({
+            'nomenclature_id': barcodes_gs1_nomenclature.id
+        })
 
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
@@ -512,7 +517,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {"active_id": gift_card_program.id}
         ).create({"coupon_qty": 1, 'points_granted': 5}).generate_coupons()
         # Change the code of the gift card.
-        gift_card_program.coupon_ids.code = '044123456'
+        gift_card_program.coupon_ids.code = '043123456'
         # Run the tour. It will pay the gift card and use it.
         self.start_pos_tour("GiftCardProgramScanUseTour")
         # Check that gift cards are used
