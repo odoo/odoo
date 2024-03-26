@@ -264,6 +264,11 @@ export class SearchModel extends EventBus {
             this.searchViewId = searchViewDescription.viewId;
         }
 
+        const {
+            searchDefaults,
+            searchPanelDefaults,
+        } = this._extractSearchDefaultsFromGlobalContext();
+
         if (config.state) {
             this._importState(config.state);
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
@@ -286,26 +291,6 @@ export class SearchModel extends EventBus {
 
         // ... to rework (API for external domain, groupBy, facet)
         this.domainParts = {}; // put in state?
-
-        const searchDefaults = {};
-        const searchPanelDefaults = {};
-
-        for (const key in this.globalContext) {
-            const defaultValue = this.globalContext[key];
-            const searchDefaultMatch = /^search_default_(.*)$/.exec(key);
-            if (searchDefaultMatch) {
-                if (defaultValue) {
-                    searchDefaults[searchDefaultMatch[1]] = defaultValue;
-                }
-                delete this.globalContext[key];
-                continue;
-            }
-            const searchPanelDefaultMatch = /^searchpanel_default_(.*)$/.exec(key);
-            if (searchPanelDefaultMatch) {
-                searchPanelDefaults[searchPanelDefaultMatch[1]] = defaultValue;
-                delete this.globalContext[key];
-            }
-        }
 
         const parser = new SearchArchParser(
             searchViewDescription,
@@ -390,6 +375,8 @@ export class SearchModel extends EventBus {
         this.globalComparison = comparison;
         this.globalGroupBy = groupBy || [];
         this.globalOrderBy = orderBy || [];
+
+        this._extractSearchDefaultsFromGlobalContext();
 
         await this._reloadSections();
     }
@@ -1226,6 +1213,28 @@ export class SearchModel extends EventBus {
         }
     }
 
+    _extractSearchDefaultsFromGlobalContext() {
+        const searchDefaults = {};
+        const searchPanelDefaults = {};
+        for (const key in this.globalContext) {
+            const defaultValue = this.globalContext[key];
+            const searchDefaultMatch = /^search_default_(.*)$/.exec(key);
+            if (searchDefaultMatch) {
+                if (defaultValue) {
+                    searchDefaults[searchDefaultMatch[1]] = defaultValue;
+                }
+                delete this.globalContext[key];
+                continue;
+            }
+            const searchPanelDefaultMatch = /^searchpanel_default_(.*)$/.exec(key);
+            if (searchPanelDefaultMatch) {
+                searchPanelDefaults[searchPanelDefaultMatch[1]] = defaultValue;
+                delete this.globalContext[key];
+            }
+        }
+        return { searchDefaults, searchPanelDefaults };
+    }
+
     /**
      * Fetches values for each category at startup. At reload a category is
      * only fetched if needed.
@@ -1807,7 +1816,7 @@ export class SearchModel extends EventBus {
      */
     _getOrderBy() {
         const groups = this._getGroups();
-        let orderBy = [];
+        const orderBy = [];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const { searchItemId } = activeItem;
