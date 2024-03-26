@@ -97,6 +97,21 @@ class TestRobustness(TransactionCase):
         move1._action_confirm()
         move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
+
+        move2 = self.env['stock.move'].create({
+            'name': 'test_location_archive',
+            'location_id': test_stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.picked = True
+        move2._action_done()
+        self.assertEqual(move2.state, 'done')
+
         quant = self.env['stock.quant']._gather(
             self.product1,
             test_stock_location,
@@ -113,6 +128,7 @@ class TestRobustness(TransactionCase):
 
         # unreserve
         move1._do_unreserve()
+        test_stock_location.scrap_location = False
 
     def test_package_unpack(self):
         """ Unpack a package that contains quants with a reservation
