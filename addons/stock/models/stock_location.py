@@ -234,6 +234,7 @@ class Location(models.Model):
                               for f in {'usage', 'scrap_location'}))
             reserved_quantities = self.env['stock.move.line'].search_count([
                 ('location_id', 'in', modified_locations.ids),
+                ('state', 'not in', ['done', 'cancel']),
                 ('quantity_product_uom', '>', 0),
             ])
             if reserved_quantities:
