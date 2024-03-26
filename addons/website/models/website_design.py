@@ -44,6 +44,10 @@ class WebsiteDesign(models.Model):
     btn__border__radius__sm = fields.Char(string='Button Border Radius SM', default='4.8px')
     btn__border__radius__lg = fields.Char(string='Button Border Radius LG', default='32px')
     btn__border__width = fields.Char(string='Button Border Width', default='2px')
+    btn__primary__flat = fields.Boolean(string='Primary Button Flat', default=False)
+    btn__secondary__flat = fields.Boolean(string='Secondary Button Flat', default=False)
+    btn__primary__outline = fields.Boolean(string='Primary Button Outline', default=False)
+    btn__secondary__outline = fields.Boolean(string='Secondary Button Outline', default=False)
 
     input__padding__y = fields.Char(string='Input Padding Y', default='6px')
     input__padding__x = fields.Char(string='Input Padding X', default='12px')
