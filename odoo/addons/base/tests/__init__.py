@@ -7,6 +7,7 @@ from . import test_barcode
 from . import test_base
 from . import test_basecase
 from . import test_cache
+from . import test_date_utils
 from . import test_deprecation
 from . import test_db_cursor
 from . import test_expression
@@ -47,6 +48,7 @@ from . import test_views
 from . import test_xmlrpc
 from . import test_res_company
 from . import test_res_currency
+from . import test_res_country
 from . import test_res_partner
 from . import test_res_partner_bank
 from . import test_res_users

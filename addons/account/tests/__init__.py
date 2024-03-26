@@ -42,3 +42,4 @@ from . import test_tour
 from . import test_early_payment_discount
 from . import test_ir_actions_report
 from . import test_download_xsds
+from . import test_mail_tracking_value

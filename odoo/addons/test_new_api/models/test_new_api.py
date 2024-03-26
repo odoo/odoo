@@ -157,7 +157,7 @@ class Message(models.Model):
     @api.constrains('author', 'discussion')
     def _check_author(self):
         for message in self.with_context(active_test=False):
-            if message.discussion and message.author not in message.discussion.participants:
+            if message.discussion and message.author not in message.discussion.sudo().participants:
                 raise ValidationError(_("Author must be among the discussion participants."))
 
     @api.depends('author.name', 'discussion.name')

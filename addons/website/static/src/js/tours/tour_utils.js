@@ -319,7 +319,8 @@ function clickOnExtraMenuItem(stepOptions, backend = false) {
         trigger: `${backend ? "iframe" : ""} #top_menu`,
         run: function () {
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
-            if (extraMenuButton) {
+            // Don't click on the extra menu button if it's already visible.
+            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
                 extraMenuButton.click();
             }
         },

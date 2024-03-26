@@ -670,6 +670,38 @@ class TestAPI(SavepointCaseWithUserDemo):
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
 
+        # sorted doesn't filter out new records but don't sort them either (limitation)
+        new_p = self.env['res.partner'].new({
+            'child_ids': [
+                Command.create({'name': 'z'}),
+                Command.create({'name': 'a'}),
+            ],
+        })
+        self.assertEqual(len(new_p.child_ids.sorted()), 2)
+
+        # sorted keeps the _prefetch_ids
+        partners_with_children = self.env['res.partner'].create([
+            {
+                'name': 'required',
+                'child_ids': [
+                    Command.create({'name': 'z'}),
+                    Command.create({'name': 'a'}),
+                ],
+            },
+            {
+                'name': 'required',
+                'child_ids': [
+                    Command.create({'name': 'z'}),
+                    Command.create({'name': 'a'}),
+                ],
+            },
+        ])
+        partners_with_children.invalidate_model(['name'])
+        # Only one query to fetch name of children of each partner
+        with self.assertQueryCount(1):
+            for partner in partners_with_children:
+                partner.child_ids.sorted('id').mapped('name')
+
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
 

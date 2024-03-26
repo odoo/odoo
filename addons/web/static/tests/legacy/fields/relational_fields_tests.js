@@ -3099,6 +3099,60 @@ QUnit.module('Legacy relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_binary required', async function (assert) {
+        assert.expect(5);
+        this.data['ir.attachment'] = {
+            fields: {
+                name: {string:"Name", type: "char"},
+                mimetype: {string: "Mimetype", type: "char"},
+            },
+            records: [{
+                id: 17,
+                name: 'Marley&Me.jpg',
+                mimetype: 'jpg',
+            }],
+        };
+        this.data.turtle.fields.picture_ids = {
+            string: "Pictures",
+            type: "many2many",
+            relation: 'ir.attachment',
+        };
+        this.data.turtle.fields.attachment_ids = {
+            string: "Files",
+            type: "many2many",
+            relation: 'ir.attachment',
+        };
+        this.data.turtle.records[0].picture_ids = [17];
+        this.data.turtle.records[0].attachment_ids = [17];
+
+        var form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch:`<form string="Turtles">
+                    <group>
+                        <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                        <field name="attachment_ids" widget="many2many_binary" required="1"/>
+                    </group>
+                </form>`,
+            archs: {
+                'ir.attachment,false,list': '<tree string="Pictures"><field name="name"/></tree>',
+            },
+            mockRPC: function (route, { method }) {
+                assert.step(method);
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+        assert.verifySteps(['read', 'read'], 'We should read the attachments');
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$(".oe_fileupload.o_field_widget[name='attachment_ids'] .o_attachment_delete"));
+        await testUtils.form.clickSave(form);
+        assert.verifySteps([], "No save should be performed");
+        assert.strictEqual(form.$('.o_field_invalid').length, 2, 'An invalid field should be present in the view')
+        form.destroy();
+    });
+
     QUnit.test('name_create in form dialog', async function (assert) {
         assert.expect(2);
 

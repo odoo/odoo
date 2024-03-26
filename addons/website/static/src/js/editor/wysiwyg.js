@@ -38,6 +38,25 @@ function toggleDropdown($toggles, show) {
 }
 
 /**
+ * Checks if the classes that changed during the mutation are all to be ignored.
+ * (The mutation can be discarded if it is the case, when filtering the mutation
+ * records).
+ *
+ * @param {Object} record the current mutation
+ * @param {Array} excludedClasses the classes to ignore
+ * @returns {Boolean}
+ */
+function checkForExcludedClasses(record, excludedClasses) {
+    const classBefore = (record.oldValue && record.oldValue.split(" ")) || [];
+    const classAfter = [...record.target.classList];
+    const changedClasses = [
+        ...classBefore.filter(c => c && !classAfter.includes(c)),
+        ...classAfter.filter(c => c && !classBefore.includes(c)),
+    ];
+    return changedClasses.every(c => excludedClasses.includes(c));
+}
+
+/**
  * HtmlEditor
  * Intended to edit HTML content. This widget uses the Wysiwyg editor
  * improved by odoo.
@@ -50,7 +69,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
@@ -59,8 +78,9 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         // Dropdown menu initialization: handle dropdown openings by hand
         var $dropdownMenuToggles = $editableWindow.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
         $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
+        // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
+        $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
-            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -77,10 +97,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
                     if (!this.options.enableTranslation) {
                         this._toggleMegaMenu($toggle[0]);
                     }
-                })
-                // FIXME this is not right, the observer should not be inactive
-                // for async periods of time.
-                .then(() => this.odooEditor.observerActive());
+                });
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -91,7 +108,87 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             }
         }
 
-        return this._super.apply(this, arguments);
+        const ret = await this._super.apply(this, arguments);
+
+        // Overriding the `filterMutationRecords` function so it can be used to
+        // filter website-specific mutations.
+        const webEditorFilterMutationRecords = this.odooEditor.options.filterMutationRecords;
+        Object.assign(this.odooEditor.options, {
+            /**
+             * @override
+             */
+            filterMutationRecords(records) {
+                const filteredRecords = webEditorFilterMutationRecords(records);
+
+                // Dropdown attributes to ignore.
+                const dropdownClasses = ["show", "dropdown-menu-start", "dropdown-menu-end"];
+                const dropdownToggleAttributes = ["aria-expanded"];
+                const dropdownMenuAttributes = ["style", "data-bs-popper"];
+                // Collapse attributes to ignore.
+                const collapseClasses = ["show", "collapse", "collapsing", "collapsed"];
+                const collapseAttributes = ["style"];
+                const collapseTogglerAttributes = ["aria-expanded"];
+                // Extra menu attributes to ignore.
+                const extraMenuClasses = ["nav-item", "nav-link", "dropdown-item", "active"];
+                const extraMenuToggleAttributes = ["data-bs-auto-close"];
+
+                return filteredRecords.filter(record => {
+                    if (record.type === "attributes") {
+                        if (record.target.closest("header#top")) {
+                            // Do not record when showing/hiding a dropdown.
+                            if (record.target.matches(".dropdown-toggle, .dropdown-menu")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, dropdownClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".dropdown-menu")
+                                    && dropdownMenuAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".dropdown-toggle")
+                                    && dropdownToggleAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record when showing/hiding a collapse.
+                            if (record.target.matches(".navbar-collapse, .navbar-toggler")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, collapseClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".navbar-collapse")
+                                    && collapseAttributes.includes(record.attributeName)) {
+                                return false;
+                            } else if (record.target.matches(".navbar-toggler")
+                                    && collapseTogglerAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+
+                            // Do not record the extra menu changes.
+                            if (record.target.matches("#top_menu li, #top_menu li > a")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, extraMenuClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".o_extra_menu_items > a")
+                                    && extraMenuToggleAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+                    } else if (record.type === "childList") {
+                        const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+                        // Do not record the addition/removal of the extra menu
+                        // and the menus inside it.
+                        if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
+                                && addedOrRemovedNode.matches(".o_extra_menu_items, #top_menu li")) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            },
+        });
+
+        return ret;
     },
     /**
      * @override
@@ -237,7 +334,7 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             // menu itself.
             // FIXME normally removing the 'show' class should not be necessary here
             // TODO check that editor classes are removed here as well
-            var classes = _.without($el.attr('class').split(' '), 'dropdown-menu', 'o_mega_menu', 'show');
+            const classes = _.without($el.attr("class").split(" "), "dropdown-menu", "o_mega_menu", "show", "o_wysiwyg_submenu");
             promises.push(this._rpc({
                 model: 'website.menu',
                 method: 'write',
@@ -295,7 +392,9 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         if (!megaMenuEl || !megaMenuEl.classList.contains('show')) {
             return this.snippetsMenu.activateSnippet(false);
         }
+        this.odooEditor.observerUnactive("toggleMegaMenu");
         megaMenuEl.classList.add('o_no_parent_editor');
+        this.odooEditor.observerActive("toggleMegaMenu");
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     },
 });

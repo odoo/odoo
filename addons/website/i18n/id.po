@@ -6,15 +6,16 @@
 # arfa simoncelli, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Abe Manyo, 2023
+# Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +37,20 @@ msgstr "\" beritahu dengan"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s penyerahan formulir\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "\"URL dari\" tidak boleh kosong."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -509,6 +518,7 @@ msgstr "<b>Tambahkan</b> gambar yang dipilih."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1486,6 +1496,13 @@ msgstr "Tentang Kami"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "Tentang kami"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Akses Ditolak"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3873,6 +3890,17 @@ msgid "Display this website when users visit this domain"
 msgstr "Tampilkan website ini saat user mengunjungi domain ini"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Jangan menyalin/menempel kode yang Anda tidak pahami, ini dapat membawa "
+"risiko untuk data Anda."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -3896,6 +3924,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "Apakah Anda ingin menginstal Aplikasi \"%s\"?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Dokumentasi"
@@ -4953,6 +4982,18 @@ msgid "Google Search Console"
 msgstr "Konsol Google Search"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"Google tidak perlu diping lagi. Google akan secara otomatis mengambil "
+"/sitemap.xml. Anda."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5284,8 +5325,8 @@ msgid "Home page of the current website"
 msgstr "Beranda dari website saat ini"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5470,6 +5511,15 @@ msgid ""
 msgstr ""
 "Jika Anda membuang edit saat ini, semua perubahan yang belum disimpan akan "
 "hilang. Anda dapat membatalkan ini untuk kembali ke mode edit."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -6625,6 +6675,7 @@ msgid "Men"
 msgstr "Pria"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -8112,6 +8163,11 @@ msgid "Qweb Field Contact"
 msgstr "Kolom Kontak Qweb"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "HTML Field Qweb"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr "Radar"
@@ -9521,6 +9577,17 @@ msgid "The chosen name already exists"
 msgstr "Nama yang dipilih sudah ada"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+"Perusahaan %(company_name)r tidak dapat diarsip karena memiliki website yang terhubung %(website_name)r.\n"
+"Ubah perusahaan website tersebut terlebih dahulu."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "Perusahaan yang memiliki website ini"
@@ -9834,6 +9901,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9908,6 +9976,13 @@ msgstr "Tampilan arch ini telah dimodifikasi"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Website ini tidak memiliki domain yang dikonfigurasi."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9916,13 +9991,6 @@ msgid ""
 msgstr ""
 "Website ini tidak memiliki domain yang dikonfigurasi. Untuk mencegah perilaku yang tidak terduga selama edisi website, kami menyarankan menutup (atau memuat ulang) tab-tab browser lainnya.\n"
 "Untuk menghapus pesan ini mohon tetapkan domain di pengaturan website Anda"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Website ini tidak memiliki domain yang dikonfigurasi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11352,6 +11420,14 @@ msgstr ""
 "mengganti pengaturannya"
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
@@ -11368,13 +11444,6 @@ msgid ""
 msgstr ""
 "Anda telah menyembunyikan halaman ini dari pencarian. Halaman ini tidak akan"
 " diineks oleh search engine."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Anda belum menetapkan domain Anda"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11436,6 +11505,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Email Anda"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Potongan Embed Code Anda tidak memiliki apapun untuk ditampilkan. Klik pada "
+"Edit untuk memodifikasinya."
 
 #. module: website
 #. odoo-javascript

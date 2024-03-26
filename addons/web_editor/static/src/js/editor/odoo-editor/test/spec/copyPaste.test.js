@@ -98,8 +98,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li>First</li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li>First</li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('First');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('First');
                 },
             });
             await testEditor(BasicEditor, {
@@ -108,8 +108,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('List');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li>List</li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li>List</li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('List');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('List');
                 },
             });
             await testEditor(BasicEditor, {
@@ -118,8 +118,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span></li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span></li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
                 },
             });
         })

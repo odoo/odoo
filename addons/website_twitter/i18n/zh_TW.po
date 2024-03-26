@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Tony Ng, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +59,7 @@ msgstr "<strong>描述：</strong> Odoo Twitter 整合"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr "<strong>名稱：</strong> Odoo 推特整合"
+msgstr "<strong>名稱：</strong>Odoo Twitter 整合"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -79,6 +79,7 @@ msgid "API secret"
 msgstr "API 密鑰"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -128,6 +129,7 @@ msgid "Get favorites from this screen name"
 msgstr "獲取這個名稱的最愛"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
@@ -144,6 +146,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Internet connection refused: We failed to reach a twitter server."
@@ -182,27 +185,30 @@ msgid ""
 msgstr "成功連線後，若未曾做完，請完成 Twitter 門戶存取流程，在"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr "請為一個網站設定的推特螢幕名稱來上載您的喜好（它不必是您自己的）"
+msgstr "請在網站設定中，設定用以載入最愛資料的 Twitter 螢幕名稱（不一定是你自己的）"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr "請在網站設定內，設定 Twitter API 密鑰和秘密。"
 
 #. module: website_twitter
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_twitter/static/src/js/website.twitter.editor.js:0
 #, python-format
 msgid "Reload"
 msgstr "重新載入"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -220,9 +226,10 @@ msgstr "螢幕名稱"
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr "您想從中上載的喜好推特帳號的螢幕名稱。它不必與 API 密鑰/secret相匹配。"
+msgstr "用以載入最愛資料的 Twitter 帳戶的螢幕名稱。此名稱無需與 API 密鑰/秘密相符。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -230,6 +237,7 @@ msgid ""
 msgstr "Twiiter伺服器線上，但是請求過載。請稍後重試。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -238,6 +246,7 @@ msgid ""
 msgstr "Twiiter伺服器已運作，但是由於我們的棧中某些錯誤，無法為此請求提供服務。請稍後重試。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -246,6 +255,7 @@ msgid ""
 msgstr "明白該請求，但請求已被拒絕，或不允許存取。請檢查你的 Twitter API 密鑰及秘密。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -254,6 +264,7 @@ msgid ""
 msgstr "請求無效或者無法提供此服務。沒有認證請求被視為無效，並產生此反應。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "There was no new data to return."
@@ -305,7 +316,7 @@ msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr "Twitter API 秘密，可在 https://apps.twitter.com/ 取得。"
 
 #. module: website_twitter
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter Configuration"
@@ -322,6 +333,7 @@ msgid "Twitter Scroller"
 msgstr "Twitter 捲軸"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -330,12 +342,14 @@ msgid ""
 msgstr "Twitter 授權發生錯誤！請檢查你的 Twitter API 密鑰和秘密！"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Twitter is down or being upgraded."
 msgstr "Twitter關閉或者正在升級。"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -354,26 +368,26 @@ msgid "Twitter tutorial"
 msgstr "Twitter 設置教學"
 
 #. module: website_twitter
+#. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
-msgstr "推特使用者 @%(username)s少於12個的喜好推文。請加入更多或選擇一個不同的螢幕名稱。"
+msgstr "Twitter 使用者 @%(username)s 的最愛推文少於 12 條。請加入更多最愛推文，或選擇其他螢幕名稱。"
 
 #. module: website_twitter
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter's user"
-msgstr "推特使用者"
+msgstr "Twitter的使用者"
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
-#: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr "推特：獲取新的最愛項目"
+msgstr "Twitter：獲取新的最愛項目"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
@@ -389,14 +403,14 @@ msgstr "網站 Twitter"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "https://developer.twitter.com/"
-msgstr ""
+msgstr "https://developer.twitter.com/"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "https://developer.twitter.com/en/portal/products"
-msgstr ""
+msgstr "https://developer.twitter.com/en/portal/products"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "https://developer.twitter.com/portal/"
-msgstr ""
+msgstr "https://developer.twitter.com/portal/"

@@ -15,6 +15,7 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
+    "bgSrc",
 ];
 const isGif = (mimetype) => mimetype === 'image/gif';
 
@@ -463,7 +464,12 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
-    // the options, instead of having no option.
+    // the options, instead of having no option. Note that we do not want to
+    // check if the image is local or not here as a previous bug converted some
+    // local (relative src) images to absolute URL... and that before users had
+    // setup their website domain. That means they can have an absolute URL that
+    // looks like "https://mycompany.odoo.com/web/image/123" that leads to a
+    // "local" image even if the domain name is now "mycompany.be".
     if (original && original.image_src) {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
@@ -527,7 +533,7 @@ return {
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
+    removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields],
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,

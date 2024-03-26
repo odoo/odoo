@@ -702,6 +702,14 @@ class TestPartnerRecursion(TransactionCase):
         ps = self.p1 + self.p2 + self.p3
         self.assertTrue(ps.write({'phone': '123456'}))
 
+    def test_111_res_partner_recursion_infinite_loop(self):
+        """ The recursion check must not loop forever """
+        self.p2.parent_id = False
+        self.p3.parent_id = False
+        self.p1.parent_id = self.p2
+        with self.assertRaises(ValidationError):
+            (self.p3|self.p2).write({'parent_id': self.p1.id})
+
 
 class TestParentStore(TransactionCase):
     """ Verify that parent_store computation is done right """

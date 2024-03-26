@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -314,13 +314,13 @@ msgstr "Tạo Nhiều Hóa đơn (sửa)"
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
-msgstr ""
+msgstr "Tạo lệnh sửa chữa"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__is_repairable
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__is_repairable
 msgid "Create Repair Orders from Returns"
-msgstr ""
+msgstr "Tạo lệnh sửa chữa từ phiếu trả hàng"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -529,6 +529,7 @@ msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"Nếu chọn, bạn sẽ có thể trực tiếp tạo lệnh sửa chữa từ một phiếu trả hàng."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -740,7 +741,7 @@ msgstr "Không có sản phẩm phí."
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "Không tìm thấy lệnh sửa chữa nào. Hãy tạo mới!"
 
 #. module: repair
 #. odoo-python
@@ -760,7 +761,7 @@ msgstr "Thông thường"
 #, python-format
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
-msgstr ""
+msgstr "Lưu ý rằng kho hàng trả lại và vị trí sửa chữa không trùng khớp!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -785,7 +786,7 @@ msgstr "Số lượng tin gửi đi bị lỗi"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Số lượng lệnh sửa chữa liên kết với phiếu lấy hàng này"
 
 #. module: repair
 #. odoo-python
@@ -972,7 +973,7 @@ msgstr "Hạng dòng sửa chữa (bộ phận)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "Ghi chú tái chế"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1024,7 +1025,7 @@ msgstr "Tham chiếu sửa chữa"
 #. module: repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
-msgstr ""
+msgstr "Dịch vụ sửa chữa"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
@@ -1075,7 +1076,7 @@ msgstr ""
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "Lệnh sửa chữa của %s"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
@@ -1124,12 +1125,12 @@ msgstr "Trả hàng"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Phiếu trả hàng chứa sản phẩm cần sửa chữa."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Loại trả hàng của"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1340,6 +1341,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"Đúng nếu lệnh sửa chữa này liên kết với một Phiếu trả hàng và trạng thái là "
+"'Xong'. Sai nếu khác điều kiện đã nêu."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type

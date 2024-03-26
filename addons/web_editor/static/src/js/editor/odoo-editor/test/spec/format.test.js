@@ -835,6 +835,20 @@ describe('Format', () => {
                 contentAfter: '<table><tbody><tr><td><h1><span style="font-size: 18px;">[]<br></span></h1></td><td><h1><span style="font-size: 18px;"><br></span></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
             });
         });
+        it('should apply font size in unbreakable span with class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span class="oe_unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span class="oe_unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
+        it('should apply font size in unbreakable span without class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span t="unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
@@ -900,6 +914,34 @@ describe('Format', () => {
                 contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
                 stepFunction: editor => editor.execCommand('removeFormat'),
                 contentAfter: '<div><p>[ab]</p></div>',
+            });
+        });
+        it('should remove all the colors for the text separated by Shift+Enter when using removeFormat button', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="color: rgb(255, 0, 0);">[abc</font><br><font style="color: rgb(255, 0, 0);">abc</font><br><font style="color: rgb(255, 0, 0);">abc</font><br><font style="color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc<br>abc<br>abc<br>abc]</h1></div>`
+
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="background-color: rgb(255, 0, 0);">[abc</font><br><font style="background-color: rgb(255, 0, 0);">abc</font><br><font style="background-color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc<br>abc<br>abc]</h1></div>`
+
+            });
+        })
+        it('should remove all the colors for the text separated by Enter when using removeFormat button' , async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="background-color: rgb(255, 0, 0);">[abc</font></h1><h1><font style="background-color: rgb(255, 0, 0);">abc</font></h1><h1><font style="background-color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
+
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="color: rgb(255, 0, 0);">[abc</font></h1><h1><font style="color: rgb(255, 0, 0);">abc</font></h1><h1><font style="color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
+
             });
         });
     });
@@ -1045,6 +1087,13 @@ describe('setTagName', () => {
                 contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
             });
         });
+        it('should not transfer attributes of list to heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
+            });
+        });
     });
     describe('to heading 2', () => {
         it('should turn a heading 1 into a heading 2', async () => {
@@ -1088,6 +1137,13 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'h2'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><h2>[]a</h2></td><td><h2>b</h2></td><td><h2>c</h2></td></tr></tbody></table>',
+            });
+        });
+        it('should not transfer attributes of list to heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<ul><li class="nav-item"><h2>[abcd]</h2></li></ul>',
             });
         });
     });
@@ -1135,6 +1191,13 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h3>[]a</h3></td><td><h3>b</h3></td><td><h3>c</h3></td></tr></tbody></table>',
             });
         });
+        it('should not transfer attributes of list to heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                contentAfter: '<ul><li class="nav-item"><h3>[abcd]</h3></li></ul>',
+            });
+        });
     });
     describe('to pre', () => {
         it('should turn a heading 1 into a pre', async () => {
@@ -1171,6 +1234,13 @@ describe('setTagName', () => {
                 contentBefore: '<p>abcd<br>[]<br></p>',
                 stepFunction: editor => editor.execCommand('setTag', 'pre'),
                 contentAfter: '<pre>abcd<br>[]<br></pre>',
+            });
+        });
+        it('should not transfer attributes of list to pre', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" id="test">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                contentAfter: '<ul><li class="nav-item" id="test"><pre>[abcd]</pre></li></ul>',
             });
         });
     });
@@ -1224,6 +1294,13 @@ describe('setTagName', () => {
                 contentBefore: '<h4 class="h5">[abcd]</h4>',
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 contentAfter: '<blockquote>[abcd]</blockquote>',
+            });
+        });
+        it('should not transfer attributes of list to blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" style="color: red;">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<ul><li class="nav-item" style="color: red;"><blockquote>[abcd]</blockquote></li></ul>',
             });
         });
     });

@@ -118,6 +118,20 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
+    def test_xml_tree_post_retention(self):
+        self.out_invoice.invoice_line_ids.tax_ids = [(4, self._get_tax_by_xml_id('s_irpf15').id)]
+        with freeze_time(self.frozen_today):
+            xml_doc = self.edi_format._get_l10n_es_tbai_invoice_xml(self.out_invoice, cancel=False)[self.out_invoice]['xml_file']
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected_base = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST)
+            xpath = """
+                <xpath expr="//ImporteTotalFactura" position="after">
+                    <RetencionSoportada>600.00</RetencionSoportada>
+                </xpath>
+            """
+            xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
     def test_xml_tree_in_post(self):
         """Test XML of vendor bill for LROE Batuz"""
         with freeze_time(self.frozen_today):

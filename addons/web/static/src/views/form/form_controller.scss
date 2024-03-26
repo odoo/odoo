@@ -474,7 +474,7 @@
 
     @include media-breakpoint-up(sm) {
         .o_inner_group {
-            grid-template-columns: fit-content(150px) 1fr;
+            grid-template-columns: fit-content(150px) minmax(0, 1fr);
             &.o_form_fw_labels {
                 grid-template-columns: 150px 1fr;
             }
@@ -966,6 +966,7 @@
             max-width: 300px;
         }
     }
+
     @include media-breakpoint-down(md) {
         .o_cp_buttons {
             width: 100%;

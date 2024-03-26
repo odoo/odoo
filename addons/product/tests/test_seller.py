@@ -152,3 +152,6 @@ class TestSeller(TransactionCase):
         }])
         self.assertEqual(vendors, self.product_consu.seller_ids,
             "Sellers of a product should be listed in the product's seller_ids")
+        vendors.write({'product_id': False})
+        self.assertEqual(vendors, self.product_consu.seller_ids,
+            "Setting the product_id to False shouldn't affect seller_ids.")

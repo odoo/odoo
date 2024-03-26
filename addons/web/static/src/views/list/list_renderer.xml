@@ -44,9 +44,9 @@
                             </th>
                             <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-sticky end-0" style="width: 32px; min-width: 32px">
+                        <th t-if="displayOptionalFields or activeActions.onDelete" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-static" style="width: 32px; min-width: 32px">
                             <Dropdown t-if="displayOptionalFields"
-                                class="'o_optional_columns_dropdown text-center border-top-0'"
+                                class="'o_optional_columns_dropdown border-top-0 text-center'"
                                 togglerClass="'btn p-0'"
                                 skipTogglerTabbing="true"
                                 position="'bottom-end'">

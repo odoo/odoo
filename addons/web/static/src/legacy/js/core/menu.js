@@ -16,6 +16,9 @@ const BREAKPOINT_SIZES = {sm: '575', md: '767', lg: '991', xl: '1199', xxl: '139
  * @param {Array} [options.images=[]] images to wait for before menu update.
  * @param {Array} [options.loadingStyleClasses=[]] list of CSS classes to add while
  * updating the menu.
+ * @param {function} [options.autoClose] returns a value that represents the
+ * "auto-close" behaviour of the dropdown (e.g. used to prevent auto-closing in
+ * "edit" mode).
 */
 export async function initAutoMoreMenu(el, options) {
     if (!el) {
@@ -27,6 +30,7 @@ export async function initAutoMoreMenu(el, options) {
     const [breakpoint = 'md'] = navbar ? Object.keys(BREAKPOINT_SIZES)
         .filter(suffix => navbar.classList.contains(`navbar-expand-${suffix}`)) : [];
     const isNoHamburgerMenu = !!navbar && navbar.classList.contains('navbar-expand');
+    let isExtraMenuOpen = false;
 
     options = Object.assign({
         unfoldable: 'none',
@@ -35,6 +39,7 @@ export async function initAutoMoreMenu(el, options) {
         minSize: BREAKPOINT_SIZES[breakpoint],
         images: [],
         loadingStyleClasses: [],
+        autoClose: () => true,
     }, options || {});
 
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
@@ -43,7 +48,6 @@ export async function initAutoMoreMenu(el, options) {
     const autoMarginLeftRegex = /\bm[sx]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: ms-auto mx-auto
     const autoMarginRightRegex = /\bm[ex]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: me-auto mx-auto
     var extraItemsToggle = null;
-    let debounce;
     const afterFontsloading = new Promise((resolve) => {
         if (document.fonts) {
             document.fonts.ready.then(resolve);
@@ -59,11 +63,29 @@ export async function initAutoMoreMenu(el, options) {
         _adapt();
     }
 
-    const debouncedAdapt = () => {
-        clearTimeout(debounce);
-        debounce = setTimeout(_adapt, 250);
+    let pending = false;
+    let refreshId = null;
+    const onRefresh = () => {
+        if (pending) {
+            refreshId = window.requestAnimationFrame(onRefresh);
+            _adapt();
+            pending = false;
+        } else {
+            refreshId = null;
+        }
     };
-    window.addEventListener('resize', debouncedAdapt);
+    // This should throttle the `_adapt()` method to the browser's refresh
+    // rate. The first menu adaptation is always executed immediately.
+    const throttleAdapt = () => {
+        if (refreshId === null) {
+            refreshId = window.requestAnimationFrame(onRefresh);
+            _adapt();
+        } else {
+            pending = true;
+        }
+    };
+
+    window.addEventListener('resize', throttleAdapt);
 
     el.addEventListener('dom:autoMoreMenu:adapt', _adapt);
     el.addEventListener('dom:autoMoreMenu:destroy', destroy, {once: true});
@@ -99,9 +121,14 @@ export async function initAutoMoreMenu(el, options) {
     }
 
     function _adapt() {
+        el.dispatchEvent(new Event("autoMoreMenu.willAdapt", { bubbles: true }));
         if (options.loadingStyleClasses.length) {
             el.classList.add(...options.loadingStyleClasses);
         }
+        // The goal here is to get the state of the extra menu dropdown if it is
+        // there, which will be restored after the menu adaptation.
+        const extraMenuEl = _getExtraMenuEl();
+        isExtraMenuOpen = extraMenuEl && extraMenuEl.classList.contains("show");
         _restore();
 
         // Ignore invisible/toggleable top menu element & small viewports.
@@ -206,12 +233,15 @@ export async function initAutoMoreMenu(el, options) {
         extraItemsToggle.appendChild(extraItemsToggleLink);
         extraItemsToggle.appendChild(dropdownMenu);
         el.insertBefore(extraItemsToggle, target);
+        if (!options.autoClose()) {
+            extraItemsToggleLink.setAttribute("data-bs-auto-close", "outside");
+        }
         return dropdownMenu;
     }
 
     function destroy() {
         _restore();
-        window.removeEventListener('resize', debouncedAdapt);
+        window.removeEventListener('resize', throttleAdapt);
         el.removeEventListener('dom:autoMoreMenu:adapt', _adapt);
     }
 
@@ -235,7 +265,15 @@ export async function initAutoMoreMenu(el, options) {
         return Promise.all(defs);
     }
 
+    function _getExtraMenuEl() {
+        return el.querySelector(".o_extra_menu_items .dropdown-toggle");
+    }
+
     function _endAutoMoreMenu() {
+        const extraMenuEl = _getExtraMenuEl();
+        if (extraMenuEl && isExtraMenuOpen) {
+            extraMenuEl.click();
+        }
         el.classList.remove(...options.loadingStyleClasses);
     }
 }

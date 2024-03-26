@@ -35,6 +35,11 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'sequence': 5
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': "tax_10",
+            'amount_type': 'percent',
+            'amount': 10.0,
+        })
         cls.tax_16 = cls.env['account.tax'].create({
             'name': "tax_16",
             'amount_type': 'percent',
@@ -305,6 +310,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 10.0,
             'tax_group_id': self.tax_group1.id,
             'include_base_amount': True,
+            'sequence': 2,
         })
 
         tax_20 = self.env['account.tax'].create({
@@ -312,6 +318,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount_type': 'percent',
             'amount': 20.0,
             'tax_group_id': self.tax_group1.id,
+            'sequence': 2,
         })
 
         tax_30 = self.env['account.tax'].create({
@@ -320,6 +327,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 30.0,
             'tax_group_id': self.tax_group2.id,
             'include_base_amount': True,
+            'sequence': 1,
         })
 
         document = self._create_document_for_tax_totals_test([
@@ -732,6 +740,14 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         ]
         run_case('round_per_line', lines, [16.60])
         run_case('round_globally', lines, [16.59])
+
+        lines = [
+            (54.45, self.tax_10),
+            (600, self.tax_10),
+            (-500, self.tax_10),
+        ]
+        run_case('round_per_line', lines, [15.45])
+        run_case('round_globally', lines, [15.45])
 
     def test_cash_rounding_amount_total_rounded(self):
         tax_15 = self.env['account.tax'].create({

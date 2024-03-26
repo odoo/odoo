@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -14,7 +13,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
-import { getClassNameFromDecoration } from "@web/views/utils";
+import { evalDomain, getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -786,7 +785,7 @@ export class ListRenderer extends Component {
     }
 
     evalModifier(modifier, record) {
-        return !!(modifier && new Domain(modifier).contains(record.evalContext));
+        return evalDomain(modifier, record.evalContext);
     }
 
     getGroupDisplayName(group) {
@@ -897,7 +896,7 @@ export class ListRenderer extends Component {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
-        } else {
+        } else if (optionalActiveFields !== "") {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             });
@@ -1819,11 +1818,14 @@ export class ListRenderer extends Component {
         }
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
-        this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-            handleField: this.props.archInfo.handleField,
-        });
-        await this.resequencePromise;
-        element.classList.add("o_row_draggable");
+        try {
+            this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
+                handleField: this.props.archInfo.handleField,
+            });
+            await this.resequencePromise;
+        } finally {
+            element.classList.add("o_row_draggable");
+        }
     }
 
     /**

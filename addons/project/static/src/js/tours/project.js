@@ -119,13 +119,18 @@ tour.register('project_tour', {
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
+    mobile: false,
+}, {
+    trigger: "div[role='article']",
+    mobile: true,
+    run: "click",
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: '.o_form_project_tasks.o_form_dirty',
     content: Markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
     position: "bottom",
 }, {
-    trigger: ".breadcrumb-item:not(.active):last",
+    trigger: ".breadcrumb .o_back_button",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     position: "right",

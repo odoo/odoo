@@ -442,6 +442,9 @@
                                     <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
                                         <i class="fa fa-fw fa-check"/> <b>Paid</b>
                                     </span>
+                                    <span t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> <b>Reversed</b>
+                                    </span>
                                     <span t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
                                         <i class="fa fa-fw fa-check"/> <b>Authorized</b>
                                     </span>
@@ -586,7 +589,7 @@
             <section t-if="sale_order.payment_term_id" class="mt-5">
                 <h3 class="">Payment terms</h3>
                 <hr class="mt-0 mb-1"/>
-                <span t-field="sale_order.payment_term_id"/>
+                <span t-field="sale_order.payment_term_id.note"/>
             </section>
         </div>
     </template>

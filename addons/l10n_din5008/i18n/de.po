@@ -4,16 +4,18 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-28 12:54+0000\n"
-"PO-Revision-Date: 2023-07-28 12:54+0000\n"
+"POT-Creation-Date: 2024-02-13 21:49+0000\n"
+"PO-Revision-Date: 2024-02-14 08:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -24,6 +26,11 @@ msgid ""
 "                                .name_container {\n"
 "                                    color:"
 msgstr ""
+"&amp;.din_page {\n"
+"                        &amp;.header {\n"
+"                            .company_header {\n"
+"                                .name_container {\n"
+"                                    color:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -35,6 +42,12 @@ msgid ""
 "                            h2 {\n"
 "                                color:"
 msgstr ""
+";\n"
+"                                    }\n"
+"                                }\n"
+"                            }\n"
+"                            h2 {\n"
+"                                color:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -49,6 +62,15 @@ msgid ""
 "                                    &gt; span {\n"
 "                                        color:"
 msgstr ""
+";\n"
+"                                }\n"
+"                            }\n"
+"                        }\n"
+"                        &amp;.invoice_note {\n"
+"                            td {\n"
+"                                .address {\n"
+"                                    &gt; span {\n"
+"                                        color:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -60,16 +82,22 @@ msgid ""
 "                                    th {\n"
 "                                        color:"
 msgstr ""
+";\n"
+"                            }\n"
+"                            .page {\n"
+"                                [name=invoice_line_table], [name=stock_move_table], .o_main_table {\n"
+"                                    th {\n"
+"                                        color:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "<span>|</span>"
-msgstr ""
+msgstr "<span>|</span>"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenstellen-Buchungen"
+msgstr "Kostenstellenbuchung"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -96,7 +124,7 @@ msgstr "Stadt"
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Geschäftsvorlagen Layout"
+msgstr "Dokumentlayout des Unternehmens"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_registry
@@ -128,12 +156,12 @@ msgstr "Fälligkeitsdatum"
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__account_fiscal_country_id
 msgid "Fiscal Country"
-msgstr ""
+msgstr "Steuerland"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "HRB Nr:"
-msgstr "HRB Nr.:"
+msgstr "HRB-Nr.:"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -169,20 +197,19 @@ msgstr "Rechnungsnr."
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Invoicing Address:"
-msgstr "Rechnungsadresse"
+msgstr "Rechnungsadresse:"
 
 #. module: l10n_din5008
 #. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
-#: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Invoicing and Shipping Address:"
-msgstr "Rechnungs- und Lieferadresse"
+msgstr "Rechnungs- und Lieferadresse:"
 
 #. module: l10n_din5008
 #: model:ir.model,name:l10n_din5008.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungseintrag"
+msgstr "Journalbuchung"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_bank_statement_line__l10n_din5008_addresses
@@ -207,7 +234,7 @@ msgstr "L10N Din5008 Dokumenttitel"
 #: model:ir.model.fields,field_description:l10n_din5008.field_account_payment__l10n_din5008_template_data
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__l10n_din5008_template_data
 msgid "L10N Din5008 Template Data"
-msgstr "L10N Din5008 Vorlagendaten"
+msgstr "L10N Din5008 Vorlagedaten"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -227,14 +254,14 @@ msgstr "Referenz"
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Shipping Address:"
-msgstr "Lieferadresse"
+msgstr "Lieferadresse:"
 
 #. module: l10n_din5008
 #. odoo-python
 #: code:addons/l10n_din5008/models/account_move.py:0
 #, python-format
 msgid "Source"
-msgstr "Quelle"
+msgstr "Referenz"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__street
@@ -249,13 +276,11 @@ msgstr "Straße 2"
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Das Land, aus dem die Steuerberichte für dieses Unternehmen zu verwenden sind"
 
 #. module: l10n_din5008
 #: model:ir.model.fields,help:l10n_din5008.field_base_document_layout__company_registry
-msgid ""
-"The registry number of the company. Use it if it is different from the Tax "
-"ID. It must be unique across all partners of a same country"
+msgid "The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country"
 msgstr "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von der Steuer-ID unterscheidet. Sie muss für alle Partner desselben Landes eindeutig sein."
 
 #. module: l10n_din5008

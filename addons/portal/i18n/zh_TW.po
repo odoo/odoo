@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -115,6 +115,18 @@ msgid ""
 msgstr ""
 "<small class=\"form-text text-"
 "muted\">當您以此帳戶建立交易後，則無法透過此處更改公司名稱或統一編號。<br/>請直接聯繫我們並進行此項操作。</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr "<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"上一頁\" title=\"上一頁\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"下一頁\" title=\"下一頁\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -359,13 +371,6 @@ msgstr "加入於"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "已經註冊"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "必須為每個附件提供存取代碼(token)。"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -877,7 +882,6 @@ msgstr "新密碼:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "下一頁"
@@ -980,11 +984,6 @@ msgstr "網站登入：用戶邀請"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
 msgstr "官方技術支援"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "上一頁"
 
 #. module: portal
 #. odoo-javascript
@@ -1157,14 +1156,6 @@ msgstr "無法刪除附件 %s，因為它連結到郵件。"
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "無法刪除附件 %s，因為它未處於 pending 狀態。"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "附件 %s 不存在，或者您沒有存取它的許可權。"
 
 #. module: portal
 #. odoo-python

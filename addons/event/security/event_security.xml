@@ -35,17 +35,17 @@
         <record model="ir.rule" id="event_event_company_rule">
             <field name="name">Event: multi-company</field>
             <field name="model_id" ref="model_event_event"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
         <record model="ir.rule" id="event_registration_company_rule">
             <field name="name">Event/Registration: multi-company</field>
             <field name="model_id" ref="model_event_registration"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
         <record id="ir_rule_event_event_ticket_company" model="ir.rule">
             <field name="name">Event/Ticket: multi-company</field>
             <field name="model_id" ref="model_event_event_ticket"/>
-            <field name="domain_force">['|', ('event_id.company_id', '=', False), ('event_id.company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('event_id.company_id', 'in', company_ids + [False])]</field>
         </record>
 
     </data>

@@ -70,22 +70,13 @@ class Product(models.Model):
         This returns a list and not a recordset because the records might be
         from different models (template, variant and image).
 
-        It contains in this order: the main image of the variant (if set), the
-        Variant Extra Images, and the Template Extra Images.
+        It contains in this order: the main image of the variant (which will fall back on the main
+        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        if self.image_variant_1920:
-            # if the main variant image is set, display it first
-            variant_images = [self] + variant_images
-        else:
-            # If the main variant image is empty, it will fallback to template
-            # image, in this case insert it after the other variant images, so
-            # that all variant images are first and all template images last.
-            variant_images = variant_images + [self]
-        # [1:] to remove the main image from the template, we only display
-        # the template extra images here
-        return variant_images + self.product_tmpl_id._get_images()[1:]
+        template_images = list(self.product_tmpl_id.product_template_image_ids)
+        return [self] + variant_images + template_images
 
 
     def _website_show_quick_add(self):

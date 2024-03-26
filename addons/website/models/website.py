@@ -8,6 +8,7 @@ import logging
 import operator
 import re
 import requests
+import threading
 
 from collections import defaultdict
 from functools import reduce
@@ -191,6 +192,14 @@ class Website(models.Model):
     @tools.ormcache('self.env.uid', 'self.id')
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
+
+    @tools.ormcache('self.env.uid', 'self.id')
+    def is_menu_cache_disabled(self):
+        """
+        Checks if the website menu contains a record like url.
+        :return: True if the menu contains a record like url
+        """
+        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url)))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -977,7 +986,9 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = request and request.httprequest.host or ''
+        domain_name = (request and request.httprequest.host
+            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or '')
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
@@ -1165,7 +1176,7 @@ class Website(models.Model):
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
                     continue
-                for loc in func(self.env, rule, query_string):
+                for loc in func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
                     yield loc
                 continue
 
@@ -1201,7 +1212,7 @@ class Website(models.Model):
 
                     for rec in converter.generate(self.env, args=val, dom=query):
                         newval.append(val.copy())
-                        newval[-1].update({name: rec})
+                        newval[-1].update({name: rec.with_context(lang=self.default_lang_id.code)})
                 values = newval
 
             for value in values:

@@ -46,7 +46,8 @@ class TestTaxPython(TestTaxCommon):
             res
         )
 
-        res = (self.python_tax + self.python_tax).compute_all(130.0)
+        python_tax_2 = self.python_tax.copy()
+        res = (self.python_tax + python_tax_2).compute_all(130.0)
         self._check_compute_all_results(
             130,    # 'total_included'
             116.07, # 'total_excluded'

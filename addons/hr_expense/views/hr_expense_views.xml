@@ -1067,14 +1067,8 @@
             <field name="name">Expense Reports to Approve</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="context">{
-                'search_default_submitted': 1,
-                'search_default_department_id': [active_id],
-                'default_department_id': active_id
-                }
-            </field>
-            <field name="domain">[('state', '=', 'submit')]</field>
+            <field name="search_view_id" ref="hr_expense_sheet_view_search_with_panel"/>
+            <field name="context">{ 'searchpanel_default_state': ["submit"] }</field>
         </record>
 
         <record id="action_hr_expense_sheet_department_filtered" model="ir.actions.act_window">

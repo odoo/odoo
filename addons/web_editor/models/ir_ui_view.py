@@ -9,14 +9,39 @@ from lxml import etree, html
 from odoo import api, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
+from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 
 _logger = logging.getLogger(__name__)
 
-EDITING_ATTRIBUTES = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-note-id']
+EDITING_ATTRIBUTES = MOVABLE_BRANDING + [
+    'data-oe-type',
+    'data-oe-expression',
+    'data-oe-translation-id',
+    'data-note-id'
+]
 
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
+
+    def _get_cleaned_non_editing_attributes(self, attributes):
+        """
+        Returns a new mapping of attributes -> value without the parts that are
+        not meant to be saved (branding, editing classes, ...). Note that
+        classes are meant to be cleaned on the client side before saving as
+        mostly linked to the related options (so we are not supposed to know
+        which to remove here).
+
+        :param attributes: a mapping of attributes -> value
+        :return: a new mapping of attributes -> value
+        """
+        attributes = {k: v for k, v in attributes if k not in EDITING_ATTRIBUTES}
+        if 'class' in attributes:
+            classes = attributes['class'].split()
+            attributes['class'] = ' '.join([c for c in classes if c != 'o_editable'])
+        if attributes.get('contenteditable') == 'true':
+            del attributes['contenteditable']
+        return attributes
 
     #------------------------------------------------------
     # Save from html
@@ -68,7 +93,7 @@ class IrUiView(models.Model):
         arch = etree.Element('data')
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
-        attributes = {k: v for k, v in el.attrib.items() if k not in EDITING_ATTRIBUTES}
+        attributes = self._get_cleaned_non_editing_attributes(el.attrib.items())
         structure = etree.Element(el.tag, attrib=attributes)
         structure.text = el.text
         xpath.append(structure)
@@ -416,7 +441,14 @@ class IrUiView(models.Model):
         name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
-        xml_arch = etree.tostring(html.fromstring(arch), encoding='utf-8')
+        arch_tree = html.fromstring(arch)
+        attributes = self._get_cleaned_non_editing_attributes(arch_tree.attrib.items())
+        for attr in arch_tree.attrib:
+            if attr in attributes:
+                arch_tree.attrib[attr] = attributes[attr]
+            else:
+                del arch_tree.attrib[attr]
+        xml_arch = etree.tostring(arch_tree, encoding='utf-8')
         new_snippet_view_values = {
             'name': name,
             'key': full_snippet_key,

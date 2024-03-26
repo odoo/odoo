@@ -17,7 +17,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'check_number': check_number,
             'payment_type': 'inbound',
             'journal_id': journal.id,
-            'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
+            'payment_method_line_id': journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
         }
         payment = self.env['account.payment'].create(vals)
         payment.action_post()

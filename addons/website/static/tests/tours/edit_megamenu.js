@@ -80,6 +80,14 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         trigger: 'iframe .o_mega_menu h4',
         run: 'text New Menu Item',
     },
+    {
+        // If this step fails, it means that a patch inside bootstrap was lost.
+        content: "Press the 'down arrow' key.",
+        trigger: 'iframe .o_mega_menu h4',
+        run: function (actions) {
+            this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
+        },
+    },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'iframe body:not(.editor_enable)'}, true),
     toggleMegaMenu(),

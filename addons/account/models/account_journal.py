@@ -348,7 +348,7 @@ class AccountJournal(models.Model):
                 journal.type,
             ) if string and is_encodable_as_ascii(string))
 
-            if journal.company_id != self.env.ref('base.main_company'):
+            if not journal.alias_name:
                 if is_encodable_as_ascii(journal.company_id.name):
                     alias_name = f"{alias_name}-{journal.company_id.name}"
                 else:
@@ -662,6 +662,10 @@ class AccountJournal(models.Model):
             # Create the bank_account_id if necessary
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+            # Create the secure_sequence_id if necessary
+            if journal.restrict_mode_hash_table and not journal.secure_sequence_id:
+                journal._create_secure_sequence(['secure_sequence_id'])
 
         return journals
 

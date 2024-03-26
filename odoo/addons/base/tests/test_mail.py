@@ -381,6 +381,7 @@ class TestHtmlTools(BaseCase):
             self.assertTrue(is_html_empty(content))
 
         void_html_samples = [
+            '<section><br /> <b><i/></b></section>',
             '<p><br></p>', '<p><br> </p>', '<p><br /></p >',
             '<p style="margin: 4px"></p>',
             '<div style="margin: 4px"></div>',

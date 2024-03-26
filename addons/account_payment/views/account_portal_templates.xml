@@ -5,7 +5,7 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td class="text-center">
-                <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+                <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized'))"/>
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider_code in ('none', 'custom'))"/>
                 <a t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
                     t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
@@ -16,7 +16,7 @@
         <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <td class="tx_status text-center">
-                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
+                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
                     <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
@@ -25,7 +25,7 @@
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')">
                   <span class="badge rounded-pill text-bg-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
                     <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
@@ -64,7 +64,7 @@
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
-            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider_code in ('none', 'custom'))"/>
             <div class="d-grid">
                 <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
@@ -81,10 +81,11 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
-            <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
-                <t t-call="payment.transaction_status">
-                    <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
-                </t>
+            <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
+            <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error and (invoice.payment_state != 'not_paid' or tx.state in ('pending', 'authorized'))"
+                 class="o_account_payment_tx_status"
+                 t-att-data-invoice-id="invoice.id">
+                <t t-call="payment.transaction_status"/>
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
             <div t-if="(invoice.amount_residual or not tx_ids) and invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total" id="portal_pay">

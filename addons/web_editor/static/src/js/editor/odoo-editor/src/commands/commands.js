@@ -379,7 +379,11 @@ export const editorCommands = {
         const changedElements = [];
         const defaultDirection = editor.options.direction;
         const shouldApplyStyle = !isSelectionFormat(editor.editable, 'switchDirection');
-        for (const block of new Set(selectedTextNodes.map(textNode => closestElement(textNode, 'ul,ol') || closestBlock(textNode)))) {
+        let blocks = new Set(selectedTextNodes.map(textNode => closestElement(textNode, 'ul,ol') || closestBlock(textNode)));
+        blocks.forEach(block => {
+            blocks = [...blocks, ...block.querySelectorAll('ul,ol')];
+        })
+        for (const block of blocks) {
             if (!shouldApplyStyle) {
                 block.removeAttribute('dir');
             } else {
@@ -405,14 +409,23 @@ export const editorCommands = {
                 textAlignStyles.set(block, block.style.textAlign);
             }
         });
+        // Calling `document.execCommand` will cause an input event with the
+        // input type "formatRemove". This would cause a new history step to be
+        // created in the middle of the process, which we prevent here.
+        editor.historyPauseSteps();
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
-            // The only possible background image on text is the gradient.
-            closestElement(node).style.backgroundImage = '';
+            if (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('color')) {
+                node.removeAttribute('color');
+            }
+            const element = closestElement(node);
+            element.style.removeProperty('color');
+            element.style.removeProperty('background');
         }
         textAlignStyles.forEach((textAlign, block) => {
             block.style.setProperty('text-align', textAlign);
         });
+        editor.historyUnpauseSteps();
     },
 
     // Align
@@ -491,7 +504,8 @@ export const editorCommands = {
                 cli.tagName == 'LI' &&
                 !li.has(cli) &&
                 !cli.classList.contains('oe-nested') &&
-                cli.isContentEditable
+                cli.isContentEditable &&
+                !cli.classList.contains('nav-item')
             ) {
                 li.add(cli);
             }
@@ -518,11 +532,15 @@ export const editorCommands = {
             if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node) && closestElement(node).isContentEditable) {
                 node.remove();
             } else {
-                let block = closestBlock(node);
-                if (!['OL', 'UL'].includes(block.tagName) && block.isContentEditable) {
-                    block = block.closest('li') || block;
-                    const ublock = block.closest('ol, ul');
-                    ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
+                // Ensure nav-item lists are excluded from toggling
+                const isNavItemList = node => node.nodeName === 'LI' && node.classList.contains('nav-item');
+                let nodeToToggle = closestBlock(node);
+                nodeToToggle = isNavItemList(nodeToToggle) ? node : nodeToToggle;
+                if (!['OL', 'UL'].includes(nodeToToggle.tagName) && (nodeToToggle.isContentEditable || nodeToToggle.nodeType === Node.TEXT_NODE)) {
+                    const closestLi = closestElement(nodeToToggle, 'li');
+                    nodeToToggle = closestLi && !isNavItemList(closestLi) ? closestLi : nodeToToggle;
+                    const ublock = nodeToToggle.nodeName === 'LI' && nodeToToggle.closest('ol, ul');
+                    ublock && getListMode(ublock) == mode ? li.add(nodeToToggle) : blocks.add(nodeToToggle);
                 }
             }
         }
@@ -551,7 +569,7 @@ export const editorCommands = {
             node => closestElement(node).isContentEditable
         );
         let coloredTds = [];
-        if (selectedTds.length) {
+        if (selectedTds.length && mode === "backgroundColor") {
             for (const td of selectedTds) {
                 colorElement(td, color, mode);
             }
@@ -574,7 +592,9 @@ export const editorCommands = {
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
-        const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+        const selectedNodes = mode === "backgroundColor"
+            ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
+            : selectionNodes;
         function getFonts(selectedNodes) {
             return selectedNodes.flatMap(node => {
                 let font = closestElement(node, 'font') || closestElement(node, 'span');
@@ -589,13 +609,15 @@ export const editorCommands = {
                     }
                 } else if (
                     (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) ||
-                    (isEmptyBlock(node.parentNode)) ||
+                    (node.nodeName === 'BR' && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                     node.nodeName !== 'FIGURE' &&
                     ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                     isVisibleStr(node.textContent) &&
                     !node.classList.contains('btn') &&
-                    !node.querySelector('font'))
+                    !node.querySelector('font')) &&
+                    node.nodeName !== 'A' &&
+                    !(node.nodeName === 'SPAN' && node.style['fontSize'])
                 ) {
                     // Node is a visible text or inline node without font nor a button:
                     // wrap it in a <font>.
@@ -731,7 +753,6 @@ export const editorCommands = {
         const newRow = document.createElement('tr');
         newRow.style.height = referenceRowHeight + 'px';
         const cells = referenceRow.querySelectorAll('td');
-        const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
         newRow.append(...Array.from(Array(cells.length)).map(() => {
             const td = document.createElement('td');
             const p = document.createElement('p');
@@ -741,11 +762,10 @@ export const editorCommands = {
         }));
         referenceRow[beforeOrAfter](newRow);
         newRow.style.height = referenceRowHeight + 'px';
-        // Preserve the width of the columns (applied only on the first row).
         if (getRowIndex(newRow) === 0) {
             let columnIndex = 0;
-            for (const column of newRow.children) {
-                column.style.width = referenceRowWidths[columnIndex];
+            for (const newColumn of newRow.children) {
+                newColumn.style.width = cells[columnIndex].style.width;
                 cells[columnIndex].style.width = '';
                 columnIndex++;
             }
@@ -761,6 +781,11 @@ export const editorCommands = {
         const cells = [...closestElement(cell, 'tr').querySelectorAll('th, td')];
         const index = cells.findIndex(td => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
+        if (table.style.width) {
+            const tableRect = table.getBoundingClientRect();
+            const cellRect = cell.getBoundingClientRect();
+            table.style.width = tableRect.width - cellRect.width + 'px';
+        }
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach(td => td.remove());
         siblingCell ? setSelection(...startPos(siblingCell)) : editorCommands.deleteTable(editor, table);
     },

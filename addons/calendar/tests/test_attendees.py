@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user, Form
+from odoo import fields, Command
 
 
 class TestEventNotifications(TransactionCase):
@@ -134,3 +136,24 @@ class TestEventNotifications(TransactionCase):
         })
         self.assertIn(self.partner, event.attendee_ids.partner_id, "Partner should be in attendee")
         self.assertNotIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should not be in attendee")
+
+    def test_push_meeting_start(self):
+        """
+        Checks that you can push the start date of an all day meeting.
+        """
+        attendee = self.env['res.partner'].create({
+            'name': "Xavier",
+            'email': "xavier@example.com",
+            })
+        event = self.env['calendar.event'].create({
+            'name': "Doom's day",
+            'attendee_ids': [Command.create({'partner_id': attendee.id})],
+            'allday': True,
+            'start_date': fields.Date.today(),
+            'stop_date': fields.Date.today(),
+        })
+        initial_start = event.start
+        with Form(event) as event_form:
+            event_form.stop_date = datetime.today() + relativedelta(days=1)
+            event_form.start_date = datetime.today() + relativedelta(days=1)
+        self.assertFalse(initial_start == event.start)

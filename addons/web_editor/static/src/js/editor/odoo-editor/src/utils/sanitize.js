@@ -226,7 +226,8 @@ class Sanitize {
             // Remove empty blocks in <li>
             if (
                 node.nodeName === 'P' &&
-                node.parentElement.tagName === 'LI'
+                node.parentElement.tagName === 'LI' &&
+                !node.parentElement.classList.contains('nav-item')
             ) {
                 const classes = node.classList;
                 const parent = node.parentElement;
