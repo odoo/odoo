@@ -4,6 +4,7 @@
 import datetime
 import logging
 
+from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 _logger = logging.getLogger('precompute_setter')
 
@@ -2009,6 +2010,28 @@ class CustomTableQuery(models.Model):
             GROUP BY tag.id
         """
 
+class CustomTableQuerySQL(models.Model):
+    _name = _description = "test_new_api.custom.table_query_sql"
+    _auto = False
+    _depends = {
+        'test_new_api.any.tag': ['name'],
+        'test_new_api.any.child': ['quantity'],
+    }
+
+    sum_quantity = fields.Integer()
+    tag_id = fields.Many2one('test_new_api.any.tag')
+
+    @property
+    def _table_query(self):
+        return SQL(
+            """
+            SELECT tag.id AS id, SUM(child.quantity) AS sum_quantity, tag.id AS tag_id
+            FROM test_new_api_any_child AS child
+            JOIN test_new_api_any_child_test_new_api_any_tag_rel AS rel ON rel.test_new_api_any_child_id = child.id
+            JOIN test_new_api_any_tag AS tag ON tag.id = rel.test_new_api_any_tag_id
+            GROUP BY tag.id
+            """,
+        )
 
 class ModelAutovacuumed(models.Model):
     _name = _description = 'test_new_api.autovacuumed'
