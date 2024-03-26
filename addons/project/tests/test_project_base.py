@@ -473,3 +473,11 @@ class TestProjectBase(TestProjectCommon):
         project_dup = project.copy()
         self.assertTrue(project_dup.active, "The new project should be active by default")
         self.assertTrue(project_dup.tasks.active, "Archived task should be active when duplicating an archived project")
+
+    def test_create_analytic_account_batch(self):
+        """ This test will check that the '_create_analytic_account' method assigns the accounts to the projects in the right order. """
+        projects = self.env["project.project"].create([{
+            "name": f"Project {x}",
+        } for x in range(10)])
+        projects._create_analytic_account()
+        self.assertEqual(projects.mapped("name"), projects.analytic_account_id.mapped("name"), "The analytic accounts names should match with the projects.")
