@@ -2,10 +2,12 @@
 
 import base64
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
+
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
 @tagged('post_install', '-at_install')
@@ -333,74 +335,72 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             {
                 'name': 'Size',
                 'create_variant': 'always',
+                'value_ids': [
+                    Command.create({
+                        'name': 'Large',
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Small',
+                        'sequence': 2,
+                    }),
+                ],
             },
             {
                 'name': 'Color',
                 'create_variant': 'always',
+                'value_ids': [
+                    Command.create({
+                        'name': 'White',
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Black',
+                        'sequence': 2,
+                    }),
+                ],
             },
             {
                 'name': 'Brand',
                 'create_variant': 'always',
-            },
-        ])
-
-        attribute_values = self.env['product.attribute.value'].create([
-            {
-                'name': 'Large',
-                'attribute_id': attribute_1.id,
-                'sequence': 1,
-            },
-            {
-                'name': 'Small',
-                'attribute_id': attribute_1.id,
-                'sequence': 2,
-            },
-            {
-                'name': 'White',
-                'attribute_id': attribute_2.id,
-                'sequence': 1,
-            },
-            {
-                'name': 'Black',
-                'attribute_id': attribute_2.id,
-                'sequence': 2,
-            },
-            {
-                'name': 'Brand A',
-                'attribute_id': attribute_3.id,
-                'sequence': 1,
-            },
-            {
-                'name': 'Brand B',
-                'attribute_id': attribute_3.id,
-                'sequence': 2,
+                'value_ids': [
+                    Command.create({
+                        'name': 'Brand A',
+                        'sequence': 1,
+                    }),
+                    Command.create({
+                        'name': 'Brand B',
+                        'sequence': 2,
+                    }),
+                ],
             },
         ])
 
         product_template = self.env['product.template'].create({
             'name': 'Test Product 2',
             'is_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute_1.id,
+                    'value_ids': [Command.set(attribute_1.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': attribute_2.id,
+                    'value_ids': [Command.set(attribute_2.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': attribute_3.id,
+                    'value_ids': [Command.set(attribute_3.value_ids.ids)],
+                }),
+            ]
         })
 
-        self.env['product.template.attribute.line'].create([
-            {
-                'attribute_id': attribute_1.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_1).ids)],
-            },
-            {
-                'attribute_id': attribute_2.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_2).ids)],
-            },
-            {
-                'attribute_id': attribute_3.id,
-                'product_tmpl_id': product_template.id,
-                'value_ids': [(6, 0, attribute_values.filtered(lambda v: v.attribute_id == attribute_3).ids)],
-            },
-        ])
-
-        product_template.product_variant_ids[-1].active = False
+        # Archive (Small, Black, Brand B) variant
+        product_template._get_variant_for_combination(
+            product_template.attribute_line_ids.product_template_value_ids.filtered(
+                lambda ptav: ptav.product_attribute_value_id.sequence == 2
+            )
+        ).action_archive()
 
         self.start_tour("/", 'tour_shop_archived_variant_multi', login="portal")
 
