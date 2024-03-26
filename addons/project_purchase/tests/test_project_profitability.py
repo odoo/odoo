@@ -536,3 +536,27 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
         purchase_bill.invoice_date = datetime.today()
         purchase_bill.action_post()
+
+    def test_project_purchase_order_smart_button(self):
+        project = self.env['project.project'].create({
+            'name': 'Test Project'
+        })
+        project._create_analytic_account()
+        account = project.analytic_account_id
+
+        purchase_order = self.env['purchase.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "company_id": self.env.company.id,
+            "order_line": [Command.create({
+                "analytic_distribution": {account.id: 100},
+                "product_id": self.product_order.id,
+                "product_qty": 1,
+                "price_unit": self.product_order.standard_price,
+                "currency_id": self.foreign_currency.id,
+            })],
+        })
+
+        action = project.action_open_project_purchase_orders()
+        self.assertTrue(action)
+        self.assertEqual(action['res_id'], purchase_order.id)
