@@ -48,7 +48,8 @@ export class LinkDialog extends Link {
     /**
      * @override
      */
-    onSave() {
+    onSave(ev) {
+        ev.preventDefault();
         var data = this._getData();
         if (data === null) {
             var $url = this.$el.find('input[name="url"]');
