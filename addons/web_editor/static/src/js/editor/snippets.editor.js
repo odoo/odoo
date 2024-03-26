@@ -862,7 +862,11 @@ var SnippetEditor = Widget.extend({
             onDragStart: (args) => {
                 this.dragStarted = true;
                 const targetRect = this.$target[0].getBoundingClientRect();
-                this.mousePositionYOnElement = args.y - targetRect.y;
+                // Bound the Y mouse position to the element height minus one
+                // grid row, to be able to drag from the bottom in a grid.
+                const gridRowSize = gridUtils.rowSize;
+                const boundedYMousePosition = Math.min(args.y, targetRect.bottom - gridRowSize);
+                this.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
                 this.mousePositionXOnElement = args.x - targetRect.x;
                 this._onDragAndDropStart(args);
             },
