@@ -53,7 +53,7 @@ export class ProgressBarField extends Component {
     }
 
     get progressBarColorClass() {
-        return this.currentValue > this.maxValue ? this.props.overflowClass : "bg-primary";
+        return this.currentValue > this.maxValue ? this.props.overflowClass : "progress-bar";
     }
 
     formatCurrentValue(humanReadable = !this.state.isEditing) {

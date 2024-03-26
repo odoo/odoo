@@ -9,7 +9,7 @@
                 <div t-if="bar.count"
                     role="progressbar"
                     class="progress-bar o_bar_has_records cursor-pointer"
-                    t-att-class="{ 'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value, 'border border-white': !props.group.isFolded and props.progressBar.activeBar }"
+                    t-att-class="{ 'progress-bar-animated progress-bar-striped': props.progressBar.activeBar === bar.value }"
                     t-attf-class="bg-{{ bar.color }}"
                     t-attf-style="width: {{ Math.min(progressWidth, maxWidth) }}%;"
                     aria-valuemin="0"

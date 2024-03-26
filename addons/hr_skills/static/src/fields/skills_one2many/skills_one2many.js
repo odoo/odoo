@@ -54,7 +54,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         if (column.name != 'skill_level_id') {
             return {
                 type: 'absolute',
-                value: '90px',
+                value: '200px',
             }
         }
 

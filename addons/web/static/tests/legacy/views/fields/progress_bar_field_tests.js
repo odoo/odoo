@@ -287,7 +287,7 @@ QUnit.module("Fields", (hooks) => {
             "Initial value should be correct"
         );
 
-        await click(target.querySelector(".o_progress"));
+        await click(target.querySelector(".progress"));
 
         assert.containsNone(target, ".o_progressbar_value .o_input", "no input in readonly mode");
 

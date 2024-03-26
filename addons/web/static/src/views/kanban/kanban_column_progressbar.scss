@@ -27,12 +27,8 @@
     .o_kanban_counter {
         transition: opacity 0.3s ease 0s;
 
-        > .o_column_progress {
-            height: $font-size-sm;
-
-            .bg-200 {
+        > .o_column_progress .bg-200 {
                 --background-color: RGBA(#{to-rgb($o-gray-300)}, var(--bg-opacity, 1))
-            }
         }
     }
 
