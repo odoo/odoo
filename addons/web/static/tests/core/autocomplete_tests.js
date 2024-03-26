@@ -540,7 +540,11 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(mousedownEvent.defaultPrevented, false);
         await triggerEvent(input, "", "change");
         await triggerEvent(input, "", "blur");
-        await click(target.querySelectorAll(".o-autocomplete--dropdown-item")[1], "");
+        await triggerEvent(
+            target.querySelectorAll(".o-autocomplete--dropdown-item")[1],
+            "",
+            "click"
+        );
         assert.verifySteps(["change", "select Hello"]);
         assert.strictEqual(input, document.activeElement);
 
@@ -550,8 +554,8 @@ QUnit.module("Components", (hooks) => {
         await triggerEvent(input, "", "input");
         await triggerEvent(target, "", "pointerdown");
         await triggerEvent(input, "", "change");
-        input.blur();
-        await click(target, "");
+        await triggerEvent(input, "", "blur");
+        await triggerEvent(target, "", "click");
         assert.verifySteps(["change", "blur"]);
     });
 
