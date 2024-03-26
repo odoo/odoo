@@ -14,9 +14,6 @@
         'views/res_users.xml',
         'wizard/calendar_popover_delete_wizard_homework.xml',
     ],
-    'demo': [
-        'data/hr_homeworking_demo.xml',
-    ],
     'installable': True,
     'assets': {
         'web.assets_backend': [
