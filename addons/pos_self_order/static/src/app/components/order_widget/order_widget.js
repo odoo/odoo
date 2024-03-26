@@ -64,7 +64,6 @@ export class OrderWidget extends Component {
     get lineNotSend() {
         const order = this.selfOrder.currentOrder;
         const lineNotSend = order.hasNotAllLinesSent();
-
         return lineNotSend.reduce(
             (acc, line) => {
                 const currentQty = line.qty;
@@ -75,7 +74,7 @@ export class OrderWidget extends Component {
                 const subtotal = this.selfOrder.config.iface_tax_included
                     ? line.price_subtotal_incl
                     : line.price_subtotal;
-                acc.price_unit += (subtotal / currentQty) * qty;
+                acc.price += (subtotal / currentQty) * qty;
 
                 return acc;
             },
