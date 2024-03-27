@@ -487,7 +487,7 @@
         <record id="event_reminder" model="mail.template">
             <field name="name">Event: Reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
-            <field name="subject">{{ object.event_id.name }}: {{ object.get_date_range_str() }}</field>
+            <field name="subject">{{ object.event_id.name }}: {{ object.event_date_range }}</field>
             <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}</field>
             <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
             <field name="description">Sent automatically to attendees if there is a reminder defined on the event</field>
@@ -538,7 +538,7 @@
                         <t t-else="">
                             <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
                         </t>
-                        is starting <strong t-out="object.get_date_range_str() or ''">today</strong>.
+                        is starting <strong t-out="object.event_date_range or ''">today</strong>.
                     </div>
                     <div>
                         <br />
