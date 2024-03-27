@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <group>
                 <group>
-                    <field name="l10n_latam_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']" 
+                    <field name="l10n_latam_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
                       domain="
                             [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
                                 if payment_type == 'outbound' else
@@ -22,8 +22,8 @@
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
                             <field name="name" />
-                            <field name="l10n_latam_check_bank_id" />
-                            <field name="l10n_latam_check_issuer_vat" />
+                            <field name="l10n_latam_check_bank_id" column_invisible="parent.payment_method_code == 'own_checks'"/>
+                            <field name="l10n_latam_check_issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
                             <field name="l10n_latam_check_payment_date" />
                             <field name="amount" />
                         </tree>

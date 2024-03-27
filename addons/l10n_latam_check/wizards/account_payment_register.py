@@ -11,7 +11,7 @@ class AccountPaymentRegister(models.TransientModel):
         string='Checks',
     )
 
-    @api.depends('l10n_latam_new_check_ids', 'l10n_latam_new_check_ids.amount')
+    @api.depends('l10n_latam_new_check_ids', 'l10n_latam_new_check_ids.amount', 'l10n_latam_check_ids')
     def _compute_amount(self):
         super()._compute_amount()
         # TODO: filter by new_third_party_checks

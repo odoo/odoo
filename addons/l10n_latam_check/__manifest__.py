@@ -51,7 +51,6 @@ There are 2 main Payment Methods additions:
         'wizards/l10n_latam_payment_mass_transfer_views.xml',
         'security/ir.model.access.csv',
         'views/account_payment_view.xml',
-        'views/account_journal_view.xml',
         'views/account_payment_check.xml',
         'wizards/account_payment_register_views.xml',
     ],

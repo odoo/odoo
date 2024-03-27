@@ -158,7 +158,7 @@
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_own_check_tree"/>
         <field name="search_view_id" ref="view_account_payment_search"/>
-        <field name="domain">[('issue_state', '!=', False)]</field>
+        <field name="domain">[('split_move_line_id', '!=', False)]</field>
         <field name="context">{'search_default_checks_on_hand': True}</field>
     </record>
 
