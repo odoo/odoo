@@ -6,12 +6,13 @@ import pytz
 import textwrap
 
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_datetime, html_to_inner_content, is_html_empty
+from odoo.tools import format_date, format_datetime, html_to_inner_content, is_html_empty
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
 
@@ -703,6 +704,23 @@ class EventEvent(models.Model):
         for event in self:
             for attendee in event.registration_ids.filtered(filter_func):
                 self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+
+    def _get_date_range_str(self, lang_code=False):
+        self.ensure_one()
+        today = fields.Datetime.now()
+        event_date = self.date_begin
+        diff = (event_date.date() - today.date())
+        if diff.days <= 0:
+            return _('today')
+        if diff.days == 1:
+            return _('tomorrow')
+        if (diff.days < 7):
+            return _('in %d days', diff.days)
+        if (diff.days < 14):
+            return _('next week')
+        if event_date.month == (today + relativedelta(months=+1)).month:
+            return _('next month')
+        return _('on %(date)s', date=format_date(self.env, self.date_begin, lang_code=lang_code, date_format='medium'))
 
     def _get_external_description(self):
         """

@@ -199,6 +199,6 @@ class EventCase(common.TransactionCase):
             "lang": "{{ object.event_id.lang or object.partner_id.lang }}",
             "model_id": cls.env['ir.model']._get_id("event.registration"),
             "name": "Event: Registration Reminder TEST",
-            "subject": "Reminder for {{ object.event_id.name }}: {{ object.get_date_range_str() }}",
+            "subject": "Reminder for {{ object.event_id.name }}: {{ object.event_date_range }}",
             "report_template_ids": [(4, cls.test_report_action.id)],
         })
