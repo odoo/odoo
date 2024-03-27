@@ -59,6 +59,7 @@ export class SplitBillScreen extends Component {
         this.newOrder.uiState.splittedOrderUuid = curOrderUuid;
 
         // Create lines for the new order
+        const lineToDel = [];
         for (const line of this.orderlines) {
             if (this.qtyTracker[line.uuid]) {
                 this.pos.models["pos.order.line"].create(
@@ -72,11 +73,15 @@ export class SplitBillScreen extends Component {
                 );
 
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {
-                    line.delete();
+                    lineToDel.push(line);
                 } else {
                     line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
                 }
             }
+        }
+
+        for (const line of lineToDel) {
+            line.delete();
         }
 
         // for the kitchen printer we assume that everything
