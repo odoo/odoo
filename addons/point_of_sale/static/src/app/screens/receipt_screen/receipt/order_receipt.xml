@@ -48,7 +48,7 @@
                 <span t-esc="props.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>
             </div>
 
-            <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change mt-2">
+            <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change">
                 CHANGE
                 <span t-esc="props.formatCurrency(props.data.change)" class="pos-receipt-right-align"/>
             </div>
