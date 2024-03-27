@@ -32,9 +32,9 @@ class Employee(models.Model):
     def _compute_license_plate(self):
         for employee in self:
             if employee.private_car_plate and employee.car_ids.license_plate:
-                employee.license_plate = ' '.join([employee.car_ids.license_plate, employee.private_car_plate])
+                employee.license_plate = ' '.join(employee.car_ids.filtered('license_plate').mapped('license_plate') + [employee.private_car_plate])
             else:
-                employee.license_plate = employee.car_ids.license_plate or employee.private_car_plate
+                employee.license_plate = ' '.join(employee.car_ids.filtered('license_plate').mapped('license_plate')) or employee.private_car_plate
 
     def _search_license_plate(self, operator, value):
         employees = self.env['hr.employee'].search(['|', ('car_ids.license_plate', operator, value), ('private_car_plate', operator, value)])
