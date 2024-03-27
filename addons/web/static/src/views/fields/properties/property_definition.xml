@@ -3,7 +3,7 @@
     <t t-name="web.PropertyDefinition">
         <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
             <div class="d-flex justify-content-between px-3 border-bottom">
-                <div class="border-end py-1">
+                <div t-if="!env.isSmall" class="border-end py-1">
                     <button
                         t-attf-class="btn btn-link ps-0 {{this.isFirst ? 'disabled' : ''}}"
                         t-on-click="() => this.onPropertyMove('up')" title="Move this Property up">
@@ -15,6 +15,7 @@
                         <i class="oi oi-chevron-down ms-2"/>
                     </button>
                 </div>
+                <button t-else="" class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
                 <button
                     t-if="!props.readonly and props.canChangeDefinition"
                     class="btn pe-0 text-danger float-end o_field_property_definition_delete"
