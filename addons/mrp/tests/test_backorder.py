@@ -600,6 +600,26 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(backorder.state, 'confirmed')
         self.assertEqual(backorder.reserve_visible, False)
 
+    def test_split_mo(self):
+        """
+        Test that an MO is split correctly.
+        BoM: 1 finished product = 0.5 comp1 + 1 comp2
+        """
+        mo = self.env['mrp.production'].create({
+            'product_qty': 10,
+            'bom_id': self.bom_1.id,
+        })
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [5, 10])
+        self.assertEqual(mo.state, 'draft')
+        action = mo.action_split()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.counter = 10
+        action = wizard.save().action_split()
+        # check that the MO is split in 10 and the components are split accordingly
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 10)
+        self.assertEqual(mo.product_qty, 1)
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [0.5, 1])
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
