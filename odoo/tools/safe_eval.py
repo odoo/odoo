@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
@@ -10,247 +9,601 @@ OpenERP domain strings, conditions and expressions, mostly based on locals
 condition/math builtins.
 """
 
-# Module partially ripped from/inspired by several different sources:
-#  - http://code.activestate.com/recipes/286134/
-#  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
-#  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
-import dis
-import functools
+from __future__ import annotations
+
+import ast
+import math
+import datetime
 import logging
-import sys
-import types
-from opcode import HAVE_ARGUMENT, opmap, opname
-from types import CodeType
-
-import werkzeug
-from psycopg2 import OperationalError
-
-from .misc import ustr
-
 import odoo
+import odoo.exceptions
+import werkzeug.exceptions
+
+from dateutil.relativedelta import relativedelta
+from email.message import EmailMessage
+from enum import EnumMeta
+from functools import reduce, partial
+from odoo.tools.json import JSON
+from psycopg2 import OperationalError
+from types import (
+    BuiltinFunctionType,
+    BuiltinMethodType,
+    FunctionType,
+    GeneratorType,
+    LambdaType,
+    MethodDescriptorType,
+    MethodType,
+    ModuleType,
+)
+from typing import Any, Optional, Literal, Type, Callable, cast, TypeVar
+from unittest.mock import Mock, MagicMock
 
 unsafe_eval = eval
-
-__all__ = ['test_expr', 'safe_eval', 'const_eval']
-
-# The time module is usually already provided in the safe_eval environment
-# but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
-# lp:703841), does import time.
-_ALLOWED_MODULES = ['_strptime', 'math', 'time']
-
-# Mock __import__ function, as called by cpython's import emulator `PyImport_Import` inside
-# timemodule.c, _datetimemodule.c and others.
-# This function does not actually need to do anything, its expected side-effect is to make the
-# imported module available in `sys.modules`. The _ALLOWED_MODULES are imported below to make it so.
-def _import(name, globals=None, locals=None, fromlist=None, level=-1):
-    if name not in sys.modules:
-        raise ImportError(f'module {name} should be imported before calling safe_eval()')
-
-for module in _ALLOWED_MODULES:
-    __import__(module)
-
-
-_UNSAFE_ATTRIBUTES = [
-    # Frames
-    'f_builtins', 'f_code', 'f_globals', 'f_locals',
-    # Python 2 functions
-    'func_code', 'func_globals',
-    # Code object
-    'co_code', '_co_code_adaptive',
-    # Method resolution order,
-    'mro',
-    # Tracebacks
-    'tb_frame',
-    # Generators
-    'gi_code', 'gi_frame', 'g_yieldfrom'
-    # Coroutines
-    'cr_await', 'cr_code', 'cr_frame',
-    # Coroutine generators
-    'ag_await', 'ag_code', 'ag_frame',
-]
-
-
-def to_opcodes(opnames, _opmap=opmap):
-    for x in opnames:
-        if x in _opmap:
-            yield _opmap[x]
-# opcodes which absolutely positively must not be usable in safe_eval,
-# explicitly subtracted from all sets of valid opcodes just in case
-_BLACKLIST = set(to_opcodes([
-    # can't provide access to accessing arbitrary modules
-    'IMPORT_STAR', 'IMPORT_NAME', 'IMPORT_FROM',
-    # could allow replacing or updating core attributes on models & al, setitem
-    # can be used to set field values
-    'STORE_ATTR', 'DELETE_ATTR',
-    # no reason to allow this
-    'STORE_GLOBAL', 'DELETE_GLOBAL',
-]))
-# opcodes necessary to build literal values
-_CONST_OPCODES = set(to_opcodes([
-    # stack manipulations
-    'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
-    'LOAD_CONST',
-    'RETURN_VALUE',  # return the result of the literal/expr evaluation
-    # literal collections
-    'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
-    # 3.6: literal map with constant keys https://bugs.python.org/issue27140
-    'BUILD_CONST_KEY_MAP',
-    'LIST_EXTEND', 'SET_UPDATE',
-    # 3.11 replace DUP_TOP, DUP_TOP_TWO, ROT_TWO, ROT_THREE, ROT_FOUR
-    'COPY', 'SWAP',
-    # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
-    'RESUME',
-])) - _BLACKLIST
-
-# operations which are both binary and inplace, same order as in doc'
-_operations = [
-    'POWER', 'MULTIPLY',  # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
-    'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
-    'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
-]
-# operations on literal values
-_EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
-    'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
-    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR',
-    *('INPLACE_' + op for op in _operations),
-    'BUILD_SLICE',
-    # comprehensions
-    'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
-    'COMPARE_OP',
-    # specialised comparisons
-    'IS_OP', 'CONTAINS_OP',
-    'DICT_MERGE', 'DICT_UPDATE',
-    # Basically used in any "generator literal"
-    'GEN_START',  # added in 3.10 but already removed from 3.11.
-    # Added in 3.11, replacing all BINARY_* and INPLACE_*
-    'BINARY_OP',
-])) - _BLACKLIST
-
-_SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
-    'POP_BLOCK', 'POP_EXCEPT',
-
-    # note: removed in 3.8
-    'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
-
-    'EXTENDED_ARG',  # P3.6 for long jump offsets.
-    'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
-    # Added in P3.7 https://bugs.python.org/issue26110
-    'CALL_METHOD', 'LOAD_METHOD',
-
-    'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
-    'SETUP_FINALLY', 'END_FINALLY',
-    # Added in 3.8 https://bugs.python.org/issue17611
-    'BEGIN_FINALLY', 'CALL_FINALLY', 'POP_FINALLY',
-
-    'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
-    'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
-    'STORE_SUBSCR',
-    'LOAD_GLOBAL',
-
-    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
-
-    # Following opcodes were Added in 3.11
-    # replacement of opcodes CALL_FUNCTION, CALL_FUNCTION_KW, CALL_METHOD
-    'PUSH_NULL', 'PRECALL', 'CALL', 'KW_NAMES',
-    # replacement of POP_JUMP_IF_TRUE and POP_JUMP_IF_FALSE
-    'POP_JUMP_FORWARD_IF_FALSE', 'POP_JUMP_FORWARD_IF_TRUE',
-    'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
-    # special case of the previous for IS NONE / IS NOT NONE
-    'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NONE',
-    'POP_JUMP_FORWARD_IF_NOT_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
-    # replacement of JUMP_IF_NOT_EXC_MATCH
-    'CHECK_EXC_MATCH',
-    # new opcodes
-    'RETURN_GENERATOR',
-    'PUSH_EXC_INFO',
-    'NOP',
-    'FORMAT_VALUE', 'BUILD_STRING',
-
-])) - _BLACKLIST
-
 _logger = logging.getLogger(__name__)
 
-def assert_no_dunder_name(code_obj, expr):
-    """ assert_no_dunder_name(code_obj, expr) -> None
+# --- Type Hints --------------------------------------------------------------
 
-    Asserts that the code object does not refer to any "dunder name"
-    (__$name__), so that safe_eval prevents access to any internal-ish Python
-    attribute or method (both are loaded via LOAD_ATTR which uses a name, not a
-    const or a var).
+T = TypeVar("T")
+OptionalTuple = tuple[()] | tuple[T, ...]
+ContextType = dict[str, Any]
 
-    Checks that no such name exists in the provided code object (co_names).
+_BUILTINS: ContextType = {
+    "True": True,
+    "False": False,
+    "None": None,
+    "bytes": bytes,
+    "str": str,
+    "unicode": str,
+    "bool": bool,
+    "int": int,
+    "float": float,
+    "enumerate": enumerate,
+    "dict": dict,
+    "list": list,
+    "tuple": tuple,
+    "map": map,
+    "abs": abs,
+    "min": min,
+    "max": max,
+    "sum": sum,
+    "reduce": reduce,
+    "filter": filter,
+    "sorted": sorted,
+    "round": round,
+    "len": len,
+    "repr": repr,
+    "set": set,
+    "all": all,
+    "any": any,
+    "ord": ord,
+    "chr": chr,
+    "divmod": divmod,
+    "isinstance": isinstance,
+    "range": range,
+    "xrange": range,
+    "zip": zip,
+    "Exception": Exception,
+    "hasattr": hasattr,
+    "floor": math.floor,
+    "ceil": math.ceil,
+}
 
-    :param code_obj: code object to name-validate
-    :type code_obj: CodeType
-    :param str expr: expression corresponding to the code object, for debugging
-                     purposes
-    :raises NameError: in case a forbidden name (containing two underscores)
-                       is found in ``code_obj``
+_CALLABLE_TYPES: frozenset[type] = frozenset(
+    {
+        BuiltinFunctionType,  # print, len, ...
+        BuiltinMethodType,  # [].append, int.from_bytes, ...
+        FunctionType,  # lambda, def, ...
+        MethodType,  # foo.bar(), ...
+        MethodDescriptorType,  # str.join(), ...
+        LambdaType,  # lambda, ...
+        GeneratorType,  # (x for x in range(10)), ...
+        partial,  # partial functions
+    }
+)
 
-    .. note:: actually forbids every name containing 2 underscores
-    """
-    for name in code_obj.co_names:
-        if "__" in name or name in _UNSAFE_ATTRIBUTES:
-            raise NameError('Access to forbidden name %r (%r)' % (name, expr))
+_ALLOWED_TYPES: frozenset[Type] = frozenset(
+    {
+        JSON,
+        bool,
+        bytes,
+        complex,
+        datetime.date,
+        datetime.datetime,
+        datetime.time,
+        datetime.timedelta,
+        dict,
+        enumerate,
+        float,
+        int,
+        list,
+        odoo.exceptions.UserError,
+        range,
+        relativedelta,
+        reversed,
+        set,
+        slice,
+        str,
+        tuple,
+        zip,
+    }
+)
 
-def assert_valid_codeobj(allowed_codes, code_obj, expr):
-    """ Asserts that the provided code object validates against the bytecode
-    and name constraints.
+_wrapped_types: tuple[type, ...] = (
+    Exception,
+    filter,
+    map,
+)
 
-    Recursively validates the code objects stored in its co_consts in case
-    lambdas are being created/used (lambdas generate their own separated code
-    objects and don't live in the root one)
+_ALLOWED_INSTANCES: frozenset[Type] = frozenset(
+    {
+        EmailMessage,
+        EnumMeta,
+        GeneratorType,
+        odoo.api.Environment,
+        odoo.models.BaseModel,
+        odoo.models.NewId,
+        odoo.sql_db.Cursor,
+        odoo.sql_db.TestCursor,
+        type({}.items()),  # <class 'dict_items'>
+        type({}.keys()),  # <class 'dict_keys'>
+        type({}.values()),  # <class 'dict_values'>
+        type(None),  # <class 'NoneType'>
+    }
+    | _ALLOWED_TYPES
+)
 
-    :param allowed_codes: list of permissible bytecode instructions
-    :type allowed_codes: set(int)
-    :param code_obj: code object to name-validate
-    :type code_obj: CodeType
-    :param str expr: expression corresponding to the code object, for debugging
-                     purposes
-    :raises ValueError: in case of forbidden bytecode in ``code_obj``
-    :raises NameError: in case a forbidden name (containing two underscores)
-                       is found in ``code_obj``
-    """
-    assert_no_dunder_name(code_obj, expr)
+_wrapped_instances: tuple[type, ...] = (
+    (
+        Mock,
+        MagicMock,
+    )
+    + _wrapped_types
+    + tuple(_CALLABLE_TYPES)
+)
 
-    # set operations are almost twice as fast as a manual iteration + condition
-    # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
-    if not allowed_codes >= code_codes:
-        raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
+# Roots node, they are required in all cases
+_AST_BASE_NODES: frozenset[Type[ast.AST]] = frozenset(
+    {
+        ast.Expr,
+        ast.Expression,
+        ast.Module,
+    }
+)
 
-    for const in code_obj.co_consts:
-        if isinstance(const, CodeType):
-            assert_valid_codeobj(allowed_codes, const, 'lambda')
+_AST_MATH_NODES: frozenset[Type[ast.AST]] = frozenset(
+    {
+        ast.Constant,  # 1, 2, 3, ...
+        ast.Add,  # +
+        ast.And,  # and
+        ast.BinOp,  # x + y
+        ast.BitAnd,  # &
+        ast.BitOr,  # |
+        ast.BitXor,  # ^
+        ast.BoolOp,  # x and y
+        ast.Div,  # /
+        ast.Eq,  # ==
+        ast.FloorDiv,  # //
+        ast.Gt,  # >
+        ast.GtE,  # >=
+        ast.In,  # in
+        ast.Invert,  # ~
+        ast.Is,  # is
+        ast.IsNot,  # is not
+        ast.LShift,  # <<
+        ast.Lt,  # <
+        ast.LtE,  # <=
+        ast.Mod,  # %
+        ast.Mult,  # *
+        ast.Not,  # not
+        ast.NotEq,  # !=
+        ast.NotIn,  # not in
+        ast.Or,  # or
+        ast.Pow,  # **
+        ast.RShift,  # >>
+        ast.Sub,  # -
+        ast.UAdd,  # +x
+        ast.UnaryOp,  # -x
+        ast.USub,  # -x
+    }
+    | _AST_BASE_NODES
+)
 
-def test_expr(expr, allowed_codes, mode="eval", filename=None):
-    """test_expr(expression, allowed_codes[, mode[, filename]]) -> code_object
+_AST_ALLOWED_NODES: frozenset[Type[ast.AST]] = frozenset(
+    {
+        ast.Load,
+        ast.Store,
+        ast.arg,  # def foo(x): ... (x is an arg)
+        ast.arguments,  # def foo(x): ... ([x] is an arguments, it's a list of args)
+        ast.Assign,  # x = 1
+        ast.Attribute,  # x.y
+        ast.AugAssign,  # +=
+        ast.Break,  # break
+        ast.Call,  # x()
+        ast.Compare,  # x < y
+        ast.comprehension,  # for x in range(10) (in list comprehension for example)
+        ast.Continue,  # continue
+        ast.Dict,  # { x: x }
+        ast.DictComp,  # { x: x for x in range(10) }
+        ast.ExceptHandler,  # try: ... except Exception as e: ...
+        ast.For,  # for x in range(10): ...
+        ast.FormattedValue,  # f"{x}"
+        ast.FunctionDef,  # def foo(): ...
+        ast.GeneratorExp,  # (x for x in range(10))
+        ast.If,  # if x: ...
+        ast.IfExp,  # x if x else y
+        ast.JoinedStr,  # f"{'x'}"
+        ast.keyword,  # foo(x=1) (x=1 is a keyword)
+        ast.Lambda,  # lambda x: x
+        ast.List,  # [1, 2, 3]
+        ast.ListComp,  # [x for x in range(10)]
+        ast.Name,  # x
+        ast.Pass,  # pass
+        ast.Raise,  # raise Exception()
+        ast.Return,  # return x
+        ast.Set,  # {1, 2, 3}
+        ast.SetComp,  # {x for x in range(10)}
+        ast.Slice,  # x[1:2]
+        ast.Subscript,  # x[1]
+        ast.Starred,  # *args
+        ast.Try,  # try: ...
+        ast.Tuple,  # (1, 2, 3)
+        ast.While,  # while x: ...
+    }
+    | _AST_MATH_NODES
+)
 
-    Test that the expression contains only the allowed opcodes.
-    If the expression is valid and contains only allowed codes,
-    return the compiled code object.
-    Otherwise raise a ValueError, a Syntax Error or TypeError accordingly.
-
-    :param filename: optional pseudo-filename for the compiled expression,
-                 displayed for example in traceback frames
-    :type filename: string
-    """
-    try:
-        if mode == 'eval':
-            # eval() does not like leading/trailing whitespace
-            expr = expr.strip()
-        code_obj = compile(expr, filename or "", mode)
-    except (SyntaxError, TypeError, ValueError):
-        raise
-    except Exception as e:
-        raise ValueError('"%s" while compiling\n%r' % (ustr(e), expr))
-    assert_valid_codeobj(allowed_codes, code_obj, expr)
-    return code_obj
+_ALLOWED_MODULES: frozenset[str] = frozenset(
+    {
+        "datetime",
+        "dateutil",
+        "json",
+        "pytz",
+        "time",
+        *[f"dateutil.{mod}" for mod in ["parser", "relativedelta", "rrule", "tz"]],
+    }
+)
 
 
-def const_eval(expr):
+# --- Utils -------------------------------------------------------------------
+
+
+def _check_attribute_name(name: str) -> None:
+    if "__" in name:
+        raise NameError(f"unsafe node: {name} (dunder name)")
+
+
+def call_wrapper(node: ast.AST) -> ast.Call:
+    return ast.Call(
+        func=ast.Name("__SafeWrapper", ctx=ast.Load()),
+        args=[],
+        keywords=[
+            ast.keyword(
+                arg="__obj",
+                value=ast.Call(
+                    func=ast.Name("__type_checker", ctx=ast.Load()),
+                    args=[],
+                    keywords=[
+                        ast.keyword(arg="__obj", value=node),
+                    ],
+                ),
+            ),
+            ast.keyword(
+                arg="__type_checker", value=ast.Name("__type_checker", ctx=ast.Load())
+            ),
+        ],
+    )
+
+
+# --- Environment -------------------------------------------------------------
+
+
+class SafeWrapper:
+    __slots__ = ("__obj", "__type_checker")
+
+    def __init__(self, **kwargs):
+        self.__obj = kwargs.pop("__obj")
+        self.__type_checker = kwargs.pop("__type_checker")
+
+    def __getattr__(self, name: str) -> Any:
+        _check_attribute_name(name)
+        if (
+            isinstance(self.__obj, str)
+            or (isinstance(self.__obj, type) and issubclass(self.__obj, str))
+        ) and name in (
+            "format",
+            "format_map",
+        ):
+            raise ValueError(f"unsafe attribute access: {name} (string format)")
+
+        return self.__type_checker(__obj=getattr(self.__obj, name))
+
+    def __setattr__(self, name: str, value: Any):
+        if "__" not in name:
+            raise SyntaxError(f"unsafe attribute assignation: {name}")
+
+        super().__setattr__(name, value)
+
+    def __call__(self, *args, **kwargs) -> Any:
+        for arg in (*args, *kwargs.values()):
+            self.__type_checker(__obj=arg)
+
+        return self.__type_checker(__obj=self.__obj(*args, **kwargs))
+
+    def __repr__(self) -> str:
+        return self.__obj.__repr__()
+
+    def __getitem__(self, key: str) -> Any:
+        key = self.__type_checker(__obj=key)
+        return self.__type_checker(__obj=self.__obj[key])
+
+    def __setitem__(self, key: str, value: Any) -> Any:
+        key = self.__type_checker(__obj=key)
+        value = self.__type_checker(__obj=value)
+        self.__obj[key] = value
+
+    def __iter__(self):
+        for item in self.__obj:
+            yield self.__type_checker(__obj=item)
+
+
+def _prepare_environment(
+    allowed_types: OptionalTuple[type] = (), allowed_instances: OptionalTuple[type] = ()
+) -> dict[str, type | Callable[..., Any]]:
+    allowed_type = allowed_types + tuple(_ALLOWED_TYPES)
+    allowed_instance = (
+        allowed_instances + tuple(_ALLOWED_INSTANCES) + allowed_type + (SafeWrapper,)
+    )
+
+    def type_checker(**kwargs) -> Any | SafeWrapper:
+        obj = kwargs.pop("__obj")
+
+        if obj is safe_eval or (
+            callable(obj)
+            and not isinstance(obj, SafeWrapper)
+            and hasattr(obj, "__self__")
+            and isinstance(obj.__self__, ModuleType)
+            and obj.__self__.__name__ not in _ALLOWED_MODULES
+            and obj not in _BUILTINS.values()):
+            raise ValueError(f"unsafe object: {obj} (denied by black-list)")
+
+        if isinstance(obj, allowed_instance) or (
+            isinstance(obj, type) and issubclass(obj, allowed_type)
+        ):
+            return obj
+        elif (
+            isinstance(obj, _wrapped_instances)
+            or (isinstance(obj, type) and issubclass(obj, _wrapped_types))
+            or (isinstance(obj, ModuleType) and obj.__name__ in _ALLOWED_MODULES)
+        ):
+            return SafeWrapper(__obj=obj, __type_checker=type_checker)
+        raise ValueError(f"unsafe object: {obj} (type not present in white-list)")
+
+    def call_checker(**kwargs) -> Any:
+        func = kwargs.pop("__func")
+        f_args = kwargs.pop("__args")
+        f_kwargs = kwargs.pop("__kwargs")
+
+        type_checker(__obj=func)
+
+        f_args = SafeWrapper(__obj=f_args, __type_checker=type_checker)
+
+        f_kwargs = SafeWrapper(__obj=f_kwargs, __type_checker=type_checker)
+
+        return type_checker(__obj=func(*f_args, **f_kwargs))
+
+    return {
+        "__type_checker": type_checker,
+        "__call_checker": call_checker,
+        "__SafeWrapper": SafeWrapper,
+    }
+
+
+# --- Ast Explorer ------------------------------------------------------------
+
+
+class StoreChecker(ast.NodeTransformer):
+    def __init__(self, stores: Optional[list] = None) -> None:
+        self.stores = stores or []
+
+    def visit_Name(self, node: ast.Name) -> ast.Call | ast.Name:
+        if isinstance(node.ctx, ast.Load) and node.id in self.stores:
+            return ast.Call(
+                func=ast.Name("__type_checker", ctx=ast.Load()),
+                args=[],
+                keywords=[ast.keyword(arg="__obj", value=node)],
+            )
+        return node
+
+
+class CodeChecker(ast.NodeTransformer):
+    def __init__(
+        self, ast_subset: frozenset[type[ast.AST]] | tuple[type[ast.AST], ...]
+    ):
+        self.ast_subset = ast_subset
+
+    def visit(self, node: ast.AST) -> ast.AST:
+        if not isinstance(node, tuple(self.ast_subset)):
+            raise SyntaxError(  # noqa: TRY004 (Reason: It should be a syntax error, not a type error)
+                f"unsafe node: {node.__class__.__name__} (node not allowed)"
+            )
+
+        visitor: Callable[[ast.AST], ast.AST] = getattr(
+            self, f"explore_{node.__class__.__name__}", self.generic_visit
+        )
+        return visitor(node)
+
+    def explore_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
+        node = cast(ast.FunctionDef, self.generic_visit(node))
+        _check_attribute_name(node.name)
+
+        if node.decorator_list:
+            raise SyntaxError("unsafe node: decorators")
+
+        return node
+
+    def explore_arg(self, node: ast.arg) -> ast.arg:
+        node = cast(ast.arg, self.generic_visit(node))
+        _check_attribute_name(node.arg)
+        return node
+
+    def explore_keyword(self, node: ast.keyword) -> ast.keyword:
+        node = cast(ast.keyword, self.generic_visit(node))
+
+        if node.arg:
+            _check_attribute_name(node.arg)
+
+        return node
+
+    def explore_arguments(self, node: ast.arguments) -> ast.arguments:
+        node = cast(ast.arguments, self.generic_visit(node))
+        if node.vararg or node.kwarg:
+            raise SyntaxError("unsafe node: variadic keyword arguments")
+        return node
+
+    def explore_Name(self, node: ast.Name) -> ast.Name:
+        node = cast(ast.Name, self.generic_visit(node))
+        _check_attribute_name(node.id)
+        return node
+
+    def explore_Attribute(self, node: ast.Attribute) -> ast.Attribute:
+        node = cast(ast.Attribute, self.generic_visit(node))
+        _check_attribute_name(node.attr)
+        return ast.Attribute(
+            value=call_wrapper(node.value),
+            attr=node.attr,
+            ctx=node.ctx,
+        )
+
+    def explore_Call(self, node: ast.Call) -> ast.Call:
+        node = cast(ast.Call, self.generic_visit(node))
+
+        kwkeys = []
+        kwvalues = []
+
+        for kw in node.keywords:
+            if isinstance(kw.value, ast.Dict) and kw.arg is None:
+                kwkeys += kw.value.keys
+                kwvalues += kw.value.values
+            else:
+                kwkeys.append(ast.Constant(kw.arg))
+                kwvalues.append(kw.value)
+
+        return ast.Call(
+            func=ast.Name("__call_checker", ctx=ast.Load()),
+            args=[],
+            keywords=[
+                ast.keyword(arg="__func", value=node.func),
+                ast.keyword(
+                    arg="__args", value=ast.List(elts=node.args, ctx=ast.Load())
+                ),
+                ast.keyword(
+                    arg="__kwargs",
+                    value=ast.Dict(keys=kwkeys, values=kwvalues, ctx=ast.Load()),
+                ),
+            ],
+        )
+
+    def explore_SetComp(self, node: ast.SetComp) -> ast.SetComp:
+        node = cast(ast.SetComp, self.generic_visit(node))
+        stores = [
+            n.id
+            for n in ast.walk(node)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)
+        ]
+        return cast(ast.SetComp, StoreChecker(stores).visit(node))
+
+    def explore_DictComp(self, node: ast.DictComp) -> ast.DictComp:
+        node = cast(ast.DictComp, self.generic_visit(node))
+        stores = [
+            n.id
+            for n in ast.walk(node)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)
+        ]
+        return cast(ast.DictComp, StoreChecker(stores).visit(node))
+
+    def explore_GeneratorExp(self, node: ast.GeneratorExp) -> ast.GeneratorExp:
+        node = cast(ast.GeneratorExp, self.generic_visit(node))
+        stores = [
+            n.id
+            for n in ast.walk(node)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)
+        ]
+        return cast(ast.GeneratorExp, StoreChecker(stores).visit(node))
+
+    def explore_ListComp(self, node: ast.ListComp) -> ast.ListComp:
+        node = cast(ast.ListComp, self.generic_visit(node))
+        stores = [
+            n.id
+            for n in ast.walk(node)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)
+        ]
+        return cast(ast.ListComp, StoreChecker(stores).visit(node))
+
+    def explore_Subscript(self, node: ast.Subscript) -> ast.Subscript:
+        node = cast(ast.Subscript, self.generic_visit(node))
+
+        return ast.Subscript(
+            value=call_wrapper(cast(ast.AST, node.value)),
+            slice=node.slice,
+            ctx=node.ctx,
+        )
+
+    def explore_Assign(self, node: ast.Assign) -> list[ast.Assign | ast.Expr]:
+        node = cast(ast.Assign, self.generic_visit(node))
+
+        nodes: list[ast.Assign | ast.Expr] = [node]
+        for target in node.targets:
+            for n in ast.walk(cast(ast.AST, target)):
+                if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store):
+                    nodes.append(
+                        ast.Expr(
+                            value=ast.Call(
+                                func=ast.Name("__type_checker", ctx=ast.Load()),
+                                args=[],
+                                keywords=[ast.keyword(arg="__obj", value=n)],
+                            )
+                        )
+                    )
+        return nodes
+
+    def explore_ExceptHandler(self, node: ast.ExceptHandler) -> ast.ExceptHandler:
+        node = cast(ast.ExceptHandler, self.generic_visit(node))
+        if node.name:
+            _check_attribute_name(node.name)
+
+        return node
+
+    def explore_For(self, node: ast.For) -> ast.For:
+        node = cast(ast.For, self.generic_visit(node))
+
+        node.iter = ast.Call(
+            func=ast.Name("__type_checker", ctx=ast.Load()),
+            args=[],
+            keywords=[
+                ast.keyword(arg="__obj", value=node.iter),
+            ],
+        )
+
+        for n in ast.walk(cast(ast.AST, node.target)):
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store):
+                node.body.insert(
+                    0,
+                    ast.Expr(
+                        value=ast.Call(
+                            func=ast.Name("__type_checker", ctx=ast.Load()),
+                            args=[],
+                            keywords=[ast.keyword(arg="__obj", value=n)],
+                        )
+                    ),
+                )
+
+        return node
+
+
+# --- Public Functions --------------------------------------------------------
+
+
+def const_eval(expr: str | bytes) -> Any:
     """const_eval(expression) -> value
 
     Safe Python constant evaluation
@@ -266,20 +619,22 @@ def const_eval(expr):
     >>> const_eval("1+2")
     Traceback (most recent call last):
     ...
-    ValueError: opcode BINARY_ADD not allowed
     """
-    c = test_expr(expr, _CONST_OPCODES)
-    return unsafe_eval(c)
+    if isinstance(expr, bytes):
+        expr = expr.decode()
 
-def expr_eval(expr):
+    if not isinstance(expr, str):
+        raise TypeError(f"expr_eval expects a string, got {type(expr)}")
+
+    return ast.literal_eval(expr)
+
+
+def expr_eval(expr: str | bytes) -> Any:
     """expr_eval(expression) -> value
-
     Restricted Python expression evaluation
-
     Evaluates a string that contains an expression that only
     uses Python constants. This can be used to e.g. evaluate
     a numerical expression from an untrusted source.
-
     >>> expr_eval("1+2")
     3
     >>> expr_eval("[1,2]*2")
@@ -287,100 +642,145 @@ def expr_eval(expr):
     >>> expr_eval("__import__('sys').modules")
     Traceback (most recent call last):
     ...
-    ValueError: opcode LOAD_NAME not allowed
+    SyntaxError: Nodes of type Name are not allowed
     """
-    c = test_expr(expr, _EXPR_OPCODES)
-    return unsafe_eval(c)
+    if isinstance(expr, bytes):
+        expr = expr.decode()
 
-_BUILTINS = {
-    '__import__': _import,
-    'True': True,
-    'False': False,
-    'None': None,
-    'bytes': bytes,
-    'str': str,
-    'unicode': str,
-    'bool': bool,
-    'int': int,
-    'float': float,
-    'enumerate': enumerate,
-    'dict': dict,
-    'list': list,
-    'tuple': tuple,
-    'map': map,
-    'abs': abs,
-    'min': min,
-    'max': max,
-    'sum': sum,
-    'reduce': functools.reduce,
-    'filter': filter,
-    'sorted': sorted,
-    'round': round,
-    'len': len,
-    'repr': repr,
-    'set': set,
-    'all': all,
-    'any': any,
-    'ord': ord,
-    'chr': chr,
-    'divmod': divmod,
-    'isinstance': isinstance,
-    'range': range,
-    'xrange': range,
-    'zip': zip,
-    'Exception': Exception,
-}
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False, filename=None):
-    """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
+    if not isinstance(expr, str):
+        raise TypeError(f"expr_eval expects a string, got {type(expr)}")
 
-    System-restricted Python expression evaluation
+    code = ast.unparse(CodeChecker(_AST_MATH_NODES).visit(ast.parse(expr)))
+    return unsafe_eval(code)
 
-    Evaluates a string that contains an expression that mostly
-    uses Python constants, arithmetic expressions and the
-    objects directly provided in context.
 
-    This can be used to e.g. evaluate
-    an OpenERP domain expression from an untrusted source.
+def allow_instance(t: type) -> type:
+    """Allow an instance to be used in the evaluation context
 
-    :param filename: optional pseudo-filename for the compiled expression,
-                     displayed for example in traceback frames
-    :type filename: string
-    :throws TypeError: If the expression provided is a code object
-    :throws SyntaxError: If the expression provided is not valid Python
-    :throws NameError: If the expression provided accesses forbidden names
-    :throws ValueError: If the expression provided uses forbidden bytecode
+    Args:
+        t (type): The instance to be allowed
+
+    Returns:
+        type: The instance that is allowed
     """
-    if type(expr) is CodeType:
-        raise TypeError("safe_eval does not allow direct evaluation of code objects.")
+    global _wrapped_instances  # noqa: PLW0603 (Reason: we need to modify the global variable, check docstring) # pylint: disable=global-statement
 
-    # prevent altering the globals/locals from within the sandbox
-    # by taking a copy.
-    if not nocopy:
-        # isinstance() does not work below, we want *exactly* the dict class
-        if (globals_dict is not None and type(globals_dict) is not dict) \
-                or (locals_dict is not None and type(locals_dict) is not dict):
-            _logger.warning(
-                "Looks like you are trying to pass a dynamic environment, "
-                "you should probably pass nocopy=True to safe_eval().")
-        if globals_dict is not None:
-            globals_dict = dict(globals_dict)
-        if locals_dict is not None:
-            locals_dict = dict(locals_dict)
+    _wrapped_instances += (t,)
+    return t
 
-    check_values(globals_dict)
-    check_values(locals_dict)
 
-    if globals_dict is None:
-        globals_dict = {}
+def allow_type(t: type) -> type:
+    """Allow a type to be used in the evaluation context
 
-    globals_dict['__builtins__'] = _BUILTINS
-    if locals_builtins:
-        if locals_dict is None:
-            locals_dict = {}
-        locals_dict.update(_BUILTINS)
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode, filename=filename)
+    Args:
+        t (type): The type to be allowed
+
+    Returns:
+        type: The type that is allowed
+    """
+    global _wrapped_types  # noqa: PLW0603 (Reason: we need to modify the global variable, check docstring) # pylint: disable=global-statement
+
+    _wrapped_types = _wrapped_types + (t,)
+    return allow_instance(t)
+
+
+def test_python_expr(expr: str, mode: str = "eval") -> str | bool:
+    """Test a Python expression before evaluating it
+
+    Args:
+        expr (str | bytes): A Python expression
+        mode (str): The mode of the expression (eval, exec)
+
+    Returns:
+        str | bool: An error message if the expression is not safe, False otherwise
+    """
+
+    if isinstance(expr, bytes):
+        expr = expr.decode()
+
+    if not isinstance(expr, str):
+        raise TypeError(f"safe_eval expects a string, got {type(expr)}")
+
     try:
-        return unsafe_eval(c, globals_dict, locals_dict)
+        wrapped_expr = ast.unparse(
+            CodeChecker(_AST_ALLOWED_NODES).visit(ast.parse(expr))
+        )
+        compile(wrapped_expr, "<sandbox>", mode)
+    except (TypeError, NameError, SyntaxError, ValueError) as err:
+        if len(err.args) >= 2 and len(err.args[1]) >= 4:
+            error = {
+                "message": err.args[0],
+                "filename": err.args[1][0],
+                "lineno": err.args[1][1],
+                "offset": err.args[1][2],
+                "error_line": err.args[1][3],
+            }
+
+            msg = f"{type(err).__name__} : {error['message']} at line {error['lineno']}\n{error['error_line']}"
+        else:
+            msg = f"{err}"
+        return msg
+    return False
+
+
+def safe_eval(
+    expr: str | bytes,
+    globals_dict: Optional[ContextType] = None,
+    locals_dict: Optional[ContextType] = None,
+    mode: Literal["eval", "exec"] = "eval",
+    filename: Optional[str] = None,
+    locals_builtins: bool = False,
+    sandbox_instances: OptionalTuple[type] = (),
+    sandbox_types: OptionalTuple[type] = (),
+    nocopy: Optional[bool] = None,
+    ast_subset: (
+        frozenset[type[ast.AST]] | tuple[type[ast.AST], ...]
+    ) = _AST_ALLOWED_NODES,  # pylint: disable=bad-whitespace
+):
+    def sanitize_context(context: ContextType):
+        to_remove = [k for k in context if "__" in k]
+        for k in to_remove:
+            del context[k]
+
+    if nocopy is not None:
+        _logger.warning("safe_eval: nocopy parameter is deprecated, defaulting to True")
+
+    if isinstance(expr, bytes):
+        expr = expr.decode()
+    elif not isinstance(expr, str):
+        raise TypeError(f"safe_eval expects a string, got {type(expr)}")
+
+    for node in ast_subset:
+        if node not in _AST_ALLOWED_NODES:
+            raise ValueError(f"unsafe node: {node.__name__} (node not allowed)")
+
+    globals_dict_eval: ContextType
+    if globals_dict is None:
+        globals_dict_eval = {}
+    elif isinstance(globals_dict, dict):
+        globals_dict_eval = globals_dict.copy()
+        sanitize_context(globals_dict_eval)
+    else:
+        raise TypeError(f"globals_dict must be a dict, got {type(globals_dict)}")
+
+    locals_dict_eval: Optional[ContextType]
+    if locals_builtins and locals_dict is None:
+        locals_dict_eval = {}
+    elif locals_dict is not None:
+        locals_dict_eval = locals_dict.copy()
+        sanitize_context(locals_dict_eval)
+    else:
+        locals_dict_eval = None
+
+    globals_dict_eval.update(_prepare_environment(sandbox_types, sandbox_instances))
+    globals_dict_eval["__builtins__"] = _BUILTINS.copy()
+    code = ast.unparse(
+        CodeChecker(ast_subset).visit(ast.parse(expr.strip(), mode=mode))
+    )
+
+    c = compile(code, filename or "<sandbox>", mode)
+    try:
+        ret = unsafe_eval(c, globals_dict_eval, locals_dict_eval)
     except odoo.exceptions.UserError:
         raise
     except odoo.exceptions.RedirectWarning:
@@ -394,77 +794,30 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except ZeroDivisionError:
         raise
     except Exception as e:
-        raise ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr))
-def test_python_expr(expr, mode="eval"):
-    try:
-        test_expr(expr, _SAFE_OPCODES, mode=mode)
-    except (SyntaxError, TypeError, ValueError) as err:
-        if len(err.args) >= 2 and len(err.args[1]) >= 4:
-            error = {
-                'message': err.args[0],
-                'filename': err.args[1][0],
-                'lineno': err.args[1][1],
-                'offset': err.args[1][2],
-                'error_line': err.args[1][3],
-            }
-            msg = "%s : %s at line %d\n%s" % (type(err).__name__, error['message'], error['lineno'], error['error_line'])
-        else:
-            msg = ustr(err)
-        return msg
-    return False
+        raise ValueError(f"{type(e)} : {e} while evaluating\n{expr}")
+
+    if globals_dict is not None:
+        globals_dict.update(globals_dict_eval)
+        sanitize_context(globals_dict)
+
+    if locals_dict is not None:
+        locals_dict.update(locals_dict_eval or {})
+        sanitize_context(locals_dict)
+
+    if mode == "eval":
+        return ret
 
 
-def check_values(d):
-    if not d:
-        return d
-    for v in d.values():
-        if isinstance(v, types.ModuleType):
-            raise TypeError(f"""Module {v} can not be used in evaluation contexts
+# --- Modules safe overrides ---------------------------------------------------
 
-Prefer providing only the items necessary for your intended use.
+vanilla_type_checker = _prepare_environment((), ())["__type_checker"]
 
-If a "module" is necessary for backwards compatibility, use
-`odoo.tools.safe_eval.wrap_module` to generate a wrapper recursively
-whitelisting allowed attributes.
-
-Pre-wrapped modules are provided as attributes of `odoo.tools.safe_eval`.
-""")
-    return d
-
-class wrap_module:
-    def __init__(self, module, attributes):
-        """Helper for wrapping a package/module to expose selected attributes
-
-        :param module: the actual package/module to wrap, as returned by ``import <module>``
-        :param iterable attributes: attributes to expose / whitelist. If a dict,
-                                    the keys are the attributes and the values
-                                    are used as an ``attributes`` in case the
-                                    corresponding item is a submodule
-        """
-        # builtin modules don't have a __file__ at all
-        modfile = getattr(module, '__file__', '(built-in)')
-        self._repr = f"<wrapped {module.__name__!r} ({modfile})>"
-        for attrib in attributes:
-            target = getattr(module, attrib)
-            if isinstance(target, types.ModuleType):
-                target = wrap_module(target, attributes[attrib])
-            setattr(self, attrib, target)
-
-    def __repr__(self):
-        return self._repr
-
-# dateutil submodules are lazy so need to import them for them to "exist"
-import dateutil
-mods = ['parser', 'relativedelta', 'rrule', 'tz']
-for mod in mods:
-    __import__('dateutil.%s' % mod)
-datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
-dateutil = wrap_module(dateutil, {
-    mod: getattr(dateutil, mod).__all__
-    for mod in mods
-})
-json = wrap_module(__import__('json'), ['loads', 'dumps'])
-time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
-pytz = wrap_module(__import__('pytz'), [
-    'utc', 'UTC', 'timezone',
-])
+json = SafeWrapper(__obj=__import__("json"), __type_checker=vanilla_type_checker)
+time = SafeWrapper(__obj=__import__("time"), __type_checker=vanilla_type_checker)
+pytz = SafeWrapper(__obj=__import__("pytz"), __type_checker=vanilla_type_checker)
+dateutil = SafeWrapper(
+    __obj=__import__("dateutil"), __type_checker=vanilla_type_checker
+)
+datetime = SafeWrapper(
+    __obj=__import__("datetime"), __type_checker=vanilla_type_checker
+)  # type: ignore
