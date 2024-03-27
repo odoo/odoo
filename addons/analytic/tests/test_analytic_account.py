@@ -70,11 +70,13 @@ class TestAnalyticAccount(TransactionCase):
         })
 
     def test_aggregates(self):
+        # debit and credit are hidden by the group when account is installed
+        fields_to_agg = ['balance', 'debit', 'credit'] if self.env.user.has_group('account.group_account_readonly') else ['balance']
         model = self.env['account.analytic.account']
         self.assertEqual(
-            model.fields_get(['balance', 'debit', 'credit'], ['aggregator']),
-            dict.fromkeys(['balance', 'debit', 'credit'], {'aggregator': 'sum'}),
-            "Fields 'balance', 'debit', 'credit' must be flagged as aggregatable.",
+            model.fields_get(fields_to_agg, ['aggregator']),
+            dict.fromkeys(fields_to_agg, {'aggregator': 'sum'}),
+            f"Fields {', '.join(f for f in fields_to_agg)} must be flagged as aggregatable.",
         )
 
     def test_get_plans_without_options(self):
