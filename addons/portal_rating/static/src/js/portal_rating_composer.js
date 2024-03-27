@@ -23,7 +23,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     willStart: function (parent) {
         const def = this._super.apply(this, arguments);
 
-        const options = this.$el.data();
+        const options = Object.assign({}, this.el.dataset);
         this.rating_avg = Math.round(options['rating_avg'] * 100) / 100 || 0.0;
         this.rating_count = options['rating_count'] || 0.0;
 
@@ -58,8 +58,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
      * @param {Object} data
      */
     _reloadRatingPopupComposer: function () {
+        const popupComposerStars = this.el.querySelector('.o_rating_popup_composer_stars');
         if (this.options.hide_rating_avg) {
-            this.$('.o_rating_popup_composer_stars').empty();
+            popupComposerStars.replaceChild();
         } else {
             const ratingAverage = renderToElement(
                 'portal_rating.rating_stars_static', {
@@ -67,7 +68,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
                 widget: this,
                 val: this.rating_avg,
             });
-            this.$('.o_rating_popup_composer_stars').empty().html(ratingAverage);
+            popupComposerStars.replaceChild();
+            popupComposerStars.html(ratingAverage);
         }
 
         // Append the modal
@@ -77,7 +79,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             widget: this,
             val: this.rating_avg,
         }) || '';
-        this.$('.o_rating_popup_composer_modal').html(modal);
+        this.el.querySelector('.o_rating_popup_composer_modal').innerHTML = modal;
 
         if (this._composer) {
             this._composer.destroy();
@@ -85,9 +87,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
 
         // Instantiate the "Portal Composer" widget and insert it into the modal
         this._composer = new PortalComposer(this, this.options);
-        return this._composer.appendTo(this.$('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
+        return this._composer.appendTo(this.el.querySelector('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
             // Change the text of the button
-            this.$('.o_rating_popup_composer_text').text(
+            this.el.querySelector('.o_rating_popup_composer_text').textContent = (
                 this.options.is_fullscreen ?
                 _t('Review') : this.options.default_message_id ?
                 _t('Edit Review') : _t('Add Review')

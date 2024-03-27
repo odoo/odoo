@@ -15,8 +15,8 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        this.$state = this.$('select[name="state_id"]');
-        this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
+        this.state = this.el.querySelector('select[name="state_id"]:enabled');
+        this.stateOptions = [...this.state.querySelectorAll('option')].filter(opt => opt.index !== 0);
         this._adaptAddressForm();
 
         return def;
@@ -30,12 +30,21 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      * @private
      */
     _adaptAddressForm: function () {
-        var $country = this.$('select[name="country_id"]');
-        var countryID = ($country.val() || 0);
-        this.$stateOptions.detach();
-        var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
-        var nb = $displayedState.appendTo(this.$state).show().length;
-        this.$state.parent().toggle(nb >= 1);
+        const country = this.el.querySelector('select[name="country_id"]');
+        const countryID = (country.value || 0);
+        this.state.removeChild()
+        // TODO: MSH: Need to check this code as this is not as per expectations
+        const displayedState = this.stateOptions.filter('[data-country_id=' + countryID + ']');
+        this.state.appendChild(displayedState)
+        displayedState.show();
+        const nb = displayedState.length;
+        if (nb >= 1) {
+            if (this.state.parent().offsetParent === null) { // hidden
+                this.state.parent().style.display = 'none';
+            } else {
+                this.state.parent().style.display = 'block';
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -132,17 +141,17 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      * @private
      */
     _adaptSearchLabel: function (elem) {
-        var $label = $(elem).clone();
-        $label.find('span.nolabel').remove();
-        this.$('input[name="search"]').attr('placeholder', $label.text().trim());
+        const label = elem.cloneNode(true);
+        label.querySelector('span.nolabel').remove();
+        this.el.querySelector('input[name="search"]').setAttribute('placeholder', label.textContent.trim());
     },
     /**
      * @private
      */
     _search: function () {
         var search = new URL(window.location).searchParams;
-        search.set("search_in", this.$('.dropdown-item.active').attr('href')?.replace('#', '') || "");
-        search.set("search", this.$('input[name="search"]').val());
+        search.set("search_in", this.el.querySelector('.dropdown-item.active').setAttribute('href')?.replace('#', '') || "");
+        search.set("search", this.el.querySelector('input[name="search"]').value);
         window.location.search = search.toString();
     },
 
@@ -155,9 +164,11 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     _onDropdownItemClick: function (ev) {
         ev.preventDefault();
-        var $item = $(ev.currentTarget);
-        $item.closest('.dropdown-menu').find('.dropdown-item').removeClass('active');
-        $item.addClass('active');
+        const item = ev.currentTarget;
+        // TODO: MSH: We need to use querySelectorAll, check other places
+        const dropdownItems = item.closest('.dropdown-menu').querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(elem => elem.classList.remove('active'));
+        item.classList.add('active');
 
         this._adaptSearchLabel(ev.currentTarget);
     },

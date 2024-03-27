@@ -45,11 +45,11 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     start: function () {
         var self = this;
-        this.$attachmentButton = this.$('.o_portal_chatter_attachment_btn');
-        this.$fileInput = this.$('.o_portal_chatter_file_input');
-        this.$sendButton = this.$('.o_portal_chatter_composer_btn');
-        this.$attachments = this.$('.o_portal_chatter_composer_input .o_portal_chatter_attachments');
-        this.$inputTextarea = this.$('.o_portal_chatter_composer_input textarea[name="message"]');
+        this.attachmentButton = this.el.querySelector('.o_portal_chatter_attachment_btn');
+        this.fileInput = this.el.querySelector('.o_portal_chatter_file_input');
+        this.sendButton = this.el.querySelector('.o_portal_chatter_composer_btn');
+        this.attachmentElems = this.el.querySelectorAll('.o_portal_chatter_composer_input .o_portal_chatter_attachments');
+        this.inputTextarea = this.el.querySelector('.o_portal_chatter_composer_input textarea[name="message"]');
 
         return this._super.apply(this, arguments).then(function () {
             if (self.options.default_attachment_ids) {
@@ -71,7 +71,8 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _onAttachmentButtonClick: function () {
-        this.$fileInput.click();
+        const event = new Event('click');
+        this.fileInput.dispatchEvent(event);
     },
     /**
      * @private
@@ -80,12 +81,12 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onAttachmentDeleteClick: function (ev) {
         var self = this;
-        var attachmentId = $(ev.currentTarget).closest('.o_portal_chatter_attachment').data('id');
+        const attachmentId = ev.currentTarget.closest('.o_portal_chatter_attachment').getAttribute('data-id');
         var accessToken = this.attachments.find(attachment => attachment.id === attachmentId).access_token;
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.$sendButton.prop('disabled', true);
+        this.sendButton.setAttribute('disabled', true);
 
         return rpc('/portal/attachment/remove', {
             'attachment_id': attachmentId,
@@ -93,7 +94,7 @@ var PortalComposer = publicWidget.Widget.extend({
         }).then(function () {
             self.attachments = self.attachments.filter(attachment => attachment.id !== attachmentId);
             self._updateAttachments();
-            self.$sendButton.prop('disabled', false);
+            self.sendButton.setAttribute('disabled', false);
         });
     },
     _prepareAttachmentData: function (file) {
@@ -112,7 +113,7 @@ var PortalComposer = publicWidget.Widget.extend({
     _onFileInputChange: function () {
         var self = this;
 
-        this.$sendButton.prop('disabled', true);
+        this.sendButton.setAttribute('disabled', true);
 
         return Promise.all([...this.$fileInput[0].files].map((file) => {
             return new Promise(function (resolve, reject) {
@@ -137,8 +138,8 @@ var PortalComposer = publicWidget.Widget.extend({
             });
         })).then(function () {
             // ensures any selection triggers a change, even if the same files are selected again
-            self.$fileInput[0].value = null;
-            self.$sendButton.prop('disabled', false);
+            self.fileInput.value = null;
+            self.sendButton.setAttribute('disabled', false);
         });
     },
     /**
@@ -151,7 +152,7 @@ var PortalComposer = publicWidget.Widget.extend({
             thread_model: this.options.res_model,
             thread_id: this.options.res_id,
             post_data: {
-                body: this.$('textarea[name="message"]').val(),
+                body: this.el.querySelector('textarea[name="message"]').value,
                 attachment_ids: this.attachments.map((a) => a.id),
             },
             attachment_tokens: this.attachments.map((a) => a.access_token),
@@ -168,8 +169,10 @@ var PortalComposer = publicWidget.Widget.extend({
         ev.preventDefault();
         const error = this._onSubmitCheckContent();
         if (error) {
-            this.$inputTextarea.addClass('border-danger');
-            this.$(".o_portal_chatter_composer_error").text(error).removeClass('d-none');
+            this.inputTextarea.classList.add('border-danger');
+            const errorElem = this.el.querySelector(".o_portal_chatter_composer_error");
+            errorElem.textContent = error;
+            errorElem.classList.remove('d-none');
             return Promise.reject();
         } else {
             return this._chatterPostMessage(ev.currentTarget.getAttribute('data-action'));
@@ -180,7 +183,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _onSubmitCheckContent: function () {
-        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+        if (!this.inputTextarea.value.trim() && !this.attachments.length) {
             return _t('Some fields are required. Please make sure to write a message or attach a document');
         };
     },
@@ -193,7 +196,8 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _updateAttachments: function () {
-        this.$attachments.empty().append(renderToElement('portal.Chatter.Attachments', {
+        this.attachmentElems.replaceChildren();
+        this.attachmentElems.append(renderToElement('portal.Chatter.Attachments', {
             attachments: this.attachments,
             showDelete: true,
         }));

@@ -26,3 +26,19 @@ export function markEventHandled(ev, markName) {
     }
     eventHandledWeakMap.get(ev).push(markName);
 }
+
+/**
+ * Iterate through all parent elements and find the parent where selector
+ * matches and return all those parents.
+ * This method is similar to parents method of jQuery.
+ *
+ * @param {HTMLElement} el
+ * @param {string} selector
+ */
+export function parents(el, selector) {
+    const parents = [];
+    while ((el = el.parentNode) && el !== document) {
+      if (!selector || el.matches(selector)) parents.push(el);
+    }
+    return parents;
+}

@@ -21,7 +21,7 @@ publicWidget.registry.testError = publicWidget.Widget.extend({
      */
     _onRpcErrorClick: function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        return rpc($link.attr('href'));
+        const link = ev.currentTarget;
+        return rpc(link.getAttribute('href'));
     }
 });

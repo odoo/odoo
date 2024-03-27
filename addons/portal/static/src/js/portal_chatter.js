@@ -165,6 +165,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
         if (this.options.display_composer) {
             this._composer = this._createComposerWidget();
+            // TODO: MSH: We need to keep following jquery code as it is as appendTo method do not support HTML Element or we need to make appendTo method handle HTML Element
             await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
         }
     },
@@ -260,13 +261,18 @@ var PortalChatter = publicWidget.Widget.extend({
         };
     },
     _renderMessages: function () {
-        this.$('.o_portal_chatter_messages').empty().append(renderToElement("portal.chatter_messages", {widget: this}));
+        const chatterMessageParent = this.el.querySelector('.o_portal_chatter_messages');
+        chatterMessageParent.replaceChildren();
+        const chatterMessage = renderToElement("portal.chatter_messages", {widget: this})
+        chatterMessageParent.appendChild(chatterMessage);
     },
     _renderMessageCount: function () {
-        this.$('.o_message_counter').replaceWith(renderToElement("portal.chatter_message_count", {widget: this}));
+        const messageCounter = this.el.querySelector('.o_message_counter');
+        messageCounter.parentNode.replaceChild(messageCounter, renderToElement("portal.chatter_message_count", {widget: this}));
     },
     _renderPager: function () {
-        this.$('.o_portal_chatter_pager').replaceWith(renderToElement("portal.pager", {widget: this}));
+        const chatterPager = this.el.querySelector('.o_portal_chatter_pager');
+        chatterPager.parentNode.replaceChild(chatterPager, renderToElement("portal.pager", {widget: this}));
     },
 
     //--------------------------------------------------------------------------
@@ -286,7 +292,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickPager: function (ev) {
         ev.preventDefault();
-        var page = $(ev.currentTarget).data('page');
+        const page = ev.currentTarget.getAttribute('data-page');
         this._changeCurrentPage(page);
     },
 
@@ -299,18 +305,18 @@ var PortalChatter = publicWidget.Widget.extend({
     _onClickUpdateIsInternal: function (ev) {
         ev.preventDefault();
 
-        var $elem = $(ev.currentTarget);
+        const elem = ev.currentTarget;
         return rpc('/mail/update_is_internal', {
-            message_id: $elem.data('message-id'),
-            is_internal: ! $elem.data('is-internal'),
+            message_id: elem.getAttribute('data-message-id'),
+            is_internal: ! elem.getAttribute('data-is-internal'),
         }).then(function (result) {
-            $elem.data('is-internal', result);
+            elem.setAttribute('data-is-internal', result);
             if (result === true) {
-                $elem.addClass('o_portal_message_internal_on');
-                $elem.removeClass('o_portal_message_internal_off');
+                elem.classList.add('o_portal_message_internal_on');
+                elem.classList.remove('o_portal_message_internal_off');
             } else {
-                $elem.addClass('o_portal_message_internal_off');
-                $elem.removeClass('o_portal_message_internal_on');
+                elem.classList.add('o_portal_message_internal_off');
+                elem.classList.remove('o_portal_message_internal_on');
             }
         });
     },
@@ -324,7 +330,9 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      */
     async start() {
         const proms = [this._super.apply(this, arguments)];
-        const chatter = new PortalChatter(this, this.$el.data());
+        const data = Object.assign({}, this.el.dataset);
+        const chatter = new PortalChatter(this, data);
+        // TODO: MSH: We need to keep following jquery code as it is as appendTo method do not support HTML Element or we need to make appendTo method handle HTML Element
         proms.push(chatter.appendTo(this.$el));
         await Promise.all(proms);
         // scroll to the right place after chatter loaded

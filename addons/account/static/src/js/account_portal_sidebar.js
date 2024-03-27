@@ -16,16 +16,16 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        var updateIframeSize = this._updateIframeSize.bind(this, $invoiceHtml);
+        const invoiceHtml = this.el.querySelector('iframe#invoice_html');
+        const updateIframeSize = this._updateIframeSize.bind(this, invoiceHtml);
 
-        $(window).on('resize', updateIframeSize);
+        window.addEventListener('resize', updateIframeSize);
 
-        var iframeDoc = $invoiceHtml[0].contentDocument || $invoiceHtml[0].contentWindow.document;
+        var iframeDoc = invoiceHtml.contentDocument || invoiceHtml.contentWindow.document;
         if (iframeDoc.readyState === 'complete') {
             updateIframeSize();
         } else {
-            $invoiceHtml.on('load', updateIframeSize);
+            invoiceHtml.addEventListener('load', updateIframeSize);
         }
 
         return def;
@@ -42,22 +42,24 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      * @private
      * @param {object} $el: the iframe
      */
-    _updateIframeSize: function ($el) {
-        var $wrapwrap = $el.contents().find('div#wrapwrap');
+    _updateIframeSize: function (el) {
+        const childNodes = el.querySelector().childNodes;
+        // TODO: MSH: Following line will iterate over all childnodes and set wrapwrap as last one, maybe we can consider only first one
+        const wrapwrap = [...childNodes].forEach((element) => { return element.querySelector("div#wrapwrap"); });
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
-        $el.height(0);
-        $el.height($wrapwrap[0].scrollHeight);
+        el.height(0);
+        el.height(wrapwrap.scrollHeight);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
         if (!isAnchor) {
             return;
         }
-        var $target = $(window.location.hash);
-        if (!$target.length) {
+        const target = window.location.hash;
+        if (!target.length) {
             return;
         }
-        dom.scrollTo($target[0], {duration: 0});
+        dom.scrollTo(target, {duration: 0});
     },
     /**
      * @private
@@ -65,7 +67,7 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      */
     _onPrintInvoice: function (ev) {
         ev.preventDefault();
-        var href = $(ev.currentTarget).attr('href');
+        const href = ev.currentTarget.getAttribute('href');
         this._printIframeContent(href);
     },
 });
