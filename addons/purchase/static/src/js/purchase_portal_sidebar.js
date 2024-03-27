@@ -13,15 +13,15 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.authorizedTextTag = ["em", "b", "i", "u"];
-        this.spyWatched = $('body[data-target=".navspy"]');
+        this.spyWatched = document.querySelector('body[data-target=".navspy"]');
     },
     /**
      * @override
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
-        this._setElementId($spyWatcheElement);
+        const spyWatcheElement = this.el.querySelector('[data-id="portal_sidebar"]');
+        this._setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
         return def;
@@ -41,7 +41,8 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      */
     _setElementId: function (prefix, $el) {
         var id = uniqueId(prefix);
-        this.spyWatched.find($el).attr("id", id);
+        // TODO: MSH: Need to convert this code
+        $(this.spyWatched).find($el).attr("id", id);
         return id;
     },
     /**
@@ -51,63 +52,63 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      *
      */
     _generateMenu: function () {
-        var self = this,
+        let self = this,
             lastLI = false,
             lastUL = null,
-            $bsSidenav = this.$el.find(".bs-sidenav");
+            bsSidenav = this.el.querySelector(".bs-sidenav");
+        let anchor;
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr(
-            "id",
-            ""
-        );
-        this.spyWatched
-            .find("#quote_content h2, #quote_content h3")
-            .toArray()
-            .forEach((el) => {
-                var id, text;
-                switch (el.tagName.toLowerCase()) {
-                    case "h2":
-                        id = self._setElementId("quote_header_", el);
-                        text = self._extractText($(el));
-                        if (!text) {
-                            break;
-                        }
-                        lastLI = $("<li class='nav-item'>")
-                            .append(
-                                $(
-                                    '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
-                                        id +
-                                        '"/>'
-                                ).text(text)
-                            )
-                            .appendTo($bsSidenav);
-                        lastUL = false;
+        const quotes = document.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]") || this.spyWatched;
+        quotes.forEach(quote => quote.attr("id", ""));
+        const h2AndH3 = this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3");
+        h2AndH3.forEach((el) => {
+            var id, text;
+            switch (el.tagName.toLowerCase()) {
+                case "h2":
+                    id = self._setElementId("quote_header_", el);
+                    text = self._extractText(el);
+                    if (!text) {
                         break;
-                    case "h3":
-                        id = self._setElementId("quote_", el);
-                        text = self._extractText($(el));
-                        if (!text) {
-                            break;
-                        }
-                        if (lastLI) {
-                            if (!lastUL) {
-                                lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
-                            }
-                            $("<li class='nav-item'>")
-                                .append(
-                                    $(
-                                        '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
-                                            id +
-                                            '"/>'
-                                    ).text(text)
-                                )
-                                .appendTo(lastUL);
-                        }
+                    }
+                    lastLI = document.createElement('li');
+                    lastLI.setAttribute('class', 'nav-item');
+                    anchor = document.createElement('a');
+                    anchor.setAttribute('class', 'nav-link p-0');
+                    anchor.setAttribute('style', 'max-width: 200px;');
+                    anchor.setAttribute('href', `"#${id}"`);
+                    anchor.textContent = text;
+                    lastLI.appendChild(anchor);
+                    bsSidenav.appendChild(lastLI);
+                    lastUL = false;
+                    break;
+                case "h3":
+                    id = self._setElementId("quote_", el);
+                    text = self._extractText(el);
+                    if (!text) {
                         break;
-                }
-                el.setAttribute("data-anchor", true);
-            });
-        this.trigger_up("widgets_start_request", { $target: $bsSidenav });
+                    }
+                    if (lastLI) {
+                        if (!lastUL) {
+                            lastUL = document.createElement('ul');
+                            lastUL.setAttribute('class', 'nav flex-column');
+                            lastLI.appendChild(lastUL);
+                        }
+                        const li = document.createElement('li');
+                        li.setAttribute('class', 'nav-item');
+                        anchor = document.createElement('a');
+                        anchor.setAttribute('class', 'nav-link p-0');
+                        anchor.setAttribute('style', 'max-width: 200px;');
+                        anchor.setAttribute('href', `"#${id}"`);
+                        anchor.textContent = text;
+                        li.appendChild(anchor);
+                        lastUL.appendChild(li);
+                    }
+                    break;
+            }
+            el.setAttribute("data-anchor", true);
+        });
+        // TODO: MSH: Need to convert widgets_start_request first to convert following code
+        this.trigger_up("widgets_start_request", { $target: $(bsSidenav) });
     },
     /**
      * extract text of menu title for sidebar
@@ -116,19 +117,18 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      * @param {Object} $node
      *
      */
-    _extractText: function ($node) {
+    _extractText: function (node) {
         var self = this;
         var rawText = [];
-        Array.from($node.contents()).forEach((el) => {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
+        Array.from(node.childNodes).forEach((el) => {
+            if (el.textContent.trim()) {
+                const tagName = el.tagName;
                 if (
                     typeof tagName === "undefined" ||
                     (typeof tagName !== "undefined" &&
                         self.authorizedTextTag.includes(tagName.toLowerCase()))
                 ) {
-                    rawText.push($.trim(current.text()));
+                    rawText.push(el.textContent.trim());
                 }
             }
         });

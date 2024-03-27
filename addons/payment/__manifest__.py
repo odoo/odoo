@@ -37,6 +37,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            # TODO: MSH: Remove jquery.payment.js if it is not used anywhere
             'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
         ],
