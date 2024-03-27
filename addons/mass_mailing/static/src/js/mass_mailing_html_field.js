@@ -189,7 +189,7 @@ export class MassMailingHtmlField extends HtmlField {
 
     async _onSnippetsLoaded() {
         if (status(this) === 'destroyed') return;
-        if (this.wysiwyg.snippetsMenu && $(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
+        if ($(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
             // In full width form mode, ensure the snippets menu's scrollable is
             // in the form view, not in the iframe.
             this.wysiwyg.snippetsMenu.$scrollable = this.wysiwyg.$el.closestScrollable();
