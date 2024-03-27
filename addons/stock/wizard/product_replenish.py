@@ -11,6 +11,7 @@ from odoo.tools.misc import clean_context
 
 class ProductReplenish(models.TransientModel):
     _name = 'product.replenish'
+    _inherit = 'stock.replenish.mixin'
     _description = 'Product Replenish'
     _check_company_auto = True
 
@@ -27,14 +28,8 @@ class ProductReplenish(models.TransientModel):
         'stock.warehouse', string='Warehouse', required=True,
         check_company=True,
     )
-    route_id = fields.Many2one(
-        'stock.route', string='Preferred Route',
-        help="Apply specific route for the replenishment instead of product's default routes.",
-        check_company=True,
-    )
     company_id = fields.Many2one('res.company')
     forecasted_quantity = fields.Float(string="Forecasted Quantity", compute="_compute_forecasted_quantity")
-    allowed_route_ids = fields.Many2many("stock.route", compute="_compute_allowed_route_ids")
 
     @api.onchange('product_id', 'warehouse_id')
     def _onchange_product_id(self):
@@ -45,12 +40,6 @@ class ProductReplenish(models.TransientModel):
     def _compute_forecasted_quantity(self):
         for rec in self:
             rec.forecasted_quantity = rec.product_id.with_context(warehouse=rec.warehouse_id.id).virtual_available
-
-    @api.depends('product_id', 'product_tmpl_id')
-    def _compute_allowed_route_ids(self):
-        domain = self._get_allowed_route_domain()
-        route_ids = self.env['stock.route'].search(domain)
-        self.allowed_route_ids = route_ids
 
     @api.depends('route_id')
     def _compute_date_planned(self):
@@ -175,15 +164,6 @@ class ProductReplenish(models.TransientModel):
                 'sticky': False,
             }
         }
-
-    # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
-    def _get_allowed_route_domain(self):
-        stock_location_inter_company_id = self.env.ref('stock.stock_location_inter_company').id
-        return [
-            ('product_selectable', '=', True),
-            ('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
-            ('rule_ids.location_dest_id', '!=', stock_location_inter_company_id)
-        ]
 
     def _get_route_domain(self, product_tmpl_id):
         company = product_tmpl_id.company_id or self.env.company
