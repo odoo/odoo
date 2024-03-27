@@ -1,5 +1,5 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
-import { CallSettings } from "@mail/discuss/call/common/call_settings";
+import { SettingsMenu } from "@mail/discuss/core/common/settings_menu";
 
 import { useComponent, useState } from "@odoo/owl";
 
@@ -28,18 +28,15 @@ threadActionsRegistry
         },
     })
     .add("settings", {
-        component: CallSettings,
+        component: SettingsMenu,
         condition(component) {
-            return (
-                component.thread?.allowCalls &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
-            );
+            return component.thread?.allowCalls && component.props.chatWindow?.isOpen;
         },
-        panelOuterClass: "o-discuss-CallSettings",
+        panelOuterClass: "o-discuss-SettingsMenu",
         icon: "fa fa-fw fa-gear",
         iconLarge: "fa fa-fw fa-lg fa-gear",
-        name: _t("Show Call Settings"),
-        nameActive: _t("Hide Call Settings"),
+        name: _t("Show Settings"),
+        nameActive: _t("Hide Settings"),
         sequence(component) {
             return component.props.chatWindow && component.thread?.eq(component.rtc.state.channel)
                 ? 6

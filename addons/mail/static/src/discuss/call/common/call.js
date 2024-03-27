@@ -86,7 +86,7 @@ export class Call extends Component {
         const raisingHandCards = [];
         const sessionCards = [];
         const invitationCards = [];
-        const filterVideos = this.props.thread.showOnlyVideo && this.props.thread.videoCount > 0;
+        const filterVideos = this.store.settings.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of this.props.thread.rtcSessions) {
             const target = session.raisingHand ? raisingHandCards : sessionCards;
             const cameraStream = session.isCameraOn

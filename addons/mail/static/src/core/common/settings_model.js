@@ -1,4 +1,6 @@
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
+import { debounce } from "@web/core/utils/timing";
 import { Record } from "./record";
 
 export class Settings extends Record {
@@ -6,6 +8,12 @@ export class Settings extends Record {
 
     setup() {
         super.setup();
+        this.saveVoiceThresholdDebounce = debounce(() => {
+            browser.localStorage.setItem(
+                "mail_user_setting_voice_threshold",
+                this.voiceActivationThreshold.toString()
+            );
+        }, 2000);
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
         this._loadLocalSettings();
@@ -24,13 +32,32 @@ export class Settings extends Record {
     logRtc = false;
     push_to_talk_key;
     use_push_to_talk = false;
-    voice_active_duration = 0;
+    voice_active_duration = 200;
     useBlur = false;
+    showOnlyVideo = false;
     volumeSettingsTimeouts = new Map();
     /**
      * Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
      */
     voiceActivationThreshold = 0.05;
+    /**
+     * General notification settings for channels
+     * @type {'mentions'|'all'|'no_notif'}
+     */
+    custom_notifications = Record.attr("mentions", {
+        compute() {
+            return this.custom_notifications === false ? "mentions" : this.custom_notifications;
+        },
+    });
+    selected_mute_duration = false;
+    mute_until_dt = Record.attr(false, {
+        type: "datetime",
+        onUpdate() {
+            if (!this.mute_until_dt) {
+                this.selected_mute_duration = false;
+            }
+        },
+    });
     /**
      * @returns {Object} MediaTrackConstraints
      */
@@ -43,6 +70,67 @@ export class Settings extends Record {
             constraints.deviceId = this.audioInputDeviceId;
         }
         return constraints;
+    }
+
+    get NOTIFICATIONS() {
+        return [
+            {
+                id: "all",
+                name: _t("All Messages"),
+            },
+            {
+                id: "mentions",
+                name: _t("Mentions Only"),
+            },
+            {
+                id: "no_notif",
+                name: _t("Nothing"),
+            },
+        ];
+    }
+
+    get MUTES() {
+        return [
+            {
+                id: "15_mins",
+                value: 15,
+                name: _t("For 15 minutes"),
+            },
+            {
+                id: "1_hour",
+                value: 60,
+                name: _t("For 1 hour"),
+            },
+            {
+                id: "3_hours",
+                value: 180,
+                name: _t("For 3 hours"),
+            },
+            {
+                id: "8_hours",
+                value: 480,
+                name: _t("For 8 hours"),
+            },
+            {
+                id: "24_hours",
+                value: 1440,
+                name: _t("For 24 hours"),
+            },
+            {
+                id: "forever",
+                value: -1,
+                name: _t("Until I turn it back on"),
+            },
+        ];
+    }
+
+    getMuteUntilText(dt) {
+        if (dt) {
+            return dt.year <= new Date().getFullYear() + 2
+                ? _t("Until ") + dt.toFormat("MM/dd, HH:mm")
+                : _t("Until I turn it back on");
+        }
+        return undefined;
     }
 
     getVolume(rtcSession) {
@@ -59,6 +147,30 @@ export class Settings extends Record {
 
     // "setters"
 
+    /**
+     * @param {string} notif
+     */
+    setCustomNotifications(notif) {
+        this._store.env.services.orm.call(
+            "res.users.settings",
+            "set_res_users_settings",
+            [[this.id]],
+            {
+                new_settings: {
+                    custom_notifications: notif === "mentions" ? false : notif,
+                },
+            }
+        );
+    }
+
+    /**
+     * @param {integer|false} minutes
+     */
+    setMuteDuration(minutes) {
+        this._store.env.services.orm.call("res.users.settings", "mute", [[this.id]], {
+            minutes: minutes,
+        });
+    }
     /**
      * @param {String} audioInputDeviceId
      */
@@ -114,10 +226,7 @@ export class Settings extends Record {
      */
     setThresholdValue(voiceActivationThreshold) {
         this.voiceActivationThreshold = voiceActivationThreshold;
-        browser.localStorage.setItem(
-            "mail_user_setting_voice_threshold",
-            voiceActivationThreshold.toString()
-        );
+        this.saveVoiceThresholdDebounce();
     }
 
     // methods
@@ -172,8 +281,12 @@ export class Settings extends Record {
             key: key || false,
         };
     }
-    togglePushToTalk() {
-        this.use_push_to_talk = !this.use_push_to_talk;
+    setBlur(value) {
+        this.useBlur = value;
+        this._saveSettings();
+    }
+    setPushToTalk(value) {
+        this.use_push_to_talk = value;
         this._saveSettings();
     }
     /**
@@ -192,17 +305,6 @@ export class Settings extends Record {
     }
     /**
      * @private
-     * @param {Event} ev
-     *
-     * Syncs the setting across tabs.
-     */
-    _onStorage(ev) {
-        if (ev.key === "mail_user_setting_voice_threshold") {
-            this.voiceActivationThreshold = ev.newValue;
-        }
-    }
-    /**
-     * @private
      */
     async _onSaveGlobalSettingsTimeout() {
         this.globalSettingsTimeout = undefined;
@@ -213,6 +315,8 @@ export class Settings extends Record {
             {
                 new_settings: {
                     push_to_talk_key: this.push_to_talk_key,
+                    show_only_video: this.show_only_video,
+                    use_blur: this.useBlur,
                     use_push_to_talk: this.use_push_to_talk,
                     voice_active_duration: this.voice_active_duration,
                 },

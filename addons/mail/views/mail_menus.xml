@@ -19,6 +19,20 @@
         action="mail.mail_canned_response_action"
         sequence="15"
     />
+    <menuitem
+        id="mail.menu_notification_settings"
+        name="Notification"
+        parent="mail.menu_configuration"
+        action="discuss_notification_settings_action"
+        sequence="1"
+    />
+    <menuitem
+        id="mail.menu_call_settings"
+        name="Voice &amp; Video"
+        parent="mail.menu_configuration"
+        action="discuss_call_settings_action"
+        sequence="2"
+    />
 
     <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>

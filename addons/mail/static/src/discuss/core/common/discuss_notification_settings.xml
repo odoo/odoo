@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussNotificationSettings">
+        <div class="o-mail-DiscussNotificationSettings d-flex flex-column">
+            <t t-call="mail.DiscussNotificationSettings.item">
+                <t t-set="title" t-value="'Mute'"/>
+                <t t-set="description" t-value="'Muting a server prevents unread indicators and notifications from appearing unless you are mentioned.'"/>
+                <t t-set="value" t-value="displayMuteMenu"/>
+                <t t-set="onChange" t-value="onChangeDisplayMute"/>
+            </t>
+            <label t-if="displayMuteMenu" class="d-flex align-items-baseline my-2">
+                <h6 class="flex-shrink-0">
+                    <t t-if="store.settings.getMuteUntilText(store.settings.mute_until_dt)" t-esc="store.settings.getMuteUntilText(store.settings.mute_until_dt)"/>
+                </h6>
+                <div class="flex-grow-1"/>
+                <select class="form-select o-width-auto d-flex" t-on-change="onChangeMuteDuration">
+                    <t t-foreach="store.settings.MUTES" t-as="item" t-key="item.id">
+                        <option t-att-value="item.value" t-att-selected="store.settings.selected_mute_duration == item.value"><t t-esc="item.name"/></option>
+                    </t>
+                </select>
+            </label>
+            <hr class="o-discuss-separator my-1"/>
+            <label class="o-mail-DiscussNotificationSettings-item d-flex flex-column my-1">
+                <h5>
+                    Channel notification settings
+                </h5>
+                <span class="mb-1">
+                    This setting will be applied to all channels using the default category
+                </span>
+                <t t-foreach="store.settings.NOTIFICATIONS" t-as="item" t-key="item.id">
+                    <button class="btn d-flex align-baselin my-1" t-att-class="{'bg-300' : item.id === store.settings.custom_notifications}" t-on-click="()=> this.onChangeCustomNotifications(item.id)">
+                        <input class="form-check-input" type="radio" t-att-checked="item.id === store.settings.custom_notifications"/>
+                        <div class="d-flex flex-column text-start flex-grow-1 mx-3">
+                            <span t-esc="item.name"/>
+                        </div>
+                    </button>
+                </t>
+            </label>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussNotificationSettings.item">
+        <div class="o-mail-DiscussNotificationSettings-item d-flex flex-column my-1">
+            <label class="cursor-pointer d-flex align-items-center">
+                <h5>
+                    <t t-esc="title"/>
+                </h5>
+                <div class="flex-grow-1"/>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" t-att-checked="value" t-on-change="onChange"/>
+                </div>
+            </label>
+            <div class="d-flex mt-1">
+                <t t-esc="description"/>
+            </div>
+        </div>
+    </t>
+</templates>

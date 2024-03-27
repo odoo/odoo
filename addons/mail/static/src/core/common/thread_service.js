@@ -754,23 +754,22 @@ export class ThreadService {
      * @param {Message} message
      */
     notifyMessageToUser(thread, message) {
-        let notify = thread.channel_type !== "channel";
-        if (thread.channel_type === "channel" && message.recipients?.includes(this.store.self)) {
-            notify = true;
-        }
+        const notify =
+            thread.channel_type === "channel"
+                ? thread.custom_notifications ||
+                  this.store.settings.custom_notifications ||
+                  "mentions"
+                : thread.custom_notifications;
         if (
             thread.correspondent?.eq(this.store.odoobot) ||
-            thread.mute_until_dt ||
-            thread.custom_notifications === "no_notif" ||
-            (thread.custom_notifications === "mentions" &&
-                !message.recipients?.includes(this.store.self))
+            thread.isMuted ||
+            notify === "no_notif" ||
+            (notify === "mentions" && !message.recipients?.includes(this.store.self))
         ) {
             return;
         }
-        if (notify) {
-            this.store.ChatWindow.insert({ thread });
-            this.outOfFocusService.notify(message, thread);
-        }
+        this.store.ChatWindow.insert({ thread });
+        this.outOfFocusService.notify(message, thread);
     }
 
     /**

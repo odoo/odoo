@@ -3609,6 +3609,11 @@ class MailThread(models.AbstractModel):
         if not partner_ids:
             return
 
+        # web_push in discuss is handled on the client side, see `notifyMessageToUser()`
+        message_model = msg_vals.get('model') if msg_vals else message.model
+        if message_model == 'discuss.channel':
+            return
+
         partner_devices_sudo = self.env['mail.push.device'].sudo()
         devices = partner_devices_sudo.search([
             ('partner_id', 'in', partner_ids)

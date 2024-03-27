@@ -23,8 +23,8 @@ test("Member list and settings menu are exclusive", async () => {
     await openDiscuss(channelId);
     await click("[title='Show Member List']");
     await contains(".o-discuss-ChannelMemberList");
-    await click("[title='Show Call Settings']");
-    await contains(".o-discuss-CallSettings");
+    await click("[title='Pinned Messages']");
+    await contains(".o-discuss-PinnedMessagesPanel");
     await contains(".o-discuss-ChannelMemberList", { count: 0 });
 });
 

@@ -159,7 +159,7 @@ test("chat window: basic rendering", async () => {
     await contains("[title='Show Attachments']");
     await contains("[title='Add Users']");
     await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
+    await contains("[title='Show Settings']");
     await contains("[title='Open in Discuss']");
 });
 
@@ -698,7 +698,7 @@ test("chat window should open when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -725,7 +725,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],
@@ -997,19 +997,19 @@ test("folded chat window should hide member-list and settings buttons", async ()
     await click(".o-mail-NotificationItem");
     await click("[title='Open Actions Menu']");
     await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
+    await contains("[title='Show Settings']");
     await click(".o-mail-ChatWindow-header"); // click away to close the more menu
     await contains("[title='Show Member List']", { count: 0 });
     // Fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains("[title='Open Actions Menu']", { count: 0 });
     await contains("[title='Show Member List']", { count: 0 });
-    await contains("[title='Show Call Settings']", { count: 0 });
+    await contains("[title='Show Settings']", { count: 0 });
     // Unfold chat window
     await click(".o-mail-ChatWindow-command[title='Open']");
     await click("[title='Open Actions Menu']");
     await contains("[title='Show Member List']");
-    await contains("[title='Show Call Settings']");
+    await contains("[title='Show Settings']");
 });
 
 test("Chat window in mobile are not foldable", async () => {

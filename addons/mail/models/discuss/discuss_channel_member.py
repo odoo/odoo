@@ -32,9 +32,9 @@ class ChannelMember(models.Model):
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
-        [("mentions", "Mentions Only"), ("no_notif", "Nothing")],
+        [("all", "All Messages"), ("mentions", "Mentions Only"), ("no_notif", "Nothing")],
         "Customized Notifications",
-        help="All Messages if not specified",
+        help="Use default from user settings if not specified",
     )
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")

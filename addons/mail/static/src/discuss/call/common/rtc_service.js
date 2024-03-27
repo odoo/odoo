@@ -124,6 +124,7 @@ export class Rtc {
         this.pttExtService = services["discuss.ptt_extension"];
         this._handleSfuClientUpdates = this._handleSfuClientUpdates.bind(this);
         this._handleSfuClientStateChange = this._handleSfuClientStateChange.bind(this);
+        this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500, false);
         this.state = reactive({
             connectionType: undefined,
             hasPendingRequest: false,
@@ -175,7 +176,7 @@ export class Rtc {
             }
         });
         onChange(this.store.settings, ["voiceActivationThreshold", "use_push_to_talk"], () =>
-            this.linkVoiceActivation()
+            this.linkVoiceActivationDebounce()
         );
         onChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.state.selfSession) {
@@ -1581,7 +1582,7 @@ export class Rtc {
             this.updateAndBroadcast({ isSelfMuted: false });
             audioTrack.enabled = !this.state.selfSession.isMute && this.state.selfSession.isTalking;
             this.state.audioTrack = audioTrack;
-            await this.linkVoiceActivation();
+            await this.linkVoiceActivationDebounce();
             if (this.sfuClient) {
                 await this.sfuClient.updateUpload("audio", this.state.audioTrack);
                 return;

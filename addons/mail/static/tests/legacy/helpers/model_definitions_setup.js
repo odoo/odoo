@@ -126,6 +126,10 @@ insertModelFields("mail.message.subtype", {
     subtype_xmlid: { type: "char" },
 });
 insertModelFields("res.users.settings", {
+    use_blur: { default: false },
+    show_only_video: { default: false },
+    custom_notifications: { default: false },
+    mute_until_dt: { default: false },
     is_discuss_sidebar_category_channel_open: { default: true },
     is_discuss_sidebar_category_chat_open: { default: true },
 });

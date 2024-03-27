@@ -72,7 +72,7 @@ test("should not display call UI when no more members (self disconnect)", async 
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']:not([disabled])");
     await contains(".o-discuss-Call", { count: 0 });
 });
 

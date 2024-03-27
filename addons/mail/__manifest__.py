@@ -115,6 +115,8 @@ For more specific needs, you may also assign custom-defined actions
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
+        'views/discuss_notification_settings_views.xml',
+        'views/discuss_call_settings_views.xml',
         'views/mail_menus.xml',
         'views/res_company_views.xml',
         "data/mail_canned_response_data.xml",

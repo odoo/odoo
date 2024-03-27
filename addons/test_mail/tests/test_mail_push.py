@@ -81,8 +81,8 @@ class TestWebPushNotification(SMSCommon):
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     def test_notify_by_push_channel(self, push_to_end_point):
-        """ Test various use case with discuss.channel. Chat and group channels
-        sends push notifications, channel not. """
+        """ Test various use case with discuss.channel. Channel, chat and group channels
+        not sends push notifications """
         chat_channel, channel_channel, group_channel = self.env['discuss.channel'].with_user(self.user_email).create([
             {
                 'channel_partner_ids': [
@@ -94,60 +94,15 @@ class TestWebPushNotification(SMSCommon):
             } for channel_type in ['chat', 'channel', 'group']
         ])
 
-        for channel, has_notification in zip(
-            (chat_channel + channel_channel + group_channel),
-            (True, False, True)
-        ):
-            with self.subTest(channel_type=channel.channel_type):
-                # Test Direct Message
-                channel.with_user(self.user_email).message_post(
-                    body='Test Push',
-                    message_type='comment',
-                    subtype_xmlid='mail.mt_comment',
-                )
-                if has_notification:
-                    push_to_end_point.assert_called_once()
-                    payload_value = json.loads(push_to_end_point.call_args.kwargs['payload'])
-                    if channel.channel_type == 'chat':
-                        self.assertEqual(payload_value['title'], f'{self.user_email.name}')
-                    else:
-                        self.assertEqual(payload_value['title'], f'#{channel.name}')
-                    self.assertEqual(
-                        payload_value['options']['icon'],
-                        f'/web/image/res.partner/{self.user_email.partner_id.id}/avatar_128'
-                    )
-                    self.assertEqual(payload_value['options']['body'], 'Test Push')
-                    self.assertEqual(payload_value['options']['data']['res_id'], channel.id)
-                    self.assertEqual(payload_value['options']['data']['model'], channel._name)
-                    self.assertEqual(push_to_end_point.call_args.kwargs['device']['endpoint'], 'https://test.odoo.com/webpush/user2')
-                else:
-                    push_to_end_point.assert_not_called()
-                push_to_end_point.reset_mock()
-
-        # Test Direct Message with channel muted -> should skip push notif
-        now = datetime.now()
-        self.env['discuss.channel.member'].search([
-            ('partner_id', 'in', (self.user_email.partner_id + self.user_inbox.partner_id).ids),
-            ('channel_id', 'in', (chat_channel + channel_channel + group_channel).ids),
-        ]).write({
-            'mute_until_dt': now + timedelta(days=5)
-        })
-        chat_channel.with_user(self.user_email).message_post(
-            body='Test',
-            message_type='comment',
-            subtype_xmlid='mail.mt_comment',
-        )
-        push_to_end_point.assert_not_called()
+        # Test Direct Message for chat_channel, channel_channel, group_channel
+        for channel in (chat_channel, channel_channel, group_channel):
+            channel.with_user(self.user_email).message_post(
+                body='Test Push',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
+            push_to_end_point.assert_not_called()
         push_to_end_point.reset_mock()
-
-        # Test Channel Message
-        group_channel.with_user(self.user_email).message_post(
-            body='Test',
-            partner_ids=self.user_inbox.partner_id.ids,
-            message_type='comment',
-            subtype_xmlid='mail.mt_comment',
-        )
-        push_to_end_point.assert_called_once()
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.addons.mail.models.mail_thread')

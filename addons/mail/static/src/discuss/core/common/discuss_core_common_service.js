@@ -253,7 +253,6 @@ export const discussCoreCommon = {
         "bus_service",
         "mail.message",
         "mail.messaging",
-        "mail.out_of_focus",
         "mail.store",
         "mail.thread",
         "notification",

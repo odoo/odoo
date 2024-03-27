@@ -1192,7 +1192,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -1736,7 +1736,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
         ],
         group_ids: [Command.create({ name: "test" })],
@@ -1938,8 +1938,9 @@ test("Notification settings: basic rendering", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Notification Settings']");
+    await contains("button", { text: "Use Default" });
     await contains("button", { text: "All Messages" });
-    await contains("button", { text: "Mentions Only" });
+    await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
     await contains("button", { text: "Nothing" });
     await click("[title='Mute Channel']");
     await contains("[title='For 15 minutes']");

@@ -7,7 +7,8 @@
                 <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="selectUnmute">
                     <div class="d-flex flex-column flex-grow-1 text-start px-2 py-1 rounded">
                         <span class="fs-6 fw-bold">Unmute Channel</span>
-                        <span class="fw-normal o-smaller" t-if="muteUntilText" t-out="muteUntilText"/>
+                        <t t-set="muteText" t-value="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
+                        <span t-if="muteText" class="fw-normal o-smaller" t-out="muteText"/>
                     </div>
                 </button>
             </t>
@@ -23,19 +24,29 @@
                         </button>
                     </button>
                     <t t-set-slot="content">
-                        <t t-foreach="props.thread.MUTES" t-as="item" t-key="item.id">
+                        <t t-foreach="store.settings.MUTES" t-as="item" t-key="item.id">
                             <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ 'title': item.name }" onSelected="()=>this.setMute(item.value)"><span class="mx-2" t-out="item.name"/></DropdownItem>
                         </t>
                     </t>
                 </Dropdown>
             </div>
             <hr class="solid mx-2 my-1"/>
-            <t t-foreach="props.thread.SETTINGS" t-as="setting" t-key="setting.id">
-                <button class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => this.setSetting(setting)">
+            <button t-if="props.thread.type === 'channel'" class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => this.setNotification(false)">
+                <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
+                    <div class="d-flex flex-column align-items-start">
+                        <span class="fs-6 fw-normal">Use Default</span>
+                        <span class="fw-bolder o-smaller"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.id === store.settings.custom_notifications).name"/></span>
+                    </div>
+                    <div class="flex-grow-1"/>
+                    <input class="form-check-input" type="radio" t-att-checked="!props.thread.custom_notifications"/>
+                </div>
+            </button>
+            <t t-foreach="store.settings.NOTIFICATIONS" t-as="item" t-key="item.id">
+                <button class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => this.setNotification(item.id)">
                     <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
-                        <span class="fs-6 fw-normal" t-esc="setting.name"/>
+                        <span class="fs-6 fw-normal" t-esc="item.name"/>
                         <div class="flex-grow-1"/>
-                        <input class="form-check-input" type="radio" t-att-checked="props.thread.custom_notifications === setting.id"/>
+                        <input class="form-check-input" type="radio" t-att-checked="props.thread.custom_notifications === item.id"/>
                     </div>
                 </button>
             </t>

@@ -243,7 +243,6 @@ export class Thread extends Record {
             return ["mail.box", "discuss.channel"].includes(this.model) ? "bottom" : 0;
         },
     });
-    showOnlyVideo = false;
     transientMessages = Record.many("Message");
     discussAppCategory = Record.one("DiscussAppCategory", {
         compute() {
@@ -281,11 +280,28 @@ export class Thread extends Record {
     });
     /** @type {Boolean} */
     is_editable;
-    /** @type {false|'mentions'|'no_notif'} */
-    custom_notifications = false;
+    /**
+     * The false value is used for channels only, which means using default from `Settings`.
+     * In other cases, the value is either `all`, `mentions` or `no_notif`.
+     * `all` is the default value for all non-channels.
+     *
+     * @type {false|'all'|'mentions'|'no_notif'}
+     */
+    custom_notifications = Record.attr(false, {
+        compute() {
+            return this.type === "channel"
+                ? this.custom_notifications
+                : this.custom_notifications || "all";
+        },
+    });
     /** @type {luxon.DateTime} */
     mute_until_dt = Record.attr(undefined, { type: "datetime" });
     /** @type {Boolean} */
+    isMuted = Record.attr(false, {
+        compute() {
+            return Boolean(this.mute_until_dt || this._store.settings.mute_until_dt);
+        },
+    });
     isLocallyPinned = Record.attr(false, {
         onUpdate() {
             this.onPinStateUpdated();

@@ -57,7 +57,8 @@ async function getModelDefinitions() {
         // apply default values for date like fields if none was passed.
         for (const fname in fields) {
             const field = fields[fname];
-            if (["date", "datetime"].includes(field.type) && !field.default) {
+            // check if the field is undefined or falsy.
+            if (["date", "datetime"].includes(field.type) && field.default === undefined) {
                 const defaultFieldValue =
                     field.type === "date"
                         ? () => serializeDate(DateTime.utc())
