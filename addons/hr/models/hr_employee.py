@@ -43,8 +43,8 @@ class HrEmployeePrivate(models.Model):
     resource_calendar_id = fields.Many2one(tracking=True)
     department_id = fields.Many2one(tracking=True)
     company_id = fields.Many2one('res.company', required=True)
-    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
-    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
+    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="hr.group_hr_user")
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="hr.group_hr_user")
     # private info
     private_street = fields.Char(string="Private Street", groups="hr.group_hr_user")
     private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user")
@@ -95,7 +95,7 @@ class HrEmployeePrivate(models.Model):
     work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
-    work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name')
+    work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
@@ -139,15 +139,50 @@ class HrEmployeePrivate(models.Model):
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
     private_car_plate = fields.Char(groups="hr.group_hr_user", help="If you have more than one car, just separate the plates by a space.")
-    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
-    related_partners_count = fields.Integer(compute="_compute_related_partners_count")
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, groups="hr.group_hr_user")
+    related_partners_count = fields.Integer(compute="_compute_related_partners_count", groups="hr.group_hr_user")
     # properties
-    employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False)
+    employee_properties = fields.Properties('Properties', definition='company_id.employee_properties_definition', precompute=False, groups="hr.group_hr_user")
+
+    # mail.activity.mixin
+    activity_ids = fields.One2many(groups="hr.group_hr_user")
+    activity_state = fields.Selection(groups="hr.group_hr_user")
+    activity_user_id = fields.Many2one(groups="hr.group_hr_user")
+    activity_type_id = fields.Many2one(groups="hr.group_hr_user")
+    activity_type_icon = fields.Char(groups="hr.group_hr_user")
+    activity_date_deadline = fields.Date(groups="hr.group_hr_user")
+    my_activity_date_deadline = fields.Date(groups="hr.group_hr_user")
+    activity_summary = fields.Char(groups="hr.group_hr_user")
+    activity_exception_decoration = fields.Selection(groups="hr.group_hr_user")
+    activity_exception_icon = fields.Char(groups="hr.group_hr_user")
+
+    # mail.thread mixin
+    message_is_follower = fields.Boolean(groups="hr.group_hr_user")
+    message_follower_ids = fields.One2many(groups="hr.group_hr_user")
+    message_partner_ids = fields.Many2many(groups="hr.group_hr_user")
+    message_ids = fields.One2many(groups="hr.group_hr_user")
+    has_message = fields.Boolean(groups="hr.group_hr_user")
+    message_needaction = fields.Boolean(groups="hr.group_hr_user")
+    message_needaction_counter = fields.Integer(groups="hr.group_hr_user")
+    message_has_error = fields.Boolean(groups="hr.group_hr_user")
+    message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
+    message_attachment_count = fields.Integer(groups="hr.group_hr_user")
 
     _sql_constraints = [
         ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
+
+    @api.model
+    def check_field_access_rights(self, operation, field_names):
+        # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
+        # groups on a field which is not prefetched (because not stored) but would crash anyway
+        # if we try to read them directly (very uncommon use case). Don't add your field on this
+        # list if you can specify the group on the field directly (as all the other fields).
+        result = super().check_field_access_rights(operation, field_names)
+        if not self.env.user.has_group("hr.group_hr_user"):
+            result = [field for field in result if field not in ['activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error']]
+        return result
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):

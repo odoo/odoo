@@ -25,7 +25,7 @@ class Employee(models.Model):
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).',
     )
 
-    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense')
+    filter_for_expense = fields.Boolean(store=False, search='_search_filter_for_expense', groups="hr.group_hr_user")
 
     @api.depends('parent_id')
     def _compute_expense_manager(self):

@@ -35,12 +35,12 @@ class Employee(models.Model):
     _inherit = "hr.employee"
 
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
-    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
+    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts', groups="hr.group_hr_user")
     contract_id = fields.Many2one(
         'hr.contract', string='Current Contract', groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee', copy=False)
-    calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
+    calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch', groups="hr.group_hr_user")
+    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count', groups="hr.group_hr_user")
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
 
