@@ -9,6 +9,7 @@
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-set="prevMsg" t-value="0"/>
+                <t t-set="separatorDisplayed" t-value="false"/>
                 <t t-if="props.order === 'asc'">
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
@@ -22,11 +23,17 @@
                         <DateSection date="msg.dateDay" className="'pt-4'"/>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
-                    <Transition t-if="props.thread.model === 'discuss.channel'"  visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
-                        <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
-                            <hr class="ms-2 flex-grow-1 border border-danger opacity-50"/><span class="px-2 text-danger">New messages</span><hr class="me-2 flex-grow-1 border border-danger opacity-50"/>
-                        </div>
-                    </Transition>
+                    <t t-if="props.thread.model === 'discuss.channel'">
+                        <t t-set="showSeparator" t-value="(msg.id > props.thread.seen_message_id and !separatorDisplayed)" />
+                        <t t-if="showSeparator">
+                            <t t-set="separatorDisplayed" t-value="true"/>
+                        </t>
+                        <Transition visible="showSeparator" name="'o-fade'" t-slot-scope="transition">
+                            <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                                <hr class="ms-2 flex-grow-1 border border-danger opacity-50"/><span class="px-2 text-danger">New messages</span><hr class="me-2 flex-grow-1 border border-danger opacity-50"/>
+                            </div>
+                        </Transition>
+                    </t>
                     <t t-if="msg.isNotification">
                         <t t-call="mail.NotificationMessage"/>
                     </t>
