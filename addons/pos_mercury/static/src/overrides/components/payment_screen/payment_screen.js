@@ -523,7 +523,7 @@ patch(PaymentScreen.prototype, {
      */
     async addNewPaymentLine(paymentMethod) {
         const order = this.pos.get_order();
-        const res = super.addNewPaymentLine(...arguments);
+        const res = await super.addNewPaymentLine(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
             order.get_selected_paymentline().mercury_swipe_pending = true;
         }
