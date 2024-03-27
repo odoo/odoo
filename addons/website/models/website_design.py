@@ -70,6 +70,11 @@ class WebsiteDesign(models.Model):
 
     footer_scrolltop = fields.Boolean(string='Footer Scrolltop', default=False)
     header_font_size = fields.Char(string='Header Font Size', default='1rem')
+    menu_border_width = fields.Char(string='Menu Border Width', default='null')
+    # Maybe menu-border-style should be a selection field
+    menu_border_style = fields.Char(string='Menu Border Style', default='solid')
+    menu_border_radius = fields.Char(string='Menu Border Radius', default='null')
+    menu_box_shadow = fields.Char(string='Menu Box Shadow', default='null')
 
     body_line_height = fields.Char(string='Body Line Height', default='1.5')
     # Logo height requires two fields because it can be computed based on the
