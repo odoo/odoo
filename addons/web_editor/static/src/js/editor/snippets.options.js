@@ -3450,34 +3450,11 @@ const SnippetOptionWidget = Widget.extend({
                 return true;
             }
 
-            // This condition requires extraClass to NOT be set.
             if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                // Property must be set => extraClass will be enabled.
-                if (params.extraClass) {
-                    // The extraClass is temporarily removed during selectStyle
-                    // because it is enabled only if the element style is set
-                    // by the option. (E.g. add the bootstrap border class only
-                    // if there is a border width.) Unfortunately the
-                    // extraClass might specify default !important properties,
-                    // therefore determining whether !important is needed
-                    // requires the class to be applied.
-                    this.$target[0].classList.add(params.extraClass);
-                    // Set inline style only if different from value defined
-                    // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                        this.$target[0].style.setProperty(cssProp, cssValue);
-                    }
-                } else {
-                    // Inline style required.
-                    this.$target[0].style.setProperty(cssProp, cssValue);
-                }
+                this.$target[0].style.setProperty(cssProp, cssValue);
                 // If change had no effect then make it important.
-                // This condition requires extraClass to be set.
                 if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
-                }
-                if (params.extraClass) {
-                    this.$target[0].classList.remove(params.extraClass);
                 }
                 return true;
             }
