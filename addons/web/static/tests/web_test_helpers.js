@@ -104,6 +104,7 @@ export {
     clickModalButton,
     clickSave,
     clickViewButton,
+    expectMarkup,
     fieldInput,
     kanbanCard,
     mountView,

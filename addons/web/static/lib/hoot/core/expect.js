@@ -24,6 +24,7 @@ import {
     ensureArguments,
     ensureArray,
     formatHumanReadable,
+    formatXML,
     isNil,
     isOfType,
     match,
@@ -49,9 +50,14 @@ import { Test } from "./test";
  *  message?: string;
  * }} ExpectOptions
  *
+ * @typedef {{
+ *  keepInlineTextNodes?: boolean;
+ * }} ExpectHtmlOptions
+ *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
+ * 
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
@@ -1485,6 +1491,40 @@ export class Matchers {
     }
 
     /**
+     * Expects the received node's outerHTML to match the `expected` regex, or to be the `expected`
+     * string (upon formatting).
+     *
+     * @param {string | RegExp} [expected]
+     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     * @example
+     *  expect(queryOne(".my_element")).toHaveInnerHTML(`
+     *      <div>
+     *          A
+     *      </div>
+     * `);
+     */
+    toHaveInnerHTML(expected, options) {
+        return this.#toHaveHTML("innerHTML", expected, options);
+    }
+
+    /**
+     * Expects the received node's outerHTML to match the `expected` regex, or to be the `expected`
+     * string (upon formatting).
+     *
+     * @param {string | RegExp} [expected]
+     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     * @example
+     *  expect(queryOne(".my_element")).toHaveOuterHTML(`
+     *      <div class="my_element">
+     *          <span>A</span>
+     *      </div>
+     * `);
+     */
+    toHaveOuterHTML(expected, options) {
+        return this.#toHaveHTML("outerHTML", expected, options);
+    }
+
+    /**
      * Expects the received {@link Target} to have the given attribute set on
      * itself, and for that attribute value to match the given `value` if any.
      *
@@ -1838,6 +1878,51 @@ export class Matchers {
         if (!this.#headless) {
             currentStack = new Error().stack;
         }
+    }
+
+    /**
+     * @param {"innerHTML" | "outerHTML"} fname
+     * @param {string | RegExp} expected
+     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     */
+    #toHaveHTML(fname, expected, options = {}) {
+        this.#saveStack();
+
+        ensureArguments([
+            [expected, ["string", "regex"]],
+            [options, ["object"]],
+        ]);
+
+        if (!(expected instanceof RegExp)) {
+            expected = formatXML(expected, options.keepInlineTextNodes);
+        }
+
+        return this.#resolve({
+            name: fname === "innerHTML" ? "toHaveInnerHTML" : "toHaveOuterHTML",
+            acceptedType: "node",
+            predicate: (node) => {
+                return regexMatchOrStrictEqual(
+                    formatXML(node[fname], options.keepInlineTextNodes),
+                    expected
+                );
+            },
+            message: (pass) =>
+                options?.message ||
+                (pass
+                    ? `node's ${fname} is[! not] equal to expected value`
+                    : `expected node's ${fname} to match given regex/equal given string`),
+            details: (actual) => {
+                actual = formatXML(actual[fname], options.keepInlineTextNodes);
+                const details = [
+                    [Markup.green("Expected:"), expected],
+                    [Markup.red("Received:"), actual],
+                ];
+                if (canDiff(actual) && canDiff(expected)) {
+                    details.push([Markup.text("Diff:"), Markup.diff(expected, actual)]);
+                }
+                return details;
+            },
+        });
     }
 }
 
