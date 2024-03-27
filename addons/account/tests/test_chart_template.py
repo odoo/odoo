@@ -25,6 +25,8 @@ def test_get_data(self, template_code):
             'currency_id': 'base.EUR',
             'property_account_income_categ_id': 'test_account_income_template',
             'property_account_expense_categ_id': 'test_account_expense_template',
+            'property_account_receivable_id': 'test_account_receivable_template',
+            'property_account_payable_id': 'test_account_payable_template',
         },
         'account.tax.group': {
             'tax_group_taxes': {
@@ -62,6 +64,16 @@ def test_get_data(self, template_code):
             }
         },
         'account.account': {
+            'test_account_receivable_template': {
+                'name': 'property_receivable_account',
+                'code': '411111',
+                'account_type': 'asset_receivable',
+            },
+            'test_account_payable_template': {
+                'name': 'property_payable_account',
+                'code': '421111',
+                'account_type': 'liability_payable',
+            },
             'test_account_income_template': {
                 'name': 'property_income_account',
                 'code': '222221',
@@ -551,6 +563,27 @@ class TestChartTemplate(TransactionCase):
 
             # silently ignore if the field doesn't exist (yet)
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
+    def test_change_coa(self):
+        def _get_chart_template_mapping(self, get_all=False):
+            return {'other_test': {
+                'name': 'test',
+                'country_id': None,
+                'country_code': None,
+                'module': 'account',
+                'parent': None,
+            }}
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_mapping', _get_chart_template_mapping),
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True)
+        ):
+            self.env['account.chart.template'].try_loading('other_test', company=self.company_1, install_demo=True)
+        self.assertEqual(self.company_1.chart_template, 'other_test')
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=True)
+        self.assertEqual(self.company_1.chart_template, 'test')
 
     def test_update_tax_with_non_existent_tag(self):
         """ Tests that when we update the CoA with a tax that has a tag that does not exist yet we raise an error.
