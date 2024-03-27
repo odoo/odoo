@@ -21,6 +21,13 @@ class TestWebsiteMenu(HttpCase):
         controller_url = '/test_website/model_item/'
         website = self.env['website'].browse(1)
 
+        # First render to fill the cache.
+        with MockRequest(self.env, website=website, url_root='', path=f"{controller_url}{records[0].id}"):
+            html.fromstring(self.env['ir.qweb'].with_context(lang='en_US')._render('test_website.model_item', {
+                'record': records[0],
+                'main_object': records[0],
+            }))
+
         self.env['website.menu'].create([{
             'name': records[0].name,
             'url': f"{controller_url}{records[0].id}",
