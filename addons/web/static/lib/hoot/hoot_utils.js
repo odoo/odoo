@@ -707,14 +707,30 @@ export function makeCallbacks() {
             return;
         }
 
-        let afterCallback = () => {};
-        if (type.startsWith("before")) {
-            const relatedType = `after${type.slice(6)}`;
-            afterCallback = (result) => addCallback(relatedType, result, true);
-        }
-
+        const afterCallback = getAfterCallback(type);
         for (const fn of fns) {
             await Promise.resolve(fn(...args)).then(afterCallback, console.error);
+        }
+    };
+
+    /**
+     * @param {string} type
+     * @param {...any} args
+     */
+    const callSync = (type, ...args) => {
+        const fns = callbackMap.get(type);
+        if (!fns?.length) {
+            return;
+        }
+
+        const afterCallback = getAfterCallback(type);
+        for (const fn of fns) {
+            try {
+                const result = fn(...args);
+                afterCallback(result);
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 
@@ -722,10 +738,21 @@ export function makeCallbacks() {
         callbackMap.clear();
     };
 
+    /**
+     * @param {string} type
+     */
+    const getAfterCallback = (type) => {
+        if (!type.startsWith("before")) {
+            return () => {};
+        }
+        const relatedType = `after${type.slice(6)}`;
+        return (result) => addCallback(relatedType, result, true);
+    };
+
     /** @type {Map<string, ((...args: any[]) => MaybePromise<((...args: any[]) => void) | void>)[]>} */
     const callbackMap = new Map();
 
-    return { add: addCallback, call, clear: clearCallbacks };
+    return { add: addCallback, call, callSync, clear: clearCallbacks };
 }
 
 /**

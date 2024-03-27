@@ -1486,7 +1486,7 @@ export class TestRunner {
 
         if (this.state.currentTest) {
             for (const callbackRegistry of this.#getCallbackChain(this.state.currentTest)) {
-                await callbackRegistry.call("error", ev);
+                callbackRegistry.callSync("error", ev);
                 if (ev.defaultPrevented) {
                     return;
                 }
