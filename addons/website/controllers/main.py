@@ -24,13 +24,14 @@ from odoo import http, models, fields, _
 from odoo.exceptions import AccessError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
-from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.base.models.ir_qweb import QWebException
+from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.website.tools import get_base_domain
+from odoo.tools.safe_eval import allow_instance
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
 
+@allow_instance
 class QueryURL(object):
     def __init__(self, path='', path_args=None, **args):
         self.path = path

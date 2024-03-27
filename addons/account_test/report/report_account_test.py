@@ -43,7 +43,7 @@ class ReportAssertAccount(models.AbstractModel):
             'column_order': None,  # used to choose the display order of columns (in case you are returning a list of dict)
             '_': _,
         }
-        safe_eval(code_exec, localdict, mode="exec", nocopy=True)
+        safe_eval(code_exec, locals_dict=localdict, mode="exec")
         result = localdict['result']
         column_order = localdict.get('column_order', None)
 

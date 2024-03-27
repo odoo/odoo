@@ -9,14 +9,13 @@ import itertools
 import logging
 import time
 from datetime import datetime, date
-from dateutil.relativedelta import relativedelta
 
 from lxml import etree
 
 import odoo
 from odoo.models import BaseModel
 from odoo.fields import Command
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, allow_instance
 
 _logger = logging.getLogger(__name__)
 
@@ -361,7 +360,7 @@ class Form:
 
         eval_context = self._get_eval_context(vals)
 
-        return bool(safe_eval(expr, eval_context))
+        return bool(safe_eval(expr, eval_context, sandbox_instances=(Dotter,)))
 
     def _get_context(self, field_name):
         """ Return the context of a given field. """
@@ -369,7 +368,7 @@ class Form:
         if not context_str:
             return {}
         eval_context = self._get_eval_context()
-        return safe_eval(context_str, eval_context)
+        return safe_eval(context_str, eval_context, sandbox_instances=(Dotter,))
 
     def _get_eval_context(self, values=None):
         """ Return the context dict to eval something. """
@@ -773,6 +772,7 @@ class O2MValue(X2MValue):
         return result
 
 
+@allow_instance
 class M2MValue(X2MValue):
     def to_commands(self):
         ids = []

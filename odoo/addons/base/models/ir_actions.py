@@ -5,7 +5,7 @@ import odoo
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import MissingError, ValidationError, AccessError, UserError
 from odoo.tools import frozendict
-from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.safe_eval import safe_eval, test_python_expr, allow_type
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
 import base64
@@ -23,6 +23,7 @@ _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
 
 
+@allow_type
 class LoggerProxy:
     """ Proxy of the `_logger` element in order to be used in server actions.
     We purposefully restrict its method as it will be executed in `safe_eval`.
@@ -800,7 +801,7 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+        safe_eval(self.code.strip(), globals_dict=eval_context, mode="exec", filename=str(self))
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):

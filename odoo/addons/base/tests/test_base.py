@@ -87,69 +87,7 @@ class TestSafeEval(BaseCase):
         with self.assertRaises(NameError):
             safe_eval("self.__name__", {'self': self}, mode="exec")
 
-    def test_06_safe_eval_format(self):
-        # string.format
-        self.assertEqual(safe_eval("'__{0}__'.format('Foo')"), '__Foo__')
-        self.assertEqual(safe_eval("'{0.__self__}'.format(abs)"), '{0.__self__}')
-        self.assertEqual(safe_eval("'{0.f_globals}'.format(abs)"), '{0.f_globals}')
-
-        # string.format_map
-        self.assertEqual(safe_eval("'__{foo}__'.format_map({'foo': 'Foo'})"), '__Foo__')
-        self.assertEqual(safe_eval("'{foo.__self__}'.format_map({'foo': abs})"), '{foo.__self__}')
-        self.assertEqual(safe_eval("'{foo.f_globals}'.format_map({'foo': abs})"), '{foo.f_globals}')
-
-        # Evaluation context for Markup asserts
-        c = {"Markup": Markup}
-
-        # Markup.format
-        self.assertEqual(safe_eval("Markup('__{0}__').format('Foo')", c), Markup('__Foo__'))
-        with self.assertRaisesRegex(ValueError, 'Access to forbidden name'):
-            safe_eval("Markup('{0.__self__}').format(abs)", c)
-        with self.assertRaisesRegex(ValueError, 'Access to forbidden name'):
-            safe_eval("Markup('{0.f_globals}').format(abs)", c)
-
-        # Markup.format_map
-        self.assertEqual(safe_eval("Markup('__{foo}__').format_map({'foo': 'Foo'})", c), Markup('__Foo__'))
-        self.assertEqual(safe_eval("Markup('{foo.__self__}').format_map({'foo': abs})", c), Markup('{foo.__self__}'))
-        self.assertEqual(safe_eval("Markup('{foo.f_globals}').format_map({'foo': abs})", c), Markup('{foo.f_globals}'))
-
-    def test_07_safe_eval_attribute_error_obj(self):
-        locals_dict = {}
-        try:
-            safe_eval("""
-try:
-    dict.foo
-except Exception as e:
-    action = {'args': e.args, 'obj': e.obj, 'name': e.name}
-            """, locals_dict=locals_dict, mode="exec", nocopy=True)
-        except ValueError as e:
-            # AttributeError.name, AttributeError.obj added in Python 3.10
-            # https://github.com/python/cpython/commit/37494b441aced0362d7edd2956ab3ea7801e60c8
-            self.assertIn("'AttributeError' object has no attribute 'obj'", e.args[0])
-        else:
-            exception = locals_dict.get('action')
-            self.assertEqual(exception['args'], ("type object 'dict' has no attribute 'foo'",))
-            self.assertIsNone(exception['name'])
-            self.assertIsNone(exception['obj'])
-
-        attribute_error = None
-        try:
-            raise AttributeError('Foo', name='Bar', obj=[])
-        except TypeError as e:
-            # AttributeError does not take keyword arguments before Python 3.10
-            # https://github.com/python/cpython/commit/37494b441aced0362d7edd2956ab3ea7801e60c8
-            # Error can be either, according to the Python version:
-            # - AttributeError does not take keyword arguments
-            # - AttributeError() takes no keyword arguments
-            self.assertIn("keyword arguments", e.args[0])
-        except AttributeError as e:
-            attribute_error = e
-        if attribute_error:
-            self.assertEqual(attribute_error.args, ('Foo',))
-            self.assertEqual(attribute_error.name, 'Bar')
-            self.assertIsNone(attribute_error.obj)
-
-    def test_08_call_checker_injection(self):
+    def test_06_call_checker_injection(self):
         """ Test that the call_checker is injected into the code"""
 
         self.assertEqual(
@@ -179,7 +117,7 @@ except Exception as e:
         with self.assertRaisesRegex(NameError, r"unsafe node: __call_checker \(dunder name\)"):
             self.inject("foo(bar, baz=__call_checker, qux=quux)")
 
-    def test_09_attr_injection(self):
+    def test_07_attr_injection(self):
         self.assertEqual(
             self.inject("foo.bar"),
             "__SafeWrapper(__obj=__type_checker(__obj=foo), __type_checker=__type_checker).bar",
@@ -227,7 +165,7 @@ except Exception as e:
         with self.assertRaisesRegex(ValueError, r"unsafe object: <module \'sys\'*"):
             safe_eval("a, = get_sys()[1:]", mode="exec", globals_dict={"get_sys": lambda: [sys, sys]})
 
-    def test_11_format_should_be_denied(self):
+    def test_08_format_should_be_denied(self):
         # format is rforbidden on strings
         # because it can be used to leak data through dunders
         with self.assertRaisesRegex(ValueError, "unsafe attribute access:*"):
@@ -283,7 +221,7 @@ except Exception as e:
 
         # Check that format method on other objects is allowed
         class SomeObject:
-            def format(*args, **kwargs):  # noqa: A003 # pylint: disable=no-method-argument
+            def format(*args, **kwargs):
                 ...
 
         code = cleandoc(
@@ -295,7 +233,7 @@ except Exception as e:
 
         safe_eval(code, globals_dict={"SomeObject": SomeObject}, mode="exec", sandbox_types=(SomeObject,))
 
-    def test_12_use_of_denied_ast_nodes(self):
+    def test_09_use_of_denied_ast_nodes(self):
         # Case 1: use of ast.Call with safe_eval in "math" mode
         with self.assertRaisesRegex(SyntaxError, r"unsafe node: Call \(node not allowed\)"):
             safe_eval("foo()", ast_subset=_AST_MATH_NODES | {ast.Load}, globals_dict={"foo": lambda: 1}, mode="exec")
@@ -304,7 +242,7 @@ except Exception as e:
         with self.assertRaisesRegex(ValueError, r"unsafe node: ImportFrom \(node not allowed\)"):
             safe_eval("from random import randint", ast_subset=_AST_ALLOWED_NODES | {ast.ImportFrom})
 
-    def test_13_wrap_module(self):
+    def test_10_wrap_module(self):
         # Everything in a module is visible, but only the allowed objects are accessible
         with self.assertRaisesRegex(ValueError,
                                     r"unsafe object: <module 'sys' \(built-in\)> \(type not present in white-list\)"):
@@ -355,7 +293,7 @@ except Exception as e:
         with self.assertRaisesRegex(SyntaxError, r"unsafe node: Delete \(node not allowed\)"):
             safe_eval("del foo.bar", globals_dict={"foo": Foo()}, sandbox_instances=(Foo,), mode="exec")
 
-    def test_15_deny_dunder_arg(self):
+    def test_11_deny_dunder_arg(self):
         with self.assertRaisesRegex(NameError, r"unsafe node: __test \(dunder name\)"):
             safe_eval("def f(x, *, __test): ...", mode="exec")
 
@@ -365,7 +303,7 @@ except Exception as e:
         with self.assertRaisesRegex(NameError, r"unsafe node: __test \(dunder name\)"):
             safe_eval("def f(x, *__test): ...", mode="exec")
 
-    def test_16_deny_dangerous_func(self):
+    def test_12_deny_dangerous_func(self):
         with self.assertRaisesRegex(ValueError, r"unsafe object: <built-in function eval> \(denied by black-list\)"):
             safe_eval("eval('1')", mode="exec", globals_dict={"eval": eval})
 
@@ -380,14 +318,14 @@ except Exception as e:
 
         safe_eval("time.strftime('%Y-%m-%d')", mode="exec", globals_dict={"time": time})
 
-    def test_17_deny_use_kwarg(self):
+    def test_13_deny_use_kwarg(self):
         with self.assertRaisesRegex(SyntaxError, "unsafe node: variadic keyword arguments"):
             safe_eval("def f(x, **kwargs): ...", mode="exec")
 
         with self.assertRaisesRegex(SyntaxError, "unsafe node: variadic keyword arguments"):
             safe_eval("lambda x, **kwargs: ...", mode="exec")
 
-    def test_18_deny_use_decorator(self):
+    def test_14_deny_use_decorator(self):
         with self.assertRaisesRegex(SyntaxError, "unsafe node: decorators"):
             safe_eval(cleandoc(
                 """
@@ -397,7 +335,7 @@ except Exception as e:
                 """
             ), mode="exec")
 
-    def test_19_deny_use_dunder_exception(self):
+    def test_15_deny_use_dunder_exception(self):
         with self.assertRaisesRegex(NameError, r"unsafe node: __type_checker \(dunder name\)"):
             safe_eval(cleandoc(
                 """
@@ -408,7 +346,7 @@ except Exception as e:
                 """
             ), mode="exec")
 
-    def test_20_globals_dict_leak_builtins(self):
+    def test_16_globals_dict_leak_builtins(self):
         def set_locals(o):
             frame = o._SafeWrapper__obj.__traceback__.tb_frame
             frame.f_locals['is_injected'] = True
@@ -434,7 +372,7 @@ except Exception as e:
         self.assertTrue(locals_dict["is_injected"])
 
     @patch("odoo.tools.safe_eval.SafeWrapper.__getattr__")
-    def test_21_bare_modules_becomes_wraps(self, mock):
+    def test_17_bare_modules_becomes_wraps(self, mock):
         # If the `type_checker` detect a bare module, and that the module is in the white-list
         # then it should be wrapped in a SafeWrapper
         c = ast.unparse(CodeChecker(_AST_ALLOWED_NODES).visit(ast.parse("datetime.datetime")))
@@ -455,15 +393,15 @@ except Exception as e:
 
         self.assertTrue(isinstance(safe_eval("f(Foo())", globals_dict={"f": f, "Foo": Foo}, mode="eval"), SafeWrapper))
 
-    def test_23_deny_dunder_in_func(self):
+    def test_18_deny_dunder_in_func(self):
         with self.assertRaisesRegex(NameError, r"unsafe node: __test \(dunder name\)"):
             safe_eval("def __test(): ...", mode="exec")
 
-    def test_24_deny_async_func(self):
+    def test_19_deny_async_func(self):
         with self.assertRaisesRegex(SyntaxError, r"unsafe node: AsyncFunctionDef \(node not allowed\)"):
             safe_eval("async def f(): ...", mode="exec")
 
-    def test_25_cls_of_instances_are_denied(self):
+    def test_20_cls_of_instances_are_denied(self):
         # The class "SafeWrapper" is not allowed to be used inside of the sandbox
         with self.assertRaisesRegex(ValueError, r"unsafe object: <class 'odoo.tools.safe_eval.SafeWrapper'>"):
             safe_eval("SafeWrapper(4)", mode="exec", globals_dict={"SafeWrapper": SafeWrapper})
@@ -472,7 +410,7 @@ except Exception as e:
         safe_eval("a[0]", mode="exec", globals_dict={
             "a": SafeWrapper(__obj=[4], __type_checker=lambda **kwargs: kwargs["__obj"])})
 
-    def test_26_globals_locals_work_properly(self):
+    def test_21_globals_locals_work_properly(self):
         safe_eval(cleandoc("""
             def f():
                 return sum(1,1)
@@ -484,7 +422,7 @@ except Exception as e:
             (lambda x: x + b)(4)
         """), mode="exec")
 
-    def test_27_multiple_assign(self):
+    def test_22_multiple_assign(self):
         safe_eval("a, b = 1, 2", mode="exec")
         safe_eval("t = (a, b) = (1, 2)", mode="exec")
 
@@ -520,14 +458,14 @@ except Exception as e:
                 [[a] for [[(a,), b, a]] in [[[*bim]]] ]
             """), mode="exec", globals_dict={"bim": ([sys], 2, sys)})
 
-    def test_28_deny_use_of_bad_ref(self):
+    def test_23_deny_use_of_bad_ref(self):
         with self.assertRaisesRegex(ValueError,
                                     r"unsafe object: <module 'sys' \(built-in\)> \(type not present in white-list\)"):
             safe_eval(cleandoc("""
                 sys.argv
             """), mode="exec", globals_dict={"sys": sys})
 
-    def test_29_bad_for_loop(self):
+    def test_24_bad_for_loop(self):
         with self.assertRaisesRegex(ValueError,
                                     r"unsafe object: <module 'sys' \(built-in\)> \(type not present in white-list\)"):
 
