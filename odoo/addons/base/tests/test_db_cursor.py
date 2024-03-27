@@ -62,6 +62,11 @@ class TestRealCursor(BaseCase):
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
 
+    def test_fetchexecute(self):
+        with registry().cursor() as cr:
+            self.assertEqual(cr.fetchall('SELECT 1'), [(1,)])
+            self.assertEqual(cr.fetchall('SELECT %s', [42]), [(42,)])
+
 
 class TestHTTPCursor(HttpCase):
     def test_cursor_keeps_readwriteness(self):

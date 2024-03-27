@@ -301,8 +301,13 @@ class Cursor(BaseCursor):
     def dictfetchmany(self, size):
         return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
 
-    def dictfetchall(self):
-        return [self.__build_dict(row) for row in self._obj.fetchall()]
+    def dictfetchall(self, query=None, params=None, log_exceptions=True):
+        return [self.__build_dict(row) for row in self.fetchall(query, params, log_exceptions)]
+
+    def fetchall(self, query=None, params=None, log_exceptions=True):
+        if query:
+            self.execute(query, params, log_exceptions)
+        return self._obj.fetchall()
 
     def __del__(self):
         if not self._closed and not self._cnx.closed:
