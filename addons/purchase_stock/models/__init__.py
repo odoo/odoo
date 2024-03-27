@@ -4,6 +4,7 @@
 from . import account_invoice
 from . import account_move_line
 from . import product
+from . import stock_replenish_mixin
 from . import purchase_order
 from . import purchase_order_line
 from . import res_config_settings
