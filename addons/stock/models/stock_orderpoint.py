@@ -6,7 +6,6 @@ from pytz import timezone, UTC
 from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
-from itertools import groupby
 from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
@@ -58,7 +57,7 @@ class StockWarehouseOrderpoint(models.Model):
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
-        check_company=True, ondelete="cascade", required=True)
+        check_company=True, ondelete="cascade", required=True, index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         ondelete="cascade", required=True, check_company=True)
@@ -254,7 +253,7 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty')
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'product_id', 'location_id')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
