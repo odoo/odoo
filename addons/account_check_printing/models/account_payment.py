@@ -4,6 +4,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
+from odoo.tools.sql import column_exists, create_column
 
 INV_LINES_PER_STUB = 9
 
@@ -43,6 +44,16 @@ class AccountPayment(models.Model):
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
     payment_method_line_id = fields.Many2one(index=True)
+
+    def _auto_init(self):
+        """
+        Create compute stored field check_number
+        here to avoid MemoryError on large databases.
+        """
+        if not column_exists(self.env.cr, 'account_payment', 'check_number'):
+            create_column(self.env.cr, 'account_payment', 'check_number', 'varchar')
+
+        return super()._auto_init()
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
