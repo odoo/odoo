@@ -202,6 +202,10 @@
                         </div>
                     <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
+                        <t t-if="o.partner_bank_id">
+                            <br/>
+                            on this account: <span t-field="o.partner_bank_id" class="fw-bold"/>
+                        </t>
                     </p>
                     <t t-set="payment_term_details" t-value="o.payment_term_details"/>
                     <div t-field="o.invoice_payment_term_id.note" name="payment_term"/>
