@@ -53,7 +53,7 @@
                                 t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
                             <span t-out="state.typeLabel"/>
                         </div>
-                        <Dropdown t-else="">
+                        <Dropdown menuClass="'o_field_property_definition_type_popover'" t-else="">
                             <button class="btn btn-link d-flex p-0 w-100" t-att-title="state.typeLabel">
                                 <div class="o_input_dropdown w-100 o_field_property_dropdown">
                                     <img t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"
