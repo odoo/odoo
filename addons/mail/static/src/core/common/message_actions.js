@@ -26,7 +26,7 @@ messageActionsRegistry
     .add("toggle-star", {
         condition: (component) => component.canToggleStar,
         icon: (component) =>
-            component.props.message.isStarred ? "fa-star o-mail-Message-starred" : "fa-star-o",
+            component.props.message.starred ? "fa-star o-mail-Message-starred" : "fa-star-o",
         title: _t("Mark as Todo"),
         onClick: (component) => component.props.message.toggleStar(),
         sequence: 30,

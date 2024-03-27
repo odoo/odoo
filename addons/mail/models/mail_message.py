@@ -1028,7 +1028,7 @@ class Message(models.Model):
                     displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
                 notifications_partners = message_sudo.notification_ids.filtered(lambda n: not n.is_read).res_partner_id
                 vals["needaction"] = not self.env.user._is_public() and self.env.user.partner_id in notifications_partners
-                vals["starredPersonas"] = [{"id": partner_id, "type": "partner"} for partner_id in message_sudo.starred_partner_ids.ids]
+                vals["starred"] = message_sudo.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
         return vals_list
 

@@ -148,7 +148,6 @@ export class Message extends Record {
     threadAsNewest = Record.one("Thread");
     /** @type {DateTime} */
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
-    starredPersonas = Record.many("Persona");
     onlyEmojis = Record.attr(false, {
         compute() {
             const div = document.createElement("div");
@@ -183,6 +182,7 @@ export class Message extends Record {
     write_date = Record.attr(undefined, { type: "datetime" });
     /** @type {undefined|Boolean} */
     needaction;
+    starred = false;
 
     /**
      * We exclude the milliseconds because datetime string from the server don't
@@ -247,10 +247,6 @@ export class Message extends Record {
         eager: true,
     });
 
-    get isStarred() {
-        return this.store.self.in(this.starredPersonas);
-    }
-
     isPending = false;
 
     get hasActions() {
@@ -302,8 +298,7 @@ export class Message extends Record {
         },
         /** @this {import("models").Message} */
         onUpdate() {
-            if (this.isEmpty && this.isStarred) {
-                this.starredPersonas.delete(this.store.self);
+            if (this.isEmpty && this.starred) {
                 const starred = this.store.discuss.starred;
                 starred.counter--;
                 starred.messages.delete(this);
