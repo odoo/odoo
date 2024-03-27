@@ -116,6 +116,7 @@
 
     <!-- new layout for mass_mailing -->
     <template id="mass_mailing.layout" name="Mass Mailing Layout">
+        <t t-set="html_data" t-value="{'lang': lang and lang.replace('_', '-')}"/>
         <t t-call="web.layout">
             <t t-set="head">
                 <t t-call-assets="web.assets_common"/>
