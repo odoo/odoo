@@ -66,12 +66,12 @@
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
                                 <field name="product_uom_qty" readonly="1"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
                             <div class="o_row">
                                 <field name="qty_done"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
                             </div>
                             <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id, 'default_company_id': company_id}" attrs="{'invisible': [('lot_id', '=', False),('lot_name', '!=', False)]}"/>
                             <field name="lot_name" groups="stock.group_production_lot" attrs="{'invisible': ['|',('lot_id', '!=', False),('lot_name', '=', False)]}"/>
