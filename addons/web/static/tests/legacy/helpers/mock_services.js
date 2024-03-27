@@ -59,7 +59,14 @@ export function patchRPCWithCleanup(mockRPC = () => {}) {
                         rpcBus.trigger("RPC:RESPONSE", { data, settings, result });
                         resolve(result);
                     })
-                    .catch(reject);
+                    .catch((error) => {
+                        rpcBus.trigger("RPC:RESPONSE", {
+                            data,
+                            settings,
+                            error,
+                        });
+                        reject(error);
+                    });
             });
             rpcProm.abort = (rejectError = true) => {
                 if (rejectError) {
