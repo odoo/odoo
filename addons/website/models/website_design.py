@@ -22,6 +22,13 @@ class WebsiteDesign(models.Model):
     hamburger_position = fields.Many2one('website.design.option', string='Hamburger Position', default=lambda self: self.env.ref('website.design_option_hamburgerposition_left'))
     hamburger_position_mobile = fields.Many2one('website.design.option', string='Hamburger Position Mobile', default=lambda self: self.env.ref('website.design_option_hamburgerpositionmobile_left'))
 
+    # If the website design is deleted, we should delete all website fonts ?
+
+    font = fields.Many2one('website.design.font', string='Font')
+    headings_font = fields.Many2one('website.design.font', string='Headings Font')
+    navbar_font = fields.Many2one('website.design.font', string='Navbar Font')
+    buttons_font = fields.Many2one('website.design.font', string='Buttons Font')
+
     paragraph_margin_top = fields.Char(string='Paragraph Margin Top', default='0')
     paragraph_margin_bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')
 
@@ -92,8 +99,14 @@ class WebsiteDesign(models.Model):
 
     def write(self, vals):
         for key in vals:
-            if self._fields[key].comodel_name == 'website.design.option' and isinstance(vals[key], str):
-                vals[key] = self.env['website.design.option'].browse(int(vals[key]))
+            comodel = self._fields[key].comodel_name
+            if comodel and comodel.startswith('website.design.'):
+                if isinstance(vals[key], int):
+                    vals[key] = self.env[comodel].browse(vals[key])
+                elif vals[key] == 'null' or vals[key] == 'false':
+                    vals[key] = False
+                elif isinstance(vals[key], str):
+                    vals[key] = self.env[comodel].browse(int(vals[key]))
             elif self._fields[key].type == 'boolean' and isinstance(vals[key], str):
                 vals[key] = vals[key] == 'true'
         res = super().write(vals)
@@ -149,7 +162,7 @@ class WebsiteDesign(models.Model):
             .with_context(website_id=self.website_id.id)\
             .make_scss_customization('/website/static/src/scss/options/user_values.scss', vals)
 
-    def _filter_design_variables(self, vals):
+    def _filter_design_variables(self, vals): # TODO rename this function
         """
         Removes the keys in vals that are not design variables, replaces `_`
         by `-` in the keys to match the SCSS variable names and compute the
@@ -159,6 +172,11 @@ class WebsiteDesign(models.Model):
         :return: dict with only the keys that are design ones.
         """
         res = {}
+        # Maybe I should write on google{Local}Fonts only on font changes ?
+        google_local_fonts = (f"'{font.name}': '{font.attachment_id or ''}'" for font in self.env['website.design.font'].search([('is_local', '=', True), ('website_id', 'in', [False, self.website_id.id])]))
+        res['google-local-fonts'] = 'null' if not google_local_fonts else f"({', '.join(list(google_local_fonts))})"
+        google_fonts = (f"'{font.name}'" for font in self.env['website.design.font'].search([('is_local', '=', False), ('website_id', 'in', [False, self.website_id.id])]))
+        res['google-fonts'] = 'null' if not google_fonts else f"({', '.join(list(google_fonts))})"
         for key in vals:
             if key in NOT_DESIGN_FIELDS:
                 continue
@@ -167,6 +185,11 @@ class WebsiteDesign(models.Model):
                 vals[key] = vals[key].value
             if self._fields[key].type == 'boolean':
                 vals[key] = 'true' if vals[key] else 'false'
+            if self._fields[key].comodel_name == 'website.design.font':
+                if not vals[key] or (isinstance(vals[key], str) and vals[key]) == '()':
+                    vals[key] = 'null'
+                elif not isinstance(vals[key], str):
+                    vals[key] = f"'{vals[key].name}'"
             # As python variable names cannot contains dashes, we replace them
             # by double underscores.
             res[key.replace('_', '-')] = vals[key]
