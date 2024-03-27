@@ -7,7 +7,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _get_demo_data(self, company=False):
         demo_data = super()._get_demo_data(company)
-        if company.account_fiscal_country_id.code == 'BE':
+        if company.chart_template.startswith('be'):
             cid = company.id
             account_data = demo_data.setdefault('account.account', {})
             account_data.update({
