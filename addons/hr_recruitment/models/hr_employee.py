@@ -7,7 +7,7 @@ from datetime import timedelta
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    applicant_id = fields.One2many('hr.applicant', 'emp_id', 'Applicant')
+    applicant_id = fields.One2many('hr.applicant', 'emp_id', 'Applicant', groups="hr.group_hr_user")
 
     def _get_partner_count_depends(self):
         return super()._get_partner_count_depends() + ['applicant_id']
