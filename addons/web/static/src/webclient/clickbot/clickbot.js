@@ -22,6 +22,7 @@ const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled)
 let isEnterprise;
 let appsMenusOnly = false;
 let calledRPC;
+let errorRPC;
 let actionCount;
 let env;
 let studioCount;
@@ -45,6 +46,7 @@ function setup() {
     env.bus.addEventListener("RPC:RESPONSE", onRPCResponse);
     actionCount = 0;
     calledRPC = {};
+    errorRPC = undefined;
     studioCount = 0;
     testedApps = [];
     testedMenus = [];
@@ -62,6 +64,9 @@ function onRPCRequest({ detail }) {
 
 function onRPCResponse({ detail }) {
     delete calledRPC[detail.data.id];
+    if (detail.error) {
+        errorRPC = { ...detail };
+    }
 }
 
 function uiUpdate() {
@@ -130,7 +135,15 @@ function waitForCondition(stopCondition) {
 
         function checkCondition(timeLimit) {
             if (document.querySelector(".o_error_dialog")) {
-                browser.console.error("Error dialog detected");
+                browser.console.error(
+                    "Error dialog detected: " + document.querySelector(".o_error_dialog").innerHTML
+                );
+                if (errorRPC) {
+                    browser.console.error(
+                        "A RPC in error was detected, maybe it's related to the error dialog : " +
+                            JSON.stringify(errorRPC)
+                    );
+                }
                 reject();
                 return;
             }
