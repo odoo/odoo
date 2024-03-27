@@ -14,6 +14,7 @@ export class PosPayment extends Base {
         this.payment_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
         this.amount = vals.amount || 0;
+        this.ticket = vals.ticket || "";
     }
 
     isSelected() {
