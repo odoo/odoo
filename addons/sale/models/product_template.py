@@ -133,6 +133,9 @@ class ProductTemplate(models.Model):
     def _compute_invoice_policy(self):
         self.filtered(lambda t: t.type == 'consu' or not t.invoice_policy).invoice_policy = 'order'
 
+    def _get_backend_root_menu_ids(self):
+        return super()._get_backend_root_menu_ids() + [self.env.ref('sale.sale_menu_root').id]
+
     @api.model
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()

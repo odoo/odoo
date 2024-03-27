@@ -34,6 +34,9 @@ class ProductTemplate(models.Model):
         for template in self:
             template.purchased_product_qty = float_round(sum([p.purchased_product_qty for p in template.product_variant_ids]), precision_rounding=template.uom_id.rounding)
 
+    def _get_backend_root_menu_ids(self):
+        return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
+
     @api.model
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
@@ -78,6 +81,9 @@ class ProductProduct(models.Model):
         action['domain'] = ['&', ('state', 'in', ['purchase', 'done']), ('product_id', 'in', self.ids)]
         action['display_name'] = _("Purchase History for %s", self.display_name)
         return action
+
+    def _get_backend_root_menu_ids(self):
+        return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
 
 
 class ProductSupplierinfo(models.Model):
