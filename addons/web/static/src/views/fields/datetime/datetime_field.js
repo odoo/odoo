@@ -376,6 +376,17 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
+    isValid: (record, fieldname, fieldInfo) => {
+        if (fieldInfo.widget === "daterange") {
+            if (fieldInfo.options.end_date_field && (!record.data[fieldInfo.options.end_date_field] !== !record.data[fieldname])) {
+                return false;
+            }
+            if (fieldInfo.options.start_date_field && (!record.data[fieldInfo.options.start_date_field] !== !record.data[fieldname])) {
+                return false;
+            }
+        }
+        return !record.isFieldInvalid(fieldname);
+    }
 };
 
 registry
