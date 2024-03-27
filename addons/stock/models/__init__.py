@@ -14,6 +14,7 @@ from . import stock_orderpoint
 from . import stock_lot
 from . import stock_picking
 from . import stock_quant
+from . import stock_replenish_mixin
 from . import stock_rule
 from . import stock_warehouse
 from . import stock_scrap
