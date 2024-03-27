@@ -16,10 +16,13 @@ United Arab Emirates accounting chart and localization.
     ],
     'auto_install': ['account'],
     'data': [
+        'security/l10n_ae_security.xml',
         'data/l10n_ae_data.xml',
         'data/account_tax_report_data.xml',
         'views/report_invoice_templates.xml',
         'views/account_move.xml',
+        'views/res_config_settings_views.xml',
+        'data/account.account.tag.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
