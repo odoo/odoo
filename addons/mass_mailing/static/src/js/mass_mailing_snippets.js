@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import options from "@web_editor/js/editor/snippets.options";
+import { loadImage } from "@web_editor/js/editor/image_processing";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "@web_editor/js/common/utils";
 import {
@@ -48,6 +49,22 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         tempEl.parentNode.removeChild(tempEl);
         return normalizeCSSColor(colorValue).replace(/"/g, "'");
     },
+
+    /**
+     * @override
+     */
+    async computeShape(svgText, img) {
+        const dataURL = await this._super(...arguments);
+        const image = await loadImage(dataURL);
+        const canvas = document.createElement("canvas");
+        const imgFilename = (img.dataset.originalSrc.split("/").pop()).split(".")[0];
+        img.dataset.fileName = `${imgFilename}.png`;
+        img.dataset.mimetype = "image/png";
+        canvas.width = image.width;
+        canvas.height = image.height;
+        canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
+        return canvas.toDataURL(`image/png`, 1.0);
+    }
 });
 
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = SelectUserValueWidget.extend({
