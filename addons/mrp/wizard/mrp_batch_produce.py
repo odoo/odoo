@@ -103,7 +103,7 @@ class MrpBatchProduct(models.TransientModel):
             production.move_raw_ids.picked = True
 
         if mark_done:
-            return productions.button_mark_done()
+            return productions.with_context(from_wizard=True).button_mark_done()
         return
 
     def _process_components(self, production, components_line):
