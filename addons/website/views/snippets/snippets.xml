@@ -316,14 +316,14 @@
 <template id="snippet_options_header_box">
     <t t-call="website.snippet_options_border_widgets">
         <t t-set="so_rounded_no_dependencies" t-value="True"/>
-        <t t-set="width_variable" t-value="'menu-border-width'"/>
-        <t t-set="style_variable" t-value="'menu-border-style'"/>
+        <t t-set="width_variable" t-value="'menu__border__width'"/>
+        <t t-set="style_variable" t-value="'menu__border__style'"/>
         <t t-set="color_variable" t-value="'menu-border-color'"/>
-        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
+        <t t-set="radius_variable" t-value="'menu__border__radius'"/>
         <t t-set="no_border_radius" t-value="_no_border_radius"/>
     </t>
     <t t-call="website.snippet_options_shadow_widgets">
-        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+        <t t-set="shadow_variable" t-value="'menu__box__shadow'"/>
     </t>
 </template>
 
