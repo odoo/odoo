@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-18 09:59+0000\n"
-"PO-Revision-Date: 2023-12-18 09:59+0000\n"
+"POT-Creation-Date: 2024-04-17 10:54+0000\n"
+"PO-Revision-Date: 2024-04-17 10:54+0000\n"
 "Last-Translator: Jakub Smolka, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "Language: cs\n"
@@ -16,6 +16,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__scheme_code__0
+msgid "0 - Standard VAT regime"
+msgstr "0 – běžné plnění"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__scheme_code__1
+msgid "1 - Section 89 of VAT Act special scheme for a travel service"
+msgstr "1 - § 89 – zvláštní režim pro cestovní službu"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__scheme_code__2
+msgid "2 - Section 90 of VAT Act margin scheme"
+msgstr "2 - § 90 – zvláštní režim pro použité zboží"
 
 #. module: l10n_cz
 #: model_terms:ir.ui.view,arch_db:l10n_cz.report_invoice_document
@@ -105,9 +120,35 @@ msgid "Basic - line 7"
 msgstr "Základní - řádek 7"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__12
+msgid "Cereals and technical crops"
+msgstr "Obiloviny a technické plodiny"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_58
 msgid "Change of deduction - line 53b"
 msgstr "Změna odpočtu - řádek 53b"
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_bank_statement_line__scheme_code
+#: model:ir.model.fields,help:l10n_cz.field_account_move__scheme_code
+#: model:ir.model.fields,help:l10n_cz.field_account_payment__scheme_code
+msgid "Code indicating special scheme, needed for VAT control report."
+msgstr "Kód označující zvláštní režim, potřebný pro kontrolní hlášení DPH."
+
+#. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_bank_statement_line__supplies_code_reverse_charge
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move__supplies_code_reverse_charge
+#: model:ir.model.fields,field_description:l10n_cz.field_account_payment__supplies_code_reverse_charge
+msgid "Code of Supply"
+msgstr "Kód předmětu plnění"
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_bank_statement_line__supplies_code_reverse_charge
+#: model:ir.model.fields,help:l10n_cz.field_account_move__supplies_code_reverse_charge
+#: model:ir.model.fields,help:l10n_cz.field_account_payment__supplies_code_reverse_charge
+msgid "Code of subject of supply in the domestic reverse charge regime."
+msgstr "Kód předmětu plnění v tuzemském režimu přenesení daňové povinnosti."
 
 #. module: l10n_cz
 #: model:account.report.column,name:l10n_cz.l10n_cz_vat_declaration_coefficient
@@ -144,6 +185,16 @@ msgid "Company ID:"
 msgstr "IČO:"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__4
+msgid "Construction and assembly work"
+msgstr "Stavební a montážní práce"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__4a
+msgid "Construction and assembly work - provision of workers"
+msgstr "Stavební a montážní práce – poskytnutí pracovníků"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_35
 msgid "Creditor - line 33"
 msgstr "Věřitel - řádek 33"
@@ -159,14 +210,44 @@ msgid "Deduction - line 52b"
 msgstr "Odpočet - řádek 52b"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__18
+msgid "Delivery of electricity certificates"
+msgstr "Dodání certifikátů elektřiny"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__20
+msgid "Delivery of gas through systems or networks to the trader"
+msgstr "Dodání plynu soustavami nebo sítěmi obchodníkov"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_32
 msgid "Delivery of goods - line 31"
 msgstr "Dodávka zboží - řádek 31"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__7
+msgid "Delivery of goods after transfer of retention of title"
+msgstr "Dodání zboží po postoupení výhrady vlastnictví"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__6
+msgid "Delivery of goods originally provided as a guarantee"
+msgstr "Dodání zboží poskytnutého původně jako záruka"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_22
 msgid "Delivery of goods to another Member State (64) - line 20"
 msgstr "Dodání zboží do jiného členského státu (64) - řádek 20"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__3a
+msgid "Delivery of immovable property in forced sale"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__3
+msgid "Delivery of immovable property, if tax is applied to this delivery"
+msgstr "Dodání nemovité věci v nuceném prodeji"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_66
@@ -196,6 +277,21 @@ msgstr "Vývoz zboží (66) - řádek 22"
 #: model:ir.model.fields,field_description:l10n_cz.field_base_document_layout__account_fiscal_country_id
 msgid "Fiscal Country"
 msgstr "Daňová země"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__1
+msgid "Gold"
+msgstr "Zlato"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__1a
+msgid "Gold - brokering the delivery of investment gold"
+msgstr "Zlato - zprostředkování dodání investičního zlata"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__5
+msgid "Goods listed in Appendix No. 5"
+msgstr "Zboží uvedené v příloze č. 5"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_1
@@ -237,9 +333,24 @@ msgid "In full"
 msgstr "V plném rozsahu"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__15
+msgid "Integrated circuits"
+msgstr "Integrované obvody"
+
+#. module: l10n_cz
 #: model:ir.model,name:l10n_cz.model_account_move
 msgid "Journal Entry"
 msgstr "Účetní záznam"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__13
+msgid "Metals"
+msgstr "Kovy"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__14
+msgid "Mobile Phones"
+msgstr "Mobilní telefony"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_52
@@ -289,6 +400,21 @@ msgid "Part of the tax deduction in a reduced amount"
 msgstr "Část daňového odpočtu ve snížené výši"
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__11
+msgid "Permits for emissions according to Section 92f of the VAT Act"
+msgstr "Povolenky na emise skleníkových plynů"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__16
+msgid "Portable devices for automated data processing"
+msgstr "Přenosná zařízení pro automatizované zpracování dat"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__21
+msgid "Provision of defined electronic communications services"
+msgstr "Poskytnutí vymezených služeb elektronických komunikací"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_8
 msgid ""
 "Receipt of services with a place of supply referred to in Article 9(1) from "
@@ -296,6 +422,16 @@ msgid ""
 msgstr ""
 "Příjem služeb s místem poskytování uvedeným v čl. 9 odst. 1 od "
 "osoby registrované k dani v jiném členském státě"
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_bank_statement_line__reverse_charge
+#: model:ir.model.fields,help:l10n_cz.field_account_move__reverse_charge
+#: model:ir.model.fields,help:l10n_cz.field_account_payment__reverse_charge
+msgid ""
+"Received or realized taxable supplies in the domestic reverse charge regime"
+msgstr ""
+"Přijatá nebo uskutečněná zdanitelná plnění v tuzemském režimu přenesení "
+"daňové povinnosti"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_17
@@ -343,6 +479,13 @@ msgid "Refund of tax (84) - line 61"
 msgstr "Vrácení daně (84) - řádek 61"
 
 #. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_bank_statement_line__reverse_charge
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move__reverse_charge
+#: model:ir.model.fields,field_description:l10n_cz.field_account_payment__reverse_charge
+msgid "Reverse Charge"
+msgstr "Přenesení daňové povinnosti"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_26
 msgid "Selected transactions (110b(2)) - line 24"
 msgstr "Vybrané transakce (110b(2)) - řádek 24"
@@ -372,6 +515,13 @@ msgstr ""
 "transakce (17) prostřednictvím prostřední osoby"
 
 #. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_bank_statement_line__scheme_code
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move__scheme_code
+#: model:ir.model.fields,field_description:l10n_cz.field_account_payment__scheme_code
+msgid "Special scheme code"
+msgstr "Kód režimu plnění - Zvláštní režim"
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_25
 msgid ""
 "Supply of a new means of transport to a person not registered for tax in "
@@ -379,6 +529,11 @@ msgid ""
 msgstr ""
 "Dodání nového dopravního prostředku osobě neregistrované k dani v "
 "v jiném členském státě (čl. 19 odst. 4) - řádek 23"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__19
+msgid "Supply of electricity through systems or networks to a trader"
+msgstr "Dodání elektřiny soustavami nebo sítěmi obchodníkovi"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_2
@@ -501,9 +656,12 @@ msgstr ""
 msgid ""
 "Value of transactions not included in the calculation of the coefficient "
 "(76(4))"
-msgstr ""
-"Hodnota transakcí nezahrnutých do výpočtu koeficientu "
-"(76(4))"
+msgstr "Hodnota transakcí nezahrnutých do výpočtu koeficientu (76(4))"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__supplies_code_reverse_charge__17
+msgid "Video game console"
+msgstr "Videoherní konzole"
 
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_41

@@ -8,6 +8,23 @@
             <xpath expr="//div[@name='due_date']" position="after">
                 <field name="taxable_supply_date" invisible="country_code != 'CZ'"/>
             </xpath>
+            <xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
+                <field name="reverse_charge"
+                       invisible="country_code != 'CZ'"
+                       readonly="state != 'draft'"
+                />
+            </xpath>
+            <xpath expr="//field[@name='reverse_charge']" position="after">
+                <field name="scheme_code"
+                       invisible="country_code != 'CZ' or reverse_charge"
+                       readonly="state != 'draft'"
+                />
+                <field name="supplies_code_reverse_charge"
+                       invisible="country_code != 'CZ' or not reverse_charge"
+                       required="reverse_charge"
+                       readonly="state != 'draft'"
+                />
+            </xpath>
         </field>
     </record>
 </odoo>
