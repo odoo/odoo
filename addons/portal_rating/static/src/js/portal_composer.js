@@ -46,17 +46,27 @@ PortalComposer.include({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             // rating stars
-            self.$input = self.$('input[name="rating_value"]');
-            self.$star_list = self.$('.stars').find('i');
+            self.input = self.el.querySelector('input[name="rating_value"]');
+            self.star_list = self.el.querySelectorAll(".stars i");
             // if this is the first review, we do not use grey color contrast, even with default rating value.
             if (!self.options.default_message_id) {
-                self.$star_list.removeClass('text-black-25');
+                self.star_list.forEach((star) => star.classList.remove("text-black-25"));
             }
 
             // set the default value to trigger the display of star widget and update the hidden input value.
             self._updateStarValue(self.options.default_rating_value);
-            self.$input.val(self.options.default_rating_value);
+            if (self.input) {
+                self.input.value = self.options.default_rating_value;
+            }
         });
+    },
+
+    destroy() {
+        const modalEl = this.el.closest("#ratingpopupcomposer");
+        if (modalEl) {
+            modalEl.removeEventListener("hidden.bs.modal", this.hideModal);
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -71,7 +81,7 @@ PortalComposer.include({
         const options = this._super(...arguments);
         return Object.assign(options || {}, {
             message_id: this.options.default_message_id,
-            post_data: { ...options.post_data, rating_value: this.$input.val() },
+            post_data: { ...options.post_data, rating_value: this.input?.value || "" },
         });
     },
     /**
@@ -82,28 +92,40 @@ PortalComposer.include({
         var index = Math.floor(val);
         var decimal = val - index;
         // reset the stars
-        this.$star_list.removeClass('fa-star fa-star-half-o').addClass('fa-star-o');
+        this.star_list.forEach((star) => {
+            star.classList.remove("fa-star", "fa-star-half-o");
+            star.classList.add("fa-star-o");
+        });
 
-        this.$('.stars').find("i:lt(" + index + ")").removeClass('fa-star-o fa-star-half-o').addClass('fa-star');
+        Array.from(this.el.querySelectorAll(".stars i"))
+            .slice(0, index)
+            .forEach((star) => {
+                star.classList.remove("fa-star-o", "fa-star-half-o");
+                star.classList.add("fa-star");
+            });
         if (decimal) {
-            this.$('.stars').find("i:eq(" + index + ")").removeClass('fa-star-o fa-star fa-star-half-o').addClass('fa-star-half-o');
+            const startAtIndexEl = this.el.querySelectorAll(".stars i")[index];
+            startAtIndexEl.classList.remove("fa-star-o", "fa-star", "fa-star-half-o");
+            startAtIndexEl.classList.add("fa-star-half-o");
         }
     },
     /**
      * @private
      */
     _onClickStar: function (ev) {
-        var index = this.$('.stars i').index(ev.currentTarget);
+        const starElements = this.el.querySelectorAll(".stars i");
+        const index = [...starElements].indexOf(ev.currentTarget);
         this._updateStarValue(index + 1);
         this.user_click = true;
-        this.$input.val(this._starValue);
+        this.input.value = this.get("star_value");
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
     _onMoveStar: function (ev) {
-        var index = this.$('.stars i').index(ev.currentTarget);
+        const starElements = this.el.querySelectorAll(".stars i");
+        const index = [...starElements].indexOf(ev.currentTarget);
         this._updateStarValue(index + 1);
     },
     /**
@@ -111,7 +133,7 @@ PortalComposer.include({
      */
     _onMoveLeaveStar: function () {
         if (!this.user_click) {
-            this._updateStarValue(parseInt(this.$input.val()));
+            this._updateStarValue(parseInt(this.input.value));
         }
         this.user_click = false;
     },
@@ -126,12 +148,18 @@ PortalComposer.include({
      */
     _onSubmitButtonClick: function (ev) {
         return this._super(...arguments).then((result) => {
-            const $modal = this.$el.closest('#ratingpopupcomposer');
-            $modal.on('hidden.bs.modal', () => {
-              this.trigger_up('reload_rating_popup_composer', result);
-            });
-            $modal.modal('hide');
-        }, () => {});
+                const modalEl = this.el.closest("#ratingpopupcomposer");
+                if (modalEl) {
+                    this.hideModal = () => {
+                        this.trigger_up("reload_rating_popup_composer", result);
+                    };
+                    modalEl.addEventListener("hidden.bs.modal", this.hideModal);
+                    const modal = Modal.getOrCreateInstance(modalEl);
+                    modal.hide();
+                }
+            },
+            () => {}
+        );
     },
 
     /**
@@ -140,7 +168,7 @@ PortalComposer.include({
      */
     _onSubmitCheckContent: function (ev) {
         if (this.options.rate_with_void_content) {
-            if (this.$input.val() === 0) {
+            if (this.input.value === 0) {
                 return _t('The rating is required. Please make sure to select one before sending your review.')
             }
             return false;

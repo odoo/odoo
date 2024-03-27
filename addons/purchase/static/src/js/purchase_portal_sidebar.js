@@ -7,8 +7,8 @@ import { uniqueId } from "@web/core/utils/functions";
 publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     selector: ".o_portal_purchase_sidebar",
     events: {
-        'click .o_portal_decline': '_onDecline',
-        'click .o_portal_accept': '_onAccept',
+        "click .o_portal_decline": "_onDecline",
+        "click .o_portal_accept": "_onAccept",
     },
 
     /**
@@ -17,7 +17,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.authorizedTextTag = ["em", "b", "i", "u"];
-        this.spyWatched = $('body[data-target=".navspy"]');
+        this.spyWatched = document.querySelector('body[data-target=".navspy"]');
         this.orm = this.bindService("orm");
     },
     /**
@@ -25,8 +25,8 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
-        this._setElementId($spyWatcheElement);
+        const spyWatcheElement = this.el.querySelector('[data-id="portal_sidebar"]');
+        this._setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
         return def;
@@ -44,9 +44,13 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      * @param {Object} $el
      *
      */
-    _setElementId: function (prefix, $el) {
+    _setElementId(prefix, el) {
         var id = uniqueId(prefix);
-        this.spyWatched.find($el).attr("id", id);
+        if (el) {
+            [...this.spyWatched.querySelectorAll(el.tagName)]
+                .find((newel) => newel === el)
+                ?.setAttribute("id", id);
+        }
         return id;
     },
     /**
@@ -56,84 +60,84 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      *
      */
     _generateMenu: function () {
-        var self = this,
-            lastLI = false,
-            lastUL = null,
-            $bsSidenav = this.$el.find(".bs-sidenav");
+        const self = this,
+            bsSidenavEl = this.el.querySelector(".bs-sidenav");
+        let lastLIEl = false;
+        let lastULEl = null;
+        let anchorEl;
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr(
-            "id",
-            ""
-        );
-        this.spyWatched
-            .find("#quote_content h2, #quote_content h3")
-            .toArray()
-            .forEach((el) => {
-                var id, text;
-                switch (el.tagName.toLowerCase()) {
-                    case "h2":
-                        id = self._setElementId("quote_header_", el);
-                        text = self._extractText($(el));
-                        if (!text) {
-                            break;
-                        }
-                        lastLI = $("<li class='nav-item'>")
-                            .append(
-                                $(
-                                    '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
-                                        id +
-                                        '"/>'
-                                ).text(text)
-                            )
-                            .appendTo($bsSidenav);
-                        lastUL = false;
+        const quoteELs =
+            document.querySelectorAll(
+                "#quote_content [id^=quote_header_], #quote_content [id^=quote_]"
+            ) || this.spyWatched;
+        quoteELs.forEach((quoteEl) => quoteEl.setAttribute("id", ""));
+        this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3").forEach((el) => {
+            var id, text;
+            switch (el.tagName.toLowerCase()) {
+                case "h2":
+                    id = self._setElementId("quote_header_", el);
+                    text = self._extractText(el);
+                    if (!text) {
                         break;
-                    case "h3":
-                        id = self._setElementId("quote_", el);
-                        text = self._extractText($(el));
-                        if (!text) {
-                            break;
-                        }
-                        if (lastLI) {
-                            if (!lastUL) {
-                                lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
-                            }
-                            $("<li class='nav-item'>")
-                                .append(
-                                    $(
-                                        '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
-                                            id +
-                                            '"/>'
-                                    ).text(text)
-                                )
-                                .appendTo(lastUL);
-                        }
+                    }
+                    lastLIEl = document.createElement("li");
+                    lastLIEl.setAttribute("class", "nav-item");
+                    anchorEl = document.createElement("a");
+                    anchorEl.setAttribute("class", "nav-link p-0");
+                    anchorEl.setAttribute("style", "max-width: 200px;");
+                    anchorEl.setAttribute("href", `"#${id}"`);
+                    anchorEl.textContent = text;
+                    lastLIEl.appendChild(anchorEl);
+                    bsSidenavEl?.appendChild(lastLIEl);
+                    lastULEl = false;
+                    break;
+                case "h3":
+                    id = self._setElementId("quote_", el);
+                    text = self._extractText(el);
+                    if (!text) {
                         break;
-                }
-                el.setAttribute("data-anchor", true);
-            });
-        this.trigger_up("widgets_start_request", { $target: $bsSidenav });
+                    }
+                    if (lastLIEl) {
+                        if (!lastULEl) {
+                            lastULEl = document.createElement("ul");
+                            lastULEl.setAttribute("class", "nav flex-column");
+                            lastLIEl.appendChild(lastULEl);
+                        }
+                        const liEl = document.createElement("li");
+                        liEl.setAttribute("class", "nav-item");
+                        anchorEl = document.createElement("a");
+                        anchorEl.setAttribute("class", "nav-link p-0");
+                        anchorEl.setAttribute("style", "max-width: 200px;");
+                        anchorEl.setAttribute("href", `"#${id}"`);
+                        anchorEl.textContent = text;
+                        liEl.appendChild(anchorEl);
+                        lastULEl.appendChild(liEl);
+                    }
+                    break;
+            }
+            el.setAttribute("data-anchor", true);
+        });
+        this.trigger_up("widgets_start_request", { target: bsSidenavEl });
     },
     /**
      * extract text of menu title for sidebar
      *
      * @private
-     * @param {Object} $node
+     * @param {Object} node
      *
      */
-    _extractText: function ($node) {
+    _extractText(node) {
         var self = this;
         var rawText = [];
-        Array.from($node.contents()).forEach((el) => {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
+        Array.from(node.childNodes).forEach((el) => {
+            if (el.textContent.trim()) {
+                const tagName = el.tagName;
                 if (
                     typeof tagName === "undefined" ||
                     (typeof tagName !== "undefined" &&
                         self.authorizedTextTag.includes(tagName.toLowerCase()))
                 ) {
-                    rawText.push($.trim(current.text()));
+                    rawText.push(el.textContent.trim());
                 }
             }
         });

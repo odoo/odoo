@@ -26,12 +26,12 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @private
      */
     _setDelayLabel: function () {
-        var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago').toArray();
-        $sidebarTimeago.forEach((el) => {
-            var dateTime = deserializeDateTime($(el).attr('datetime')),
-                today = DateTime.now().startOf('day'),
-                diff = dateTime.diff(today).as("days"),
-                displayStr;
+        const sidebarTimeagoEls = this.el.querySelectorAll(".o_portal_sidebar_timeago");
+        sidebarTimeagoEls.forEach((el) => {
+            const dateTime = deserializeDateTime(el.getAttribute("datetime"));
+            const today = DateTime.now().startOf("day");
+            const diff = dateTime.diff(today).as("days");
+            let displayStr;
 
                 if (diff === 0) {
                     displayStr = _t('Due today');
@@ -42,7 +42,7 @@ var PortalSidebar = publicWidget.Widget.extend({
                 } else {
                     displayStr = _t('%s days overdue', Math.abs(diff).toFixed());
                 }
-                $(el).text(displayStr);
+                el.textContent = displayStr;
         });
     },
     /**
@@ -51,13 +51,16 @@ var PortalSidebar = publicWidget.Widget.extend({
      */
     _printIframeContent: function (href) {
         if (!this.printContent) {
-            this.printContent = $('<iframe id="print_iframe_content" src="' + href + '" style="display:none"></iframe>');
-            this.$el.append(this.printContent);
-            this.printContent.on('load', function () {
-                $(this).get(0).contentWindow.print();
+            this.printContent = document.createElement("iframe");
+            this.printContent.setAttribute("id", "print_iframe_content");
+            this.printContent.setAttribute("src", href);
+            this.printContent.setAttribute("style", "display:none");
+            this.el.appendChild(this.printContent);
+            this.printContent.addEventListener("load", function () {
+                this.contentWindow.print();
             });
         } else {
-            this.printContent.get(0).contentWindow.print();
+            this.printContent.contentWindow.print();
         }
     },
 });

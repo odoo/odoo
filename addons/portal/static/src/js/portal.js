@@ -15,8 +15,10 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        this.$state = this.$('select[name="state_id"]');
-        this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
+        this.state = this.el.querySelector('select[name="state_id"]:enabled');
+        this.stateOptions = [...this.state.querySelectorAll("option")].filter(
+            (opt) => opt.index !== 0
+        );
         this._adaptAddressForm();
 
         return def;
@@ -30,12 +32,27 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      * @private
      */
     _adaptAddressForm: function () {
-        var $country = this.$('select[name="country_id"]');
-        var countryID = ($country.val() || 0);
-        this.$stateOptions.detach();
-        var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
-        var nb = $displayedState.appendTo(this.$state).show().length;
-        this.$state.parent().toggle(nb >= 1);
+        const countryEl = this.el.querySelector('select[name="country_id"]');
+        const countryID = parseInt(countryEl.value) || 0;
+        this.stateOptions.forEach((state) => {
+            state.remove();
+        });
+        const displayedStateEls = this.stateOptions.filter(
+            (el) => el.getAttribute("data-country_id") === `${countryID}`
+        );
+        if (countryID) {
+            this.state.innerHTML = "";
+        }
+        displayedStateEls.forEach((state) => {
+            this.state.append(state);
+            state.classList.remove("d-none");
+        });
+        const nb = displayedStateEls.length;
+        if (nb >= 1) {
+            this.state.parentElement.style.display = "";
+        } else {
+            this.state.parentElement.style.display = "none";
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -120,7 +137,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        this._adaptSearchLabel(this.$('.dropdown-item.active'));
+        this._adaptSearchLabel(this.el.querySelector(".dropdown-item.active"));
         return def;
     },
 
@@ -132,17 +149,28 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      * @private
      */
     _adaptSearchLabel: function (elem) {
-        var $label = $(elem).clone();
-        $label.find('span.nolabel').remove();
-        this.$('input[name="search"]').attr('placeholder', $label.text().trim());
+        if (!elem) {
+            return;
+        }
+        const labelEl = elem.cloneNode(true);
+        labelEl.querySelector("span.nolabel")?.remove();
+        this.el
+            .querySelector('input[name="search"]')
+            .setAttribute("placeholder", labelEl.textContent.trim());
     },
     /**
      * @private
      */
     _search: function () {
         var search = new URL(window.location).searchParams;
-        search.set("search_in", this.$('.dropdown-item.active').attr('href')?.replace('#', '') || "");
-        search.set("search", this.$('input[name="search"]').val());
+        search.set(
+            "search_in",
+            document
+                .querySelector(".dropdown-item.active")
+                ?.getAttribute("href")
+                .replace("#", "") || ""
+        );
+        search.set("search", this.el.querySelector('input[name="search"]').value);
         window.location.search = search.toString();
     },
 
@@ -155,9 +183,10 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     _onDropdownItemClick: function (ev) {
         ev.preventDefault();
-        var $item = $(ev.currentTarget);
-        $item.closest('.dropdown-menu').find('.dropdown-item').removeClass('active');
-        $item.addClass('active');
+        const item = ev.currentTarget;
+        const dropdownItemsEls = item.closest(".dropdown-menu").querySelectorAll(".dropdown-item");
+        dropdownItemsEls.forEach((elem) => elem.classList.remove("active"));
+        item.classList.add("active");
 
         this._adaptSearchLabel(ev.currentTarget);
     },

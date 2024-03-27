@@ -9,6 +9,29 @@ import { rpc } from "@web/core/network/rpc";
 
 import { Component, markup } from "@odoo/owl";
 
+function processDataset(data) {
+    const rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/;
+    for (const [key, value] of Object.entries(data)) {
+        if (value === "true") {
+            data[key] = true;
+        }
+        if (value === "false") {
+            data[key] = false;
+        }
+        if (value === "null") {
+            data[key] = null;
+        }
+        // Only convert to a number if it doesn't change the string
+        if (value === +value + "") {
+            data[key] = +value;
+        }
+        if (rbrace.test(value)) {
+            data[key] = JSON.parse(value);
+        }
+    }
+    return data;
+}
+
 /**
  * Widget PortalChatter
  *
@@ -155,7 +178,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
         if (this.options.display_composer) {
             this._composer = this._createComposerWidget();
-            await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
+            await this._composer.appendTo(this.el.querySelector(".o_portal_chatter_composer"));
         }
     },
     /**
@@ -250,16 +273,31 @@ var PortalChatter = publicWidget.Widget.extend({
 
     _updateMessages: function (messages) {
         this._messages = messages;
-        this.$('.o_portal_chatter_messages').empty().append(renderToElement("portal.chatter_messages", {widget: this}));
+        const chatterMessageParentEl = this.el.querySelector(".o_portal_chatter_messages");
+        chatterMessageParentEl.replaceChildren();
+        const chatterMessage = renderToElement("portal.chatter_messages", { widget: this });
+        chatterMessageParentEl.appendChild(chatterMessage);
     },
     _updateMessageCount: function (messageCount) {
         this._messageCount = messageCount;
-        this.$('.o_message_counter').replaceWith(renderToElement("portal.chatter_message_count", {widget: this}));
+        const messageCounterEL = this.el.querySelector(".o_message_counter");
+        if (messageCounterEL) {
+            messageCounterEL.parentNode.replaceChild(
+                renderToElement("portal.chatter_message_count", { widget: this }),
+                messageCounterEL
+            );
+        }
         this._updatePager(this._pager(this._currentPage));
     },
     _updatePager: function (pager) {
         this._pagerData = pager;
-        this.$('.o_portal_chatter_pager').replaceWith(renderToElement("portal.pager", {widget: this}));
+        const chatterPagerEl = this.el.querySelector(".o_portal_chatter_pager");
+        if (chatterPagerEl) {
+            chatterPagerEl.parentNode.replaceChild(
+                renderToElement("portal.pager", { widget: this }),
+                chatterPagerEl
+            );
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -272,8 +310,8 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickPager: function (ev) {
         ev.preventDefault();
-        var page = $(ev.currentTarget).data('page');
-        this._changeCurrentPage(page);
+        const page = ev.currentTarget.getAttribute("data-page");
+        this._changeCurrentPage(parseInt(page));
     },
 
     /**
@@ -284,19 +322,19 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickUpdateIsInternal: function (ev) {
         ev.preventDefault();
-
-        var $elem = $(ev.currentTarget);
+        const elem = ev.currentTarget;
+        const dataset = processDataset(Object.assign({}, elem.dataset));
         return rpc('/mail/update_is_internal', {
-            message_id: $elem.data('message-id'),
-            is_internal: ! $elem.data('is-internal'),
+            message_id: dataset.messageId,
+            is_internal: !dataset.isInternal,
         }).then(function (result) {
-            $elem.data('is-internal', result);
+            elem.setAttribute("data-is-internal", result);
             if (result === true) {
-                $elem.addClass('o_portal_message_internal_on');
-                $elem.removeClass('o_portal_message_internal_off');
+                elem.classList.add("o_portal_message_internal_on");
+                elem.classList.remove("o_portal_message_internal_off");
             } else {
-                $elem.addClass('o_portal_message_internal_off');
-                $elem.removeClass('o_portal_message_internal_on');
+                elem.classList.add("o_portal_message_internal_off");
+                elem.classList.remove("o_portal_message_internal_on");
             }
         });
     },
@@ -310,8 +348,9 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      */
     async start() {
         const proms = [this._super.apply(this, arguments)];
-        const chatter = new PortalChatter(this, this.$el.data());
-        proms.push(chatter.appendTo(this.$el));
+        const data = Object.assign({}, this.el.dataset);
+        const chatter = new PortalChatter(this, processDataset(data));
+        proms.push(chatter.appendTo(this.el));
         await Promise.all(proms);
         // scroll to the right place after chatter loaded
         if (window.location.hash === `#${this.el.id}`) {

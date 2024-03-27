@@ -13,22 +13,22 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         this.authorizedTextTag = ['em', 'b', 'i', 'u'];
-        this.spyWatched = $('body[data-target=".navspy"]');
+        this.spyWatched = document.querySelector('body[data-target=".navspy"]');
     },
     /**
      * @override
      */
     start: function () {
         var def = this._super.apply(this, arguments);
-        var $spyWatcheElement = this.$el.find('[data-id="portal_sidebar"]');
-        this._setElementId($spyWatcheElement);
+        const spyWatcheElement = this.el.querySelector('[data-id="portal_sidebar"]');
+        this._setElementId(spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
         // After signature, automatically open the popup for payment
         const searchParams = new URLSearchParams(window.location.search.substring(1));
-        const payNowButton = this.$('#o_sale_portal_paynow')
-        if (searchParams.get("allow_payment") === "yes" && payNowButton) {
-            payNowButton[0].click();
+        const payNowButtonEl = this.el.querySelector("#o_sale_portal_paynow");
+        if (searchParams.get("allow_payment") === "yes" && payNowButtonEl) {
+            payNowButtonEl.click();
         }
         return def;
     },
@@ -42,13 +42,17 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      *
      * @private
      * @param {string} prefix
-     * @param {Object} $el
+     * @param {Object} el
      *
      */
-    _setElementId: function (prefix, $el) {
-        var id = uniqueId(prefix);
-        this.spyWatched.find($el).attr('id', id);
-        return id;
+    _setElementId(prefix, el) {
+        if (el) {
+            const id = uniqueId(prefix);
+            [...this.spyWatched.querySelectorAll(el.tagName)]
+                .find((newel) => newel === el)
+                ?.setAttribute("id", id);
+            return id;
+        }
     },
     /**
      * generate the new spy menu
@@ -57,62 +61,76 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      *
      */
     _generateMenu: function () {
-        var self = this,
-            lastLI = false,
-            lastUL = null,
-            $bsSidenav = this.$el.find('.bs-sidenav');
+        const self = this,
+            bsSidenavEl = this.el.querySelector(".bs-sidenav");
+        let lastLIEl = false,
+            lastULEl = null;
 
-        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
-        this.spyWatched.find("#quote_content h2, #quote_content h3").toArray().forEach((el) => {
+        Array.from(
+            this.spyWatched.querySelectorAll(
+                "#quote_content [id^=quote_header_], #quote_content [id^=quote_]"
+            )
+        ).forEach((el) => el.removeAttribute("id"));
+        Array.from(
+            this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")
+        ).forEach((el) => {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
                     id = self._setElementId('quote_header_', el);
-                    text = self._extractText($(el));
+                    text = self._extractText(el);
                     if (!text) {
                         break;
                     }
-                    lastLI = $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
-                    lastUL = false;
+                    lastLIEl = document.createElement("li");
+                    lastLIEl.className = "nav-item";
+                    lastLIEl.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
+                    bsSidenavEl?.appendChild(lastLIEl);
+                    lastULEl = false;
                     break;
                 case "h3":
                     id = self._setElementId('quote_', el);
-                    text = self._extractText($(el));
+                    text = self._extractText(el);
                     if (!text) {
                         break;
                     }
-                    if (lastLI) {
-                        if (!lastUL) {
-                            lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
+                    if (lastLIEl) {
+                        if (!lastULEl) {
+                            lastULEl = document.createElement("ul");
+                            lastULEl.className = "nav flex-column";
+                            lastLIEl.appendChild(lastULEl);
                         }
-                        $("<li class='nav-item'>").append($('<a class="nav-link p-0" href="#' + id + '"/>').text(text)).appendTo(lastUL);
+                        const liEl = document.createElement("li");
+                        liEl.className = "nav-item";
+                        liEl.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
+                        lastULEl.appendChild(liEl);
                     }
                     break;
             }
             el.setAttribute('data-anchor', true);
         });
-        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
+        this.trigger_up("widgets_start_request", { target: bsSidenavEl });
     },
     /**
      * extract text of menu title for sidebar
      *
      * @private
-     * @param {Object} $node
+     * @param {Object} node
      *
      */
-    _extractText: function ($node) {
+    _extractText: function (node) {
         var self = this;
         var rawText = [];
-        $node.contents().toArray().forEach((el) => {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
+        Array.from(node.childNodes).forEach((el) => {
+            const current = el;
+            if (current.textContent.trim()) {
+                const tagName = current.tagName;
                 if (
                     typeof tagName === "undefined" ||
                     (typeof tagName !== "undefined" &&
                         self.authorizedTextTag.includes(tagName.toLowerCase()))
                 ) {
-                    rawText.push($.trim(current.text()));
+                    rawText.push(current.textContent.trim());
                 }
             }
         });
