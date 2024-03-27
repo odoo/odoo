@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="report_timesheet_sale_timesheet" inherit_id="hr_timesheet.timesheet_table">
+        <xpath expr="//th/span[text()='Description']" position="after">
+            <th class="text-start align-middle" t-if="not hide_sale_line">Sale Order Item</th>
+        </xpath>
+        <xpath expr="//td[span[@t-field='line.name']]" position="after">
+            <td class="align-middle" t-if="not hide_sale_line">
+                <span t-field="line.so_line">S00023 - Furniture Delivery (Manual) (Deco Addict)</span>
+            </td>
+        </xpath>
+    </template>
     <template id="timesheet_sale_page">
         <t t-set="show_project" t-value="true"/>
         <t t-set="show_task" t-value="true"/>
@@ -16,10 +26,11 @@
                                 <t t-if="doc.timesheet_ids">
                                     <h2>
                                         <br/>
-                                        <span>Timesheets for the <t t-out="doc_name">S0001</t> <t t-out="record_name">- Timesheet product</t>
-                                        </span>
+                                        <span t-if="not doc_name.startswith('INV/')">Order <t t-out="doc_name"/></span>
+                                        <span t-else="">Timesheets for the Invoice <t t-out="doc_name"/></span>
                                     </h2>
                                     <t t-set='lines' t-value='doc.timesheet_ids'/>
+                                    <t t-set="hide_sale_line" t-value="true"/>
                                     <t t-call="hr_timesheet.timesheet_table"/>
                                 </t>
                             </div>
