@@ -10,6 +10,7 @@ import {
     formatDateTime,
     today,
 } from "@web/core/l10n/dates";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
@@ -376,6 +377,31 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
+    isValid: (record, fieldname, fieldInfo) => {
+        if (fieldInfo.widget === "daterange") {
+            if (
+                !record.data[fieldInfo.options[END_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[END_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+            if (
+                !record.data[fieldInfo.options[START_DATE_FIELD_OPTION]] !==
+                    !record.data[fieldname] &&
+                evaluateBooleanExpr(
+                    record.activeFields[fieldInfo.options[START_DATE_FIELD_OPTION]]?.required,
+                    record.evalContextWithVirtualIds
+                )
+            ) {
+                return false;
+            }
+        }
+        return !record.isFieldInvalid(fieldname);
+    }
 };
 
 registry
