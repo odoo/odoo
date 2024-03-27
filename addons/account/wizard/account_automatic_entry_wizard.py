@@ -7,6 +7,7 @@ from odoo.tools import groupby
 
 from collections import defaultdict
 from markupsafe import Markup, escape
+from odoo.tools import frozendict
 import json
 
 class AutomaticEntryWizard(models.TransientModel):
@@ -173,7 +174,12 @@ class AutomaticEntryWizard(models.TransientModel):
             counterpart_balances[(line.partner_id, counterpart_currency)]['amount_currency'] += counterpart_amount_currency
             counterpart_balances[(line.partner_id, counterpart_currency)]['balance'] += line.balance
             counterpart_balances[(line.partner_id, counterpart_currency)]['analytic_distribution'] = line.analytic_distribution
-            grouped_source_lines[(line.partner_id, line.currency_id, line.account_id)] += line
+            grouped_source_lines[(
+                line.partner_id,
+                line.currency_id,
+                line.account_id,
+                line.analytic_distribution and frozendict(line.analytic_distribution),
+            )] += line
 
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
@@ -193,7 +199,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 })
 
         # Generate change_account lines' vals
-        for (partner, currency, account), lines in grouped_source_lines.items():
+        for (partner, currency, account, analytic_distribution), lines in grouped_source_lines.items():
             account_balance = sum(line.balance for line in lines)
             if not self.company_id.currency_id.is_zero(account_balance):
                 account_amount_currency = currency.round(sum(line.amount_currency for line in lines))
@@ -205,6 +211,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': partner.id or None,
                     'currency_id': currency.id,
                     'amount_currency': (account_balance > 0 and -1 or 1) * abs(account_amount_currency),
+                    'analytic_distribution': analytic_distribution,
                 })
 
         # Get the lowest child company based on accounts used to avoid access error
