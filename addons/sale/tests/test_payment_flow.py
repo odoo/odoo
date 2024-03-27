@@ -300,6 +300,71 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertTrue(_create_invoices_mock.call_args.kwargs['final'])
 
+    def test_linked_transactions_when_invoicing(self):
+        self.provider.support_manual_capture = 'partial'
+        partial_amount = self.sale_order.amount_total - 2
+
+        partial_tx_done = self._create_transaction(
+            flow='direct',
+            amount=partial_amount,
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+            reference='partial_tx_done',
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            partial_tx_done._reconcile_after_done()
+        partial_tx_pending = self._create_transaction(
+            flow='direct',
+            amount=2,
+            sale_order_ids=[self.sale_order.id],
+            state='pending',
+            reference='partial_tx_pending',
+        )
+        self.assertTrue(partial_tx_done.payment_id, msg="Account payment should have been created.")
+        msg = "The created account payment shouldn't be reconciled as there are no invoice yet."
+        self.assertFalse(partial_tx_pending.payment_id.is_reconciled, msg=msg)
+
+        # Add some noisy transactions
+        self._create_transaction(
+            flow='direct', sale_order_ids=[self.sale_order.id], state='draft', reference='draft_tx'
+        )
+        self._create_transaction(
+            flow='direct', sale_order_ids=[self.sale_order.id], state='error', reference='error_tx'
+        )
+        self._create_transaction(
+            flow='direct', sale_order_ids=[self.sale_order.id], state='cancel', reference='cncl_tx'
+        )
+
+        msg = "The sale order should be linked to 5 transactions."
+        self.assertEqual(len(self.sale_order.transaction_ids), 5, msg=msg)
+
+        self.sale_order.action_confirm()
+        self.sale_order._create_invoices()
+
+        self.assertEqual(len(self.sale_order.invoice_ids), 1, msg="1 invoice should be created.")
+
+        first_invoice = self.sale_order.invoice_ids
+        linked_txs = first_invoice.transaction_ids
+        msg = "The newly created invoice should be linked to the done and pending transactions."
+        self.assertEqual(len(linked_txs), 2, msg=msg)
+        expected_linked_tx = (partial_tx_done, partial_tx_pending)
+        self.assertTrue(all(tx in expected_linked_tx for tx in linked_txs), msg=msg)
+        msg = "The payment shouldn't be reconciled yet."
+        self.assertFalse(partial_tx_done.payment_id.is_reconciled, msg=msg)
+
+        partial_tx_done._reconcile_after_done()
+
+        msg = "The payment should now be reconciled."
+        self.assertTrue(partial_tx_done.payment_id.is_reconciled, msg=msg)
+
+        self.sale_order.order_line[0].product_uom_qty += 2
+        self.sale_order._create_invoices()
+
+        second_invoice = self.sale_order.invoice_ids - first_invoice
+        msg = "The newly created invoice should only be linked to the pending transaction."
+        self.assertEqual(len(second_invoice.transaction_ids), 1, msg=msg)
+        self.assertEqual(second_invoice.transaction_ids.state, 'pending', msg=msg)
+
     def test_downpayment_confirm_sale_order_sufficient_amount(self):
         """Paying down payments can confirm an order if amount is enough."""
         self.sale_order.require_payment = True
