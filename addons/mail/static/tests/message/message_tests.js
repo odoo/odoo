@@ -4,7 +4,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { start } from "@mail/../tests/helpers/test_utils";
-
+import { config as transitionConfig } from "@web/core/transition";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 import {
@@ -1741,4 +1741,61 @@ QUnit.test("Click on view reactions shows the reactions on the message", async (
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='View Reactions']");
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
+});
+
+QUnit.test("new message separator between messages A & C after deleting message B", async () => {
+    patchWithCleanup(transitionConfig, { disabled: true });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+    const userId = pyEnv["res.users"].create({
+        name: "Foreigner user",
+        partner_id: partnerId,
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        name: "General",
+    });
+    const [, messageId_2] = pyEnv["mail.message"].create([
+        {
+            body: "a",
+            model: "discuss.channel",
+            res_id: channelId,
+            author_id: userId,
+            message_type: "comment",
+        },
+        {
+            body: "b",
+            model: "discuss.channel",
+            res_id: channelId,
+            author_id: userId,
+            message_type: "comment",
+        },
+    ]);
+    const { env, openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
+    $(".o-mail-Composer-input")[0].blur();
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/post", {
+            post_data: { body: "c", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { text: "c" });
+    pyEnv.withUser(userId, () =>
+        env.services.rpc("/mail/message/update_content", {
+            attachment_ids: [],
+            attachment_tokens: [],
+            body: "",
+            message_id: messageId_2,
+        })
+    );
+    await contains(".o-mail-Message", { text: "b", count: 0 });
+    await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "c" });
 });
