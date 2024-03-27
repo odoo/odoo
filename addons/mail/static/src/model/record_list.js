@@ -581,4 +581,11 @@ export class RecordList extends Array {
             yield recordListFullProxy._store.recordByLocalId.get(localId);
         }
     }
+    /** @param {number} index */
+    at(index) {
+        // this custom implement of "at" is slightly faster than auto-calling unimplement array method
+        const recordList = toRaw(this)._raw;
+        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        return recordListFullProxy._store.recordByLocalId.get(recordListFullProxy.data.at(index));
+    }
 }
