@@ -19,11 +19,11 @@
         </div>
         <!-- Blog Posts page  -->
         <div data-selector="main:has(#o_wblog_index_content)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Blogs Page">
-            <we-select string="Top Banner" data-no-preview="true" data-reload="/">
-                <we-button data-customize-website-views="website_blog.opt_blog_cover_post"
-                    data-name="blog_cover_opt">Name / Latest Post</we-button>
-                <we-button data-customize-website-views="">Drop Zone for Building Blocks</we-button>
-            </we-select>
+            <we-checkbox string="Top Banner"
+                         data-name="blog_cover_opt"
+                         data-customize-website-views="website_blog.opt_blog_cover_post"
+                         data-no-preview="true"
+                         data-reload="/"/>
             <we-checkbox string="Full-Width"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_blog.opt_blog_cover_post_fullwidth_design"

@@ -37,21 +37,15 @@ list of filtered posts (by date or tag).
         <div id="o_wblog_blog_top">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
             <t t-if="not tag and not date_begin and not search">
-                <div id="o_wblog_blog_top_droppable">
-                    <t t-if="blog">
-                        <t t-set="oe_structure_blog_single_header_description">Edit the '<t t-esc="blog.name"/>' page header.</t>
-                        <div t-field="blog.content"
-                            class="oe_structure"
-                            t-attf-id="oe_structure_blog_single_header_#{blog.id}"
-                            t-att-data-editor-sub-message="oe_structure_blog_single_header_description"/>
-                    </t>
-                    <t t-elif="blogs">
-                        <t t-set="oe_structure_blog_all_header_description">Edit the 'All Blogs' page header.</t>
-                        <div class="oe_structure"
-                            id="oe_structure_blog_all_header"
-                            t-att-data-editor-sub-message="oe_structure_blog_all_header_description"/>
-                    </t>
-                </div>
+                <div id="o_wblog_blog_top_droppable"/>
+                <t t-if="blog">
+                    <t t-set="oe_structure_blog_single_header_description">Edit the '<t t-esc="blog.name"/>' page header.</t>
+                    <div t-field="blog.content" t-att-data-editor-sub-message="oe_structure_blog_single_header_description"/>
+                </t>
+                <t t-elif="blogs">
+                    <t t-set="oe_structure_blog_all_header_description">Edit the 'All Blogs' page header.</t>
+                    <div class="oe_structure" t-att-data-editor-sub-message="oe_structure_blog_all_header_description"/>
+                </t>
             </t>
             <t t-else="">
                 <!-- Droppable-area for filtered results (tags or date) -->
@@ -98,40 +92,27 @@ list of filtered posts (by date or tag).
      `#oe_structure_blog_all_header.oe_structure`. -->
 <template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" priority="17">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
-        <div t-if="first_post or blog" class="container">
+        <div class="container">
             <div class="row py-4">
-                <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
-                    <t t-call="website.record_cover">
-                        <t t-set="_record" t-value="blog or first_post"/>
-                        <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
-                    </t>
-                </div>
-                <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
-                    <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
-                        <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                            <t t-if="blog">
+                <t t-if="blog">
+                    <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="blog"/>
+                            <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
+                        </t>
+                    </div>
+                    <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
+                        <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
+                            <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
                                 <span t-field="blog.name" class="h1 d-block" placeholder="Blog's Title"/>
                                 <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
-                            </t>
-                            <t t-else="first_post">
-                                <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-1 d-inline-block me-auto">Latest</div>
-                                <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}"
-                                   t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
-                                <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
-
-                                <div t-if="not blog" class="d-flex">
-                                    <div class="small mt-2 mb-3 me-1">
-                                        in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
-                                    </div>
-                                </div>
-                                <div t-field="first_post.teaser" class="mb-4 lead"  placeholder=""/>
-                                <div>
-                                    <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" class="btn btn-primary">Read more</a>
-                                </div>
-                            </t>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </t>
+                <t t-else="">
+                    <div class="h1 o_not_editable" style="text-align:center;">Our Latest Posts</div>
+                </t>
                 <div class="col-12 mt-3"> <hr/> </div>
             </div>
         </div>
@@ -141,32 +122,22 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
 <template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
-        <t t-if="blog or first_post" t-call="website.record_cover">
-            <t t-set="_record" t-value="blog or first_post"/>
+        <t t-if="blog" t-call="website.record_cover">
+            <t t-set="_record" t-value="blog"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
-
             <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-1">Latest</div>
-                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
-                        <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
-                        <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
-                    </a>
-                    <span t-elif="blog" t-att-title="blog.name" class="text-white text-decoration-none">
+                    <span t-att-title="blog.name" class="text-white text-decoration-none">
                         <div t-field="blog.name" id="o_wblog_post_name" placeholder="Blog Title"/>
                         <div t-field="blog.subtitle" id="o_wblog_post_subtitle" placeholder="Blog Subtitle"/>
                     </span>
-
-                    <div>
-                        <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
-                            in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
-                        </span>
-                        <span t-else="">&amp;nbsp;</span>
-                    </div>
                 </div>
             </div>
+        </t>
+        <t t-else="">
+            <div class="h1 my-4 o_not_editable" style="text-align:center;">Our Latest Posts</div>
         </t>
     </xpath>
 </template>
