@@ -6071,10 +6071,6 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
                 await this._applyShapeAndColors(saveData);
-                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
-                    img.dataset.originalMimetype = img.dataset.mimetype;
-                    img.dataset.mimetype = 'image/svg+xml';
-                }
             }
         } else {
             // Re-applying the modifications and deleting the shapes
@@ -6190,6 +6186,18 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _writeShape(svgText) {
         const img = this._getImg();
+        const dataURL = await this.computeShape(svgText, img);
+        return loadImage(dataURL, img);
+    },
+    /**
+     * Sets the image in the supplied SVG and replace the src with a dataURL
+     *
+     * @param {string} svgText svg text file
+     * @param img JQuery image
+     * @returns {Promise} resolved once the svg is properly loaded
+     * in the document
+     */
+    async computeShape(svgText, img) {
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
@@ -6228,7 +6236,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
-        return loadImage(dataURL, img);
+        return dataURL;
     },
     /**
      * @override
