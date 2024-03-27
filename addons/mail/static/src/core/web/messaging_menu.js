@@ -32,9 +32,7 @@ export class MessagingMenu extends Component {
             addingChannel: false,
             isOpen: false,
         });
-        onExternalClick("selector", () => {
-            Object.assign(this.state, { addingChat: false, addingChannel: false });
-        });
+        onExternalClick("selector", this.handleExternalClick.bind(this));
     }
 
     beforeOpen() {
@@ -126,6 +124,10 @@ export class MessagingMenu extends Component {
 
     getThreads() {
         return this.store.menuThreads;
+    }
+
+    handleExternalClick() {
+        Object.assign(this.state, { addingChat: false, addingChannel: false });
     }
 
     /**
@@ -261,6 +263,20 @@ export class MessagingMenu extends Component {
             value++;
         }
         return value;
+    }
+
+    get displayChannelSelector() {
+        return this.state.addingChannel || this.state.addingChat;
+    }
+
+    get displayStartConversation() {
+        return (
+            !this.ui.isSmall ||
+            (this.ui.isSmall &&
+                this.store.discuss.activeTab !== "channel" &&
+                !this.state.addingChat &&
+                !(this.env.inDiscussApp && this.store.discuss.activeTab === "main"))
+        );
     }
 }
 
