@@ -37,7 +37,7 @@ class HrEmployeePrivate(models.Model):
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False, check_company=True)
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False, check_company=True, precompute=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(tracking=True)
