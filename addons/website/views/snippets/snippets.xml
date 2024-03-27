@@ -925,7 +925,7 @@
                                  data-variable="hamburger__position__mobile"
                                  data-reload="/"/>
 
-        <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
+        <we-designfontselector string="Font" data-variable="navbar__font"/>
 
         <we-row string="Format" class="o_we_header_font_row">
             <we-input data-customize-website-variable="null" data-variable="header__font__size" data-unit="px" data-save-unit="rem"/>
@@ -1592,7 +1592,7 @@
                     data-unit="px"
                     data-save-unit="rem"/>
         </we-collapse>
-        <we-fontfamilypicker string="Font Family" data-variable="font"/>
+        <we-designfontselector string="Font Family" data-variable="font"/>
         <!-- "× ": \u00D7\u2000 -->
         <we-input string="Line Height"
                   data-customize-website-variable="null"
@@ -1632,14 +1632,14 @@
         </we-collapse>
         <we-collapse>
             <we-row string="Font Family" title="Heading 1">
-                <we-fontfamilypicker data-variable="headings-font"/>
+                <we-designfontselector data-variable="headings__font"/>
                 <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                    data-customize-website-variable="" data-variable="headings-font"
+                    data-customize-website-variable="" data-variable="headings__font"
                     data-remove-font="set-headings-font" data-no-preview="true"/>
             </we-row>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="h#{depth}-font"/>
+                    <we-designfontselector t-attf-data-variable="h#{depth}-font"/>
                     <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
                         data-customize-website-variable="" t-attf-data-variable="h#{depth}-font"
                         t-attf-data-remove-font="set-h#{depth}-font" data-no-preview="true"/>
@@ -1647,7 +1647,7 @@
             </t>
             <t t-foreach="used_display_font_sizes" t-as="depth">
                 <we-row t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="display-#{depth}-font"/>
+                    <we-designfontselector t-attf-data-variable="display-#{depth}-font"/>
                     <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
                         data-customize-website-variable="" t-attf-data-variable="display-#{depth}-font"
                         t-attf-data-remove-font="set-display-#{depth}-font" data-no-preview="true"/>
@@ -1711,9 +1711,9 @@
             data-variable="btn__secondary__outline__border__width" data-dependencies="btn_secondary_outline_opt"
             data-unit="px" data-save-unit="rem"/>
         <we-row string="Font Family">
-            <we-fontfamilypicker data-variable="buttons-font"/>
+            <we-designfontselector data-variable="buttons__font"/>
             <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                data-customize-website-variable="" data-variable="buttons-font"
+                data-customize-website-variable="" data-variable="buttons__font"
                 data-remove-font="set-buttons-font" data-no-preview="true"/>
         </we-row>
         <we-collapse>

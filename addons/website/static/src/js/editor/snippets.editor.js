@@ -18,8 +18,6 @@ snippetsEditorRegistry.add("no_parent_editor_snippets", ["s_popup", "o_mega_menu
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getTraversedNodes = OdooEditorLib.getTraversedNodes;
 
-const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
-
 const ANIMATED_TEXT_SELECTOR = ".o_animated_text";
 const HIGHLIGHTED_TEXT_SELECTOR = ".o_text_highlight";
 
@@ -214,16 +212,6 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _computeSnippetTemplates(html) {
-        const $html = $(html);
-        const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
-        const fontVariables = toFind.map((el) => el.dataset.variable);
-        FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
-        return super._computeSnippetTemplates(html);
-    }
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
