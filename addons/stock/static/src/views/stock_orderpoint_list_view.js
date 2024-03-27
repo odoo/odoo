@@ -7,7 +7,6 @@ import { StockOrderpointListController as Controller } from './stock_orderpoint_
 export const StockOrderpointListView = {
     ...listView,
     Controller,
-    buttonTemplate: 'stock.StockOrderpoint.Buttons',
 };
 
 registry.category("views").add("stock_orderpoint_list", StockOrderpointListView);

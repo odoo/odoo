@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="warehouse_orderpoint_search_inherit">
+        <field name="name">stock.warehouse.orderpoint.search.inherit</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="inherit_id" ref="stock.warehouse_orderpoint_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='product']" position="after">
+                <filter string="Product Supplier" name="product_supplier" domain="[]" context="{'group_by': 'product_supplier_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
