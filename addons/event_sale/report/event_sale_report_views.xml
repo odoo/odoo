@@ -100,13 +100,13 @@
                 <filter string="Pending payment" name="payment_pending" domain="[('sale_status', '=', 'to_pay')]"/>
                 <filter string="Sold" name="is_sold" domain="[('sale_status', '=', 'sold')]"/>
                 <separator/>
-                <filter string="Registration Date" name="event_registration_create_date" date="event_registration_create_date" default_period="this_year"/>
+                <filter string="Registration Date" name="event_registration_create_date" date="event_registration_create_date" default_period="year"/>
                 <separator/>
                 <filter string="Upcoming/Running" name="upcoming" help="Upcoming events from today"
                         domain="[('event_date_end', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
                 <filter string="Past Events" name="past" help="Events that have ended"
                         domain="[('event_date_end', '&lt;', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
-                <filter string="Event Start Date" name="event_date_start" date="event_date_begin" default_period="this_year"/>
+                <filter string="Event Start Date" name="event_date_start" date="event_date_begin" default_period="year"/>
                 <filter string="Event End Date" name="event_date_end" date="event_date_end"/>
                 <group expand="0" string="Group By">
                     <filter string="Event Type" name="group_by_event_type_id" context="{'group_by': 'event_type_id' }"/>

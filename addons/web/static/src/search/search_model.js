@@ -179,7 +179,6 @@ export class SearchModel extends EventBus {
         this.referenceMoment = DateTime.local();
         this.comparisonOptions = getComparisonOptions();
         this.intervalOptions = getIntervalOptions();
-        this.optionGenerators = getPeriodOptions(this.referenceMoment);
     }
 
     /**
@@ -705,25 +704,20 @@ export class SearchModel extends EventBus {
             return searchItem.comparison;
         }
         const { dateFilterId, comparisonOptionId } = searchItem;
-        const {
-            fieldName,
-            fieldType,
-            description: dateFilterDescription,
-        } = this.searchItems[dateFilterId];
+        const dateFilter = this.searchItems[dateFilterId];
+        const { fieldName, description: dateFilterDescription } = dateFilter;
         const selectedGeneratorIds = this._getSelectedGeneratorIds(dateFilterId);
         // compute range and range description
         const { domain: range, description: rangeDescription } = constructDateDomain(
             this.referenceMoment,
-            fieldName,
-            fieldType,
+            dateFilter,
             selectedGeneratorIds
         );
         // compute comparisonRange and comparisonRange description
         const { domain: comparisonRange, description: comparisonRangeDescription } =
             constructDateDomain(
                 this.referenceMoment,
-                fieldName,
-                fieldType,
+                dateFilter,
                 selectedGeneratorIds,
                 comparisonOptionId
             );
@@ -960,13 +954,28 @@ export class SearchModel extends EventBus {
                     );
                 }
             } else {
+                if (generatorId.startsWith("custom")) {
+                    const comparisonId = this._getActiveComparison()?.id;
+                    this.query = this.query.filter(
+                        (queryElem) =>
+                            ![searchItemId, comparisonId].includes(queryElem.searchItemId)
+                    );
+                    this.query.push({ searchItemId, generatorId });
+                    continue;
+                }
+                this.query = this.query.filter(
+                    (queryElem) =>
+                        queryElem.searchItemId !== searchItemId ||
+                        !queryElem.generatorId.startsWith("custom")
+                );
                 this.query.push({ searchItemId, generatorId });
                 if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
-                    // Here we add 'this_year' as options if no option of type
+                    // Here we add 'year' as options if no option of type
                     // year is already selected.
-                    const { defaultYearId } = this.optionGenerators.find(
-                        (o) => o.id === generatorId
-                    );
+                    const { defaultYearId } = getPeriodOptions(
+                        this.referenceMoment,
+                        searchItem.optionsParams
+                    ).find((o) => o.id === generatorId);
                     this.query.push({ searchItemId, generatorId: defaultYearId });
                 }
             }
@@ -1416,7 +1425,9 @@ export class SearchModel extends EventBus {
             case "comparison": {
                 const { dateFilterId } = searchItem;
                 const dateFilterIsActive = this.query.some(
-                    (queryElem) => queryElem.searchItemId === dateFilterId
+                    (queryElem) =>
+                        queryElem.searchItemId === dateFilterId &&
+                        !queryElem.generatorId.startsWith("custom")
                 );
                 if (!dateFilterIsActive) {
                     return null;
@@ -1425,7 +1436,7 @@ export class SearchModel extends EventBus {
             }
             case "dateFilter":
                 enrichSearchItem.options = _enrichOptions(
-                    this.optionGenerators,
+                    getPeriodOptions(this.referenceMoment, searchItem.optionsParams),
                     queryElements.map((queryElem) => queryElem.generatorId)
                 );
                 break;
@@ -1624,13 +1635,7 @@ export class SearchModel extends EventBus {
      * with a date filter starting from its corresponding query elements.
      */
     _getDateFilterDomain(dateFilter, generatorIds, key = "domain") {
-        const { fieldName, fieldType } = dateFilter;
-        const dateFilterRange = constructDateDomain(
-            this.referenceMoment,
-            fieldName,
-            fieldType,
-            generatorIds
-        );
+        const dateFilterRange = constructDateDomain(this.referenceMoment, dateFilter, generatorIds);
         return dateFilterRange[key];
     }
 

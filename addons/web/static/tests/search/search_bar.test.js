@@ -34,6 +34,7 @@ import {
     removeFacet,
     serverState,
     toggleMenuItem,
+    toggleMenuItemOption,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -1294,6 +1295,70 @@ test("edit a date filter with comparison active", async () => {
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
     expect(getFacetTexts()).toEqual([`Birthday is between 04/01/2023 and 04/30/2023`]);
+});
+
+test("toggle a custom option in a date filter", async () => {
+    mockDate("2023-04-28T13:40:00");
+    onRpc("/web/domain/validate", () => true);
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["filter", "comparison"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="birthday" string="Birthday" date="birthday">
+                    <filter name="birthday_today" string="Today" domain="[('birthday', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </filter>
+            </search>
+        `,
+        context: {
+            search_default_birthday: true,
+        },
+    });
+    expect(getFacetTexts()).toEqual(["Birthday: April 2023"]);
+
+    await toggleSearchBarMenu();
+    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(1);
+
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "Today");
+    expect(getFacetTexts()).toEqual(["Birthday: Today"]);
+
+    await toggleSearchBarMenu();
+    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(0);
+});
+
+test("toggle a custom option in a date filter with comparison active", async () => {
+    mockDate("2023-04-28T13:40:00");
+    onRpc("/web/domain/validate", () => true);
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["filter", "comparison"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="birthday" string="Birthday" date="birthday">
+                    <filter name="birthday_today" string="Today" domain="[('birthday', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </filter>
+            </search>
+        `,
+        context: {
+            search_default_birthday: true,
+        },
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Birthday: Previous Period");
+    expect(getFacetTexts()).toEqual(["Birthday: April 2023", "Birthday: Previous Period"]);
+
+    await toggleMenuItem("Birthday");
+    await toggleMenuItemOption("Birthday", "Today");
+    expect(getFacetTexts()).toEqual(["Birthday: Today"]);
+
+    await toggleSearchBarMenu();
+    expect(`.o_dropdown_container.o_comparison_menu`).toHaveCount(0);
 });
 
 test("edit a field", async () => {

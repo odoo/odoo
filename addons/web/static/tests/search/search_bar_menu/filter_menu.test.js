@@ -300,7 +300,7 @@ test("filter by a date field using period works even in January", async () => {
         searchMenuTypes: ["filter"],
         searchViewArch: `
             <search>
-                <filter string="Date" name="some_filter" date="date_field" default_period="last_month"/>
+                <filter string="Date" name="some_filter" date="date_field" default_period="month-1"/>
             </search>
         `,
         context: { search_default_some_filter: 1 },
@@ -317,6 +317,78 @@ test("filter by a date field using period works even in January", async () => {
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "December")).toBe(true);
     expect(isOptionSelected("Date", "2016")).toBe(true);
+});
+
+test("filter by a date field using period works even with an endYear in the past", async () => {
+    mockDate("2017-01-07T03:00:00");
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="some_filter" date="date_field" start_year="-4" end_year="-2"/>
+            </search>
+        `,
+        context: { search_default_some_filter: 1 },
+    });
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "2015-01-01"],
+        ["date_field", "<=", "2015-01-31"],
+    ]);
+    expect(getFacetTexts()).toEqual(["Date: January 2015"]);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "January")).toBe(true);
+    expect(isOptionSelected("Date", "2015")).toBe(true);
+
+    await toggleMenuItemOption("Date", "2015");
+    expect(isOptionSelected("Date", "January")).toBe(false);
+
+    await toggleMenuItemOption("Date", "December");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "December")).toBe(true);
+    expect(isOptionSelected("Date", "2014")).toBe(true);
+});
+
+test("filter by a date field using period works even with a startYear in the future", async () => {
+    mockDate("2017-01-07T03:00:00");
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="some_filter" date="date_field" start_year="2" end_year="4"/>
+            </search>
+        `,
+        context: { search_default_some_filter: 1 },
+    });
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["date_field", ">=", "2019-01-01"],
+        ["date_field", "<=", "2019-01-31"],
+    ]);
+    expect(getFacetTexts()).toEqual(["Date: January 2019"]);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "January")).toBe(true);
+    expect(isOptionSelected("Date", "2019")).toBe(true);
+
+    await toggleMenuItemOption("Date", "2019");
+    expect(isOptionSelected("Date", "January")).toBe(false);
+
+    await toggleMenuItemOption("Date", "December");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "December")).toBe(true);
+    expect(isOptionSelected("Date", "2019")).toBe(true);
 });
 
 test("`context` key in <filter> is used", async () => {
@@ -364,7 +436,7 @@ test("filter with date attribute set as search_default", async () => {
         searchMenuTypes: ["filter"],
         searchViewArch: `
             <search>
-                <filter string="Date" name="date_field" date="date_field" default_period="last_month"/>
+                <filter string="Date" name="date_field" date="date_field" default_period="month-1"/>
             </search>
         `,
         context: { search_default_date_field: true },
@@ -381,7 +453,7 @@ test("filter with multiple values in default_period date attribute set as search
         searchMenuTypes: ["filter"],
         searchViewArch: `
             <search>
-                <filter string="Date" name="date_field" date="date_field" default_period="this_year,last_year"/>
+                <filter string="Date" name="date_field" date="date_field" default_period="year,year-1"/>
             </search>
         `,
         context: { search_default_date_field: true },
@@ -391,6 +463,29 @@ test("filter with multiple values in default_period date attribute set as search
     expect(isItemSelected("Date")).toBe(true);
     expect(isOptionSelected("Date", "2019")).toBe(true);
     expect(isOptionSelected("Date", "2018")).toBe(true);
+});
+
+test("date filter with custom option set as default_period", async () => {
+    mockDate("2019-07-31T13:43:00");
+
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field" default_period="custom_date_field_today">
+                    <filter name="date_field_today" string="Today" domain="[('date_field', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </filter>
+            </search>
+        `,
+        context: { search_default_date_field: true },
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    expect(isItemSelected("Date")).toBe(true);
+    expect(isOptionSelected("Date", "Today")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["date_field", "=", "2019-07-31"]]);
 });
 
 test("filter domains are correcly combined by OR and AND", async () => {

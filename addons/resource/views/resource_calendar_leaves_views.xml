@@ -9,7 +9,7 @@
                 <field name="resource_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="calendar_id"/>
-                <filter name="filter_date" date="date_from" default_period="this_year" string="Period"/>
+                <filter name="filter_date" date="date_from" default_period="year" string="Period"/>
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
                     <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
