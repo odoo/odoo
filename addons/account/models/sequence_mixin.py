@@ -106,14 +106,11 @@ class SequenceMixin(models.AbstractModel):
                 and not record._sequence_matches_date()
             ):
                 raise ValidationError(_(
-                    "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
-                    "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
-                    "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence.",
+                    "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
+                    "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode.",
+                    date_field=record._fields[record._sequence_date_field]._description_string(self.env),
                     date=format_date(self.env, date),
                     sequence=sequence,
-                    date_field=record._fields[record._sequence_date_field]._description_string(self.env),
-                    sequence_field=record._fields[record._sequence_field]._description_string(self.env),
-                    model=self.env['ir.model']._get(record._name).display_name,
                 ))
 
     @api.depends(lambda self: [self._sequence_field])
