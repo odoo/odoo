@@ -26,7 +26,7 @@ export class MailCoreWeb {
             if (message.needaction && notifId > this.store.discuss.inbox.counter_bus_id) {
                 this.store.discuss.inbox.counter--;
             }
-            if (message.isStarred && notifId > this.store.discuss.starred.counter_bus_id) {
+            if (message.starred && notifId > this.store.discuss.starred.counter_bus_id) {
                 this.store.discuss.starred.counter--;
             }
         });
