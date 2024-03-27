@@ -33,6 +33,7 @@ Tento modul definuje:
     ],
     'demo': [
         'data/demo_company.xml',
+        'data/menuitem_data.xml',
     ],
     'license': 'LGPL-3',
 }

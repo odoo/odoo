@@ -6,14 +6,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-25 13:53+0000\n"
-"PO-Revision-Date: 2024-03-25 13:53+0000\n"
+"POT-Creation-Date: 2024-06-11 14:33+0000\n"
+"PO-Revision-Date: 2024-06-11 14:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__l10n_cz_scheme_code__0
+msgid "0 - Standard VAT regime"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__l10n_cz_scheme_code__1
+msgid "1 - Section 89 of VAT Act special scheme for a travel service"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move__l10n_cz_scheme_code__2
+msgid "2 - Section 90 of VAT Act margin scheme"
+msgstr ""
 
 #. module: l10n_cz
 #: model_terms:ir.ui.view,arch_db:l10n_cz.report_invoice_document
@@ -102,8 +117,30 @@ msgid "Basic - line 7"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__12
+msgid "Cereals and technical crops"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_58
 msgid "Change of deduction - line 53b"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_bank_statement_line__l10n_cz_scheme_code
+#: model:ir.model.fields,help:l10n_cz.field_account_move__l10n_cz_scheme_code
+#: model:ir.model.fields,help:l10n_cz.field_account_payment__l10n_cz_scheme_code
+msgid "Code indicating special scheme, needed for VAT control report."
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move_line__l10n_cz_supplies_code
+msgid "Code of Supply"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_move_line__l10n_cz_supplies_code
+msgid "Code of subject of supply in the domestic reverse charge regime."
 msgstr ""
 
 #. module: l10n_cz
@@ -141,8 +178,23 @@ msgid "Company ID:"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__4
+msgid "Construction and assembly work"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__4a
+msgid "Construction and assembly work - provision of workers"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_35
 msgid "Creditor - line 33"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.ui.menu,name:l10n_cz.account_reports_cz_statements_menu
+msgid "Czech Republic"
 msgstr ""
 
 #. module: l10n_cz
@@ -156,13 +208,43 @@ msgid "Deduction - line 52b"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__18
+msgid "Delivery of electricity certificates"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__20
+msgid "Delivery of gas through systems or networks to the trader"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_32
 msgid "Delivery of goods - line 31"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__7
+msgid "Delivery of goods after transfer of retention of title"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__6
+msgid "Delivery of goods originally provided as a guarantee"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_22
 msgid "Delivery of goods to another Member State (64) - line 20"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__3a
+msgid "Delivery of immovable property in forced sale"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__3
+msgid "Delivery of immovable property, if tax is applied to this delivery"
 msgstr ""
 
 #. module: l10n_cz
@@ -190,6 +272,21 @@ msgstr ""
 #. module: l10n_cz
 #: model:ir.model.fields,field_description:l10n_cz.field_base_document_layout__account_fiscal_country_id
 msgid "Fiscal Country"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__1
+msgid "Gold"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__1a
+msgid "Gold - brokering the delivery of investment gold"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__5
+msgid "Goods listed in Appendix No. 5"
 msgstr ""
 
 #. module: l10n_cz
@@ -230,8 +327,38 @@ msgid "In full"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_tax__l10n_cz_reverse_charge
+msgid "Indicates if the tax is to be used with reverse charge transactions"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__15
+msgid "Integrated circuits"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move_line__is_reverse_charge
+msgid "Is Reverse Charge"
+msgstr ""
+
+#. module: l10n_cz
 #: model:ir.model,name:l10n_cz.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model,name:l10n_cz.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__13
+msgid "Metals"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__14
+msgid "Mobile Phones"
 msgstr ""
 
 #. module: l10n_cz
@@ -273,6 +400,21 @@ msgstr ""
 #. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_53
 msgid "Part of the tax deduction in a reduced amount"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__11
+msgid "Permits for emissions according to Section 92f of the VAT Act"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__16
+msgid "Portable devices for automated data processing"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__21
+msgid "Provision of defined electronic communications services"
 msgstr ""
 
 #. module: l10n_cz
@@ -328,6 +470,11 @@ msgid "Refund of tax (84) - line 61"
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_tax__l10n_cz_reverse_charge
+msgid "Reverse Charge Tax"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_26
 msgid "Selected transactions (110b(2)) - line 24"
 msgstr ""
@@ -355,10 +502,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields,field_description:l10n_cz.field_account_bank_statement_line__l10n_cz_scheme_code
+#: model:ir.model.fields,field_description:l10n_cz.field_account_move__l10n_cz_scheme_code
+#: model:ir.model.fields,field_description:l10n_cz.field_account_payment__l10n_cz_scheme_code
+msgid "Special scheme code"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_25
 msgid ""
 "Supply of a new means of transport to a person not registered for tax in "
 "another Member State (Article 19(4)) - line 23"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__19
+msgid "Supply of electricity through systems or networks to a trader"
 msgstr ""
 
 #. module: l10n_cz
@@ -373,6 +532,11 @@ msgstr ""
 msgid ""
 "Supply of services with a place of supply in another Member State as defined"
 " in Article 102(1)(d) and (2) - line 21"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model,name:l10n_cz.model_account_tax
+msgid "Tax"
 msgstr ""
 
 #. module: l10n_cz
@@ -474,8 +638,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_cz
+#: model:ir.model.fields.selection,name:l10n_cz.selection__account_move_line__l10n_cz_supplies_code__17
+msgid "Video game console"
+msgstr ""
+
+#. module: l10n_cz
 #: model:account.report.line,name:l10n_cz.l10n_cz_vat_declaration_line_41
 msgid ""
 "When importing goods where the customs office is the tax administrator - "
 "line 42"
+msgstr ""
+
+#. module: l10n_cz
+#: model:ir.model.fields,help:l10n_cz.field_account_move_line__is_reverse_charge
+msgid "Whether line contains a tax related to reverse charge transactions"
 msgstr ""
