@@ -326,8 +326,9 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _inverse_type(self):
-        for record in self:
-            record._update_mail_alias()
+        if not self._context.get('account_journal_skip_alias_sync'):
+            for record in self:
+                record._update_mail_alias()
 
     @api.depends('name')
     def _compute_alias_domain(self):
