@@ -26,14 +26,12 @@
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
             <div class="flex-grow-1"></div>
-            <t t-if="!store.discuss.isActive or store.isSmall and store.discuss.activeTab !== 'mailbox'">
-                <t t-if="env.inDiscussApp and ['chat', 'channel'].includes(store.discuss.activeTab)">
-                    <div t-if="state.addingChat or state.addingChannel" class="p-4 border-bottom bg-light" t-ref="selector">
-                        <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
-                        <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
-                        <ChannelSelector category="category" autofocus="true"/>
-                    </div>
-                </t>
+            <t name="searchBar" t-if="!store.discuss.isActive or store.isSmall and store.discuss.activeTab !== 'mailbox'">
+                <div t-if="env.inDiscussApp and displayChannelSelector" class="p-4 border-bottom bg-light" t-ref="selector">
+                    <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
+                    <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
+                    <ChannelSelector category="category" autofocus="true"/>
+                </div>
                 <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat' and !state.addingChat)" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link'" t-on-click.stop="onClickNewMessage">
                     <t t-if="env.inDiscussApp">Start a conversation</t>
                     <t t-else="">New Message</t>
