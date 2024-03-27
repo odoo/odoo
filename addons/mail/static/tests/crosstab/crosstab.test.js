@@ -37,9 +37,10 @@ test("Messages are received cross-tab", async () => {
 test("Delete starred message updates counter", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const messageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         body: "Hello World!",
         model: "discuss.channel",
+        message_type: "comment",
         res_id: channelId,
         starred_partner_ids: [serverState.partnerId],
     });
@@ -48,12 +49,9 @@ test("Delete starred message updates counter", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains("button", { target: env2, text: "Starred1" });
-    rpc = rpcWithEnv(env1);
-    rpc("/mail/message/update_content", {
-        message_id: messageId,
-        body: "",
-        attachment_ids: [],
-    });
+    await click(":nth-child(1 of .o-mail-Message) [title='Expand']", { target: env2 });
+    await click(".o-mail-Message-moreMenu [title='Delete']", { target: env2 });
+    await click("button", { text: "Confirm" }, { target: env2 });
     await contains("button", { count: 0, target: env2, text: "Starred1" });
 });
 

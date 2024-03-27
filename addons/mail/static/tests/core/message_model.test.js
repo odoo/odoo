@@ -31,7 +31,7 @@ test("Message model properties", async () => {
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
-        starredPersonas: { id: serverState.partnerId, type: "partner" },
+        starred: true,
         model: "res.partner",
         thread: { id: serverState.partnerId, model: "res.partner" },
         res_id: serverState.partnerId,
