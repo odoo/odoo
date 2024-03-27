@@ -549,7 +549,7 @@ class AccountJournal(models.Model):
         result = super(AccountJournal, self).write(vals)
 
         # Ensure alias coherency when changing type
-        if 'type' in vals:
+        if 'type' in vals and not self._context.get('account_journal_skip_alias_sync'):
             for journal in self:
                 alias_vals = journal._alias_get_creation_values()
                 alias_vals = {
