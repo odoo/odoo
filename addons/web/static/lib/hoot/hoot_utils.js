@@ -33,6 +33,11 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
  *  tests: number;
  *  todo: number;
  * }} Reporting
+ *
+ * @typedef {{
+ *  tabSize: number;
+ *  keepInlineTextNodes: boolean;
+ * }} formatXMLOptions
  */
 
 /**
@@ -54,6 +59,7 @@ const {
     clearTimeout,
     console: { debug: $debug },
     Date,
+    DOMParser,
     Error,
     ErrorEvent,
     Map,
@@ -88,6 +94,86 @@ const $writeText = $clipboard.writeText.bind($clipboard);
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {Element} node
+ * @param {number} level
+ * @param {boolean} [keepInlineTextNodes=false]
+ * @returns {Object[]}
+ */
+const extractLayers = (node, level, keepInlineTextNodes = false) => {
+    const layers = [];
+    if (node.nodeType === 8) {
+        // COMMENT_NODE
+        return layers;
+    }
+    if (node.nodeType === 3) {
+        // TEXT_NODE
+        const textContent = node.nodeValue.replaceAll(/\n/g, "");
+        const trimmedTextContent = textContent.trim();
+        if (trimmedTextContent) {
+            const type = textContent === trimmedTextContent ? "inline-text" : "text";
+            layers.push({ level, type, value: { textContent: trimmedTextContent } });
+        }
+        return layers;
+    }
+    const [open, close] = node.outerHTML.replace(`>${node.innerHTML}<`, ">\n<").split("\n");
+    const layer = { level, type: "element", value: { open, close } };
+    layers.push(layer);
+    const childLayers = [...node.childNodes].map((child) => extractLayers(child, level + 1)).flat();
+    if (keepInlineTextNodes && childLayers.length === 1 && childLayers[0].type === "inline-text") {
+        layer.value.textContent = childLayers[0].value.textContent;
+    } else {
+        layers.push(...childLayers);
+    }
+    return layers;
+};
+
+/**
+ * @param {Object[]} layers
+ * @param {number} tabSize
+ * @returns {string}
+ */
+const generateStringFromLayers = (layers, tabSize) => {
+    let layerIndex = 0;
+    let result = "";
+    while (layers.length > 0) {
+        const layer = layers[layerIndex];
+        const { level, value } = layer;
+        const pad = new Array(tabSize * level + 1).join(" ");
+        let nextLayerIndex = layerIndex + 1;
+        if (value.open) {
+            if (value.textContent) {
+                // node with inline textContent (no wrapping white-spaces)
+                result += `${pad}${value.open}${value.textContent}${value.close}\n`;
+                layers.splice(layerIndex, 1);
+                nextLayerIndex--;
+            } else {
+                result += `${pad}${value.open}\n`;
+                delete value.open;
+            }
+        } else {
+            if (value.close) {
+                result += `${pad}${value.close}\n`;
+            } else if (value.textContent) {
+                result += `${pad}${value.textContent}\n`;
+            }
+            layers.splice(layerIndex, 1);
+            nextLayerIndex--;
+        }
+        if (nextLayerIndex >= layers.length) {
+            layerIndex = nextLayerIndex - 1;
+            continue;
+        }
+        const nextLayer = layers[nextLayerIndex];
+        if (nextLayer.level > layers[nextLayerIndex - 1].level) {
+            layerIndex = nextLayerIndex;
+        } else {
+            layerIndex = nextLayerIndex - 1;
+        }
+    }
+    return result;
+};
+
+/**
  * @param {unknown} number
  */
 const ordinal = (number) => {
@@ -109,6 +195,24 @@ const ordinal = (number) => {
             return `${strNumber}th`;
         }
     }
+};
+
+const parser = new DOMParser();
+
+/**
+ * @param {string} str
+ * @returns {Element}
+ */
+const parseXML = (str) => {
+    const xml = parser.parseFromString(str, "text/xml");
+    if (xml.getElementsByTagName("parsererror").length > 0) {
+        throw new Error(
+            `An error occured while parsing ${str}: ${
+                xml.getElementsByTagName("parsererror")[0].innerText
+            }`
+        );
+    }
+    return xml.documentElement;
 };
 
 const R_OBJECT = /^\[object \w+\]$/;
@@ -515,6 +619,17 @@ export function formatTime(value, unit) {
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
         seconds
     ).padStart(2, "0")}`;
+}
+
+/**
+ * @param {string} value
+ * @param {formatXMLOptions} [options={}]
+ * @returns {string}
+ */
+export function formatXML(value, options = {}) {
+    const xml = parseXML(value);
+    const layers = extractLayers(xml, 0, options.keepInlineTextNodes);
+    return generateStringFromLayers(layers, options.tabSize || 4);
 }
 
 /**
