@@ -126,6 +126,9 @@ Wysiwyg.include({
                 const collapseTogglerAttributes = ["aria-expanded"];
                 // Extra menu attributes to ignore.
                 const extraMenuClasses = ["nav-item", "nav-link", "dropdown-item", "active"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-left", "carousel-item-right",
+                    "carousel-item-next", "carousel-item-prev", "active"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -162,6 +165,16 @@ Wysiwyg.include({
                             if (record.target.matches("#top_menu li, #top_menu li > a")
                                     && record.attributeName === "class") {
                                 if (checkForExcludedClasses(record, extraMenuClasses)) {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
                                     return false;
                                 }
                             }
