@@ -1,13 +1,13 @@
-import { beforeEach, destroy, expect, getFixture, test } from "@odoo/hoot";
-import { queryAll, queryOne, scroll } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
+import { queryOne, scroll } from "@odoo/hoot-dom";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, xml, useRef, onMounted } from "@odoo/owl";
 import { defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { usePosition } from "@web/core/position/position_hook";
 
-beforeEach(
+before(
     () =>
-        document.readyState === "complete" ||
+        document.readyState !== "loading" ||
         new Promise((resolve) => addEventListener("load", resolve, { once: true }))
 );
 
@@ -410,19 +410,20 @@ test("is positioned relative to its containing block", async () => {
 });
 
 test("iframe: popper is outside, target inside", async () => {
-    await mountWithCleanup(/* xml */ `
-        <iframe class="container" style="height: 200px; width: 400px; margin: 25px" srcdoc="&lt;div id='target-iframe' /&gt;" />
-    `);
+    await mountWithCleanup(`<div id="container"/>`);
 
-    await Promise.all(
-        queryAll("iframe").map(
-            (iframe) =>
-                iframe.contentDocument.readyState === "complete" ||
-                new Promise((resolve) => iframe.addEventListener("load", resolve))
-        )
-    );
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, {
+        height: "200px",
+        width: "400px",
+        margin: "25px",
+    });
+    iframe.srcdoc = `<div id="target-iframe" />`;
+    const def = new Deferred();
+    iframe.onload = () => def.resolve();
+    queryOne("#container").appendChild(iframe);
+    await def;
 
-    const iframe = queryOne("iframe");
     const iframeBody = iframe.contentDocument.body;
     Object.assign(iframeBody.style, {
         display: "flex",
@@ -474,7 +475,7 @@ test("iframe: popper is outside, target inside", async () => {
     // Scrolling inside the iframe should reposition the popover accordingly
     const previousPositionSolution = onPositionedArgs.solution;
     const scrollOffset = 100;
-    scroll(iframe.contentDocument.documentElement, { y: scrollOffset });
+    scroll(queryOne("iframe").contentDocument.documentElement, { y: scrollOffset });
     await animationFrame();
     expect(["bottom-middle"]).toVerifySteps();
     expect(previousPositionSolution.top).toBe(onPositionedArgs.solution.top + scrollOffset);
@@ -493,19 +494,20 @@ test("iframe: popper is outside, target inside", async () => {
 });
 
 test("iframe: both popper and target inside", async () => {
-    await mountWithCleanup(/* xml */ `
-        <iframe class="container" style="height: 300px; width: 400px" srcdoc="&lt;div id='inner-container' /&gt;" />
-    `);
+    await mountWithCleanup(`<div id="container"/>`);
 
-    await Promise.all(
-        queryAll("iframe").map(
-            (iframe) =>
-                iframe.contentDocument.readyState === "complete" ||
-                new Promise((resolve) => iframe.addEventListener("load", resolve))
-        )
-    );
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, {
+        height: "200px",
+        width: "400px",
+        margin: "25px",
+    });
+    iframe.srcdoc = `<div id="inner-container" />`;
+    const def = new Deferred();
+    iframe.onload = () => def.resolve();
+    queryOne("#container").appendChild(iframe);
+    await def;
 
-    const iframe = queryOne("iframe");
     const iframeBody = iframe.contentDocument.body;
     Object.assign(iframeBody.style, {
         display: "flex",
