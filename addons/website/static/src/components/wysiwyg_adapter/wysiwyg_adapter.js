@@ -243,6 +243,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Offcanvas attributes to ignore.
                 const offcanvasClasses = ["show"];
                 const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
+                    "carousel-item-next", "carousel-item-prev", "active"];
+                const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -269,6 +273,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                                 }
                             } else if (record.target.matches(".offcanvas")
                                     && offcanvasAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".carousel-indicators > li")
+                                    && carouselIndicatorAttributes.includes(record.attributeName)) {
                                 return false;
                             }
                         }
