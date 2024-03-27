@@ -195,7 +195,7 @@ test(`toggle favorite correctly clears filter, groupbys, comparison and field "o
         searchViewArch: `
             <search>
                 <field string="Foo" name="foo"/>
-                <filter string="Date Field Filter" name="positive" date="date_field" default_period="this_year"/>
+                <filter string="Date Field Filter" name="positive" date="date_field" default_period="year"/>
                 <filter string="Date Field Groupby" name="coolName" context="{'group_by': 'date_field'}"/>
             </search>
         `,

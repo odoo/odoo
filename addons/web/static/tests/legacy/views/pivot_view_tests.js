@@ -707,7 +707,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                 </search>`,
             context: { search_default_date_filter: true },
         });
@@ -775,7 +775,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
                 searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                 </search>`,
                 context: { search_default_date_filter: true },
             });
@@ -852,7 +852,7 @@ QUnit.module("Views", (hooks) => {
             arch: "<pivot/>",
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                 </search>`,
             context: { search_default_date_filter: true },
         });
@@ -900,7 +900,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `<pivot><field name="product_id" type="row"/></pivot>`,
                 searchViewArch: `
                     <search>
-                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                        <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                     </search>`,
                 context: { search_default_date_filter: true },
             });
@@ -3534,7 +3534,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='last_year'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='year-1'/>
                 </search>`,
             context: { search_default_date_filter: 1 },
             mockRPC(route, args) {
@@ -3678,7 +3678,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='antepenultimate_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month-2'/>
                 </search>`,
             context: { search_default_date_filter: 1 },
         });
@@ -3741,7 +3741,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<pivot><field name="customer" type="row"/></pivot>',
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                 </search>`,
             context: { search_default_date_filter: 1 },
             mockRPC(route, args) {
@@ -3796,7 +3796,7 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
                 searchViewArch: `
                     <search>
-                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                        <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                     </search>`,
                 context: { search_default_date_filter: 1 },
             });
@@ -4170,7 +4170,7 @@ QUnit.module("Views", (hooks) => {
                     </pivot>`,
                 searchViewArch: `
                     <search>
-                        <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                        <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                     </search>`,
                 context: { search_default_date_filter: 1 },
             });
@@ -4280,7 +4280,7 @@ QUnit.module("Views", (hooks) => {
                 </pivot>`,
             searchViewArch: `
                 <search>
-                    <filter name="date_filter" date="date" domain="[]" default_period='this_month'/>
+                    <filter name="date_filter" date="date" domain="[]" default_period='month'/>
                 </search>`,
         });
 
