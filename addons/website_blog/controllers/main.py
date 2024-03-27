@@ -122,9 +122,6 @@ class WebsiteBlog(http.Controller):
         total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
-        first_post = BlogPost
-        if posts and not blog and posts[0].website_published:
-            first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
 
         url_args = dict()
@@ -150,21 +147,18 @@ class WebsiteBlog(http.Controller):
         tag_category = tools.lazy(lambda: sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper()))
         other_tags = tools.lazy(lambda: sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper()))
         nav_list = tools.lazy(self.nav_list)
-        # for performance prefetch the first post with the others
-        post_ids = (first_post | posts).ids
         # and avoid accessing related blogs one by one
         posts.blog_id
 
         return {
             'date_begin': date_begin,
             'date_end': date_end,
-            'first_post': first_post.with_prefetch(post_ids),
             'other_tags': other_tags,
             'tag_category': tag_category,
             'nav_list': nav_list,
             'tags_list': self.tags_list,
             'pager': pager,
-            'posts': posts.with_prefetch(post_ids),
+            'posts': posts.with_prefetch(),
             'tag': tags,
             'active_tag_ids': active_tags.ids,
             'domain': domain,
