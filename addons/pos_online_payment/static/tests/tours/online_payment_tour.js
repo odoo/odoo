@@ -17,6 +17,7 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             PaymentScreen.emptyPaymentlines("48.0"),
 
             PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "48.0"),
             PaymentScreen.enterPaymentLineAmount("Online payment", "47"),
             PaymentScreen.selectedPaymentlineHas("Online payment", "47.0"),
             PaymentScreen.remainingIs("1.0"),
