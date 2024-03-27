@@ -15,7 +15,7 @@ import secrets
 from ..tools.pos_order_data import PoSOrderData
 
 from odoo import api, fields, models, _, Command
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.osv.expression import AND
 from odoo.service.common import exp_version
 from odoo.tools import float_is_zero, float_compare, convert
@@ -2236,6 +2236,8 @@ class PosSession(models.Model):
         return self.env['product.product'].sudo().search_count(['&', ('available_in_pos', '=', True), ('list_price', '>', 0)], limit=1) > 0
 
     def _load_onboarding_data(self):
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessDenied()
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
 
     def load_product_frontend(self):
