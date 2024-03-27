@@ -187,14 +187,11 @@ class CountryState(models.Model):
             domain = [('name', operator, name)]
 
         fallback_domain = None
-        if name:
-            m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
-            if m:
-                fallback_domain = [
-                    ('name', operator, m['name'].strip()),
-                    '|', ('country_id.name', 'ilike', m['country'].strip()),
-                         ('country_id.code', '=', m['country'].strip()),
-                ]
+        if name and operator in ['ilike', '=']:
+            fallback_domain = self._get_name_search_domain(name, operator)
+
+        if name and operator in ['in', 'any']:
+            fallback_domain = expression.OR([self._get_name_search_domain(n, '=') for n in name])
 
         first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
         return list(first_state_ids) + [
@@ -207,6 +204,17 @@ class CountryState(models.Model):
             if fallback_domain
             else []
         )
+
+    def _get_name_search_domain(self, name, operator):
+        m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
+        if m:
+            return [
+                ('name', operator, m['name'].strip()),
+                '|', ('country_id.name', 'ilike', m['country'].strip()),
+                ('country_id.code', '=', m['country'].strip()),
+            ]
+        return None
+
 
     def name_get(self):
         result = []
