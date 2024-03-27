@@ -7,10 +7,10 @@ export class PosCategory extends Base {
 
     getAllChildren() {
         const children = [this];
-        if (this.child_id.length === 0) {
+        if (this.child_ids.length === 0) {
             return children;
         }
-        for (const child of this.child_id) {
+        for (const child of this.child_ids) {
             children.push(...child.getAllChildren());
         }
         return children;
