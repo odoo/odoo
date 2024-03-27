@@ -93,10 +93,11 @@ class Orderpoint(models.Model):
 
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
-        'product.supplierinfo', string='Product Supplier', check_company=True,
+        'product.supplierinfo', string='Supplier', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
     vendor_id = fields.Many2one(related='supplier_id.partner_id', string="Vendor", store=True)
     purchase_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the purchase routes.")
+    product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
     @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
@@ -113,6 +114,11 @@ class Orderpoint(models.Model):
             if 'buy' in orderpoint.rule_ids.mapped('action'):
                 orderpoint.visibility_days = orderpoint.purchase_visibility_days
         return res
+
+    @api.depends('product_tmpl_id', 'product_tmpl_id.seller_ids', 'product_tmpl_id.seller_ids.sequence', 'product_tmpl_id.seller_ids.partner_id')
+    def _compute_product_supplier_id(self):
+        for orderpoint in self:
+            orderpoint.product_supplier_id = orderpoint.product_tmpl_id.seller_ids.sorted('sequence')[:1].partner_id.id
 
     def _set_visibility_days(self):
         res = super()._set_visibility_days()

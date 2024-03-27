@@ -1,8 +1,18 @@
 /** @odoo-module */
 
 import { ListController } from '@web/views/list/list_controller';
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class StockOrderpointListController extends ListController {
+    static template = "stock.StockOrderpoint.listView";
+
+    static components = {
+        ...super.components,
+        Dropdown,
+        DropdownItem,
+    }
+
     async onClickOrder(force_to_max) {
         const resIds = await this.getSelectedResIds();
         const action = await this.model.orm.call(this.props.resModel, 'action_replenish', [resIds], {
