@@ -299,6 +299,7 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # execute event reminder scheduler explicitly after its schedule date
         new_end = self.event_date_end + relativedelta(hours=2)
         with self.mock_datetime_and_now(new_end), self.mock_mail_gateway():
+            (reg1 + reg2 + reg3).invalidate_recordset(['event_date_range'])
             self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished

@@ -3,10 +3,8 @@
 import logging
 import os
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.tools import format_date, email_normalize, email_normalize_all
+from odoo.tools import email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
 _logger = logging.getLogger(__name__)
 
@@ -56,6 +54,7 @@ class EventRegistration(models.Model):
         readonly=False, store=True)
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
+    event_date_range = fields.Char("Date Range", compute="_compute_date_range")
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
     event_user_id = fields.Many2one(string='Event Responsible', related='event_id.user_id', readonly=True)
     company_id = fields.Many2one(
@@ -147,6 +146,11 @@ class EventRegistration(models.Model):
                     registration.date_closed = self.env.cr.now()
                 else:
                     registration.date_closed = False
+
+    @api.depends("event_id", "partner_id")
+    def _compute_date_range(self):
+        for registration in self:
+            registration.event_date_range = registration.event_id._get_date_range_str(registration.partner_id.lang)
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
@@ -387,24 +391,6 @@ class EventRegistration(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
-
-    def get_date_range_str(self, lang_code=False):
-        self.ensure_one()
-        today = fields.Datetime.now()
-        event_date = self.event_begin_date
-        diff = (event_date.date() - today.date())
-        if diff.days <= 0:
-            return _('today')
-        elif diff.days == 1:
-            return _('tomorrow')
-        elif (diff.days < 7):
-            return _('in %d days', diff.days)
-        elif (diff.days < 14):
-            return _('next week')
-        elif event_date.month == (today + relativedelta(months=+1)).month:
-            return _('next month')
-        else:
-            return _('on %(date)s', date=format_date(self.env, self.event_begin_date, lang_code=lang_code, date_format='medium'))
 
     def _get_registration_summary(self):
         self.ensure_one()

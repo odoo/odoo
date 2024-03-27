@@ -114,19 +114,23 @@ class TestEventData(TestEventInternalsCommon):
                 'date_end': datetime(2020, 4, 5, 18, 0, 0),
             })
             registration = event.registration_ids[0]
-            self.assertEqual(registration.get_date_range_str(), u'today')
+            self.assertEqual(registration.event_date_range, 'today')
 
             event.date_begin = datetime(2020, 2, 1, 15, 0, 0)
-            self.assertEqual(registration.get_date_range_str(), u'tomorrow')
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'tomorrow')
 
             event.date_begin = datetime(2020, 2, 2, 6, 0, 0)
-            self.assertEqual(registration.get_date_range_str(), u'in 2 days')
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'in 2 days')
 
             event.date_begin = datetime(2020, 2, 20, 17, 0, 0)
-            self.assertEqual(registration.get_date_range_str(), u'next month')
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'next month')
 
             event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
-            self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020')
+            registration.invalidate_recordset(['event_date_range'])
+            self.assertEqual(registration.event_date_range, 'on Mar 1, 2020')
 
             # Is actually 8:30 to 20:00 in Mexico
             event.write({
