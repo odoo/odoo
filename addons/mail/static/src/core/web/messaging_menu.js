@@ -27,15 +27,12 @@ export class MessagingMenu extends Component {
         this.installPrompt = useState(useService("installPrompt"));
         this.ui = useState(useService("ui"));
         this.state = useState({
-            addingChat: false,
-            addingChannel: false,
+            adding: false,
             searchOpen: false,
         });
         this.dropdown = useDropdownState();
 
-        onExternalClick("selector", () => {
-            Object.assign(this.state, { addingChat: false, addingChannel: false });
-        });
+        onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
     }
 
     beforeOpen() {
@@ -147,7 +144,7 @@ export class MessagingMenu extends Component {
 
     onClickNewMessage() {
         if (this.ui.isSmall || this.env.inDiscussApp) {
-            this.state.addingChat = true;
+            Object.assign(this.state, { adding: "chat" });
         } else {
             this.store.openNewMessage();
             this.dropdown.close();
@@ -242,6 +239,10 @@ export class MessagingMenu extends Component {
             value++;
         }
         return value;
+    }
+
+    get displayStartConversation() {
+        return this.store.discuss.activeTab !== "channel" && !this.state.adding;
     }
 }
 
