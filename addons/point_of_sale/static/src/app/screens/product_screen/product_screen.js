@@ -92,7 +92,7 @@ export class ProductScreen extends Component {
     }
     getChildCategories(selectedCategory) {
         return selectedCategory
-            ? [...selectedCategory.child_id]
+            ? [...selectedCategory.child_ids]
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
     }
     getCategoriesAndSub() {

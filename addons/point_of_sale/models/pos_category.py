@@ -23,7 +23,7 @@ class PosCategory(models.Model):
 
     name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
-    child_id = fields.One2many('pos.category', 'parent_id', string='Children Categories')
+    child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     color = fields.Integer('Color', required=False, default=get_default_color)
@@ -71,7 +71,7 @@ class PosCategory(models.Model):
 
     def _get_descendants(self):
         available_categories = self
-        for child in self.child_id:
+        for child in self.child_ids:
             available_categories |= child
             available_categories |= child._get_descendants()
         return available_categories
