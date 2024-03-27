@@ -11,7 +11,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">25</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">411</field>
@@ -49,7 +49,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">25</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">411</field>
@@ -83,7 +83,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">25</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">412</field>
@@ -224,7 +224,7 @@
             <field name="name">IVA 15% (411, Bienes)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">30</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">411</field>
@@ -261,7 +261,7 @@
             <field name="name">IVA 15% (411, Servicios)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">30</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">411</field>
@@ -294,7 +294,7 @@
             <field name="name">IVA 15% (412, Activos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">30</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">412</field>
@@ -573,7 +573,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">115</field>
+            <field name="sequence">128</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">444</field>
@@ -602,12 +602,12 @@
                 })]"/>
         </record>
         <record id="tax_vat_444" model="account.tax.template">
-            <!-- IVA 12 en ventas por reembolso como intermediario -->
+            <!-- IVA 12% en ventas por reembolso como intermediario -->
             <field name="name">IVA 12% (444, Reembolsos)</field>
             <field name="active">False</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">120</field>
+            <field name="sequence">125</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">444</field>
@@ -640,7 +640,7 @@
             <field name="name">IVA 15% (444, Reembolsos)</field>
             <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">125</field>
+            <field name="sequence">115</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">444</field>
@@ -771,7 +771,7 @@
             <field name="name">IVA 5% (510, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
+            <field name="sequence">13</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -808,7 +808,7 @@
             <field name="name">IVA 5% (510, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
+            <field name="sequence">13</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -845,7 +845,7 @@
             <field name="name">IVA 5% (510, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
+            <field name="sequence">13</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -882,7 +882,7 @@
             <field name="name">IVA 5% (510, 15 Servicios Digitales)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">5</field>
+            <field name="sequence">13</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -920,7 +920,7 @@
             <field name="name">IVA 5% (511, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">511</field>
@@ -953,7 +953,7 @@
             <field name="name">IVA 5% (512, 04 Activos Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -984,7 +984,7 @@
             <field name="name">IVA 5% (512, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1015,7 +1015,7 @@
             <field name="name">IVA 5% (512, 07 Inventario Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1050,7 +1050,7 @@
             <field name="name">IVA 5% (513, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">513</field>
@@ -1083,7 +1083,7 @@
             <field name="name">IVA 5% (514, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">514</field>
@@ -1116,7 +1116,7 @@
             <field name="name">IVA 5% (515, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">515</field>
@@ -1151,7 +1151,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">9</field>
+            <field name="sequence">11</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1189,7 +1189,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">9</field>
+            <field name="sequence">11</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1227,7 +1227,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">9</field>
+            <field name="sequence">11</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1265,7 +1265,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">9</field>
+            <field name="sequence">11</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1304,7 +1304,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">511</field>
@@ -1338,7 +1338,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1370,7 +1370,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1402,7 +1402,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1438,7 +1438,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">513</field>
@@ -1472,7 +1472,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">514</field>
@@ -1506,7 +1506,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">515</field>
@@ -1540,7 +1540,7 @@
             <field name="name">IVA 15% (510, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">12</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1577,7 +1577,7 @@
             <field name="name">IVA 15% (510, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">12</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1614,7 +1614,7 @@
             <field name="name">IVA 15% (510, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">12</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1651,7 +1651,7 @@
             <field name="name">IVA 15% (510, 15 Servicios Digitales)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">12</field>
+            <field name="sequence">5</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">510</field>
@@ -1689,7 +1689,7 @@
             <field name="name">IVA 15% (511, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">511</field>
@@ -1722,7 +1722,7 @@
             <field name="name">IVA 15% (512, 04 Activos Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1753,7 +1753,7 @@
             <field name="name">IVA 15% (512, 05 Liq. Viaje Gasto IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1784,7 +1784,7 @@
             <field name="name">IVA 15% (512, 07 Inventario Costo IR)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">512</field>
@@ -1819,7 +1819,7 @@
             <field name="name">IVA 15% (513, 01 Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">513</field>
@@ -1852,7 +1852,7 @@
             <field name="name">IVA 15% (514, 06 Inventario Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">514</field>
@@ -1885,7 +1885,7 @@
             <field name="name">IVA 15% (515, 03 Activos Crédito IVA)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">515</field>
@@ -2235,7 +2235,7 @@
             <field name="name">IVA 5% (545, 08 Reembolso)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">545</field>
@@ -2269,7 +2269,7 @@
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">545</field>
@@ -2302,7 +2302,7 @@
             <field name="name">IVA 15% (545, 08 Reembolso)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">545</field>
@@ -2434,7 +2434,7 @@
             <field name="name">IVA 5% (545, 09 Reembolso Siniestro)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">6</field>
+            <field name="sequence">14</field>
             <field name="amount">5.0</field>
             <field name="description">IVA 5%</field>
             <field name="l10n_ec_code_base">545</field>
@@ -2463,12 +2463,12 @@
                 })]"/>
         </record>
         <record id="tax_vat_545_sup_09" model="account.tax.template">
-            <!-- IVA 12 en compras por reembolso como intermediario -->
+            <!-- IVA 12% en compras por reembolso como intermediario -->
             <field name="name">IVA 12% (545, 09 Reembolso Siniestro)</field>
             <field name="active">False</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">10</field>
+            <field name="sequence">12</field>
             <field name="amount">12.0</field>
             <field name="description">IVA 12%</field>
             <field name="l10n_ec_code_base">545</field>
@@ -2501,7 +2501,7 @@
             <field name="name">IVA 15% (545, 09 Reembolso Siniestro)</field>
             <field name="type_tax_use">purchase</field>
             <field name="amount_type">percent</field>
-            <field name="sequence">14</field>
+            <field name="sequence">6</field>
             <field name="amount">15.0</field>
             <field name="description">IVA 15%</field>
             <field name="l10n_ec_code_base">545</field>
