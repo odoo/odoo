@@ -36,7 +36,7 @@ class StockWarehouseOrderpoint(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
-        check_company=True, ondelete="cascade", required=True)
+        check_company=True, ondelete="cascade", required=True, index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
@@ -284,7 +284,13 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
+<<<<<<< saas-17.4
     @api.depends('qty_to_order_manual', 'qty_to_order_computed')
+||||||| b9c552a5013bd0ede97ec34448c65a61977f71ed
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+=======
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id')
+>>>>>>> c08cae984137cd99fa7ab2cdf74aa6650a75b08a
     def _compute_qty_to_order(self):
         for orderpoint in self:
             orderpoint.qty_to_order = orderpoint.qty_to_order_manual if orderpoint.qty_to_order_manual else orderpoint.qty_to_order_computed
