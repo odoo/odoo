@@ -531,3 +531,29 @@ class TestPurchase(AccountTestInvoicingCommon):
         product._invalidate_cache()
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+    def test_purchase_order_multi_company(self):
+        """
+        Check that the unit price is correct in a multi company environment
+        when editing a PO with another company selected.
+        """
+        company_a = self.env.user.company_ids[0]
+        company_b = self.env.user.company_ids[1]
+        product = self.env['product.product'].with_company(company_a).create({
+            'name': 'product_test',
+            'standard_price': 3.0
+        })
+        product.with_company(company_b).standard_price = 5.0
+
+        po_form = Form(self.env['purchase.order'].with_company(company_a))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+        po = po_form.save()
+
+        po_form = Form(po.with_company(company_b))
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_id = product
+        po = po_form.save()
+
+        self.assertEqual(po.order_line[0].price_unit, 3.0)
