@@ -192,15 +192,29 @@ class CountryState(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if value and operator not in expression.NEGATIVE_TERM_OPERATORS and (m := re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", value)):
-            fallback_domain = [
-                ('name', operator, m['name'].strip()),
-                ('country_id', 'ilike', m['country'].strip()),
-            ]
-            domain = expression.OR([domain, fallback_domain])
+        if value and operator not in expression.NEGATIVE_TERM_OPERATORS:
+            if operator in ('ilike', '='):
+                domain = expression.OR([
+                    domain, self._get_name_search_domain(value, operator),
+                ])
+            elif operator == 'in':
+                domain = expression.OR([
+                    domain,
+                    *(self._get_name_search_domain(name, '=') for name in value),
+                ])
         if country_id := self.env.context.get('country_id'):
             domain = expression.AND([domain, [('country_id', '=', country_id)]])
         return domain
+
+    def _get_name_search_domain(self, name, operator):
+        m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
+        if m:
+            return [
+                ('name', operator, m['name'].strip()),
+                '|', ('country_id.name', 'ilike', m['country'].strip()),
+                ('country_id.code', '=', m['country'].strip()),
+            ]
+        return [expression.FALSE_LEAF]
 
     @api.depends('country_id')
     def _compute_display_name(self):
