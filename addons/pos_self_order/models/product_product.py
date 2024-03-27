@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+
 from typing import List, Dict, Optional
+
+from copy import deepcopy
 
 from odoo import models
 
@@ -35,9 +39,16 @@ class ProductProduct(models.Model):
     def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
         self.ensure_one()
 
-        attributes = self._filter_applicable_attributes(
-            self.env["pos.session"]._get_attributes_by_ptal_id()
-        )
+        attributes = self.env.context.get("cached_attributes_by_ptal_id")
+
+        if attributes is None:
+            attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
+            attributes = self._filter_applicable_attributes(attributes)
+        else:
+            # Performance trick to avoid unnecessary calls to _get_attributes_by_ptal_id()
+            # Needs to be deep-copied because attributes is potentially mutated
+            attributes = deepcopy(self._filter_applicable_attributes(attributes))
+
         return self._add_price_info_to_attributes(
             attributes,
             pos_config_sudo,
@@ -93,6 +104,8 @@ class ProductProduct(models.Model):
         """
         returns the list of products with the necessary info for the self order app
         """
+        attributes_by_ptal_id = self.env["pos.session"]._get_attributes_by_ptal_id()
+        self = self.with_context(cached_attributes_by_ptal_id=attributes_by_ptal_id)
         return [
             {
                 "price_info": product._get_price_info(pos_config),
