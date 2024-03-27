@@ -5,11 +5,12 @@ import { Deferred, advanceTime, runAllTimers, tick } from "@odoo/hoot-mock";
 import { parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
-    test("advanceTime", async () => {
+    // timeout of 1 second to ensure timeouts are actually mocked
+    test.timeout(1_000)("advanceTime", async () => {
         expect.assertions(8);
 
-        const timeoutId = window.setTimeout(() => expect.step("timeout"), 100);
-        const intervalId = window.setInterval(() => expect.step("interval"), 150);
+        const timeoutId = window.setTimeout(() => expect.step("timeout"), 2_000);
+        const intervalId = window.setInterval(() => expect.step("interval"), 3_000);
         const animationHandle = window.requestAnimationFrame((delta) => {
             expect(delta).toBeGreaterThan(0);
             expect.step("animation");
@@ -20,17 +21,17 @@ describe(parseUrl(import.meta.url), () => {
         expect(animationHandle).toBeGreaterThan(0);
         expect([]).toVerifySteps();
 
-        await advanceTime(1000); // just to be sure
+        await advanceTime(10_000); // 10 seconds
 
         expect(["animation", "timeout", "interval"]).toVerifySteps();
 
-        await advanceTime(1000);
+        await advanceTime(10_000);
 
         expect(["interval"]).toVerifySteps();
 
         window.clearInterval(intervalId);
 
-        await advanceTime(1000);
+        await advanceTime(10_000);
 
         expect([]).toVerifySteps();
     });
