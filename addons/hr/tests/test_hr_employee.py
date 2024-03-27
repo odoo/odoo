@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from psycopg2.errors import UniqueViolation
 
 from odoo.tests import Form, users
 from odoo.addons.hr.tests.common import TestHrCommon
-
+from odoo.tools import mute_logger
+from odoo.exceptions import ValidationError
 
 class TestHrEmployee(TestHrCommon):
 
@@ -249,6 +250,37 @@ class TestHrEmployee(TestHrCommon):
         user_fields = ['email', 'phone', 'im_status']
         for field in user_fields:
             self.assertEqual(employee[field], user[field])
+
+    def test_set_user_on_new_employee(self):
+        test_company = self.env['res.company'].create({
+            'name': 'Test User Company',
+        })
+        self.env['hr.employee'].create({
+            'name': 'Hr Officer - employee',
+            'user_id': self.res_users_hr_officer.id,
+            'company_id': test_company.id,
+        })
+
+        self.res_users_hr_officer.write({'company_ids': test_company.ids, 'company_id': test_company.id})
+
+        # Try to set the user with existing employee in the company, on a new employee form
+        employee_form = Form(self.env['hr.employee'].with_user(self.res_users_hr_officer).with_company(company=test_company.id))
+        employee_form.name = "Second employee"
+        employee_form.user_id = self.res_users_hr_officer
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+            employee_form.save()
+
+        employee_2 = self.env['hr.employee'].create({
+            'name': 'Hr 2 - employee',
+            'company_id': test_company.id,
+        })
+
+        # Try to set the user with existing employee in the company, on another existing employee
+        employee_2_form = Form(employee_2.with_user(self.res_users_hr_officer).with_company(company=test_company.id))
+        employee_2_form.user_id = self.res_users_hr_officer
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.assertRaises(ValidationError), self.cr.savepoint():
+            employee_2_form.save()
+
 
     @users('admin')
     def test_change_user_on_employee(self):
