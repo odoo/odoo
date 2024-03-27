@@ -1169,11 +1169,12 @@ export class PosStore extends Reactive {
             if (!(error instanceof ConnectionLostError)) {
                 for (const order of orders) {
                     const reactiveOrder = this.orders.find((o) => o.uid === order.id);
-                    reactiveOrder.finalized = false;
-                    this.db.remove_order(reactiveOrder.uid);
-                    this.db.save_unpaid_order(reactiveOrder);
+                    if (reactiveOrder) {
+                        reactiveOrder.finalized = false;
+                        this.db.remove_order(reactiveOrder.uid);
+                        this.db.save_unpaid_order(reactiveOrder);
+                    }
                 }
-                this.set_synch("connected");
             }
             throw error;
         } finally {
