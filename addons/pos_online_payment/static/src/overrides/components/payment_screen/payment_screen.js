@@ -15,7 +15,7 @@ patch(PaymentScreen.prototype, {
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();
         }
-        return super.addNewPaymentLine(...arguments);
+        return await super.addNewPaymentLine(...arguments);
     },
     getRemainingOnlinePaymentLines() {
         return this.paymentLines.filter(
