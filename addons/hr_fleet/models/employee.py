@@ -13,7 +13,7 @@ class Employee(models.Model):
         'fleet.vehicle', 'driver_employee_id', string='Vehicles (private)',
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )
-    license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate")
+    license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate", groups="hr.group_hr_user")
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):

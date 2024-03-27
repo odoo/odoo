@@ -15,8 +15,8 @@ class Users(models.Model):
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
-    equipment_ids = fields.One2many('maintenance.equipment', 'employee_id')
-    equipment_count = fields.Integer('Equipment Count', compute='_compute_equipment_count')
+    equipment_ids = fields.One2many('maintenance.equipment', 'employee_id', groups="hr.group_hr_user")
+    equipment_count = fields.Integer('Equipment Count', compute='_compute_equipment_count', groups="hr.group_hr_user")
 
     @api.depends('equipment_ids')
     def _compute_equipment_count(self):
