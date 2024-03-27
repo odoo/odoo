@@ -46,8 +46,14 @@ class StockWarehouseOrderpoint(models.Model):
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
+<<<<<<< HEAD
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
         check_company=True, ondelete="cascade", required=True)
+||||||| parent of bac5583146a7 (temp)
+        check_company=True, ondelete="cascade", required=True)
+=======
+        check_company=True, ondelete="cascade", required=True, index=True)
+>>>>>>> bac5583146a7 (temp)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
@@ -261,7 +267,13 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
+<<<<<<< HEAD
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+||||||| parent of bac5583146a7 (temp)
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty')
+=======
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'product_id', 'location_id')
+>>>>>>> bac5583146a7 (temp)
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:

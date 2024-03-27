@@ -53,6 +53,7 @@ class TestProcRule(TransactionCase):
 
         # Then, creates a rule and adds it into the route's rules.
         reception_route.rule_ids.action_archive()
+<<<<<<< HEAD
         self.env['stock.rule'].create({
             'name': 'Looping Rule',
             'route_id': reception_route.id,
@@ -62,9 +63,34 @@ class TestProcRule(TransactionCase):
             'procure_method': 'make_to_order',
             'picking_type_id': warehouse.int_type_id.id,
         })
+||||||| parent of bac5583146a7 (temp)
+        self.env['stock.rule'].create({
+            'name': 'Looping Rule',
+            'route_id': reception_route.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'action': 'pull_push',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+=======
+>>>>>>> bac5583146a7 (temp)
 
-        # Tries to open the Replenishment view -> It should raise an UserError.
+        # Tries to create loop in rules -> It should raise an UserError.
+        # As assertRaises() creates a savepoint, resulting in a flush, the UserError would already be triggered on the 
+        # 'with self.assertRaises(UserError):' line when computing qty_to_order, failing the test.
+        # To avoid this, we move both the create() and the action_open_orderpoints() inside of the assertRaises.
         with self.assertRaises(UserError):
+            self.env['stock.rule'].create({
+                'name': 'Looping Rule',
+                'route_id': reception_route.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_src_id': warehouse.lot_stock_id.id,
+                'action': 'pull_push',
+                'procure_method': 'make_to_order',
+                'picking_type_id': warehouse.int_type_id.id,
+            })
+            
             self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
     def test_proc_rule(self):
