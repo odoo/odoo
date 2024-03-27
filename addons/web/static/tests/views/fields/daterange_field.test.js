@@ -915,3 +915,51 @@ test("there is no arrow between the dates with option always_range if nothing is
 
     expect(".fa-long-arrow-right").toHaveCount(1);
 });
+
+test("invalid empty date with optional end date", async () => {
+    Partner._fields.date_end = fields.Date({ string: "Date end" });
+    Partner._records[0].date_end = "2017-02-08";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+        <form>
+            <label for="date" string="Daterange" />
+            <field name="date" widget="daterange" options="{'end_date_field': 'date_end','always_range': '1'}"  string="Planned Date" required="date_end"/>
+            <field name="date_end" invisible="1" required="date"/>
+        </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_daterange input").toHaveCount(2);
+    await contains(".o_field_daterange input:eq(1)").click();
+    await contains("input[data-field=date_end]").clear();
+    await contains(".o_form_view").click();
+    expect(".o_field_daterange input:eq(1)").toHaveValue("");
+    expect(".o_field_daterange").toHaveClass("o_field_invalid");
+});
+
+test("invalid empty date with optional start date", async () => {
+    Partner._fields.date_end = fields.Date({ string: "Date end" });
+    Partner._records[0].date_end = "2017-02-08";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+        <form>
+            <label for="date_end" string="Daterange" />
+            <field name="date" invisible="1" required="date_end"/>
+            <field name="date_end" widget="daterange" options="{'start_date_field': 'date','always_range': '1'}" string="Planned Date" required="date"/>
+        </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_daterange input").toHaveCount(2);
+    await contains(".o_field_daterange input:eq(0)").click();
+    await contains("input[data-field=date]").clear();
+    await contains(".o_form_view").click();
+    expect(".o_field_daterange input:eq(0)").toHaveValue("");
+    expect(".o_field_daterange").toHaveClass("o_field_invalid");
+});
