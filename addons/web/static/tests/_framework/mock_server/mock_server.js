@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
 import { deepCopy, isObject } from "@web/core/utils/objects";
 import { serverState } from "../mock_server_state.hoot";
-import { fetchModelDefinitions } from "../module_set.hoot";
+import { fetchModelDefinitions, registerModelToFetch } from "../module_set.hoot";
 import { DEFAULT_FIELD_VALUES, FIELD_SYMBOL } from "./mock_fields";
 import {
     FIELD_NOT_FOUND,
@@ -219,6 +219,7 @@ const DEFAULT_MENU = {
 };
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
 const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
+const serverFields = new WeakSet();
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -590,6 +591,7 @@ export class MockServer {
 
     async loadModels() {
         const models = this.modelSpecs;
+        const serverModelInheritances = new Set();
         this.modelSpecs = [];
         if (this.modelNamesToFetch.size) {
             const modelEntries = await fetchModelDefinitions(this.modelNamesToFetch);
@@ -601,18 +603,25 @@ export class MockServer {
             ] of modelEntries) {
                 const localModelDef = [...models].find((model) => model._name === name);
                 localModelDef._description = description;
-                localModelDef._inherit = [...new Set([...(localModelDef._inherit || []), inherit])];
                 localModelDef._order = order;
                 localModelDef._parent_name = parent_name;
                 localModelDef._rec_name = rec_name;
+                const inheritList = new Set(safeSplit(localModelDef._inherit));
+                for (const inherittedModelName of inherit) {
+                    inheritList.add(inherittedModelName);
+                    serverModelInheritances.add([name, inherittedModelName].join(","));
+                }
+                localModelDef._inherit = [...inheritList].join(",");
                 for (const name in others) {
                     localModelDef[name] = others[name];
                 }
                 for (const [fieldName, serverFieldDef] of Object.entries(fields)) {
-                    localModelDef._fields[fieldName] = {
+                    const serverField = {
                         ...serverFieldDef,
                         ...localModelDef._fields[fieldName],
                     };
+                    serverFields.add(serverField);
+                    localModelDef._fields[fieldName] = serverField;
                 }
             }
         }
@@ -649,18 +658,28 @@ export class MockServer {
                     continue;
                 }
                 const parentModel = this.models[modelName];
-                if (!parentModel) {
+                if (parentModel) {
+                    for (const fieldName in parentModel._fields) {
+                        model._fields[fieldName] ??= parentModel._fields[fieldName];
+                    }
+                } else if (serverModelInheritances.has([model._name, modelName].join(","))) {
+                    // Inheritance comes from the server, so we can safely remove it:
+                    // it means that the inherited model has not been fetched in this
+                    // context.
+                    model._inherit = model._inherit.replace(new RegExp(`${modelName},?`), "");
+                } else {
                     throw modelNotFoundError(modelName, "could not inherit from model");
-                }
-                for (const fieldName in parentModel._fields) {
-                    model._fields[fieldName] ??= parentModel._fields[fieldName];
                 }
             }
 
             // Check missing models
             for (const field of Object.values(model._fields)) {
                 if (field.relation && !this.models[field.relation]) {
-                    throw modelNotFoundError(field.relation, "could not find model");
+                    if (serverFields.has(field)) {
+                        delete model._fields[field.name];
+                    } else {
+                        throw modelNotFoundError(field.relation, "could not find model");
+                    }
                 }
             }
         }
@@ -987,7 +1006,15 @@ export function defineMenus(menus) {
  * @param  {ModelConstructor[] | Record<string, ModelConstructor>} ModelClasses
  */
 export function defineModels(ModelClasses) {
-    return defineParams({ models: Object.values(ModelClasses) }, "add").models;
+    const models = Object.values(ModelClasses);
+    for (const ModelClass of models) {
+        const { definition } = ModelClass;
+        if (definition._fetch) {
+            registerModelToFetch(definition._name);
+        }
+    }
+
+    return defineParams({ models }, "add").models;
 }
 
 /**

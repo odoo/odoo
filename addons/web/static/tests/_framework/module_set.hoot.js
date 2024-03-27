@@ -216,6 +216,8 @@ const DEFAULT_MOCKS = {
 
 const dependencyCache = {};
 const { loader } = odoo;
+/** @type {Set<string>} */
+const modelsToFetch = new Set();
 /** @type {Record<string, string[]>} */
 const moduleNamesCache = {};
 /** @type {Map<string, Record<string, any>>} */
@@ -325,14 +327,12 @@ export async function describeSuite(entryPoints, params) {
  * @param {Iterable<string>} modelNames
  */
 export async function fetchModelDefinitions(modelNames) {
-    const namesList = [...modelNames];
-    const modelNamesToFetch = namesList.filter((modelName) => !serverModelCache.has(modelName));
-
     // Fetch missing definitions
-    if (modelNamesToFetch.length) {
+    const namesList = [...modelsToFetch];
+    if (namesList.length) {
         const formData = new FormData();
         formData.set("csrf_token", odoo.csrf_token);
-        formData.set("model_names", JSON.stringify(modelNamesToFetch));
+        formData.set("model_names", JSON.stringify(namesList));
 
         const response = await realFetch("/web/model/get_definitions", {
             body: formData,
@@ -350,8 +350,18 @@ export async function fetchModelDefinitions(modelNames) {
 
         for (const [modelName, modelDef] of Object.entries(modelDefs)) {
             serverModelCache.set(modelName, modelDef);
+            modelsToFetch.delete(modelName);
         }
     }
 
-    return namesList.map((modelName) => [modelName, serverModelCache.get(modelName)]);
+    return [...modelNames].map((modelName) => [modelName, serverModelCache.get(modelName)]);
+}
+
+/**
+ * @param {string} modelName
+ */
+export function registerModelToFetch(modelName) {
+    if (!serverModelCache.has(modelName)) {
+        modelsToFetch.add(modelName);
+    }
 }
