@@ -73,7 +73,7 @@
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
                     <div class="switchpane d-flex">
-                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => currentOrder.pay()">
+                        <button class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => pos.pay()">
                             <span class="fs-1 d-block">Pay</span>
                             <span t-esc="total" />
                         </button>
