@@ -616,7 +616,8 @@ class TestChannelRTC(MailCommon):
         self.env['bus.bus'].sudo().search([]).unlink()
 
         with self.mock_bus():
-            channel.add_members(partner_ids=test_user.partner_id.ids, guest_ids=test_guest.ids, invite_to_rtc_call=True)
+            with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=10)):
+                channel.add_members(partner_ids=test_user.partner_id.ids, guest_ids=test_guest.ids, invite_to_rtc_call=True)
 
         channel_member_test_user = channel.sudo().channel_member_ids.filtered(lambda member: member.partner_id == test_user.partner_id)
         channel_member_test_guest = channel.sudo().channel_member_ids.filtered(lambda member: member.guest_id == test_guest)
