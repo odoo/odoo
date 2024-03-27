@@ -187,14 +187,13 @@ class CountryState(models.Model):
                 expression.AND([domain1, domain]), limit=limit, order=order,
             ))
         fallback_domain = None
-        if name:
-            m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
-            if m:
-                fallback_domain = [
-                    ('name', operator, m['name'].strip()),
-                    '|', ('country_id.name', 'ilike', m['country'].strip()),
-                         ('country_id.code', '=', m['country'].strip()),
-                ]
+
+        if name and operator in ['ilike', '=']:
+            fallback_domain = self._get_name_search_domain(name, operator)
+
+        if name and operator in ['in', 'any']:
+            fallback_domain = expression.OR([self._get_name_search_domain(n, '=') for n in name])
+
         return first_state_ids + list(self._search(
             expression.AND([domain2, domain, [('id', 'not in', first_state_ids)]]),
             limit=limit,
@@ -204,6 +203,16 @@ class CountryState(models.Model):
             if fallback_domain
             else []
         )
+
+    def _get_name_search_domain(self, name, operator):
+        m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
+        if m:
+            return [
+                ('name', operator, m['name'].strip()),
+                '|', ('country_id.name', 'ilike', m['country'].strip()),
+                ('country_id.code', '=', m['country'].strip()),
+            ]
+        return None
 
     @api.depends('country_id')
     def _compute_display_name(self):
