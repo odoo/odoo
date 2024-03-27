@@ -7,7 +7,7 @@ import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 
 export class ChatGPTPromptDialog extends ChatGPTDialog {
-    static template = 'web_edior.ChatGPTPromptDialog';
+    static template = 'web_editor.ChatGPTPromptDialog';
     static props = {
         ...super.props,
         initialPrompt: { type: String, optional: true },
