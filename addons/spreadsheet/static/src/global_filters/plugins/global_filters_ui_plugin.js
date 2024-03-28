@@ -527,7 +527,8 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             return new Domain();
         }
         const field = fieldMatching.chain;
-        return new Domain([[field, "in", values]]);
+        const operator = filter.includeChildren ? "child_of" : "in";
+        return new Domain([[field, operator, values]]);
     }
 
     /**
