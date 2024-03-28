@@ -670,6 +670,75 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # has gone to the stock account, and must be reflected in inventory valuation
         self.assertEqual(self.product1.value_svl, 150)
 
+    def test_billed_valuation_multicurrency(self):
+        """
+            Product with an invoice policy on ordered quantity should keep the valuation
+            of the bill with the exchange rate at the bill date
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+
+        date_po = '1993-07-18'
+
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+
+        self.env['res.currency.rate'].create([{
+            'name': date_po,
+            'rate': 1/1.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        }, {
+            'name': '1993-08-30', # exchange rate updated
+            'rate': 1/1.7,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        }])
+
+        # Create PO
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0, # 100€ = 150$ (at that time)
+                    'date_planned': date_po,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        # Create and post the vendor bill before recieving the product
+        self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
+            'invoice_date': date_po,
+            'date': date_po,
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test',
+                'price_unit': 100.0,
+                'product_id': self.product1.id,
+                'purchase_line_id': po.order_line.id,
+                'quantity': 1.0,
+                'account_id': self.stock_input_account.id,
+            })]
+        }).action_post()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids.qty_done = 1
+
+        with freeze_time("4000-01-01"):
+            receipt.button_validate()
+
+        self.assertEqual(receipt.move_ids.stock_valuation_layer_ids.value, 150)
+
     def test_standard_valuation_multicurrency(self):
         company = self.env.user.company_id
         company.anglo_saxon_accounting = True
