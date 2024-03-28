@@ -181,7 +181,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
         epd_tax_to_discount = self._get_early_payment_discount_grouped_by_tax_rate(invoice)
         for grouping_key, vals in taxes_vals['tax_details'].items():
-            if grouping_key['tax_amount_type'] != 'fixed':
+            if grouping_key['tax_amount_type'] != 'fixed' or not self._context.get('convert_fixed_taxes'):
                 subtotal = {
                     'currency': invoice.currency_id,
                     'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
@@ -214,7 +214,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :return:            A python dictionary.
         """
         product = line.product_id
-        taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
+        taxes = line.tax_ids.flatten_taxes_hierarchy()
+        if self._context.get('convert_fixed_taxes'):
+            taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
         description = (line.product_id.display_name and line.product_id.display_name.replace('\n', ', ')) or (line.name and line.name.replace('\n', ', '))
         return {
@@ -278,20 +280,21 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
-        fixed_tax_charge_vals_list = []
-        for grouping_key, tax_details in tax_values_list['tax_details'].items():
-            if grouping_key['tax_amount_type'] == 'fixed':
-                fixed_tax_charge_vals_list.append({
-                    'currency_name': line.currency_id.name,
-                    'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                    'charge_indicator': 'true',
-                    'allowance_charge_reason_code': 'AEO',
-                    'allowance_charge_reason': tax_details['tax_name'],
-                    'amount': tax_details['tax_amount_currency'],
-                })
+        if self._context.get('convert_fixed_taxes'):
+            fixed_tax_charge_vals_list = []
+            for grouping_key, tax_details in tax_values_list['tax_details'].items():
+                if grouping_key['tax_amount_type'] == 'fixed':
+                    fixed_tax_charge_vals_list.append({
+                        'currency_name': line.currency_id.name,
+                        'currency_dp': self._get_currency_decimal_places(line.currency_id),
+                        'charge_indicator': 'true',
+                        'allowance_charge_reason_code': 'AEO',
+                        'allowance_charge_reason': tax_details['tax_name'],
+                        'amount': tax_details['tax_amount_currency'],
+                    })
 
-        if not line.discount:
-            return fixed_tax_charge_vals_list
+            if not line.discount:
+                return fixed_tax_charge_vals_list
 
         # Price subtotal with discount subtracted:
         net_price_subtotal = line.price_subtotal
@@ -425,28 +428,28 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
 
-    def _export_invoice_vals(self, invoice):
-        def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
-            grouping_key = {
-                'tax_category_id': tax_category_vals['id'],
-                'tax_category_percent': tax_category_vals['percent'],
-                '_tax_category_vals_': tax_category_vals,
-                'tax_amount_type': tax.amount_type,
-            }
-            # If the tax is fixed, we want to have one group per tax
-            # s.t. when the invoice is imported, we can try to guess the fixed taxes
-            if tax.amount_type == 'fixed':
-                grouping_key['tax_name'] = tax.name
-            return grouping_key
+    def _get_tax_grouping_key(self, base_line, tax_values):
+        tax = tax_values['tax_repartition_line'].tax_id
+        tax_category_vals = self._get_tax_category_list(base_line['record'].move_id, tax)[0]
+        grouping_key = {
+            'tax_category_id': tax_category_vals['id'],
+            'tax_category_percent': tax_category_vals['percent'],
+            '_tax_category_vals_': tax_category_vals,
+            'tax_amount_type': tax.amount_type,
+        }
+        # If the tax is fixed, we want to have one group per tax
+        # s.t. when the invoice is imported, we can try to guess the fixed taxes
+        if tax.amount_type == 'fixed':
+            grouping_key['tax_name'] = tax.name
+        return grouping_key
 
+    def _export_invoice_vals(self, invoice):
         # Validate the structure of the taxes
         self._validate_taxes(invoice)
 
         # Compute the tax details for the whole invoice and each invoice line separately.
         taxes_vals = invoice._prepare_invoice_aggregated_taxes(
-            grouping_key_generator=grouping_key_generator,
+            grouping_key_generator=self._get_tax_grouping_key,
             filter_tax_values_to_apply=self._apply_invoice_tax_filter,
             filter_invl_to_apply=self._apply_invoice_line_filter,
         )
@@ -455,13 +458,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
         # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
         # as an extra charge/allowance.
-        fixed_taxes_keys = [k for k in taxes_vals['tax_details'] if k['tax_amount_type'] == 'fixed']
-        for key in fixed_taxes_keys:
-            fixed_tax_details = taxes_vals['tax_details'].pop(key)
-            taxes_vals['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
-            taxes_vals['tax_amount'] -= fixed_tax_details['tax_amount']
-            taxes_vals['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
-            taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
+        if self._context.get('convert_fixed_taxes'):
+            fixed_taxes_keys = [k for k in taxes_vals['tax_details'] if k['tax_amount_type'] == 'fixed']
+            for key in fixed_taxes_keys:
+                fixed_tax_details = taxes_vals['tax_details'].pop(key)
+                taxes_vals['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
+                taxes_vals['tax_amount'] -= fixed_tax_details['tax_amount']
+                taxes_vals['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
+                taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
 
         # Compute values for invoice lines.
         line_extension_amount = 0.0
@@ -514,6 +518,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'SignatureType_template': 'account_edi_ubl_cii.ubl_20_SignatureType',
             'ResponseType_template': 'account_edi_ubl_cii.ubl_20_ResponseType',
             'DeliveryType_template': 'account_edi_ubl_cii.ubl_20_DeliveryType',
+            'InvoicePeriodType_template': 'account_edi_ubl_cii.ubl_20_InvoicePeriodType',
             'MonetaryTotalType_template': 'account_edi_ubl_cii.ubl_20_MonetaryTotalType',
             'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_20_InvoiceLineType',
             'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteLineType',
@@ -528,6 +533,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'issue_date': invoice.invoice_date,
                 'due_date': invoice.invoice_date_due,
                 'note_vals': self._get_note_vals_list(invoice),
+                'document_currency_code': invoice.currency_id.name,
                 'order_reference': order_reference,
                 'sales_order_id': sales_order_id,
                 'accounting_supplier_party_vals': {
@@ -584,8 +590,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         })
         return constraints
 
-    def _export_invoice(self, invoice):
-        vals = self._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
+    def _export_invoice(self, invoice, convert_fixed_taxes=True):
+        """ Generates an UBL 2.0 xml for a given invoice.
+        :param convert_fixed_taxes: whether the fixed taxes are converted into AllowanceCharges on the InvoiceLines
+        """
+        vals = self \
+            .with_context(convert_fixed_taxes=convert_fixed_taxes) \
+            ._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
         return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
