@@ -221,7 +221,7 @@ class AccountBalance(models.Model):
         # Prepare the payment register wizard with the appropriate context
         PaymentWizard = self.env['account.payment.register'].with_context(**wizard_context).create({
             'payment_date': payment_date,
-            'journal_id': 6,
+            'journal_id': target_journal_id,
             'payment_method_line_id': payment_method_line,
             'amount': payment_amount,
         })
