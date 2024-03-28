@@ -87,6 +87,15 @@ class TestStructure(TransactionCase):
         test_partner = self.env['res.partner'].create({'name': "Turlututu", 'country_id': self.env.ref('base.fr').id})
         test_partner.write({'vat': "EU528003646", 'country_id': None})
 
+    def test_nif_de(self):
+        test_partner = self.env['res.partner'].create({'name': "Mein Company", 'country_id': self.env.ref('base.de').id})
+        # Set a valid VAT
+        test_partner.write({'vat': "DE123456788"})
+        # Set a valid German tax ID (steuernummer)
+        test_partner.write({'vat': "201/123/12340"})
+        # Test invalid VAT (should raise a ValidationError)
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': "136695978"})
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
