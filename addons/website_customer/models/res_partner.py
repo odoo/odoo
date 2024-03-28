@@ -8,7 +8,14 @@ class Partner(models.Model):
 
     _inherit = 'res.partner'
 
-    website_tag_ids = fields.Many2many('res.partner.tag', 'res_partner_res_partner_tag_rel', 'partner_id', 'tag_id', string='Website tags')
+    website_tag_ids = fields.Many2many(
+        'res.partner.tag',
+        'res_partner_res_partner_tag_rel',
+        'partner_id',
+        'tag_id',
+        string='Website tags',
+        help="Filter published customers on the .../customers website page",
+    )
 
     def get_backend_menu_id(self):
         return self.env.ref('contacts.menu_contacts').id
