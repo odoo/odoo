@@ -62,6 +62,9 @@ export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
 
 export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 
+export const ZERO_WIDTH_CHARS = ['\u200b', '\ufeff'];
+export const ZERO_WIDTH_CHARS_REGEX = new RegExp(`[${ZERO_WIDTH_CHARS.join('')}]`, 'g');
+
 //------------------------------------------------------------------------------
 // Position and sizes
 //------------------------------------------------------------------------------
@@ -1429,6 +1432,14 @@ export const ICON_SELECTOR = iconTags.map(tag => {
     }).join(', ');
 }).join(', ');
 
+/**
+ * Return true if the given node is a zero-width breaking space (200b), false
+ * otherwise. Note that this will return false for a zero-width NON-BREAK space
+ * (feff)!
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
 export function isZWS(node) {
     return (
         node &&
@@ -1638,11 +1649,11 @@ export function isInPre(node) {
  * Returns whether the given string (or given text node value)
  * has at least one visible character or one non colapsed whitespace characters in it.
  */
-const nonWhitespaces = '\\S\\u00A0\\u0009';
+const nonWhitespaces = '\\S\\u00A0\\u0009\\uFEFF';
 const nonWhitespacesRegex = new RegExp(`[${nonWhitespaces}]`);
 export function isVisibleStr(value) {
     const str = typeof value === 'string' ? value : value.nodeValue;
-    return nonWhitespacesRegex.test(str);
+    return nonWhitespacesRegex.test(str) && str !== '\ufeff';
 }
 /**
  * @param {Node} node
@@ -1680,6 +1691,9 @@ export function isVisibleTextNode(testedNode) {
     }
     if (isVisibleStr(testedNode)) {
         return true;
+    }
+    if (testedNode.textContent === '\ufeff') {
+        return false; // a ZWNBSP is _always_ invisible, regardless of context.
     }
     // The following assumes node is made entirely of whitespace and is not
     // preceded of followed by a block.
@@ -1792,6 +1806,10 @@ export function toggleClass(node, className) {
     if (!node.className) {
         node.removeAttribute('class');
     }
+}
+
+export function makeZeroWidthCharactersVisible(text) {
+    return text.replaceAll('\u200B', '//ZWSP//').replaceAll('\uFEFF', '//ZWNBSP//');
 }
 
 /**
@@ -2221,7 +2239,7 @@ export function prepareUpdate(...args) {
         const right = getState(el, offset, DIRECTIONS.RIGHT, left.cType);
         if (options.debug) {
             const editable = el && closestElement(el, '.odoo-editor-editable');
-            const oldEditableHTML = editable && editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') || '';
+            const oldEditableHTML = editable && makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') || '';
             left.oldEditableHTML = oldEditableHTML;
             right.oldEditableHTML = oldEditableHTML;
         }
@@ -2515,12 +2533,12 @@ export function restoreState(prevStateData, debug=false) {
     if (debug) {
         const editable = closestElement(node, '.odoo-editor-editable');
         console.log(
-            '%c' + node.textContent.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') + '\n' +
+            '%c' + makeZeroWidthCharactersVisible(node.textContent).replaceAll(' ', '_') + '\n' +
             '%c' + (direction === DIRECTIONS.LEFT ? 'left' : 'right') + '\n' +
             '%c' + ctypeToString(cType1) + '\n' +
             '%c' + ctypeToString(cType2) + '\n' +
             '%c' + 'BEFORE: ' + (oldEditableHTML || '(unavailable)') + '\n' +
-            '%c' + 'AFTER:  ' + (editable ? editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') : '(unavailable)') + '\n',
+            '%c' + 'AFTER:  ' + (editable ? makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') : '(unavailable)') + '\n',
             'color: white; display: block; width: 100%;',
             'color: ' + (direction === DIRECTIONS.LEFT ? 'magenta' : 'lightgreen') + '; display: block; width: 100%;',
             'color: pink; display: block; width: 100%;',
@@ -2861,6 +2879,7 @@ export function isMacOS() {
 
 /**
  * Remove zero-width spaces from the provided node and its descendants.
+ * Note: Does NOT remove zero-width NON-BREAK spaces (feff)!
  *
  * @param {Node} node
  */

@@ -314,6 +314,16 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     continue;
                 }
 
+                // Do not mark the editable dirty when simply adding/removing
+                // link zwnbsp since these are just technical nodes that aren't
+                // part of the user's editing of the document.
+                if (record.type === 'childList' &&
+                    [...record.addedNodes, ...record.removedNodes].every(node => (
+                        node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff')
+                    )) {
+                    continue;
+                }
+
                 // Mark any savable element dirty if any tracked mutation occurs
                 // inside of it.
                 $savable.not('.o_dirty').each(function () {
