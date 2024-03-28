@@ -64,18 +64,19 @@ const TableOfContent = publicWidget.Widget.extend({
         this._stripNavbarStyles();
         await this._super(...arguments);
         this._scrollElement = this.$target.closest(".s_table_of_content").closestScrollable()[0];
+        this._scrollTarget = $().getScrollingTarget(this._scrollElement)[0];
         this._tocElement = this.el.querySelector('.s_table_of_content_navbar');
         this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
         extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPositionBound);
-        this._scrollElement.addEventListener("scroll", this._onScrollBound);
+        this._scrollTarget.addEventListener("scroll", this._onScrollBound);
     },
     /**
      * @override
      */
     destroy() {
-        this._scrollElement.removeEventListener("scroll", this._onScrollBound);
+        this._scrollTarget.removeEventListener("scroll", this._onScrollBound);
         const indexCallback = extraMenuUpdateCallbacks.indexOf(this._updateTableOfContentNavbarPositionBound);
         if (indexCallback >= 0) {
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
