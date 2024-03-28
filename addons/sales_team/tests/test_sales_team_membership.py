@@ -302,3 +302,6 @@ class TestMembership(TestSalesCommon):
         self.sales_team_1_m1.unlink()
         self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
+
+        # ensure sale.team recordset is not false
+        self.assertFalse(self.env.ref('base.demo_user0').sale_team_id.id)

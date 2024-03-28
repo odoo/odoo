@@ -28,8 +28,4 @@ class ResUsers(models.Model):
     @api.depends('crm_team_member_ids.crm_team_id', 'crm_team_member_ids.create_date', 'crm_team_member_ids.active')
     def _compute_sale_team_id(self):
         for user in self:
-            if not user.crm_team_member_ids.ids:
-                user.sale_team_id = False
-            else:
-                sorted_memberships = user.crm_team_member_ids  # sorted by create date
-                user.sale_team_id = sorted_memberships[0].crm_team_id if sorted_memberships else False
+            user.sale_team_id = user.crm_team_member_ids[0].crm_team_id if user.crm_team_member_ids.ids else self.env['crm.team'].browse()
