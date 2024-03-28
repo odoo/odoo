@@ -638,7 +638,7 @@ export class Wysiwyg extends Component {
         // Ensure the Toolbar always have the correct layout in note.
         this._updateEditorUI();
 
-        this.$root.on('click', (ev) => {
+        this.$root.on('click.Wysiwyg', (ev) => {
             const $target = $(ev.target).closest('a');
 
             // Keep popover open if clicked inside it, but not on a button
@@ -887,7 +887,7 @@ export class Wysiwyg extends Component {
         if ($wrapwrap.length && this.odooEditor) {
             $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
-        $(this.$root).off('click');
+        this.$root?.off('.Wysiwyg');
         this.toolbarEl?.remove();
         this.imageCropEL?.remove();
         if (this.linkPopover) {
