@@ -286,3 +286,14 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         }
     },
 });
+publicWidget.registry.PortalHomeCounters.include({
+    /**
+     * @override
+     */
+    _getCountersAlwaysDisplayed() {
+        if (document.getElementById("force_opportunities_display")) {
+            return this._super(...arguments).concat(['opp_count']);
+        }
+        return this._super(...arguments);
+    }
+});
