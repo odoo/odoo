@@ -105,13 +105,22 @@ class HolidaysRequest(models.Model):
         # Instead of overwriting all the javascript methods to use
         # request_date_{from,to} instead of date_{from,to}, we just convert
         # date_{from,to} to request_date_{from,to} here.
+
+        # Request dates are determined during an onchange scenario.
+        # To ensure that the values are correct in the client context (UI),
+        # the timezone must be applied (because no processing is carried out
+        # when these dates are received on the frontend).
+        # Note:
+        # Without the application of the timezone, days based on UTC datetimes
+        # will be returned (and will therefore not be correct for the client).
+        client_tz = timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         if values.get('date_from'):
             if not values.get('request_date_from'):
-                values['request_date_from'] = values['date_from']
+                values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
             del values['date_from']
         if values.get('date_to'):
             if not values.get('request_date_to'):
-                values['request_date_to'] = values['date_to']
+                values['request_date_to'] = pytz.utc.localize(values['date_to']).astimezone(client_tz)
             del values['date_to']
         return values
 
@@ -856,7 +865,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                         )
                 else:
                     if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                        display_date += ' / %s' % format_date(self.env, date_to_utc) or ""
+                        display_date += ' - %s' % format_date(self.env, date_to_utc) or ""
                     if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         leave.display_name = _("%(leave_type)s: %(duration).2f days (%(start)s)",
                             leave_type=time_off_type_display,
@@ -1606,7 +1615,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].create(activity_vals)
+        self.env['mail.activity'].with_context(short_name=False).create(activity_vals)
 
     ####################################################
     # Messaging methods

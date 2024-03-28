@@ -110,6 +110,9 @@
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
             </tree>
+            <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
+                <attribute name="widget">many2one</attribute>
+            </xpath>
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>

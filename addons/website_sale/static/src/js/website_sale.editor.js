@@ -51,14 +51,14 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      */
     setPpr: function (previewMode, widgetValue, params) {
         this.ppr = parseInt(widgetValue);
-        this.rpc('/shop/config/website', { 'shop_ppr': this.ppr });
+        return this.rpc('/shop/config/website', { 'shop_ppr': this.ppr });
     },
     /**
      * @see this.selectClass for params
      */
     setDefaultSort: function (previewMode, widgetValue, params) {
         this.default_sort = widgetValue;
-        this.rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
+        return this.rpc('/shop/config/website', { 'shop_default_sort': this.default_sort });
     },
 
     //--------------------------------------------------------------------------
@@ -229,6 +229,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @see this.selectClass for params
      */
     changeSequence: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this.rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             sequence: widgetValue,
@@ -433,6 +434,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         var $td = $(ev.currentTarget);
         var x = $td.index() + 1;
         var y = $td.parent().index() + 1
+        // TODO this should be awaited somehow
         this.rpc('/shop/config/product', {
             product_id: this.productTemplateID,
             x: x,
@@ -488,7 +490,9 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     _updateWebsiteConfig(params) {
-        this.rpc('/shop/config/website', params).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this.rpc('/shop/config/website', params).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
     _getZoomOptionData() {
@@ -504,11 +508,11 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const zoomOption = this._getZoomOptionData();
         const updateWidth = this._updateWebsiteConfig.bind(this, { product_page_image_width: widgetValue });
         if (!zoomOption || widgetValue !== "100_pc") {
-            updateWidth();
+            await updateWidth();
         } else {
             const defaultZoomOption = "website_sale.product_picture_magnify_click";
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
-            updateWidth();
+            await updateWidth();
         }
     },
 
@@ -519,7 +523,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         const zoomOption = this._getZoomOptionData();
         const updateLayout = this._updateWebsiteConfig.bind(this, { product_page_image_layout: widgetValue });
         if (!zoomOption) {
-            updateLayout();
+            await updateLayout();
         } else {
             const imageWidthOption = this.productDetailMain.dataset.image_width;
             let defaultZoomOption = widgetValue === "grid" ? "website_sale.product_picture_magnify_click" : "website_sale.product_picture_magnify_hover";
@@ -527,7 +531,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                 defaultZoomOption = "website_sale.product_picture_magnify_click";
             }
             await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
-            updateLayout();
+            await updateLayout();
         }
     },
 
@@ -652,6 +656,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Removes all extra-images from the product.
      */
     clearImages: function () {
+        // TODO this should be awaited
         this.rpc(`/shop/product/clear-images`, {
             model: this.mode,
             product_product_id: this.productProductID,
@@ -672,17 +677,21 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             2: 'medium',
             3: 'big',
         }[widgetValue];
-        this.rpc('/shop/config/website', {
+        this.productPageGrid.dataset.image_spacing = spacing;
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this.rpc('/shop/config/website', {
             'product_page_image_spacing': spacing,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.productPageGrid.dataset.image_spacing = spacing;
     },
 
     setColumns(previewMode, widgetValue, params) {
-        this.rpc('/shop/config/website', {
+        this.productPageGrid.dataset.grid_columns = widgetValue;
+        // TODO: Remove the request_save in master, it's already done by the
+        // data-page-options set to true in the template.
+        return this.rpc('/shop/config/website', {
             'product_page_grid_columns': widgetValue,
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.productPageGrid.dataset.grid_columns = widgetValue;
     },
 
     /**
@@ -751,6 +760,7 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
      * @see this.selectClass for params
      */
     setDisplayType: function (previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this.rpc('/shop/config/attribute', {
             attribute_id: this.attributeID,
             display_type: widgetValue,
@@ -813,6 +823,7 @@ options.registry.ReplaceMedia.include({
      *
      */
     async setPosition(previewMode, widgetValue, params) {
+        // TODO this should be awaited
         this.rpc('/shop/product/resequence-image', {
             image_res_model: this.recordModel,
             image_res_id: this.recordId,

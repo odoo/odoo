@@ -7507,7 +7507,7 @@ msgstr ""
 "Het voegt ook blacklist-beheer toe aan de telefoon via een specifiek modelopslag\n"
 "telefoonnummers op de blacklist.\n"
 "\n"
-"Het voegt mail.thread.phone mixin toe die de sanitaire voorzieningen en blacklist van . afhandelt\n"
+"Het voegt een mail.thread.phone-mix toe die het opschonen en de zwarte lijst afhandelt\n"
 "neemt nummers op. "
 
 #. module: base
@@ -31742,7 +31742,7 @@ msgstr "Roemeense SAF-T-export"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_room
 msgid "Room"
-msgstr "Kamer"
+msgstr "Ruimte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__root_id
@@ -32386,6 +32386,12 @@ msgstr "Geplande acties"
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
 msgstr "Geplande acties Triggers"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -36049,6 +36055,14 @@ msgstr ""
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
 msgstr "Deze modules kunnen niet worden verwijderd: %s"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep

@@ -172,14 +172,14 @@ msgstr "%s solicitud de asignación (%s %s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f day(s)"
-msgstr "%s en tiempo personal : %.2f día(s)"
+msgstr "%s de ausencias: %.2f día(s)"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f hour(s)"
-msgstr "%s en tiempo personal : %.2f hora(s)"
+msgstr "%s de ausencias: %.2f hora(s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -200,7 +200,7 @@ msgstr "%s: %.2f horas"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr "%s: Tiempo personal"
+msgstr "%s: Ausencia"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -610,7 +610,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            Tiempo personal\n"
+"                            Ausencias\n"
 "                        </span>"
 
 #. module: hr_holidays
@@ -621,7 +621,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           Tiempo personal\n"
+"                           Ausencias\n"
 "                        </span>"
 
 #. module: hr_holidays
@@ -637,7 +637,7 @@ msgstr "<span class=\"o_stat_text\">Asignaciones</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Tiempo personal</span>"
+msgstr "<span class=\"o_stat_text\">Ausencia</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -680,8 +680,8 @@ msgid ""
 "<span>You can only take this time off in whole days, so if your schedule has"
 " half days, it won't be used efficiently.</span>"
 msgstr ""
-"<span>Solo puede tomar tiempo personal en días completos, si su horario "
-"tiene medios días, no se podrán usar de manera eficiente.</span>"
+"<span>Solo puede tomar esta ausencia en días completos, si su horario tiene "
+"medios días, no se podrán usar de manera eficiente.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -713,7 +713,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "A time off cannot be duplicated."
-msgstr "No se puede duplicar un tiempo personal."
+msgstr "Un ausencia no puede ser duplicada."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -732,7 +732,7 @@ msgstr "Ausencia"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__absence_of_today
 msgid "Absence by Today"
-msgstr "Ausentes del día"
+msgstr "Ausencias por día"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -1409,7 +1409,7 @@ msgstr "Cancelar ausencia futura"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 #, python-format
 msgid "Cancel Time Off"
-msgstr "Cancelar tiempo libre"
+msgstr "Cancelar ausencia"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
@@ -1442,7 +1442,7 @@ msgstr "Ausencia cancelada"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__cancel
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Cancelled"
-msgstr "Cancelado"
+msgstr "Cancelada"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -1511,9 +1511,8 @@ msgid ""
 "allocation accordingly."
 msgstr ""
 "Cambiar este horario de trabajo puede ocasionar que los empleados afectados "
-"no tengan suficientes días de tiempo personal asignados para el futuro. "
-"Revise los días de tiempo personal del empleado y ajuste sus asignaciones "
-"adecuadamente. "
+"no tengan suficientes días de ausencia asignados para el futuro. Revise los "
+"días de ausencia del empleado y ajuste sus asignaciones adecuadamente. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
@@ -1724,7 +1723,7 @@ msgstr "Fecha"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
 msgid "Date Period Start"
-msgstr "Fecha de Inicio de periodo "
+msgstr "Fecha de inicio del periodo "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__lastcall
@@ -1796,7 +1795,7 @@ msgstr "Eliminar confirmación"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Delete Time Off"
-msgstr "Eliminar tiempo libre"
+msgstr "Eliminar ausencia"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
@@ -2071,8 +2070,8 @@ msgid ""
 "Filters only on allocations that belong to a time off type that is 'active' "
 "(active field is True)"
 msgstr ""
-"Filtra solo las asignaciones que pertenecen a un tipo de tiempo personal "
-"\"activo\" (el campo activo es True)."
+"Filtra solo las asignaciones que pertenecen a un tipo de ausencia \"activo\""
+" (el campo activo es True)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -2190,7 +2189,7 @@ msgstr "Ausencia grupal"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
 msgid "HR Approval"
-msgstr "Autorización por RR.HH."
+msgstr "Aprobación por RR. HH."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
@@ -2288,7 +2287,7 @@ msgstr "Horas"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
 msgid "Hr Icon Display"
-msgstr "Visualización del icono RR.HH."
+msgstr "Visualización del icono RR. HH."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
@@ -2516,7 +2515,7 @@ msgstr "Vamos a aprobarlo"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Let's discover the Time Off application"
-msgstr "Descubramos la aplicación Tiempo personal"
+msgstr "Descubramos la aplicación de Ausencias"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2624,7 +2623,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Maximum amount of accruals to transfer"
-msgstr "Importe máximo de acumulaciones por transferir"
+msgstr "Importe máximo de acumulaciones a transferir"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
@@ -2712,7 +2711,7 @@ msgstr "Mañana"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__multi_employee
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__multi_employee
 msgid "Multi Employee"
-msgstr "Multiempleado"
+msgstr "Múltiples empleados"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -2787,7 +2786,7 @@ msgstr "Nuevo"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "New %(leave_type)s Request created by %(user)s"
-msgstr "%(user)s creo una nueva solicitud de %(leave_type)s"
+msgstr "%(user)s creó una nueva solicitud de %(leave_type)s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2824,7 +2823,7 @@ msgstr "Nuevo hito"
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "Nuevo tiempo personal"
+msgstr "Nueva ausencia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2867,7 +2866,7 @@ msgstr "Sin validación"
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
 msgid "No data to display"
-msgstr "Sin datos que mostrar"
+msgstr "No hay datos para mostrar"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
@@ -2916,7 +2915,7 @@ msgstr "No permitido"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr "Encargado de tiempo personal notificado"
+msgstr "Encargado de ausencias notificado"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2964,7 +2963,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid "Number of days of the time off request. Used in the calculation."
-msgstr "Número de días del tiempo personal solicitado. Se usa en el cálculo. "
+msgstr "Número de días de la solicitud de ausencia. Se usa en el cálculo. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2978,13 +2977,13 @@ msgid ""
 "Number of hours of the time off request according to your working schedule. "
 "Used for interface."
 msgstr ""
-"Número de horas de ausencia solicitadas de acuerdo a su horario de trabajo. "
-"Se utiliza en la interfaz."
+"Número de horas de la solicitud de ausencia de acuerdo a su horario de "
+"trabajo. Se usa en la interfaz."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
 msgid "Number of hours of the time off request. Used in the calculation."
-msgstr "Número de horas del tiempo personal solicitado. Se usa en el cálculo."
+msgstr "Número de horas de la solicitud de ausencia. Se usa en el cálculo. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -3010,22 +3009,22 @@ msgstr "Octubre"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Off Till"
-msgstr "Ausente Hasta"
+msgstr "Ausente hasta"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Off Today"
-msgstr "Con permiso hoy"
+msgstr "Ausente hoy"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer: Manage all requests"
-msgstr "Gerente: gestionar todas las solicitudes"
+msgstr "Encargado: gestionar todas las solicitudes"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "On Time Off"
-msgstr "En Tiempo personal"
+msgstr "Ausente"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
@@ -3186,8 +3185,7 @@ msgstr "Imprimir"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to delete an approved time off"
 msgstr ""
-"Proporcione una justificación para eliminar una solicitud de tiempo personal"
-" aprobado"
+"Proporcione una razón para eliminar una solicitud de ausencia aprobada"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3217,7 +3215,7 @@ msgstr "Valoraciones"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
 msgid "Reason"
-msgstr "Motivo"
+msgstr "Razón"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__notes
@@ -3260,7 +3258,7 @@ msgstr "Rechazado"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Refused Time Off"
-msgstr "Tiempo personal rechazado"
+msgstr "Ausencia rechazada"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -3353,7 +3351,7 @@ msgstr "Detalle de las ausencias del recurso"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar
 msgid "Resource Working Time"
-msgstr "Tiempo de Trabajo de Recursos"
+msgstr "Tiempo de trabajo de recursos"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3394,12 +3392,12 @@ msgstr "Guardar"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Search Time Off"
-msgstr "Búsqueda de ausencias"
+msgstr "Buscar ausencias"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Search Time Off Type"
-msgstr "Búsqueda de tipo de ausencia"
+msgstr "Buscar tipo de ausencia"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -3453,12 +3451,12 @@ msgstr "Segunda solicitud de aprobación de %(leave_type)s"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Select Time Off"
-msgstr "Seleccione Tiempo personal"
+msgstr "Seleccionar ausencia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
 msgid "Select Time Off Type"
-msgstr "Seleccione el tipo de ausencia"
+msgstr "Seleccionar el tipo de ausencia"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__validation_type
@@ -3753,8 +3751,8 @@ msgid ""
 "The leaves planned in the future are exceeding the maximum value of the allocation.\n"
 "                It will not be possible to take all of them."
 msgstr ""
-"Los días de tiempo personal planificados a futuro exceden el valor máximo de la asignación.\n"
-"                No será posible quitarlos todos."
+"Los días de ausencia planificados en el futuro exceden el valor máximo de la asignación.\n"
+"                No será posible tomarlos todos."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
@@ -3838,8 +3836,8 @@ msgstr "Se canceló la ausencia: %s"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr ""
-"El tipo con la secuencia más pequeña es el valor predeterminado en la "
-"solicitud de ausencia"
+"El tipo con la secuencia más pequeña es el valor por defecto en la solicitud"
+" de ausencia"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3988,7 +3986,7 @@ msgstr "Calendario de ausencias"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
 msgid "Time Off Count"
-msgstr "Número de días de tiempo personal"
+msgstr "Número de ausencias"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4015,8 +4013,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"Los encargados de ausencias asignan días de ausencia a los empleados (ej. ausencia pagada).<br>\n"
-"                Los empleados solicitan asignaciones a los encargados de ausencias (ej. días de recuperación)."
+"Los encargados de ausencias asignan días de ausencia a los empleados (p. ej. ausencia pagada).<br>\n"
+"                Los empleados solicitan asignaciones a los encargados de ausencias (p. ej. días de recuperación)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4067,7 +4065,7 @@ msgstr "Resumen de ausencias"
 #: model:ir.model,name:hr_holidays.model_hr_leave_employee_type_report
 #: model:ir.model,name:hr_holidays.model_hr_leave_report
 msgid "Time Off Summary / Report"
-msgstr "Resumen / informe de ausencias"
+msgstr "Resumen/informe de ausencias"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -4100,7 +4098,7 @@ msgstr "Tipos de ausencia"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Time Off Validation"
-msgstr "Validación de tiempo personal"
+msgstr "Validación de ausencias"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -4110,7 +4108,7 @@ msgstr "Ausencias de los miembros de su equipo"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
 msgid "Time Off to Approve"
-msgstr "Ausencias por aprobar"
+msgstr "Ausencias a aprobar"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -4120,12 +4118,12 @@ msgstr "Ausencias."
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_cron_cancel_invalid_ir_actions_server
 msgid "Time Off: Cancel invalid leaves"
-msgstr "Tiempo personal: cancelar días de tiempo personal no válidos"
+msgstr "Ausencia: cancelar días de ausencia no válidos"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Time off"
-msgstr "Tiempo personal"
+msgstr "Ausencias"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4135,13 +4133,13 @@ msgstr "Ausencias ya tomadas"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "Análisis de ausencias por empleado y tipo"
+msgstr "Análisis de ausencias por empleado y tipo de ausencia"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_pivot
 msgid "Time off Summary"
-msgstr "Resumen de tiempo personal"
+msgstr "Resumen de ausencias"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -4224,12 +4222,12 @@ msgstr "A"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 #, python-format
 msgid "To Approve"
-msgstr "Por aprobar"
+msgstr "A aprobar"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr "Asignaciones por aprobar o aprobadas"
+msgstr "Asignaciones a aprobar o aprobadas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4448,7 +4446,7 @@ msgstr "Inicio de la validez"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Stop"
-msgstr "Detener validez"
+msgstr "Fin de la validez"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -4460,7 +4458,7 @@ msgstr "Ausencias virtuales restantes"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__confirm
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__confirm
 msgid "Waiting Approval"
-msgstr "Esperando aprobación"
+msgstr "En espera de aprobación"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4472,7 +4470,7 @@ msgstr "Esperándome"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
 msgid "Waiting Second Approval"
-msgstr "En espera de la segunda aprobación"
+msgstr "En espera de segunda aprobación"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -4759,7 +4757,7 @@ msgstr "Su ausencia"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr "Se canceló su ausencia."
+msgstr "Se ha cancelado su ausencia."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4785,14 +4783,14 @@ msgstr "y"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "and on the"
-msgstr "y en el "
+msgstr "y el "
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "available"
-msgstr "disponible"
+msgstr "disponibles"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -4809,7 +4807,7 @@ msgstr "por tipo"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "can be used before the allocation expires."
-msgstr "puede utilizarse antes de que expire la asignación."
+msgstr "se puede usar antes de que la asignación ya no sea válida."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4869,7 +4867,7 @@ msgstr "eliminado por %s (uid=%d)."
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
-"ej. Tipo de ausencia (desde el inicio de la validez hasta el final de la "
+"p. ej. Tipo de ausencia (desde el inicio de la validez hasta el final de la "
 "validez / sin límite)"
 
 #. module: hr_holidays

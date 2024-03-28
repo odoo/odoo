@@ -9,12 +9,12 @@
             <form method="post"
                 id="o_wbooth_contact_details_form"
                 t-att-data-event-id="event.id"
-                class="col-12 js_website_submit_form">
+                class="col-12 col-lg-9 js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="booth_category_id" t-att-value="booth_category.id"/>
                 <input type="hidden" name="event_booth_ids" t-att-value="event_booths.ids"/>
                 <div id="o_wbooth_contact_details">
-                    <h4>Contact Details</h4>
+                    <h4 class="h5 my-3">Contact Details</h4>
                     <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">
                             <span>Name</span>

@@ -133,7 +133,7 @@ class ChannelUsersRelation(models.Model):
 
             if not record.channel_id.active:
                 continue
-            elif not was_finished and record.completed_slides_count >= record.channel_id.total_slides:
+            elif not was_finished and record.channel_id.total_slides and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
             elif was_finished and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
@@ -741,6 +741,9 @@ class Channel(models.Model):
         default = default or {}
         if 'name' not in default:
             default['name'] = f"{self.name} ({_('copy')})"
+
+        if 'enroll' not in default and self.visibility == "members":
+            default['enroll'] = 'invite'
 
         return super().copy_data(default)
 

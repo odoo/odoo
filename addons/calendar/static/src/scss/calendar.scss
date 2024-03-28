@@ -26,13 +26,11 @@
 
 .o_calendar_renderer .fc-event {
     &:not(.o_event_dot) {
-        --o-overlay-opacity: .5;
-
         &.o_attendee_status_active {
             --o-bg-opacity: 1;
         }
 
-        &.o_attendee_status_tentative, &.o_event_hatched {
+        &.o_attendee_status_tentative {
             --o-bg-opacity: .5;
         }
 
@@ -47,22 +45,6 @@
     }
 
     &.o_event_dot {
-        --o-overlay-opacity: .25;
-
-        display: flex;
-        align-items: center;
-        gap: map-get($spacers, 1 );
-        border: none;
-        background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
-
-        &:before {
-            z-index: 2;
-            display: inline-block;
-            font-family: Fontawesome;
-            color: var(--o-event-bg, #{$info});
-            content: '\f111'; // fa-circle
-        }
-
         &.o_attendee_status_needsAction, &.o_event_hatched {
             &:before {
                 content: "\f1db"; // fa-circle-thin
@@ -80,27 +62,11 @@
         &.o_attendee_status_alone {
             content: "\f06a"; // fa-exclamation-circle
         }
-
-        &:hover {
-            --o-bg-opacity: 1;
-        }
     }
 
     &.o_attendee_status_declined, &.o_event_striked {
         .fc-content {
             text-decoration: line-through;
         }
-    }
-}
-
-@for $-i from 1 through length($o-colors-complete) {
-    $-color: nth($o-colors-complete, $-i);
-    $-color-subtle: mix($o-white, $-color, 85%);
-
-    .o_calendar_renderer .fc-event.o_calendar_color_#{$-i - 1} {
-        --o-event-bg: #{$-color};
-        --o-event-bg-rgb: #{to-rgb($-color)};
-        --o-event-bg--subtle: #{$-color-subtle};
-        --o-event-bg--subtle-rgb: #{to-rgb($-color-subtle)};
     }
 }

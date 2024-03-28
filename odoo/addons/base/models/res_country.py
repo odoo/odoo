@@ -186,12 +186,25 @@ class CountryState(models.Model):
             first_state_ids = list(self._search(
                 expression.AND([domain1, domain]), limit=limit, order=order,
             ))
+        fallback_domain = None
+        if name:
+            m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
+            if m:
+                fallback_domain = [
+                    ('name', operator, m['name'].strip()),
+                    '|', ('country_id.name', 'ilike', m['country'].strip()),
+                         ('country_id.code', '=', m['country'].strip()),
+                ]
         return first_state_ids + [
             state_id
             for state_id in self._search(expression.AND([domain2, domain]),
                                          limit=limit, order=order)
             if state_id not in first_state_ids
-        ]
+        ] or (
+            list(self._search(expression.AND([fallback_domain, domain]), limit=limit))
+            if fallback_domain
+            else []
+        )
 
     @api.depends('country_id')
     def _compute_display_name(self):

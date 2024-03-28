@@ -43,7 +43,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // While scrolling through navbar menus on medium devices, body should
         // not be scrolled with it.
         const disableScroll = function () {
-            if (uiUtils.getSize() <= SIZES.SM) {
+            if (uiUtils.getSize() < SIZES.LG) {
                 $(document.body).addClass('overflow-hidden');
             }
         };
@@ -266,7 +266,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
-                && uiUtils.getSize() > SIZES.SM) {
+                && uiUtils.getSize() >= SIZES.LG) {
             this.el.querySelectorAll(".offcanvas.show").forEach(offcanvasEl => {
                 Offcanvas.getOrCreateInstance(offcanvasEl).hide();
             });
@@ -669,7 +669,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
-        if (uiUtils.getSize() > SIZES.SM) {
+        if (uiUtils.getSize() >= SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
@@ -693,7 +693,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {boolean} [doShow=true] true to show, false to hide
      */
     _updateDropdownVisibility(ev, doShow = true) {
-        if (uiUtils.getSize() <= SIZES.SM) {
+        if (uiUtils.getSize() < SIZES.LG) {
             return;
         }
         if (ev.currentTarget.closest('.o_extra_menu_items')) {
@@ -877,7 +877,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         // Ignore the event if the menus are not hoverable or if we are in
         // mobile view (again, the hoverable menus are clicked on mobile view).
         if (!this.el.classList.contains("o_hoverable_dropdown")
-                || megaMenuToggleEl.closest(".o_header_mobile") && uiUtils.getSize() <= SIZES.SM) {
+                || megaMenuToggleEl.closest(".o_header_mobile")) {
             return;
         }
         this._moveMegaMenu(megaMenuToggleEl);

@@ -1,11 +1,11 @@
 .o_wevent_sidebar_social > .o_wevent_social_link {
-    $o_link_size: 3em;
+    $o_link_size: 2.3em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: $o_link_size;
     height: $o_link_size;
-    margin: 0 ($spacer * .25) ($spacer * .5) ($spacer * .25);
+    margin: 0 0 ($spacer * .5) ($spacer * .25);
     line-height: $o_link_size;
     background-color: map-get($grays, '100');
     border: $border-width solid $border-color;
@@ -13,6 +13,7 @@
     text-align: center;
     &:hover, &:focus {
         background-color: map-get($grays, '300');
+        text-decoration: none;
     }
 }
 
@@ -23,6 +24,9 @@
         .opt_events_list_columns {
             .card-header {
                 height: 200px;
+            }
+            .card-footer {
+                color: color-contrast($card-bg);
             }
         }
         .opt_events_list_rows {
@@ -47,7 +51,7 @@
             border-radius: 50%;
             text-align: center;
             background-color: $o-wevent-bg-color-base;
-            color: $o-wevent-color;
+            color: $o-wevent-bg-color-base-contrast;
 
             .o_wevent_event_day {
                 @include font-size(1.125rem);
@@ -63,19 +67,12 @@
                 left: $card-spacer-x;
             }
         }
-        a {
-            .card-body {
-                background-color: $o-wevent-bg-color-base !important;
-                color: $o-wevent-color;
-            }
-        }
     }
     .o_wevent_sidebar_title {
         margin: 0 0 ($spacer * 1.5) 0;
         border-bottom: $border-width solid $border-color;
         padding: 0 0 ($spacer * .5) 0;
         font-weight: $font-weight-bold;
-        text-transform: uppercase;
     }
     .o_wevent_sidebar_block {
         margin: 0 0 ($spacer * 2.5) 0;

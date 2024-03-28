@@ -1954,6 +1954,8 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
+        if property_name and field.type != 'property':
+            warnings.warn(f"Ignore the {property_name!r} part of {aggregate_spec!r}, this notation is reserved for the Property field")
 
         sql_field = self._field_to_sql(self._table, access_fname, query)
         sql_expr = READ_GROUP_AGGREGATE[func](self._table, sql_field)

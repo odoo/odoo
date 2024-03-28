@@ -35,6 +35,9 @@ export function serializeNode(node, nodesToStripFromChildren = new Set()) {
 }
 
 export function unserializeNode(obj) {
+    if (!obj) {
+        return;
+    }
     let result = undefined;
     if (obj.nodeType === Node.TEXT_NODE) {
         result = document.createTextNode(obj.textValue);
@@ -47,8 +50,10 @@ export function unserializeNode(obj) {
     } else {
         console.warn('unknown node type');
     }
-    result.oid = obj.oid;
-    return result;
+    if (result) {
+        result.oid = obj.oid;
+        return result;
+    }
 }
 
 export function serializeSelection(selection) {
