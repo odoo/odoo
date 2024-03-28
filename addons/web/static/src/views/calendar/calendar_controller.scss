@@ -26,6 +26,16 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_calendar_wrapper {
         grid-area: 3 / 1 / 3 / 4;
+
+        &:has(.fc-popover) {
+            overflow: auto !important;
+
+            @include media-breakpoint-down(md) {
+                .o_actionswiper_overflow_container {
+                    overflow: visible !important;
+                }
+            }
+        }
     }
 }
 
