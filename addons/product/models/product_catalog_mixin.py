@@ -66,11 +66,12 @@ class ProductCatalogMixin(models.AbstractModel):
             {
                 'productId': int
                 'quantity': float (optional)
+                'productType': string
                 'price': float
                 'readOnly': bool (optional)
             }
         """
-        return {}
+        return {product.id: {'productType': product.type} for product in products}
 
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Returns products information to be shown in the catalog.
@@ -82,6 +83,7 @@ class ProductCatalogMixin(models.AbstractModel):
             {
                 'productId': int
                 'quantity': float (optional)
+                'productType': string
                 'price': float
                 'readOnly': bool (optional)
             }
@@ -89,8 +91,11 @@ class ProductCatalogMixin(models.AbstractModel):
         order_line_info = {}
         default_data = self._default_order_line_values(child_field)
 
-        for product, record_lines in self._get_product_catalog_record_lines(product_ids, child_field=child_field, **kwargs).items():
-            order_line_info[product.id] = record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs)
+        for product, record_lines in self._get_product_catalog_record_lines(product_ids).items():
+            order_line_info[product.id] = {
+               **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
+               'productType': product.type,
+            }
             product_ids.remove(product.id)
 
         products = self.env['product.product'].browse(product_ids)
