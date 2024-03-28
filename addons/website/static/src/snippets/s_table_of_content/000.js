@@ -20,6 +20,7 @@ const TableOfContent = publicWidget.Widget.extend({
 
         await this._super(...arguments);
         this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
+        this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
         this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
 
@@ -78,10 +79,10 @@ const TableOfContent = publicWidget.Widget.extend({
             // Otherwise the call has no effect. We also need to be sure that
             // a scrollSpy instance exists to avoid targeting elements outside
             // the table of content navbar on scrollSpy methods.
-            if (this.$scrollingElement.data('bs.scrollspy')) {
-                this.$scrollingElement.scrollspy('dispose');
+            if (this.$scrollingTarget.data('bs.scrollspy')) {
+                this.$scrollingTarget.scrollspy('dispose');
             }
-            this.$scrollingElement.scrollspy({
+            this.$scrollingTarget.scrollspy({
                 target: '.s_table_of_content_navbar',
                 method: 'offset',
                 offset: position + 100,

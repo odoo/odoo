@@ -263,6 +263,12 @@ var dom = {
         return $().getScrollingElement()[0];
     },
     /**
+     * @returns {HTMLElement|Window}
+     */
+    getScrollingTarget() {
+        return $().getScrollingTarget(...arguments)[0];
+    },
+    /**
      * @param {HTMLElement} el
      * @returns {boolean}
      */
