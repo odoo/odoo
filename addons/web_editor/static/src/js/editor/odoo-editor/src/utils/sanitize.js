@@ -23,6 +23,7 @@ import {
     unwrapContents,
     padLinkWithZws,
     getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -88,7 +89,7 @@ export function areSimilarElements(node, node2) {
 * @returns {String|null}
 */
 function deduceURLfromLabel(link) {
-   const label = link.innerText.trim().replaceAll('\u200B', '');
+   const label = link.innerText.trim().replace(ZERO_WIDTH_CHARS_REGEX, '');
    // Check first for e-mail.
    let match = label.match(EMAIL_REGEX);
    if (match) {
