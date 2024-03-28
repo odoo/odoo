@@ -19,6 +19,14 @@ class AccountMoveSend(models.Model):
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_send_mail_extra_fields')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
+    ubl_partner_warning = fields.Char(
+        string="Partner warning",
+        compute="_compute_ubl_warnings",
+    )
+    show_ubl_company_warning = fields.Boolean(
+        string="Company warning",
+        compute="_compute_ubl_warnings",
+    )
 
     def _get_available_field_values_in_multi(self, move):
         # EXTENDS 'account'
@@ -55,6 +63,27 @@ class AccountMoveSend(models.Model):
     def _compute_checkbox_ubl_cii_xml(self):
         for wizard in self:
             wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and wizard.company_id.invoice_is_ubl_cii
+
+    @api.depends('move_ids')
+    def _compute_ubl_warnings(self):
+        for wizard in self:
+            wizard.show_ubl_company_warning = False
+            wizard.ubl_partner_warning = False
+            if not set(wizard.move_ids.partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
+                return
+
+            wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
+            not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
+                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+            )
+            if len(not_configured_partners) == 1:
+                wizard.ubl_partner_warning = _("This partner is missing Peppol EAS or Peppol Endpoint field. "
+                                        "Please check those in its Accounting tab or the generated file will be incomplete.")
+            if len(not_configured_partners) > 1:
+                names = ', '.join(not_configured_partners[:5].mapped('display_name'))
+                wizard.ubl_partner_warning = _("The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+                                        "Please check those in their Accounting tab. "
+                                        "Otherwise, the generated files will be incomplete.", names)
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
