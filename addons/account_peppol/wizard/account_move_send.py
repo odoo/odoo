@@ -45,7 +45,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('enable_peppol')
     def _compute_checkbox_send_peppol(self):
         for wizard in self:
-            wizard.checkbox_send_peppol = wizard.enable_peppol
+            wizard.checkbox_send_peppol = wizard.enable_peppol and not wizard.peppol_warning
 
     @api.depends('checkbox_send_peppol')
     def _compute_checkbox_ubl_cii_xml(self):
@@ -147,7 +147,6 @@ class AccountMoveSend(models.TransientModel):
 
                 partner = invoice.partner_id.commercial_partner_id
                 if not partner.peppol_eas or not partner.peppol_endpoint:
-                    # should never happen but in case it does, we need to handle it
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                     continue
