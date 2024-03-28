@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="sale_order_portal_content_brazil" inherit_id="sale.sale_order_portal_content" primary="True">
+    <template id="sale_order_portal_content_brazil" inherit_id="sale.sale_order_portal_content">
         <!-- hide the taxes th -->
-        <th id="taxes_header" position="replace"/>
+        <th id="taxes_header" position="attributes">
+            <attribute name="t-if">sale_order.country_code != 'BR'</attribute>
+        </th>
+
         <!-- hide the taxes td -->
-        <td id="taxes" position="replace"/>
-        <!-- hide the "Amount" th -->
-        <th id="subtotal_header" position="replace"/>
-        <!-- hide the "Amount" td -->
-        <td id='subtotal' position="replace"/>
-        <xpath expr="//t[@t-call='sale.sale_order_portal_content_totals_table']" position="replace">
-            <table class="table table-sm">
-                <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
-                <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
-            </table>
-        </xpath>
-        <!-- hide subsection subtotals, because they don't include tax -->
-        <xpath expr="//span[@t-out='current_subtotal']/.." position="replace"/>
+        <td id="taxes" position="attributes">
+            <attribute name="t-if">sale_order.country_code != 'BR'</attribute>
+        </td>
+
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">(current_subtotal + line.price_total) if sale_order.country_code == 'BR' else (current_subtotal + line.price_subtotal)</attribute>
+        </t>
+
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-if">sale_order.country_code != 'BR'</attribute>
+        </span>
+        <span t-field="line.price_subtotal" position="after">
+            <span t-if="sale_order.country_code == 'BR'" class="oe_order_line_price_subtotal" t-field="line.price_total"/>
+        </span>
     </template>
+
+    <record id="sale_order_portal_content_brazil" model="ir.ui.view">
+        <field name="mode">extension</field>
+    </record>
 </odoo>
