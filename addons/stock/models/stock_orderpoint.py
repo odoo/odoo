@@ -253,6 +253,7 @@ class StockWarehouseOrderpoint(models.Model):
             for orderpoint in orderpoints_by_context:
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
+        orderpoints_by_context._compute_qty_to_order()
 
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty')
     def _compute_qty_to_order(self):
