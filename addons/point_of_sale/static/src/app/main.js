@@ -10,6 +10,7 @@ import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
+import { RPCError } from "@web/core/network/rpc";
 
 const loader = reactive({ isShown: true });
 whenReady(() => {
@@ -29,6 +30,19 @@ whenReady(() => {
     // setup environment
     const env = makeEnv();
     await startServices(env);
+
+    // handle loading PoS error
+    if (env.services.pos instanceof Error) {
+        let message = _t("An error occurred while loading the Point of Sale: \n");
+        if (env.services.pos instanceof RPCError) {
+            message += env.services.pos.data.message;
+        } else {
+            message += env.services.pos.message;
+        }
+        window.alert(message);
+        window.location = "/web#action=point_of_sale.action_client_pos_menu";
+    }
+
     // start application
     await whenReady();
     const app = new App(Chrome, {
