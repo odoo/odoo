@@ -20,7 +20,8 @@ with a single statement.
         'web.assets_backend': [
             'base_iban/static/src/components/**/*',
         ],
-        'web.qunit_suite_tests': [
+        # Unit test files
+        'web.assets_unit_tests': [
             'base_iban/static/src/tests/**/*',
         ],
     },

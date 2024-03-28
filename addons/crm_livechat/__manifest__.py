@@ -22,7 +22,8 @@
         'web.assets_backend': {
             'crm_livechat/static/src/core/*',
         },
-        'web.qunit_suite_tests': [
+        # Unit test files
+        'web.assets_unit_tests': [
             'crm_livechat/static/tests/**/*.js',
         ],
     },

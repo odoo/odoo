@@ -1,12 +1,18 @@
-/* @odoo-module */
+import { test } from "@odoo/hoot";
+import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
+import {
+    click,
+    contains,
+    openFormView,
+    registerArchs,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineCalendarModels();
+registerArchs({ "calendar.event,false,calendar": `<calendar date_start="start"/>` });
 
-import { openFormView, start } from "@mail/../tests/helpers/test_utils";
-
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.test("activity click on Reschedule", async () => {
+test("activity click on Reschedule", async () => {
     const pyEnv = await startServer();
     const resPartnerId = pyEnv["res.partner"].create({});
     const meetingActivityTypeId = pyEnv["mail.activity.type"].create({
@@ -36,7 +42,7 @@ QUnit.test("activity click on Reschedule", async () => {
     await contains(".o_calendar_view");
 });
 
-QUnit.test("Can cancel activity linked to an event", async () => {
+test("Can cancel activity linked to an event", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Milan Kundera" });
     const activityTypeId = pyEnv["mail.activity.type"].create({

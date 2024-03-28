@@ -1,13 +1,20 @@
-/* @odoo-module */
+import { expect, test } from "@odoo/hoot";
+import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
+import {
+    assertSteps,
+    click,
+    contains,
+    start,
+    startServer,
+    step,
+} from "@mail/../tests/mail_test_helpers";
+import { mockService, patchDate, serverState } from "@web/../tests/web_test_helpers";
+import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
+import { actionService } from "@web/webclient/actions/action_service";
 
-import { serverState, startServer } from "@bus/../tests/helpers/mock_python_environment";
+defineCalendarModels();
 
-import { start } from "@mail/../tests/helpers/test_utils";
-
-import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { click, contains } from "@web/../tests/utils";
-
-QUnit.test("activity menu widget:today meetings", async function (assert) {
+test("activity menu widget:today meetings", async () => {
     patchDate(2018, 3, 20, 6, 0, 0);
     const pyEnv = await startServer();
     const attendeeId = pyEnv["calendar.attendee"].create({ partner_id: serverState.partnerId });
@@ -25,19 +32,25 @@ QUnit.test("activity menu widget:today meetings", async function (assert) {
             attendee_ids: [attendeeId],
         },
     ]);
-    const { env } = await start();
+    mockService("action", () => {
+        const ogService = actionService.start(getMockEnv());
+        return {
+            ...ogService,
+            doAction(action) {
+                if (action?.res_model !== "res.partner") {
+                    step("action");
+                    expect(action).toBe("calendar.action_calendar_event");
+                }
+            },
+        };
+    });
+    await start();
     await contains(".o_menu_systray i[aria-label='Activities']");
     await click(".o_menu_systray i[aria-label='Activities']");
-    patchWithCleanup(env.services.action, {
-        doAction(action) {
-            assert.strictEqual(action, "calendar.action_calendar_event");
-            assert.step("action");
-        },
-    });
     await contains(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Today's Meetings" });
     await contains(".o-mail-ActivityGroup .o-calendar-meeting", { count: 2 });
     await contains(".o-calendar-meeting span.fw-bold", { text: "meeting1" });
     await contains(".o-calendar-meeting span:not(.fw-bold)", { text: "meeting2" });
     await click(".o-mail-ActivityMenu .o-mail-ActivityGroup");
-    assert.verifySteps(["action"]);
+    await assertSteps(["action"]);
 });
