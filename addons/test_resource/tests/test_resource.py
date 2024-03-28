@@ -1386,3 +1386,18 @@ class TestResource(TestResourceCommon):
         """
         self.env.company.resource_calendar_id = self.two_weeks_resource
         self.env['res.company'].create({'name': 'New Company'})
+
+    def test_empty_working_hours_for_two_weeks_resource(self):
+        resource = self._define_calendar_2_weeks(
+            'Two weeks resource',
+            [],
+            'Europe/Brussels'
+        )
+        resource_attendance = self.env['resource.calendar.attendance'].create({
+            'name': 'test',
+            'calendar_id': self.calendar_jean.id,
+            'hour_from': 0,
+            'hour_to': 0
+        })
+        resource_hour = resource._get_hours_per_day(resource_attendance)
+        self.assertEqual(resource_hour, 0.0)
