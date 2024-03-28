@@ -2133,6 +2133,10 @@ export class OdooEditor extends EventTarget {
         }
 
         const sel = this.document.getSelection();
+        if (!sel) {
+            this.toolbar.style.visibility = 'hidden';
+            return;
+        }
         if (!sel.anchorNode) {
             show = false;
         }
