@@ -1,6 +1,5 @@
 import datetime
 import string
-import zeep
 import re
 import stdnum
 from stdnum.eu.vat import check_vies
@@ -11,6 +10,7 @@ from stdnum import luhn
 import logging
 
 from odoo import api, models, fields, tools, _
+from odoo.tools import zeep
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
