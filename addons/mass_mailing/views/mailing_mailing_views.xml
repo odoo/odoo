@@ -171,6 +171,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
+                            <field name="create_uid" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <label for="subject">Subject</label>
