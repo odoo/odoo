@@ -4,9 +4,9 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang
+from odoo.tools.zeep import Client
 
 from markupsafe import Markup
-from zeep import Client
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
