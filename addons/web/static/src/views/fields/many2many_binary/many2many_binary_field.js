@@ -18,6 +18,7 @@ export class Many2ManyBinaryField extends Component {
         ...standardFieldProps,
         acceptedFileExtensions: { type: String, optional: true },
         className: { type: String, optional: true },
+        numberOfFiles: { type: Number, optional: true },
     };
 
     setup() {
@@ -69,6 +70,11 @@ export const many2ManyBinaryField = {
             name: "accepted_file_extensions",
             type: "string",
         },
+        {
+            label: _lt("Number of files"),
+            name: "number_of_files",
+            type: "integer",
+        },
     ],
     supportedTypes: ["many2many"],
     isEmpty: () => false,
@@ -80,6 +86,7 @@ export const many2ManyBinaryField = {
     extractProps: ({ attrs, options }) => ({
         acceptedFileExtensions: options.accepted_file_extensions,
         className: attrs.class,
+        numberOfFiles: options.number_of_files,
     }),
 };
 
