@@ -132,12 +132,40 @@ stepUtils.autoExpandMoreButtons(),
     trigger: ".o_form_editable",
 },
 {
+    trigger: 'th.o_list_actions_header i.o_optional_columns_dropdown_toggle',
+    content: _t("Let's make sure to display the variant column"),
+    position: "bottom",
+    run: "click",
+}, {
+    trigger: 'span.o-dropdown-item span:contains("Product Variant")',
+    run: (action) => {
+        action.click();
+        const e = $('input[type="checkbox"][name="product_id"]:not(:checked)');
+        if (e.length > 0) {
+            action.click(e);
+        }
+    },
+}, {
 // Add first component
     // FIXME in mobile replace list by kanban + form
     trigger: ".o_field_x2many_list_row_add > a",
     content: _t("Click here to add some lines."),
     tooltipPosition: "bottom",
     run: "click",
+}, {
+    trigger: 'th.o_list_actions_header i.o_optional_columns_dropdown_toggle',
+    content: _t("Let's make sure to display the variant column"),
+    position: "bottom",
+    run: "click",
+}, {
+    trigger: 'span.o-dropdown-item span:contains("Product Variant")',
+    run: (action) => {
+        action.click();
+        const e = $('input[type="checkbox"][name="product_id"]:not(:checked)');
+        if (e.length > 0) {
+            action.click(e);
+        }
+    },
 }, {
     isActive: ["desktop"],
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
@@ -150,7 +178,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    trigger: ".o_selected_row td[name=product_id] input",
     content: _t("Click here to open kanban search mobile."),
     tooltipPosition: "bottom",
     run: "click",
@@ -281,7 +309,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains(Component)",
+    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains(Product Variant)",
 },
 {
     isActive: ["mobile"],
@@ -334,7 +362,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 }, {
     isActive: ["mobile"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    trigger: ".o_selected_row .td[name=product_id] input",
     content: _t("Click here to open kanban search mobile."),
     tooltipPosition: "bottom",
     run: "click",
@@ -358,7 +386,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["desktop"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    trigger: ".o_selected_row .td[name=product_id] input",
     content: _t("Select a product, or create a new one on the fly."),
     tooltipPosition: "right",
     run: "edit the_flow.component2",
