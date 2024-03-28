@@ -76,12 +76,8 @@ patch(Wysiwyg.prototype, {
      */
     _loadIframe() {
         var self = this;
-        const isEditableRoot = this.$editable === this.$root;
         this.$editable = $('<div class="note-editable oe_structure odoo-editor-editable"></div>');
         this.$el.removeClass('note-editable oe_structure odoo-editor-editable');
-        if (isEditableRoot) {
-            this.$root = this.$editable;
-        }
         this.$iframe = $('<iframe class="wysiwyg_iframe o_iframe">').css({
             width: '100%'
         });

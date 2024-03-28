@@ -430,9 +430,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     // Private
     //--------------------------------------------------------------------------
 
-    _renderElement() {
-        this.$root = this.$editable;
-    }
+    /**
+     * Nothing to render for the website specialization.
+     *
+     * @override
+     */
+    _renderElement() {}
     /**
      * @override
      * @private
