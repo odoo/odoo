@@ -247,7 +247,14 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: 'text Xperia',
-        }, {
+        },
+        {
+            //TODO: Fix code to avoid this behavior
+            content: "Click outside focussed element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
@@ -289,7 +296,14 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: 'text Development Service',
-        }, {
+        }, 
+        {
+            //TODO: Fix code to avoid this behavior
+            content: "Click outside focussed element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
@@ -324,17 +338,38 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: 'text France',
-        }, {
+        }, 
+        {
+            //TODO: Fix code to avoid this behavior
+            content: "Click outside focussed element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
-        }, {
+        }, 
+        {
+            //TODO: Fix code to avoid this behavior
+            content: "Click outside focussed element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Change last Option label",
             trigger: 'we-list table input:eq(3)',
             run: 'text Canada',
         }, {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
-        }, {
+        }, 
+        {
+            //TODO: Fix code to avoid this behavior
+            content: "Click outside focussed element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
