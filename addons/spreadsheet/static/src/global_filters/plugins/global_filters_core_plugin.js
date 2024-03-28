@@ -29,6 +29,7 @@
  * @property {string} id
  * @property {string} label
  * @property {string} modelName
+ * @property {boolean} includeChildren
  * @property {"current_user" | number[]} [defaultValue]
  *
  * @typedef {TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter} GlobalFilter
