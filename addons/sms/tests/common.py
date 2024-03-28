@@ -51,7 +51,7 @@ class MockSMS(common.BaseCase):
                             'body': to_send['content'],
                         })
                 return result
-            elif local_endpoint == '/iap/sms/3/send':
+            elif local_endpoint == '/api/sms/3/send':
                 result = []
                 for message in params['messages']:
                     for number in message["numbers"]:
