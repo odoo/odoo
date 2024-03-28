@@ -940,6 +940,8 @@ class ProductTemplate(models.Model):
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
+        if 'product_variant' in self.env.context:
+            return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
         return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
 
     def action_update_quantity_on_hand(self):
