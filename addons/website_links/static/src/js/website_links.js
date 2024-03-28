@@ -425,7 +425,7 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
      * @private
      */
     _onShortenUrlButtonClick: async function (ev) {
-        const textValue = ev.target.dataset["clipboard-text"];
+        const textValue = ev.target.dataset.clipboardText;
         await browser.navigator.clipboard.writeText(textValue);
 
         if (!$('#btn_shorten_url').hasClass('btn-copy') || this.url_copy_animating) {

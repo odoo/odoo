@@ -9,7 +9,7 @@ publicWidget.registry.WebsiteSaleGiftCardCopy = publicWidget.Widget.extend({
         "click .copy-to-clipboard": "_onClickCopyToClipboard",
     },
     async _onClickCopyToClipboard(ev) {
-        const textValue = ev.target.dataset["clipboard-text"];
+        const textValue = ev.target.dataset.clipboardText;
         await browser.navigator.clipboard.writeText(textValue);
     },
 });
