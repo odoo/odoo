@@ -201,6 +201,20 @@ $.fn.extend({
         return $baseScrollingElement;
     },
     /**
+     * @returns {jQuery}
+     */
+    getScrollingTarget(contextItem = window.document) {
+        const $scrollingElement = contextItem instanceof Element
+            ? $(contextItem)
+            : contextItem instanceof jQuery
+            ? contextItem
+            : $().getScrollingElement(contextItem);
+        const document = $scrollingElement[0].ownerDocument;
+        return $scrollingElement.is(document.scrollingElement)
+            ? $(document.defaultView)
+            : $scrollingElement;
+    },
+    /**
      * @return {boolean}
      */
     hasScrollableContent() {
