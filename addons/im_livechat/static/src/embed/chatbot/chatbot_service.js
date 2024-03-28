@@ -261,15 +261,21 @@ export class ChatBotService {
         }
         this.currentStep.hasAnswer = true;
         this.save();
+        let isRedirecting = false;
         if (answer) {
+            if (answer.redirectLink && URL.canParse(answer.redirectLink, window.location.href)) {
+                const url = new URL(window.location.href);
+                const nextURL = new URL(answer.redirectLink, window.location.href);
+                isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
+                browser.location.assign(answer.redirectLink);
+            }
             await this.rpc("/chatbot/answer/save", {
                 channel_uuid: this.livechatService.thread.uuid,
                 message_id: stepMessage.id,
                 selected_answer_id: answer.id,
             });
         }
-        if (answer?.redirectLink) {
-            browser.location.assign(answer.redirectLink);
+        if (isRedirecting) {
             return;
         }
         this._triggerNextStep();
