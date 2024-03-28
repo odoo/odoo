@@ -229,7 +229,7 @@ class ProductProduct(models.Model):
 
     def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
         packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
-        if self.env['product.packaging'].sudo().search(packaging_domain, order="id", limit=1):
+        if self.env['product.packaging'].sudo().search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
     @api.constrains('barcode')
@@ -347,7 +347,7 @@ class ProductProduct(models.Model):
         if self.id.origin:
             domain.append(('id', '!=', self.id.origin))
 
-        if self.env['product.product'].search(domain, limit=1):
+        if self.env['product.product'].search_count(domain, limit=1):
             return {'warning': {
                 'title': _("Note:"),
                 'message': _("The Internal Reference '%s' already exists.", self.default_code),

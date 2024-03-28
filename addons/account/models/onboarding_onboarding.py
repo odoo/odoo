@@ -17,7 +17,7 @@ class Onboarding(models.Model):
         if self == self.env.ref('account.onboarding_onboarding_account_invoice', raise_if_not_found=False):
             step = self.env.ref('account.onboarding_onboarding_step_create_invoice', raise_if_not_found=False)
             if step and step.current_step_state == 'not_done':
-                if self.env['account.move'].search(
+                if self.env['account.move'].search_count(
                     [('company_id', '=', self.env.company.id), ('move_type', '=', 'out_invoice')], limit=1
                 ):
                     step.action_set_just_done()

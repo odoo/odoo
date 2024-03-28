@@ -11,7 +11,7 @@ class Lang(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals['active']:
-            if self.env['website'].search([('language_ids', 'in', self._ids)]):
+            if self.env['website'].search_count([('language_ids', 'in', self._ids)], limit=1):
                 raise UserError(_("Cannot deactivate a language that is currently used on a website."))
         return super(Lang, self).write(vals)
 

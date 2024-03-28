@@ -200,8 +200,8 @@ class Location(models.Model):
     @api.constrains('scrap_location')
     def _check_scrap_location(self):
         for record in self:
-            if record.scrap_location and self.env['stock.picking.type'].search([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)]):
-                raise ValidationError(_("You cannot set a location as a scrap location when it assigned as a destination location for a manufacturing type operation."))
+            if record.scrap_location and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
+                raise ValidationError(_("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
@@ -435,7 +435,7 @@ class Location(models.Model):
                 product = product or self._context.get('products')
                 if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
                     return False
-                if self.env['stock.move.line'].search([
+                if self.env['stock.move.line'].search_count([
                     ('product_id', '!=', product.id),
                     ('state', 'not in', ('done', 'cancel')),
                     ('location_dest_id', '=', self.id),

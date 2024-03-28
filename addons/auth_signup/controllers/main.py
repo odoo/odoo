@@ -54,7 +54,7 @@ class AuthSignupHome(Home):
             except UserError as e:
                 qcontext['error'] = e.args[0]
             except (SignupError, AssertionError) as e:
-                if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
+                if request.env["res.users"].sudo().search_count([("login", "=", qcontext.get("login"))], limit=1):
                     qcontext["error"] = _("Another user is already registered using this email address.")
                 else:
                     _logger.warning("%s", e)

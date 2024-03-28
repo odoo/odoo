@@ -673,7 +673,7 @@ class MrpProduction(models.Model):
                 if mo.state == 'done':
                     allowed_states += ['assigned']
                 wh_location_ids = self.env['stock.location']._search([('id', 'child_of', mo.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
-                if self.env['stock.move'].search([
+                if self.env['stock.move'].search_count([
                     ('state', 'in', allowed_states),
                     ('product_qty', '>', 0),
                     ('location_id', 'in', wh_location_ids),

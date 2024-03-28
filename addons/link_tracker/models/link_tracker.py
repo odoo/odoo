@@ -303,7 +303,7 @@ class LinkTrackerCode(models.Model):
                 for __ in range(n)
             ]
 
-            if len(set(code_propositions)) != n or self.search([('code', 'in', code_propositions)]):
+            if len(set(code_propositions)) != n or self.search_count([('code', 'in', code_propositions)], limit=1):
                 size += 1
             else:
                 return code_propositions

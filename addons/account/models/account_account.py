@@ -254,7 +254,7 @@ class AccountAccount(models.Model):
     @api.constrains('company_id')
     def _check_company_consistency(self):
         for company, accounts in tools.groupby(self, lambda account: account.company_id):
-            if self.env['account.move.line'].search([
+            if self.env['account.move.line'].search_count([
                 ('account_id', 'in', [account.id for account in accounts]),
                 '!', ('company_id', 'child_of', company.id)
             ], limit=1):
@@ -803,7 +803,7 @@ class AccountAccount(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_journal_items(self):
-        if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
+        if self.env['account.move.line'].search_count([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
 
     @api.ondelete(at_uninstall=False)
@@ -821,12 +821,12 @@ class AccountAccount(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_fiscal_position(self):
-        if self.env['account.fiscal.position.account'].search(['|', ('account_src_id', 'in', self.ids), ('account_dest_id', 'in', self.ids)], limit=1):
+        if self.env['account.fiscal.position.account'].search_count(['|', ('account_src_id', 'in', self.ids), ('account_dest_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on the account mapping of a fiscal position.', ', '.join(f"{a.code} - {a.name}" for a in self)))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_tax_repartition_line(self):
-        if self.env['account.tax.repartition.line'].search([('account_id', 'in', self.ids)], limit=1):
+        if self.env['account.tax.repartition.line'].search_count([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot remove/deactivate the accounts "%s" which are set on a tax repartition line.', ', '.join(f"{a.code} - {a.name}" for a in self)))
 
     def action_duplicate_accounts(self):

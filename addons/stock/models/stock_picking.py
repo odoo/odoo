@@ -756,7 +756,7 @@ class Picking(models.Model):
             if self[0].state == 'done':
                 allowed_states += ['assigned']
             wh_location_ids = self.env['stock.location']._search([('id', 'child_of', picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
-            if self.env['stock.move'].search([
+            if self.env['stock.move'].search_count([
                 ('state', 'in', allowed_states),
                 ('product_qty', '>', 0),
                 ('location_id', 'in', wh_location_ids),
@@ -1134,7 +1134,7 @@ class Picking(models.Model):
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
                 wh_location_ids = self.env['stock.location']._search([('id', 'child_of', pickings_show_report.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
-                if self.env['stock.move'].search([
+                if self.env['stock.move'].search_count([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),
                         ('location_id', 'in', wh_location_ids),

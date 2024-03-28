@@ -69,12 +69,12 @@ class Efaktur(models.Model):
                 raise ValidationError(_("The difference between the two numbers must not be greater than 10.000"))
 
             # The number of records should always be very small, so it is ok to search in loop
-            if self.search([
+            if self.search_count([
                 '&', ('id', '!=', record.id), '|', '|',
                 '&', ('min', '<=', record.max), ('max', '>=', record.max),
                 '&', ('min', '<=', record.min), ('max', '>=', record.min),
                 '&', ('min', '>=', record.min), ('max', '<=', record.max),
-            ]):
+            ], limit=1):
                 raise ValidationError(_('Efaktur interleaving range detected'))
 
     @api.depends('min', 'max')

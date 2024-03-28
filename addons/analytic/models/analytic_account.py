@@ -92,7 +92,7 @@ class AccountAnalyticAccount(models.Model):
     @api.constrains('company_id')
     def _check_company_consistency(self):
         for company, accounts in groupby(self, lambda account: account.company_id):
-            if company and self.env['account.analytic.line'].sudo().search([
+            if company and self.env['account.analytic.line'].sudo().search_count([
                 ('auto_account_id', 'in', [account.id for account in accounts]),
                 '!', ('company_id', 'child_of', company.id),
             ], limit=1):

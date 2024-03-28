@@ -33,7 +33,7 @@ class ProductPackaging(models.Model):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
         domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
-        if self.env['product.product'].search(domain, order="id", limit=1):
+        if self.env['product.product'].search_count(domain, limit=1):
             raise ValidationError(_("A product already uses the barcode"))
 
     def _check_qty(self, product_qty, uom_id, rounding_method="HALF-UP"):

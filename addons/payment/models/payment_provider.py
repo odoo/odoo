@@ -281,7 +281,7 @@ class PaymentProvider(models.Model):
         :return: None
         :raise UserError: If transactions are linked to the provider.
         """
-        if self._origin.company_id != self.company_id and self.env['payment.transaction'].search(
+        if self._origin.company_id != self.company_id and self.env['payment.transaction'].search_count(
             [('provider_id', '=', self._origin.id)], limit=1
         ):
             raise UserError(_(
