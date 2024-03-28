@@ -198,7 +198,7 @@
                                 <field name="receipt_reminder_email"/>
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" invisible="not receipt_reminder_email">
-                                    <field name="reminder_date_before_receipt"/>
+                                    <field name="reminder_date_before_receipt" class="oe_inline" style="max-width: 30px;"/>
                                     day(s) before
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." invisible="not id"/>
                                 </div>
