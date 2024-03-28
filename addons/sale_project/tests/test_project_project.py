@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -29,3 +29,33 @@ class TestProjectProject(TransactionCase):
         )[0]
         projects_to_make_billable += non_billable_projects
         self.assertEqual(projects_to_make_billable, project1 + project2)
+
+    def test_onchange_allow_billable_warning(self):
+        project = self.env['project.project'].create({
+            'name': 'Test Project',
+            'allow_billable': True,
+        })
+        expected_msg = self.env._(
+            "If you mark this project as non-billable, all tasks will be disconnected from customers and "
+            "sales orders. You won't be able to recover this data if you decide to make the project billable "
+            "again later. Are you sure you want to do this?"
+        )
+
+        with self.assertLogs('odoo.tests.form.onchange', 'WARNING') as captured_logs:
+            with Form(project) as form:
+                form.allow_billable = False
+        self.assertTrue(
+            captured_logs.output[0].startswith('WARNING:odoo.tests.form.onchange:'),
+            "A warning should be logged when marking an existing project as non-billable.",
+        )
+        self.assertIn(
+            expected_msg,
+            captured_logs.output[0],
+            "Warning message should match expected when disabling billable.",
+        )
+
+        # No warning should be logged when creating a non-billable project
+        with self.assertNoLogs('odoo.tests.form.onchange', 'WARNING'):
+            with Form(self.env['project.project']) as project_form:
+                project_form.name = 'New Project'
+                project_form.allow_billable = False

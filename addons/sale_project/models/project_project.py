@@ -72,6 +72,17 @@ class ProjectProject(models.Model):
         defaults['sale_line_id'] = False
         return defaults
 
+    @api.onchange('allow_billable')
+    def _onchange_allow_billable_warning(self):
+        if self._origin and not self.allow_billable:
+            return {'warning': {
+                'message': self.env._(
+                    "If you mark this project as non-billable, all tasks will be disconnected from customers and "
+                    "sales orders. You won't be able to recover this data if you decide to make the project billable "
+                    "again later. Are you sure you want to do this?"
+                )
+            }}
+
     @api.depends('allow_billable', 'partner_id.company_id')
     def _compute_partner_id(self):
         for project in self:
