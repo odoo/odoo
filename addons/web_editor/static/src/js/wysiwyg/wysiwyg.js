@@ -514,7 +514,6 @@ export class Wysiwyg extends Component {
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
             $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
-            this.$root = this.$root || $wrapwrap;
         }
 
         this.$editable.on('click', '[data-oe-field][data-oe-sanitize-prevent-edition]', () => {
@@ -639,7 +638,7 @@ export class Wysiwyg extends Component {
         // Ensure the Toolbar always have the correct layout in note.
         this._updateEditorUI();
 
-        this.$root.on('click.Wysiwyg', (ev) => {
+        this.$editable.on('click.Wysiwyg', (ev) => {
             const $target = $(ev.target).closest('a');
 
             // Keep popover open if clicked inside it, but not on a button
@@ -888,7 +887,7 @@ export class Wysiwyg extends Component {
         if ($wrapwrap.length && this.odooEditor) {
             $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
-        this.$root?.off('.Wysiwyg');
+        this.$editable?.off('.Wysiwyg');
         this.toolbarEl?.remove();
         this.imageCropEL?.remove();
         if (this.linkPopover) {
@@ -918,7 +917,6 @@ export class Wysiwyg extends Component {
             this.$editable.attr('contenteditable', true);
         }
 
-        this.$root = this.$editable;
         if (this.options.height) {
             this.$editable.height(this.options.height);
         }
@@ -930,7 +928,6 @@ export class Wysiwyg extends Component {
         }
         if (this.options.resizable && !isMobileOS()) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
-            this.$root = $wrapper;
             $wrapper.append(this.$editable);
             this.$resizer = $(`<div class="o_wysiwyg_resizer">
                 <div class="o_wysiwyg_resizer_hook"></div>
