@@ -211,6 +211,7 @@
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="placeholder_count" t-value="'opp_count'"/>
             </t>
+            <div id="force_opportunities_display" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" class="d-none"/>
         </xpath>
     </template>
 
