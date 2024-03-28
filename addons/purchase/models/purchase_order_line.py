@@ -475,7 +475,7 @@ class PurchaseOrderLine(models.Model):
         else:
             self.product_qty = 1.0
 
-    def _get_product_catalog_lines_data(self):
+    def _get_product_catalog_lines_data(self, **kwargs):
         """ Return information about purchase order lines in `self`.
 
         If `self` is empty, this method returns only the default value(s) needed for the product
