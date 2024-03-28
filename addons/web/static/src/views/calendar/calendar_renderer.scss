@@ -159,14 +159,14 @@
         }
 
         .fc-more-popover {
-            .fc-header {
+            .fc-popover-header {
                 padding-left: 1rem;
-                .fc-title {
+                .fc-popover-title {
                     font-weight: bold;
                 }
             }
 
-            .fc-body {
+            .fc-popover-body {
                 max-height: 500px;
                 overflow: auto;
             }
@@ -627,7 +627,7 @@
     $color: nth($o-colors-complete, $i);
     $color-subtle: mix($o-white, $color, 55%);
 
-    .o_calendar_renderer .fc-view {
+    .o_calendar_renderer {
         .o_calendar_color_#{$i - 1} {
             --fc-event-bg-color: #{$color-subtle};
             --o-event-bg: #{$color};
