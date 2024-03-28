@@ -30,9 +30,16 @@
     align-self: start;
 
     > .o_view_controller {
-        padding: 0 12px 12px 12px;
+        padding: 0 6px 6px 6px;
         .o_graph_renderer canvas {
             height: 300px;
+        }
+        .o_content {
+            max-height: 80vh;
+            overflow: auto;
+            > .o_renderer {
+                min-width: 1200px;
+            }
         }
     }
 
