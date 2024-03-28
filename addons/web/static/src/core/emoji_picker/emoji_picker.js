@@ -214,7 +214,7 @@ export class EmojiPicker extends Component {
             () => [this.state.searchStr]
         );
         onWillUnmount(() => {
-            if (this.emojis.length === 0) {
+            if (!this.gridRef.el) {
                 return;
             }
             if (this.props.storeScroll) {
