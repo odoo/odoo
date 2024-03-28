@@ -29,6 +29,7 @@ import {
     isWhitespace,
     isVisibleTextNode,
     getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 /**
@@ -49,7 +50,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentElement, firstSplitOffset, parentElement, secondSplitOffset);
     const isSpace = isWhitespace(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
