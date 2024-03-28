@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
@@ -858,6 +859,30 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'is_reconciled': True,
             'is_matched': True,
         }])
+
+    def test_reconciliation_payment_states_reverse_payment_move(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})\
+            ._create_payments()
+
+        self.assertTrue(invoice.payment_state in ('paid', 'in_payment'))
+        self.assertRecordValues(payment, [{'reconciled_invoice_ids': invoice.ids}])
+
+        # Reverse the payment move
+        reversal_wizard = self.env['account.move.reversal']\
+            .with_context(active_model='account.move', active_ids=payment.move_id.ids)\
+            .create({'reason': "oopsie", 'journal_id': payment.journal_id.id})
+        reversal_wizard.refund_moves()
+        self.assertRecordValues(invoice, [{'payment_state': 'not_paid'}])
+        self.assertRecordValues(payment.line_ids, [{'reconciled': True}] * 2)
 
     def test_payment_name(self):
         AccountPayment = self.env['account.payment']
