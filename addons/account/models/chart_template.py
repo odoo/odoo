@@ -600,7 +600,7 @@ class AccountChartTemplate(models.AbstractModel):
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
         # Display caba fields if there are caba taxes
-        if not company.parent_id and self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
+        if not company.parent_id and self.env['account.tax'].search_count([('tax_exigibility', '=', 'on_payment')], limit=1):
             company.tax_exigibility = True
 
         for field, model in {

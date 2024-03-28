@@ -397,7 +397,7 @@ class AccountJournal(models.Model):
     @api.constrains('company_id')
     def _check_company_consistency(self):
         for company, journals in groupby(self, lambda journal: journal.company_id):
-            if self.env['account.move'].search([
+            if self.env['account.move'].search_count([
                 ('journal_id', 'in', [journal.id for journal in journals]),
                 '!', ('company_id', 'child_of', company.id)
             ], limit=1):

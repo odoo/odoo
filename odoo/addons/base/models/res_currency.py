@@ -114,7 +114,7 @@ class Currency(models.Model):
             return
 
         currencies = self.filtered(lambda c: not c.active)
-        if self.env['res.company'].search([('currency_id', 'in', currencies.ids)]):
+        if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(_("This currency is set on a company and therefore cannot be deactivated."))
 
     def _get_rates(self, company, date):

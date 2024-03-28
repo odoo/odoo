@@ -364,7 +364,7 @@ class PaymentTransaction(models.Model):
 
         # Compute the sequence number.
         reference = prefix  # The first reference of a sequence has no sequence number.
-        if self.sudo().search([('reference', '=', prefix)]):  # The reference already has a match
+        if self.sudo().search_count([('reference', '=', prefix)], limit=1):  # The reference already has a match
             # We now execute a second search on `payment.transaction` to fetch all the references
             # starting with the given prefix. The load of these two searches is mitigated by the
             # index on `reference`. Although not ideal, this solution allows for quickly knowing
