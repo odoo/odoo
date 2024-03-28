@@ -2923,6 +2923,7 @@ export class OdooEditor extends EventTarget {
         }
 
         const sel = this.document.getSelection();
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
         if (!hasTableSelection(this.editable)) {
             if (this.editable.classList.contains('o_col_resize') || this.editable.classList.contains('o_row_resize')) {
                 show = false;
@@ -2936,6 +2937,17 @@ export class OdooEditor extends EventTarget {
                     show = false;
                 }
             }
+||||||| parent of 780c02f7270a (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        if (!sel.anchorNode) {
+            show = false;
+=======
+        if (!sel) {
+            this.toolbar.style.visibility = 'hidden';
+            return;
+        }
+        if (!sel.anchorNode) {
+            show = false;
+>>>>>>> 780c02f7270a (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         }
         if (this.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
             if (!this.isMobile) {
