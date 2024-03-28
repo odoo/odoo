@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang
 
-from zeep import Client
+from odoo.tools.zeep import Client
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
