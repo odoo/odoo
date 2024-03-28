@@ -3033,7 +3033,6 @@ class SnippetsMenu extends Component {
     _computeSnippetTemplates(html) {
         var self = this;
         var $html = $(html);
-        this._patchForComputeSnippetTemplates($html);
 
         this.templateOptions = [];
         var selectors = [];
@@ -3164,15 +3163,6 @@ class SnippetsMenu extends Component {
         this._disableUndroppableSnippets();
 
     }
-    /**
-     * Eases patching the XML definition for snippets and options in stable
-     * versions. Note: in the future, we will probably move to other ways to
-     * define snippets and options.
-     *
-     * @private
-     * @param {jQuery}
-     */
-    _patchForComputeSnippetTemplates($html) {}
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
      * snippet already has a linked snippet editor, the function only returns
