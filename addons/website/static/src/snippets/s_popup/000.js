@@ -59,7 +59,7 @@ const SharedPopupWidget = publicWidget.Widget.extend({
             // '_hideBottomFixedElements' method and re-display any bottom fixed
             // elements that may have been hidden (e.g. the live chat button
             // hidden when the cookies bar is open).
-            $().getScrollingElement()[0].dispatchEvent(new Event('scroll'));
+            $().getScrollingTarget()[0].dispatchEvent(new Event('scroll'));
         }
 
         this.el.classList.add('d-none');
