@@ -342,14 +342,19 @@ class AccountEdiCommon(models.AbstractModel):
 
         return True
 
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False):
-        """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
-        """
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False):
+        """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
+        if peppol_eas and peppol_endpoint:
+            domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
+        else:
+            domain = False
         invoice.partner_id = self.env['res.partner'] \
             .with_company(invoice.company_id) \
-            ._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
+            ._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat, domain=domain)
         if not invoice.partner_id and name and vat:
             partner_vals = {'name': name, 'email': mail, 'phone': phone}
+            if peppol_eas and peppol_endpoint:
+                partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
             if country:
                 partner_vals['country_id'] = country.id
