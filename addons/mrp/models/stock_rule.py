@@ -258,7 +258,7 @@ class ProcurementGroup(models.Model):
             bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
-                qty_to_produce = (order_qty / bom_kit.product_qty)
+                qty_to_produce = order_qty
                 boms, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce)
                 for bom_line, bom_line_data in bom_sub_lines:
                     bom_line_uom = bom_line.product_uom_id

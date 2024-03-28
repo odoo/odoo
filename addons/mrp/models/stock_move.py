@@ -378,9 +378,9 @@ class StockMove(models.Model):
                 moves_ids_to_return.add(move.id)
                 continue
             if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
+                factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id)
             else:
-                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
+                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id)
             boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
