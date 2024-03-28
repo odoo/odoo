@@ -10,7 +10,7 @@ export const patchAvatarCardPopover = {
     },
     get fieldNames() {
         const fields = super.fieldNames;
-        return fields.concat([
+        const additionalFields = [
             "work_phone",
             "work_email",
             "work_location_name",
@@ -18,18 +18,24 @@ export const patchAvatarCardPopover = {
             "job_title",
             "department_id",
             this.props.recordModel ? "employee_id" : "employee_ids",
-        ]);
+        ];
+        fields["users"] = [...fields["users"], ...additionalFields];
+        return fields;
     },
     get email() {
-        return this.user.work_email || this.user.email;
+        return this.avatarEntity.work_email || this.avatarEntity.email;
     },
     get phone() {
-        return this.user.work_phone || this.user.phone;
+        return this.avatarEntity.work_phone || this.avatarEntity.phone;
     },
     async getProfileAction() {
-        return this.user.employee_ids?.length > 0
-            ? this.orm.call("hr.employee", "get_formview_action", [this.user.employee_ids[0]])
-            : super.getProfileAction(...arguments);
+        const { employee_ids } = this.avatarEntity;
+        if (employee_ids?.length > 0) {
+            return this.orm.call("hr.employee", "get_formview_action", [employee_ids[0]], {
+                chat_icon: true,
+            });
+        }
+        return super.getProfileAction(...arguments);
     },
 };
 

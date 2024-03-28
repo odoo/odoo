@@ -7,7 +7,12 @@ export class AvatarCardPopover extends Component {
 
     static props = {
         id: { type: Number, required: true },
+        resModel: { type: String, optional: true },
         close: { type: Function, required: true },
+    };
+
+    static defaultProps = {
+        resModel: "res.users",
     };
 
     setup() {
@@ -15,20 +20,36 @@ export class AvatarCardPopover extends Component {
         this.orm = useService("orm");
         this.openChat = useOpenChat("res.users");
         onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
+            const modelName = this.props.resModel === "res.users" ? "res.users" : "res.partner";
+            [this.avatarEntity] = await this.orm.read(
+                modelName,
+                [this.props.id],
+                this.fieldNames[this.props.resModel === "res.users" ? "users" : "partners"]
+            );
         });
     }
 
     get fieldNames() {
-        return ["name", "email", "phone", "im_status", "share", "partner_id"];
+        return {
+            users: ["name", "email", "phone", "im_status", "share", "partner_id"],
+            partners: ["name", "email", "phone", "im_status", "partner_share"],
+        };
     }
 
     get email() {
-        return this.user.email;
+        return this.avatarEntity.email;
     }
 
     get phone() {
-        return this.user.phone;
+        return this.avatarEntity.phone;
+    }
+
+    get userShare() {
+        if (this.props.resModel === "res.users") {
+            return this.avatarEntity.share;
+        } else {
+            return this.avatarEntity.partner_share;
+        }
     }
 
     get showViewProfileBtn() {
@@ -36,8 +57,13 @@ export class AvatarCardPopover extends Component {
     }
 
     async getProfileAction() {
+        const id =
+            this.props.resModel === "res.partner"
+                ? this.avatarEntity.id
+                : this.avatarEntity.partner_id[0];
+
         return {
-            res_id: this.user.partner_id[0],
+            res_id: id,
             res_model: "res.partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
@@ -45,7 +71,7 @@ export class AvatarCardPopover extends Component {
     }
 
     get userId() {
-        return this.user.id;
+        return this.avatarEntity.id;
     }
 
     onSendClick() {
