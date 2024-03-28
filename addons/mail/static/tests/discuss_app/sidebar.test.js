@@ -24,6 +24,7 @@ import {
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
+import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -919,8 +920,17 @@ test("chat - states: open should call update server data", async () => {
 });
 
 test("chat - states: close from the bus", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2023-01-03 10:00:00",
+            }),
+        ],
+    });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
