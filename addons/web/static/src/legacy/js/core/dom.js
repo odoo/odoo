@@ -252,6 +252,12 @@ const dom = Object.assign({}, minimalDom, {
         return $().getScrollingElement(...arguments)[0];
     },
     /**
+     * @returns {HTMLElement|Window}
+     */
+    getScrollingTarget() {
+        return $().getScrollingTarget(...arguments)[0];
+    },
+    /**
      * @param {HTMLElement} el
      * @returns {boolean}
      */
