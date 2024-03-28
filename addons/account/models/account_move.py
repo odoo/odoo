@@ -2169,7 +2169,10 @@ class AccountMove(models.Model):
         return {**default_data, **new_default_data}
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        return {product.id: self._get_product_price_and_data(product) for product in products}
+        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            product_catalog[product.id] |= self._get_product_price_and_data(product)
+        return product_catalog
 
     def _get_product_price_and_data(self, product):
         """
