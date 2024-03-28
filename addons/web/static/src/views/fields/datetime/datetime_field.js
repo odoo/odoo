@@ -15,6 +15,7 @@ import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { archParseBoolean } from "@web/views/utils";
 import { standardFieldProps } from "../standard_field_props";
+import { sprintf } from '@web/core/utils/strings';
 
 /**
  * @typedef {luxon.DateTime} DateTime
@@ -249,13 +250,13 @@ export const dateField = {
             label: _lt("Earliest accepted date"),
             name: "min_date",
             type: "string",
-            help: _lt(`ISO-formatted date (e.g. "2018-12-31") or "today".`),
+            help: sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today"),
         },
         {
             label: _lt("Latest accepted date"),
             name: "max_date",
             type: "string",
-            help: _lt(`ISO-formatted date (e.g. "2018-12-31") or "today".`),
+            help: sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today"),
         },
         {
             label: _lt("Warning for future dates"),
