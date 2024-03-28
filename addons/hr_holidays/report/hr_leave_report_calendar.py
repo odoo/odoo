@@ -29,6 +29,7 @@ class LeaveReportCalendar(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
     ], readonly=True)
+    description = fields.Char("Description", readonly=True, groups='hr_holidays.group_hr_holidays_user')
 
     is_hatched = fields.Boolean('Hatched', readonly=True)
     is_striked = fields.Boolean('Striked', readonly=True)
@@ -47,6 +48,7 @@ class LeaveReportCalendar(models.Model):
             hl.state AS state,
             hl.department_id AS department_id,
             hl.number_of_days as duration,
+            hl.private_name AS description,
             em.company_id AS company_id,
             em.job_id AS job_id,
             COALESCE(
