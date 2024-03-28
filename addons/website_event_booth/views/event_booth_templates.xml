@@ -3,11 +3,12 @@
 
     <template id="event_booth_layout" name="Event Booth Layout">
         <t t-call="website_event.layout">
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_booth_1"/>
             <div class="o_wbooth_registration" t-att-data-event-id="event.id"
                  itemscope="itemscope" itemtype="http://schema.org/Event">
                 <section>
                     <div class="container overflow-hidden">
-                        <h3>Get A Booth</h3>
+                        <h3 class="mt-3 mb-4">Get A Booth</h3>
                         <div class="row g-0">
                             <t t-out="0"/>
                         </div>
@@ -38,6 +39,7 @@
                     </div>
                 </div>
             </div>
+             <div class="oe_structure oe_empty" id="oe_structure_website_event_booth_2"/>
         </t>
     </template>
 
@@ -52,24 +54,24 @@
                           t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="row mb-3">
-                            <h4 class="mb-3">Choose your type of booth</h4>
+                            <h4 class="h5 mt-0 mb-3">Choose your type of booth</h4>
                             <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
-                                <div class="col-md-6 col-lg-4 mb-2">
-                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}">
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
                                             t-att-checked="booth_category.id == selected_booth_category_id"/>
                                         <div class="card h-100">
                                             <div t-field="booth_category.image_1920" class="card-img-top border-bottom"
                                                 t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'/>
-                                            <div class="card-body">
-                                                <h5 name="booth_category_name" class="card-title" t-out="booth_category.name"/>
+                                            <div class="card-body d-flex flex-wrap w-100 gap-2 justify-content-between flex-grow-0 pb-0">
+                                                <h5 name="booth_category_name" class="card-title my-0" t-out="booth_category.name"/>
                                                 <span class="booth_category_price"></span>
-                                                <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                                                <div class="flex-basis-100 flex-grow-1 pb-2 mx-n3 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
                                                     t-field="booth_category.description"/>
                                             </div>
                                         </div>
-                                        <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">
+                                        <div t-if="booth_category_unavailable" class="o_ribbon_right text-bg-danger">
                                             <span class="text-nowrap">Sold Out</span>
                                         </div>
                                     </label>
@@ -79,7 +81,7 @@
                         <t t-if="available_booth_category_ids">
                             <div class="row">
                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                                    <h4 class="mb-0">Location</h4>
+                                    <h4 class="h5 mb-0">Location</h4>
                                     <div t-if="event.exhibition_map">
                                         <a class="text-decoration-none text-center" href="#" data-bs-toggle="modal" data-bs-target="#mapModal"><i class="fa fa-map-o me-2"/>View Plan</a>
                                         <div role="dialog" id="mapModal" class="modal" tabindex="-1">
@@ -101,8 +103,8 @@
                                     </div>
                                 </div>
                                 <div class="my-3" name="booth_registration_submit">
-                                    <div class="d-flex flex-column align-content-end justify-content-end pt-3 border-top">
-                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block ms-auto fw-bold" disabled="true">
+                                    <div class="d-flex align-items-center justify-content-end pt-3 gap-2 mt-4 mb-5">
+                                        <button type="submit" class="o_wbooth_registration_submit btn btn-primary btn-block" disabled="true">
                                             <span>Book my Booth(s)</span>
                                         </button>
                                     </div>
@@ -110,7 +112,7 @@
                             </div>
                         </t>
                         <div t-else="" class="alert alert-info">
-                            <span>Sorry, all the booths are sold out. <a href="/contactus">Contact Us</a> if you have any question.</span>
+                            <span>Sorry, all the booths are sold out. <a class="alert-link" href="/contactus">Contact Us</a> if you have any question.</span>
                         </div>
                     </form>
                 </div>

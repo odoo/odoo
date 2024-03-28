@@ -11,7 +11,7 @@
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
             <!-- Content -->
-            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'container-fluid pb-3')">
                 <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not sponsors_other else '')">
                     <t t-if="sponsors_other">
                         <t t-call="website_event_exhibitor.exhibitor_aside"/>
@@ -30,7 +30,7 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_main" name="Exhibitor: Main Content">
-    <div t-att-class="'o_wesponsor_exhibitor_main col-12 border mt-3 p-0 %s' % ('col-lg-10' if option_widescreen else 'col-lg-9')">
+    <div t-att-class="'o_wesponsor_exhibitor_main mt-3 px-0 %s' % ('col-lg-10' if option_widescreen else 'col-lg-9 ps-lg-3 ps-xxl-5')">
         <!-- EVENT NOT STARTED ALERTS -->
         <t t-if="not sponsor.event_id.is_ongoing">
             <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
@@ -152,7 +152,7 @@
                  placeholder="e.g. &quot;Openwood specializes in home decoration...&quot;"/>
             <div class="alert alert-info mx-3 mt-3 o_wesponsor_exhibitor_main_empty_website_descr_warning">
                 The sponsor website description is missing.
-                <a t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                <a class="alert-link" t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
                     <i class="oi oi-fw oi-arrow-right"></i>
                     Write one.
                 </a>
@@ -168,16 +168,16 @@
 <template id="exhibitor_aside" name="Exhibitor: Aside">
     <div t-att-class="'o_wevent_online_page_aside o_wesponsor_exhibitor_aside col-12 mt-3 ps-0 pe-0 border %s' % ('col-lg-2' if option_widescreen else 'col-lg-3')">
         <div class="o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="position-relative text-bg-light d-flex align-items-center justify-content-between pe-3">
                 <span class="h5 m-3">Other exhibitors</span>
                 <a href="#collapse_exhibitor_aside" data-bs-toggle="collapse"
-                   class="o_wevent_online_page_aside_collapse d-lg-none p-2 text-decoration-none collapsed">
+                   class="o_wevent_online_page_aside_collapse o_wevent_collapse_link stretched-link d-lg-none p-2 text-decoration-none text-reset collapsed">
                     <i class="oi oi-chevron-down d-lg-none"/>
                 </a>
             </div>
             <ul id="collapse_exhibitor_aside" class="list-group list-group-flush collapse d-lg-block">
                 <li class="list-group-item list-group-item-action" t-foreach="sponsors_other" t-as="sponsor_other">
-                    <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-dark"
+                    <a class="d-flex flex-wrap flex-md-nowrap text-decoration-none text-reset"
                         t-att-href="sponsor_other.website_url"
                         t-att-data-publish="sponsor_other.website_published and 'on' or 'off'">
                         <div class="d-flex flex-column align-items-center">
@@ -195,7 +195,7 @@
                             <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
                                 <span class="d-inline-block text-truncate" t-out="sponsor_other.name"/>
                             </span>
-                            <small class="text-muted" t-out="sponsor_other.subtitle"/>
+                            <small class="opacity-75" t-out="sponsor_other.subtitle"/>
                             <div class="d-inline-block float-end" t-if="not sponsor_other.website_published">
                                 <small class="badge text-bg-danger">Unpublished</small>
                             </div>

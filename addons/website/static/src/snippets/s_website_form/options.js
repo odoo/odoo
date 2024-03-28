@@ -1227,18 +1227,18 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const dependencyEl = this._getDependencyEl();
         switch (widgetName) {
             case 'hidden_condition_time_comparators_opt':
-                return dependencyEl && dependencyEl.dataset.target;
+                return dependencyEl?.classList.contains("datetimepicker-input");
             case 'hidden_condition_date_between':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datepicker')
+                return dependencyEl?.closest(".s_website_form_date")
                 && ['between', '!between'].includes(this.$target[0].getAttribute('data-visibility-comparator'));
             case 'hidden_condition_datetime_between':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datetimepicker')
+                return dependencyEl?.closest(".s_website_form_datetime")
                 && ['between', '!between'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_datetime':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datetimepicker')
+                return dependencyEl?.closest(".s_website_form_datetime")
                 && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_date':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datepicker')
+                return dependencyEl && dependencyEl?.closest(".s_website_form_date")
                 && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_text':
                 if (!this.$target[0].classList.contains('s_website_form_field_hidden_if') ||
@@ -1248,7 +1248,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (!dependencyEl) {
                     return true;
                 }
-                if (dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#date')) {
+                if (dependencyEl?.classList.contains("datetimepicker-input")) {
                     return false;
                 }
                 return (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
@@ -1258,16 +1258,16 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             case 'hidden_condition_num_opt':
                 return dependencyEl && dependencyEl.type === 'number';
             case 'hidden_condition_text_opt':
-                if (!this.$target[0].classList.contains('s_website_form_field_hidden_if') || (dependencyEl &&
-                dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#date'))) {
+                if (!this.$target[0].classList.contains('s_website_form_field_hidden_if') ||
+                (dependencyEl?.classList.contains("datetimepicker-input"))) {
                     return false;
                 }
                 return !dependencyEl || (['text', 'email', 'tel', 'url', 'search', 'password'].includes(dependencyEl.type) ||
                 dependencyEl.nodeName === 'TEXTAREA');
             case 'hidden_condition_date_opt':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datepicker');
+                return dependencyEl?.closest(".s_website_form_date");
             case 'hidden_condition_datetime_opt':
-                return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datetimepicker');
+                return dependencyEl?.closest(".s_website_form_datetime");
             case 'hidden_condition_file_opt':
                 return dependencyEl && dependencyEl.type === 'file';
             case 'hidden_condition_opt':

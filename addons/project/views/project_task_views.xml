@@ -337,6 +337,7 @@
                                    domain="[('active', '=', True), '|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
                                    widget="project"
                             />
+                            <field name="display_in_project" invisible="True" force_save="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
                                 context="{'default_project_id': project_id}"
@@ -529,7 +530,7 @@
                     <group>
                         <field name="project_id" invisible="1" />
                         <field name="company_id" invisible="1" />
-                        <field name="parent_id" domain="[('id', '!=', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" /> 
+                        <field name="parent_id" domain="[('id', '!=', id), '!', ('id', 'child_of', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" />
                     </group>
                     <footer>
                         <button string="Convert Task" class="btn-primary" special="save" data-hotkey="q"/>

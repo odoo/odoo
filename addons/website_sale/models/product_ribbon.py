@@ -21,11 +21,11 @@ class ProductRibbon(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'bg_color' in vals and not '!important' in vals['bg_color']:
+            if vals.get('bg_color') and not '!important' in vals['bg_color']:
                 vals['bg_color'] += ' !important'
         return super().create(vals_list)
 
     def write(self, data):
-        if 'bg_color' in data and not '!important' in data['bg_color']:
+        if data.get('bg_color') and not '!important' in data['bg_color']:
             data['bg_color'] += ' !important'
         return super().write(data)

@@ -99,3 +99,12 @@ export function trackingMethodIsLot() {
         },
     ];
 }
+
+export function shippingDateExists() {
+    return [
+        {
+            content: 'Shipping date must be printed',
+            trigger: '.pos-receipt-order-data:contains("Expected delivery:")'
+        }
+    ]
+}

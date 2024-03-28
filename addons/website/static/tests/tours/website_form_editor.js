@@ -538,12 +538,45 @@
         ...addCustomField("date", "text", "field E", false),
         ...selectFieldByLabel("field D"),
         ...selectButtonByData('data-set-visibility-dependency="field E"'),
-        ...selectButtonByData('data-select-data-attribute="set"'),
+        ...selectButtonByData('data-select-data-attribute="after"'),
+        {
+            content: "Enter a date in the date input",
+            trigger: "[data-name='hidden_condition_additional_date'] input",
+            run: "text 03/28/2017",
+        },
         ...wTourUtils.clickOnSave(),
         {
-            content: "Click to open the date picker popover from field E",
+            content: "Enter an invalid date in field E",
             trigger: `iframe ${triggerFieldByLabel("field E")} input`,
-            run: "click",
+            run() {
+                this.$anchor[0].value = "25071981";
+                this.$anchor[0].dispatchEvent(new InputEvent("input", {bubbles: true}));
+                // Adds a delay to let the input code run.
+                setTimeout(() => {
+                    this.$anchor[0].classList.add("invalidDate");
+                }, 500);
+            },
+        },
+        {
+            content: "Enter an valid date in field E",
+            trigger: `iframe ${triggerFieldByLabel("field E")} input.invalidDate`,
+            run() {
+                this.$anchor[0].classList.remove("invalidDate");
+                this.$anchor[0].value = "07/25/1981";
+                this.$anchor[0].dispatchEvent(new InputEvent("input", {bubbles: true}));
+                // Adds a delay to let the input code run.
+                setTimeout(() => {
+                    this.$anchor[0].classList.add("validDate");
+                }, 500);
+            },
+        },
+        {
+            content: "Click to open the date picker popover from field E",
+            trigger: `iframe ${triggerFieldByLabel("field E")} input.validDate`,
+            run(actions) {
+                this.$anchor[0].classList.remove("validDate");
+                actions.click();
+            },
         },
         {
             content: "Select today's date from the date picker",

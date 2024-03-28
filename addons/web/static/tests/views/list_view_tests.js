@@ -2159,11 +2159,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+                target.querySelector(".o_group_header th").getAttribute("colspan"),
+                "2"
             );
             assert.strictEqual(
                 target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
-                "2",
+                "2"
             );
         }
     );
@@ -2186,11 +2187,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_group_header th").getAttribute("colspan"), "2"
+                target.querySelector(".o_group_header th").getAttribute("colspan"),
+                "2"
             );
             assert.strictEqual(
                 target.querySelector(".o_group_header th:last-child").getAttribute("colspan"),
-                "1",
+                "1"
             );
         }
     );
@@ -6806,6 +6808,23 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_group_header:first-of-type .o_pager_limit").innerText,
             "2"
         );
+    });
+
+    QUnit.test("multi-level grouped list, pager inside a group", async function (assert) {
+        serverData.models.foo.records.forEach((r) => (r.bar = true));
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="2" groups_limit="3"><field name="foo"/><field name="bar"/></tree>',
+            groupBy: ["bar", "foo"],
+        });
+
+        assert.containsOnce(target, ".o_group_header");
+
+        await click(target.querySelector(".o_group_header"));
+        assert.containsN(target, ".o_group_header", 4);
+        assert.containsNone(target, ".o_group_header:first-of-type .o_group_name .o_pager");
     });
 
     QUnit.test("count_limit attrs set in arch", async function (assert) {
@@ -11563,7 +11582,10 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
                 mockRPC(route, args) {
                     if (args.method === "write") {
-                        assert.deepEqual(args.args, [[1, 2], { date_start: "2021-04-01",  date_end: "2017-01-26"}]);
+                        assert.deepEqual(args.args, [
+                            [1, 2],
+                            { date_start: "2021-04-01", date_end: "2017-01-26" },
+                        ]);
                     }
                 },
             });
@@ -20025,36 +20047,39 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("onchange should only be called once after pressing enter on a field", async function (assert) {
-        serverData.models.foo.onchanges = {
-            foo(record) {
-                if (record.foo) {
-                    record.int_field = 1;
-                }
-            },
-        };
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "onchange should only be called once after pressing enter on a field",
+        async function (assert) {
+            serverData.models.foo.onchanges = {
+                foo(record) {
+                    if (record.foo) {
+                        record.int_field = 1;
+                    }
+                },
+            };
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree editable="top">
                     <field name="foo"/>
                     <field name="int_field"/>
                 </tree>`,
-            async mockRPC(_, { method }) {
-                if (method === "onchange") {
-                    assert.step(method);
-                }
-            },
-        });
-        await click(target.querySelector(".o_data_cell"));
-        target.querySelector(".o_field_widget[name=foo] input").value = "1";
-        await triggerEvents(target, ".o_field_widget[name=foo] input", [
-            ["keydown", { key: "Enter" }],
-            ["change"],
-        ]);
-        await nextTick();
-        assert.verifySteps(["onchange"], "There should only be one onchange call");
-    });
+                async mockRPC(_, { method }) {
+                    if (method === "onchange") {
+                        assert.step(method);
+                    }
+                },
+            });
+            await click(target.querySelector(".o_data_cell"));
+            target.querySelector(".o_field_widget[name=foo] input").value = "1";
+            await triggerEvents(target, ".o_field_widget[name=foo] input", [
+                ["keydown", { key: "Enter" }],
+                ["change"],
+            ]);
+            await nextTick();
+            assert.verifySteps(["onchange"], "There should only be one onchange call");
+        }
+    );
 });

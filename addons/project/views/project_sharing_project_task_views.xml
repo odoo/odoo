@@ -110,6 +110,9 @@
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
             </tree>
+            <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
+                <attribute name="widget">many2one</attribute>
+            </xpath>
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
@@ -140,7 +143,7 @@
                             </div>
                         </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
-                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            invisible="not id or subtask_count == 0" context="{'default_user_ids': [(6, 0, [uid])], 'default_project_id': project_id }">
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                     </div>

@@ -778,14 +778,14 @@ class IrModelFields(models.Model):
                     'message': _("The table %r if used for other, possibly incompatible fields.", self.relation_table),
                 }}
 
-    @api.onchange('required', 'ttype', 'on_delete')
-    def _onchange_required(self):
+    @api.constrains('required', 'ttype', 'on_delete')
+    def _check_on_delete_required_m2o(self):
         for rec in self:
             if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
-                return {'warning': {'title': _("Warning"), 'message': _(
+                raise ValidationError(_(
                     "The m2o field %s is required but declares its ondelete policy "
                     "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
-                )}}
+                ))
 
     def _get(self, model_name, name):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
@@ -2279,7 +2279,7 @@ class IrModelData(models.Model):
                     for module, name, model, res_id, create_date, write_date in result:
                         # small optimisation: during install a lot of xmlid are created/updated.
                         # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
-                        self._xmlid_lookup.cache.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
+                        self._xmlid_lookup.__cache__.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
                         if create_date != write_date:
                             # something was updated, notify other workers
                             # it is possible that create_date and write_date

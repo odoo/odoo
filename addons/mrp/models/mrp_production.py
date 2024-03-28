@@ -866,6 +866,12 @@ class MrpProduction(models.Model):
                 if command == Command.CREATE and not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
 
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            for production in self:
+                if production.state == 'draft' and picking_type != production.picking_type_id:
+                    production.name = picking_type.sequence_id.next_by_id()
+
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
@@ -1426,7 +1432,8 @@ class MrpProduction(models.Model):
         moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
         # run scheduler for moves forecasted to not have enough in stock
-        self.move_raw_ids._trigger_scheduler()
+        ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
+        self.move_raw_ids.with_context(ignore_mo_ids=ignored_mo_ids + self.ids)._trigger_scheduler()
         self.picking_ids.filtered(
             lambda p: p.state not in ['cancel', 'done']).action_confirm()
         # Force confirm state only for draft production not for more advanced state like

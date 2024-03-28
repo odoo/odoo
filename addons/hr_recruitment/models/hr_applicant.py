@@ -413,7 +413,8 @@ class Applicant(models.Model):
         return res
 
     def _email_is_blacklisted(self, mail):
-        return mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
+        normalized_mail = tools.email_normalize(mail)
+        return normalized_mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
 
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
@@ -610,10 +611,12 @@ class Applicant(models.Model):
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': partner_name or email_from_normalized,
-            'partner_id': msg.get('author_id', False),
         }
         if msg.get('from') and not self._email_is_blacklisted(msg.get('from')):
             defaults['email_from'] = msg.get('from')
+            defaults['partner_id'] = msg.get('author_id', False)
+        if msg.get('email_from') and self._email_is_blacklisted(msg.get('email_from')):
+            del msg['email_from']
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if stage and stage.id:

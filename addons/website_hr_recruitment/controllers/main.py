@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import warnings
@@ -284,11 +283,12 @@ class WebsiteHrRecruitment(http.Controller):
             code=301,
         )
 
-    @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public")
+    @http.route('/website_hr_recruitment/check_recent_application', type='json', auth="public", website=True)
     def check_recent_application(self, email, job_id):
         date_limit = datetime.now() - timedelta(days=90)
         domain = [('email_from', '=ilike', email),
-                  ('create_date', '>=', date_limit)]
+                  ('create_date', '>=', date_limit),
+                  ('job_id.website_id', 'in', [http.request.website.id, False])]
         recent_applications = http.request.env['hr.applicant'].sudo().search(domain)
         response = {'applied_same_job': any(a.job_id.id == int(job_id) for a in recent_applications),
                     'applied_other_job': bool(recent_applications)}

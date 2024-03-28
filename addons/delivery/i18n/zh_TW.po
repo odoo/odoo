@@ -373,7 +373,7 @@ msgstr "錯誤：此傳遞方法不適用於此地址。"
 msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the "
 "shipping."
-msgstr ""
+msgstr "預計成本：會以預算運費向客戶開立發票。"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -832,6 +832,14 @@ msgstr ""
 "\n"
 "已處理以下交貨明細 (產品、應收憑單數量和價格)!\n"
 "\n"
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

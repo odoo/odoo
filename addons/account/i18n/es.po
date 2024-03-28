@@ -10,8 +10,8 @@
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Xabi Spacebiker <xabispacebiker@gmail.com>, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +40,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"El asiento (%s) no está balanceado.\n"
-"El debe total es de %s y el haber total es de %s.\n"
-"Debería especificar una cuenta por defecto en el diario \"%s\" para balancear automáticamente cada asiento."
+"El movimiento (%s) no está saldado.\n"
+"El total de débito es igual a %s y el total de crédito es igual a %s.\n"
+"Tal vez quiera especificar una cuenta por defecto en el diario \"%s\" para saldar cada movimiento de forma automática."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -59,14 +59,14 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Grupo de impuestos: el impuesto es un conjunto de sub impuestos.\n"
-"     - Fijo: el importe del impuesto permanece igual independientemente del precio.\n"
-"     - Porcentaje del precio: el importe del impuesto es un % del precio:\n"
-"         Por ejemplo, 100 * (1 + 10%) = 110 (sin precio incluido)\n"
-"         por ejemplo, 110 / (1 + 10%) = 100 (precio incluido)\n"
-"     - Porcentaje del precio impuesto incluido: El importe del impuesto es una división del precio:\n"
-"         Por ejemplo, 180 / (1 - 10%) = 200 (sin precio incluido)\n"
-"         Por ejemplo, 200 * (1-10%) =  180  (precio incluido)\n"
+"    - Grupo de impuestos: El impuesto es un conjunto de subimpuestos.\n"
+"    - Fijo: El importe del impuesto permanece igual independientemente del precio.\n"
+"    - Porcentaje del precio: el importe del impuesto es un % del precio:\n"
+"        p. ej. 100 * (1 + 10 %) = 110 (sin precio incluido)\n"
+"        p. ej. 110 / (1 + 10 %) = 100 (precio incluido)\n"
+"    - Porcentaje del precio con impuestos incluidos: el importe de impuestos es una división del precio:\n"
+"        p. ej. 180 / (1 - 10 %) = 200 (sin precio incluido)\n"
+"        p. ej. 200 * (1-10 %) =  180  (precio incluido)\n"
 "        "
 
 #. module: account
@@ -268,7 +268,7 @@ msgstr "- %(name)s de %(company)s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "- A default Customer Invoice / Vendor Bill date will be suggested."
 msgstr ""
-"- Se sugerirá una fecha de factura de cliente/proveedor predeterminada."
+"- Se sugerirá una fecha de factura de cliente / proveedor por defecto."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -722,7 +722,7 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimado/a<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Gracias por su pago.\n"
-"        Aquí está su recibo de pago <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
+"        Aquí está su recibo de pago <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</span> de parte de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br><br>\n"
 "       No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
 "        <br><br>\n"
@@ -1611,7 +1611,7 @@ msgstr "Cuenta de Avatax"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "Redondeo para cuenta de efectivo"
+msgstr "Redondeo de efectivo de la cuenta"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -5006,7 +5006,7 @@ msgstr "Tasa de cambio de divisa de la empresa a divisa del documento."
 #: model:account.account,name:account.1_current_assets
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 msgid "Current Assets"
-msgstr "Activos Circulantes"
+msgstr "Activos corrientes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -5017,7 +5017,7 @@ msgstr "Saldo actual"
 #: model:account.account,name:account.1_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
 msgid "Current Liabilities"
-msgstr "Pasivos Circulantes"
+msgstr "Pasivos corrientes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
@@ -9962,13 +9962,13 @@ msgstr "Cuentas por cobrar no comerciales"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_non_current
 msgid "Non-current Assets"
-msgstr "Activos no-circulantes"
+msgstr "Activos no corrientes"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "Pasivos no-circulantes"
+msgstr "Pasivos no corrientes"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_assets
@@ -10393,7 +10393,7 @@ msgstr ""
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "Oops"
-msgstr "Oops"
+msgstr "Uy"
 
 #. module: account
 #. odoo-python
@@ -12738,7 +12738,7 @@ msgstr "Enviar correo electrónico"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_readonly
 msgid "Send Mail Readonly"
-msgstr "Enviar correo electrónico solo de lectura "
+msgstr "Enviar correo electrónico sólo de lectura "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__send_mail_warning_message
@@ -13072,7 +13072,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr "Mostrar funciones de contabilidad: solo lectura"
+msgstr "Mostrar funciones de contabilidad: sólo lectura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
@@ -16001,7 +16001,7 @@ msgstr "Base imponible"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "Base imponible con signo"
+msgstr "Base imponible firmado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -17057,6 +17057,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -17622,7 +17631,7 @@ msgstr "p. ej. efectivo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
-msgstr "p. ej. Activos circulantes"
+msgstr "p. ej. Activos corrientes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form

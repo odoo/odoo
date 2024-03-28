@@ -169,7 +169,11 @@ class Project(models.Model):
                     purchase_order_line_invoice_line_ids.extend(pol_read['invoice_lines'].ids)
                     currency = self.env['res.currency'].browse(pol_read['currency_id']).with_prefetch(currency_ids)
                     price_unit = currency._convert(pol_read['price_unit'], self.currency_id, self.company_id)
-                    analytic_contribution = pol_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
+                    # an analytic account can appear several time in an analytic distribution with different repartition percentage
+                    analytic_contribution = sum(
+                        percentage for ids, percentage in pol_read['analytic_distribution'].items()
+                        if str(self.analytic_account_id.id) in ids.split(',')
+                    ) / 100.
                     amount_invoiced -= price_unit * pol_read['qty_invoiced'] * analytic_contribution if pol_read['qty_invoiced'] > 0 else 0.0
                     if pol_read['qty_to_invoice'] > 0:
                         amount_to_invoice -= price_unit * pol_read['qty_to_invoice'] * analytic_contribution

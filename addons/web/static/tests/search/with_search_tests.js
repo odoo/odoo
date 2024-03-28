@@ -333,4 +333,56 @@ QUnit.module("Search", (hooks) => {
 
         await nextTick();
     });
+
+    QUnit.test("search defaults are removed from context at reload", async function (assert) {
+        assert.expect(4);
+
+        const context = {
+            search_default_x: true,
+            searchpanel_default_y: true,
+        };
+
+        class TestComponent extends Component {
+            setup() {
+                onWillStart(() => {
+                    assert.deepEqual(this.props.context, { lang: "en", tz: "taht", uid: 7 });
+                });
+                onWillUpdateProps((nextProps) => {
+                    assert.deepEqual(nextProps.context, { lang: "en", tz: "taht", uid: 7 });
+                });
+            }
+        }
+        TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
+        TestComponent.props = { context: Object };
+
+        const env = await makeTestEnv(serverData);
+        const target = getFixture();
+
+        class Parent extends Component {
+            setup() {
+                useSubEnv({ config: {} });
+                this.searchState = useState({
+                    resModel: "animal",
+                    domain: [["type", "=", "carnivorous"]],
+                    context,
+                });
+            }
+        }
+        Parent.template = xml`
+            <WithSearch t-props="searchState" t-slot-scope="search">
+                <TestComponent
+                    context="search.context"
+                />
+            </WithSearch>
+        `;
+        Parent.components = { WithSearch, TestComponent };
+
+        const parent = await mount(Parent, target, { env });
+        assert.deepEqual(parent.searchState.context, context);
+
+        parent.searchState.domain = [["type", "=", "herbivorous"]];
+
+        await nextTick();
+        assert.deepEqual(parent.searchState.context, context);
+    });
 });

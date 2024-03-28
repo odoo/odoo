@@ -286,6 +286,7 @@ export class PosStore extends Reactive {
         this._loadProductProduct(loadedData["product.product"]);
         this.db.add_packagings(loadedData["product.packaging"]);
         this.attributes_by_ptal_id = loadedData["attributes_by_ptal_id"];
+        this._add_ptal_ids_by_ptav_id(this.attributes_by_ptal_id);
         this.cash_rounding = loadedData["account.cash.rounding"];
         this.payment_methods = loadedData["pos.payment.method"];
         this._loadPosPaymentMethod();
@@ -298,6 +299,23 @@ export class PosStore extends Reactive {
         this.show_category_images = loadedData["show_category_images"] === "yes";
         await this._loadPosPrinters(loadedData["pos.printer"]);
         this.open_orders_json = loadedData["open_orders"];
+    }
+    _add_ptal_ids_by_ptav_id(attributes_by_ptal_id) {
+        // Create a cache based on attributes_by_ptal_id
+        // that enables faster lookup for all ptal_ids
+        // inside a given attribute's "values" list,
+        // given a specific ptav_id.
+        this.ptal_ids_by_ptav_id = {};
+        for (const [ptal_id, attribute] of Object.entries(attributes_by_ptal_id)) {
+            for (const value of attribute["values"]) {
+                const ptav_id = value["id"];
+                if (ptav_id in this.ptal_ids_by_ptav_id) {
+                    this.ptal_ids_by_ptav_id[ptav_id].push(ptal_id);
+                } else {
+                    this.ptal_ids_by_ptav_id[ptav_id] = [ptal_id];
+                }
+            }
+        }
     }
     _loadPosSession() {
         // We need to do it here, since only then the local storage has the correct uuid

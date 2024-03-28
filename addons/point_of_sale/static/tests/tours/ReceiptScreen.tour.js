@@ -18,11 +18,17 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             // press close button in receipt screen
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Addison Olson"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
+            //receipt had expected delivery printed
+            ReceiptScreen.shippingDateExists(),
             // letter tray has 10% tax (search SRC)
             ReceiptScreen.totalAmountContains("55.0"),
             ReceiptScreen.clickNextOrder(),
@@ -70,6 +76,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ customerNote: "Test customer note" }),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 

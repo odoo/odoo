@@ -1039,16 +1039,18 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             order='id desc',
             limit=1,
         )
-        self.assertEqual(json.loads(bus_1.message)['payload']['type'], 'success')
-        self.assertEqual(json.loads(bus_1.message)['payload']['action_button']['res_ids'], invoices_success.ids)
+        payload_1 = json.loads(bus_1.message)['payload']
+        self.assertEqual(payload_1['type'], 'success')
+        self.assertEqual(sorted(payload_1['action_button']['res_ids']), invoices_success.ids)
 
         bus_2 = self.env['bus.bus'].sudo().search(
             [('channel', 'like', f'"res.partner",{sp_partner_2.id}')],
             order='id desc',
             limit=1,
         )
-        self.assertEqual(json.loads(bus_2.message)['payload']['type'], 'warning')
-        self.assertEqual(json.loads(bus_2.message)['payload']['action_button']['res_ids'], invoices_error.ids)
+        payload_2 = json.loads(bus_2.message)['payload']
+        self.assertEqual(payload_2['type'], 'warning')
+        self.assertEqual(sorted(payload_2['action_button']['res_ids']), invoices_error.ids)
 
     def test_send_and_print_only(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

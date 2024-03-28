@@ -7,8 +7,8 @@ from hashlib import sha256
 from json import dumps
 import logging
 from markupsafe import Markup
-from psycopg2 import OperationalError
 import math
+import psycopg2
 import re
 from textwrap import shorten
 
@@ -755,6 +755,9 @@ class AccountMove(models.Model):
         self = self.sorted(lambda m: (m.date, m.ref or '', m._origin.id))
 
         for move in self:
+            if move.state == 'cancel':
+                continue
+
             move_has_name = move.name and move.name != '/'
             if move_has_name or move.state != 'posted':
                 if not move.posted_before and not move._sequence_matches_date():
@@ -1403,7 +1406,7 @@ class AccountMove(models.Model):
     @api.depends('currency_id')
     def _compute_display_inactive_currency_warning(self):
         for move in self.with_context(active_test=False):
-            move.display_inactive_currency_warning = move.currency_id and not move.currency_id.active
+            move.display_inactive_currency_warning = move.state == 'draft' and move.currency_id and not move.currency_id.active
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -3547,7 +3550,8 @@ class AccountMove(models.Model):
             }[self.move_type]
             name += ' '
         if not self.name or self.name == '/':
-            name += '(* %s)' % str(self.id)
+            if self.id:
+                name += '(* %s)' % str(self.id)
         else:
             name += self.name
             if self.env.context.get('input_full_display_name'):
@@ -3926,7 +3930,7 @@ class AccountMove(models.Model):
     def _link_bill_origin_to_purchase_orders(self, timeout=10):
         for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
             references = [move.invoice_origin] if move.invoice_origin else []
-            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout)
+            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
 
     # -------------------------------------------------------------------------
@@ -4254,40 +4258,34 @@ class AccountMove(models.Model):
             ]
 
         limit = job_count + 1
-        to_process = self.env['account.move']._read_group(
+        to_process = self.env['account.move'].search(
             [('send_and_print_values', '!=', False)],
-            groupby=['company_id'],
-            aggregates=['id:recordset'],
             limit=limit,
         )
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
 
-        for _company, moves in to_process[:job_count]:
+        all_moves = to_process[:job_count]
+        for _company, moves in all_moves.grouped('company_id').items():
             try:
                 # Lock moves
                 with self.env.cr.savepoint(flush=False):
                     self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
 
-            except OperationalError as e:
-                if e.pgcode == '55P03':
-                    _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                else:
-                    raise
+            except psycopg2.errors.LockNotAvailable:
+                _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
+                continue
 
-            # Retrieve res.partner that executed the Send & Print wizard
-            sp_partner_ids = set(moves.mapped(lambda move: move.send_and_print_values.get('sp_partner_id')))
-            sp_partners = self.env['res.partner'].browse(sp_partner_ids)
-            moves_map = {
-                partner: moves.filtered(lambda m: m.send_and_print_values['sp_partner_id'] == partner.id)
-                for partner in sp_partners
-            }
+            # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
+            # that modify send_and_print_values.
+            moves_by_partner = moves.grouped(lambda m: m.send_and_print_values['sp_partner_id'])
 
             self.env['account.move.send']._process_send_and_print(moves)
 
             notifications = []
-            for partner, partner_moves in moves_map.items():
+            for partner_id, partner_moves in moves_by_partner.items():
+                partner = self.env['res.partner'].browse(partner_id)
                 partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
                 if partner_moves_error:
                     notifications.append(get_account_notification(partner, partner_moves_error, False))

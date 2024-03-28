@@ -4449,7 +4449,7 @@ class MailThread(models.AbstractModel):
 
         if author_name:
             title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.users/%d/avatar_128" % author_id[0]
+            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
 
         payload = {
             'title': title,

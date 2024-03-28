@@ -154,7 +154,7 @@ class SaleOrder(models.Model):
         store=True, readonly=False, precompute=True, check_company=True,
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
             "The default value comes from the customer.",
-        domain="[('company_id', '=', company_id)]")
+    )
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string="Payment Terms",
@@ -785,6 +785,11 @@ class SaleOrder(models.Model):
                 for line in self.order_line.filtered(lambda l: not l.is_downpayment)
             ]
         return super().copy_data(default)
+
+    def write(self, values):
+        if 'pricelist_id' in values and any(so.state == 'sale' for so in self):
+            raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+        return super().write(values)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):

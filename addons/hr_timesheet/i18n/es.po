@@ -65,7 +65,7 @@ msgstr "Hojas de asistencia de %(name)s"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "%s Spent"
-msgstr "%s Utilizado"
+msgstr "%s dedicadas"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -106,7 +106,8 @@ msgstr "01-09-2021"
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
 msgstr ""
-"<b class=\"tip_title\">Truco: Registre sus hojas de trabajo más rápido</b>"
+"<b class=\"tip_title\">Consejo: registre sus hojas de asistencia más "
+"rápido</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -438,7 +439,7 @@ msgstr "Días dedicados"
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
 "Valor por defecto del proyecto para la hoja de asistencia generada a partir "
-"del tipo de tiempo personal."
+"del tipo de ausencia."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
@@ -556,7 +557,7 @@ msgstr "Hojas de asistencia de los empleados"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr "Codificar Uom en días"
+msgstr "Codificar UdM en días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
@@ -566,7 +567,7 @@ msgstr "Método de codificación"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
 msgid "Encoding Uom"
-msgstr "Codificación de UdM"
+msgstr "UdM de la codificación"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -580,8 +581,8 @@ msgstr "Tiempo extra"
 msgid ""
 "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
-"Genere hojas de asistencia para solicitudes de tiempo personal validado y "
-"días festivos"
+"Genere hojas de asistencia para solicitudes de ausencia validadas y días "
+"festivos"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -667,7 +668,7 @@ msgstr "Valor no válido: %s"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr "Está codificado en días Uom"
+msgstr "La UdM está codificada en días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
@@ -862,7 +863,7 @@ msgstr "Hojas de asistencia del proyecto"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
 msgid "Readonly Timesheet"
-msgstr "Hojas de hora solo para lectura"
+msgstr "Hojas de asistencia de sólo lectura"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -921,7 +922,7 @@ msgstr "Investigación y desarrollo/Nuevo sistema del portal"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
 msgid "Review all timesheets related to your projects"
-msgstr "Revisar todas las hojas de asistencia relacionadas con sus proyectos"
+msgstr "Revise todas las hojas de asistencia relacionadas con sus proyectos"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -935,14 +936,14 @@ msgstr "Buscar en todos"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr "Busca en la descripción"
+msgstr "Buscar en descripción"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr "Busca en empleado"
+msgstr "Buscar en empleado"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -956,7 +957,7 @@ msgstr "Buscar en proyecto"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr "Busca en tarea"
+msgstr "Buscar en tarea"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -978,7 +979,7 @@ msgid ""
 "timesheets to validate"
 msgstr ""
 "Envíe un recordatorio periódico por correo electrónico a los aprobadores de "
-"hojas de asistencia que aún tienen hojas de asistencia para validar"
+"hojas de asistencia que aún tienen hojas de asistencia a validar"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -987,7 +988,7 @@ msgid ""
 "timesheets to encode"
 msgstr ""
 "Envíe un recordatorio periódico por correo electrónico a los usuarios de "
-"hojas de asistencia que aún tienen hojas de asistencia por codificar"
+"hojas de asistencia que aún tienen hojas de asistencia a codificar"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -997,7 +998,7 @@ msgstr "Ajustes"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Sub-Tasks Total Effective Hours"
-msgstr "Total de horas efectivas en las subtareas"
+msgstr "Total de horas reales en las subtareas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1360,7 +1361,7 @@ msgstr "Hojas de asistencia de %(name)s"
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr "Truco: Registre sus partes de hora más rápido"
+msgstr "Consejo: Registre sus hojas de asistencia más rápido"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1385,7 +1386,7 @@ msgstr "Tiempo asignado total"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr "Días totales"
+msgstr "Total de días"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1394,7 +1395,7 @@ msgstr "Días totales"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Hours"
-msgstr "Horas totales"
+msgstr "Total de horas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1412,8 +1413,8 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
-"Tiempo total (en UoM adecuado) registrado en este proyecto, redondeado de "
-"acuerdo a la unidad."
+"Tiempo total (en la UdM adecuada) registrado en este proyecto, redondeado a "
+"la unidad."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1428,15 +1429,15 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
-"Da seguimiento a las horas que dedicas por proyecto todos los días y factura"
-" este tiempo a tus clientes."
+"Lleve el seguimiento de las horas que utiliza por proyecto todos los días y "
+"facture este tiempo a sus clientes."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 #, python-format
 msgid "Training"
-msgstr "Capacitación"
+msgstr "Formación"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_update__uom_id
@@ -1457,12 +1458,12 @@ msgid ""
 msgstr ""
 "Utilice estas palabras clave en el título para establecer nuevas tareas:\n"
 "\n"
-"        30h asignar 30 horas a la tarea\n"
-"        #etiquetas asignar etiquetas a la tarea\n"
-"        @usuario asignar la tarea a un usuario\n"
-"        ! asignar prioridad alta a la tarea\n"
+"        30h Asignar 30 horas a la tarea\n"
+"        #etiquetas Asignar etiquetas a la tarea\n"
+"        @usuario Asignar la tarea a un usuario\n"
+"        ! Asignar prioridad alta a la tarea\n"
 "\n"
-"        Asegúrese de utilizar el formato y orden correcto. Por ejemplo: Mejorar la pantalla de configuración 5h #función #v16 @Mitchell !"
+"        Asegúrese de utilizar el formato y orden correcto. Por ejemplo: Mejorar la pantalla de configuración 5h #función #v16 @Mitchell!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1548,7 +1549,7 @@ msgstr "para"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
 msgid "for the"
-msgstr "para el"
+msgstr "para"
 
 #. module: hr_timesheet
 #. odoo-python

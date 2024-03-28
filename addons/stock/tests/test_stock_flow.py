@@ -2617,3 +2617,30 @@ class TestStockFlowPostInstall(TestStockCommon):
         backorder = picking.backorder_ids
         self.assertEqual(backorder.move_ids.product_uom_qty, 2)
         self.assertEqual(backorder.move_ids.description_picking, 'Ipsum')
+
+    def test_onchange_picking_type_id_and_name(self):
+        """
+        when changing picking_type_id of a stock.picking, should change the name too
+        """
+        picking_type_1 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_1',
+            'code': 'internal',
+            'sequence_code': 'PT1/',
+        })
+        picking_type_2 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_2',
+            'code': 'internal',
+            'sequence_code': 'PT2/',
+        })
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.assertEqual(picking.name, "PT1/00001")
+        picking.picking_type_id = picking_type_2
+        self.assertEqual(picking.name, "PT2/00001")
+        picking.picking_type_id = picking_type_1
+        self.assertEqual(picking.name, "PT1/00002")
+        picking.picking_type_id = picking_type_1
+        self.assertEqual(picking.name, "PT1/00002")

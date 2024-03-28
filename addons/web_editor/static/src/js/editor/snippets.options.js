@@ -1250,7 +1250,11 @@ const UnitUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
+        return isSuperActive && (
+            this._floatToStr(parseFloat(this._value)) !== '0'
+            // Or is a composite value.
+            || !!this._value.match(/\d+\s+\d+/)
+        );
     },
     /**
      * @override
@@ -1429,34 +1433,48 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             case "ArrowUp":
             case "ArrowDown": {
                 const input = ev.currentTarget;
-                let value = parseFloat(input.value || input.placeholder);
-                if (isNaN(value)) {
-                    value = 0.0;
+                let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
+                if (!parts) {
+                    parts = [input.value || input.placeholder];
                 }
-                let step = parseFloat(params.step);
-                if (isNaN(step)) {
-                    step = 1.0;
+                if (parts.length > 1 && !('min' in params)) {
+                    // No negative for composite values.
+                    params['min'] = 0;
                 }
+                const newValue = parts.map(part => {
+                    let value = parseFloat(part);
+                    if (isNaN(value)) {
+                        value = 0.0;
+                    }
+                    let step = parseFloat(params.step);
+                    if (isNaN(step)) {
+                        step = 1.0;
+                    }
 
-                const increasing = ev.key === "ArrowUp";
-                const hasMin = ('min' in params);
-                const hasMax = ('max' in params);
+                    const increasing = ev.key === "ArrowUp";
+                    const hasMin = ('min' in params);
+                    const hasMax = ('max' in params);
 
-                // If value already at min and trying to decrease, do nothing
-                if (!increasing && hasMin && Math.abs(value - params.min) < 0.001) {
+                    // If value already at min and trying to decrease, do nothing
+                    if (!increasing && hasMin && Math.abs(value - params.min) < 0.001) {
+                        return value;
+                    }
+                    // If value already at max and trying to increase, do nothing
+                    if (increasing && hasMax && Math.abs(value - params.max) < 0.001) {
+                        return value;
+                    }
+
+                    // If trying to decrease/increase near min/max, we still need to
+                    // bound the produced value and immediately show the user.
+                    value += (increasing ? step : -step);
+                    value = hasMin ? Math.max(params.min, value) : value;
+                    value = hasMax ? Math.min(value, params.max) : value;
+                    return this._floatToStr(value);
+                }).join(" ");
+                if (newValue === (input.value || input.placeholder)) {
                     return;
                 }
-                // If value already at max and trying to increase, do nothing
-                if (increasing && hasMax && Math.abs(value - params.max) < 0.001) {
-                    return;
-                }
-
-                // If trying to decrease/increase near min/max, we still need to
-                // bound the produced value and immediately show the user.
-                value += (increasing ? step : -step);
-                value = hasMin ? Math.max(params.min, value) : value;
-                value = hasMax ? Math.min(value, params.max) : value;
-                input.value = this._floatToStr(value);
+                input.value = newValue;
 
                 // We need to know if the change event will be triggered or not.
                 // Change is triggered if there has been a "natural" input event
@@ -3620,10 +3638,14 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         let hasUserValue = false;
-        for (let i = cssProps.length - 1; i > 0; i--) {
-            hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+        const applyAllCSS = (values) => {
+            for (let i = cssProps.length - 1; i > 0; i--) {
+                hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+            }
+            hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
         }
-        hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
+
+        applyAllCSS([...values]);
 
         function applyCSS(cssProp, cssValue, styles) {
             if (typeof params.forceStyle !== 'undefined') {
@@ -3631,35 +3653,13 @@ const SnippetOptionWidget = Widget.extend({
                 return true;
             }
 
-            // This condition requires extraClass to NOT be set.
             if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                // Property must be set => extraClass will be enabled.
-                if (params.extraClass) {
-                    // The extraClass is temporarily removed during selectStyle
-                    // because it is enabled only if the element style is set
-                    // by the option. (E.g. add the bootstrap border class only
-                    // if there is a border width.) Unfortunately the
-                    // extraClass might specify default !important properties,
-                    // therefore determining whether !important is needed
-                    // requires the class to be applied.
-                    this.$target[0].classList.add(params.extraClass);
-                    // Set inline style only if different from value defined
-                    // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                        this.$target[0].style.setProperty(cssProp, cssValue);
-                    }
-                } else {
-                    // Inline style required.
-                    this.$target[0].style.setProperty(cssProp, cssValue);
-                }
+                this.$target[0].style.setProperty(cssProp, cssValue);
                 // If change had no effect then make it important.
                 // This condition requires extraClass to be set.
                 if (!params.preventImportant && !weUtils.areCssValuesEqual(
                         styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
-                }
-                if (params.extraClass) {
-                    this.$target[0].classList.remove(params.extraClass);
                 }
                 return true;
             }
@@ -3668,6 +3668,13 @@ const SnippetOptionWidget = Widget.extend({
 
         if (params.extraClass) {
             this.$target.toggleClass(params.extraClass, hasUserValue);
+            if (hasUserValue) {
+                // Might have changed because of the class.
+                for (const cssProp of cssProps) {
+                    this.$target[0].style.removeProperty(cssProp);
+                }
+                applyAllCSS(values);
+            }
         }
 
         _restoreTransitions();
@@ -4438,8 +4445,10 @@ const SnippetOptionWidget = Widget.extend({
                 return;
             }
 
+            this.__willReload = requiresReload;
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
+            this.__willReload = false;
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
@@ -7410,6 +7419,10 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @returns {boolean}
      */
     _canHaveHoverEffect() {
+        // TODO Remove this comment in master:
+        // Note that this method does not ensure that a shape can be applied,
+        // which is required for hover effects. It should be preferably merged
+        // with the `_isImageSupportedForShapes()` method.
         return !this._isDeviceShape() && !this._isAnimatedShape();
     },
     /**
@@ -7569,6 +7582,16 @@ registry.ImageTools = ImageHandlerOption.extend({
                 clearTimeout(this.hoverTimeoutId);
             }
         }
+    },
+    /**
+     * Checks if a shape can be applied on the target.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isImageSupportedForShapes() {
+        const imgEl = this._getImg();
+        return imgEl.dataset.originalId && this._isImageSupportedForProcessing(imgEl);
     },
 
     //--------------------------------------------------------------------------
@@ -7973,7 +7996,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             delete parts.url;
-            this.$target.removeClass('oe_img_bg o_bg_img_center');
+            this.$target[0].classList.remove(
+                "oe_img_bg",
+                "o_bg_img_center",
+                "o_modified_image_to_save",
+            );
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);

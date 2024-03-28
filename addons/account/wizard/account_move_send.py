@@ -142,6 +142,8 @@ class AccountMoveSend(models.TransientModel):
         self.ensure_one()
         return {
             'mail_template_id': self.mail_template_id.id,
+            'sp_partner_id': self.env.user.partner_id.id,
+            'sp_user_id': self.env.user.id,
             'download': self.checkbox_download,
             'send_mail': self.checkbox_send_mail,
         }
@@ -452,11 +454,12 @@ class AccountMoveSend(models.TransientModel):
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
         partner_ids = kwargs.get('partner_ids', [])
+        author_id = kwargs.pop('author_id')
 
         new_message = move\
             .with_context(
                 no_new_invoice=True,
-                mail_notify_author=self.env.user.partner_id.id in partner_ids,
+                mail_notify_author=author_id in partner_ids,
             ).message_post(
                 message_type='comment',
                 **kwargs,
@@ -503,6 +506,7 @@ class AccountMoveSend(models.TransientModel):
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'].ids,
             'attachments': mail_attachments,
+            'author_id': move_data['sp_partner_id'],
         }
 
     @api.model
@@ -707,7 +711,7 @@ class AccountMoveSend(models.TransientModel):
         if process_later:
             # Set sending information on moves
             for move in self.move_ids:
-                move.send_and_print_values = {'sp_partner_id': self.env.user.partner_id.id, **self._get_wizard_values()}
+                move.send_and_print_values = self._get_wizard_values()
             self.env.ref('account.ir_cron_account_move_send')._trigger()
             return {
                 'type': 'ir.actions.client',
