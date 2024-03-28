@@ -2341,8 +2341,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                         Command.update(line.id, {'balance': amount}),
                     ],
                 })
-
-            reverse_move.action_post()
+            if reverse_move.state == 'draft':
+                reverse_move.action_post()
 
         def create_statement_line(move, amount):
             statement_line = self.env['account.bank.statement.line'].create({
