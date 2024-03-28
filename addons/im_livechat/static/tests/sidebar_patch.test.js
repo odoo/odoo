@@ -323,13 +323,14 @@ test("Clicking on unpin button unpins the channel", async () => {
 });
 
 test("Message unread counter", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, last_interest_dt: "2021-01-03 10:00:00" }),
+            Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 10:00:00" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
