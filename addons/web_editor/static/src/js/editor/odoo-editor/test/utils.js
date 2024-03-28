@@ -2,7 +2,7 @@
 
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
-import { closestElement } from '../src/utils/utils.js';
+import { closestElement, makeZeroWidthCharactersVisible } from '../src/utils/utils.js';
 
 export const Direction = {
     BACKWARD: 'BACKWARD',
@@ -270,12 +270,9 @@ export function renderTextualSelection(doc = document) {
  * Return a more readable test error messages
  */
 export function customErrorMessage(assertLocation, value, expected) {
-    const zws = '//zws//';
-    value = value.replaceAll('\u200B', zws);
-    expected = expected.replaceAll('\u200B', zws);
     const tab = '//TAB//';
-    value = value.replaceAll('\u0009', tab);
-    expected = expected.replaceAll('\u0009', tab);
+    value = makeZeroWidthCharactersVisible(value).replaceAll('\u0009', tab);
+    expected = makeZeroWidthCharactersVisible(expected).replaceAll('\u0009', tab);
 
     return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
