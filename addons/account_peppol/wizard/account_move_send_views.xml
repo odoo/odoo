@@ -9,10 +9,13 @@
                 <xpath expr="//div[@name='warnings']" position="inside">
                     <field name="enable_peppol" invisible="1"/>
                     <div class="alert alert-warning" role="alert" attrs="{
-                                'invisible': ['|',
+                                'invisible': ['|', '|',
                                     ('checkbox_send_peppol', '!=', True),
                                     ('peppol_warning', '=', False),
+                                    ('ubl_partner_warning', '!=', False),
                                 ]}">
+                                <!-- hiding the warning if we're already showing one through the
+                                UBL module to avoid showing basically the same errors at the same time -->
                         <field name="peppol_warning"/>
                     </div>
                 </xpath>
