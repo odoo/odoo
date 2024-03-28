@@ -34,11 +34,11 @@ class PickingType(models.Model):
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location', compute='_compute_default_location_src_id',
         check_company=True, store=True, readonly=False, precompute=True,
-        help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
+        help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Default Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True,
-        help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
+        help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
     default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",
         domain="[('return_location', '=', True)]")
@@ -249,17 +249,17 @@ class PickingType(models.Model):
             stock_location = picking_type.warehouse_id.lot_stock_id
             if picking_type.code == 'incoming':
                 picking_type.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
-            elif picking_type.code == 'outgoing':
+            else:
                 picking_type.default_location_src_id = stock_location.id
 
     @api.depends('code')
     def _compute_default_location_dest_id(self):
         for picking_type in self:
             stock_location = picking_type.warehouse_id.lot_stock_id
-            if picking_type.code == 'incoming':
-                picking_type.default_location_dest_id = stock_location.id
-            elif picking_type.code == 'outgoing':
+            if picking_type.code == 'outgoing':
                 picking_type.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
+            else:
+                picking_type.default_location_dest_id = stock_location.id
 
     @api.depends('code')
     def _compute_print_label(self):

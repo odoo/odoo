@@ -46,6 +46,18 @@ class StockPickingType(models.Model):
     code = fields.Selection(
         selection_add=[('dropship', 'Dropship')], ondelete={'dropship': lambda recs: recs.write({'code': 'outgoing', 'active': False})})
 
+    def _compute_default_location_src_id(self):
+        dropship_types = self.filtered(lambda pt: pt.code == 'dropship')
+        dropship_types.default_location_src_id = self.env.ref('stock.stock_location_suppliers').id
+
+        super(StockPickingType, self - dropship_types)._compute_default_location_src_id()
+
+    def _compute_default_location_dest_id(self):
+        dropship_types = self.filtered(lambda pt: pt.code == 'dropship')
+        dropship_types.default_location_dest_id = self.env.ref('stock.stock_location_customers').id
+
+        super(StockPickingType, self - dropship_types)._compute_default_location_dest_id()
+
     @api.depends('default_location_src_id', 'default_location_dest_id')
     def _compute_warehouse_id(self):
         super()._compute_warehouse_id()
