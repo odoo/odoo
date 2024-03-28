@@ -31,7 +31,7 @@ import {
     getTaxesValues,
 } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { DateTime } = luxon;
@@ -99,6 +99,16 @@ export class PosStore extends Reactive {
             pos_data,
         }
     ) {
+        if (pos_data instanceof Error) {
+            let message = _t("An error occurred while loading the Point of Sale: \n");
+            if (pos_data instanceof RPCError) {
+                message += pos_data.data.message;
+            } else {
+                message += pos_data.message;
+            }
+            window.alert(message);
+            window.location = "/web#action=point_of_sale.action_client_pos_menu";
+        }
         this.env = env;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
