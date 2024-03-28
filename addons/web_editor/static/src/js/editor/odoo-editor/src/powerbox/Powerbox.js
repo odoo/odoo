@@ -332,7 +332,7 @@ export class Powerbox {
                 this._context.initialTarget.textContent.split(''),
                 true,
             );
-            this._context.lastText = diff.bMove.join('');
+            this._context.lastText = diff.bMove.join('').replaceAll('\ufeff', '');
             const selection = this.document.getSelection();
             if (
                 this._context.lastText.match(/\s/) ||

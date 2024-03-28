@@ -62,6 +62,9 @@ export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
 
 export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 
+export const ZERO_WIDTH_CHARS = ['\u200b', '\ufeff'];
+export const ZERO_WIDTH_CHARS_REGEX = new RegExp(`[${ZERO_WIDTH_CHARS.join('')}]`, 'g');
+
 //------------------------------------------------------------------------------
 // Position and sizes
 //------------------------------------------------------------------------------
@@ -1419,6 +1422,14 @@ export const ICON_SELECTOR = iconTags.map(tag => {
     }).join(', ');
 }).join(', ');
 
+/**
+ * Return true if the given node is a zero-width breaking space (200b), false
+ * otherwise. Note that this will return false for a zero-width NON-BREAK space
+ * (feff)!
+ *
+ * @param {Node} node
+ * @returns {boolean}
+ */
 export function isZWS(node) {
     return (
         node &&
@@ -1637,7 +1648,7 @@ export function isInPre(node) {
             getComputedStyle(element).getPropertyValue('white-space') === 'pre')
     );
 }
-const whitespace = `[^\\S\\u00A0\\u0009]`; // for formatting (no "real" content) (TODO: 0009 shouldn't be included)
+const whitespace = `[^\\S\\u00A0\\u0009\\ufeff]`; // for formatting (no "real" content) (TODO: 0009 shouldn't be included)
 const whitespaceRegex = new RegExp(`^${whitespace}*$`);
 export function isWhitespace(value) {
     const str = typeof value === 'string' ? value : value.nodeValue;
@@ -1672,8 +1683,8 @@ export function isVisibleTextNode(testedNode) {
     if (visibleCharRegex.test(testedNode.textContent) || (isInPre(testedNode) && isWhitespace(testedNode))) {
         return true;
     }
-    if (testedNode.textContent === '\u200B') {
-        return false;
+    if (ZERO_WIDTH_CHARS.includes(testedNode.textContent)) {
+        return false; // a ZW(NB)SP is always invisible, regardless of context.
     }
     // The following assumes node is made entirely of whitespace and is not
     // preceded of followed by a block.
@@ -1790,6 +1801,10 @@ export function toggleClass(node, className) {
     if (!node.className) {
         node.removeAttribute('class');
     }
+}
+
+export function makeZeroWidthCharactersVisible(text) {
+    return text.replaceAll('\u200B', '//ZWSP//').replaceAll('\uFEFF', '//ZWNBSP//');
 }
 
 /**
@@ -2205,7 +2220,7 @@ export function prepareUpdate(...args) {
         const right = getState(el, offset, DIRECTIONS.RIGHT, left.cType);
         if (options.debug) {
             const editable = el && closestElement(el, '.odoo-editor-editable');
-            const oldEditableHTML = editable && editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') || '';
+            const oldEditableHTML = editable && makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') || '';
             left.oldEditableHTML = oldEditableHTML;
             right.oldEditableHTML = oldEditableHTML;
         }
@@ -2498,12 +2513,12 @@ export function restoreState(prevStateData, debug=false) {
     if (debug) {
         const editable = closestElement(node, '.odoo-editor-editable');
         console.log(
-            '%c' + node.textContent.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') + '\n' +
+            '%c' + makeZeroWidthCharactersVisible(node.textContent).replaceAll(' ', '_') + '\n' +
             '%c' + (direction === DIRECTIONS.LEFT ? 'left' : 'right') + '\n' +
             '%c' + ctypeToString(cType1) + '\n' +
             '%c' + ctypeToString(cType2) + '\n' +
             '%c' + 'BEFORE: ' + (oldEditableHTML || '(unavailable)') + '\n' +
-            '%c' + 'AFTER:  ' + (editable ? editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') : '(unavailable)') + '\n',
+            '%c' + 'AFTER:  ' + (editable ? makeZeroWidthCharactersVisible(editable.innerHTML).replaceAll(' ', '_') : '(unavailable)') + '\n',
             'color: white; display: block; width: 100%;',
             'color: ' + (direction === DIRECTIONS.LEFT ? 'magenta' : 'lightgreen') + '; display: block; width: 100%;',
             'color: pink; display: block; width: 100%;',
@@ -2843,6 +2858,7 @@ export function isMacOS() {
 
 /**
  * Remove zero-width spaces from the provided node and its descendants.
+ * Note: Does NOT remove zero-width NON-BREAK spaces (feff)!
  *
  * @param {Node} node
  */
