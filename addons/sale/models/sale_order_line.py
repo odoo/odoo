@@ -1239,7 +1239,7 @@ class SaleOrderLine(models.Model):
                 'price': self.price_unit,
                 'readOnly': self.order_id._is_readonly() or (self.product_id.sale_line_warn == "block"),
             }
-            if self.product_id.sale_line_warn_msg:
+            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
             return res
         elif self:
@@ -1264,7 +1264,7 @@ class SaleOrderLine(models.Model):
                     )
                 )
             }
-            if self.product_id.sale_line_warn_msg:
+            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
             return res
         else:
