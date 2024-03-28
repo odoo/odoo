@@ -288,6 +288,13 @@
             <t t-set="title">Offline</t>
             <t t-set="head">
                 <script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const cookies = document.cookie.split(';').map(c => c.trim());
+                        if (cookies.includes('configured_color_scheme=dark') || cookies.includes('color_scheme=dark')) {
+                            document.body.style.backgroundColor = "#1e1e1e";
+                            document.body.style.color = "#fff";
+                        }
+                    });
                     window.addEventListener('online', () => location.reload());
                 </script>
                 <style>
