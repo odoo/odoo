@@ -8,7 +8,8 @@
                    <t t-call="Many2ManyBinaryField.attachment_preview"/>
                 </t>
             </div>
-            <div t-if="!props.readonly" class="oe_add">
+            <div t-if="!props.readonly &amp;&amp; (!props.numberOfFiles or files.length &lt; props.numberOfFiles)"
+                 class="oe_add">
                 <FileInput
                     acceptedFileExtensions="props.acceptedFileExtensions"
                     multiUpload="true"
