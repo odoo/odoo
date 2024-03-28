@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <template id="mail_powered_by">
+Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
+          t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
+        </template>
+
+        <template id="mail_footer">
+<hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+<b t-out="company.name" style="font-size:11px;"/><br/>
+<p style="color: #999999; margin-top:2px; font-size:11px;">
+    <t t-out="company.phone"/>
+    <t t-if="company.email and company.phone"> |</t>
+    <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
+    <t t-if="company.website and (company.phone or company.email)"> |</t>
+    <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
+</p>
+        </template>
+
         <template id="mail_notification_layout" name="Mail: mail notification layout template">
 <html t-att-lang="lang">
 <head>
@@ -22,7 +39,7 @@
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
             <tr>
-                <td valign="center" style="white-space:nowrap;"">
+                <td valign="center" style="white-space:nowrap;">
                     <table t-if="bool(subtitles or has_button_access or actions)" cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
@@ -90,22 +107,12 @@
 </t>
 <!-- FOOTER -->
 <div style="margin-top:16px;">
-    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-    <b t-out="company.name" style="font-size:11px;"/><br/>
-    <p style="color: #999999; margin-top:2px; font-size:11px;">
-        <t t-out="company.phone"/>
-        <t t-if="company.email and company.phone"> |</t>
-        <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
-        <t t-if="company.website and (company.phone or company.email)"> |</t>
-        <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
-    </p>
+    <t t-call="mail.mail_footer"/>
 </div>
 <div style="color: #555555; font-size:11px;">
-    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
-                  t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
-    <span id="mail_unfollow">
-        | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
-    </span>
+    <t t-call="mail.mail_powered_by"/> <span id="mail_unfollow">
+    | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+</span>
 </div>
 </div>
 </body></html>
@@ -159,15 +166,7 @@
     <!-- FOOTER -->
     <tr>
         <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
-            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
-            <b t-out="company.name"/><br/>
-            <div style="color: #999999;">
-                <t t-out="company.phone"/>
-                <t t-if="company.email and company.phone"> |</t>
-                <a t-if="company.email" t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;" t-out="company.email"/>
-                <t t-if="company.website and (company.phone or company.email)"> |</t>
-                <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
-            </div>
+            <t t-call="mail.mail_footer"/>
         </td>
     </tr>
 </tbody>
@@ -175,11 +174,9 @@
 </td></tr>
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
-                      t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
-    <span id="mail_unfollow">
-        | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
-    </span>
+    <t t-call="mail.mail_powered_by"/> <span id="mail_unfollow">
+    | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+</span>
 </td></tr>
 </table>
 </body>
@@ -208,6 +205,43 @@
                          t-out="record.user_id.sudo().signature" style="font-size: 13px;"/>
                 </t>
             </xpath>
+        </template>
+
+        <template id="mail_notification_no_header">
+<html t-att-lang="lang">
+<head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+</head>
+<body>
+<t t-set="subtype_internal" t-value="False"/>
+<t t-call="mail.notification_preview"/>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- CONTENT -->
+    <tr>
+        <td style="min-width: 590px;">
+            <t t-out="message.body"/>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+            <t t-call="mail.mail_footer"/>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <t t-call="mail.mail_powered_by"/> <span id="mail_unfollow">
+    | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+</span>
+</td></tr>
+</table>
+</body>
+</html>
         </template>
     </data>
 </odoo>

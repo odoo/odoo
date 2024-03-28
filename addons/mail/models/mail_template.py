@@ -73,6 +73,13 @@ class MailTemplate(models.Model):
         column2='ir_actions_report_id',
         string='Dynamic Reports',
         domain="[('model', '=', model)]")
+    email_layout_type = fields.Selection([
+        ('default', 'Default'),
+        ('no_header', 'Without header'),
+        ('custom', 'Custom'),
+    ],
+        string='Email Layout',
+        compute='_compute_email_layout_type', inverse='_inverse_email_layout_type', required=True)
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -97,6 +104,24 @@ class MailTemplate(models.Model):
     def _compute_render_model(self):
         for template in self:
             template.render_model = template.model
+
+    @api.depends('email_layout_xmlid')
+    def _compute_email_layout_type(self):
+        tpl_no_header = str(self.env.ref('mail.mail_notification_no_header').id)
+        for template in self:
+            if not template.email_layout_xmlid:
+                template.email_layout_type = 'default'
+            elif template.email_layout_xmlid == tpl_no_header:
+                template.email_layout_type = 'no_header'
+            else:
+                template.email_layout_type = 'custom'
+
+    def _inverse_email_layout_type(self):
+        for template in self:
+            if template.email_layout_type == 'default':
+                template.email_layout_xmlid = False
+            elif template.email_layout_type == 'no_header':
+                template.email_layout_xmlid = str(self.env.ref('mail.mail_notification_no_header').id)
 
     @api.depends_context('uid')
     def _compute_can_write(self):
