@@ -52,6 +52,7 @@ export class DiscussApp extends Record {
                 : c1.name.localeCompare(c2.name),
     });
     thread = Record.one("Thread");
+    messageList = Record.one("MessageList");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");
     // mailboxes in sidebar

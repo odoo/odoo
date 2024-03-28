@@ -92,6 +92,10 @@ export class Discuss extends Component {
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
 
+    get messageList() {
+        return this.store.discuss.messageList;
+    }
+
     get thread() {
         return this.store.discuss.thread;
     }

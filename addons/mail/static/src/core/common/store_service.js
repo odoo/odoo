@@ -44,6 +44,8 @@ export class Store extends BaseStore {
     LinkPreview;
     /** @type {typeof import("@mail/core/common/message_model").Message} */
     Message;
+    /** @type {typeof import("@mail/core/common/message_list_model").MessageList} */
+    MessageList;
     /** @type {typeof import("@mail/core/common/message_reactions_model").MessageReactions} */
     MessageReactions;
     /** @type {typeof import("@mail/core/common/notification_model").Notification} */

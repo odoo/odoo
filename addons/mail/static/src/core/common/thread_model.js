@@ -208,7 +208,7 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messagesListed = Record.many("Message");
+    listedMessages = Record.many("MessageList");
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -433,13 +433,13 @@ export class Thread extends Record {
         return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
     }
 
-    get newestMessage() {
-        return [...this.messagesListed].reverse().find((msg) => !msg.isEmpty);
-    }
+    // get newestMessage() {
+    //     return [...this.messagesListed].reverse().find((msg) => !msg.isEmpty);
+    // }
 
-    get newestPersistentMessage() {
-        return [...this.messagesListed].reverse().find((msg) => Number.isInteger(msg.id));
-    }
+    // get newestPersistentMessage() {
+    //     return [...this.messagesListed].reverse().find((msg) => Number.isInteger(msg.id));
+    // }
 
     newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
         compute() {
@@ -451,9 +451,9 @@ export class Thread extends Record {
         },
     });
 
-    get oldestPersistentMessage() {
-        return this.messagesListed.find((msg) => Number.isInteger(msg.id));
-    }
+    // get oldestPersistentMessage() {
+    //     return this.messagesListed.find((msg) => Number.isInteger(msg.id));
+    // }
 
     onPinStateUpdated() {}
 
@@ -468,9 +468,9 @@ export class Thread extends Record {
         return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
     }
 
-    get isEmpty() {
-        return !this.messagesListed.some((message) => !message.isEmpty);
-    }
+    // get isEmpty() {
+    //     return !this.messagesListed.some((message) => !message.isEmpty);
+    // }
 
     offlineMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
@@ -480,13 +480,13 @@ export class Thread extends Record {
         sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
     });
 
-    get nonEmptyMessages() {
-        return this.messagesListed.filter((message) => !message.isEmpty);
-    }
+    // get nonEmptyMessages() {
+    //     return this.messagesListed.filter((message) => !message.isEmpty);
+    // }
 
-    get persistentMessages() {
-        return this.messagesListed.filter((message) => !message.is_transient);
-    }
+    // get persistentMessages() {
+    //     return this.messagesListed.filter((message) => !message.is_transient);
+    // }
 
     get prefix() {
         return this.isChatChannel ? "@" : "#";

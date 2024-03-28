@@ -11,6 +11,7 @@ declare module "models" {
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
+    import { MessageList as MessageListClass } from "@mail/core/common/message_list_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
@@ -32,6 +33,7 @@ declare module "models" {
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface Message extends MessageClass {}
+    export interface MessageList extends MessageListClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
@@ -54,6 +56,7 @@ declare module "models" {
         "Follower": Follower,
         "LinkPreview": LinkPreview,
         "Message": Message,
+        "MessageList": MessageList,
         "MessageReactions": MessageReactions,
         "Notification": Notification,
         "Persona": Persona,

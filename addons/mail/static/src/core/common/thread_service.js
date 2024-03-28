@@ -100,10 +100,10 @@ export class ThreadService {
      * @param {import("models").Thread} thread
      */
     updateSeen(thread, lastSeen = thread.newestPersistentNotEmptyOfAllMessage) {
-        const lastReadIndex = thread.messagesListed.findIndex((message) => message.eq(lastSeen));
+        const lastReadIndex = thread.messages.findIndex((message) => message.eq(lastSeen));
         let newNeedactionCounter = 0;
         let newUnreadCounter = 0;
-        for (const message of thread.messagesListed.slice(lastReadIndex + 1)) {
+        for (const message of thread.messages.slice(lastReadIndex + 1)) {
             if (message.isNeedaction) {
                 newNeedactionCounter++;
             }
@@ -234,7 +234,7 @@ export class ThreadService {
                         message.id < thread.oldestPersistentMessage.id ||
                         message.id > thread.newestPersistentMessage.id)
             );
-            thread.messagesListed.splice(startIndex, 0, ...filtered);
+            thread.listedMessages[0].messages.splice(startIndex, 0, ...filtered);
             Object.assign(thread, {
                 loadOlder:
                     after === undefined && fetched.length === FETCH_LIMIT
@@ -556,6 +556,10 @@ export class ThreadService {
             pushState = thread.localId !== this.store.discuss.thread?.localId;
         }
         this.store.discuss.thread = thread;
+        this.store.discuss.messageList = this.store.MessageList.insert({
+            thread,
+            source: "discuss",
+        });
         const activeId =
             typeof thread.id === "string"
                 ? `mail.box_${thread.id}`

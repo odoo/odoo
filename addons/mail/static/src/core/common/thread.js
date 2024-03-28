@@ -33,6 +33,7 @@ export const PRESENT_THRESHOLD = 2500;
  * @property {import("models").Thread} thread
  * @property {string} [searchTerm]
  * @property {import("@web/core/utils/hooks").Ref} [scrollRef]
+ * @property {import("models").MessageList} messageList
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
@@ -49,6 +50,7 @@ export class Thread extends Component {
         "showEmptyMessage?",
         "showJumpPresent?",
         "messageActions?",
+        "messageList",
     ];
     static defaultProps = {
         isInChatWindow: false,
@@ -87,7 +89,7 @@ export class Thread extends Component {
             "load-older",
             () => {
                 if (this.loadOlderState.isVisible) {
-                    this.threadService.fetchMoreMessages(this.props.thread);
+                    this.props.messageList.fetchMoreMessages();
                 }
             },
             { ready: false }
@@ -96,7 +98,7 @@ export class Thread extends Component {
             "load-newer",
             () => {
                 if (this.loadNewerState.isVisible) {
-                    this.threadService.fetchMoreMessages(this.props.thread, "newer");
+                    this.props.messageList.fetchMoreMessages("newer");
                 }
             },
             { ready: false }
@@ -147,7 +149,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                this.threadService.fetchNewMessages(this.props.thread);
+                this.props.messageList.fetchNewMessages();
             }
         });
         useEffect(
@@ -371,7 +373,7 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        this.threadService.fetchMoreMessages(this.props.thread);
+        this.props.messageList.fetchMoreMessages();
     }
 
     async onClickPreferences() {
