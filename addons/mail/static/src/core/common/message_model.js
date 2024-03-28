@@ -198,7 +198,7 @@ export class Message extends Record {
     }
 
     get resUrl() {
-        return `${url("/web")}#model=${this.thread?.model}&id=${this.thread?.id}`;
+        return `${url("/web")}#model=${this.thread.model}&id=${this.thread.id}`;
     }
 
     get editDate() {
