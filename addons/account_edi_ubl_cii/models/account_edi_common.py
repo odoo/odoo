@@ -349,10 +349,10 @@ class AccountEdiCommon(models.AbstractModel):
 
         return True
 
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False):
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, domain=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
         """
-        invoice.partner_id = self.env['res.partner']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
+        invoice.partner_id = self.env['res.partner']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat, domain=domain)
         if not invoice.partner_id and name and vat:
             partner_vals = {'name': name, 'email': mail, 'phone': phone}
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
