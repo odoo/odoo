@@ -65,6 +65,7 @@ _UNSAFE_ATTRIBUTES = {
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators
     'ag_await', 'ag_code', 'ag_frame',
+
 }
 
 
