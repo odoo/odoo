@@ -1028,6 +1028,13 @@ export class OdooEditor extends EventTarget {
                     continue;
                 }
             }
+            if (record.type === "childList") {
+                const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
+                if (addedOrRemovedNode.nodeType === Node.ELEMENT_NODE
+                        && addedOrRemovedNode.matches("span[data-o-link-zws]")) {
+                    continue;
+                }
+            }
             filteredRecords.push(record);
         }
         return this.options.filterMutationRecords(filteredRecords);
