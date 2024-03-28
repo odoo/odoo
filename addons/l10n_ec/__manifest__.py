@@ -3,7 +3,7 @@
     'name': 'Ecuadorian Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ec'],
-    'version': '3.5',
+    'version': '3.7',
     'description': """
 Functional
 ----------
