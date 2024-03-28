@@ -4,16 +4,14 @@ from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
-from zeep.transports import Transport
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import html_escape
+from odoo.tools import html_escape, zeep
 
 import math
 import json
 import requests
-import zeep
 
 
 # Custom patches to perform the WSDL requests.
@@ -475,8 +473,7 @@ class AccountEdiFormat(models.Model):
         session.cert = company.l10n_es_edi_certificate_id
         session.mount('https://', PatchedHTTPAdapter())
 
-        transport = Transport(operation_timeout=60, timeout=60, session=session)
-        client = zeep.Client(connection_vals['url'], transport=transport)
+        client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
 
         if invoices[0].is_sale_document():
             service_name = 'SuministroFactEmitidas'
