@@ -8,6 +8,9 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 
+REGEX_FORMULA_OBJECT = re.compile(r'((?:product\[\')(?P<field>\w+)(?:\'\]))+')
+
+
 class AccountTaxPython(models.Model):
     _inherit = "account.tax"
 
@@ -64,7 +67,7 @@ class AccountTaxPython(models.Model):
             if tax_data['amount_type'] == 'code':
                 tax = self.browse(tax_data['id'])
                 for formula in ((tax.python_applicable or '').strip(), (tax.python_compute or '').strip()):
-                    groups = re.findall(r'((?:product\[\')(?P<field>\w+)(?:\'\]))+', formula)
+                    groups = REGEX_FORMULA_OBJECT.findall(formula)
                     if groups:
                         for group in groups:
                             field_name = group[1]
