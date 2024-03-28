@@ -959,7 +959,6 @@ class Warehouse(models.Model):
                 'name': _('Receipts'),
                 'code': 'incoming',
                 'use_existing_lots': False,
-                'default_location_src_id': False,
                 'sequence': max_sequence + 1,
                 'sequence_code': 'IN',
                 'company_id': self.company_id.id,
