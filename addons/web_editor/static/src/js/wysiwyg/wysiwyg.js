@@ -139,7 +139,7 @@ export class Wysiwyg extends Component {
     imageCropProps = useState({
         showCount: 0,
         media: undefined,
-        mimetype: undefined,
+        getRecordInfo: this._getRecordInfo.bind(this),
     });
     state = useState({
         linkToolProps: false,

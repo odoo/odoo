@@ -6654,6 +6654,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     start() {
         this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
         this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
+        this.$target.on('image_cropper_destroyed.ImageOptimization', this._onImageCropperDestroyed.bind(this));
         return this._super(...arguments);
     },
     /**
@@ -6682,7 +6683,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             activeOnStart: true,
             media: img,
-            mimetype: this._getImageMimetype(img),
+            getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
         });
 
         await new Promise(resolve => {
@@ -6756,7 +6757,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             activeOnStart: true,
             media: img,
-            mimetype: this._getImageMimetype(img),
+            getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
         });
         await imageCropWrapper.component.mountedPromise;
         await imageCropWrapper.component.reset();
@@ -7037,7 +7038,7 @@ registry.ImageTools = ImageHandlerOption.extend({
 ￼    * @private
 ￼    */
     _isCropped() {
-        return this.$target.hasClass('o_we_image_cropped');
+        return this.imageData.isCropped;
     },
     /**
      * @override
@@ -7837,6 +7838,15 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _onImageCropped(ev) {
         await this._rerenderXML();
+    },
+    /**
+     * Update the image data with the cropping info.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onImageCropperDestroyed(ev) {
+        this.imageData = weUtils.getImageData(this._getImg());
     },
 });
 
