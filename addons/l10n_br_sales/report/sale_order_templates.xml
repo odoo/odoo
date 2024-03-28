@@ -13,12 +13,14 @@
     <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document" primary="True">
         <th name="th_taxes" position="replace"/>
         <td name="td_taxes" position="replace"/>
-        <th name="th_subtotal" position="replace"/>
-        <td name="td_subtotal" position="replace"/>
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">current_subtotal + line.price_total</attribute>
+        </t>
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field">line.price_total</attribute>
+        </span>
         <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
             <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
         </xpath>
-        <!-- hide subsection subtotals, because they don't include tax -->
-        <td name="td_section_subtotal" position="replace"/>
     </template>
 </odoo>
