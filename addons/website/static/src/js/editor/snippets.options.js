@@ -675,28 +675,10 @@ options.Class.include({
         }
         for (const widget of widgets) {
             const methodsNames = widget.getMethodsNames();
-            const specialMethodsNames = [];
-            // If it's a pageOption, it's most likely to need to reload, so check the widgets.
-            if (this.data.pageOptions) {
-                specialMethodsNames.push(methodsNames);
-            } else {
-                for (const methodName of methodsNames) {
-                    if (this.specialCheckAndReloadMethodsNames.includes(methodName)) {
-                        specialMethodsNames.push(methodName);
-                    }
-                }
-            }
-            if (!specialMethodsNames.length) {
-                continue;
-            }
-            let paramsReload = false;
-            for (const methodName of specialMethodsNames) {
-                if (widget.getMethodsParams(methodName).reload) {
-                    paramsReload = true;
-                    break;
-                }
-            }
-            if (paramsReload) {
+            const methodNamesToCheck = this.data.pageOptions
+                ? methodsNames
+                : methodsNames.filter(m => this.specialCheckAndReloadMethodsNames.includes(m));
+            if (methodNamesToCheck.some(m => widget.getMethodsParams(m).reload)) {
                 return true;
             }
         }
