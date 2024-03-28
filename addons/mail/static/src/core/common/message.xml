@@ -46,12 +46,12 @@
                                 className="'ms-1'"
                                 message="props.message"
                                 thread="props.thread"/>
-                            <small t-if="!isOriginThread and !message.is_transient" t-on-click.prevent="openRecord" class="ms-1 text-500">
-                                <t t-if="message.originThread?.model !== 'discuss.channel'">
-                                    on <a t-att-href="message.resUrl"><t t-esc="message.originThread?.displayName"/></a>
+                            <small t-if="!isOriginThread and !message.is_transient and message.originThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
+                                <t t-if="message.originThread.model !== 'discuss.channel'">
+                                    on <a t-att-href="message.resUrl"><t t-esc="message.originThread.displayName"/></a>
                                 </t>
                                 <t t-else="">
-                                    (from <a t-att-href="message.resUrl"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
+                                    (from <a t-att-href="message.resUrl"><t t-esc="message.originThread.prefix"/><t t-esc="message.originThread.displayName"/></a>)
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
