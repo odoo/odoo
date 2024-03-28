@@ -952,8 +952,8 @@ class StockQuant(TransactionCase):
         package = self.env['stock.quant.package'].create({
             'name': 'Super Package',
         })
-        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
-        dst_location = stock_location.child_ids[0]
+        stock_location = self.stock_location
+        dst_location = self.stock_subloc2
         picking_type = self.env.ref('stock.picking_type_internal')
 
         self.env['stock.quant']._update_available_quantity(product, stock_location, 5.0, lot_id=lot_a, package_id=package)
