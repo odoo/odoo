@@ -1825,7 +1825,7 @@ class SaleOrder(models.Model):
         res = {}
         for product in products:
             res[product.id] = {'price': pricelist.get(product.id)}
-            if product.sale_line_warn_msg:
+            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":
                 res[product.id]['readOnly'] = True
