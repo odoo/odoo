@@ -29,6 +29,7 @@ import {
     closestElement,
     closestBlock,
     getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -51,7 +52,7 @@ const isDeletable = (node) => {
 }
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
-    const contentIsZWS = this.textContent === '\u200B';
+    const contentIsZWS = ZERO_WIDTH_CHARS.includes(this.textContent);
     let moveDest;
     if (offset) {
         const leftNode = this.childNodes[offset - 1];
