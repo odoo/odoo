@@ -1572,6 +1572,11 @@ class Transport(xmlrpclib.Transport):
         return super().request(*args, **kwargs)
 
 
+class No404Filter(logging.Filter):
+    def filter(self, record):
+        return werkzeug.exceptions.NotFound.description not in record.getMessage()
+
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
     registry_test_mode = True
@@ -1763,6 +1768,10 @@ class HttpCase(TransactionCase):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
+        no_404_filter = No404Filter()
+        http_logger = logging.getLogger('odoo.http')
+        http_logger.addFilter(no_404_filter)
+        self.addCleanup(http_logger.removeFilter, no_404_filter)
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
         ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
