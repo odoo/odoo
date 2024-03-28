@@ -27,6 +27,16 @@ class ImageData(models.Model):
     shape_flip = fields.Char(help='The directions in which the shape applied on the image have been flipped')
     shape_rotate = fields.Char(help='The tilt of the shape applied on the image')
     file_name = fields.Char(help='Name useful to recover the shape of the image')
+    # Crop options
+    is_cropped = fields.Boolean(default=False, help='Boolean indicating if the image is cropped')
+    x = fields.Float(help='')
+    y = fields.Float(help='')
+    width = fields.Float(help='Width of the cropped image')
+    height = fields.Float(help='Height of the cropped image')
+    rotate = fields.Float(help='Rotation of the cropped image')
+    scale_x = fields.Integer(help='')
+    scale_y = fields.Integer(help='')
+    aspect_ratio = fields.Char(help='Ratio of the width of an image over its height')
 
     @api.constrains('res_model', 'res_field', 'res_id')
     def check_unique_record(self):
@@ -71,7 +81,8 @@ class ImageData(models.Model):
         """
         return [
             'original_mimetype', 'resize_width', 'gl_filter', 'shape', 'shape_animation_speed',
-            'shape_colors', 'shape_flip', 'shape_rotate', 'file_name',
+            'shape_colors', 'shape_flip', 'shape_rotate', 'file_name', 'is_cropped', 'x', 'y',
+            'width', 'height', 'rotate', 'scale_x', 'scale_y', 'aspect_ratio',
         ]
 
     def _update_image_data(self, vals):

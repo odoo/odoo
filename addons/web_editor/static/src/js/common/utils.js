@@ -550,6 +550,15 @@ function _getImageData(imgEl, preImageData = {}) {
 function _convertSnakeToCamelString(snakeString) {
     return snakeString.replace(/(_[a-z])/g, (group) => group.replace("_", "").toUpperCase());
 }
+/**
+ * Converts a camel case string to snake case.
+ *
+ * @param {string} camelString - the camel case string to convert to snake case.
+ * @returns {string} The snake case version of camelString.
+ */
+function _convertCamelToSnakeString(camelString) {
+    return camelString.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -558,6 +567,7 @@ export default {
     DEFAULT_PALETTE: DEFAULT_PALETTE,
     EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
     computePxByRem: _computePxByRem,
+    convertCamelToSnakeString: _convertCamelToSnakeString,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
     convertSnakeToCamelString: _convertSnakeToCamelString,

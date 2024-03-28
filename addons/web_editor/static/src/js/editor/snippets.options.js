@@ -6659,6 +6659,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     start() {
         this.$target.on('image_changed.ImageOptimization', this._onImageChanged.bind(this));
         this.$target.on('image_cropped.ImageOptimization', this._onImageCropped.bind(this));
+        this.$target.on('image_cropper_destroyed.ImageOptimization', this._onImageCropperDestroyed.bind(this));
         return this._super(...arguments);
     },
     /**
@@ -6693,6 +6694,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
         });
         await imageCropWrapper.component.mountedPromise;
         if (widgetValue) {
@@ -6729,6 +6731,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
         });
 
         await new Promise(resolve => {
@@ -6804,6 +6807,7 @@ registry.ImageTools = ImageHandlerOption.extend({
             activeOnStart: true,
             media: img,
             mimetype: this._getImageMimetype(img),
+            getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
         });
         await imageCropWrapper.component.mountedPromise;
         await imageCropWrapper.component.reset();
@@ -6833,7 +6837,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // If the shape needs the image to be square (1:1 ratio) and if not
         // already the case, crop the image before applying the shape.
         const isCropRequired = params.unstretch;
-        if ((isCropRequired && img.dataset.aspectRatio !== "1/1" && previewMode !== "reset")
+        if ((isCropRequired && this.imageData.aspect_ratio !== "1/1" && previewMode !== "reset")
                 || this.hasCroppedPreview) {
             // Preserve the cursor to be able to replace the image afterwards.
             const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
@@ -6850,6 +6854,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 activeOnStart: true,
                 media: img,
                 mimetype: this._getImageMimetype(img),
+                getRecordInfo: this.options.wysiwyg._getRecordInfo.bind(this.options.wysiwyg),
             });
             await imageCropWrapper.component.mountedPromise;
             await imageCropWrapper.component.cropSquare(previewMode);
@@ -7144,7 +7149,7 @@ registry.ImageTools = ImageHandlerOption.extend({
 ￼    * @private
 ￼    */
     _isCropped() {
-        return this.$target.hasClass('o_we_image_cropped');
+        return this.imageData.is_cropped;
     },
     /**
      * @override
@@ -7535,8 +7540,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 return imgEl.dataset.hoverEffectColor || "";
             }
             case "removeStretch": {
-                const imgEl = this._getImg();
-                return imgEl.dataset.aspectRatio !== "1/1";
+                return this.imageData.aspect_ratio !== "1/1";
             }
         }
         return this._super(...arguments);
@@ -7964,6 +7968,15 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _onImageCropped(ev) {
         await this._rerenderXML();
+    },
+    /**
+     * Update the image data with the cropping info.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onImageCropperDestroyed(ev) {
+        this.imageData = weUtils.getImageData(this._getImg());
     },
 });
 

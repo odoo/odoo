@@ -35,6 +35,15 @@ export function backgroundImagePartsToCss(parts) {
     }
     return css || "none";
 }
+/**
+ * Converts a camel case string to snake case.
+ *
+ * @param {string} camelString - the camel case string to convert to snake case.
+ * @returns {string} The snake case version of camelString.
+ */
+export function convertCamelToSnakeString(camelString) {
+    return camelString.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+}
 
 /**
  * Parse an element's background-image's url.

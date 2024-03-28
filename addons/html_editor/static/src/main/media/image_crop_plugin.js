@@ -33,6 +33,7 @@ export class ImageCropPlugin extends Plugin {
         this.imageCropProps = {
             media: undefined,
             mimetype: undefined,
+            getRecordInfo:this.config.getRecordInfo,
         };
     }
 

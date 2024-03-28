@@ -1,3 +1,4 @@
+import { convertCamelToSnakeString, getImageData, updateImageDataRegistry } from "@html_editor/utils/image";
 import {
     applyModifications,
     cropperDataFields,
@@ -5,6 +6,7 @@ import {
     loadImage,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
@@ -23,6 +25,7 @@ export class ImageCrop extends Component {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         media: { optional: true },
         mimetype: { type: String, optional: true },
+        getRecordInfo: { type: Function },
         onClose: { type: Function, optional: true },
         onSave: { type: Function, optional: true },
     };
@@ -60,6 +63,8 @@ export class ImageCrop extends Component {
     closeCropper() {
         this.cropper?.destroy?.();
         this.media.setAttribute("src", this.initialSrc);
+        // Update the registry as the img src changes
+        updateImageDataRegistry(this.initialSrc, this.imageData);
         this.props?.onClose?.();
     }
 
@@ -80,25 +85,24 @@ export class ImageCrop extends Component {
     async show() {
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute("src");
-        const data = { ...this.media.dataset };
         this.initialSrc = src;
-        this.aspectRatio = data.aspectRatio || "0/0";
+        if (!registry.category("image.data").get(src, undefined)) {
+            await loadImageInfo(this.media, this.props.getRecordInfo());
+        }
+        this.imageData = getImageData(this.media);
+        this.aspectRatio = this.imageData.aspect_ratio || "0/0";
         const mimetype =
-            data.mimetype || src.endsWith(".png")
+        this.imageData.mimetype || src.endsWith(".png")
                 ? "image/png"
                 : src.endsWith(".webp")
                 ? "image/webp"
                 : "image/jpeg";
         this.mimetype = this.props.mimetype || mimetype;
-
-        await loadImageInfo(this.media);
-        const isIllustration = /^\/html_editor\/shape\/illustration\//.test(
-            this.media.dataset.originalSrc
-        );
+        const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.imageData.original_src);
         this.uncroppable = false;
-        if (this.media.dataset.originalSrc && !isIllustration) {
-            this.originalSrc = this.media.dataset.originalSrc;
-            this.originalId = this.media.dataset.originalId;
+        if (this.imageData.original_src && !isIllustration) {
+            this.originalSrc = this.imageData.original_src;
+            this.originalId = this.imageData.original_id;
         } else {
             // Couldn't find an attachment: not croppable.
             this.uncroppable = true;
@@ -161,7 +165,7 @@ export class ImageCrop extends Component {
         this.cropper = await activateCropper(
             cropperImage,
             this.aspectRatios[this.aspectRatio].value,
-            this.media.dataset
+            this.imageData
         );
     }
     /**
@@ -177,18 +181,18 @@ export class ImageCrop extends Component {
         this.media.classList.add("o_modified_image_to_save");
 
         [...cropperDataFields, "aspectRatio"].forEach((attr) => {
-            delete this.media.dataset[attr];
+            delete this.imageData[convertCamelToSnakeString(attr)];
             const value = this.getAttributeValue(attr);
             if (value) {
-                this.media.dataset[attr] = value;
+                this.imageData[convertCamelToSnakeString(attr)] = value;
             }
         });
-        delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media, this.cropper, {
+        delete this.imageData.resize_width;
+        this.initialSrc = await applyModifications(this.imageData, this.cropper, {
             forceModification: true,
             mimetype: this.mimetype,
         });
-        this.media.classList.toggle("o_we_image_cropped", cropped);
+        this.imageData.is_cropped = cropped;
         this.closeCropper();
         this.props.onSave?.();
     }
