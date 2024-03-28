@@ -31,6 +31,8 @@ class TestName(TransactionCase):
         self.assertNotIn(self.product.id, res_ids)
 
     def test_product_template_search_name_no_product_product(self):
+        # To be able to test dynamic variant "variants" feature must be set up
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
         color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
         color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': color_attr.id})
         color_attr_value_b = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': color_attr.id})
