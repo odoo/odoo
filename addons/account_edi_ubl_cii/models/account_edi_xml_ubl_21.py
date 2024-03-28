@@ -25,7 +25,10 @@ class AccountEdiXmlUBL21(models.AbstractModel):
         vals = super()._export_invoice_vals(invoice)
 
         vals.update({
+            'AddressType_template': 'account_edi_ubl_cii.ubl_21_AddressType',
             'PaymentTermsType_template': 'account_edi_ubl_cii.ubl_21_PaymentTermsType',
+            'PartyType_template': 'account_edi_ubl_cii.ubl_21_PartyType',
+            'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_21_InvoiceLineType',
             'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_21_CreditNoteLineType',
             'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_21_DebitNoteLineType',
             'InvoiceType_template': 'account_edi_ubl_cii.ubl_21_InvoiceType',
