@@ -57,9 +57,22 @@ patch(Message.prototype, {
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
                     id: this.message.author.userId,
+                    resModel: "res.users",
                 });
             }
         }
+    },
+    onClick(ev) {
+        if (ev.target.closest(".o_mail_redirect")) {
+            ev.preventDefault();
+            const partnerId = Number(ev.target.dataset.oeId);
+            this.avatarCard.open(ev.target, {
+                id: partnerId,
+                resModel: "res.partner",
+            });
+            return;
+        }
+        super.onClick(ev);
     },
     openRecord() {
         this.message.thread.open();

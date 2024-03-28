@@ -190,6 +190,13 @@ patch(MockServer.prototype, {
         if (route === "/discuss/gif/favorites") {
             return [[]];
         }
+        if (route === "/mail/avatar_card/info") {
+            return this._mockRouteMailAvatarCardInfo(
+                args.avatar_id,
+                args.fieldNames,
+                args.resModel
+            );
+        }
         return super._performRPC(route, args);
     },
     /**
@@ -698,5 +705,29 @@ patch(MockServer.prototype, {
             ...res,
             messages: this._mockMailMessageMessageFormat(res.messages.map((message) => message.id)),
         };
+    },
+    /**
+     * Simulates the `/mail/avatar_card/info` route.
+     *
+     * @private
+     * @param {integer} avatar_id
+     * @param {object} fieldNames
+     * @param {string} resModel
+     * @returns {object} avatar info of an partner/user.
+     */
+    async _mockRouteMailAvatarCardInfo(avatar_id, fieldNames, resModel) {
+        const domain =
+            resModel === "res.users" ? [["id", "=", avatar_id]] : [["partner_id", "=", avatar_id]];
+        let partner_data = this.pyEnv["res.users"].search_read(
+            domain,
+            fieldNames["partnerwithuser"]
+        );
+        if (!partner_data.length) {
+            partner_data = this.pyEnv["res.partner"].search_read(
+                [("id", "=", avatar_id)],
+                fieldNames["partnerwithoutuser"]
+            );
+        }
+        return partner_data;
     },
 });
