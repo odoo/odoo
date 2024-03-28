@@ -492,7 +492,7 @@ class AccountTax(models.Model):
     @api.constrains('company_id')
     def _check_company_consistency(self):
         for company, taxes in groupby(self, lambda tax: tax.company_id):
-            if self.env['account.move.line'].search([
+            if self.env['account.move.line'].search_count([
                 '|',
                 ('tax_line_id', 'in', [tax.id for tax in taxes]),
                 ('tax_ids', 'in', [tax.id for tax in taxes]),

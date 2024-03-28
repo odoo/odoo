@@ -7,7 +7,7 @@ from . import populate
 
 
 def _install_hr_localization(env):
-    if any(c.partner_id.country_id.code == 'MX' for c in env['res.company'].search([])):
+    if env["res.company"].search_count([('partner_id.country_id.code', '=', 'MX')], limit=1):
         l10n_mx = env['ir.module.module'].sudo().search([
             ('name', '=', 'l10n_mx_hr'),
             ('state', 'not in', ['installed', 'to install', 'to upgrade']),

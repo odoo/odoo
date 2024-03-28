@@ -223,7 +223,7 @@ class Challenge(models.Model):
 
         elif vals.get('state') == 'draft':
             # resetting progress
-            if self.env['gamification.goal'].search([('challenge_id', 'in', self.ids), ('state', '=', 'inprogress')], limit=1):
+            if self.env['gamification.goal'].search_count([('challenge_id', 'in', self.ids), ('state', '=', 'inprogress')], limit=1):
                 raise exceptions.UserError(_("You can not reset a challenge with unfinished goals."))
 
         return write_res

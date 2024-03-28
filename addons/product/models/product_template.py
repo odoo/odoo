@@ -367,7 +367,7 @@ class ProductTemplate(models.Model):
         if self.id.origin:
             domain.append(('id', '!=', self.id.origin))
 
-        if self.env['product.template'].search(domain, limit=1):
+        if self.env['product.template'].search_count(domain, limit=1):
             return {'warning': {
                 'title': _("Note:"),
                 'message': _("The Internal Reference '%s' already exists.", self.default_code),

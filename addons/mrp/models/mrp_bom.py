@@ -191,7 +191,7 @@ class MrpBom(models.Model):
 
     @api.onchange('bom_line_ids', 'product_qty')
     def onchange_bom_structure(self):
-        if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
+        if self.type == 'phantom' and self._origin and self.env['stock.move'].search_count([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
             return {
                 'warning': {
                     'title': _('Warning'),
@@ -308,7 +308,7 @@ class MrpBom(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_running_mo(self):
-        if self.env['mrp.production'].search([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
+        if self.env['mrp.production'].search_count([('bom_id', 'in', self.ids), ('state', 'not in', ['done', 'cancel'])], limit=1):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
 
     @api.model
