@@ -3,7 +3,13 @@
     'name': 'Ecuadorian Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ec'],
+<<<<<<< HEAD
     'version': '3.5',
+||||||| parent of 5b8eee6b92eb (temp)
+    'version': '3.6',
+=======
+    'version': '3.7',
+>>>>>>> 5b8eee6b92eb (temp)
     'description': """
 Functional
 ----------
