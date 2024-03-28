@@ -186,6 +186,11 @@
                 <xpath expr="//field[@name='product_tmpl_id']" position="after">
                     <field name="seller_ids" string="Vendor"/>
                 </xpath>
+                <xpath expr="//filter[@name='products']" position="after">
+                    <filter string="In the Order"
+                            name="products_in_order"
+                            domain="[('is_in_purchase_order', '=', True)]"/>
+                </xpath>
             </field>
         </record>
 
