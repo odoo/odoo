@@ -68,4 +68,17 @@ export class SaleOrderRow extends Component {
     get salesman() {
         return this.order.user_id?.name;
     }
+    get isProcessed() {
+        let sumPriceUnit = 0;
+        for (const order of this.pos.get_order_list()) {
+            const filteredLines = order.lines.filter(
+                (line) => line.sale_order_origin_id?.id === this.order.id
+            );
+            sumPriceUnit += filteredLines.reduce((total, line) => {
+                const taxAmount = line.tax_ids[0] ? line.tax_ids[0].amount / 100 : 0;
+                return total + line.price_unit * line.qty * (1 + taxAmount);
+            }, 0);
+        }
+        return sumPriceUnit.toFixed(2) >= this.order.amount_unpaid;
+    }
 }

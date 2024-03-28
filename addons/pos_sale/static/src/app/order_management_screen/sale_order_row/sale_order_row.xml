@@ -3,11 +3,12 @@
 
     <t t-name="pos_sale.SaleOrderRow">
         <div class="order-row"
-        t-att-class="{ highlight: highlighted }"
+        t-att-class="{'highlight': highlighted, 'pe-none opacity-75': isProcessed}"
         t-on-click="() => this.props.onClickSaleOrder(props.order)">
-            <div class="col name p-2">
+            <div class="col name p-2 d-flex">
                 <div t-if="ui.isSmall">Order</div>
                 <div><t t-esc="name"/></div>
+                <div t-if="isProcessed" class="isProcessed">Being processed</div>
             </div>
             <div class="col date p-2">
                 <div t-if="ui.isSmall">Date</div>
