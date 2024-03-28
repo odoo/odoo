@@ -118,8 +118,8 @@
                                     picking type with the code 'Internal', which make sense, but as the field 'code' on picking
                                     types can't be partially hidden, you can still select the code internal in the form view -->
                                 <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
-                                    <field name="default_location_src_id" options="{'no_create': True}" required="code in ('internal', 'outgoing')"/>
-                                    <field name="default_location_dest_id" options="{'no_create': True}" required="code in ('internal', 'incoming')"/>
+                                    <field name="default_location_src_id" options="{'no_create': True}" required="1"/>
+                                    <field name="default_location_dest_id" options="{'no_create': True}" required="1"/>
                                 </group>
                             </group>
                         </page>
