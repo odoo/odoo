@@ -82,6 +82,8 @@ _CONST_OPCODES = set(to_opcodes([
     'COPY', 'SWAP',
     # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
+    # Added in 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'RETURN_CONST', 'END_FOR', 'CALL_INTRINSIC_1', 'RERAISE', 'BINARY_SLICE',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
