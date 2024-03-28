@@ -599,16 +599,19 @@ class AccountTestInvoicingCommon(ProductCommon):
             :param node_dict:           The node to compare with.
             :param expected_node_dict:  The expected node.
             '''
+            if expected_node_dict['text'] == '___ignore___':
+                return
             # Check tag.
             self.assertEqual(node_dict['tag'], expected_node_dict['tag'])
 
             # Check attributes.
-            node_dict_attrib = {k: '___ignore___' if expected_node_dict['attrib'].get(k) == '___ignore___' else v
-                                for k, v in node_dict['attrib'].items()}
-            expected_node_dict_attrib = {k: v for k, v in expected_node_dict['attrib'].items() if v != '___remove___'}
+            for k, v in expected_node_dict['attrib'].items():
+                if v == '___ignore___':
+                    node_dict['attrib'][k] = '___ignore___'
+
             self.assertDictEqual(
-                node_dict_attrib,
-                expected_node_dict_attrib,
+                node_dict['attrib'],
+                expected_node_dict['attrib'],
                 f"Element attributes are different for node {node_dict['full_path']}",
             )
 
