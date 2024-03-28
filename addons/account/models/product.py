@@ -193,7 +193,7 @@ class ProductProduct(models.Model):
             product_values = product_taxes._eval_taxes_computation_turn_to_product_values(
                 original_taxes_data + new_taxes_data,
                 product=product,
-            ),
+            )
             product_price_unit = product_taxes._adapt_price_unit_to_another_taxes(
                 price_unit=product_price_unit,
                 product_values=product_values,
