@@ -85,6 +85,9 @@ export class Colorpicker extends Component {
             this.start();
         });
         onWillUpdateProps((newProps) => {
+            if (!this.el) {
+                return;
+            }
             if (newProps.selectedColor) {
                 this.setSelectedColor(newProps.selectedColor);
             }
