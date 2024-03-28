@@ -1535,8 +1535,8 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.product_uom_qty, receipt1_qty, "Incorrect quantity split for remaining MTO move qty")
         self.assertEqual(mto_move.quantity, receipt1_qty, "Incorrect reserved amount split for remaining MTO move qty")
         self.assertEqual(mto_move.state, 'assigned', "MTO move state shouldn't have changed")
-        for move in non_mto_moves:
-            self.assertEqual(move.quantity, move.product_uom_qty, "Incorrect reserved amount split for remaining MTO move qty")
+        total_non_mto_qty = sum(move.quantity for move in non_mto_moves)
+        self.assertEqual(total_non_mto_qty, outgoing_qty - (receipt1_qty + receipt2_qty), "Unassigned move should be also unreserved")
 
     def test_report_reception_3_multiwarehouse(self):
         """ Check that reception report respects same warehouse for
@@ -1781,4 +1781,4 @@ class TestReports(TestReportsCommon):
         report.action_unassign([mto_move.id], incoming_qty, receipt.move_ids_without_package.ids)
         self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
         self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
-        self.assertEqual(mto_move.state, 'assigned', "Unassigning receipt move shouldn't affect the out move reservation")
+        self.assertEqual(mto_move.state, 'confirmed', "Unassigning receipt move should also unreserve the out move")

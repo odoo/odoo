@@ -329,7 +329,7 @@ class ReceptionReport(models.AbstractModel):
                 out.move_orig_ids = False
                 new_out._recompute_state()
         out.procure_method = 'make_to_stock'
-        out._recompute_state()
+        out._do_unreserve()
         return True
 
     def _action_assign(self, in_move, out_move):
