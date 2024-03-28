@@ -464,6 +464,36 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain.length, 0, "it should not have updated the pivot domain");
     });
 
+    QUnit.test("Relational filter including children", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        await addGlobalFilter(
+            model,
+            {
+                id: "42",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                includeChildren: true,
+            },
+            {
+                pivot: {
+                    "PIVOT#1": {
+                        chain: "product_id",
+                        type: "many2one",
+                    },
+                },
+            }
+        );
+        const [filter] = model.getters.getGlobalFilters();
+        await setGlobalFilterValue(model, {
+            id: filter.id,
+            value: [42],
+        });
+        assert.deepEqual(model.getters.getPivotComputedDomain("PIVOT#1"), [
+            ["product_id", "child_of", [42]],
+        ]);
+    });
+
     QUnit.test("Relational filter default to current user", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         await addGlobalFilter(model, {
