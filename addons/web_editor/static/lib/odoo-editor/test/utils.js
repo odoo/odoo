@@ -2,7 +2,7 @@ import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
 import {
     closestElement,
-    insertText as insertTextSel,
+    makeZeroWidthCharactersVisible,
 } from '../src/utils/utils.js';
 
 export const Direction = {
@@ -271,9 +271,8 @@ export function renderTextualSelection() {
  * Return a more readable test error messages
  */
 export function customErrorMessage(assertLocation, value, expected) {
-    const zws = '//zws//';
-    value = value.replaceAll('\u200B', zws);
-    expected = expected.replaceAll('\u200B', zws);
+    value = makeZeroWidthCharactersVisible(value);
+    expected = makeZeroWidthCharactersVisible(expected);
 
     return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }

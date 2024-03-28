@@ -18,6 +18,7 @@ import {
     unwrapContents,
     padLinkWithZws,
     getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -253,7 +254,7 @@ class Sanitize {
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A') {
                 if (anchorEl === node) {
-                    const linkLabel = node.innerText.replace(/[\u200B\uFEFF]/g, '');
+                    const linkLabel = node.innerText.replace(ZERO_WIDTH_CHARS_REGEX, '');
                     const urlInfo = getUrlsInfosInString(linkLabel);
                     if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:') && urlInfo[0].url !== node.href) {
                         node.setAttribute('href', urlInfo[0].url);

@@ -63,6 +63,8 @@ import {
     rightLeafOnlyNotBlockPath,
     lastLeaf,
     descendants,
+    ZERO_WIDTH_CHARS,
+    ZERO_WIDTH_CHARS_REGEX,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1664,7 +1666,7 @@ export class OdooEditor extends EventTarget {
             if (range &&
                 range.startContainer === range.endContainer &&
                 range.endContainer.nodeType === Node.TEXT_NODE &&
-                range.cloneContents().textContent === '\u200B'
+                ZERO_WIDTH_CHARS.includes(range.cloneContents().textContent)
             ) {
                 // We Collapse the selection and bypass deleteRange
                 // if the range content is only one ZWS.
@@ -1811,7 +1813,7 @@ export class OdooEditor extends EventTarget {
         const anchorNode = this._latestComputedSelection.anchorNode;
         const focusNode = this._latestComputedSelection.focusNode;
         const parentTextContent = anchorNode.parentElement? anchorNode.parentElement.textContent : null;
-        return anchorNode === focusNode && (parentTextContent === '' || parentTextContent === '\u200B')
+        return anchorNode === focusNode && (['', ...ZERO_WIDTH_CHARS].includes(parentTextContent))
     }
     /**
      * Get the step index in the history to undo.
@@ -2859,7 +2861,7 @@ export class OdooEditor extends EventTarget {
         if (selection.isCollapsed || !range) {
             return false;
         }
-        return range.cloneContents().textContent === '\u200B';
+        return ZERO_WIDTH_CHARS.includes(range.cloneContents().textContent);
     }
 
     getCurrentCollaborativeSelection() {
@@ -3200,7 +3202,7 @@ export class OdooEditor extends EventTarget {
         const clipboardHtml = ev.clipboardData.getData('text/html');
         // Replace entire link if its label is fully selected.
         const link = closestElement(sel.anchorNode, 'a', true);
-        if (link && sel.toString().replace(/\u200B/g, '') === link.innerText.replace(/\u200B/g, '')) {
+        if (link && sel.toString().replace(ZERO_WIDTH_CHARS_REGEX, '') === link.innerText.replace(ZERO_WIDTH_CHARS_REGEX, '')) {
             const start = leftPos(link);
             link.remove();
             setSelection(...start, ...start, false);
