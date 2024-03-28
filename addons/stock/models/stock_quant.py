@@ -391,7 +391,6 @@ class StockQuant(models.Model):
             'view_id': self.env.ref('stock.view_stock_quant_tree_inventory_editable').id,
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
-            'path': 'inventory',
             'context': ctx,
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'help': """
