@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import _monkeypatches
+from . import _monkeypatches_pytz
 
 from werkzeug import urls
 if not hasattr(urls, 'url_join'):
