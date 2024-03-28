@@ -844,7 +844,10 @@ class PurchaseOrder(models.Model):
         return expression.AND([super()._get_product_catalog_domain(), [('purchase_ok', '=', True)]])
 
     def _get_product_catalog_order_data(self, products, **kwargs):
-        return {product.id: self._get_product_price_and_data(product) for product in products}
+        res = super()._get_product_catalog_order_data(products, **kwargs)
+        for product in products:
+            res[product.id] += self._get_product_price_and_data(product)
+        return res
 
     def _get_product_catalog_record_lines(self, product_ids):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])

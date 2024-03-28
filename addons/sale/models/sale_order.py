@@ -1822,7 +1822,7 @@ class SaleOrder(models.Model):
             date=self.date_order,
             **kwargs,
         )
-        res = {}
+        res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
             res[product.id] = {'price': pricelist.get(product.id)}
             if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
