@@ -24,7 +24,7 @@
         essentialFieldsForDefaultFormFillInSteps.push({
             content: "Enter data in model-required field",
             trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
-            run: `text ${data.value}`,
+            run: `edit ${data.value}`,
         });
     }
 
@@ -89,7 +89,7 @@
             ret.push({
                 content: "Set the visibility condition",
                 trigger: 'we-input[data-attribute-name="visibilityCondition"] input',
-                run: `text ${display.condition}`,
+                run: `edit ${display.condition}`,
             });
         }
         if (required) {
@@ -104,7 +104,7 @@
             ret.push({
                 content: "Change the label text",
                 trigger: 'we-input[data-set-label-text] input',
-                run: `text ${label}`,
+                run: `edit ${label}`,
             });
         }
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
@@ -140,6 +140,7 @@
             content: "Select form by clicking on an input field",
             extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form input',
+            run: "click",
         }, {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
@@ -150,18 +151,15 @@
             content: "Select form by clicking on a text area",
             extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form textarea',
+            run: "click",
         }, {
             content: "Verify that the form editor appeared",
             trigger: '.o_we_customize_panel .snippet-option-WebsiteFormEditor',
             run: () => null,
         }, {
-            content: "Rename the field label",
+            content: "Rename and leave the field label",
             trigger: 'we-input[data-set-label-text] input',
-            run: "text Renamed",
-        }, {
-            content: "Leave the rename options",
-            trigger: 'we-input[data-set-label-text] input',
-            run: "text_blur",
+            run: "edit Renamed && blur",
         },
         wTourUtils.goBackToBlocks(),
         {
@@ -176,6 +174,7 @@
         }, {
             content: 'Edit the Phone Number field',
             trigger: ':iframe input[name="phone"]',
+            run: "click",
         }, {
             content: 'Change the label position of the phone field',
             trigger: 'we-button[data-select-label-position="right"]',
@@ -199,7 +198,7 @@
         {
             content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
             trigger: 'we-input[data-set-label-text] input',
-            run: "text Conditional Visibility Check 3",
+            run: "edit Conditional Visibility Check 3 && blur",
         },
         {
             content: "Check that the conditional visibility of the renamed field is removed",
@@ -212,7 +211,7 @@
         {
             content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
             trigger: 'we-input[data-set-label-text] input',
-            run: "text Conditional Visibility Check 5",
+            run: "edit Conditional Visibility Check 5 && blur",
         },
         {
             content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
@@ -238,22 +237,31 @@
         {
             content: "Change Option 1 label",
             trigger: 'we-list table input:eq(0)',
-            run: 'text Iphone',
+            run: "edit Iphone",
         }, {
             content: "Change Option 2 label",
             trigger: 'we-list table input:eq(1)',
-            run: 'text Galaxy S',
-        }, {
+            run: "edit Galaxy S",
+        },{
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
-            run: 'text Xperia',
-        }, {
+            run: "edit Xperia",
+        },
+        {
+            // TODO: Fix code to avoid this behavior
+            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
-        }, {
+            run: "click",
+        },
+        {
             content: "Change added Option label",
             trigger: 'we-list table input:eq(3)',
-            run: 'text Wiko Stairway',
+            run: "edit Wiko Stairway",
         }, {
             content: "Check the resulting field",
             trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
@@ -280,22 +288,29 @@
         {
             content: "Change Option 1 label",
             trigger: 'we-list table input:eq(0)',
-            run: 'text After-sales Service',
+            run: "edit After-sales Service",
         }, {
             content: "Change Option 2 label",
             trigger: 'we-list table input:eq(1)',
-            run: 'text Invoicing Service',
+            run: "edit Invoicing Service",
         }, {
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
-            run: 'text Development Service',
-        }, {
+            run: "edit Development Service",
+        }, 
+        {
+            // TODO: Fix code to avoid this behavior
+            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last Option label",
             trigger: 'we-list table input:eq(3)',
-            run: 'text Management Service',
+            run: "edit Management Service",
         }, {
             content: "Mark the field as not required",
             trigger: 'we-button[data-name="required_opt"] we-checkbox',
@@ -315,32 +330,55 @@
         {
             content: "Change Option 1 Label",
             trigger: 'we-list table input:eq(0)',
-            run: 'text Germany',
+            run: "edit Germany",
         }, {
             content: "Change Option 2 Label",
             trigger: 'we-list table input:eq(1)',
-            run: 'text Belgium',
+            run: "edit Belgium",
         }, {
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
-            run: 'text France',
-        }, {
+            run: "edit France",
+        }, 
+        {
+            // TODO: Fix code to avoid this behavior
+            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
-            trigger: 'we-list we-button.o_we_list_add_optional',
-        }, {
+            trigger: 'we-button.o_we_list_add_optional',
+            run: "click",
+        }, 
+        {
+            // TODO: Fix code to avoid this behavior
+            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Change last Option label",
             trigger: 'we-list table input:eq(3)',
-            run: 'text Canada',
+            // TODO: Fix code to avoid blur event
+            run: "edit Canada",
         }, {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
-        }, {
+        }, 
+        {
+            // TODO: Fix code to avoid this behavior
+            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
+            trigger: "we-list we-title",
+            run: "click",
+        },
+        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last option label with a number",
             trigger: 'we-list table input:eq(3)',
-            run: 'text 44 - UK',
+            run: "edit 44 - UK",
         }, {
             content: "Check that the input value is the full option value",
             trigger: 'we-list table input:eq(3)',
@@ -407,7 +445,7 @@
         }, {
             content: 'Set a default value to the name field',
             trigger: 'we-input[data-attribute-name="value"] input',
-            run: 'text John Smith',
+            run: "edit John Smith",
         },
 
         // Add two fields: the 1st one's visibility is tied to the 2nd one
@@ -422,7 +460,7 @@
         {
             content: "Insert default value",
             trigger: 'we-input[data-attribute-name="value"] input',
-            run: "text prefilled",
+            run: "edit prefilled",
         },
         ...wTourUtils.clickOnSave(),
         {
@@ -475,7 +513,7 @@
         }, {
             content: "Type something in field C",
             trigger: `:iframe ${triggerFieldByLabel("field C")} input`,
-            run: "text Sesame",
+            run: "edit Sesame",
         }, {
             content: "Check that fields A and B are visible",
             trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
@@ -496,7 +534,7 @@
         {
             content: "Tie the visibility of field A to field B containing 'peek-a-boo'",
             trigger: "we-input[data-name=hidden_condition_additional_text] input",
-            run: "text peek-a-boo",
+            run: "edit peek-a-boo",
         },
         ...wTourUtils.clickOnSave(),
 
@@ -504,7 +542,7 @@
          {
             content: "Write anything in C",
             trigger: `:iframe ${triggerFieldByLabel("field C")} input`,
-            run: "text Mellon",
+            run: "edit Mellon",
         }, {
             content: "Check that field B is visible, but field A is not",
             trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field B")}:visible)` +
@@ -513,7 +551,7 @@
         }, {
             content: "Insert 'peek-a-boo' in field B",
             trigger: `:iframe ${triggerFieldByLabel("field B")} input`,
-            run: "text peek-a-boo",
+            run: "edit peek-a-boo",
         }, {
             content: "Check that field A is visible",
             trigger: `:iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
@@ -535,7 +573,7 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            run: 'text test@test.test',
+            run: "edit test@test.test && blur we-title",
         },
         // Test a field visibility when it's tied to another Date [Time] field
         // being set.
@@ -619,7 +657,7 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            run: 'text test@test.test',
+            run: "edit test@test.test && blur",
         },
     ]));
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
@@ -630,7 +668,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: "edit ** && blur",
         }, {
             content: "Check that the recipient email is correct",
             trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -656,7 +694,7 @@
             extra_trigger: ':iframe .s_website_form_field',
             trigger: ':iframe section.s_website_form input',
             run: function (actions) {
-                actions.auto();
+                actions.click();
 
                 // The next steps will be about removing non essential required
                 // fields. For the robustness of the test, check that amount
@@ -675,6 +713,7 @@
                 steps.push({
                     content: "Select required field to remove",
                     trigger: ':iframe .s_website_form_required .s_website_form_input',
+                    run: "click",
                 });
                 steps.push({
                     content: "Remove required field",
@@ -762,7 +801,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: 'text_blur **',
+            run: "edit ** && blur",
         },
     ]));
 
