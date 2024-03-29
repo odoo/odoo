@@ -86,7 +86,9 @@ export class ActivityListPopoverItem extends Component {
     }
 
     async onFileUploaded(data) {
-        const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
+        const { id: attachmentId } = await this.attachmentUploader.uploadData(data, {
+            activity: this.props.activity,
+        });
         await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged?.();
     }
