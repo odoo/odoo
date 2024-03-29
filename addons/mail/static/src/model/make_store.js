@@ -99,16 +99,21 @@ export function makeStore(env, { localRegistry } = {}) {
                          * Using record.update(data) is preferable for performance to batch process
                          * when updating multiple fields at the same time.
                          */
-                        set(record, name, val) {
+                        set(record, name, val, receiver) {
                             // ensure each field write goes through the updatingAttrs method exactly once
                             if (record._.updatingAttrs.has(name)) {
                                 record[name] = val;
                                 return true;
                             }
                             return store.MAKE_UPDATE(function recordSet() {
-                                record._.proxyUsed.set(name, true);
+                                const reactiveSet = receiver !== record._proxyInternal;
+                                if (reactiveSet) {
+                                    record._.proxyUsed.set(name, true);
+                                }
                                 store._.updateFields(record, { [name]: val });
-                                record._.proxyUsed.delete(name);
+                                if (reactiveSet) {
+                                    record._.proxyUsed.delete(name);
+                                }
                                 return true;
                             });
                         },
