@@ -20,7 +20,9 @@ import {
     fillEmpty,
     setSelection,
     isZWS,
-    childNodeIndex, boundariesOut
+    childNodeIndex,
+    boundariesOut,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
@@ -43,7 +45,7 @@ Text.prototype.oDeleteForward = function (offset, alreadyMoved = false) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentNode, firstSplitOffset, parentNode, secondSplitOffset);
     const isSpace = !isVisibleStr(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
@@ -82,6 +84,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         this.parentElement.remove();
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
+        return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
         return;
     }
     if (

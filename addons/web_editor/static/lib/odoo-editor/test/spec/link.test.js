@@ -245,7 +245,7 @@ describe('Link', () => {
                         await insertLineBreak(editor);
                         await insertText(editor, 'odoo.com')
                     },
-                    contentAfter: '<p>a<a href="https://google.com">google.com<br>odoo.com[]</a></p>',
+                    contentAfter: '<p>a<a href="https://google.com">google.com</a><br>odoo.com[]</p>',
                 });
             });
         });
@@ -562,13 +562,7 @@ describe('Link', () => {
                     await clickOnLink(editor);
                     await deleteBackward(editor);
                 },
-                contentAfterEdit: '<p>a<a href="#/" oe-zws-empty-inline="" class="o_link_in_selection">' +
-                        '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
-                        '[]\u200B' + // content: empty inline zws
-                        '<span data-o-link-zws="end">\u200B</span>' + // end zws
-                    '</a>' +
-                    '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
-                    'c</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
                 contentAfter: '<p>a[]c</p>',
             });
         });
@@ -576,7 +570,7 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
                     await insertText(editor, '1');
                     await insertText(editor, '2');

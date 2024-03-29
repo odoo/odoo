@@ -2,7 +2,8 @@ import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
 import {
     closestElement,
-    insertText as insertTextSel,
+    makeZeroWidthCharactersVisible,
+    insertSelectionChars,
 } from '../src/utils/utils.js';
 
 export const Direction = {
@@ -91,13 +92,6 @@ export function parseTextualSelection(testContainer) {
         node = next;
     }
     if (anchorNode && focusNode) {
-        // Correct for the addition of the link ZWS start characters.
-        if (anchorNode.nodeName === 'A' && anchorOffset) {
-            anchorOffset += 1;
-        }
-        if (focusNode.nodeName === 'A' && focusOffset) {
-            focusOffset += 1;
-        }
         return {
             anchorNode: anchorNode,
             anchorOffset: anchorOffset,
@@ -177,33 +171,6 @@ export async function setTestSelection(selection, doc = document) {
 }
 
 /**
- * Inserts the given characters at the given offset of the given node.
- *
- * @param {string} chars
- * @param {Node} node
- * @param {number} offset
- */
-export function insertCharsAt(chars, node, offset) {
-    if (node.nodeType === Node.TEXT_NODE) {
-        const startValue = node.nodeValue;
-        if (offset < 0 || offset > startValue.length) {
-            throw new Error(`Invalid ${chars} insertion in text node`);
-        }
-        node.nodeValue = startValue.slice(0, offset) + chars + startValue.slice(offset);
-    } else {
-        if (offset < 0 || offset > node.childNodes.length) {
-            throw new Error(`Invalid ${chars} insertion in non-text node`);
-        }
-        const textNode = document.createTextNode(chars);
-        if (offset < node.childNodes.length) {
-            node.insertBefore(textNode, node.childNodes[offset]);
-        } else {
-            node.appendChild(textNode);
-        }
-    }
-}
-
-/**
  * Return the deepest child of a given container at a given offset, and its
  * adapted offset.
  *
@@ -257,30 +224,15 @@ export function renderTextualSelection() {
     if (selection.rangeCount === 0) {
         return;
     }
-
-    const anchor = targetDeepest(selection.anchorNode, selection.anchorOffset);
-    const focus = targetDeepest(selection.focusNode, selection.focusOffset);
-
-    // If the range characters have to be inserted within the same parent and
-    // the anchor range character has to be before the focus range character,
-    // the focus offset needs to be adapted to account for the first insertion.
-    const [anchorNode, anchorOffset] = anchor;
-    const [focusNode, baseFocusOffset] = focus;
-    let focusOffset = baseFocusOffset;
-    if (anchorNode === focusNode && anchorOffset <= focusOffset) {
-        focusOffset++;
-    }
-    insertCharsAt('[', ...anchor);
-    insertCharsAt(']', focusNode, focusOffset);
+    insertSelectionChars(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
 }
 
 /**
  * Return a more readable test error messages
  */
 export function customErrorMessage(assertLocation, value, expected) {
-    const zws = '//zws//';
-    value = value.replaceAll('\u200B', zws);
-    expected = expected.replaceAll('\u200B', zws);
+    value = makeZeroWidthCharactersVisible(value);
+    expected = makeZeroWidthCharactersVisible(expected);
 
     return `${(isMobileTest ? '[MOBILE VERSION: ' : '[')}${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
@@ -350,6 +302,12 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     if (spec.contentAfterEdit) {
         renderTextualSelection();
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checklist-id-')) {
+                li.removeAttribute('id');
+            }
+        }
         const afterEditValue = testNode.innerHTML;
         window.chai.expect(afterEditValue).to.be.equal(
             spec.contentAfterEdit,
