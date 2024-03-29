@@ -138,7 +138,14 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('/iso6523-actorid-upis%3A%3A9925%3A0000000000'):
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0477472701'):
+            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier></smp:ServiceGroup>'
+            return response
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
+            response.status_code = 404
+            return response
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
+            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
         proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
@@ -294,3 +301,29 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_move_state': 'done',
                 'move_type': 'in_invoice',
             }])
+
+    def test_validate_partner(self):
+        new_partner = self.env['res.partner'].create({
+            'name': 'Deanna Troi',
+            'city': 'Namur',
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.assertRecordValues(
+            new_partner, [{
+                'account_peppol_verification_label': 'not_verified',
+                'account_peppol_is_endpoint_valid': False,
+                'peppol_eas': '0208',
+                'peppol_endpoint': False,
+            }])
+
+        new_partner.peppol_endpoint = '0477472701'
+        self.assertRecordValues(
+            new_partner, [{
+                'account_peppol_verification_label': 'valid',
+                'account_peppol_is_endpoint_valid': True,  # should validate automatically
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0477472701',
+            }])
+
+        new_partner.ubl_cii_format = False
+        self.assertFalse(new_partner.account_peppol_is_endpoint_valid)
