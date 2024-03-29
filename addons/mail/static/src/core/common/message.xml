@@ -73,6 +73,7 @@
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
+                                    <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
@@ -174,6 +175,12 @@
         <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
             <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
         </span>
+    </div>
+</t>
+
+<t t-name="mail.Message.bodyAsNotification">
+    <div class="o-mail-Message-body text-break mb-0 w-100">
+        <t t-out="messageSearch?.highlight(message.body) ?? message.body"/>
     </div>
 </t>
 
