@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
 import {
@@ -769,8 +770,18 @@ test("channel - states: open should update the value on the server", async () =>
 });
 
 test("channel - states: close from the bus", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "channel1" });
+    pyEnv["discuss.channel"].create({
+        name: "channel1",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
+        ],
+    });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: true,
@@ -906,8 +917,17 @@ test("chat - states: open should call update server data", async () => {
 });
 
 test("chat - states: close from the bus", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
+        ],
+    });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: true,
@@ -1055,20 +1075,41 @@ test("Can unpin chat channel", async () => {
 });
 
 test("Unpinning chat should display notification", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 12:00:00",
+            }),
+            Command.create({ partner_id: partnerId, last_interest_dt: "2021-01-03 12:00:00" }),
+        ],
+    });
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
-        text: "You unpinned your conversation with Mitchell Admin",
+        text: "You unpinned your conversation with Mario",
     });
 });
 
 test("Can leave channel", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 12:00:00",
+            }),
+        ],
+    });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
