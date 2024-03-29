@@ -9,7 +9,7 @@ from collections import defaultdict
 from datetime import time, datetime
 
 from odoo import api, fields, models
-from odoo.tools import format_date
+from odoo.tools import format_date, frozendict
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -220,6 +220,12 @@ class HolidaysType(models.Model):
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
         target_date = self._context['default_date_from'] if 'default_date_from' in self._context else None
+        # This is a workaround to save the date value in context for next triggers
+        # when context gets cleaned and 'default_' context keys gets removed
+        if target_date:
+            self.env.context = frozendict(self.env.context, leave_date_from=self._context['default_date_from'])
+        else:
+            target_date = self._context.get('leave_date_from', None)
         data_days = self.get_allocation_data(employee, target_date)[employee]
         for holiday_status in self:
             result = [item for item in data_days if item[0] == holiday_status.name]
