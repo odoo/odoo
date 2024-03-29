@@ -12,7 +12,7 @@ export function selectTable(table) {
         {
             content: `Select table ${table}`,
             trigger: `.self_order_popup_table select:has(option:contains("${table}"))`,
-            run: `text ${table}`,
+            run: `select ${table}`,
         },
         {
             content: `Click on 'Confirm' button`,

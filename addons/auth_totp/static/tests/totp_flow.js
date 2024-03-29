@@ -10,7 +10,7 @@ function openRoot() {
         content: "return to client root to avoid race condition",
         trigger: 'body',
         run() {
-            $('body').addClass('wait');
+            document.querySelector("body").classList.add("wait");
             window.location = '/web';
         }
     }, {
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
         const token = await rpc('/totphook', {
             secret: secret.textContent
         });
-        helpers.text(token, '[name=code] input');
+        helpers.edit(token, '[name=code] input');
         helpers.click('button.btn-primary:contains(Activate)');
         document.querySelector("body").classList.add("got-token");
     }
@@ -132,11 +132,11 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -154,7 +154,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
         //       could set a class but that's really no better than
         //       procedurally clicking the button after we've set the input.
         const token = await rpc('/totphook');
-        helpers.text(token);
+        helpers.edit(token);
         helpers.click('button:contains("Log in")');
     }
 }, {
@@ -172,11 +172,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -191,7 +191,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: 'input[name=totp_token]',
     async run(helpers) {
         const token = await rpc('/totphook')
-        helpers.text(token);
+        helpers.edit(token);
         helpers.click('button:contains("Log in")');
     }
 }, {
@@ -203,15 +203,16 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: '.dropdown-item[data-menu=logout]',
 }, {
     content: "check that we're back on the login page or go to it",
-    trigger: 'input#login, a:contains(Log in)'
+    trigger: 'input#login, a:contains(Log in)', 
+    run: "edit Test",
 }, {
     content: "input login again",
     trigger: 'input#login',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: 'input password again',
     trigger: 'input#password',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "click da button again",
     trigger: 'button:contains("Log in")',
@@ -231,7 +232,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -253,11 +254,11 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text demo',
+    run: "edit demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -288,22 +289,6 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
 }, {
     content: "Open Users view",
     trigger: '[data-menu-xmlid="base.menu_action_res_users"]',
-    run(helpers) {
-        // funny story: the users view we're trying to reach, sometimes we're
-        // already there, but if we re-click the next step executes before the
-        // action has the time to re-load, the one after that doesn't, and our
-        // selection get discarded by the action reloading, so here try to
-        // see if we're already on the users action through the breadcrumb and
-        // just close the menu if so
-        const $crumb = $('.breadcrumb');
-        if ($crumb.text().indexOf('Users') === -1) {
-            // on general settings page, click menu
-            helpers.click();
-        } else {
-            // else close menu
-            helpers.click($('[data-menu-xmlid="base.menu_users"]'));
-        }
-    }
 }, {
     content: "Find Demo User",
     trigger: 'td.o_data_cell:contains("demo")',
@@ -326,7 +311,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "Check that we have to enter enhanced security mode & input password",
     extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text admin',
+    run: "edit admin",
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",

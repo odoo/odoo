@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('tour_configurator_quick_add_single_cust
         },
         {
             trigger: 'input.variant_custom_value',
-            run: 'text TEST',
+            run: "edit TEST",
         },
         {
             content: "Go through the modal window of the product configurator",

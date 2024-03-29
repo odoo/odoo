@@ -20,12 +20,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Fill in Subject",
             trigger: '#subject_0',
-            run: 'text Test Basic Theme',
+            run: "edit Test Basic Theme",
         },
         {
             content: "Fill in Mailing list",
             trigger: '#contact_list_ids_0',
-            run: 'text Newsletter',
+            run: "edit Newsletter",
         },
         {
             content: "Pick 'Newsletter' option",
@@ -50,12 +50,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Fill in Subject",
             trigger: '#subject_0',
             extra_trigger: ':iframe .o_mail_theme_selector_new',
-            run: 'text Test Newsletter Theme',
+            run: "edit Test Newsletter Theme",
         },
         {
             content: "Fill in Mailing list",
             trigger: '#contact_list_ids_0',
-            run: 'text Newsletter',
+            run: "edit Newsletter",
         },
         {
             content: "Pick 'Newsletter' option",
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Add some content to be selected afterwards",
             trigger: ':iframe p',
-            run: 'text content',
+            run: "editor content",
         },
         {
             content: "Select text",

@@ -22,13 +22,13 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     content: markup(_t("Give your course an engaging <b>Title</b>.")),
     position: 'bottom',
     width: 280,
-    run: 'text My New Course',
+    run: "edit My New Course",
 }, {
     trigger: 'div[name="description"] div[contenteditable=true]',
     content: markup(_t("Give your course a helpful <b>Description</b>.")),
     position: 'bottom',
     width: 300,
-    run: 'text This course is for advanced users.',
+    run: "edit This course is for advanced users.",
 }, {
     trigger: 'button.btn-primary',
     content: markup(_t("Click on the <b>Create</b> button to create your first course.")),

@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         {
             content: "Enter gift card code",
             trigger: "form[name='coupon_code'] input[name='promo']",
-            run: 'text 123456'
+            run: "edit 123456",
         },
         {
             content: "click on 'Pay'",

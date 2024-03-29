@@ -47,7 +47,7 @@ wTourUtils.registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     {
         content: "Type a search query into the searchbar input",
         trigger: ":iframe #wrapwrap header .s_searchbar_input input.search-query",
-        run: "text a",
+        run: "edit a",
     },
     wTourUtils.checkIfVisibleOnScreen(":iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"),
 ]);

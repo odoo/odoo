@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('create_crm_team_tour', {
     trigger: 'button.o_list_button_add',
 }, {
     trigger: 'input[id="name_0"]',
-    run: 'text My CRM Team',
+    run: "edit My CRM Team",
 }, {
     trigger: 'button.o-kanban-button-new',
 }, {

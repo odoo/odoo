@@ -16,7 +16,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
     extra_trigger: 'label[for=partner_ids_0]:contains("Invite People")',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
-    run: 'text Georges',
+    run: "edit Georges",
 }, {
     trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     in_modal: false,
@@ -44,7 +44,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: ':iframe .o_kanban_quick_create .o_field_widget[name="name"] input',
     content: 'Create Task',
-    run: 'text Test Create Task',
+    run: "edit Test Create Task",
 }, {
     content: "Check that task stages cannot be drag and dropped",
     trigger: ':iframe .o_kanban_group:not(.o_group_draggable)',
@@ -58,7 +58,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body textarea',
     content: 'Write a message in the chatter of the task',
-    run: 'text I create a new task for testing purpose.',
+    run: "edit I create a new task for testing purpose.",
 }, {
     trigger: ':iframe .o_portal_chatter_composer_input .o_portal_chatter_composer_body button[name="send_message"]',
     content: 'Send the message',

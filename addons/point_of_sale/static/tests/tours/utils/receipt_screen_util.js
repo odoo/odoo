@@ -26,7 +26,7 @@ export function setEmail(email) {
     return [
         {
             trigger: ".receipt-screen .input-email input",
-            run: `text ${email}`,
+            run: `edit ${email}`,
         },
     ];
 }

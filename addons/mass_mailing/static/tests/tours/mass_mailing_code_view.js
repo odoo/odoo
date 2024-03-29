@@ -17,10 +17,11 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             trigger: 'input#subject_0',
             content: markup('Pick the <b>email subject</b>.'),
             position: 'bottom',
-            run: 'text Test'
+            run: "edit Test",
         }, {
             trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
             content: 'Click on the dropdown to open it and then start typing to search.',
+            run: "edit Test"
         }, {
             trigger: 'div[name="contact_list_ids"] .ui-state-active',
             content: 'Select item from dropdown',

@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     trigger: 'button.o_list_button_add',
 }, {
     trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
+    run: "edit Test",
 }, {
     trigger: 'div[name="contact_list_ids"] .ui-state-active'
 }, {
@@ -45,7 +46,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: () => {},
 }, {
     trigger: 'input#subject_0',
-    run: 'text TestFromTour',
+    run: "edit TestFromTour",
 }, {
     trigger: '.o_form_view', // blur previous input
 },

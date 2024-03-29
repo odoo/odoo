@@ -39,10 +39,7 @@
             trigger: '.o_form_editable .o_field_widget[name=email_from] input',
             extra_trigger: '.o_form_editable .o_field_widget[name=phone] input',
             content: 'Remove the email and the phone',
-            run: function (action) {
-                action.remove_text(".o_form_editable .o_field_widget[name=email_from] input");
-                action.remove_text(".o_form_editable .o_field_widget[name=phone] input");
-            },
+            run: "clear && clear .o_form_editable .o_field_widget[name=phone] input",
         }, {
             trigger: '.o_back_button',
             // wait the warning message to be visible

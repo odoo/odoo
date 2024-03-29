@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         {
             content: "Update the email address",
             trigger: 'div[name="email"] input',
-            run: "text updatedemail@example.com",
+            run: "edit updatedemail@example.com",
         },
         {
             content: "Save the form",

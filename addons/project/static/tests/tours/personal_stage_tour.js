@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Create a new personal stage",
     trigger: 'input.form-control',
-    run: 'text Never',
+    run: "edit Never",
 }, {
     content: "Confirm create",
     trigger: '.o_kanban_add',
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Change title",
     trigger: 'div.o_field_char[name="name"] input',
-    run: 'text  (Todo)',
+    run: "edit ((Todo))",
 }, {
     content: "Save changes",
     trigger: '.btn-primary:contains("Save")',
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Create a new personal task",
     trigger: 'input.o_input:not(.o_searchview_input)',
-    run: 'text New Test Task',
+    run: "edit New Test Task",
 }, {
     content: "Confirm create",
     trigger: '.o_kanban_add',

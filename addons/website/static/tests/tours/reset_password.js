@@ -8,12 +8,12 @@ registry.category("web_tour.tours").add('website_reset_password', {
     {
         content: "fill new password",
         trigger: '.oe_reset_password_form input[name="password"]',
-        run: "text adminadmin"
+        run: "edit adminadmin",
     },
     {
         content: "fill confirm password",
         trigger: '.oe_reset_password_form input[name="confirm_password"]',
-        run: "text adminadmin"
+        run: "edit adminadmin",
     },
     {
         content: "submit reset password form",

@@ -2023,7 +2023,7 @@ export class OdooEditor extends EventTarget {
     _setLinkZws() {
         this._resetLinkZws();
         const selection = this.document.getSelection();
-        if (!selection.isCollapsed) {
+        if (!selection?.isCollapsed) {
             return;
         }
         const linkInSelection = getInSelection(this.document, EDITABLE_LINK_SELECTOR);

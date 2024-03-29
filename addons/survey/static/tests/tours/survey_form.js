@@ -17,21 +17,21 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Set the Survey's title",
         trigger: ".o_field_widget[name=title] textarea",
-        run: "text Test survey",
+        run: "edit Test survey",
     }, {
         content: "Add a first question",
         trigger: "td.o_field_x2many_list_row_add a",
     }, {
         content: "Set the first question's title",
         trigger: ".modal-content .o_field_widget[name=title] input",
-        run: "text Question 1",
+        run: "edit Question 1",
     },
     ...addTwoAnswers(),
     ...saveAndNew(),
     {
         content: "Set the second question's title",
         trigger: ".o_field_widget[name=title] input",
-        run: "text Question 2",
+        run: "edit Question 2",
         in_modal: true,
     },
     ...addTwoAnswers(),
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Set the third question's title",
         trigger: ".o_field_widget[name=title] input",
-        run: "text Question 3",
+        run: "edit Question 3",
         in_modal: true,
     },
     ...addTwoAnswers(),
@@ -227,7 +227,7 @@ function addTwoAnswers() {
             in_modal: true,
         }, {
             trigger: 'tr.o_selected_row div[name=value] input',
-            run: 'text Answer A',
+            run: "edit Answer A",
             in_modal: true,
         }, {
             content: "Add the second answer",
@@ -235,7 +235,7 @@ function addTwoAnswers() {
             in_modal: true,
         }, {
             trigger: 'tr:nth-child(2).o_selected_row div[name=value] input',
-            run: 'text Answer B',
+            run: "edit Answer B",
             in_modal: true,
         }
     ];

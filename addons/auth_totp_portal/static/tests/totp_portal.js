@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }, {
     content: "Input password",
     trigger: '[name=password]',
-    run: 'text portal', // FIXME: better way to do this?
+    run: "edit portal", // FIXME: better way to do this?
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
         const token = await rpc('/totphook', {
             secret
         });
-        helpers.text(token, 'input[name="code"]');
+        helpers.edit(token, 'input[name="code"]');
         helpers.click("button.btn-primary:contains(Activate)");
     }
 }, {
@@ -52,11 +52,11 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     trigger: 'input[name=totp_token]',
     run: async function (helpers) {
         const token = await rpc('/totphook');
-        helpers.text(token);
+        helpers.edit(token);
         // FIXME: is there a way to put the button as its own step trigger without
         //        the tour straight blowing through and not waiting for this?
         helpers.click('button:contains("Log in")');
@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "Input password",
     trigger: '[name=password]',
-    run: 'text portal', // FIXME: better way to do this?
+    run: "edit portal", // FIXME: better way to do this?
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -109,11 +109,11 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',

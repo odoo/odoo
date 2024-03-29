@@ -18,41 +18,41 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
 }, {
     content: "Select 2 'Free' tickets to buy",
     trigger: 'div.o_wevent_ticket_selector:contains("Free") select.form-select',
-    run: 'text 2'
+    run: "select 2",
 }, {
     content: "Click on Register (to fill tickets data) button",
     trigger: 'div.modal-footer button:contains("Register")',
     run: 'click'
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="name"]',
-    run: 'text Attendee A'
+    run: "edit Attendee A",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="email"]',
-    run: 'text attendee-a@gmail.com'
+    run: "edit attendee-a@gmail.com",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="phone"]',
-    run: 'text +32499123456'
+    run: "edit +32499123456",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body select[name*="1-simple_choice"]',
-    run: 'text Vegetarian'
+    run: "selectByLabel Vegetarian",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body textarea[name*="1-text_box"]',
-    run: 'text Fish and Nuts'
+    run: "edit Fish and Nuts",
 }, {
     trigger: 'div:contains("Ticket #2").modal-body input[name*="name"]',
-    run: 'text Attendee B'
+    run: "edit Attendee B",
 }, {
     trigger: 'div:contains("Ticket #2").modal-body input[name*="email"]',
-    run: 'text attendee-b@gmail.com'
+    run: "edit attendee-b@gmail.com",
 }, {
     trigger: 'div:contains("Ticket #2").modal-body input[name*="company_name"]',
-    run: 'text My Company'
+    run: "edit My Company",
 }, {
     trigger: 'div:contains("Ticket #2").modal-body select[name*="2-simple_choice"]',
-    run: 'text Pastafarian'
+    run: "selectByLabel Pastafarian",
 }, {
     trigger: 'div.o_wevent_registration_question_global select[name*="0-simple_choice"]',
-    run: 'text A friend'
+    run: "selectByLabel A friend",
 }, {
     trigger: 'button[type=submit]',
     run: 'click'

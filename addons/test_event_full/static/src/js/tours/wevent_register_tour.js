@@ -86,7 +86,7 @@ var registerSteps = [{
 }, {
     content: "Select 2 units of 'Standard' ticket type",
     trigger: '.o_wevent_ticket_selector select',
-    run: 'text 2',
+    run: "select 2",
 }, {
     content: "Click on 'Register' button",
     trigger: '#o_wevent_tickets .btn-primary:contains("Register"):not(:disabled)',

@@ -5,6 +5,6 @@ export function inputText(val) {
         content: `input text '${val}'`,
         trigger: `textarea`,
         in_modal: true,
-        run: `text ${val}`,
+        run: `edit ${val}`,
     };
 }

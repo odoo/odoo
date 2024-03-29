@@ -30,6 +30,7 @@ registry.category("web_tour.tours").add("sale_tour", {
     content: _t("Complete your company's data"),
     position: "bottom",
     skip_trigger: 'a[data-method=action_open_step_company_data].o_onboarding_step_action__done',
+    run: "edit Test",
 }, {
     trigger: ".modal-content button.o_form_button_save",
     content: _t("Looks good. Let's continue."),
@@ -87,7 +88,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         extra_trigger: ".o_sale_order",
         content: _t("Write a company name to create one, or see suggestions."),
         position: "right",
-        run: "text Agrolait",
+        run: "edit Agrolait",
     }, {
         trigger: ".ui-menu-item > a:contains('Agrolait')",
         auto: true,
@@ -103,7 +104,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         position: "right",
         run: function (actions) {
             const input = this.anchor.querySelector("input");
-            actions.text("DESK0001", input || this.anchor);
+            actions.edit("DESK0001", input || this.anchor);
             const descriptionElement = document.querySelector(
                 ".o_form_editable textarea[name='name']"
             );
@@ -127,7 +128,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         extra_trigger: ".oi-arrow-right",  // Wait for product creation
         content: markup(_t("<b>Set a price</b>.")),
         position: "right",
-        run: "text 10.0"
+        run: "edit 10.0 && blur",
     }, {
         trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
         auto: true,

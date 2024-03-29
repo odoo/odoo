@@ -10,15 +10,15 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Survey")',
     }, { // Question: Where do you live?
         trigger: 'div.js_question-wrapper:contains("Where do you live?") input',
-        run: 'text Grand-Rosiere',
+        run: "edit Grand-Rosiere",
     }, { // Question: When is your date of birth?
         trigger: 'div.js_question-wrapper:contains("When is your date of birth?") input',
-        run: 'text 05/05/1980',
+        run: "edit 05/05/1980",
     }, { // Question: How frequently do you buy products online?
         trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online?") label:contains("Once a week")',
     }, { // Question: How many times did you order products on our website?
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',
-        run: 'text 42',
+        run: "edit 42",
     }, {
         content: 'Click on Next Page',
         trigger: 'button[value="next"]',
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
     }, {
         content: 'Answer Do you have any other comments, questions, or concerns',
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
-        run: 'text Is the prefill working?',
+        run: "edit Is the prefill working?",
     }, {
         content: 'Answer How would you rate your experience on our website?',
         trigger: 'div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4")',

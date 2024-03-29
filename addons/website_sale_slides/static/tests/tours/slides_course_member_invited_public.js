@@ -28,7 +28,7 @@ registry.category('web_tour.tours').add('invited_on_payment_course_public', {
     trigger: 'a:contains("Log in")',
 }, {
     trigger: 'input[id="password"]',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     trigger: 'button:contains("Log in")',
 }, {

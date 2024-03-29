@@ -41,22 +41,20 @@ registry.category("web_tour.tours").add('project_update_tour', {
     width: 200,
 }, {
     trigger: '.o_project_name input',
-    run: 'text New Project'
+    run: "edit New Project",
 }, {
     trigger: '.o_open_tasks',
-    run: function (actions) {
-        actions.auto('.modal:visible .btn.btn-primary');
-    },
+    run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-    run: "text New",
+    run: "edit New",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
     extra_trigger: '.o_kanban_group',
-    run: "text Done",
+    run: "edit Done",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
@@ -66,7 +64,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     extra_trigger: '.o_kanban_project_tasks',
-    run: 'text New task'
+    run: "edit New task",
 }, {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks'
@@ -76,7 +74,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     extra_trigger: '.o_kanban_project_tasks',
-    run: 'text Second task'
+    run: "edit Second task",
 }, {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks'
@@ -100,27 +98,27 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: "Add a first milestone"
 }, {
     trigger: "div.o_field_widget[name=name] input",
-    run: 'text New milestone'
+    run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: 'text 12/12/2099'
+    run: "edit 12/12/2099 && blur",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o_add_milestone a",
 }, {
     trigger: "div.o_field_widget[name=name] input",
-    run: 'text Second milestone'
+    run: "edit Second milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: 'text 12/12/2022'
+    run: "edit 12/12/2022 && blur",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
 }, {
     trigger: "input[data-field=deadline]",
-    run: 'text 12/12/2100'
+    run: "edit 12/12/2100 && blur",
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
@@ -128,7 +126,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: "Create a new update"
 }, {
     trigger: "div.o_field_widget[name=name] input",
-    run: 'text New update'
+    run: "edit New update",
 }, {
     trigger: ".o_form_button_save"
 }, {

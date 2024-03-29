@@ -34,7 +34,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter site URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "text odoo.com",
+        run: "edit odoo.com",
     },
     ...selectImageSteps,
     {
@@ -44,7 +44,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "remove_text",
+        run: "clear",
     },
     ...selectImageSteps,
     {
@@ -54,7 +54,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter email URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "text mailto:test@test.com",
+        run: "edit mailto:test@test.com",
     },
     ...selectImageSteps,
     {
@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter phone URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "text tel:555-2368",
+        run: "edit tel:555-2368",
     },
     ...selectImageSteps,
     {
@@ -74,7 +74,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "remove_text",
+        run: "clear",
     },
     ...selectImageSteps,
     {

@@ -14,7 +14,7 @@ export function pickSelect(name) {
         {
             content: `picking select attribute with name ${name}`,
             trigger: `.configurator_select:has(option:contains('${name}'))`,
-            run: `text ${name}`,
+            run: `select ${name}`,
             in_modal: true,
         },
     ];
@@ -33,7 +33,7 @@ export function fillCustomAttribute(value) {
         {
             content: `filling custom attribute with value ${value}`,
             trigger: `.custom_value`,
-            run: `text ${value}`,
+            run: `edit ${value}`,
             in_modal: true,
         },
     ];

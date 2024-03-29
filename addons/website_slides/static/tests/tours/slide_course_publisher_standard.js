@@ -22,11 +22,11 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: set name',
     trigger: 'div[name="name"] input',
-    run: 'text How to Déboulonnate',
+    run: "edit How to Déboulonnate",
 }, {
     content: 'eLearning: click on tags',
     trigger: '.o_field_many2many_tags input',
-    run: 'text Gard',
+    run: "edit Gard",
 }, {
     content: 'eLearning: select Gardening tag',
     trigger: '.ui-autocomplete a:contains("Gardening")',
@@ -34,7 +34,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: set description',
     trigger: '.o_field_html[name="description"]',
-    run: 'text Déboulonnate is very common at Fleurus',
+    run: "editor Déboulonnate is very common at Fleurus",
 }, {
     content: 'eLearning: we want reviews',
     trigger: '.o_field_boolean[name="allow_comment"] input',
@@ -53,7 +53,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: add a bioutifoul URL',
     trigger: 'input.o_we_url_input',
-    run: 'text https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/800px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'
+    run: "edit https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg/800px-ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg",
 }, {
     content: 'eLearning: click "Add URL" really adding image',
     trigger: '.o_upload_media_url_button',

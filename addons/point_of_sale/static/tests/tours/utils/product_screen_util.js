@@ -160,7 +160,7 @@ export function enterOpeningAmount(amount) {
         {
             content: "enter opening amount",
             trigger: ".cash-input-sub-section input",
-            run: "text " + amount,
+            run: "edit " + amount,
         },
     ];
 }
@@ -188,7 +188,7 @@ export function closeWithCashAmount(val) {
         {
             trigger: ".close-pos-popup .cash-input input",
             in_modal: true,
-            run: `text ${val}`,
+            run: `edit ${val}`,
         },
     ];
 }
@@ -235,7 +235,7 @@ export function enterLotNumber(number) {
         {
             content: "enter lot number",
             trigger: ".list-line-input:first",
-            run: "text " + number,
+            run: "edit " + number,
         },
         Dialog.confirm(),
     ];

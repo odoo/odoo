@@ -215,7 +215,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     }, {
         content: "search 'fox' images",
         trigger: ".o_we_search",
-        run: "text fox",
+        run: "edit fox",
     }, {
         content: "click on unsplash result", // note that unsplash is mocked
         trigger: "img[alt~=fox]"

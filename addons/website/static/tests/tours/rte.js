@@ -19,7 +19,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "type Parseltongue",
     trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-    run: 'text Parseltongue',
+    run: "edit Parseltongue",
 }, {
     content: 'select Parseltongue',
     trigger: '.dropdown-item:contains(Parseltongue)',
@@ -49,7 +49,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "insert file name",
     trigger: '.modal-dialog input[type="text"]',
-    run: 'text rte_translator.xml',
+    run: "edit rte_translator.xml",
 }, {
     content: "create file",
     trigger: '.modal-dialog button.btn-primary',
@@ -73,7 +73,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "insert page name",
     trigger: '.modal-dialog input[type="text"]',
-    run: 'text rte_translator',
+    run: "edit rte_translator",
 }, {
     content: "create page",
     trigger: '.modal-dialog button.btn-primary',
@@ -123,7 +123,7 @@ wTourUtils.dragNDrop({
     extra_trigger: '#oe_snippets.o_loaded',
     trigger: ':iframe #wrap p font:first',
     run: function (actionHelper) {
-        actionHelper.text('translated Parseltongue text');
+        actionHelper.editor('translated Parseltongue text');
         const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.anchor.childNodes[0], 22);
         this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
@@ -148,11 +148,11 @@ wTourUtils.dragNDrop({
 }, {
     content: "translate placeholder",
     trigger: '.modal-dialog input:first',
-    run: 'text test Parseltongue placeholder',
+    run: "edit test Parseltongue placeholder",
 }, {
     content: "translate default value",
     trigger: '.modal-dialog input:last',
-    run: 'text test Parseltongue default value',
+    run: "edit test Parseltongue default value",
 }, {
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
@@ -231,6 +231,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "check bis: placeholder translation",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
+    run: "edit Test",
 }, {
     content: "open site menu",
     trigger: 'button[data-menu-xmlid="website.menu_site"]',

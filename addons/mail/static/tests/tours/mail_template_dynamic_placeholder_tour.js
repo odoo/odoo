@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
-import { waitFor } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     test: true,
@@ -22,24 +21,12 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: 'Insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
-            async run(actions) {
-                actions.text(`no_model_id #`);
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { bubbles: true, key: "#" })
-                );
-                await waitFor(`div[name='subject'] input[type='text']:value(no_model_id #)`, {
-                    timeout: 5000,
-                });
-                await waitFor(
-                    `.o_notification:contains(You need to select a model before opening the dynamic placeholder selector.)`,
-                    { timeout: 5000 }
-                );
-            },
+            run: "edit(no_model_id #)",
         },
         {
             content: 'Select "Contact" model',
             trigger: 'div[name="model_id"] input[type="text"]',
-            run: "text Contact",
+            run: "edit Contact",
         },
         {
             content: "Wait for the autocomplete RPC",
@@ -71,12 +58,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: 'Retry insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
-            run(actions) {
-                actions.text(`yes_model_id #`);
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { bubbles: true, key: "#" })
-                );
-            },
+            run: "edit (yes_model_id ) && press #",
         },
         {
             content: "Check if the dynamic placeholder popover is opened",
@@ -86,7 +68,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "filter the dph result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
-            run: "text name",
+            run: "edit name",
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
@@ -96,7 +78,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: "Enter a default value",
             trigger:
                 'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
-            run: "text defValue",
+            run: "edit defValue",
         },
         {
             content: "Click on the the dynamic placeholder default value",
@@ -120,10 +102,10 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             },
         },
         {
-            content: "Insert tesxt inside editable",
+            content: "Insert text inside editable",
             trigger: ".note-editable.odoo-editor-editable",
             run(actions) {
-                actions.text(`/`);
+                actions.editor(`/`);
                 document.querySelector(".note-editable").dispatchEvent(
                     new InputEvent("input", {
                         inputType: "insertText",
@@ -143,7 +125,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "filter the dph result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
-            run: "text name",
+            run: "edit name",
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
@@ -153,7 +135,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: "Enter a default value",
             trigger:
                 'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
-            run: "text defValue",
+            run: "edit defValue",
         },
         {
             content: "Click on the the dynamic placeholder default value",

@@ -14,7 +14,7 @@
         run: 'click',
     }, {
         trigger: 'input.variant_custom_value',
-        run: 'text Wood',
+        run: "edit Wood",
     }, {
         id: 'add_cart_step',
         trigger: 'a:contains(Add to cart)',

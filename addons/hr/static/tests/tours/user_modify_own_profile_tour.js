@@ -22,7 +22,7 @@ patch(registry.category("web_tour.tours").get("mail/static/tests/tours/user_modi
             {
                 content: "Update the email address",
                 trigger: 'div[name="email"] input',
-                run: 'text updatedemail@example.com',
+                run: "edit updatedemail@example.com",
             }, 
             ...stepUtils.saveForm(),
         ];

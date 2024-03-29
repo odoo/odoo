@@ -35,9 +35,7 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     isCheck: true
 }, {
     trigger: 'h1',
-    run: function () {
-        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
-    }
+    run: "press ArrowRight",
 }, {
     trigger: 'h1:contains("Nickname")',
     run: function () {} // check first question is displayed

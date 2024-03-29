@@ -22,7 +22,7 @@ var addSection = function (sectionName, backend = false) {
 }, {
     content: 'eLearning: set section name',
     trigger: prefix + 'input[name="name"]',
-    run: 'text ' + sectionName,
+    run: `edit ${sectionName}`,
 }, {
     content: 'eLearning: create section',
     trigger: prefix + 'footer.modal-footer button:contains("Save")'
@@ -44,7 +44,7 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 }, {
 	content: 'eLearning: fill video link',
 	trigger: prefix + 'input[name=video_url]',
-	run: 'text https://www.youtube.com/watch?v=pzmI3vAIhbE',
+	run: "edit https://www.youtube.com/watch?v=pzmI3vAIhbE",
 }, {
     content: 'eLearning: click outside to trigger onchange',
     trigger: prefix + 'div.o_w_slide_upload_modal_container',
@@ -78,7 +78,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 }, {
 	content: 'eLearning: fill article title',
 	trigger: prefix + 'input[name=name]',
-	run: 'text ' + pageName,
+	run: `edit ${pageName}`,
 }, {
     content: 'eLearning: click on tags',
     trigger: prefix + 'button.o_select_menu_toggler:last',
@@ -89,7 +89,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 }, {
 	content: 'eLearning: fill article completion time',
 	trigger: prefix + 'input[name=duration]',
-	run: 'text 4',
+	run: "edit 4",
 }, {
     content: 'eLearning: create and publish slide',
     trigger: prefix + 'footer.modal-footer button:contains("Publish")',
@@ -263,7 +263,7 @@ var addNewCourseTag = function (courseTagName, backend) {
 }, {
     content: 'eLearning: add a new course tag',
 	trigger: prefix + 'input.dropdown-item:first',
-	run:"text 123",
+	run: "edit 123",
 }, {
     content: 'eLearning: click on create this tag',
     trigger: prefix + 'i:contains("123")',

@@ -29,7 +29,7 @@
         },
         {
             trigger: 'input.variant_custom_value',
-            run: 'text TEST',
+            run: "edit TEST",
         },
         {
             content: "Click add to cart",

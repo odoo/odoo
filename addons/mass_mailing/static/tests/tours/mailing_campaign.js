@@ -36,12 +36,12 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         {
             content: 'Fill in Subject',
             trigger: '#subject_0',
-            run: 'text TestFromTour',
+            run: "edit TestFromTour",
         },
         {
             content: 'Fill in Mailing list',
             trigger: '#contact_list_ids_0',
-            run: 'text Newsletter',
+            run: "edit Newsletter",
         },
         {
             content: 'Pick "Newsletter" option',

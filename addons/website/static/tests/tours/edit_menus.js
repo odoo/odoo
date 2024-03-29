@@ -24,7 +24,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Write a label for the new menu item",
         trigger: '.modal-dialog .o_website_dialog input',
-        run: 'text Megaaaaa!'
+        run: "edit Megaaaaa!",
     },
     {
         content: "Confirm the mega menu label",
@@ -65,7 +65,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "It didn't save without a label. Fill label input.",
         extra_trigger: '.o_website_dialog:eq(1):visible',
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
-        run: 'text Random!',
+        run: "edit Random!",
     },
     {
         content: "Confirm the new menu entry without a url",
@@ -75,7 +75,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "It didn't save without a url. Fill url input.",
         trigger: '.modal-dialog .o_website_dialog input:eq(1)',
         extra_trigger: '.modal-dialog .o_website_dialog input.is-invalid',
-        run: 'text #',
+        run: "edit #",
     },
     {
         content: "Confirm the new menu entry",
@@ -101,7 +101,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Change the label",
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
-        run: 'text Modnar',
+        run: "edit Modnar",
     },
     {
         content: "Confirm the new label",
@@ -136,7 +136,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Change the label",
         trigger: '.modal-dialog .o_website_dialog input:eq(0)',
-        run: 'text Modnar !!',
+        run: "edit Modnar !!",
     },
     {
         content: "Confirm the new menu label",

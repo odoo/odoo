@@ -30,18 +30,17 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: '.o_project_name input',
     content: markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer, of a product, of a team, of a construction site, etc.</i>')),
     position: 'right',
+    run: "edit Test",
 }, {
     trigger: '.o_open_tasks',
     content: markup(_t('Let\'s create your first <b>project</b>.')),
     position: 'top',
-    run: function (actions) {
-        actions.auto('.modal:visible .btn.btn-primary');
-    },
+    run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_header input",
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
     position: 'bottom',
-    run: "text Test",
+    run: "edit Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your first <b>stage</b>.')),
@@ -51,7 +50,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_kanban_group',
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
     position: 'bottom',
-    run: "text Test",
+    run: "edit Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your second <b>stage</b>.')),
@@ -67,6 +66,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_kanban_project_tasks',
     content: markup(_t('Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>')),
     position: 'right',
+    run: "edit Test",
 }, {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_kanban_project_tasks',
@@ -107,13 +107,11 @@ registry.category("web_tour.tours").add('project_tour', {
     position: "bottom",
     run: "click",
 }, {
-    trigger: ".o_field_widget[name='user_ids']",
+    trigger: ".o_field_widget[name='user_ids'] input",
     extra_trigger: '.o_form_project_tasks',
     content: _t("Assign a responsible to your task"),
     position: "right",
-    run() {
-        document.querySelector('.o_field_widget[name="user_ids"] input').click();
-    }
+    run: "click",
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
@@ -133,7 +131,7 @@ registry.category("web_tour.tours").add('project_tour', {
 }, {
     trigger: '.o_field_subtasks_one2many div[name="name"] input',
     content: markup(_t('Give the sub-task a <b>name</b>')),
-    run: 'text New Sub-task'
+    run: "edit New Sub-task",
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: '.o_form_project_tasks .o_form_dirty',
@@ -156,7 +154,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
     extra_trigger: ".subtask_create_input",
     content: markup(_t("Give the sub-task a <b>name</b>")),
-    run: 'text Newer Sub-task'
+    run: "edit Newer Sub-task && blur",
 }, {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),

@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
     trigger: 'a:contains("Add a product")'
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: 'text Custo',
+    run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 },

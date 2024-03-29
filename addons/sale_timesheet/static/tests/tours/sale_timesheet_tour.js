@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: 'Add the customer for this quotation (e.g. Brandon Freeman)',
-    run: 'text Brandon Freeman',
+    run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the first item on the autocomplete dropdown',
@@ -27,14 +27,14 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
     content: markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
-    run: 'text Service Product (Prepaid Hours)',
+    run: "edit Service Product (Prepaid Hours)",
 }, {
     trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
     content: 'Select the prepaid service product in the autocomplete dropdown',
 }, {
     trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
-    run: 'text 10',
+    run: "edit 10 && blur",
 }, {
     trigger: '.o_field_widget[name=price_subtotal]:contains(2,500.00)',
     run() {},
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: '.o_field_widget.o_project_name input',
     content: 'Select your project name (e.g. Project for Freeman)',
-    run: 'text Project for Freeman',
+    run: "edit Project for Freeman",
 }, {
     trigger: 'div[name="allow_billable"] input',
     run: 'click',
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div.o_kanban_header > div:first-child input',
     content: 'Select a name of your kanban column (e.g. To Do)',
-    run: 'text To Do',
+    run: "edit To Do",
 }, {
     trigger: 'button.o_kanban_add',
     content: 'Click on Add button to create the column.',
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="display_name"] > input',
     content: 'Select the name of the task (e.g. Onboarding)',
-    run: 'text Onboarding',
+    run: "edit Onboarding",
 }, {
     trigger: 'button.o_kanban_edit',
     content: 'Click on Edit button to enter to the form view of the task.',
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Select the customer of your Sales Order <i>(e.g. Brandon Freeman)</i>. Since we have a Sales Order for this customer with a prepaid service product which the remaining hours to deliver is greater than 0, the Sales Order Item in the task should be contain the Sales Order Item containing this prepaid service product.'),
-    run: 'text Brandon Freeman',
+    run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown.',
@@ -98,11 +98,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: '.o_field_x2many div[name="name"] input',
     content: 'Enter a description for this timesheet',
-    run: 'text work',
+    run: "edit work",
 }, {
     trigger: 'div[name="unit_amount"] input',
     content: 'Enter one hour for this timesheet',
-    run: 'text 1',
+    run: "edit 1",
 }, {
     trigger: 'i.o_optional_columns_dropdown_toggle',
     content: 'The so_line field should be hidden by default. We check if it is the case by adding this field in the timesheet list view',
@@ -162,14 +162,14 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
-    run: 'text Brandon Freeman',
+    run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
-    run: 'text S',
+    run: "edit S",
 }, {
     trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
@@ -191,14 +191,14 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
     position: 'bottom',
-    run: 'text S',
+    run: "edit S",
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
 }, {
     trigger: 'h1 > div[name="name"] > div > textarea',
     content: 'Set Project name',
-    run: 'text Project with employee mapping',
+    run: "edit Project with employee mapping",
 }, {
     trigger: '[data-menu-xmlid="project.menu_projects"]',
     content: 'Select Project main menu',
@@ -212,7 +212,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
-    run: 'text Brandon Freeman',
+    run: "edit Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
@@ -223,7 +223,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select the first sale order of the list',
-    run: 'text Prepaid',
+    run: "edit Prepaid",
 }, {
     trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first item on the autocomplete dropdown',
@@ -274,11 +274,11 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: "div.o_field_widget[name=name] input",
     content: "Edit new Milestone",
-    run: 'text New milestone',
+    run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
     content: "Edit new Milestone",
-    run: 'text 12/12/2099',
+    run: "edit 12/12/2099",
 }, {
     trigger: ".modal-footer button",
     content: "Save new Milestone",
@@ -288,7 +288,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: "div.o_field_widget[name=name] input",
     content: "Give a name to Project Update",
-    run: 'text New update',
+    run: "edit New update",
 }, {
     trigger: ".o_field_widget[name=description] h3:contains('Sales')",
     content: "Sales title must be in description in description",

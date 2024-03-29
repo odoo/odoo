@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     {trigger: '.o_field_x2many_list_row_add > a'},
     {
         trigger: ".o_field_widget[name=product_id] input",
-        run: 'text Lot',
+        run: "edit Lot",
     },
     {trigger: ".ui-menu-item > a:contains('Product Lot')"},
     {trigger: ".btn-primary[name=action_confirm]"},
@@ -15,11 +15,11 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     {trigger: '.o_field_x2many_list_row_add > a'},
     {
         trigger: ".o_field_widget[name=lot_name] input",
-        run: 'text lot1',
+        run: "edit lot1",
     },
     {
         trigger: ".o_field_widget[name=quantity] input",
-        run: 'text 4',
+        run: "edit 4",
     },
     {trigger: ".o_form_button_save"},
     {trigger: ".o_optional_columns_dropdown_toggle"},
@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     {trigger: '.o_field_x2many_list_row_add > a'},
     {
         trigger: ".o_field_widget[name=product_id] input",
-        run: 'text Serial',
+        run: "edit Serial",
     },
     {trigger: ".ui-menu-item > a:contains('Product Serial')"},
     {trigger: ".btn-primary[name=action_confirm]"},
@@ -62,11 +62,11 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     {trigger: "h4:contains('Generate Serial numbers')"},
     {
         trigger: "div[name=next_serial] input",
-        run: 'text serial_n_1',
+        run: "edit serial_n_1",
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: 'text 5',
+        run: "edit 5 && blur",
     },
     {trigger: ".btn-primary:contains('Generate')"},
     {
@@ -109,12 +109,12 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     {trigger: '.o_field_x2many_list_row_add > a'},
     {
         trigger: ".o_field_widget[name=product_id] input",
-        run: 'text Lot',
+        run: "edit Lot",
     },
     {trigger: ".ui-menu-item > a:contains('Product Lot 1')"},
     {
         trigger: ".o_field_widget[name=product_uom_qty] input",
-        run: 'text 100',
+        run: "edit 100",
     },
     {trigger: ".btn-primary[name=action_confirm]"},
     {trigger: ".fa-list"},
@@ -124,15 +124,15 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     {trigger: "h4:contains('Generate Lot numbers')"},
     {
         trigger: "div[name=next_serial] input",
-        run: "text lot_n_1_1",
+        run: "edit lot_n_1_1",
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: "text 7.5",
+        run: "edit 7.5 && blur",
     },
     {
         trigger: "div[name=total_received] input",
-        run: "text 50",
+        run: "edit 50 && blur",
     },
     {trigger: ".btn-primary:contains('Generate')"},
     {
@@ -149,15 +149,15 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     {trigger: "h4:contains('Generate Lot numbers')"},
     {
         trigger: "div[name=next_serial] input",
-        run: "text lot_n_2_1",
+        run: "edit lot_n_2_1",
     },
     {
         trigger: "div[name=next_serial_count] input",
-        run: "text 13",
+        run: "edit 13 && blur",
     },
     {
         trigger: "div[name=total_received] input",
-        run: "text 50",
+        run: "edit 50 && blur",
     },
     {
         trigger: "div[name=keep_lines] input",
@@ -204,24 +204,24 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
     { trigger: '.o_list_button_add' },
     {
         trigger: 'div[name=product_id] input',
-        run: 'text Product 1',
+        run: "edit Product 1",
     },
     { trigger: '.ui-menu-item > a:contains("Product 1")' },
     {
         trigger: 'div[name=inventory_quantity] input',
-        run: 'text 123',
+        run: "edit 123",
     },
     // Unfocus to show the "New" button again
     { trigger: '.o_searchview_input_container' },
     { trigger: '.o_list_button_add' },
     {
         trigger: 'div[name=product_id] input',
-        run: 'text Product 2',
+        run: "edit Product 2",
     },
     { trigger: '.ui-menu-item > a:contains("Product 2")' },
     {
         trigger: 'div[name=inventory_quantity] input',
-        run: 'text 456',
+        run: "edit 456",
     },
     { trigger: 'button[name=action_apply_all]' },
     { trigger: '.modal-content button[name=action_apply]' },

@@ -13,19 +13,20 @@
         trigger: "input[name=post_name]",
         position: "top",
         content: _t("Give your post title."),
+        run: "edit Test",
     }, {
         trigger: ".note-editable p",
         extra_trigger: `input[name=post_name]:not(:empty)`,
         content: _t("Put your question here."),
         position: "bottom",
-        run: "text",
+        run: "editor Test",
     }, {
         trigger: ".select2-choices",
         extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Insert tags related to your question."),
         position: "top",
         run: function (actions) {
-            actions.auto("input[id=s2id_autogen2]");
+            actions.editor("Test", "input[id=s2id_autogen2]");
         },
     }, {
         trigger: "button:contains(/^Post/)",
@@ -46,7 +47,7 @@
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
         position: "bottom",
-        run: "text",
+        run: "editor Test",
     }, {
         trigger: "button:contains(\"Post Answer\")",
         extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,

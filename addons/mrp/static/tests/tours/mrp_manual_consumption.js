@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from '@web_tour/tour_service/tour_utils';
-
 registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
     test: true,
     steps: () => [
@@ -16,7 +15,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: 'div[name="quantity"] input',
-            run: 'text 16.0'
+            run: "edit 16.0 && blur",
         },
         {
             trigger: 'div[name="picked"] input',
@@ -28,7 +27,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: "input[id='qty_producing_0']",
-            run: 'text 8.0',
+            run: "edit 8.0 && blur",
         },
         {
             content: "Click Pager",

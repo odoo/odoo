@@ -269,8 +269,7 @@ function clickOnText(snippet, element, position = "bottom") {
         extra_trigger: ":iframe body.editor_enable",
         content: markup(_t("<b>Click on a text</b> to start editing it.")),
         position: position,
-        run: "text",
-        consumeEvent: "click",
+        run: "click",
     };
 }
 
@@ -460,7 +459,7 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
         steps.push({
             content: `Inputing ${elementName} in m2o widget search`,
             trigger: `we-select[data-name=${widgetName}] div.o_we_m2o_search input`,
-            run: `text ${elementName}`
+            run: `edit ${elementName}`,
         });
     }
     steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,

@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "insert website name",
         trigger: '[name="name"] input',
-        run: 'text Website Test',
+        run: "edit Website Test",
     }, {
         content: "validate the website creation modal",
         trigger: 'button.btn-primary:contains("Create")',
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "insert a website industry",
         trigger: '.o_configurator_industry input',
-        run: 'text ab',
+        run: "edit ab",
     }, {
         content: "select a website industry from the autocomplete",
         trigger: '.o_configurator_industry ul li a',

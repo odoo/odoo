@@ -23,7 +23,7 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     {
         content: "translate the menu entry",
         trigger: ':iframe a[href="/englishURL"] span',
-        run: 'text value pa-GB',
+        run: "editor value pa-GB",
     },
     ...wTourUtils.clickOnSave(),
 ]);

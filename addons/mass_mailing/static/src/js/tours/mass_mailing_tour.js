@@ -31,7 +31,7 @@
         trigger: 'input[name="subject"]',
         content: markup(_t('Pick the <b>email subject</b>.')),
         position: 'bottom',
-        run: 'text ' + DateTime.now().toFormat("LLLL") + " Newsletter",
+        run: `edit ${DateTime.now().toFormat("LLLL")} Newsletter`,
     }, {
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
         run: 'click',

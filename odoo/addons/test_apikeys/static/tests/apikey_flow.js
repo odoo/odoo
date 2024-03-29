@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Input password",
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: "edit demo", // FIXME: better way to do this?
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Enter description",
     trigger: '[name=name] input',
-    run: 'text my key',
+    run: "edit my key",
 }, {
     content: "Confirm key creation",
     trigger: 'button:contains("Generate key")'
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
 }, {
     content: "Input password for security mode again",
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: "edit demo", // FIXME: better way to do this?
 }, {
     content: "And confirm",
     trigger: 'button:contains(Confirm Password)',

@@ -18,14 +18,14 @@ const commonSteps = [
     },
     {
         trigger: 'input[id="title_0"]',
-        run: "text Test Chatbot Sequence",
+        run: "edit Test Chatbot Sequence",
     },
     {
         trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
     },
     {
         trigger: "textarea#message_0",
-        run: "text Step 1",
+        run: "edit Step 1",
     },
     {
         trigger: 'button:contains("Save & New")',
@@ -37,7 +37,7 @@ const commonSteps = [
     },
     {
         trigger: "textarea#message_0",
-        run: "text Step 2",
+        run: "edit Step 2",
     },
     {
         trigger: 'button:contains("Save & New")',
@@ -49,7 +49,7 @@ const commonSteps = [
     },
     {
         trigger: "textarea#message_0",
-        run: "text Step 3",
+        run: "edit Step 3",
     },
 ];
 
@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: "textarea#message_0",
-            run: "text Step 4",
+            run: "edit Step 4",
         },
         {
             trigger: 'button:contains("Save & New")',
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: "textarea#message_0",
-            run: "text Step 5",
+            run: "edit Step 5",
         },
         {
             trigger: 'button:contains("Save & Close")',
@@ -120,7 +120,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: "textarea#message_0",
-            run: "text Step 6",
+            run: "edit Step 6",
         },
         {
             trigger: 'button:contains("Save & Close")',

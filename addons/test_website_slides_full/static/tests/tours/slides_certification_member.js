@@ -115,7 +115,7 @@ var certificationCompletionSteps = [{
     trigger: 'a:contains("Share your certification")'
 }, {
     trigger: '.o_wslides_js_share_email input',
-    run: 'text friend@example.com'
+    run: "edit friend@example.com",
 }, {
     trigger: '.o_wslides_js_share_email button',
 }, {

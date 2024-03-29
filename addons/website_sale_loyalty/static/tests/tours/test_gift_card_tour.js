@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         {
             content: 'insert gift card code',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: 'text GIFT_CARD'
+            run: "edit GIFT_CARD",
         },
         {
             content: 'validate the gift card',
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
             content: 'insert gift card code',
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: 'text 10PERCENT'
+            run: "edit 10PERCENT",
         },
         {
             content: 'validate the gift card',

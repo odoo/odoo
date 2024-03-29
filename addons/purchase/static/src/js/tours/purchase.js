@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             extra_trigger: ".o_purchase_order",
             content: _t("Search a vendor name, or create one on the fly."),
             position: "bottom",
-            run: "text Agrolait",
+            run: "edit Agrolait",
         },
         {
             trigger: ".ui-menu-item > a",
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             position: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
-                actions.text("DESK0001", input || this.anchor);
+                actions.edit("DESK0001", input || this.anchor);
                 var $descriptionElement = $('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
                 $descriptionElement.change(function () {
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             extra_trigger: ".o_purchase_order",
             content: _t("Indicate the product quantity you want to order."),
             position: "right",
-            run: "text 12.0",
+            run: "edit 12.0",
         },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",
@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
                 // Check in case user must add email to vendor
                 var $input = $(".modal-content input[name='email']");
                 if ($input.length) {
-                    actions.text("agrolait@example.com", $input);
+                    actions.edit("agrolait@example.com", $input);
                     actions.click($(".modal-footer button"));
                 }
             },
@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
                 "Once you get the price from the vendor, you can complete the purchase order with the right price."
             ),
             position: "right",
-            run: "text 200.00",
+            run: "edit 200.00",
         },
         {
             auto: true,

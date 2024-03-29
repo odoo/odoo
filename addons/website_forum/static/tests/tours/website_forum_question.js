@@ -12,17 +12,17 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',
-        run: 'text First Question Title',
+        run: "edit First Question Title",
     }, {
         content: "Put your question here.",
         extra_trigger: "#wrap:not(:has(input[name=post_name]:value('')))",
         trigger: '.note-editable p',
-        run: 'text First Question',
+        run: "editor First Question",
     }, {
         content: "Insert tags related to your question.",
         extra_trigger: '.note-editable:not(:has(br))',
         trigger: '.select2-choices',
-        run: 'text Tag',
+        run: "editor Tag",
     }, {
         content: "Click to post your question.",
         extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:value('')))",
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         content: "Put your answer here.",
         trigger: '.note-editable p',
-        run: 'text First Answer',
+        run: "editor First Answer",
     }, {
         content: "Click to post your answer.",
         extra_trigger: '.note-editable:not(:has(br))',

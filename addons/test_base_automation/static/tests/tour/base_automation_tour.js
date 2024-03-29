@@ -47,12 +47,12 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Enter rule name",
             trigger: ".o_form_renderer .oe_title .o_input",
-            run: "text Test rule",
+            run: "edit Test rule",
         },
         {
             content: "Select model",
             trigger: '.o_form_renderer .o_group div[name="model_id"] input',
-            run: "text res.partner",
+            run: "edit res.partner",
         },
         {
             content: "Select model contact",
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Select On save",
             trigger: ".o_form_renderer #trigger_0",
-            run: `text "on_create_or_write"`,
+            run: `select "on_create_or_write"`,
         },
         {
             content: "Add new action",
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "text Job Position",
+            run: "edit Job Position",
             in_modal: false,
         },
         {
@@ -96,7 +96,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Open update select",
             trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
-            run: "text Test",
+            run: "edit Test",
         },
         {
             content: "Open update select",
@@ -117,11 +117,11 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: ".o_form_renderer .oe_title .o_input",
-            run: "text Test rule",
+            run: "edit Test rule",
         },
         {
             trigger: '.o_form_renderer .o_group div[name="model_id"] input',
-            run: "text test_base_automation.project",
+            run: "edit test_base_automation.project",
         },
         {
             trigger:
@@ -158,11 +158,11 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: ".o_form_renderer #trigger_0",
-            run: 'text "on_tag_set"',
+            run: `select "on_tag_set"`,
         },
         {
             trigger: '.o_form_renderer div[name="trg_field_ref"] input',
-            run: "text test",
+            run: "edit test",
         },
         {
             trigger: ".dropdown-menu li a:contains(test):not(:has(.fa-spin))",
@@ -181,7 +181,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "text Name",
+            run: "edit Name",
             in_modal: false,
         },
         {
@@ -192,7 +192,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
-            run: "text Test",
+            run: "edit Test",
         },
         {
             trigger: ".modal-content .o_form_button_save",
@@ -211,7 +211,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "text Priority",
+            run: "edit Priority",
             in_modal: false,
         },
         {
@@ -222,7 +222,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="selection_value"] input',
-            run: "text High",
+            run: "edit High",
         },
         {
             trigger: ".dropdown-menu li a:contains(High):not(:has(.fa-spin))",
@@ -277,7 +277,7 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
         },
         {
             trigger: ".o_form_view .o_field_widget[name='name'] input",
-            run: "text From Tour",
+            run: "edit From Tour",
         },
         ...stepUtils.saveForm(),
     ],
@@ -457,7 +457,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "text base.automation.line.test",
+            run: "edit base.automation.line.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Line Test)",
@@ -478,7 +478,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "text test_base_automation.project",
+            run: "edit test_base_automation.project",
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
@@ -524,7 +524,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "text test_base_automation.project",
+            run: "edit test_base_automation.project",
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
@@ -532,10 +532,11 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         {
             extra_trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
             trigger: ".o_field_widget[name='trigger'] select",
-            run: 'text "on_stage_set"',
+            run: `select "on_stage_set"`,
         },
         {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
+            run: "fill test",
         },
         {
             trigger:
@@ -546,10 +547,11 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger: ".o_field_widget[name='trigger'] select",
-            run: 'text "on_tag_set"',
+            run: `select "on_tag_set"`,
         },
         {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
+            run: "fill test",
         },
         {
             trigger:
@@ -573,7 +575,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "text base.automation.lead.test",
+            run: "edit base.automation.lead.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Test)",
@@ -591,7 +593,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "text base.automation.lead.thread.test",
+            run: "edit base.automation.lead.thread.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Threaded Lead Test)",
@@ -637,18 +639,18 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         trigger: ".o-kanban-button-new",
     }, {
         trigger: ".o_field_widget[name=name] input",
-        run: "text Test rule",
+        run: "edit Test rule",
     }, {
         trigger: ".o_field_widget[name=model_id] input",
-        run: "text ir.ui.view",
+        run: "edit ir.ui.view",
     }, {
         trigger: ".ui-menu-item > a:contains(/^View$/)",
     }, {
         trigger: ".o_field_widget[name=trigger] select",
-        run: 'text "on_change"',
+        run: `select "on_change"`,
     }, {
         trigger: ".o_field_widget[name=on_change_field_ids] input",
-        run: "text Active",
+        run: "edit Active",
     }, {
         trigger: ".ui-menu-item > a:contains(/^Active$/)",
     },

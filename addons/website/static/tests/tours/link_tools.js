@@ -21,7 +21,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Replace first paragraph, to insert a new link",
         trigger: ':iframe #wrap .s_text_image p',
-        run: 'text Go to odoo: '
+        run: 'editor Go to odoo: ',
     },
     {
         content: "Open link tools",
@@ -30,7 +30,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Type the link URL odoo.com",
         trigger: '#toolbar:not(.oe-floating) #o_link_dialog_url_input',
-        run: 'text odoo.com'
+        run: 'edit odoo.com',
     },
     clickOnImgStep,
     // 2. Edit the link with the link tools.
@@ -41,7 +41,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change content (editing the label input) to odoo website_2",
         trigger: '#o_link_dialog_label_input:value(odoo.com)',
-        run: 'text odoo website_2',
+        run: 'edit odoo website_2',
     },
     {
         content: "Click again on the link",
@@ -50,7 +50,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change content (editing the DOM) to odoo website",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
-        run: 'text odoo website',
+        run: 'editor odoo website',
     },
     clickOnImgStep,
     {
@@ -65,7 +65,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Link tools, should be open, change the url",
         trigger: '#o_link_dialog_url_input',
-        run: 'text_blur odoo.be'
+        run: "edit odoo.be && blur",
     },
 
     ...wTourUtils.clickOnSave(),
@@ -106,7 +106,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Set URL.",
         trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
-        run: 'text odoo.com',
+        run: "edit odoo.com && blur (we-title:contains(Your URL))",
     },
     {
         content: "Deselect image.",
@@ -147,7 +147,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter mega menu name",
         trigger: ".modal-body input",
-        run: "text Mega",
+        run: "edit Mega",
     },
     wTourUtils.clickOnElement("OK button", ".btn-primary"),
     {
@@ -168,7 +168,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
-        run: "text https://www.odoo.com",
+        run: "edit https://www.odoo.com",
     },
     {
         content: "Check nothing is lost",
@@ -179,7 +179,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Replace first paragraph, write a URL",
         trigger: ':iframe #wrap .s_text_image p',
-        run: 'text odoo.com'
+        run: "editor odoo.com",
     },
     {
         content: "Select text",
@@ -202,13 +202,20 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Click on link to open the link tools",
-        trigger: ":iframe .s_text_image p a",
+        trigger: ":iframe .s_text_image p a[href='http://odoo.com']",
     },
     // 8. Check that http links are not coerced to https and vice-versa.
     {
         content: "Change URL to https",
         trigger: "#o_link_dialog_url_input",
-        run: 'text https://odoo.com',
+        run(helpers) {
+            //TODO : update the tour to use helpers.edit("https://odoo.com")
+            //To see what happens with edit, add `pause:true` to the previous step 
+            // and type yourself https://odoo.com in #o_link_dialog_url_input  
+            //The label will be ohttps://
+            this.anchor.value = "https://odoo.com";
+            this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        }
     },
     {
         content: "Check that link was updated",
@@ -218,7 +225,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change it back http",
         trigger: "#o_link_dialog_url_input",
-        run: 'text http://odoo.com',
+        run(helpers) {
+             //TODO : update the tour to use helpers.edit("http://odoo.com")
+            this.anchor.value = "http://odoo.com";
+            this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        }
     },
     {
         content: "Check that link was updated",
@@ -229,7 +240,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change URL into an email address",
         trigger: "#o_link_dialog_url_input",
-        run: "text callme@maybe.com",
+        run: "edit callme@maybe.com",
     },
     {
         content: "Check that link was updated and link content is synced with URL",
@@ -239,7 +250,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change URL back into a http one",
         trigger: "#o_link_dialog_url_input",
-        run: "text_blur callmemaybe.com",
+        run: "edit callmemaybe.com && blur",
     },
     {
         content: "Check that link was updated and link content is synced with URL",
@@ -320,7 +331,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter partial URL",
         trigger: "#o_link_dialog_url_input",
-        run: 'text /contact'
+        run: "edit /contact",
     },
     {
         content: "Pick '/contactus",
@@ -335,7 +346,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter a non-existent URL",
         trigger: "#o_link_dialog_url_input",
-        run: "text /this-address-does-not-exist",
+        run: "edit /this-address-does-not-exist",
     },
     {
         content: "Check that the link's href was updated and click on it",

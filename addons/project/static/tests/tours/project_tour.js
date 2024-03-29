@@ -15,23 +15,21 @@ registry.category("web_tour.tours").add('project_test_tour', {
         width: 200,
     }, {
         trigger: '.o_project_name input',
-        run: 'text New Project',
+        run: 'edit New Project',
         id: 'project_creation',
     }, {
         trigger: '.o_open_tasks',
-        run: function (actions) {
-            actions.auto('.modal:visible .btn.btn-primary');
-        },
+        run: "click .modal:visible .btn.btn-primary",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-        run: "text New",
+        run: "edit New",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
         extra_trigger: '.o_kanban_group',
-        run: "text Done",
+        run: "edit Done",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,
@@ -41,7 +39,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
         extra_trigger: '.o_kanban_project_tasks',
-        run: 'text New task'
+        run: "edit New task",
     }, {
         trigger: '.o_kanban_quick_create .o_kanban_add',
     }, {
@@ -57,7 +55,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: '.o_field_subtasks_one2many div[name="name"] input',
         content: 'Set subtask name',
-        run: 'text new subtask'
+        run: "edit new subtask",
     }, {
         trigger: ".o_breadcrumb .o_back_button",
         content: 'Go back to kanban view',
@@ -73,7 +71,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
         extra_trigger: ".subtask_create_input",
         content: 'Give the sub-task a name',
-        run: 'text newer subtask'
+        run: "edit newer subtask && click(div.subtask_create_input button:contains(SAVE))",
     }, {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
         content: 'Change the subtask state',
@@ -88,7 +86,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: '.o_field_text[name="name"] textarea',
         content: 'Set task name',
-        run: 'text New task',
+        run: "edit New task",
     }, {
         trigger: 'div[name="user_ids"].o_field_many2many_tags_avatar input',
         content: 'Assign the task to you',
@@ -107,7 +105,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: '.o_field_subtasks_one2many div[name="name"] input',
         content: 'Set subtask name',
-        run: 'text new subtask'
+        run: "edit new subtask",
     }, {
         trigger: 'button[special="save"]',
         extra_trigger: '.o_field_many2many_tags_avatar .o_m2m_avatar',

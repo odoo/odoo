@@ -29,18 +29,18 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: ".o_field_widget[name=name] input",
         content: "complete name",
-        run: "text Test Opportunity 1",
+        run: "edit Test Opportunity 1",
     }, {
         trigger: ".o_field_widget[name=expected_revenue] input",
         content: "complete expected revenue",
-        run: "text 999999",
+        run: "edit 999999",
     }, {
         trigger: "button.o_kanban_edit",
         content: "edit lead",
     }, {
         trigger: "div[name=date_deadline] input",
         content: "complete expected closing",
-        run: `text ${today.toFormat("MM/dd/yyyy")}`,
+        run: `edit ${today.toFormat("MM/dd/yyyy")}`,
     }, {
         trigger: "div[name=date_deadline] input",
         content: "click to make the datepicker disappear",
@@ -64,22 +64,11 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
-        run: function (actions) {
-            actions.text(
-                `text ${today
-                    .plus({ months: 5 })
-                    .startOf("month")
-                    .minus({ days: 1 })
-                    .toFormat("MM/dd/yyyy")}`
-            );
-            this.anchor.dispatchEvent(
-                new KeyboardEvent("keydown", { bubbles: true, key: "Escape" })
-            );
-        },
+        run: `edit ${today.plus({ months: 5 }).startOf("month").minus({ days: 1 }).toFormat("MM/dd/yyyy")} && press Escape`,
     }, {
         trigger: ".o_field_widget[name=probability] input",
         content: "max out probability",
-        run: "text 100"
+        run: "edit 100",
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',

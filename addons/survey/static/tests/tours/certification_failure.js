@@ -56,7 +56,7 @@ var failSteps = [{ // Page-1
 }, { // Question: Do you think we have missing products in our catalog? (not rated)
     content: "Missing products",
     trigger: 'div.js_question-wrapper:contains("Do you think we have missing products in our catalog") textarea',
-    run: "text I don't know products enough to be able to answer that",
+    run: "edit I don't know products enough to be able to answer that",
 }, { // Page-2 Question: How much do we sell our Cable Management Box?
     content: "Selecting answer '$80'",
     trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("$80")',
@@ -74,23 +74,25 @@ var failSteps = [{ // Page-1
 }, { // Page-3 Question: How many days is our money-back guarantee?
     content: "Inputting answer '60'",
     trigger: 'div.js_question-wrapper:contains("How many days is our money-back guarantee") input',
-    run: 'text 60'
+    run: "edit 60",
 }, { // Question: If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it?
     content: "Inputting answer '01/06/2020'",
     trigger: 'div.js_question-wrapper:contains("If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it") input',
-    run: 'text 01/06/2020'
+    run: "edit 01/06/2020",
 }, { // Question: If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?
     content: "Inputting answer '01/06/2021 00:00:01'",
     trigger: 'div.js_question-wrapper:contains("If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire") input',
-    run: 'text 01/06/2021 00:00:01'
+    run: "edit 01/06/2021 00:00:01",
 }, { // Question: What day to you think is best for us to start having an annual sale (not rated)?
     trigger: 'div.js_question-wrapper:contains("What day to you think is best for us to start having an annual sale (not rated)") input',
+    run: "edit Test",
 }, { // Question: What day and time do you think most customers are most likely to call customer service (not rated)?
     trigger: 'div.js_question-wrapper:contains("What day and time do you think most customers are most likely to call customer service (not rated)") input',
+    run: "edit Test",
 }, { // Question: How many chairs do you think we should aim to sell in a year (not rated)?
     content: "Inputting answer '0'",
     trigger: 'div.js_question-wrapper:contains("How many chairs do you think we should aim to sell in a year (not rated)") input',
-    run: 'text 0'
+    run: "edit 0",
 }, {
     content: "Finish Survey",
     trigger: 'button[type="submit"]',

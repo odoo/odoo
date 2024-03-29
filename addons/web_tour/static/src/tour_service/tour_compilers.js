@@ -5,7 +5,7 @@ import { debounce } from "@web/core/utils/timing";
 import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
 import { omit, pick } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
-import { queryAll } from "@odoo/hoot-dom";
+import * as hoot from "@odoo/hoot-dom";
 import {
     callWithUnloadCheck,
     getConsumeEventType,
@@ -40,13 +40,13 @@ function findTrigger(selector, shadowDOM, inModal) {
     const target = shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document;
     let nodes;
     if (inModal !== false) {
-        const visibleModal = queryAll(".modal", { root: target, visible: true }).at(-1);
+        const visibleModal = hoot.queryAll(".modal", { root: target, visible: true }).at(-1);
         if (visibleModal) {
-            nodes = queryAll(selector, { root: visibleModal });
+            nodes = hoot.queryAll(selector, { root: visibleModal });
         }
     }
     if (!nodes) {
-        nodes = queryAll(selector, { root: target });        
+        nodes = hoot.queryAll(selector, { root: target });        
     }
     return nodes;
 }
@@ -412,8 +412,6 @@ export function compileStepAuto(stepIndex, step, options) {
                     return;
                 }
 
-                const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-
                 if (showPointerDuration > 0) {
                     // Useful in watch mode.
                     pointer.pointTo(stepEl, step);
@@ -422,7 +420,7 @@ export function compileStepAuto(stepIndex, step, options) {
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
-                const actionHelper = new RunningTourActionHelper(stepEl, consumeEvent);
+                const actionHelper = new RunningTourActionHelper(stepEl);
 
                 let result;
                 if (typeof step.run === "function") {
@@ -434,14 +432,16 @@ export function compileStepAuto(stepIndex, step, options) {
                     });
                     result = willUnload && "will unload";
                 } else if (typeof step.run === "string") {
-                    const m = step.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                    await tryToDoAction(() => actionHelper[m[1]](m[2]));
+                    step.run.split("&&").forEach(async (todo) => {
+                        const m = String(todo).trim().match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                        await tryToDoAction(() => actionHelper[m.groups?.action](m.groups?.arguments));
+                    });
                 } else if (!step.isCheck) {
                     if (stepIndex === tour.steps.length - 1) {
                         console.warn("Tour %s: ignoring action (auto) of last step", tour.name);
                         step.state.hasRun = true;
                     } else {
-                        await tryToDoAction(() => actionHelper.auto());
+                        await tryToDoAction(() => actionHelper.click());
                     }
                 } else {
                     step.state.hasRun = true;
@@ -471,10 +471,12 @@ export function compileStepAuto(stepIndex, step, options) {
                         styles[1],
                         styles[0]
                     );
+                    window.hoot = hoot;
                     await new Promise((resolve) => {
                         window.play = () => {
                             resolve();
                             delete window.play;
+                            delete window.hoot;
                         };
                     });
                 }

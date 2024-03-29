@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
             content: "change quantity",
             extra_trigger: '#product_detail',
             trigger: '#product_detail form[action^="/shop/cart/update"] input[name=add_qty]',
-            run: 'text 3',
+            run: "edit 3",
         },
         {
             content: "click on add to cart",

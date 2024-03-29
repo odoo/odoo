@@ -11,7 +11,7 @@ export function setCustomTip(amount) {
     return [
         {
             trigger: `.tip-screen .custom-amount-form input`,
-            run: `text ${amount}`,
+            run: `edit ${amount}`,
         },
     ];
 }

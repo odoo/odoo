@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
         },
         {
             trigger: "div[name='summary'] input",
-            run: "text Play Mario Party",
+            run: "edit Play Mario Party",
         },
         {
             trigger: "button:contains('Schedule')",
@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
         },
         {
             trigger: "div[name='summary'] input",
-            run: "text Play Mario Kart",
+            run: "edit Play Mario Kart",
         },
         {
             trigger: "button:contains('Mark as Done')",

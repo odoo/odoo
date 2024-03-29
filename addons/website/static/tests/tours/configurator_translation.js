@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('configurator_translation', {
     }, {
         content: "insert a website industry",
         trigger: '.o_configurator_industry input',
-        run: 'text ab',
+        run: "edit ab",
     }, {
         content: "select a website industry from the autocomplete",
         trigger: '.o_configurator_industry_wrapper ul li a:contains("in fr")',
