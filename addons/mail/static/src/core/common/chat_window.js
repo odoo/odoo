@@ -11,7 +11,7 @@ import {
 } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -84,6 +84,7 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
+        const chatWindow = toRaw(this.props.chatWindow);
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
             return;
         }
@@ -103,9 +104,7 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = this.chatWindowService.visible.findIndex((cw) =>
-                    cw.eq(this.props.chatWindow)
-                );
+                const index = this.chatWindowService.visible.findIndex((cw) => cw.eq(chatWindow));
                 if (index === 0) {
                     this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
                         .autofocus++;
@@ -124,18 +123,20 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
+        const chatWindow = toRaw(this.props.chatWindow);
         if (this.ui.isSmall || this.state.actionsMenuOpened) {
             return;
         }
-        if (this.props.chatWindow.hidden) {
-            this.chatWindowService.makeVisible(this.props.chatWindow);
+        if (chatWindow.hidden) {
+            this.chatWindowService.makeVisible(chatWindow);
         } else {
-            this.chatWindowService.toggleFold(this.props.chatWindow);
+            this.chatWindowService.toggleFold(chatWindow);
         }
     }
 
     async close(options) {
-        await this.chatWindowService.close(this.props.chatWindow, options);
+        const chatWindow = toRaw(this.props.chatWindow);
+        await this.chatWindowService.close(chatWindow, options);
     }
 
     get actionsMenuTitleText() {
@@ -143,7 +144,8 @@ export class ChatWindow extends Component {
     }
 
     async renameThread(name) {
-        await this.threadService.renameThread(this.thread, name);
+        const thread = toRaw(this.thread);
+        await this.threadService.renameThread(thread, name);
         this.state.editingName = false;
     }
 

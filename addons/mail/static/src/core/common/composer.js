@@ -21,6 +21,7 @@ import {
     useRef,
     useState,
     useExternalListener,
+    toRaw,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -212,10 +213,11 @@ export class Composer extends Component {
     }
 
     onClickCancelOrSaveEditText(ev) {
-        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
+        const composer = toRaw(this.props.composer);
+        if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
             this.props.onDiscardCallback(ev);
         }
-        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
+        if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
             this.editMessage(ev);
         }
     }
@@ -405,10 +407,11 @@ export class Composer extends Component {
     }
 
     onKeydown(ev) {
+        const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && this.props.composer.textInputContent === "") {
-                    const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
+                if (this.props.messageEdition && composer.textInputContent === "") {
+                    const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
                     }
@@ -424,7 +427,7 @@ export class Composer extends Component {
                     return;
                 }
                 ev.preventDefault(); // to prevent useless return
-                if (this.props.composer.message) {
+                if (composer.message) {
                     this.editMessage();
                 } else {
                     this.sendMessage();
@@ -444,8 +447,9 @@ export class Composer extends Component {
     }
 
     onClickAddAttachment(ev) {
+        const composer = toRaw(this.props.composer);
         markEventHandled(ev, "composer.clickOnAddAttachment");
-        this.props.composer.autofocus++;
+        composer.autofocus++;
     }
 
     async onClickFullComposer(ev) {
@@ -584,17 +588,18 @@ export class Composer extends Component {
     }
 
     async sendMessage() {
-        if (this.props.composer.message) {
+        const composer = toRaw(this.props.composer);
+        if (composer.message) {
             this.editMessage();
             return;
         }
         await this.processMessage(async (value) => {
             const postData = {
-                attachments: this.props.composer.attachments,
+                attachments: composer.attachments,
                 isNote: this.props.type === "note",
-                mentionedChannels: this.props.composer.mentionedChannels,
-                mentionedPartners: this.props.composer.mentionedPartners,
-                cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
+                mentionedChannels: composer.mentionedChannels,
+                mentionedPartners: composer.mentionedPartners,
+                cannedResponseIds: composer.cannedResponses.map((c) => c.id),
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             await this._sendMessage(value, postData);
@@ -615,8 +620,8 @@ export class Composer extends Component {
      * @param {postData} postData Message meta data info
      */
     async _sendMessage(value, postData) {
-        const thread = this.props.composer.thread;
-        await this.threadService.post(this.thread, value, postData);
+        const thread = toRaw(this.props.composer.thread);
+        await this.threadService.post(toRaw(this.thread), value, postData);
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
@@ -626,24 +631,17 @@ export class Composer extends Component {
     }
 
     async editMessage() {
-        if (
-            this.props.composer.textInputContent ||
-            this.props.composer.message.attachments.length > 0
-        ) {
+        const composer = toRaw(this.props.composer);
+        if (composer.textInputContent || composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.edit(
-                    this.props.composer.message,
-                    value,
-                    this.props.composer.attachments,
-                    {
-                        mentionedChannels: this.props.composer.mentionedChannels,
-                        mentionedPartners: this.props.composer.mentionedPartners,
-                    }
-                )
+                this.messageService.edit(composer.message, value, composer.attachments, {
+                    mentionedChannels: composer.mentionedChannels,
+                    mentionedPartners: composer.mentionedPartners,
+                })
             );
         } else {
             this.env.services.dialog.add(MessageConfirmDialog, {
-                message: this.props.composer.message,
+                message: composer.message,
                 messageComponent: this.props.messageComponent,
                 onConfirm: () => this.messageService.delete(this.message),
                 prompt: _t("Are you sure you want to delete this message?"),
@@ -653,35 +651,39 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        const textContent = this.props.composer.textInputContent;
-        const firstPart = textContent.slice(0, this.props.composer.selection.start);
-        const secondPart = textContent.slice(this.props.composer.selection.end, textContent.length);
-        this.props.composer.textInputContent = firstPart + str + secondPart;
+        const composer = toRaw(this.props.composer);
+        const textContent = composer.textInputContent;
+        const firstPart = textContent.slice(0, composer.selection.start);
+        const secondPart = textContent.slice(composer.selection.end, textContent.length);
+        composer.textInputContent = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         if (!this.ui.isSmall) {
-            this.props.composer.autofocus++;
+            composer.autofocus++;
         }
     }
 
     onFocusin() {
-        this.props.composer.isFocused = true;
-        if (this.props.composer.thread) {
-            this.threadService.markAsRead(this.props.composer.thread);
+        const composer = toRaw(this.props.composer);
+        composer.isFocused = true;
+        if (composer.thread) {
+            this.threadService.markAsRead(composer.thread);
         }
     }
 
     saveContent() {
+        const composer = toRaw(this.props.composer);
         const fullComposerContent =
             document
                 .querySelector(".o_mail_composer_form_view .note-editable")
-                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? this.props.composer.textInputContent;
-        browser.localStorage.setItem(this.props.composer.localId, fullComposerContent);
+                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? composer.textInputContent;
+        browser.localStorage.setItem(composer.localId, fullComposerContent);
     }
 
     restoreContent() {
-        const fullComposerContent = browser.localStorage.getItem(this.props.composer.localId);
+        const composer = toRaw(this.props.composer);
+        const fullComposerContent = browser.localStorage.getItem(composer.localId);
         if (fullComposerContent) {
-            this.props.composer.textInputContent = fullComposerContent;
+            composer.textInputContent = fullComposerContent;
         }
     }
 }
