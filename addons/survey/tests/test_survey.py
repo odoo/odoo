@@ -14,8 +14,8 @@ class TestSurveyInternals(common.TestSurveyCommon):
     def test_allowed_triggering_question_ids(self):
         # Create 2 surveys, each with 3 questions, each with 2 suggested answers
         survey_1, survey_2 = self.env['survey.survey'].create([
-            {'title': 'Test Survey 1'},
-            {'title': 'Test Survey 2'}
+            {'title': 'Test Survey 1', 'session_code': '10000'},
+            {'title': 'Test Survey 2', 'session_code': '10001'}
         ])
         self.env['survey.question'].create([
             {
