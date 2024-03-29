@@ -94,6 +94,14 @@ export class Colorpicker extends Component {
             this.start();
         });
         onWillUpdateProps((newProps) => {
+            if (!this.el) {
+                // There is legacy code that can trigger the instantiation of the
+                // link tool when one of it's parent component is not in the dom. If
+                // that parent element is not in the dom, owl will not return
+                // `this.linkComponentWrapperRef.el` because of a check (see
+                // `inOwnerDocument`).
+                return;
+            }
             if (newProps.selectedColor) {
                 this.setSelectedColor(newProps.selectedColor);
             }
