@@ -433,13 +433,15 @@ export class Thread extends Record {
         return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
     }
 
-    /** @returns {import("models").Message | undefined} */
-    get newestMessage() {
-        return [...this.messages].reverse().find((msg) => !msg.isEmpty);
-    }
+    newestMessage = Record.one("Message", {
+        inverse: "threadAsNewest",
+        compute() {
+            return this.messages.findLast((msg) => !msg.isEmpty);
+        },
+    });
 
     get newestPersistentMessage() {
-        return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
+        return this.messages.findLast((msg) => Number.isInteger(msg.id));
     }
 
     newestPersistentAllMessages = Record.many("Message", {

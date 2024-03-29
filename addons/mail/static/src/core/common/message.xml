@@ -151,7 +151,7 @@
                 </button>
             </t>
             <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                <Dropdown state="optionsDropdown" position="props.message.eq(props.thread?.newestMessage)  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
+                <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
                     <button t-att-class="`btn p-0 rounded-0 ${ optionsDropdown.isOpen ? 'bg-200' : '' }`" t-att-title="expandText">
                         <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                     </button>
