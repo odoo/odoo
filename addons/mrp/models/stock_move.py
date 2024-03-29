@@ -135,7 +135,7 @@ class StockMove(models.Model):
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
         domain="[('id', 'in', allowed_operation_ids)]")
     workorder_id = fields.Many2one(
-        'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True)
+        'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True, index='btree_not_null')
     # Quantities to process, in normalized UoMs
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
     byproduct_id = fields.Many2one(
