@@ -138,10 +138,10 @@ test("Limiting the visible tags displays a counter", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o_tag").toHaveCount(2);
-    expect(".rounded-circle", {
+    expect(".rounded", {
         message: "the counter displays 4 more items",
     }).toHaveText("+4");
-    expect(JSON.parse(queryAttribute(".rounded-circle", "data-tooltip-info")), {
+    expect(JSON.parse(queryAttribute(".rounded", "data-tooltip-info")), {
         message: "the counter has a tooltip displaying other items",
     }).toEqual({
         tags: [
