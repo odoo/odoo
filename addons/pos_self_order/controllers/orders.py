@@ -48,6 +48,7 @@ class PosSelfOrderController(http.Controller):
             'amount_return': 0,
             'table_stand_number': order.get('table_stand_number'),
             'ticket_code': order.get('ticket_code'),
+            'pricelist_id': pos_config.pricelist_id.id if pos_config.pricelist_id else False,
         }
 
         # Save the order in the database to get the id
