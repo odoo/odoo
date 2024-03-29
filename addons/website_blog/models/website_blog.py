@@ -160,6 +160,7 @@ class BlogPost(models.Model):
     _name = 'blog.post'
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
+        'website.page_visibility_options.mixin',
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
