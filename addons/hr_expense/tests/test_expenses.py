@@ -1391,3 +1391,58 @@ class TestExpenses(TestExpenseCommon):
             {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
             {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
         ])
+
+    def test_expense_sheet_payment_bank_account(self):
+        ''' Test expense sheet payment bank account'''
+
+        employee_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': "0123456789",
+            'partner_id': self.expense_employee.address_home_id.id,
+            'acc_type': 'bank',
+        })
+
+        company_partner = self.env['res.partner'].create({
+            'name': 'Company',
+            'is_company': True,
+        })
+
+        company_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': "98765",
+            'partner_id': company_partner.id,
+            'acc_type': 'bank',
+        })
+
+        self.expense_employee.write({'bank_account_id': employee_bank_account.id})
+        self.expense_employee.address_home_id.write({'parent_id': company_partner.id})
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [(0, 0, {
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'unit_amount': 350.00,
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        # Bank account on the payment should be the employee account
+        action_data = expense_sheet.action_register_payment()
+        wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
+        self.assertEqual(wizard.partner_bank_id, employee_bank_account)
+
+        # Bank account on the move should be the employee account
+        self.assertEqual(expense_sheet.account_move_id.partner_bank_id, employee_bank_account)
+
+        ctx = {'active_model': 'account.move', 'active_ids': expense_sheet.account_move_id.ids}
+        payment_register = self.env['account.payment.register'].with_context(**ctx).create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })
+        # Bank account on the expense payment widget should be the employee account
+        self.assertEqual(payment_register.partner_bank_id, employee_bank_account)

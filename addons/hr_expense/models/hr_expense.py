@@ -1289,16 +1289,21 @@ class HrExpenseSheet(models.Model):
 
     def _prepare_bill_vals(self):
         self.ensure_one()
-        return {
+        res = {
             **self._prepare_move_vals(),
             # force the name to the default value, to avoid an eventual 'default_name' in the context
             # to set it to '' which cause no number to be given to the account.move when posted.
             'journal_id': self.journal_id.id,
             'move_type': 'in_invoice',
-            'partner_id': self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+            'partner_id': self.employee_id.sudo().address_home_id.id,
             'currency_id': self.currency_id.id,
             'line_ids':[Command.create(expense._prepare_move_line_vals()) for expense in self.expense_line_ids],
         }
+        if self.employee_id.sudo().bank_account_id:
+            res.update({
+                'partner_bank_id': self.employee_id.sudo().bank_account_id.id,
+            })
+        return res
 
     def _prepare_move_vals(self):
         self.ensure_one()
