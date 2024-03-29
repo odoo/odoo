@@ -51,7 +51,7 @@
                 </a>
             </span>
         </t>
-        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
             <span t-if="otherTags.length > 9" t-esc="'9+'" />
             <span t-else="" t-esc="'+' + otherTags.length" />
         </span>
