@@ -416,7 +416,8 @@ class Picking(models.Model):
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
     date_deadline = fields.Datetime(
         "Deadline", compute='_compute_date_deadline', store=True,
-        help="Date Promise to the customer on the top level document (SO/PO)")
+        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
+        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier")
     has_deadline_issue = fields.Boolean(
         "Is late", compute='_compute_has_deadline_issue', store=True, default=False,
         help="Is late or will be late depending on the deadline and scheduled date")
