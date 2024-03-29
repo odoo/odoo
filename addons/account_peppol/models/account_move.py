@@ -62,5 +62,11 @@ class AccountMove(models.Model):
                 not move.peppol_move_state,
             ]):
                 move.peppol_move_state = 'ready'
+            elif (
+                move.state == 'draft'
+                and move.is_sale_document(include_receipts=True)
+                and move.peppol_move_state not in ('processing', 'done')
+            ):
+                move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
