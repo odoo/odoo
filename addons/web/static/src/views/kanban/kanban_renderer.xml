@@ -46,7 +46,7 @@
                                     group="group"
                                     list="props.list"
                                     deleteRecord="props.deleteRecord"
-                                    archiveRecord="(record, active) => this.archiveRecord(record, active)"
+                                    archiveRecord.bind="archiveRecord"
                                     openRecord="props.openRecord"
                                     readonly="props.readonly"
                                     record="record"
