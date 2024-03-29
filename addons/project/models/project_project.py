@@ -690,8 +690,8 @@ class Project(models.Model):
             'name': _("%(name)s's Milestones", name=self.name),
             'domain': [('project_id', '=', self.id)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree')],
-            'view_mode': 'tree',
+            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree'), (False, 'form'), (False, 'kanban')],
+            'view_mode': 'tree,form,kanban',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!
@@ -704,6 +704,27 @@ class Project(models.Model):
                 **self.env.context
             }
         }
+
+    def action_get_list_view_project_update(self):
+        return self.action_get_list_view()
+
+    def action_view_tasks_from_project_milestone(self):
+        self.ensure_one()
+        return {
+            'name': _('Tasks'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.task',
+            "views": [
+                [self.env.ref('project.project_task_kanban_view_project_milestone').id, 'kanban'],
+                [self.env.ref('project.project_task_tree_view_project_milestone').id, "tree"], [False, "form"], [False, "calendar"],
+                [self.env.ref('project.project_task_pivot_view_project_milestone').id, "pivot"],
+                [self.env.ref('project.project_task_graph_view_project_milestone').id, "graph"], [False, "activity"],
+            ],
+            'view_mode': 'kanban,tree,form,calendar,pivot,graph,activity',
+            'context': {'default_project_id': self.id},
+            'domain': [('milestone_id', 'in', self.milestone_ids.ids)],
+        }
+
 
     # ---------------------------------------------
     #  PROJECT UPDATES
@@ -733,6 +754,7 @@ class Project(models.Model):
         }
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
+            panel_data['milestones']['data'] = sorted(self._get_milestones()['data'], key=lambda k: k['sequence'])
         if show_profitability:
             profitability_items = self.with_context(active_test=False)._get_profitability_items()
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
@@ -741,6 +763,7 @@ class Project(models.Model):
             panel_data['profitability_items'] = profitability_items
             panel_data['profitability_labels'] = self._get_profitability_labels()
         return panel_data
+
 
     def get_milestones(self):
         if self.env.user.has_group('project.group_project_user'):
