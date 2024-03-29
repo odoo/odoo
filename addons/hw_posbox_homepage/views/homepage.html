@@ -1,0 +1,263 @@
+{% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
+{% block head %}
+<style>
+    .btn-sm-restart {
+        display: flex;
+        min-width: 100%;
+        justify-content: center;
+    }
+    .item-restart {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        max-width: 100%;
+    }
+    .text-green-primary {
+        display: flex;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        justify-content: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    table tr {
+        border-bottom: 1px solid #f1f1f1;
+    }
+    table tr:last-child {
+        border-width: 0px;
+    }
+    table td {
+        padding: 8px;
+        border-left: 1px solid #f1f1f1;
+    }
+    table td:first-child {
+        border-left: 0;
+    }
+    td.heading {
+        font-weight: bold;
+        vertical-align: top;
+        width: 30%;
+        text-align: left;
+    }
+    .device-status {
+        margin: 6px 0;
+    }
+    .device-status .identifier {
+        font-size: 0.8rem;
+        max-width: 350px;
+    }
+    .device-status .indicator {
+        margin-left: 4px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+    .device-status .device {
+        font-weight: 500;
+    }
+    .collapse .collapsible{
+        border: 1px solid #f1f1f1;
+    }
+    .collapse .title {
+        position: relative;
+        color: #00a09d;
+        cursor: pointer;
+        padding: 8px;
+    }
+    .collapse  .active, .collapse .title:hover {
+        background-color: #f1f1f1;
+        color: #006d6b;
+    }
+    .collapse  .content {
+        padding: 0 8px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+    }
+    .arrow-down::after {
+        content: '\25bc';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+    .arrow-up::after {
+        content: '\25b2';
+        padding: 0 10px;
+        position: absolute;
+        right: 0;
+    }
+    .warn-tr {
+        color: #856404;
+        background-color: #fff3cd;
+        border: 2px solid #f3e4ce;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('.collapsible .title').on('click', function (ev) {
+            $(ev.target).toggleClass('active');
+            $(ev.target).toggleClass('arrow-down arrow-up');
+            var content = $(ev.target).next('.content');
+            var maxHeight = ( content.css('max-height') === '0px' ? content.prop('scrollHeight') : 0) + 'px';
+            content.css('max-height', maxHeight);
+        });
+    });
+
+    function display_error_and_clear_interval(interval, xhrStatus, thrownError) {
+        /// Displays the error message and stops sending requests to the server
+        if (interval) {
+            clearInterval(interval);
+        }
+        $('.loading-block').addClass('o_hide');
+        $('.error-message').text(xhrStatus + ": " + thrownError);
+    }
+
+    function restart_odoo_or_reboot(action) {
+        /// Call restart method on server, then ping it until restarting is finished
+        /// If an error is encountered, display it and stop
+        $('.loading-block').removeClass('o_hide');
+        $('.message-title').text('Restarting');
+        $('.message-status').text('Please wait');
+        $.ajax({
+            url: '/iot_restart_odoo_or_reboot/',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({ params: {action: action} }),
+            timeout: 15000,
+        }).done(function(data) {
+            if (data.result == 'success') {
+                const interval = setInterval(function() {
+                    $.ajax({
+                        url:'/',
+                        timeout: 4000
+                    }).done(function() {
+                        location.reload();
+                    }).fail(function(xhr, textStatus, thrownError) {
+                        if (xhr.status) {
+                            display_error_and_clear_interval(interval, xhr.status, thrownError);
+                        }
+                    })
+                }, 4000)
+                setTimeout(function(){
+                    display_error_and_clear_interval(interval, '0', 'timeout');
+                }, 600000);
+            }
+            else {
+                display_error_and_clear_interval(interval, 'Error', data.result);
+            }
+        }).fail(function(xhr, textStatus, thrownError) {
+            display_error_and_clear_interval(null, xhr.status, thrownError);
+        })
+    }
+</script>
+{% endblock %}
+{% block content %}
+    <div class="collapse item-restart">
+        <div class="collapsible item-restart">
+            <div class="title arrow-down">Restart</div>
+            <div class="content">
+                <div class="device-status">
+                    {% if system == "Linux" %}
+                        <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('reboot_iot_box')">Reboot the IoT Box</button>
+                    {% endif %}
+                    <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('restart_odoo')">Restart Odoo service</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center text-green">Your IoT Box is up and running</h2>
+    <table align="center" cellpadding="3">
+        <tr>
+            <td class="heading">Name</td>
+            <td> {{ hostname }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/server'>configure</a>{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="heading">Version</td>
+            <td> {{ version }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/hw_proxy/upgrade/'>update</a>{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="heading">IP Address</td>
+            <td>{{ ip }}</a></td>
+        </tr>
+        <tr>
+            <td class="heading">Mac Address</td>
+            <td> {{ mac }}</td>
+        </tr>
+        <tr>
+            <td class="heading">Network</td>
+            <td>{{ network_status }} {% if system == "Linux" %}<a class="btn btn-sm float-right" href='/wifi'>configure wifi</a>{% endif %}</td>
+        </tr>
+        <tr>
+            <td class="heading">Server</td>
+            <td><a href='{{ server_status }}' target=_blank>{{ server_status }}<a class="btn btn-sm float-end" href='/server'>configure</a></td>
+        </tr>
+        <tr class="{{ 'warn-tr' if not is_certificate_ok }}">
+            <td class="heading">HTTPS certificate</td>
+            <td>
+                {% if is_certificate_ok %}
+                    <details>
+                        <summary>OK</summary>
+                        <code>{{ certificate_details }}</code>
+                    </details>
+                {% else %}
+                    Error code:
+                    {% set error_code = certificate_details.split(' ') | first | replace("_", "-") | lower %}
+                    {% set doc_url = 'https://www.odoo.com/documentation/17.0/applications/productivity/iot/config/https_certificate_iot.html#' ~ error_code %}
+                    <a target="_blank" class="btn btn-sm float-end" href="{{ doc_url }}">help</a>
+                    <br/>
+                    <code style="white-space: pre-wrap;">{{ certificate_details }}</code>
+                {% endif %}
+            </td>
+        </tr>
+        {% if server_status != "Not Configured" %}
+        <tr>
+            <td class="heading">Six payment terminal</td>
+            <td>{{ six_terminal }} <a class="btn btn-sm float-end" href='/six_payment_terminal'>configure</a></td>
+        </tr>
+        {% endif %}
+        {% if pairing_code %}
+        <tr>
+            <td class="heading">Pairing code</td>
+            <td>{{ pairing_code }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td class="heading">IOT Device</td>
+            <td>
+                <div class="collapse">
+                    {% if iot_device_status|length == 0 %}
+                        No Device Found
+                    {% endif %}
+                    {% for iot_devices in iot_device_status|groupby('type') %}
+                        <div class="collapsible">
+                            <div class="title arrow-down">{{ iot_devices.grouper|capitalize }}s</div>
+                            <div class="content">
+                                {% for device in iot_devices.list %}
+                                    <div class="device-status">
+                                        <span class="device">{{ device['name'] }}</span>
+                                        <div class="identifier">{{ device['identifier'] }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br><center><a class="btn btn-sm" href='/list_handlers'>handlers list</a></center>
+            </td>
+        </tr>
+    </table>
+    <div style="margin: 20px auto 10px auto;" class="text-center">
+        <a class="btn" href='/point_of_sale/display'>POS Display</a>
+        {% if system == "Linux" %}
+            <a class="btn" style="margin-left: 10px;" href='/remote_connect'>Remote Debug</a>
+            <a target="_blank" class="btn" style="margin-left: 10px;" href="http://{{ ip }}:631">Printers server</a>
+        {% endif %}
+        {% if server_status != "Not Configured" %}
+        <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
+        {% endif %}
+    </div>
+    {{ loading_block_ui(loading_message) }}
+{% endblock %}

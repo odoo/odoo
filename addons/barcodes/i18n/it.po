@@ -1,0 +1,371 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
+msgstr ""
+"\"*\" non è uno modello di espressione regolare valido per un codice a "
+"barre. Intendevi \".*\"?"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"Le <i>nomenclature codici a barre</i> definiscono il modo in cui i codici a barre vengono riconosciuti e catalogati.\n"
+"                                Al momento della scansione il codice a barre viene associato alla <i>prima</i> regola che rispetta\n"
+"                                la sintassi. La sintassi corrisponde a un'espressione regolare, e il codice a barre è collegato\n"
+"                                se l'espressione regolare corrisponde al prefisso del codice a barre."
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Una nomenclatura codice a barre definisce come il punto vendita identifica e"
+" interpreta i codici a barre"
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Add a new barcode nomenclature"
+msgstr "Aggiungere una nuova nomenclatura codice a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
+msgid "Alias"
+msgstr "Alias"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
+msgid "Always"
+msgstr "Sempre"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr ""
+"Un identificativo interno per questa regola di nomenclatura codice a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "Un identificativo interno della nomenclatura codici a barre"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
+msgid "Any"
+msgstr "Qualsiasi"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+#, python-format
+msgid "Barcode"
+msgstr "Codice a barre"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr "Barcode Event Mixin"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "Nomenclatura codice a barre"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "Nomenclature codici a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
+msgid "Barcode Pattern"
+msgstr "Modello codice"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "Regola codice a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Barcode Scanned"
+msgstr "Codice letto"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Barcode: "
+msgstr "Codice a barre:"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
+msgid "Created on"
+msgstr "Data creazione"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13 a UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "Codifica"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP Routing"
+msgstr "Instradamento HTTP"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
+msgid "Never"
+msgstr "Mai"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "Nomenclatura"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the\n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases,\n"
+"                                the barcode field on the associated records <i>must</i> show these digits as\n"
+"                                zeroes."
+msgstr ""
+"I modelli possono anche definire il modo in cui i valori numerici come il peso e il prezzo possono essere\n"
+"                                codificati nel codice a barre. I valori sono indicati da <code>{NNN}</code> dove i caratteri N\n"
+"                                definiscono dove sono codificate le cifre del numero. Sono supportati anche i numeri a virgola mobile\n"
+"                                con i decimali indicati dai caratteri D, come <code>{NNNDD}</code>. In questi casi,\n"
+"                                il campo codice a barre nei record associati <i>deve</i> mostrare queste cifre come\n"
+"                                zeri."
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.js:0
+#, python-format
+msgid "Please, Scan again!"
+msgstr "Per favore, scansiona di nuovo!"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
+msgid "Rule Name"
+msgstr "Nome regola"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
+msgid "Rules"
+msgstr "Regole"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
+msgid "Sequence"
+msgstr "Sequenza"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "Tabelle"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
+#, python-format
+msgid "Tap to scan"
+msgstr "Tocca per acquisire"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
+msgid "The barcode matching pattern"
+msgstr "Il modello di corrispondenza del codice a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
+msgid "The list of barcode rules"
+msgstr "Elenco delle regole codici a barre"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "Il modello corrispondente sarà l'alias di questo codice a barre"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"C'è un errore di sintassi nello schema del codice a barre %(pattern)s:  una "
+"regola può contenere solo una coppia di parentesi."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"C'è un errore di sintassi nello schema del codice a barre %(pattern)s: le "
+"parentesi possono contenere solo N seguite da D."
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+"C'è un errore di sintassi nello schema del codice a barre%(pattern)s: "
+"parentesi vuote."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+"Questa regola verrà applicata solo se il codice rispetta la codifica "
+"specificata"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
+msgid "Type"
+msgstr "Tipologia"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+"I codici UPC possono essere convertiti a EAN anteponendo uno zero. Questa "
+"impostazione determina se un codice UPC/EAN debba essere convertito "
+"automaticamente quando viene applicata una delle due codifiche."
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
+msgid "UPC-A to EAN-13"
+msgstr "UPC-A a EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "Conversione UPC/EAN"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
+msgid "Unit Product"
+msgstr "Prodotto unitario"
+
+#. module: barcodes
+#. odoo-javascript
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Unknown barcode command"
+msgstr "Comando codice a barre sconosciuto"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Utilizzato per ordinare le regole, come trovare prima le regole con una "
+"sequenza piccola"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "Valore dell'ultimo codice a barre scansionato."

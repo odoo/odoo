@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskCalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='filter.label']" position="before">
+            <span t-if="props.model.isCheckProject and !filter.value" class="text-danger pe-1">
+                <i class="fa fa-lock"/>
+            </span>
+        </xpath>
+    </t>
+
+</templates>

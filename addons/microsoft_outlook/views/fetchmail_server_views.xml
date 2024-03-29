@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_view_form" model="ir.ui.view">
+        <field name="name">fetchmail.server.view.form.inherit.outlook</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="mail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <field name="user" position="after">
+                <field name="is_microsoft_outlook_configured" invisible="1"/>
+                <field name="microsoft_outlook_refresh_token" invisible="1"/>
+                <field name="microsoft_outlook_access_token" invisible="1"/>
+                <field name="microsoft_outlook_access_token_expiration" invisible="1"/>
+                <div invisible="server_type != 'outlook'"
+                    class="d-flex flex-row align-items-center" colspan="2">
+                    <span invisible="server_type != 'outlook' or not microsoft_outlook_refresh_token"
+                        class="badge text-bg-success">
+                        Outlook Token Valid
+                    </span>
+                    <button type="object"
+                        name="open_microsoft_outlook_uri" class="btn-link px-0"
+                        invisible="not is_microsoft_outlook_configured or server_type != 'outlook' or microsoft_outlook_refresh_token">
+                        <i class="oi oi-arrow-right"/>
+                        Connect your Outlook account
+                    </button>
+                    <button type="object"
+                        name="open_microsoft_outlook_uri" class="btn-link px-0 ms-2"
+                        invisible="not is_microsoft_outlook_configured or server_type != 'outlook' or not microsoft_outlook_refresh_token">
+                        <i class="fa fa-cog" title="Edit Settings"/>
+                    </button>
+                    <button class="alert alert-warning d-block mt-2 text-start"
+                        icon="oi-arrow-right" type="action" role="alert"
+                        name="%(base.res_config_setting_act_window)d"
+                        invisible="is_microsoft_outlook_configured or server_type != 'outlook'">
+                        Setup your Outlook API credentials in the general settings to link a Outlook account.
+                    </button>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

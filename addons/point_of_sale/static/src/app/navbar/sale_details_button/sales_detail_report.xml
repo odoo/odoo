@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SaleDetailsReport">
+        <div class="pos-receipt">
+            <t t-if="pos.company_logo_base64">
+                <img class="pos-receipt-logo" t-att-src="pos.company_logo_base64" alt="Logo"/>
+                <br/>
+            </t>
+            <t t-if="!pos.company_logo_base64" class="pos-receipt-center-align">
+                <h1 t-esc="pos.company.name" />
+                <br/>
+            </t>
+            <br /><br />
+
+            <div>
+                SOLD:
+            </div>
+
+            <div class="orderlines">
+                <t t-foreach="products" t-as="category" t-key="category['name']">
+                    <t t-foreach="category['products']" t-as="line" t-key="line_index">
+                        <div class="responsive-price">
+                            <t t-esc="line['product_name'].substr(0,20)" />
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
+                                <t t-if="line.uom !== 'Units'">
+                                    <t t-esc="line.uom" />
+                                </t>
+                                x
+                                <t t-esc="formatCurrency(line.price_unit, false)" />
+                            </span>
+                        </div>
+                        <t t-if="line.discount !== 0">
+                            <div class="pos-receipt-left-padding">Discount: <t t-esc="line.discount" />%</div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+
+            <br/>
+            <div>------------------------</div>
+            <br/>
+
+            <div>
+                REFUNDED:
+            </div>
+
+            <div class="orderlines">
+                <t t-foreach="refund_products" t-as="category" t-key="category['name']">
+                    <t t-foreach="category['products']" t-as="line" t-key="line_index">
+                        <div class="responsive-price">
+                            <t t-esc="line['product_name'].substr(0,20)" />
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
+                                <t t-if="line.uom !== 'Units'">
+                                    <t t-esc="line.uom" />
+                                </t>
+                                x
+                                <t t-esc="formatCurrency(line.price_unit, false)" />
+                            </span>
+                        </div>
+                        <t t-if="line.discount !== 0">
+                            <div class="pos-receipt-left-padding">Discount: <t t-esc="line.discount" />%</div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+
+            <br/>
+            <div>------------------------</div>
+            <br/>
+
+            <div>
+                Payments:
+            </div>
+            <div t-foreach="payments" t-as="payment" t-key="payment_index">
+                <t t-esc="payment['name']" />
+                <span t-esc="formatCurrency(payment['total'], false)" class="pos-receipt-right-align"/>
+            </div>
+
+            <br/>
+            <div>------------------------</div>
+            <br/>
+
+            <div>
+                Taxes:
+            </div>
+            <div t-foreach="taxes" t-as="tax" t-key="tax_index">
+                <t t-esc="tax.name" />
+                <span t-esc="formatCurrency(tax.tax_amount, false)" class="pos-receipt-right-align"/>
+            </div>
+
+            <br/>
+            <div>------------------------</div>
+            <br/>
+
+            <div>
+                Total:
+                <span t-esc="formatCurrency(currency.total_paid, false)" class="pos-receipt-right-align"/>
+            </div>
+
+            <br/>
+            <div class="pos-receipt-order-data">
+                <div><t t-esc="date" /></div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Alipay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+                <div class="alert alert-danger"
+                     role="alert"
+                     invisible="code != 'alipay'">
+                    This provider is deprecated.
+                    Consider disabling it and moving to <strong>Asiapay</strong>.
+                </div>
+            </xpath>
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'alipay'">
+                    <field name="alipay_payment_method" widget="radio"/>
+                    <field name="alipay_seller_email"
+                           invisible="alipay_payment_method == 'standard_checkout'"
+                           required="code == 'alipay' and alipay_payment_method == 'express_checkout'"/>
+                    <field name="alipay_merchant_partner_id"/>
+                    <field name="alipay_md5_signature_key" password="True"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

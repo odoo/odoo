@@ -1,0 +1,149 @@
+///
+/// This file regroups main website UI layout rules (when the user is connected)
+/// and the UI components rules.
+///
+
+$-mini-nav-size: 40px;
+
+.o_frontend_to_backend_nav {
+    @include o-position-absolute(0, auto, auto, 0);
+    z-index: $zindex-modal;
+    @include font-size($o-font-size-base);
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, auto, auto, 0);
+        border-top: $-mini-nav-size/2 solid $o-enterprise-color;
+        border-left: $-mini-nav-size/2 solid $o-enterprise-color;
+        border-bottom: $-mini-nav-size/2 solid transparent;
+        border-right: $-mini-nav-size/2 solid transparent;
+        cursor: pointer;
+    }
+
+    &::before, .o_frontend_to_backend_icon, .o_frontend_to_backend_buttons {
+        transform-origin: top left;
+        transition: transform 400ms ease 1s;
+    }
+
+    .o_frontend_to_backend_buttons {
+        transition-duration: 800ms;
+    }
+
+    .o_frontend_to_backend_buttons {
+        transform: translateX(-250%) scaleX(0.5);
+
+        > a {
+            min-width: $-mini-nav-size;
+            height: $-mini-nav-size;
+            color: #FFFFFF;
+        }
+    }
+
+    .o_frontend_to_backend_apps_menu {
+        @include font-size($o-font-size-base);
+        max-height: 70vh;
+        overflow: auto;
+    }
+
+    @each $-name, $-color in ('apps': $o-enterprise-color, 'edit': $o-we-bg-lighter) {
+        .o_frontend_to_backend_#{$-name}_btn {
+            background-color: $-color;
+
+            &:hover {
+                background-color: darken($-color, 5%);
+            }
+        }
+    }
+
+    .o_frontend_to_backend_edit_btn > img {
+        height: 1.8em;
+        margin-right: 0.5em;
+        border-radius: 0.25rem;
+    }
+
+    &:hover {
+        &:before, .o_frontend_to_backend_icon {
+            transform: scale(.3);
+            transition-delay: 0ms;
+            transition-duration: 400ms;
+        }
+
+        .o_frontend_to_backend_buttons {
+            transform: translateX(0);
+            transition-delay: 0ms;
+            transition-duration: 400ms;
+        }
+    }
+}
+
+// LAYOUTING
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
+}
+
+// LOGIN FORM
+.oe_login_form, .oe_signup_form, .oe_reset_password_form {
+    max-width: 300px;
+    position: relative;
+    margin: 50px auto;
+}
+
+// POPOVER NAVIGATION
+.tour .popover-navigation {
+    margin-left: 13px;
+    margin-bottom: 8px;
+}
+
+// PUBLISH
+.css_published {
+    .btn-danger, .css_publish {
+        display: none;
+    }
+}
+.css_unpublished {
+    .btn-success, .css_unpublish {
+        display: none;
+    }
+}
+[data-publish='off'] > *:not(.css_options) {
+    opacity: 0.5;
+}
+
+// Do not show path behind the links in browser printing
+@media print {
+    a[href]:after {
+        content: initial;
+    }
+}
+
+// Post Submit Links
+.post_link:not(.o_post_link_js_loaded) {
+    pointer-events: none;
+}
+
+// Mobile preview
+#wrapwrap.o_is_mobile {
+    // Scrollbar
+    &, .modal {
+        $-foreground-color: #999;
+        $-background-color: rgba(255, 255, 255, 0.5);
+
+        // For Chrome & Safari
+        &::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: $-foreground-color;
+        }
+        &::-webkit-scrollbar-track {
+            background: $-background-color;
+        }
+
+        // Standard version (Firefox only for now)
+        scrollbar-color: $-foreground-color $-background-color;
+        scrollbar-width: thin;
+    }
+}

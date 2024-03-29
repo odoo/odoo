@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="project.ProjectProfitability">
+        <div class="o_rightpanel_subsection pb-3 border-bottom" t-if="revenues.data.length">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="bg-100 align-middle">
+                    <tr>
+                        <th>Revenues</th>
+                        <th class="text-end">Invoiced</th>
+                        <th class="text-end">To Invoice</th>
+                        <th class="text-end">Expected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="revenues.data" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
+                        <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
+                        <td class="align-middle">
+                            <a t-if="revenue.action" href="#"
+                                t-on-click="() => this.props.onClick(revenue.action)"
+                            >
+                                <t t-esc="revenue_label"/>
+                            </a>
+                            <t t-esc="revenue_label" t-else=""/>
+                        </td>
+                        <td t-attf-class="text-end align-middle {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+                        <td t-attf-class="text-end align-middle {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
+                        <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bolder">
+                        <td>Total</td>
+                        <td t-attf-class="text-end {{ revenues.total.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced)"/></td>
+                        <td t-attf-class="text-end {{ revenues.total.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.to_invoice)"/></td>
+                        <td t-attf-class="text-end {{ revenues.total.invoiced + revenues.total.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced + revenues.total.to_invoice)"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="o_rightpanel_subsection pb-3 border-bottom" t-if="costs.data.length">
+            <table class="table table-sm table-striped table-hover mb-0">
+                <thead class="bg-100">
+                    <tr>
+                        <th>Costs</th>
+                        <th class="text-end">Billed</th>
+                        <th class="text-end">To Bill</th>
+                        <th class="text-end">Expected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="costs.data" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
+                        <t t-set="cost_label" t-value="props.labels[cost.id] or cost.id"/>
+                        <td class="align-middle">
+                            <a t-if="cost.action" href="#"
+                                t-on-click="() => this.props.onClick(cost.action)"
+                            >
+                                <t t-esc="cost_label"/>
+                            </a>
+                            <t t-esc="cost_label" t-else=""/>
+                        </td>
+                        <td t-attf-class="text-end align-middle {{ cost.billed === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(cost.billed)"/></td>
+                        <td t-attf-class="text-end align-middle {{ cost.to_bill === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(cost.to_bill)"/></td>
+                        <td t-attf-class="text-end align-middle {{ cost.billed + cost.to_bill === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(cost.billed + cost.to_bill)"/></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bolder">
+                        <td>Total</td>
+                        <td t-attf-class="text-end {{ costs.total.billed === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed)"/></td>
+                        <td t-attf-class="text-end {{ costs.total.to_bill === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.to_bill)"/></td>
+                        <td t-attf-class="text-end {{ costs.total.billed + costs.total.to_bill  === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed + costs.total.to_bill)"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="o_rightpanel_subsection" t-if="revenues.data.length &amp;&amp; costs.data.length">
+            <table class="table table-sm table-borderless w-100 mb-0">
+                <thead>
+                    <tr class="align-top">
+                        <th>Margin</th>
+                        <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.invoiced_billed)"/><br/>
+                            <t t-if="costs.total.billed != 0">
+                                <t t-esc="margin.invoiced_billed > 0 ? '+' : ''"/><t t-esc="(margin.invoiced_billed / (-costs.total.billed) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
+                        <th class="text-end" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.to_invoice_to_bill)"/><br/>
+                            <t t-if="costs.total.to_bill != 0">
+                                <t t-esc="margin.to_invoice_to_bill > 0 ? '+' : ''"/><t t-esc="(margin.to_invoice_to_bill / (-costs.total.to_bill) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
+                        <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'">
+                            <t t-esc="props.formatMonetary(margin.total)"/><br/>
+                            <t t-if="(costs.total.billed + costs.total.to_bill) != 0">
+                                <t t-esc="margin.total > 0 ? '+' : ''"/><t t-esc="(margin.total / (-costs.total.billed - costs.total.to_bill) * 100).toFixed(0)"/>%
+                            </t>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </t>
+</templates>

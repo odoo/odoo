@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr.homeworking.CalendarCommonRenderer.worklocation">
+        <t t-if="multiCalendar">
+            <div class="o_homework_multi d-flex align-items-center gap-1">
+                <t t-foreach="records" t-as="record" t-key="record.id">
+                    <div class="o_homeworking_content">
+                        <i class="o_homework_content d-flex align-items-center justify-content-center flex-wrap border border-1 rounded-circle me-0" t-att-class="`fa ${iconStr} wl_color_${record.colorIndex}`" t-att-data-id="record.id"/>
+                    </div>
+                </t>
+                <span class="fw-bolder" t-esc="records[0].title"/>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_homework_single d-flex align-items-center w-100">
+                <div class="o_homeworking_content overflow-visible opacity-100 rounded-pill m-0 px-2 text-nowrap" t-att-class="`wl_color_${colorIndex}`">
+                    <t t-if="icon === 'office'">
+                        <div class="fa fa-building me-lg-1"/>
+                    </t>
+                    <t t-elif="icon === 'home'">
+                        <div class="fa fa-home me-lg-1"/>
+                    </t>
+                    <t t-else="">
+                        <div class="fa fa-map-marker me-lg-1"/>
+                    </t>
+                    <span class="d-none d-lg-inline fw-bold" t-esc="title"/>
+                </div>
+                <span class="o_worklocation_line w-100" t-att-class="`wl_color_${colorIndex}`"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="hr_homeworking.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
+            <t t-if="scale != 'month'" t-call="hr.homeworking.CalendarCommonRenderer.buttonWorklocation"/>
+        </xpath>
+    </t>
+
+    <t t-name="hr.homeworking.CalendarCommonRenderer.buttonWorklocation">
+        <div class="o_worklocation_btn w-100 d-flex align-items-center opacity-0 opacity-100-hover">
+            <button class='o_worklocation_text bg-info bg-opacity-25 border-0 rounded-pill px-lg-2 py-0 text-nowrap'>
+                <i class="fa fa-map-marker me-lg-1" aria-hidden="true"></i>
+                <span class="d-lg-inline fw-bold">Set Location</span>
+            </button>
+            <button class="o_worklocation_line d-lg-block w-100 bg-info bg-opacity-25 border-0 p-0"/>
+        </div>
+    </t>
+</templates>

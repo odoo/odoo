@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Sips Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'sips'">
+                    <field name="sips_merchant_id" required="code == 'sips' and state != 'disabled'"/>
+                    <field name="sips_secret" string="Secret Key" required="code == 'sips' and state != 'disabled'" password="True"/>
+                    <field name="sips_key_version" required="code == 'sips' and state != 'disabled'" />
+                    <field name="sips_test_url" required="code == 'sips' and state != 'disabled'" groups='base.group_no_one'/>
+                    <field name="sips_prod_url" required="code == 'sips' and state != 'disabled'" groups='base.group_no_one'/>
+                    <field name="sips_version" required="code == 'sips' and state != 'disabled'" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

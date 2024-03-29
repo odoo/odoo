@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportDataSidepanel">
+        <div class="o_import_data_sidepanel p-3 overflow-auto bg-view">
+            <div class="pb-4">
+                <h4>Imported file</h4>
+                <div class="mb-2 d-flex align-items-center">
+                    <i class="fa fa-file white me-2"></i>
+                    <div class="fst-italic truncate"><t t-esc="fileName"/></div>
+                    <span class="fst-italic"><t t-esc="fileExtension"/></span>
+                </div>
+
+                <div t-if="props.options.sheets.length > 0" class="flex-row my-2">
+                    <label for="o_import_sheet">Sheet:</label>
+                    <select
+                        class="o_select o_import_sheet w-100 mb-3 form-select"
+                        name="o_import_sheet"
+                        t-on-change="ev => this.props.onOptionChanged('sheet', ev.target.value)"
+                        t-att-value="props.options.sheet"
+                    >
+                        <option t-foreach="props.options.sheets" t-as="sheet" t-key="sheet" t-att-value="sheet" t-att-selected="sheet === props.options.sheet">
+                            <t t-esc="sheet" />
+                        </option>
+                    </select>
+                </div>
+                <CheckBox value="props.options.has_headers" onChange.bind="isChecked => this.props.onOptionChanged('has_headers', isChecked)">
+                    Use first row as header
+                </CheckBox>
+            </div>
+            <div t-if="fileExtension === '.csv'" class="o_import_formatting pt-3 pb-4 border-top">
+                <h4>Formatting</h4>
+                <div t-foreach="Object.entries(props.formattingOptions)" t-as="option" t-key="`${option[0]}-${option_index}`" class="o_import_options">
+                    <label t-att-for="`${option[0]}-${option_index}`">
+                        <t t-esc="option[1].label" />
+                        <sup t-if="option[1].help" class="text-info p-1" t-att-data-tooltip="option[1].help" t-esc="'?'" />
+                    </label>
+                    <input
+                        t-if="option[1].type === 'input'"
+                        t-att-id="`${option[0]}-${option_index}`"
+                        t-att-list="option[1].options ? `list-${ option_index }` : null"
+                        t-attf-class="o_import_#{option[0]} o_import_dropdown w-100 mb-3"
+                        t-att-value="option[1].value"
+                        t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
+                    />
+                    <datalist t-if="option[1].type === 'input' and option[1].options" t-att-id="`list-${ option_index }`">
+                        <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
+                            <t t-esc="opt.label ? opt.label : opt" />
+                        </option>
+                    </datalist>
+                    <select
+                        t-elif="option[1].type === 'select'"
+                        t-att-class="`o_select form-select w-100 mb-3 o_import_${option[0]} o_import_dropdown`"
+                        t-att-name="`${option[0]}-${option_index}`"
+                        t-on-change="(ev) => this.setOptionValue(option[0], ev.target.value)"
+                    >
+                        <option t-foreach="option[1].options" t-as="opt" t-key="opt_index" t-att-value="opt.value or opt" t-att-selected="opt.value ? opt.value === option[1].value : opt === option[1].value">
+                            <t t-esc="opt.label ? opt.label : opt" />
+                        </option>
+                    </select>
+                </div>
+                <button class="btn btn-primary w-100" t-on-click="() => this.props.onReload()">Reimport</button>
+            </div>
+            <div t-if="props.isBatched" class="pt-3 pb-4 border-top" >
+                <h4>Batch Import</h4>
+                <div class="o_import_batch_alert fw-bold pb-2">
+                    The file will be imported by batches
+                </div>
+                <div class="d-flex">
+                    <div class="o_import_batch_limit w-50 pe-1">
+                        <label class="mb-1" for="o_import_batch_limit">Batch limit</label>
+                        <input class="w-100" id="o_import_batch_limit" t-att-value="getOptionValue('limit')" t-on-change="(ev) => this.setOptionValue('limit', ev.target.value)" />
+                    </div>
+                    <div class="w-50 ps-1" data-tooltip="Warning: ignores the labels line, empty lines and lines composed only of empty cells">
+                        <label class="mb-1" for="o_import_row_start">Start at line</label>
+                        <input class="w-100" id="o_import_row_start" t-att-value="getOptionValue('skip')" t-on-change="onLimitChange" />
+                    </div>
+                </div>
+            </div>
+            <div class="pt-3 pb-4 border-top">
+                <h4>Help</h4>
+                <t t-foreach="props.importTemplates" t-as="template" t-key="template">
+                    <a class="d-block my-2" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                        <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                    </a>
+                </t>
+                <a href="https://www.odoo.com/documentation/17.0/applications/general/export_import_data.html" target="new">
+                    <i class="fa fa-external-link"></i>
+                    Go to Import FAQ
+                </a>
+            </div>
+            <div t-if="env.debug" class="o_import_debug_options pt-3 pb-4 border-top">
+                <h4>Advanced</h4>
+                <div data-tooltip="If the model uses openchatter, history tracking will set up subscriptions and send notifications during the import, but lead to a slower import.">
+                    <CheckBox value="!props.options.tracking_disable" onChange.bind="(isChecked) => this.props.onOptionChanged('tracking_disable', !isChecked)">
+                        Track history during import
+                    </CheckBox>
+                </div>
+                <CheckBox value="props.options.advanced" onChange.bind="(isChecked) => this.props.onOptionChanged('advanced', isChecked)">
+                    Allow matching with subfields
+                </CheckBox>
+            </div>
+        </div>
+    </t>
+</templates>

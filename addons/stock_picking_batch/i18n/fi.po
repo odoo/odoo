@@ -1,0 +1,1064 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_picking_batch
+# 
+# Translators:
+# Jukka Paulin <jukka.paulin@gmail.com>, 2023
+# Johanna Valkonen <miujohanna@gmail.com>, 2023
+# Marko Happonen <marko.happonen@sprintit.fi>, 2023
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Martin Trigaux, 2024
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "2023-08-20"
+msgstr "2023-08-20"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Group "
+"by</span>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>FROM</strong>"
+msgstr "<strong>LÄHETTÄJÄ</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>Erä/sarjanumero</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
+msgstr "<strong>Pakkaus</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Product Barcode</strong>"
+msgstr "<strong>Tuotteen viivakoodi</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>Vastuullinen:</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>TO</strong>"
+msgstr "<strong>VASTAANOTTAJA</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>→</strong>"
+msgstr "<strong>→</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"Leave this value as '0' if no line limit."
+msgstr ""
+"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän rivimäärän, jos siirto lisätään siihen.\n"
+"Jätä tämä arvo arvoksi \"0\", jos rivirajoitusta ei ole."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"Leave this value as '0' if no transfer limit."
+msgstr ""
+"Siirtoa ei lisätä automaattisesti eriin, jotka ylittävät tämän siirtojen määrän.\n"
+"Jätä tämä arvo arvoksi \"0\", jos siirtorajoitusta ei ole."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimenpiteitä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
+msgid "Activities"
+msgstr "Toimenpiteet"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Toimenpiteen poikkeuksen tyyli"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid "Activity State"
+msgstr "Toimenpiteen tila"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Toimenpiteen ikoni"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "Add Operations"
+msgstr "Lisää toimintoja"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add pickings to"
+msgstr "Lisää poimintoja"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add to"
+msgstr "Lisää kohteeseen"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
+#, python-format
+msgid "Add to Wave"
+msgstr "Lisää Aaltoon"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+msgid "Add to batch"
+msgstr "Lisää erään"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
+msgid "Add to wave"
+msgstr "Lisää aaltoon"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Allocation"
+msgstr "Varaus"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
+msgid "Allowed Picking"
+msgstr "Sallittu keräily"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid "Assigned to %s Responsible"
+msgstr "Nimetty %s vastuussa olevaksi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
+msgid "Auto-confirm"
+msgstr "Automaattinen vahvistus"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid "Automatic Batches"
+msgstr "Automaattiset erät"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+msgid "Automatically group batches by contacts."
+msgstr "Ryhmittele erät automaattisesti yhteystietojen mukaan."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Automatically group batches by destination country."
+msgstr "Ryhmittele erät automaattisesti kohdemaan mukaan."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Automatically group batches by their destination location."
+msgstr "Ryhmittele erät automaattisesti niiden määränpään sijainnin mukaan."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Automatically group batches by their source location."
+msgstr "Ryhmittele erät automaattisesti niiden lähtöpaikan mukaan."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid ""
+"Automatically put pickings into batches as they are confirmed when possible."
+msgstr ""
+"Laita poiminnat automaattisesti eriin sitä mukaa kuin ne vahvistetaan, kun "
+"se on mahdollista."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "Viivakoodi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
+msgid "Batch"
+msgstr "Erä"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Batch Name"
+msgstr "Erän nimi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_move_line_view_search_inherit_stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
+#, python-format
+msgid "Batch Transfer"
+msgstr "Eräsiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Transfer Lines"
+msgstr "Eränsiirtorivit"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Batch Transfers"
+msgstr "Eräsiirrot"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Batch Transfers not finished"
+msgstr "Eräsiirtoja ei ole saatu valmiiksi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
+msgid "Batch associated to this transfer"
+msgstr "Tähän siirtoon liittyvä erä"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Batches"
+msgstr "Erät"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__cancel
+msgid "Cancelled"
+msgstr "Peruttu"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "Cannot create wave transfers"
+msgstr "Ei voi luoda aaltosiirtoja"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Check Availability"
+msgstr "Tarkista saatavuus"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Choose Labels Layout"
+msgstr "Valitse tunnisteiden asettelu"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Choose Type of Labels To Print"
+msgstr "Valitse tulostettavien tarrojen tyyppi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
+msgid "Count Picking Batch"
+msgstr "Laske keräilyerä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
+msgid "Count Picking Wave"
+msgstr "Laske keräilyaalto"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Create a new batch transfer"
+msgstr "Luo uusi eräsiirto"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid "Create a new wave transfer"
+msgstr "Luo uusi aaltosiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Destination Country"
+msgstr "Kohdemaa"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Destination Location"
+msgstr "Kohdepaikka"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Detailed Operations"
+msgstr "Saatavilla/Varattu"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Done"
+msgstr "Valmis"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Draft"
+msgstr "Luonnos"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome -ikoni esim.. fa-tasks"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Future Activities"
+msgstr "Tulevat toimenpiteet"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Group By"
+msgstr "Ryhmittely"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Gujarat"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon"
+msgstr "Kuvake"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid ""
+"If the Automatic Batches feature is enabled, at least one 'Group by' option "
+"must be selected."
+msgstr ""
+"Jos Automaattiset erät -toiminto on käytössä, vähintään yksi Ryhmittely on "
+"valittava."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "In Progress"
+msgstr "Käynnissä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
+msgid "In progress"
+msgstr "Kesken"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "John Doe"
+msgstr "Matti Meikäläinen"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Late Activities"
+msgstr "Myöhässä olevat toimenpiteet"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
+msgid "Line"
+msgstr "Rivi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
+msgid "List of transfers associated to this batch"
+msgstr "Luettelo tähän erään liittyvistä siirroista"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location From Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Location To Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Lot Number"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
+msgid "Maximum lines per batch"
+msgstr "Enimmäisrivit erää kohti"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+msgid "Maximum transfers per batch"
+msgstr "Enimmäissiirrot erää kohti"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "Message Delivery error"
+msgstr "Ongelma viestin toimituksessa"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__mode
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__mode
+msgid "Mode"
+msgstr "Tila"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+msgid "Move Lines"
+msgstr "Siirtorivit"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Toimenpiteeni määräaika"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "My Transfers"
+msgstr "Omat siirrot"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Seuraavan toimenpiteen eräpäivä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
+msgid "Next Activity Summary"
+msgstr "Seuraavan toimenpiteen kuvaus"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
+msgid "Next Activity Type"
+msgstr "Seuraavan toimenpiteen tyyppi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheellisten viestien määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
+msgid "Operation Type"
+msgstr "Toiminnon tyyppi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Operations"
+msgstr "Toiminnot"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Package ID"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
+msgid "Picking"
+msgstr "Keräily"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Keräilyn tyyppi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid ""
+"Please add 'Done' quantities to the batch picking to create a new pack."
+msgstr "Lisää \"Tehdyt\" määrät erän poimintaan uuden pakkauksen luomiseksi."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Print"
+msgstr "Tulosta"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Print Labels"
+msgstr "Tulosta tarrat"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "Tuote"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Barcode"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Tuotteiden siirrot (Stock Move Line)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product Name"
+msgstr "Tuotteen nimi"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Put in Pack"
+msgstr "Lisää pakettiin"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "Määrä"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity Done"
+msgstr "Siirretty määrä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Responsible"
+msgstr "Vastuuhenkilö"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
+msgid "Responsible User"
+msgstr "Vastuuhenkilö"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Result Package ID"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Tekstiviestin toimitusvirhe"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "Suunniteltu päivämäärä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
+msgid ""
+"Scheduled date for the transfers to be processed.\n"
+"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in batch."
+msgstr ""
+"Siirtojen käsittelyn suunniteltu päivämäärä.\n"
+"              - Jos se asetetaan manuaalisesti, kaikkien erän siirtojen suunniteltu päivämäärä päivittyy automaattisesti tähän päivämäärään.\n"
+"              - Jos sitä ei muuteta manuaalisesti ja siirtoja lisätään/poistetaan/päivitetään, tämä on niiden varhaisin suunniteltu päivämäärä\n"
+"                mutta tätä aikataulun mukaista päivämäärää ei aseteta kaikille erän siirroille."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Search Batch Transfer"
+msgstr "Hae eräsiirtoa"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
+msgid "Show Allocation Button"
+msgstr "Näytä jakopainike"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Check Availability"
+msgstr "Näytä Tarkista saatavuus"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
+msgid "Show Clear Qty Button"
+msgstr "Näytä Tyhjennä määrä -painike"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "Näytä erät"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
+msgid "Show Set Qty Button"
+msgstr "Näytä aseta määrä -painike"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Show all records which has next action date is before today"
+msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Source Location"
+msgstr "Lähtöpaikka"
+
+#. module: stock_picking_batch
+#: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
+#: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
+msgid "Stage Changed"
+msgstr "Vaihe muutettu"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "State"
+msgstr "Alue"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "Tila"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Eräpäivä on menneisyydessä\n"
+"Tänään: Eräpäivä on tänään\n"
+"Suunniteltu: Tulevaisuudessa."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
+msgid "Stock Batch Transfer"
+msgstr "Varastoerän siirto"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_package_destination
+msgid "Stock Package Destination"
+msgstr "Varastopaketin kohde"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
+msgid "Stock move lines"
+msgstr "Varastosiirtojen rivit"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
+msgid "Stock moves"
+msgstr "Varastosiirrot"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "Yhteenveto:"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid ""
+"The following transfers cannot be added to batch transfer %s. Please check their states and operation types.\n"
+"\n"
+"Incompatibilities: %s"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"The goal of the batch transfer is to group operations that may\n"
+"            (needs to) be done together in order to increase their efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) or\n"
+"            help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+"Eräsiirron tavoitteena on ryhmitellä toimintoja, jotka voivat olla\n"
+"            (täytyy) tehdä yhdessä niiden tehokkuuden lisäämiseksi.\n"
+"            Voi olla myös hyödyllistä jakaa työtehtäviä (yksi henkilö = yksi erä) tai\n"
+"            auttaa toimintojen ajoituksen hallinnassa (tehtävät, jotka on tehtävä klo 13.00)."
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid ""
+"The goal of the wave transfer is to group operations from different transfer\n"
+"                    together in order to increase their efficiency.\n"
+"                    It may also be useful to assign jobs (one person = one batch) or\n"
+"                    help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+"Aaltosiirron tavoitteena on ryhmitellä toimintoja eri siirroista\n"
+"                    yhteen niiden tehokkuuden lisäämiseksi.\n"
+"                    Voi myös olla hyödyllistä jakaa työtehtäviä (yksi henkilö = yksi erä) tai\n"
+"                    auttaa toimintojen ajoituksen hallinnassa (tehtävät, jotka on tehtävä klo 13)."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected operations should belong to a unique company."
+msgstr "Valittujen toimintojen on kuuluttava ainutlaatuiseen yritykseen."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, python-format
+msgid "The selected pickings should belong to an unique company."
+msgstr "Valittujen poimintojen olisi kuuluttava ainutlaatuiseen yritykseen."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected transfers should belong to a unique company."
+msgstr "Valittujen siirtojen on kuuluttava ainutlaatuiseen yritykseen."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected transfers should belong to the same operation type"
+msgstr "Valittujen siirtojen on kuuluttava samaan toimintatyyppiin"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
+msgid "This batch is a wave"
+msgstr "Tämä erä on aalto"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "To Do"
+msgstr "Tehtävät"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Today Activities"
+msgstr "Tämän päivän toimenpiteet"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Display Name"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer Name"
+msgstr "Siirron nimi"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Transferred by"
+msgstr "Siirtäjä"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Transfers"
+msgstr "Siirrot"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
+msgid "Type of Operation"
+msgstr "Toiminnon tyyppi"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Unit of Measure"
+msgstr "Mittayksikkö"
+
+#. module: stock_picking_batch
+#: model:ir.actions.server,name:stock_picking_batch.action_unreserve_batch_picking
+msgid "Unreserve"
+msgstr "Peruuta varaus"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Validate"
+msgstr "Vahvista"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Varasto"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
+msgid "Wave Transfer"
+msgstr "Aaltosiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
+msgid "Wave Transfer Lines"
+msgstr "Aaltosiirron rivit"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
+msgid "Wave Transfers"
+msgstr "Aaltosiirrot"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Waves"
+msgstr "Aallot"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+msgid "When checked, create the batch in draft status"
+msgstr "Kun valittu, erä luodaan luonnostilassa"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "You cannot delete Done batch transfers."
+msgstr "Et voi poistaa valmiita eräsiirtoja."
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "You have to set some pickings to batch."
+msgstr "Sinun on asetettava joitakin poimintoja eriin."
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
+msgid "a new batch transfer"
+msgstr "uusi eränsiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
+msgid "a new wave transfer"
+msgstr "uuden aaltosiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
+msgid "an existing batch transfer"
+msgstr "olemassa oleva eräsiirto"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
+msgid "an existing wave transfer"
+msgstr "olemassa oleva aaltosiirto"

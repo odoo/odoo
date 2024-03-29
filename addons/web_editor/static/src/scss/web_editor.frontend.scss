@@ -1,0 +1,116 @@
+@include media-breakpoint-down(md) {
+    img, .media_iframe_video, span.fa, i.fa {
+        &:not(.o_animate) {
+            transform: none !important;
+        }
+    }
+}
+
+.o_wysiwyg_loader {
+    @extend :disabled;
+    pointer-events: none;
+    min-height: 100px;
+    color: transparent;
+}
+.o_wysiwyg_loading {
+    @include o-position-absolute($top: 50%, $left: 50%);
+    transform: translate(-50%, -50%)
+}
+
+@include media-breakpoint-down(md) {
+    .o_we_shape:not(.o_shape_show_mobile) {
+        display: none;
+    }
+}
+.o_we_flip_x {
+    transform: scaleX(-1);
+}
+.o_we_flip_y {
+    transform: scaleY(-1);
+}
+.o_we_flip_x.o_we_flip_y {
+    transform: scale(-1);
+}
+
+// GRID LAYOUT
+.o_grid_mode {
+    @include media-breakpoint-down(lg) {
+        // No gaps in mobile view.
+        row-gap: 0px !important;
+        column-gap: 0px !important;
+    }
+    --grid-item-padding-y: 10px;
+    --grid-item-padding-x: 10px;
+
+    > * {
+        padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .o_grid_mode {
+        display: grid !important;
+        grid-auto-rows: 50px;
+        grid-template-columns: repeat(12, 1fr);
+        row-gap: 0px;
+        column-gap: 0px;
+
+        --gutter-x: 0px;
+
+        > * {
+            margin: 0 !important;
+            width: 100%;
+            min-width: 0;
+        }
+    }
+
+    .container-fluid > .o_grid_mode {
+        --gutter-x: 30px;
+    }
+
+    .o_extra_menu_items .o_grid_mode {
+        display: flex !important;
+        row-gap: 0px !important;
+        column-gap: 0px !important;
+    }
+
+    .o_grid_item_image {
+        img, .media_iframe_video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
+
+        &.o_grid_item_image_contain img,
+        img[data-shape] {
+            object-fit: contain !important;
+        }
+
+        // Allowing "cover" for some hover effects.
+        &:not(.o_grid_item_image_contain) img[data-shape$="geo_square"] {
+            &:not(
+                [data-hover-effect="dolly_zoom"],
+                [data-hover-effect="outline"],
+                [data-hover-effect="image_mirror_blur"],
+            ) {
+                object-fit: cover !important;
+            }
+        }
+
+        // Needed when "a" is "display: block".
+        > a {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+// Override the default image selection color used in "web_editor". This
+// prevents selected images from being covered with a blue filter in edit mode
+// (Website, Email Marketing). This allows to see the correct final rendering
+// of an image when it is edited.
+body.editor_enable:not(.o_basic_theme) .odoo-editor-editable {
+    img::selection {
+        background-color: transparent !important;
+    }
+}

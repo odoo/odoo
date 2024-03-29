@@ -1,0 +1,286 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_images
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"%(matching_images_count)s matching images have been found for "
+"%(product_count)s products."
+msgstr ""
+"تم إيجاد %(matching_images_count)s صور مشابهة لـ %(product_count)s منتج. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            As only 10,000 products can be processed per day, the remaining will be\n"
+"                            done tomorrow.\n"
+"                        </span>"
+msgstr ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                             بما أن 10,000 منتج فقط يمكن معالجته في اليوم الواحد، ستتم معالجة\n"
+"                            الباقي غداً.\n"
+"                        </span>"
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"A task to process products in the background is already running. Please try "
+"againlater."
+msgstr ""
+"هناك مهمة لمعالجة المنتجات جارية في الخلفية بالفعل. يرجى المحاولة مجدداً "
+"لاحقاً. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "API Key"
+msgstr "مفتاح الواجهة البرمجية للتطبيق "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_fetch_image_wizard
+msgid ""
+"Fetch product images from Google Images based on the product's barcode "
+"number."
+msgstr "قم بجلب صور المنتجات من صور Google في رقم باركود المنتج. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "Get Pictures"
+msgstr "الحصول على الصور "
+
+#. module: product_images
+#: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
+#: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
+msgid "Get Pictures from Google Images"
+msgstr "احصل على الصور من صور Google "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
+msgid "Google Custom Search API Key"
+msgstr "مفتاح API لبحث Google المخصص "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
+msgid "Image Fetch Pending"
+msgstr "جلب الصورة قيد الانتظار "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
+msgid "Number of product unprocessable"
+msgstr "عدد المنتجات غير القابلة للمعالجة "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
+msgid "Number of products to process"
+msgstr "عدد المنتجات لمعالجتها "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
+msgid "Number of selected products"
+msgstr "عدد المنتجات المحددة "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"Please note that some images might not be royalty-free. You should not\n"
+"                        publish these on your website."
+msgstr ""
+"يرجى ملاحظة أن بعض الصور قد لا تكون خالية من حقوق النشر. يجب ألا تقوم\n"
+"                        بنشر تلك الصور على موقعك الإلكتروني. "
+
+#. module: product_images
+#: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
+msgid "Product Images: Get product images from Google"
+msgstr "صور المنتجات: احصل على صور المنتجات من Google "
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "Product images"
+msgstr "صور المنتجات "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
+msgid "Products To Process"
+msgstr "المنتجات لمعالجتها "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"Products are processed in the background. Images will be updated "
+"progressively."
+msgstr "تتم معالجة المنتجات في الخلفية. سوف يتم تحديث الصور تدريجياً. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
+msgid "Search Engine ID"
+msgstr "معرّف محرك البحث "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "The API Key and Search Engine ID must be set in the General Settings."
+msgstr "يجب ضبط مفتاح API ومعرّف محرك البحث في الإعدادات العامة. "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"The Custom Search API is not enabled in your Google project. Please visit "
+"your Google Cloud Platform project page and enable it, then retry. If you "
+"enabled this API recently, please wait a few minutes and retry."
+msgstr ""
+"الواجهة البرمجية للبحث المخصص غير مفعلة في مشروع Google الخاص بك. يرجى زيارة"
+" صفحة مشروع منصة سحابة Google وتفعيلها. إذا كنت قد قمت بتمكين هذه الواجهة "
+"البرمجية للتطبيق حديثاً، يرجى الانتظار لعدة دقائق ثم المحاولة من جديد. "
+
+#. module: product_images
+#: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
+msgid "The identifier of the Google Programmable Search Engine"
+msgstr "معرّف محرك بحث Google القابل للبرمجة "
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
+msgid ""
+"The list of selected products that meet the criteria (have a barcode and no "
+"image)"
+msgstr ""
+"قائمة المنتجات المختارة التي تمتثل للمعايير (أن يكون لها باركود ودون صورة) "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid ""
+"The scheduled action \"Product Images: Get product images from Google\" has "
+"been deleted. Please contact your administrator to have the action restored "
+"or to reinstall the module \"product_images\"."
+msgstr ""
+"تم حذف الإجراء المجدول \"صور المنتجات: احصل على صور للمنتجات من Google\". "
+"يرجى التواصل مع مديرك لاستعادة الإجراء أو لإعادة تثبيت التطبيق "
+"\"product_images\". "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/models/ir_cron_trigger.py:0
+#, python-format
+msgid "This action is already scheduled. Please try again later."
+msgstr "الإجراء مجدول بالفعل. يرجى المحاولة مجدداً لاحقاً. "
+
+#. module: product_images
+#: model:ir.model,name:product_images.model_ir_cron_trigger
+msgid "Triggered actions"
+msgstr "الإجراءات المشغلة "
+
+#. module: product_images
+#: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
+msgid "Whether an image must be fetched for this product. Handled by a cron."
+msgstr ""
+"ما إذا كان يجب جلب صورة لهذا المنتج أم لا. يتم التعامل معه بواسطة cron. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "You selected"
+msgstr "لقد قمت بتحديد "
+
+#. module: product_images
+#. odoo-python
+#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
+#, python-format
+msgid "Your API Key or your Search Engine ID is incorrect."
+msgstr "مفتاح API الخاص بك أو معرّف محرك البحث غير صحيح. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "of which will be processed."
+msgstr "والذي ستتم معالجته. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid ""
+"products will not be\n"
+"                            processed because they either already have an image or their barcode\n"
+"                            number is not set."
+msgstr ""
+"لن تتم معالجة\n"
+"                            المنتجات لأنها إما أن لها صورة بالفعل أو أن أرقام الباركود الخاصة بها\n"
+"                            لم يتم إعدادها بعد. "
+
+#. module: product_images
+#: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
+msgid "products,"
+msgstr "المنتجات، "

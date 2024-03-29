@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ActivityListPopoverItem" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o-mail-ActivityListPopoverItem-editbtn')]" position="after">
+            <button t-if="props.activity.calendar_event_id" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" t-on-click="onClickReschedule">
+                <i class="fa fa-calendar"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,212 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_fleet
+# 
+# Translators:
+# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
+msgid ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Employee</span>"
+msgstr ""
+"<span class=\"o_stat_value\">موظف</span>\n"
+"                        <span class=\"o_stat_text\">واحد</span>"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "قالب خطة النشاط "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "التعيين "
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
+msgid "Attachments"
+msgstr "المرفقات "
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/employee.py:0
+#, python-format
+msgid "Cannot remove address from employees with linked cars."
+msgstr "لا يمكن إزالة العنوان من الموظفين الذين لديهم سيارات مرتبطة. "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
+#: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
+msgid "Cars"
+msgstr "السيارات "
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
+msgid "Company Car"
+msgstr "سيارة الشركة "
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
+msgid "Current Driver"
+msgstr "السائق الحالي "
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "معالج المغادرة"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
+msgid "Driver"
+msgstr "السائق"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
+msgid "Driver (Employee)"
+msgstr "السائق (الموظف) "
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
+msgid "Drivers history on a vehicle"
+msgstr "سِجِل السائقين على مركبة "
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_search_inherit_hr
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "Employee %s is not linked to a vehicle."
+msgstr "الموظف %s غير مرتبط بمركبة. "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
+msgid "Employee Name"
+msgstr "اسم الموظف"
+
+#. module: hr_fleet
+#: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
+msgid "Fleet Manager"
+msgstr "مدير الأسطول "
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "Fleet Manager is limited to Employee plans."
+msgstr "يقتصر مدير الأسطول على خطط الموظفين. "
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Fleet Mobility Card"
+msgstr "بطاقة تنقل الأسطول "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
+msgid "Future Driver (Employee)"
+msgstr "السائق المستقبلي (الموظف) "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
+msgid "License Plate"
+msgstr "لوحة السيارة "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
+msgid "Mobility Card"
+msgstr "بطاقة التنقل "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
+msgid "Number of Attachments"
+msgstr "عدد المرفقات"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "سجل عداد المسافات لمركبة"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_employee_public
+msgid "Public Employee"
+msgstr "موظف في القطاع العام"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "Related Employee"
+msgstr "الموظف ذو الصلة "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
+msgid "Release Company Car"
+msgstr "إطلاق سيارة الشركة "
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "الخدمات للمركبات"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+#, python-format
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr "مركبة الموظف %(employee)s غير مرتبطة بمدير الأسطول. "
+
+#. module: hr_fleet
+#. odoo-javascript
+#: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
+#, python-format
+msgid "Upload"
+msgstr "رفع"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle
+msgid "Vehicle"
+msgstr "المركبة"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
+msgid "Vehicle Contract"
+msgstr "عقد المركبة "
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
+msgid "Vehicles (private)"
+msgstr "المركبات (الخاصة) "

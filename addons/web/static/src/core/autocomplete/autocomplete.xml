@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.AutoComplete">
+        <div class="o-autocomplete" t-ref="root" t-att-class="autoCompleteRootClass">
+            <input
+                type="text"
+                t-att-id="props.id"
+                class="o-autocomplete--input o_input"
+                autocomplete="off"
+                t-att-placeholder="props.placeholder"
+                t-model="state.value"
+                t-on-blur="onInputBlur"
+                t-on-click.stop="onInputClick"
+                t-on-change="onInputChange"
+                t-on-input="onInput"
+                t-on-keydown="onInputKeydown"
+                t-on-focus="onInputFocus"
+                t-ref="input"
+            />
+            <t t-if="displayOptions">
+                <ul class="o-autocomplete--dropdown-menu ui-widget show"
+                    t-att-class="ulDropdownClass"
+                    t-ref="sourcesList">
+                    <t t-foreach="sources" t-as="source" t-key="source.id">
+                        <t t-if="source.isLoading">
+                            <li class="ui-menu-item"
+                                t-att-class="{
+                                    'o-autocomplete--dropdown-item': props.dropdown,
+                                    'd-block': !props.dropdown
+                                }">
+                                <a href="#" class="dropdown-item ui-menu-item-wrapper">
+                                    <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="source.options" t-as="option" t-key="option.id">
+                                <li
+                                    class="o-autocomplete--dropdown-item ui-menu-item d-block"
+                                    t-att-class="option.classList"
+                                    t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
+                                    t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
+                                    t-on-click="() => this.onOptionClick([source_index, option_index])"
+                                    t-on-pointerdown="() => this.ignoreBlur = true"
+                                >
+                                    <a
+                                        href="#"
+                                        class="dropdown-item ui-menu-item-wrapper text-truncate"
+                                        t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
+                                    >
+                                        <t t-if="source.optionTemplate">
+                                            <t t-call="{{ source.optionTemplate }}" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="option.label" />
+                                        </t>
+                                    </a>
+                                </li>
+                            </t>
+                        </t>
+                    </t>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+</templates>

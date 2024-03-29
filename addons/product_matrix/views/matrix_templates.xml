@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="matrix">
+          <t t-foreach="order.get_report_matrixes()" t-as="grid">
+            <div t-if="False" contenteditable="false" class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
+                    <!-- this block is here for demo purposes, when editing the report via studio -->
+                    <strong>Product matrix block</strong>
+                    <div>The matrix of product variants of this order will be displayed here, if there are any.</div>
+                    <small>Switch to the "else" condition of this block to view or edit the table.</small>
+            </div>
+            <table t-else="" class="o_view_grid o_product_variant_grid table table-sm table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th t-foreach="grid['header']" t-as="column_header" class="o_grid_title_header text-center">
+                            <span t-esc="column_header['name']">Column name</span>
+                            <t t-call="product_matrix.extra_price">
+                                <t t-set="price" t-value="column_header.get('price', False)"/>
+                            </t>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="grid['matrix']" t-as="row">
+                        <td t-foreach="row" t-as="cell" t-if="cell.get('name', False)" class="text-start">
+                            <strong t-esc="cell['name']">Cell name</strong>
+                            <t t-call="product_matrix.extra_price">
+                                <t t-set="price" t-value="cell.get('price', False)"/>
+                            </t>
+                        </td>
+                        <td t-else="" class="text-end">
+                            <span t-esc="cell.get('qty', 0)" class="o_grid_cell_container"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+          </t>
+    </template>
+
+    <template id="extra_price">
+      <span t-if="price" class="badge rounded-pill text-bg-secondary">
+              <!--
+                  price_extra is displayed as catalog price instead of
+                  price after pricelist because it is impossible to
+                  compute. Indeed, the pricelist rule might depend on the
+                  selected variant, so the price_extra will be different
+                  depending on the selected combination. The price of an
+                  attribute is therefore variable and it's not very
+                  accurate to display it.
+                  -->
+              <span class="variant_price_extra" style="white-space: nowrap;">
+                  <t t-out="price">Variant price</t>
+              </span>
+          </span>
+    </template>
+</odoo>

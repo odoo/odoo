@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="im_livechat.ThreadIcon" t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
+        <xpath expr="//*[contains(@class, 'o-mail-ThreadIcon')]" position="inside">
+            <t t-if="props.thread.type === 'livechat'">
+                <Typing t-if="typingService.hasTypingMembers(props.thread)" channel="props.thread" size="props.size" displayText="false"/>
+                <div t-else="" class="fa fa-fw fa-comments" title="Livechat"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

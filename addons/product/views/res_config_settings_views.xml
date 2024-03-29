@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.product</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='companies']" position="after">
+                    <block title="Units of Measure" id="product_general_settings">
+                        <setting id="weight_uom_setting" string="Weight" help="Define your weight unit of measure">
+                            <field name="product_weight_in_lbs" class="o_light_label" widget="radio" options="{'horizontal': true}"/>
+                        </setting>
+                        <setting id="manage_volume_uom_setting" string="Volume" help="Define your volume unit of measure">
+                            <field name="product_volume_volume_in_cubic_feet" class="o_light_label" widget="radio" options="{'horizontal': true}"/>
+                        </setting>
+                    </block>
+                </xpath>
+                 <xpath expr="//div[@id='product_get_pic_setting']" position="replace">
+                    <setting id="product_get_pic_setting" string="Google Images" help="Get product pictures using Barcode" documentation="/applications/sales/sales/products_prices/products/product_images.html">
+                        <field name="module_product_images"/>
+                        <div class="content-group mt16"
+                            invisible="not module_product_images"
+                            id="msg_module_product_images">
+                            <div class="mt16 text-warning">
+                                <strong>Save</strong> this page and come back
+                                here to set up the feature.
+                            </div>
+                        </div>
+                    </setting>
+                 </xpath>
+            </field>
+        </record>
+</odoo>

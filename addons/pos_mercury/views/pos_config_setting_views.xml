@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_pos_mercury" model="ir.ui.view">
+        <field name="name">res.config.form.inherit.mercury</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="btn_use_pos_mercury" position="replace">
+                <div class="mt16">
+                    <button name="%(pos_mercury.action_configuration_form)d" icon="oi-arrow-right" type="action" string="Vantiv Accounts" class="btn-link"/>
+                </div>
+                <div>
+                    <a href="https://www.odoo.com/app/point-of-sale-hardware#part_8" target="_blank"><i class="oi oi-fw oi-arrow-right"/>Buy a card reader</a>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

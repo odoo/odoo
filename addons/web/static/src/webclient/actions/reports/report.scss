@@ -1,0 +1,264 @@
+$o-default-report-font: 'Lato' !default;
+$o-default-report-primary-color: rgb(0, 0, 0) !default;
+$o-default-report-secondary-color: rgb(0, 0, 0) !default;
+
+// wkhtmltopdf doesn't support CSS custom properties (--name-stuff)
+// It doesn't support CSS's rgba function
+// We re-define here the .bg-[theme-colors] (and text)
+// In order to define them as a css rgb function
+$report-extended-theme-colors: map-merge(
+  $utilities-colors,
+  (
+    "black": to-rgb($black),
+    "white": to-rgb($white),
+    "body": to-rgb($body-bg)
+  )
+);
+@each $color-name, $color-value in $report-extended-theme-colors {
+    .text-#{$color-name} {
+        color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+    .bg-#{$color-name} {
+        background-color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+}
+// Do a similar operation than before for grays.
+@each $color-name, $color-value in $grays {
+    .text-#{$color-name} {
+        color: $color-value if($enable-important-utilities, !important, null);
+    }
+    .bg-#{$color-name} {
+        background-color: $color-value if($enable-important-utilities, !important, null);
+    }
+}
+
+html, body {
+    height: 100%;
+    direction: ltr;
+}
+
+body {
+    color: #000 !important;
+    word-wrap: break-word;
+    font-family: $o-default-report-font;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+h1, .h1 {
+    font-size: 2.5rem;
+}
+
+h2, .h2 {
+    font-size: 2rem;
+}
+
+h3, .h3 {
+    font-size: 1.75rem;
+}
+
+h4, .h4 {
+    font-size: 1.5rem;
+}
+
+h5, .h5 {
+    font-size: 1.25rem;
+}
+
+h6, .h6 {
+    font-size: 1rem;
+}
+
+p, span, strong, em {
+    line-height: 1.5;
+}
+
+span.o_force_ltr {
+    display: inline;
+}
+.o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+.border-black td, .border-black th {
+    border-top: 1px solid black !important;
+}
+
+.table-sm {
+    > thead > tr > th {
+        border-bottom: none !important;
+    }
+    > tbody > tr {
+        border-top: none !important;
+    }
+}
+.zero_min_height {
+    min-height: 0px !important;
+}
+
+/* To avoid broken snippets in report rendering */
+.jumbotron, .panel, .carousel, section{
+    page-break-inside: avoid;
+}
+
+/* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
+.d-print-none{
+    display: none;
+}
+
+.o_bold {
+    font-weight: bolder;
+}
+.o_italic {
+    font-style: italic;
+}
+.o_underline {
+    text-decoration: underline;
+}
+
+/*Total table*/
+div#total {
+    page-break-inside: avoid;
+    table {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    td {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+table {
+    &.table {
+        td {
+            vertical-align: $table-cell-vertical-align;
+        }
+    }
+    thead {
+        &.o_black_border {
+            tr {
+                th {
+                    border-bottom: 2px solid black !important;
+                }
+            }
+        }
+    }
+}
+
+// TODO: investigate further for proper fix
+// By default there is 40px padding on the lists (both <ol> and <ul>) and it is
+// also the case with HTML reports, but when PDFs are rendered with Wkhtmltopdf,
+// the padding is not applied on <ol>, it is strangely applied on <ul> only.
+// So we simply remove the left padding, and apply left margin instead which
+// seems to do the job while not breaking layout in both html/pdf.
+ol {
+    margin-left: 40px;
+    padding-left: 0;
+}
+
+/* Checklist */
+ul.o_checklist {
+    > li {
+        list-style: none;
+        position: relative;
+        margin-left: 20px;
+
+        &:not(.oe-nested):before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            display: block;
+            height: 14px;
+            width: 14px;
+            top: 1px;
+            border: 1px solid;
+            cursor: pointer;
+        }
+        &.o_checked:after {
+            content: "✓";
+            transition: opacity .5s;
+            position: absolute;
+            left: -18px;
+            top: -1px;
+            opacity: 1;
+        }
+    }
+}
+
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
+}
+
+// Wkhtmltopdf doesn't handle flexbox properly, both the content
+// of columns and columns themselves does not wrap over new lines
+// when needed: the font of the pdf will reduce to make the content
+// fit the page format.
+// A (weak) solution is to force the content on one line and
+// impose the width, so to have evenly size columns.
+// This should work fine in most cases, but will yield ugly results
+// when 6+ columns are rendered
+.col-auto{
+    -webkit-box-flex: 1 !important;
+}
+
+// Report footer need to support bootstrap columns (2, 3 and 4 columns)
+// Even if the width is smaller than the media querry limit from bootstrap.
+// This need come from the footer being editable via the Odoo editor.
+
+.footer {
+    .row {
+        -webkit-box-flex: 1 !important;
+    }
+    .col-lg-3 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 25%;
+    }
+    .col-lg-4 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 33.33333333%;
+    }
+    .col-lg-6 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 50%;
+    }
+}
+
+// Boostrap 5 introduces variable paddings for container which wkhtmltopdf doesn't seem to process, so we restore Boostrap 4's paddings for PDFs
+.container {
+    padding-right: $container-padding-x;
+    padding-left: $container-padding-x;
+}
+
+// Removes borders within a table-borderless as its new definition in Boostrap 5 still has its borders visible in PDFs 
+.table-borderless {
+    tbody, thead, tfoot, tr, td, th {
+        border: 0 none;
+    }
+    > :not(:first-child) {
+        border-top-style: none;
+    }
+}
+
+li.oe-nested {
+    display: block;
+}

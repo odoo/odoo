@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_tree" model="ir.ui.view">
+        <field name="name">delivery.carrier.tree</field>
+        <field name="model">delivery.carrier</field>
+        <field name="arch" type="xml">
+            <tree string="Carrier">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="delivery_type"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="country_ids" widget="many2many_tags" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_delivery_carrier_search" model="ir.ui.view">
+        <field name="name">delivery.carrier.search</field>
+        <field name="model">delivery.carrier</field>
+        <field name="arch" type="xml">
+            <search string="Delivery Carrier">
+                <field name="name" string="Carrier" />
+                <field name="delivery_type"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Provider" name="provider" context="{'group_by':'delivery_type', 'residual_visible':True}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_delivery_carrier_form" model="ir.ui.view">
+        <field name="name">delivery.carrier.form</field>
+        <field name="model">delivery.carrier</field>
+        <field name="arch" type="xml">
+            <form string="Carrier">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_prod_environment"
+                                invisible="not prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
+                                class="oe_stat_button"
+                                type="object" icon="fa-play">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Production</span>
+                                <span class="o_stat_text">Environment</span>
+                            </div>
+                        </button>
+                        <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
+                        <button name="toggle_prod_environment"
+                                invisible="prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
+                                class="oe_stat_button"
+                                type="object" icon="fa-stop">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="o_stat_text o_warning_text fw-bold">Test</span>
+                                <span class="o_stat_text">Environment</span>
+                            </div>
+                        </button>
+                        <button name="toggle_debug"
+                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or debug_logging"
+                                class="oe_stat_button"
+                                type="object" icon="fa-code">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="o_stat_text text-danger">No debug</span>
+                            </div>
+                        </button>
+                        <button name="toggle_debug"
+                                invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule' or not debug_logging"
+                                class="oe_stat_button"
+                                type="object" icon="fa-code">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Debug requests</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title" name="title">
+                        <label for="name" string="Shipping Method"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. UPS Express"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="provider_details">
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="prod_environment" invisible="1"/>
+                            <field name="debug_logging" invisible="1"/>
+                            <label for="delivery_type"/>
+                            <div>
+                                <field name="delivery_type" />
+                                <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
+                            </div>
+                            <field name="integration_level" widget="radio" invisible="delivery_type == 'fixed' or delivery_type == 'base_on_rule'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="delivery_details">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fixed_price"
+                                    widget="monetary"
+                                    class="oe_inline"
+                                    invisible="delivery_type != 'fixed'"/>
+                            <field name="margin"
+                                    string="Margin on Rate"
+                                    widget="percentage"
+                                    class="oe_inline"
+                                    invisible="delivery_type == 'fixed'"/>
+                            <field name="fixed_margin"
+                                    string="Additional margin"
+                                    widget="monetary"
+                                    invisible="delivery_type == 'fixed'"/>
+                            <label for="free_over" invisible="delivery_type == 'base_on_rule'"/>
+                            <div name="free_over_amount" invisible="delivery_type == 'base_on_rule'">
+                                <field name="free_over"/>
+                                <field name="amount"
+                                        widget="monetary"
+                                        class="oe_inline"
+                                        invisible="not free_over"
+                                        required="free_over"/>
+                            </div>
+                            <field name="product_id" context="{'default_detailed_type': 'service', 'default_sale_ok': False, 'default_purchase_ok': False, 'default_invoice_policy': 'order'}" />
+                            <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
+                            <field name="supports_shipping_insurance" invisible="1"/>
+                            <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>
+                            <div invisible="not supports_shipping_insurance">
+                                <field name="shipping_insurance" class="oe_inline"/>%
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="pricing" string="Pricing" invisible="delivery_type != 'base_on_rule'">
+                            <group name="general">
+                                <field name="price_rule_ids" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
+                        <page string="Destination Availability" name="destination">
+                            <group col="1">
+                                <p>
+                                    Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
+                                </p>
+                                <group name="country_details" class="oe_inline">
+                                    <field name="country_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="state_ids"
+                                            widget="many2many_tags"
+                                            domain="[('country_id', 'in', country_ids)]"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create': True}"/>
+                                    <field name="zip_prefix_ids"
+                                            widget="many2many_tags"
+                                            readonly="not country_ids"
+                                            force_save="1"
+                                            options="{'no_create_edit': True}"/>
+                                </group>
+                                <p class="fst-italic" invisible="country_ids">
+                                    Please select a country before choosing a state or a zip prefix.
+                                </p>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="carrier_description" placeholder="Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_delivery_carrier_form" model="ir.actions.act_window">
+        <field name="name">Shipping Methods</field>
+        <field name="res_model">delivery.carrier</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_provider': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Define a new delivery method
+            </p><p>
+            Each carrier (e.g. UPS) can have several delivery methods (e.g.
+            UPS Express, UPS Standard) with a set of pricing rules attached
+            to each method.
+            </p><p>
+            These methods allow to automatically compute the delivery price
+            according to your settings; on the sales order (based on the
+            quotation) or the invoice (based on the delivery orders).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="sale_menu_action_delivery_carrier_form"
+        action="action_delivery_carrier_form"
+        parent="sale.menu_sales_config"
+        sequence="4"/>
+
+</odoo>

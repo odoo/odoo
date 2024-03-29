@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="microsoft_calendar_reset_account_view_form" model="ir.ui.view">
+        <field name="name">microsoft.calendar.account.reset.form</field>
+        <field name="model">microsoft.calendar.account.reset</field>
+        <field name="arch" type="xml">
+            <form>
+                <h1>Reset Outlook Calendar Account</h1>
+                <group>
+                    <field name="delete_policy" widget="radio"/>
+                    <field name="sync_policy" widget="radio"/>
+                </group>
+
+                <footer>
+                    <button name="reset_account" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="microsoft_calendar_reset_account_action" model="ir.actions.act_window">
+        <field name="name"></field>
+        <field name="res_model">microsoft.calendar.account.reset</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

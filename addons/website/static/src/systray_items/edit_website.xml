@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.EditWebsiteSystray">
+    <div class="o_menu_systray_item o_edit_website_container d-none d-md-block" t-att-class="{ o_not_translatable: !translatable }">
+        <a href="#" class="h-100" accesskey="a" t-on-click="startEdit" t-att-class="{'btn btn-primary d-flex align-items-center ps-0 pe-2 rounded-0 border-0 fw-normal': !translatable, 'o_nav_entry': translatable}">
+            <span t-att-class="{'o_nav_entry' : !translatable}">
+                <span t-if="translatable" class="fa fa-pencil me-1"/>
+                <span t-else="" class="fa" t-att-class="{ 'fa-refresh fa-spin me-2': this.state.isLoading, 'fa-pencil me-1': !this.state.isLoading }"/>
+                <t t-esc="label"/>
+            </span>
+        </a>
+    </div>
+</t>
+</templates>

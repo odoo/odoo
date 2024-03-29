@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageSeenIndicator">
+        <span class="o-mail-MessageSeenIndicator position-relative d-flex opacity-50" t-att-class="{ 'o-all-seen text-primary': hasEveryoneSeen }" t-attf-class="{{ props.className }}">
+            <t t-if="!isMessagePreviousToLastSelfMessageSeenByEveryone">
+                <i t-if="hasSomeoneFetched or hasSomeoneSeen" class="fa fa-check ps-1"/>
+                <i t-if="hasSomeoneSeen" class="o-second fa fa-check position-absolute"/>
+            </t>
+        </span>
+    </t>
+</templates>

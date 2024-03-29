@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web_edior.ChatGPTPromptDialog">
+    <Dialog size="'lg'" title="'Generate Text with AI'">
+        <div t-foreach="state.messages" t-as="message" t-key="message_index"
+            class="position-relative py-1 px-3"
+            t-att-class="message_index ? 'mt-2' : 'mt-0'">
+            <div class="position-relative d-flex flex-shrink-0">
+                <div class="d-flex flex-shrink-0" style="flex-basis: 42px; max-width: 42px;">
+                    <div class="position-relative bg-view" style="width: 36px; height: 36px;">
+                        <img class="w-100 h-100 rounded"
+                            t-att-src="message.author === 'user' ? userAvatarUrl : assistantAvatarUrl"/>
+                    </div>
+                </div>
+                <div class="w-100 o-min-width-0">
+                    <div class="d-flex flex-wrap align-items-baseline mb-1 lh-1">
+                        <strong class="me-1 text-truncate"><t t-esc="message.author === 'user' ? 'You' : 'OdooBot'"/></strong>
+                    </div>
+                    <div class="position-relative d-flex">
+                        <div class="o-min-width-0">
+                            <div class="position-relative d-flex">
+                                <div class="position-relative overflow-x-auto d-inline-block">
+                                    <div class="rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 border opacity-25"
+                                        t-att-class="{
+                                            'border-success bg-success-light': message.author === 'user' and message.isError !== true,
+                                            'border-info bg-info-light': message.author === 'assistant' and message.isError !== true,
+                                            'border-danger bg-danger': message.isError,
+                                        }"/>
+                                    <div class="position-relative text-break mb-0 py-2 px-3 align-self-start rounded-end-3 rounded-bottom-3 o-chatgpt-message">
+                                        <!-- INSERT BUTTON -->
+                                        <button t-if="message.author === 'assistant' and 'text' in message and message.isError !== true"
+                                            t-att-data-message-id="message.id"
+                                            class="o-message-insert d-block float-end p-1 mb-1 btn btn-info opacity-75 fst-italic ms-3"
+                                            t-on-click="insertMessage">Insert</button>
+                                        <div class="d-inline">
+                                            <!-- ASSISTANT IS THINKING -->
+                                            <div t-if="message.author === 'assistant' and !('text' in message)" class="d-flex align">
+                                                <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
+                                                    style="filter:invert(1); opacity: 0.5; width: 30px; height: 30px;"/>
+                                                <p class="m-0 text-muted align-self-center">
+                                                    <em>Thinking...</em>
+                                                </p>
+                                            </div>
+                                            <!-- ASSISTANT OR USER MESSAGE -->
+                                            <div t-elif="message.isError" class="o-message-error">
+                                                <t t-out="message.text"/>
+                                            </div>
+                                            <t t-else="">
+                                                <t t-out="formatContent(message.text)"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div t-if="!state.messages.length" style="min-height: 150px;"/> <!-- ensure min height -->
+
+        <!-- FOOTER -->
+        <t t-set-slot="footer">
+            <div class="md-8 mb-8 d-flex bg-view flex-grow-1 border rounded-3">
+                <div class="o-prompt-input position-relative flex-grow-1">
+                    <textarea type="text" id="promptInput" t-ref="promptInput"
+                        name="promptInput" t-on-keydown="onTextareaKeydown"
+                        class="form-control bg-view px-3 border-0 overflow-auto"
+                        placeholder="Send a message" autocomplete="off"
+                        t-model="state.prompt" required="required"></textarea>
+                </div>
+                <div class="border-start-0 rounded-0 rounded-end-3 align-self-center ms-2 me-3">
+                    <button class="btn" t-att-class="state.prompt.length ? 'btn-success' : 'disabled'" t-on-click="submitPrompt">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </t>
+    </Dialog>
+</t>
+</templates>

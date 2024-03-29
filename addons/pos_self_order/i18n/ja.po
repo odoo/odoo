@@ -1,0 +1,1363 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_self_order
+# 
+# Translators:
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Wil Odoo, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_self_order
+#: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
+msgid "\"QR codes\""
+msgstr "\"QRコード\""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid ""
+"%s is not available anymore, it has thus been removed from your order. "
+"Please review your order and validate it again."
+msgstr "%s は利用できなくなりました。そのため、オーダから削除されました。オーダ内容を再度ご確認下さい。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "/ Tracker number:"
+msgstr "/ 追跡番号:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"<br/>\n"
+"                    URL:"
+msgstr ""
+"<br/>\n"
+"                    URL:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid ""
+"<span>Please note that the kiosk only works with Adyen &amp; Stripe "
+"terminals</span>"
+msgstr "<span>キオスクはAdyen &amp; Stripe端末でのみご利用頂けます</span>"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+msgid ""
+"Access rights of this user will be used when visiting self order website "
+"when no session is open."
+msgstr "このユーザのアクセス権は、セッションが開かれていないときにセルフオーダウェブサイトにアクセスするときに使用されます。"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
+msgid "Active"
+msgstr "有効化"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Add Languages"
+msgstr "言語を追加"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Add an image to brand your header."
+msgstr "画像を追加して、ヘッダーをブランディングしましょう。"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+msgid "Add images"
+msgstr "画像を追加"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_popup.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr "カートに入れる"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, python-format
+msgid "Add to cart"
+msgstr "カートに入れる"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid ""
+"Adjust the tax rate based on whether customers are dining in or opting for "
+"takeout."
+msgstr "顧客が店内で食事をするか、テイクアウトを選ぶかで税率を調整します。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, python-format
+msgid "All the items will be removed from the cart."
+msgstr "全てのプロダクトがカートから削除されます。"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Alternative Fiscal Position"
+msgstr "代替会計ポジション"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "An error has occurred"
+msgstr "エラーが発生しました"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, python-format
+msgid "Any items already sent will not be canceled"
+msgstr "すでに発送済のプロダクトは取消されません。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, python-format
+msgid "Are you sure you want to cancel this order?"
+msgstr "本当にこのオーダを取消しますか？"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#, python-format
+msgid "Available"
+msgstr "処理可能"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+msgid "Available Languages"
+msgstr "利用可能な言語"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+msgid "Available in Self"
+msgstr "セルフオーダで利用可能"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
+msgid "Available in Self Order"
+msgstr "セルフオーダで利用可能"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Available interface languages"
+msgstr "利用可能なインターフェイス言語"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#, python-format
+msgid "Back"
+msgstr "戻る"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#, python-format
+msgid "Cancel Order"
+msgstr "オーダを取消"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
+#, python-format
+msgid "Cancel order"
+msgstr "オーダを取消"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Choose the kiosk mode"
+msgstr "キオスクモードを選択"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+msgid "Choose the self ordering mode"
+msgstr "セルフオーダモードを選択"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+msgid "Choose when the customer will pay"
+msgstr "顧客がいつ支払うかを選択"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
+#, python-format
+msgid "Choose your"
+msgstr "選択する"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#, python-format
+msgid "Choose your eating location"
+msgstr "食事の場所を選択して下さい"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
+#, python-format
+msgid "Close"
+msgstr "閉じる"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Close Session"
+msgstr "セッション終了"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "Combo"
+msgstr "コンボ"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_line_ids
+msgid "Combo Lines"
+msgstr "コンボ明細"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_parent_id
+msgid "Combo Parent"
+msgstr "コンボ親"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
+msgid "Combo line reference"
+msgstr "コンボ明細参照"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "確認"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Connection lost, please try again later"
+msgstr "接続が切断されました。後ほどお試し下さい。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Could you please confirm your table number?"
+msgstr "テーブル番号を確認して頂けますか？"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.js:0
+#, python-format
+msgid "Current"
+msgstr "流動"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "Custom Links"
+msgstr "カスタムリンク"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
+msgid ""
+"Custom links that the restaurant can configure to be displayed on the self "
+"order screen"
+msgstr "セルフオーダ画面に表示するカスタムリンクの設定"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Customize Header"
+msgstr "ヘッダーをカスタマイズ"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
+msgid "Danger"
+msgstr "危険"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
+msgid "Dark"
+msgstr "暗い"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Default"
+msgstr "デフォルト"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+msgid "Default Language"
+msgstr "デフォルト言語"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Default User"
+msgstr "デフォルトユーザ"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+msgid "Default language for the kiosk mode"
+msgstr "キオスクモードのデフォルト言語"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
+msgid "Disable"
+msgstr "無効にする"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, python-format
+msgid "Discard"
+msgstr "破棄"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Download QR Codes"
+msgstr "QRコードをダウンロード"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, python-format
+msgid "Each Order"
+msgstr "各オーダ"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+msgstr ""
+"フロアプランの各テーブルには、設定に基づいて固有のQRコードが割当てられます。セキュリティ上の理由から\n"
+"以下の例に示すように、生成されるURLでは販売ポイントとテーブル名の両方が暗号化されます。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#, python-format
+msgid "Eat In"
+msgstr "イートイン"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Eat in / Take out"
+msgstr "イートイン/テイクアウト"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, python-format
+msgid "Edit"
+msgstr "編集"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+#, python-format
+msgid "Enter your custom value"
+msgstr "顧客値を入力"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Feel free to use and print this QR code as many times as needed according to"
+" your requirements."
+msgstr "このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Fiscal Positions"
+msgstr "会計ポジション"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#, python-format
+msgid "Follow instructions on the terminal"
+msgstr "端末の指示に従って下さい。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
+msgid "From your Kiosk, open this URL:"
+msgstr "キオスクから、このURLを開いて下さい:"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, python-format
+msgid "Generic"
+msgstr "汎用"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#, python-format
+msgid "Get a tracker and enter its number here"
+msgstr "トラッカーを入手し、その番号をここに入力します"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTPルーティング"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+#, python-format
+msgid ""
+"Hey, looks like you forgot to create products or add them to pos_config. "
+"Please add them before using the Self Order"
+msgstr "プロダクトの作成またはpos_configへの追加を忘れているようです。セルフオーダを使う前にプロダクトを追加して下さい。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Home buttons"
+msgstr "ホームボタン"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Hope you enjoyed your meal!"
+msgstr "お食事をお楽しみ頂けましたか"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "How to customize"
+msgstr "カスタマイズ方法"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "How to use"
+msgstr "使用方法"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
+msgid "If this product is available in the Self Order screens"
+msgstr "このプロダクトがセルフオーダスクリーンで利用可能な場合"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+msgstr ""
+"カスタマイズされたQRコードが必要な場合は、関連するQRコードをスキャンしてURLを取得することから始めます。次に\n"
+"https://www.qrcode-monkey.com や https://www.qr-code-generator.com のようなQRコードジェネレータを使用します。"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+msgid "Image to display on the self order screen"
+msgstr "セルフオーダ画面に表示する画像"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"In Self-Order mode, you must have at least one table to generate QR codes"
+msgstr "セルフオーダモードでは、QRコードを生成するために少なくとも1つのテーブルが必要です。"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
+msgid "Inactive"
+msgstr "無効"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
+msgid "Info"
+msgstr "情報"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
+msgid "Information about your product for Self Order and Kiosk"
+msgstr "セルフオーダおよびキオスク端末用プロダクト情報"
+
+#. module: pos_self_order
+#: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
+msgid "Kiosk"
+msgstr "キオスク"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
+msgid "Label"
+msgstr "ラベル"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Language"
+msgstr "言語"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+msgid "Languages available for the kiosk mode"
+msgstr "キオスクモードで使用可能な言語"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Let your customers order using their mobile or a kiosk."
+msgstr "顧客に携帯電話やキオスク端末を使ってオーダしてもらいましょう。"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
+msgid "Light"
+msgstr "ライト"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "読込中..."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online or order with the QR codes on your tables"
+msgstr "テーブルのQRコードで、顧客は簡単にオンラインメニューを検索し、オーダできます。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online with the QR codes on your tables"
+msgstr ""
+"テーブルのQRコードで、顧客は簡単にオンラインメニューを検索\n"
+"できます。"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, python-format
+msgid "Meal"
+msgstr "食事"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Mobile Menu"
+msgstr "モバイルメニュー"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Mobile self-order & Kiosk"
+msgstr "モバイルセルフオーダ&キオスク"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#, python-format
+msgid "My Order"
+msgstr "自分のオーダ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#, python-format
+msgid "My Orders"
+msgstr "自分のオーダ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NEW"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "メモ"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+msgid "Name of the image to display on the self order screen"
+msgstr "セルフオーダ画面に表示する画像の名前"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, python-format
+msgid "Next"
+msgstr "次へ"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "No"
+msgstr "いいえ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "No order found"
+msgstr "オーダが見つかりません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#, python-format
+msgid "No products found"
+msgstr "プロダクトが見つかりません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#, python-format
+msgid "Not available"
+msgstr "利用不可"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+msgid "Not available in Self"
+msgstr "セルフオーダで利用不可"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Ok"
+msgstr "OK"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, python-format
+msgid "Only pay after each is available with kiosk mode."
+msgstr "キオスク・モードでは後払いのみです。"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Open Kiosk"
+msgstr "キオスクを開ける"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_kiosk_read_only_form_dialog
+msgid "Open in New Tab"
+msgstr "新規タブで開く"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#, python-format
+msgid "Order"
+msgstr "オーダ"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: model:pos_self_order.custom_link,name:pos_self_order.default_custom_link
+#, python-format
+msgid "Order Now"
+msgstr "今すぐオーダ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "Order number:"
+msgstr "オーダ番号: "
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Order to pick-up at the counter"
+msgstr "オーダしてカウンタで受取る"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Orders not found on server"
+msgstr "サーバ上にオーダが見つかりません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
+#, python-format
+msgid "Out of stock"
+msgstr "在庫切れ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+#, python-format
+msgid "Pay"
+msgstr "お支払い"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+msgid "Pay After:"
+msgstr "以下の後で払う:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Pay after"
+msgstr "後で払う"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Pay at the cashier"
+msgstr "レジで払う"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid ""
+"Personalize your splash screen by adding one or multiple images to create a "
+"slideshow"
+msgstr "1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソナライズします"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, python-format
+msgid "Pickup At Counter"
+msgstr "カウンタで受取る"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+msgid "Pickup zone"
+msgstr "受取ゾーン"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_session.py:0
+#, python-format
+msgid "PoS Order by Session"
+msgstr "セッションごとのPOSオーダ"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS設定"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "POS注文ライン"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POSオーダ"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS支払い方法"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_session
+msgid "Point of Sale Session"
+msgstr "POSセッション"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Point of sale:"
+msgstr "POS:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+msgid "Points of Sale"
+msgstr "POS"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
+msgid "Preview"
+msgstr "プレビュー"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Preview Web interface"
+msgstr "ウェブインターフェイスのプレビュー"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__primary
+msgid "Primary"
+msgstr "プライマリ"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Print QR Codes"
+msgstr "QRコードを印刷"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__description_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__description_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_form_view
+msgid "Product Description for Self Order"
+msgstr "販売オーダ用プロダクト説明"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
+#, python-format
+msgid "Product Information"
+msgstr "プロダクト情報"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/combo_selection/combo_selection.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_card/product_card.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, python-format
+msgid "Product image"
+msgstr "プロダクト画像"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product is not available"
+msgstr "プロダクトは利用できません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Product not found"
+msgstr "製品は見つかりませんでした"
+
+#. module: pos_self_order
+#: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
+msgid "QR Codes"
+msgstr "QRコード"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, python-format
+msgid "QR codes can only be generated in mobile or consultation mode."
+msgstr "QRコードは、モバイルモードまたはコンサルテーションモードでのみ生成できます。"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
+msgid "QR menu"
+msgstr "QRメニュー"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "QR menu & Kiosk activation"
+msgstr "QRメニュー&キオスク有効化"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
+msgid "QR menu + Ordering"
+msgstr "QRメニュー + オーダ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, python-format
+msgid "Quantity select"
+msgstr "量の選択"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Reset QR Codes"
+msgstr "QRコードをリセット"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_table
+msgid "Restaurant Table"
+msgstr "レストランテーブル"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#, python-format
+msgid "Retry"
+msgstr "再試行"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+#, python-format
+msgid "Search product"
+msgstr "プロダクト検索"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
+msgid "Secondary"
+msgstr "セカンダリ"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__access_token
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__identifier
+msgid "Security Token"
+msgstr "セキュリティトークン"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+msgid ""
+"Select for which points of sale you want to display this link. Leave empty "
+"to display it for all points of sale. You have to select among the points of"
+" sale that have the 'QR Code Menu' feature enabled."
+msgstr ""
+"どのPOSにこのリンクを表示するかを選択します。空白のままにしておくと、すべてのPOSに表示されます。'QRコードメニュー'機能が有効になっているPOSの中から選択する必要があります。"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, python-format
+msgid "Self Kiosk"
+msgstr "セルフキオスク"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+msgid "Self Order Kiosk Image Brand"
+msgstr "セルフオーダキオスク画像ブランド"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+msgid "Self Order Kiosk Image Brand Name"
+msgstr "セルフオーダキオスク画像ブランド名"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Self Order:"
+msgstr "セルフオーダ:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Self Ordering"
+msgstr "セルフオーダ"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Self Ordering Enabled"
+msgstr "セルフオーダ有効化済"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+msgid "Self Ordering Mode"
+msgstr "セルフオーダモード"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
+msgid "Self Ordering Url"
+msgstr "セルフオーダURL"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#, python-format
+msgid "Self-ordering availability:"
+msgstr "セルフオーダの利用可能性"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Service"
+msgstr "サービス"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Service at"
+msgstr "以下でのサービス:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, python-format
+msgid "Service at Table"
+msgstr "テーブルでのサービス"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Service at table"
+msgstr "テーブルでのサービス"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Splash screens"
+msgstr "スプラッシュスクリーン"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Start Kiosk"
+msgstr "キオスクを開始"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
+msgid "Status"
+msgstr "状態"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
+msgid "Style"
+msgstr "スタイル"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__success
+msgid "Success"
+msgstr "成功"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+msgid "Table"
+msgstr "表"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
+msgid "Table Stand Number"
+msgstr "テーブルスタンド番号"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#, python-format
+msgid "Table Tracker:"
+msgstr "テーブルトラッカー:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Table detective time!"
+msgstr "テーブルの検出時間"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Table:"
+msgstr "テーブル:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__take_away
+msgid "Take Away"
+msgstr "テイクアウト"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#, python-format
+msgid "Take Out"
+msgstr "テイクアウト"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
+msgid "Takeaway"
+msgstr "テイクアウト"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "Tax:"
+msgstr "税:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#, python-format
+msgid "Taxes:"
+msgstr "税:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#, python-format
+msgid "Thanks a lot!"
+msgstr "ありがとうございました！"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#, python-format
+msgid "The Self-Order default user must be a POS user"
+msgstr "セルフオーダデフォルトユーザはPOSユーザである必要があります"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+#, python-format
+msgid "The user must be a POS user"
+msgstr "ユーザはPOSユーザである必要があります"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_alternative_fp_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_alternative_fp_id
+msgid ""
+"This is useful for restaurants with onsite and take-away services that imply"
+" specific tax rates."
+msgstr "これは、特定の税率を暗示するオンサイトおよびテイクアウトサービスを提供するレストランに役立ちます。"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#, python-format
+msgid "Total:"
+msgstr "合計:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__url
+msgid "URL"
+msgstr "URL"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "URL:"
+msgstr "URL:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Uncategorised"
+msgstr "カテゴリなし"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
+msgid "Warning"
+msgstr "警告"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "We're currently closed"
+msgstr "現在閉店中です"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+#, python-format
+msgid "We're currently closed."
+msgstr "現在閉店中です"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "We're preparing your order!"
+msgstr "オーダを準備しています"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Yes"
+msgstr "はい"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+#, python-format
+msgid "You cannot edit a posted orderline !"
+msgstr "投稿済のオーダ明細を編集することはできません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "You're not authorized to perform this action"
+msgstr "このアクションを実行する権限がありません"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#, python-format
+msgid "Your Order"
+msgstr "自分のオーダ"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#, python-format
+msgid "Your Selection"
+msgstr "選択"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Your order has been canceled"
+msgstr "オーダが取消されました"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Your order has been paid"
+msgstr "オーダが支払されました"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#, python-format
+msgid "Your order number"
+msgstr "オーダ番号"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Your order status has been changed"
+msgstr "オーダのステータスが変わりました"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "empty = all points of sale"
+msgstr "空 = 全てのPOS"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "https://odoo.com"
+msgstr "https://odoo.com"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "odoo"
+msgstr "odoo"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+#, python-format
+msgid "options"
+msgstr "オプション"

@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="index" name="Jobs">
+    <t t-call="website.layout">
+        <div id="wrap" class="o_website_hr_recruitment_jobs_list o_colored_level o_cc o_cc2">
+            <!-- Snippet area -->
+            <div class="oe_structure" id="oe_structure_hr_recruitment_index_top"/>
+
+            <!-- Topbar -->
+            <nav class="navbar navbar-light border-top shadow-sm d-print-none w-100 o_colored_level">
+                <div class="container">
+                    <div class="d-flex flex-column flex-md-row flex-md-wrap flex-lg-nowrap align-items-center justify-content-between w-100">
+                        <!-- Title -->
+                        <span class="navbar-brand h5 my-0 me-sm-auto">Our Job Offers</span>
+                        <!-- Customizations -->
+                        <t t-call="website_hr_recruitment.topbar_customizations"/>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <div class="container oe_website_jobs">
+                <div class="row pt48 pb16">
+                    <div class="d-none" id="jobs_grid_left"/>
+                    <div class="col-lg" id="jobs_grid">
+                        <div class="row flex-column">
+                            <t t-if="not jobs">
+                                <div class="col">
+                                    <div t-if="search" class="alert alert-warning text-center" role="alert">
+                                        No results found for '<span t-out="search"/>'.
+                                    </div>
+                                    <div class="alert alert-info text-center text-muted" groups="hr_recruitment.group_hr_recruitment_manager">
+                                        Create new job pages from the <strong>+ <i>New</i></strong> top-right button.
+                                    </div>
+                                    <div class="col-lg-12 text-center pt24">
+                                        <p class="h5 fw-light text-muted pb24">
+                                            There are currently no open job opportunities,<br class="mb-2"/>
+                                            but feel free to <span class="fw-bold">contact us</span> for a spontaneous application.
+                                        </p>
+                                        <img class="img-fluid o_we_custom_image pb24" src="/website_hr_recruitment/static/src/img/job_not_found.svg" style="width: 50% !important;" alt="Job not found"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-elif="search and original_search">
+                                <div class="col">
+                                    <div class="alert alert-info text-center" role="alert">
+                                        No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
+                                        <t t-set="search" t-value="original_search"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <div t-foreach="jobs" t-as="job" class="col-lg mb32">
+                                <div t-attf-class="card #{not job.website_published and 'o_jobs_unpublished'}">
+                                    <a t-attf-href="/jobs/#{ slug(job) }"
+                                            t-attf-class="text-decoration-none text-reset"
+                                            draggable="false">
+                                        <div class="card-body p-4">
+                                            <div class="mt0 d-flex justify-content-between align-items-center">
+                                                <h3 t-field="job.name"/>
+                                                <span t-if="not job.website_published" class="badge bg-danger mb8 p-2">unpublished</span>
+                                            </div>
+                                            <h5 t-if="job.no_of_recruitment >= 3" class="text-reset">
+                                                <span t-field="job.no_of_recruitment"/> open positions
+                                            </h5>
+                                            <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
+                                            <div class="oe_empty text-muted mb16"
+                                                 t-field="job.description"
+                                                 t-att-data-editor-message="job_desc_edition_placeholder"/>
+                                            <div class="o_job_infos d-flex flex-column">
+                                                <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
+                                                <div t-if="job.department_id"
+                                                        class="d-inline-flex align-items-center">
+                                                    <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
+                                                </div>
+                                                <div t-if="job.contract_type_id"
+                                                        class="d-inline-flex align-items-center">
+                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.contract_type_id" class="fw-light"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Pager -->
+                    <div class='navbar mb-3 w-100'>
+                        <t t-call="website.pager">
+                            <t t-set="classname" t-valuef="mx-auto"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Snippet area -->
+            <div class="oe_structure" id="oe_structure_hr_recruitment_index_bottom"/>
+        </div>
+    </t>
+</template>
+
+<!-- Job Detail -->
+<template id="detail" name="Job Detail" track="1">
+    <t t-call="website.layout">
+        <!-- Topbar -->
+        <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+            <div class="container">
+                <div class="d-flex flex-column flex-md-row flex-md-wrap flex-lg-nowrap justify-content-between w-100">
+                    <!-- Title -->
+                    <span class="navbar-brand h4 my-0 me-auto">
+                        <a t-attf-href="/jobs">
+                            <i class="fa fa-long-arrow-left text-primary me-2"/>All Jobs
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </nav>
+        <!-- Content -->
+        <div id="wrap" class="js_hr_recruitment">
+            <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
+                <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
+                <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date"/>
+                <meta itemprop="title" t-att-content="job.name"/>
+                <meta itemprop="directApply" content="true"/>
+                <span itemprop="hiringOrganization" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    <meta itemprop="name" t-att-content="job.company_id.name"/>
+                    <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
+                </span>
+                <span itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
+                    <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
+                </span>
+                <!-- Job name -->
+                <section class="pb32">
+                    <div class="container">
+                        <div class="mt32">
+                            <div class="float-end">
+                                <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
+                            </div>
+                            <h1 t-field="job.name"/>
+                            <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["city"],
+                                "no_tag_br": True,
+                                "null_text": "Remote"
+                            }'/>
+                        </div>
+                    </div>
+                </section>
+                <!-- Job Description -->
+                <div t-field="job.website_description"/>
+                <div class="oe_structure">
+                    <section class="o_job_bottom_bar mt24 mb48">
+                        <div class="text-center">
+                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Apply -->
+<template id="apply">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Apply Job</t>
+
+        <div id="wrap"  class="container">
+            <nav aria-label="breadcrumb" class="mt-5">
+                <ol class="breadcrumb ps-0 mb-0 pb-1">
+                    <li class="breadcrumb-item"><a href="/jobs" class="text-secondary fw-bold">Jobs</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a t-attf-href="/jobs/detail/#{slug(job)}">
+                            <span t-field="job.name"/>
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="mb-4">
+                Job Application Form
+            </h1>
+            <span class="hidden" data-for="hr_recruitment_form" t-att-data-values="{'department_id': job and job.department_id.id or '', 'job_id': job and job.id or ''}" />
+            <div id="jobs_section" class="container">
+                <div class="row">
+                    <section id="forms" class="col-12 col-md-9 s_website_form" data-vcss="001" data-snippet="s_website_form">
+                        <div class="container">
+                            <form id="hr_recruitment_form" action="/website/form/" method="post"
+                                enctype="multipart/form-data" class="o_mark_required row"
+                                data-mark="*" data-model_name="hr.applicant"
+                                data-success-mode="redirect" data-success-page="/job-thank-you"
+                                hide-change-model="true">
+                                <div class="s_website_form_rows row s_col_no_bgcolor">
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_required s_website_form_model_required"
+                                        data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment1">
+                                                <span class="s_website_form_label_content">Your Name</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment1" type="text"
+                                                    class="form-control s_website_form_input"
+                                                    name="partner_name" required=""
+                                                    data-fill-with="name"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_required"
+                                        data-type="email" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment2">
+                                                <span class="s_website_form_label_content">Your Email</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment2" type="email"
+                                                    class="form-control s_website_form_input"
+                                                    name="email_from" required=""
+                                                    data-fill-with="email"/>
+                                                <div class="alert alert-warning mt-2" id="email-message" style="display:none;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_required"
+                                        data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment3">
+                                                <span class="s_website_form_label_content">Your Phone Number</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment3" type="tel"
+                                                    class="form-control s_website_form_input"
+                                                    name="partner_mobile" required=""
+                                                    data-fill-with="phone"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_required"
+                                        data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment4">
+                                                <span class="s_website_form_label_content">LinkedIn Profile</span>
+                                            </label>
+                                            <div class="col-sm" style="position: relative">
+                                                <i class="fa fa-linkedin fa-2x m-1 o_linkedin_icon" style="max-height: 37px;"></i>
+                                                <input id="recruitment4" type="text"
+                                                    class="form-control s_website_form_input pl64"
+                                                    placeholder="e.g. https://www.linkedin.com/in/fpodoo/"
+                                                    style="padding-left: 40px"
+                                                    name="linkedin_profile"
+                                                    data-fill-with="linkedin_profile"/>
+                                                <div class="alert alert-warning mt-2" id="linkedin-message" style="display:none;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_custom"
+                                        data-type="binary" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment6">
+                                                <span class="s_website_form_label_content">Resume</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment6" type="file"
+                                                    class="form-control s_website_form_input o_resume_input"
+                                                    name="Resume"/>
+                                                <span class="text-muted small">Provide either a resume file or a linkedin profile</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field"
+                                        data-type="text" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment5">
+                                                <span class="s_website_form_label_content">Short Introduction</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <textarea id="recruitment5"
+                                                    class="form-control s_website_form_input"
+                                                    placeholder="Optional introduction, or any question you might have about the job…"
+                                                    name="description" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_dnone">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment7">
+                                                <span class="s_website_form_label_content">Job</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment7" type="hidden"
+                                                    class="form-control s_website_form_input"
+                                                    name="job_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-0 py-2 s_website_form_field s_website_form_dnone">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-4 col-sm-auto s_website_form_label" style="width: 200px" for="recruitment8">
+                                                <span class="s_website_form_label_content">Department</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="recruitment8" type="hidden"
+                                                    class="form-control s_website_form_input"
+                                                    name="department_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 s_website_form_submit mb64" data-name="Submit Button">
+                                        <div style="width: 200px" class="s_website_form_label"/>
+                                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send" id="apply-btn">I'm feeling lucky</a>
+                                        <span id="s_website_form_result"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="col-12 col-md-3 ps-5">
+                        <a role="button" t-attf-href="/jobs/#{slug(job)}" class="btn btn-outline-primary btn-lg mb16 o_apply_description_link">
+                            <i class="oi oi-arrow-left"></i> Job Description
+                        </a>
+                        <div t-if="job.name" class="d-flex flex-column align-items-baseline">
+                            <span class="text-muted small">Job</span>
+                            <h6 t-field="job.name"/>
+                        </div>
+                        <div class="d-flex flex-column align-items-baseline">
+                            <span class="text-muted small">Location</span>
+                            <h6 t-if="job.address_id" t-field="job.address_id" t-options='{
+                                "widget": "contact",
+                                "fields": ["city"],
+                                "no_tag_br": True,
+                                "no_marker": True
+                            }'/>
+                            <h6 t-else="">Remote</h6>
+                        </div>
+                        <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
+                            <span class="text-muted small">Department</span>
+                            <h6 t-field="job.department_id"/>
+                        </div>
+                        <div t-if="job.contract_type_id" class="d-flex flex-column align-items-baseline">
+                            <span class="text-muted small">Employment Type</span>
+                            <h6 t-field="job.contract_type_id"/>
+                        </div>
+                        <hr t-if="job.job_details" class="w-50 my-3"/>
+                        <div t-field="job.job_details"/>
+                    </section>
+                </div>
+            </div>
+            <div class="oe_structure mt-2"/>
+        </div>
+    </t>
+</template>
+
+<!-- Job Default Description -->
+<template id="default_description" name="Job Description">
+    <p>
+        Perform assigned responsibilities, collaborate with team members, and adhere to company policies.
+        Strong communication, problem-solving, and work ethic required.
+        Adaptability, initiative, and willingness to learn are valued.
+    </p>
+</template>
+
+<template id="default_website_description">
+    <!-- Description text and ratings -->
+    <section class="pt32">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 pb32" itemprop="description">
+                    <p class="lead">
+                        As an employee of our company, you will <b>collaborate with each department
+                        to create and deploy disruptive products.</b> Come work at a growing company
+                        that offers great benefits with opportunities to moving forward and learn
+                        alongside accomplished leaders. We're seeking an experienced and outstanding
+                        member of staff.
+                        <br/><br/>
+                        This position is both <b>creative and rigorous</b> by nature you need to think
+                        outside the box. We expect the candidate to be proactive and have a "get it done"
+                        spirit. To be successful, you will have solid solving problem skills.
+                    </p>
+                </div>
+                <div class="col-lg-3 offset-lg-1 pb32">
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+                        <h6 class="s_rating_title">Customer Relationship</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+                        <h6 class="s_rating_title">Personal Evolution</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+                        <h6 class="s_rating_title">Autonomy</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                                <i class="fa fa-star-o"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+                        <h6 class="s_rating_title">Administrative Work</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                                <i class="fa fa-star-o"/>
+                                <i class="fa fa-star-o"/>
+                                <i class="fa fa-star-o"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+                        <h6 class="s_rating_title">Technical Expertise</h6>
+                        <div class="s_rating_icons o_not_editable">
+                            <span class="s_rating_active_icons text-primary">
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                            </span>
+                            <span class="s_rating_inactive_icons text-primary">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Responsabilities, Must Have and Nice to have -->
+    <section class="s_comparisons pt24 pb24 bg-200" data-snippet="s_comparisons">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card text-bg-primary">
+                        <h4 class="card-header">Responsibilities</h4>
+                        <ul class="list-group list-group-flush" itemprop="responsibilities">
+                            <li class="list-group-item">Lead the entire sales cycle</li>
+                            <li class="list-group-item">Achieve monthly sales objectives</li>
+                            <li class="list-group-item">Qualify the customer needs</li>
+                            <li class="list-group-item">Negotiate and contract</li>
+                            <li class="list-group-item">Master demos of our software</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card text-bg-primary">
+                        <h4 class="card-header">Must Have</h4>
+                        <ul class="list-group list-group-flush" itemprop="skills">
+                            <li class="list-group-item">Bachelor Degree or Higher</li>
+                            <li class="list-group-item">Passion for software products</li>
+                            <li class="list-group-item">Perfect written English</li>
+                            <li class="list-group-item">Highly creative and autonomous</li>
+                            <li class="list-group-item">Valid work permit for Belgium</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 s_col_no_bgcolor pt16 pb16" data-name="Box">
+                    <div class="card text-bg-primary">
+                        <h4 class="card-header">Nice to have</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Experience in writing online content</li>
+                            <li class="list-group-item">Additional languages</li>
+                            <li class="list-group-item">Google Adwords experience</li>
+                            <li class="list-group-item">Strong analytical skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- What's great -->
+    <section class="s_comparisons pt24 pb24" data-snippet="s_comparisons">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-sm-7 pb40">
+                    <h2>What's great in the job?</h2>
+                    <br/>
+                    <ul class="lead">
+                        <li>Great team of smart people, in a friendly and open culture</li>
+                        <li>No dumb managers, no stupid tools to use, no rigid working hours</li>
+                        <li>No waste of time in enterprise processes, real responsibilities and autonomy</li>
+                        <li>Expand your knowledge of various business industries</li>
+                        <li>Create content that will help our users on a daily basis</li>
+                        <li>Real responsibilities and challenges in a fast evolving company</li>
+                    </ul>
+                </div>
+                <div data-name="Box" class="col-sm-4 offset-sm-1 pt16 pb16">
+                    <div class="card shadow text-center">
+                        <h5 class="card-header o_colored_level text-bg-primary">Our Product</h5>
+                        <div class="card-body p-0 pt-3">
+                            <img class="img-fluid o_we_custom_image pb24" src="/website_hr_recruitment/static/src/img/job_product.svg" style="width: 75% !important;" alt="Our Product"/>
+                            <p>Discover our products.</p>
+                            <p><a href="/" class="btn btn-primary" target="_blank"><small><b>READ</b></small></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- What we offer -->
+    <section class="s_features pt64 pb40 bg-200" data-name="Features" data-snippet="s_features">
+        <div class="container" itemprop="employerOverview">
+            <h2>What We Offer</h2>
+            <br/>
+            <p class="lead">
+                Each employee has a chance to see the impact of his work.
+                You can make a real contribution to the success of the company.
+                <br/>
+                Several activities are often organized all over the year, such as weekly
+                sports sessions, team building events, monthly drink, and much more
+            </p>
+            <div class="row pt16">
+                <div class="col-lg-3 text-center pt16 pb32">
+                    <i class="fa fa-2x fa-gift rounded-circle text-bg-primary m-3"></i>
+                    <h3>Perks</h3>
+                    <p>A full-time position <br/>Attractive salary package.</p>
+                </div>
+                <div class="col-lg-3 text-center pt16 pb32">
+                    <i class="fa fa-2x fa-bar-chart rounded-circle text-bg-primary m-3"></i>
+                    <h3>Trainings</h3>
+                    <p>12 days / year, including <br/>6 of your choice.</p>
+                </div>
+                <div class="col-lg-3 text-center pt16 pb32">
+                    <i class="fa fa-2x fa-futbol-o rounded-circle text-bg-primary m-3"></i>
+                    <h3>Sport Activity</h3>
+                    <p>Play any sport with colleagues, <br/>the bill is covered.</p>
+                </div>
+                <div class="col-lg-3 text-center pt16 pb32">
+                    <i class="fa fa-2x fa-coffee rounded-circle text-bg-primary m-3"></i>
+                    <h3>Eat &amp; Drink</h3>
+                    <p>Fruit, coffee and <br/>snacks provided.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Photos -->
+    <section class="o_jobs_image_gallery s_image_gallery pt24 pb24 o_grid o_spc-medium" data-vcss="001" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-8">
+                    <img src="/website_hr_recruitment/static/src/img/job_image_9.jpg" class="img img-fluid d-block h-100 w-100 shadow" style="object-fit: cover;"/>
+                </div>
+                <div class="col-lg-4">
+                    <img src="/website_hr_recruitment/static/src/img/job_image_10.jpg" class="img img-fluid d-block h-100 w-100 shadow" style="object-fit: cover;"/>
+                </div>
+            </div>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-3">
+                    <img src="/website_hr_recruitment/static/src/img/job_image_11.jpg" class="img img-fluid d-block h-100 w-100 shadow" style="object-fit: cover;"/>
+                </div>
+                <div class="col-lg-3">
+                    <img src="/website_hr_recruitment/static/src/img/job_image_12.jpg" class="img img-fluid d-block h-100 w-100 shadow" style="object-fit: cover;"/>
+                </div>
+                <div class="col-lg-6">
+                    <img src="/website_hr_recruitment/static/src/img/job_image_13.jpg" class="img img-fluid d-block h-100 w-100 shadow" style="object-fit: cover;"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Thank You -->
+<record id="thankyou" model="website.page">
+    <field name="url">/job-thank-you</field>
+    <field name="is_published">True</field>
+    <field name="website_indexed" eval="False"/>
+    <field name="name">Thank you (Recruitment)</field>
+    <field name="type">qweb</field>
+    <field name="key">website_hr_recruitment.thankyou</field>
+    <field name="arch" type="xml">
+        <t name="Thank you (Recruitment)" t-name="website_hr_recruitment.thankyou">
+            <t t-if="request.session.get('form_builder_model_model', '') == 'hr.applicant'">
+                <t t-set="job_sudo" t-value="request.website._website_form_last_record().sudo().job_id"/>
+            </t>
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure"/>
+                    <div id="jobs_thankyou" class="container">
+                        <div class="row pt24 pb24">
+                            <div class="col pt24 pb24 text-center">
+                                <h1 class="fw-bolder">Congratulations!</h1>
+                                <p class="fw-light pb24">
+                                    Your application has been posted successfully,<br class="mb-2"/>
+                                    We usually respond within 3 days...
+                                </p>
+                                <img class="img-fluid o_we_custom_image" t-attf-style="width:{{ '50%' if (job_sudo and job_sudo.user_id) else '25%' }} !important;" src="/website_hr_recruitment/static/src/img/job_congratulations.svg" alt="Congratulations!"/>
+                                <div class="row" id="o_recruitment_thank_cta">
+                                    <div class="col-lg-12 text-center mt32 mb48">
+                                        <p>
+                                            <span class="h5 fw-light">In the meantime,</span><br/>
+                                            <span class="h3 mt8 mb32 fw-bold">Take a look around our website:</span>
+                                        </p>
+                                        <a role="button" href="/" class="btn btn-primary btn-lg">Home</a><a role="button" href="/" class="btn btn-primary btn-lg ms-3">About Us</a><a role="button" href="/" class="btn btn-primary btn-lg ms-3">Products</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- HR Recruiter Block -->
+                            <t t-if="job_sudo and job_sudo.user_id">
+                                <div class="col-lg-4 align-self-center ps-4 o_cc o_cc2 rounded">
+                                    <section class="s_text_block pt24" data-snippet="s_text_block" data-name="Text">
+                                        <div class="container">
+                                            <p class="text-center mb-0 fs-3 lead">Your <b>contact</b> information is:</p>
+                                        </div>
+                                    </section>
+                                    <section class="s_company_team pt12" data-snippet="s_company_team" data-name="Team">
+                                        <div class="container-fluid">
+                                            <div class="row justify-content-center">
+                                                <div class="o_jobs_hr_recruiter col-10 o_cc o_cc1 mt24 p-4 border border-primary rounded shadow">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-lg-5 pb16 o_not_editable">
+                                                            <img t-att-src="image_data_uri(job_sudo.user_id.avatar_256)" class="img-fluid" loading="lazy"/>
+                                                        </div>
+                                                        <div class="col-lg-7 px-1">
+                                                            <h2 class="o_default_snippet_text text-truncate" t-field="job_sudo.user_id.name"/>
+                                                            <p class="fw-light text-truncate" t-field="job_sudo.user_id.job_title"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li t-if="job_sudo.user_id.work_phone"><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.user_id.work_phone"/></li>
+                                                            <li class="d-inline-flex align-items-baseline"><i class="fa fa-envelope fa-fw me-2"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.user_id.email}" t-field="job_sudo.user_id.email"/></span></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="s_text_block pt24" data-snippet="s_text_block" data-name="Text">
+                                        <div class="container">
+                                            <p class="lead alert px-0">
+                                                I usually <strong>answer applications within 3 days</strong>.
+                                                <br/><br/>
+                                                The next step is either a call or a meeting in our offices.
+                                                <br/><br/>
+                                                Feel free to <strong>contact me if you want a faster
+                                                feedback</strong> or if you don't get news from me
+                                                quickly enough.
+                                            </p>
+                                        </div>
+                                    </section>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </field>
+</record>
+
+<!-- Topbar Customizations -->
+<template id="topbar_customizations" name="Topbar">
+    <!-- Sets -->
+    <t t-set="current_country_param" t-value="'&amp;is_remote=1' if is_remote else ('&amp;country_id=%s' % country_id.id if country_id else '')"/>
+    <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else '&amp;is_other_department=1' if is_other_department else ''"/>
+    <t t-set="current_office_param" t-value="'' if is_remote else '&amp;office_id=%s' % office_id.id if office_id else ''"/>
+    <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;contract_type_id=%s' % contract_type_id.id if contract_type_id else '')"/>
+    <t t-set="opt_jobs_filter_countries" t-value="is_view_active('website_hr_recruitment.job_filter_by_countries')"/>
+    <t t-set="opt_jobs_filter_departments" t-value="is_view_active('website_hr_recruitment.job_filter_by_departments')"/>
+    <t t-set="opt_jobs_filter_offices" t-value="is_view_active('website_hr_recruitment.job_filter_by_offices')"/>
+    <t t-set="opt_jobs_filter_employment_type" t-value="is_view_active('website_hr_recruitment.job_filter_by_employment_type')"/>
+    <t t-set="opt_jobs_search_bar" t-value="is_view_active('website_hr_recruitment.job_search_bar')"/>
+    <!-- Filters -->
+    <ul class="o_jobs_topbar_filters flex-md-nowrap nav py-2 py-md-0 ps-lg-3"/>
+    <!-- Search bar -->
+    <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex align-items-center justify-content-end w-md-100 w-lg-25 me-2 me-lg-0 ps-lg-2"/>
+</template>
+
+<!-- Filter - Countries -->
+<template id="job_filter_by_countries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="10">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-set="non_country_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}"/>
+        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="countriesDropdown">
+                <i class="fa fa-map-marker"/>
+                <t t-if="country_id" t-out="country_id.name"/>
+                <t t-elif="is_remote">Remote</t>
+                <t t-else="">All Countries</t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="countriesDropdown">
+                <a t-attf-href="/jobs?all_countries=1#{non_country_params}"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if country_id or is_remote else ' active'}">
+                    All Countries
+                    <span t-attf-class="badge rounded-pill#{' bg-primary' if country_id or is_remote else ' bg-light text-primary'} ms-2 px-2" t-out="count_per_country.get('all', '0')"/>
+                </a>
+                <t t-foreach="countries" t-as="country">
+                    <t t-if="country">
+                        <a t-attf-href="/jobs?country_id=#{country.id}#{non_country_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if country_id and country_id.id == country.id else ''}">
+                            <t t-out="country.name"/>
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if country_id and country_id.id == country.id else ' bg-primary'} ms-2 px-2" t-out="count_per_country.get(country, '0')"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a t-attf-href="/jobs?is_remote=1#{current_department_param}#{current_employment_type_param}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
+                            Remote
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2 px-2" t-out="count_per_country.get(None, '0')"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Departments -->
+<template id="job_filter_by_departments" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="30">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-set="non_department_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}"/>
+        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="departmentsDropdown">
+                <i class="fa fa-sitemap"/>
+                <t t-if="department_id" t-out="department_id.name"/>
+                <t t-elif="is_other_department">Others</t>
+                <t t-else="">All Departments</t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="departmentsDropdown">
+                <a t-attf-href="/jobs?all_departments=1#{non_department_params}"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if department_id or is_other_department else ' active'}">
+                    All Departments
+                    <span t-attf-class="badge rounded-pill#{' bg-primary' if department_id or is_other_department else ' bg-light text-primary'} ms-2 px-2" t-out="count_per_department.get('all', '0')"/>
+                </a>
+                <t t-foreach="departments" t-as="department">
+                    <t t-if="department">
+                        <a t-attf-href="/jobs?department_id=#{department.id}#{non_department_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if department_id and department_id.id == department.id else ''}">
+                            <t t-out="department.name"/>
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if department_id and department_id.id == department.id else ' bg-primary'} ms-2 px-2" t-out="count_per_department.get(department, '0')"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a t-attf-href="/jobs?is_other_department=1#{non_department_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if is_other_department else ''}">
+                            Others
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_other_department else ' bg-primary'} ms-2 px-2" t-out="count_per_department.get(None, '0')"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Offices -->
+<template id="job_filter_by_offices" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="20">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-set="non_location_params" t-valuef="#{current_department_param}#{current_employment_type_param}"/>
+        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
+                <i class="fa fa-building"/>
+                <t t-if="office_id">
+                    <span t-if="len(office_id.contact_address) &lt;= 5" class="fst-italic">No address specified</span>
+                    <t t-out="office_id.city"/><t t-if="office_id.country_id">, <t t-out="office_id.country_id.name"/></t>
+                </t>
+                <t t-elif="is_remote">Remote</t>
+                <t t-else="">All Offices</t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="officesDropdown">
+                <a t-attf-href="/jobs?#{'all_countries=1' if is_remote else current_country_path}#{non_location_params}"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if office_id or is_remote else ' active'}">
+                    All Offices
+                    <span t-attf-class="badge rounded-pill#{' bg-primary' if office_id or is_remote else ' bg-light text-primary'} ms-2 px-2" t-out="count_per_office.get('all', '0')"/>
+                </a>
+                <t t-foreach="offices" t-as="thisoffice">
+                    <t t-if="thisoffice">
+                        <a t-attf-href="/jobs?office_id=#{thisoffice.id}#{'' if is_remote else current_country_param}#{non_location_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if office_id and office_id.id == thisoffice.id else ''}">
+                            <t t-if="not (thisoffice.city or thisoffice.country_id)"><span class="fst-italic">No address specified</span></t>
+                            <t t-else="">
+                                <t t-out="thisoffice.city"/><t t-if="thisoffice.country_id">, <t t-out="thisoffice.country_id.name"/></t>
+                            </t>
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if office_id and office_id.id == thisoffice.id else ' bg-primary'} ms-2 px-2" t-out="count_per_office.get(thisoffice, '0')"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a t-attf-href="/jobs?is_remote=1#{non_location_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_remote else ''}">
+                            Remote
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2 px-2" t-out="count_per_office.get(None, '0')"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Employment Type -->
+<template id="job_filter_by_employment_type" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="40">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-set="non_employment_type_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}"/>
+        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
+                <i class="fa fa-suitcase"/>
+                <t t-if="contract_type_id and 'name' in contract_type_id" t-out="contract_type_id.name"/>
+                <t t-elif="is_untyped">Unspecified type</t>
+                <t t-else="">All Types</t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto" aria-labelledby="employmentDropdown">
+                <a t-attf-href="/jobs?all_employment_types=1#{non_employment_type_params}"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if contract_type_id or is_untyped else ' active'}">
+                    All Types
+                    <span t-attf-class="badge rounded-pill#{' bg-primary' if contract_type_id else ' bg-light text-primary'} ms-2 px-2" t-out="count_per_employment_type.get('all', '0')"/>
+                </a>
+                <t t-foreach="employment_types" t-as="employment_type">
+                    <t t-if="employment_type">
+                        <a t-attf-href="/jobs?contract_type_id=#{employment_type.id}#{non_employment_type_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if contract_type_id and contract_type_id == employment_type.id else ''}">
+                            <t t-out="employment_type.name"/>
+                            <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if contract_type_id and contract_type_id == employment_type.id else ' bg-primary'} ms-2 px-2" t-out="count_per_employment_type.get(employment_type, '0')"/>
+                        </a>
+                    </t>
+                </t>
+                <t t-if="count_per_employment_type.get(None, 0)">
+                    <a t-attf-href="/jobs?is_untyped=1#{non_employment_type_params}"
+                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_untyped else ''}">
+                        Unspecified type
+                        <span t-attf-class="badge rounded-pill#{' bg-light text-primary' if is_remote else ' bg-primary'} ms-2 px-2" t-out="count_per_employment_type.get(None, '0')"/>
+                    </a>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Search Bar -->
+<template id="job_search_bar" inherit_id="website_hr_recruitment.topbar_customizations" active="True">
+    <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="inside">
+        <t t-call="website.website_search_box_input">
+            <t t-set="_form_classes" t-valuef="w-100"/>
+            <t t-set="_classes" t-valuef="my-1"/>
+            <t t-set="search_type" t-valuef="jobs"/>
+            <t t-set="display_description" t-valuef="true"/>
+            <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>
+            <input t-if="office_id" type="hidden" name="office_id" t-att-value="office_id.id"/>
+            <input t-if="department_id" type="hidden" name="department_id" t-att-value="department_id.id"/>
+            <input t-if="contract_type_id" type="hidden" name="contract_type_id" t-att-value="contract_type_id.id"/>
+            <input t-if="is_remote" type="hidden" name="is_remote" value="1"/>
+            <input t-if="is_other_department" type="hidden" name="is_other_department" value="1"/>
+        </t>
+    </xpath>
+</template>
+
+<!-- Right Side Bar -->
+<template id="job_right_side_bar" inherit_id="website_hr_recruitment.index" active="True" name="Right Side Bar">
+    <xpath expr="//div[@id='jobs_grid']" position="after">
+        <div class="col-lg-4 oe_structure oe_empty" id="jobs_grid_right">
+            <section class="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 pb24">
+                            <img src="/website_hr_recruitment/static/src/img/job_image_8.jpg" class="img-fluid" alt="About us"/>
+                            <p class="mt24 mb8">
+                                We are a team of passionate people whose goal is to improve everyone's life through disruptive products.
+                                We build great products to solve your business problems.
+                            </p>
+                            <div class="s_hr text-start pt16 pb16" data-snippet="s_hr" data-name="Separator">
+                                <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400)  !important;"/>
+                            </div>
+                            <div id="connect">
+                                <ul class="list-unstyled text-nowrap">
+                                    <li><i class="fa fa-comment fa-fw me-2"></i><span><a href="/contactus">Contact us</a></span></li>
+                                    <li><i class="fa fa-envelope fa-fw me-2"></i><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                                    <li><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr"><a href="tel:+1 (650) 555-0187">+1 (650) 555-0187</a></span></li>
+                                </ul>
+                                <!-- Social media -->
+                                <div class="s_social_media text-start" data-name="Social Media" data-snippet="s_social_media">
+                                    <h5 class="s_social_media_title d-none">Follow us</h5>
+                                    <a href="/website/social/facebook" class="s_social_media_facebook text-decoration-none" target="_blank" aria-label="Facebook">
+                                        <i class="fa fa-facebook rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
+                                    </a>
+                                    <a href="/website/social/twitter" class="s_social_media_twitter text-decoration-none" target="_blank" aria-label="Twitter">
+                                        <i class="fa fa-twitter rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
+                                    </a>
+                                    <a href="/website/social/linkedin" class="s_social_media_linkedin text-decoration-none" target="_blank" aria-label="LinkedIn">
+                                        <i class="fa fa-linkedin rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

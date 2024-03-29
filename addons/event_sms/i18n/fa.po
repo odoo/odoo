@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_sms
+# 
+# Translators:
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Martin Trigaux, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail
+msgid "Event Automated Mailing"
+msgstr ""
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_registration
+msgid "Event: Registration"
+msgstr ""
+
+#. module: event_sms
+#: model:sms.template,name:event_sms.sms_template_data_event_reminder
+msgid "Event: Reminder"
+msgstr ""
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr ""
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_reminder
+msgid ""
+"Ready for \"{{ object.event_id.name }}\" {{ object.get_date_range_str(object.partner_id.lang) }}?\n"
+"{{ 'It starts at %s' % format_time(time=object.event_begin_date, tz=object.event_id.date_tz, time_format='short', lang_code=object.partner_id.lang) + (', at %s' % object.event_id.address_inline if object.event_id.address_inline else '') + '.\\nSee you there!' if object.event_id.address_inline or 'website_published' not in object.event_id._fields else 'Join us on %s/event/%i!' % (object.get_base_url(), object.event_id.id) }}"
+msgstr ""
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_event_mail_registration
+msgid "Registration Mail Scheduler"
+msgstr ""
+
+#. module: event_sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
+#: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
+msgid "SMS"
+msgstr "پیامک"
+
+#. module: event_sms
+#: model:ir.model,name:event_sms.model_sms_template
+msgid "SMS Templates"
+msgstr ""
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "ارسال"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_registration
+msgid ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: We are happy to confirm your registration for the "
+"{{ object.event_id.name }} event."
+msgstr ""

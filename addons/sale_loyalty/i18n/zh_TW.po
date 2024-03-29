@@ -1,0 +1,503 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid " - On product with the following taxes: %(taxes)s"
+msgstr " - 對於具有以下稅項產品： %(taxes)s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr "<span class=\"fa fa-clipboard\"/> 複製"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "A better global discount is already applied."
+msgstr "已套用更好的全單折扣。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr "至少需要購買 %(amount)s %(currency)s 才能獲得獎勵"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Apply"
+msgstr "套用"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
+msgid "Available Rewards"
+msgstr "可用獎勵"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose a product:"
+msgstr "選擇產品："
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose your reward:"
+msgstr "選擇你的獎勵："
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Code:"
+msgstr "代碼："
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__coupon_id
+msgid "Coupon"
+msgstr "優惠券"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__coupon_code
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Coupon Code"
+msgstr "優惠碼"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
+msgid "Coupon Point"
+msgstr "優惠積分"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "Coupon not found while trying to add the following reward: %s"
+msgstr "嘗試加入以下獎勵時找不到優惠券： %s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Coupons & Loyalty"
+msgstr "優惠券及會員計劃"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
+msgid "Discount & Loyalty"
+msgstr "折扣及會員計劃"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(desc)s%(tax_str)s"
+msgstr "折扣： %(desc)s %(tax_str)s"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
+msgid "Enter Promotion or Coupon Code"
+msgstr "輸入促銷或優惠券代碼"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Expired Date:"
+msgstr "使用期限："
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Free Product - %(product)s"
+msgstr "免費產品 - %(product)s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift #"
+msgstr "禮物卡號碼"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift Card Code"
+msgstr "禮物卡代碼"
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
+msgid "Gift cards & eWallet"
+msgstr "禮品卡及電子錢包"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
+msgid "How much point this reward costs on the loyalty card."
+msgstr "此獎勵會花費會員卡多少積分。"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Invalid product to claim."
+msgstr "申領的產品無效。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
+#, python-format
+msgid "Invalid sales order."
+msgstr "銷售訂單無效。"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr "是優惠計劃獎勵資料行"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_card
+msgid "Loyalty Coupon"
+msgstr "會員優惠券"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_program
+msgid "Loyalty Program"
+msgstr "會員計劃"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
+msgstr "會員獎賞"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
+msgid "Manually Applied Coupons"
+msgstr "手動套用優惠券"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
+msgid "Manually Triggered Rules"
+msgstr "手動觸發規則"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
+msgid "Multi Product"
+msgstr "多項產品"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"No card found for this loyalty program and no points will be given with this"
+" order."
+msgstr "找不到此忠誠度計劃的卡，此訂單不會獲得任何積分。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "No reward selected."
+msgstr "未選擇獎勵。"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "No rewards available for this customer!"
+msgstr "此客戶沒有可用獎勵。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "One or more rewards on the sale order is invalid. Please check them."
+msgstr "銷售訂單的一項或多項獎勵無效。請檢查它們。"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__order_id
+msgid "Order"
+msgstr "訂單"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__order_count
+msgid "Order Count"
+msgstr "銷售訂單數量"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
+msgid "Order Reference"
+msgstr "訂單參考"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__points
+msgid "Points"
+msgstr "分"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
+msgid "Points Cost"
+msgstr "花費積分"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Promotions"
+msgstr "促銷"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
+msgid "Reward"
+msgstr "獎勵"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr "獎勵金額"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid "Reward Identifier Code"
+msgstr "獎賞識別代碼"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "Reward Products"
+msgstr "獎賞產品"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
+msgid "Sale Loyalty - Apply Coupon Wizard"
+msgstr "銷售忠誠度 - 優惠券套用精靈"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
+msgid "Sale Loyalty - Reward Selection Wizard"
+msgstr "銷售忠誠度 - 獎賞選擇精靈"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
+msgid ""
+"Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
+msgstr "銷售訂單優惠積分 - 追蹤銷售訂單如何影響優惠券"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
+msgid "Sales"
+msgstr "銷售"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單資料行"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
+msgid "Selected Product"
+msgstr "已選產品"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
+msgid "Selected Reward"
+msgstr "已選獎賞"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "TEMPORARY DISCOUNT LINE"
+msgstr "【臨時折扣】"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid ""
+"Technical field used to link multiple reward lines from the same reward "
+"together."
+msgstr "技術欄位，用於連結使用相同獎賞的多個獎賞資料行。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon can only be claimed on future orders."
+msgstr "此優惠券只能在以後的訂單領取。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon does not have enough points for the selected reward."
+msgstr "優惠券沒有足夠積分兌換所選獎賞。"
+
+#. module: sale_loyalty
+#: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
+msgid "The coupon points entry already exists."
+msgstr "優惠券積分記項已存在。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The program is not available for this order."
+msgstr "優惠計劃不適用於此訂單。"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
+msgid "The sales order from which coupon is generated"
+msgstr "銷售訂單，生成優惠券"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "There is nothing to discount"
+msgstr "沒有項目可套用折扣"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "These are the products that can be claimed with this rule."
+msgstr "可按此規則領取優惠的產品如下。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is expired (%s)."
+msgstr "此代碼已過期 (%s)。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is invalid (%s)."
+msgstr "此代碼無效 (%s)。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon has already been used."
+msgstr "此優惠券已被使用。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon is expired."
+msgstr "此優惠券已過期。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is already applied to this order."
+msgstr "優惠計劃已套用至訂單。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is not available for public users."
+msgstr "此優惠計劃不適用於公眾用戶。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program requires a code to be applied."
+msgstr "此優惠計劃須填寫優惠碼，才可套用。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This promo code is already applied."
+msgstr "此促銷代碼已被套用。"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Update current promotional lines and select new rewards if applicable."
+msgstr "更新目前的促銷活動資料行，並選擇新的獎賞（如適用）。"
+
+#. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "You don't have the required product quantities on your sales order."
+msgstr "你的銷售訂單未達所需產品數量。"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid ""
+"You will find below your gift cards code. An email has been sent with it. "
+"You can use it starting right now."
+msgstr "您會在禮物卡代碼下方找到。已發送一封電子郵件。您可以立即開始使用它。"

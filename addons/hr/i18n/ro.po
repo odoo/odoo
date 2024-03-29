@@ -1,0 +1,3459 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr
+#
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Martin Trigaux, 2022
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
+msgid "# emails to send"
+msgstr "# email-uri de trimis"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
+msgstr "%(activity)s, atribuit lui %(name)s, scadent la %(deadline)s"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_job.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: hr
+#: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
+msgid "'Badge - %s' % (object.name).replace('/', '')"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Onsite Interview"
+msgstr "1 Interviu la sediu"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Phone Call"
+msgstr "1 Apel telefonic"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "12 days / year, including <br>6 of your choice."
+msgstr "12 zile / an, inclusiv <br>6 alese de tine."
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "2 open days"
+msgstr "2 zile deschise"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "4 Days after Interview"
+msgstr "4 zile după interviu"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "<b>Congratulations!</b> May I recommend you to setup an <a href=\"%s\">onboarding plan?</a>"
+msgstr "<b>Felicitări!</b> Pot să vă recomand să configurați <a href=\"%s\">2un plan de bord?</a>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+msgstr "<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
+msgstr "<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
+msgstr "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\"/>"
+msgstr "<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}\" aria-label=\"Prezent dar inactiv\" title=\"Prezent dar inactiv\" name=\"presence_absent_active\"/>"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<small><b>READ</b></small>"
+msgstr "<small><b>CITIRE</b></small>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                    </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"De definit\" name=\"presence_to_define\">\n"
+"                                                    </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                    </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present dar inactiv\" title=\"Prezent dar inactiv\" name=\"presence_absent_active\">\n"
+"                                                    </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Adrese IP (separate prin virgulă)</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to send</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">Număr minim de emailuri de trimis</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span class=\"fw-bolder\">Reporting</span>"
+msgstr "<span class=\"fw-bolder\">Rapoarte</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Close Activities</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">Închide activitățile</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed Reason</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">Motiv detașat</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">Info HR</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Not Connected\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Neconectat\n"
+"                                </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "<span class=\"o_stat_text\">Connected Since</span>"
+msgstr "<span class=\"o_stat_text\">Conectat începând cu data de</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
+msgid "<span class=\"o_stat_text\">Contacts</span>"
+msgstr "<span class=\"o_stat_text\">Contacte</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
+msgstr "<span class=\"text-muted small\">Zile până la obținerea unei oferte</span>"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Process</span>"
+msgstr "<span class=\"text-muted small\">Proces</span>"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Time to Answer</span>"
+msgstr "<span class=\"text-muted small\">Timp de răspuns</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Km</span>"
+msgstr "<span>Km</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span>new Employees</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "A full-time position <br>Attractive salary package."
+msgstr "O poziție full-time <br>Un pachet salarial atractiv."
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
+msgid "A user cannot be linked to multiple employees in the same company."
+msgstr "Un utilizator nu poate fi legat de mai mulți angajați din aceeași companie."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
+msgid "Absent"
+msgstr "Absent"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Achieve monthly sales objectives"
+msgstr "Atingeți obiectivele de vânzare lunare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction
+msgid "Action Needed"
+msgstr "Intervenție necesară"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
+#: model:ir.model.fields,field_description:hr.field_hr_job__active
+#: model:ir.model.fields,field_description:hr.field_hr_plan__active
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_ids
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
+msgid "Activities"
+msgstr "Activități"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Activities To Generate"
+msgstr "Activități de generat"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
+msgid "Activity"
+msgstr "Activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activitate Excepție Decorare"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan
+msgid "Activity Planning"
+msgstr "Planificare Activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_state
+msgid "Activity State"
+msgstr "Stare activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
+msgid "Activity Type"
+msgstr "Tip activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Pictograma tipului de activitate"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Activity by"
+msgstr "Activitate de"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Add a new employee"
+msgstr "Adăugare angajat nou"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
+msgid "Add a new plan"
+msgstr "Adăugați un nou plan"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
+msgid "Add a new plan activity"
+msgstr "Adăugați o nouă activitate planificată"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
+msgid "Additional Information"
+msgstr "Informații suplimentare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
+#: model:ir.model.fields,field_description:hr.field_res_users__additional_note
+msgid "Additional Note"
+msgstr "Notă Adițională"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Additional languages"
+msgstr "Limbi suplimentare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
+msgid "Address"
+msgstr "Adresa"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Administrative Work"
+msgstr "Muncă administrativă"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
+msgid "Advanced Presence Control"
+msgstr "Control Prezență Avansat"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Advanced presence of employees"
+msgstr "Prezență avansată a angajaților"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias Contact Security"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__lang
+#: model:ir.model.fields,help:hr.field_res_users__private_lang
+msgid "All the emails and documents sent to this contact will be translated in this language."
+msgstr "Toate e-mailurile și documentele trimise acestui contact vor fi traduse în această limbă."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data"
+msgstr "Permiteți angajaților să își actualizeze propriile date"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data."
+msgstr "Permiteți angajaților să își actualizeze propriile date."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Application Settings"
+msgstr "Setări"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Apply"
+msgstr "Aplică"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Approvers"
+msgstr "Aprobatori"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
+msgid "Archive Private Address"
+msgstr "Arhivați Adresă Privată"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
+"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"                                <br><br>\n"
+"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                you will have solid solving problem skills."
+msgstr ""
+"Ca angajat al companiei noastre, veți colabora cu fiecare departament pentru a crea și implementa\n"
+"produse disruptive. Veniți să lucrați la o companie în creștere care oferă beneficii mari cu oportunități de\n"
+"înaintare și învățare alături de lideri de seamă. Căutăm un membru de personal experimentat și remarcabil.\n"
+"                                <br><br>\n"
+"                                Această poziție este atât creativă cât și riguroasă, de natură trebuie să gândiți în afara cutiei.\n"
+"                                Așteptăm ca candidatul să fie proactiv și să aibă un spirit de \"get it done\". Pentru a fi de succes,\n"
+"                                veți avea abilități solide de rezolvare a problemelor."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_attachment_count
+msgid "Attachment Count"
+msgstr "Număr atașamente"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Attendance"
+msgstr "Prezență"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Attendance/Point of Sale"
+msgstr "Prezență/Punct de Vânzare"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
+msgid "Authenticated Employees"
+msgstr "Angajați Autentificați "
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.discuss_channel_view_form
+msgid "Auto Subscribe Departments"
+msgstr "Abonare Automată Departamente"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
+msgid "Automatically subscribe members of those departments to the channel."
+msgstr "Abonați-vă automat membrii acestor departamente la canal."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Autonomy"
+msgstr "Autonomie"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Available"
+msgstr "Disponibil"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
+msgid "Avatar 1024"
+msgstr "Avatar 1024"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
+msgid "Avatar 256"
+msgstr "Avatar 256"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
+msgid "Avatar 512"
+msgstr "Avatar 512"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Away"
+msgstr "Absent"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
+msgid "Bachelor"
+msgstr "Licență"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Bachelor Degree or Higher"
+msgstr "Licență sau mai mult"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
+msgid "Badge ID"
+msgstr "ID Ecuson"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
+msgid "Bank Account Number"
+msgstr "Numar de cont bancar"
+
+#. module: hr
+#: model:ir.model,name:hr.model_base
+msgid "Base"
+msgstr "Baza"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
+msgid "Based on IP Address"
+msgstr "Bazat pe adresă IP"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
+msgid "Based on attendances"
+msgstr "Bazat pe audiență"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
+msgid "Based on number of emails sent"
+msgstr "Bazat pe numărul de email-uri trimise "
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
+msgid "Based on user status in system"
+msgstr "Pe baza stării utilizatorului în sistem"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "BAngajat de bază"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/background_image/background_image.xml:0
+#, python-format
+msgid "Binary file"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__can_edit
+msgid "Can Edit"
+msgstr "Poate edita"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
+#: model:ir.model.fields,field_description:hr.field_res_users__certificate
+msgid "Certificate Level"
+msgstr "Nivel Certificare"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.res_users_action_my
+msgid "Change my Preferences"
+msgstr "Schimbare Preferințe"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#, python-format
+msgid "Chat"
+msgstr "Conversație"
+
+#. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr "Director Executiv"
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr "Director Tehnic"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
+msgid "Child Departments"
+msgstr "Departamente Subordonate"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Citizenship"
+msgstr "Naționalitate"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "City"
+msgstr "Localitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,field_description:hr.field_res_users__coach_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
+msgid "Coach"
+msgstr "Instructor"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "Coach of employee %s is not set."
+msgstr "Antrenor angajat%s nu este setat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
+msgid "Color Index"
+msgstr "Index Culori"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_company
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
+msgid "Companies"
+msgstr "Companii"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Company"
+msgstr "Companie"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
+msgid "Company Country"
+msgstr "Țara companiei"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Company Logo"
+msgstr "Siglă comanie"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
+msgid "Company Working Hours"
+msgstr "Ore Lucru Companie"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_id
+msgid "Company employee"
+msgstr "Angajat Companie"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
+msgid "Complete Name"
+msgstr "Numele complet"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Configuration"
+msgstr "Configurare"
+
+#. module: hr
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr "Consultant"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Contact Information"
+msgstr "Informații de contact"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
+msgid "Contact Name"
+msgstr "Numele Contactului"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
+msgid "Contact Phone"
+msgstr "Telefon Contact"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_contract_type
+msgid "Contract Type"
+msgstr "Tip de contract"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
+msgid "Contract Types"
+msgstr "Tipuri de contract"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__contractor
+msgid "Contractor"
+msgstr "Contractor"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Country"
+msgstr "Țară"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
+msgid "Country Code"
+msgstr "Codul tarii"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
+msgid "Country of Birth"
+msgstr "Țara Natală"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
+msgid "Create Date"
+msgstr "Data creării"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
+msgid "Create Employee"
+msgstr "Creati Angajatul"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.server,name:hr.action_hr_employee_create_user
+#, python-format
+msgid "Create User"
+msgstr "Creați utilizator"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid "Create a new department"
+msgstr "Creați un departament nou"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Create content that will help our users on a daily basis"
+msgstr "Creați conținut care va ajuta utilizatorii noștri zilnic"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Create employee"
+msgstr "Creați un angajat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
+msgid "Currency"
+msgstr "Monedă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
+msgid "Current Number of Employees"
+msgstr "Numărul Actual de Angajati"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Customer Relationship"
+msgstr "Relația cu clienții"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
+msgid "Date of Birth"
+msgstr "Data nașterii"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_departure_reason.py:0
+#, python-format
+msgid "Default departure reasons cannot be deleted."
+msgstr "Motivul implicit de plecare nu poate fi șters."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_ceo
+msgid ""
+"Demonstration of different Odoo services for each client and convincing the client about functionality of the application.\n"
+"The candidate should have excellent communication skills.\n"
+"Relationship building and influencing skills\n"
+"Expertise in New Client Acquisition (NCAs) and Relationship Management.\n"
+"Gathering market and customer information.\n"
+"Coordinating with the sales and support team for adopting different strategies\n"
+"Reviewing progress and identifying opportunities and new areas for development.\n"
+"Building strong relationships with clients / customers for business growth profitability.\n"
+"Keep regular interaction with key clients for better extraction and expansion."
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__department_id
+#: model:ir.model.fields,field_description:hr.field_res_users__department_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__name
+msgid "Department Name"
+msgstr "Nume departament"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
+#, python-format
+msgid "Department Organization"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_department_kanban_action
+#: model:ir.actions.act_window,name:hr.hr_department_tree_action
+#: model:ir.ui.menu,name:hr.menu_hr_department_kanban
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+msgid "Departments"
+msgstr "Departamente"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Departure"
+msgstr "Plecare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
+msgid "Departure Date"
+msgstr "Dată Plecare"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
+msgid "Departure Reason"
+msgstr "Motiv Plecare"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_departure_reason_action
+#: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
+msgid "Departure Reasons"
+msgstr "Motivul Plecării"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Asistent Plecare"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Dependant"
+msgstr "Dependent"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
+msgid "Direct subordinates"
+msgstr "Subordonați direcți"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_employee
+msgid "Directory"
+msgstr "Director"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Discover our products."
+msgstr "Descoperă produsele noastre."
+
+#. module: hr
+#: model:ir.model,name:hr.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "Canal Discuții"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
+msgid "Divorced"
+msgstr "Divortat(a)"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
+msgid "Doctor"
+msgstr "Doctor"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
+msgid "Driving License"
+msgstr "Permis de Conducere"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Each employee has a chance to see the impact of his work.\n"
+"                        You can make a real contribution to the success of the company.\n"
+"                        <br>\n"
+"                        Several activities are often organized all over the year, such as weekly\n"
+"                        sports sessions, team building events, monthly drink, and much more"
+msgstr ""
+"Orice angajat are ocazia să vadă impactul muncii sale.\n"
+"Poți face o contribuție reală la succesul companiei.\n"
+"                        <br>\n"
+"                        De multe ori sunt organizate activități în cadrul companiei, cum ar fi\n"
+"                        sesiuni sportive săptămânale, evenimente de team building, petreceri lunare, etc."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Eat &amp; Drink"
+msgstr "Mâncare &amp; Băutură"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Education"
+msgstr "Educație"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Email"
+msgstr "Email"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "Alias-uri Email"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Emergency"
+msgstr "Urgență"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
+#: model:ir.model,name:hr.model_hr_employee
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_ids
+#: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
+#: model:ir.ui.menu,name:hr.menu_config_employee
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, python-format
+msgid "Employee"
+msgstr "Angajat"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "Categorie aAgajat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_count
+msgid "Employee Count"
+msgstr "Număr de angajați "
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
+msgid "Employee Editing"
+msgstr "Editare Angajați"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Employee Image"
+msgstr "Poză angajat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_lang
+msgid "Employee Lang"
+msgstr "Limbă Angajat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "Employee Name"
+msgstr "Nume angajat"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.model.fields,field_description:hr.field_res_users__category_ids
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
+msgid "Employee Tags"
+msgstr "Etichete Angajat"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/archive_employee_hook.js:0
+#, python-format
+msgid "Employee Termination"
+msgstr "Terminare Angajat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_type
+msgid "Employee Type"
+msgstr "Tip Angajat"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Employee Update Rights"
+msgstr "Drepturile de actualizare a angajaților"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
+msgid "Employee bank account to pay salaries"
+msgstr "Contul bancar al angajatului pentru plata salariilor"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
+msgid "Employee's Bank Account Number"
+msgstr "Număr Cont Bancar Angajați"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
+msgid "Employee's Country"
+msgstr "Țara Angajați "
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name"
+msgstr "Numele angajatului"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
+msgid "Employee's Working Hours"
+msgstr "Orele de lucru ale angajatului"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.act_employee_from_department
+#: model:ir.actions.act_window,name:hr.hr_employee_public_action
+#: model:ir.actions.act_window,name:hr.open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
+#: model:ir.ui.menu,name:hr.menu_hr_employee_user
+#: model:ir.ui.menu,name:hr.menu_hr_root
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Employees"
+msgstr "Angajați"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
+#: model:ir.model.fields,field_description:hr.field_res_users__employees_count
+msgid "Employees Count"
+msgstr "Numărul angajaților"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "Structura Angajați"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
+msgid "Employees Tags"
+msgstr "Etichete angajați"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Employment Type"
+msgstr "Tipul de angajare"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_contract_type_action
+#: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
+msgid "Employment Types"
+msgstr "Tipuri de angajare"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Enrich employee profiles with skills and resumes"
+msgstr "Îmbogățiți profilurile angajaților cu abilități și CV-uri"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,help:hr.field_res_users__address_home_id
+msgid "Enter here the private address of the employee, not the one linked to your company."
+msgstr "Introduceți aici adresa privată a angajatului, nu cea legată de compania dvs."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Expand your knowledge of various business industries"
+msgstr "Extindeți-vă cunoștințele despre diverse industrii de afaceri"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__expected_employees
+msgid "Expected number of employees for this job position after new recruitment."
+msgstr "Numărul prevazut de angajati pentru acest post dupa noua recrutare."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Experience in writing online content"
+msgstr "Experiență în scrierea de conținut online"
+
+#. module: hr
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
+msgstr "Dezvoltator experimentat"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Family Status"
+msgstr "Starea de familie"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
+msgid "Female"
+msgstr "Femeie"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
+#: model:ir.model.fields,field_description:hr.field_res_users__study_field
+msgid "Field of Study"
+msgstr "Domeniu de Studiu"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_fired
+msgid "Fired"
+msgstr "Concediat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_follower_ids
+msgid "Followers"
+msgstr "Persoane interesate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Urmăritori (Parteneri)"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/discuss_channel.py:0
+#, python-format
+msgid "For %(channels)s, channel_type should be 'channel' to have the department auto-subscription."
+msgstr "Pentru %(channels)s, channel_type trebuie să fie 'channel' pentru a avea abonamentul la departament automat."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
+msgid "Freelancer"
+msgstr "Liber profesionist"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Fruit, coffee and <br>snacks provided."
+msgstr "Fructe, cafea și <br> gustări oferite."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "Activități viitoare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__gender
+#: model:ir.model.fields,field_description:hr.field_res_users__gender
+msgid "Gender"
+msgstr "Sex"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Generate"
+msgstr "Generați"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Give more details about the reason of archiving the employee."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Google Adwords experience"
+msgstr "Experiență Google Adwords"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
+msgid "Graduate"
+msgstr "Licentiat"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Great team of smart people, in a friendly and open culture"
+msgstr "Echipă grozavă de oameni deștepți, într-o cultură prietenoasă și deschisă"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Group By"
+msgstr "Grupează după"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__subscription_department_ids
+msgid "HR Departments"
+msgstr "Departamente HR"
+
+#. module: hr
+#: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
+msgid "HR Employee: check work permit validity"
+msgstr "Angajat HR: verificați valabilitatea permisului de muncă"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "HR Settings"
+msgstr "Setări HR"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_job__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__has_message
+msgid "Has Message"
+msgstr "Are mesaj"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Highly creative and autonomous"
+msgstr "Foarte creativ și autonom"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
+msgid "Hired Employees"
+msgstr "Muncitori angajați"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+msgid "Home-Work Distance"
+msgstr "Distranța Lucru - Acasă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
+msgid "Homeworking"
+msgstr "Lucrul de acasă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
+msgid "Hr Icon Display"
+msgstr "Afișare pictogramă Hr"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
+msgid "Hr Presence State"
+msgstr "Stare Prezență HR"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+msgid "Human Resources"
+msgstr "Resurse Umane"
+
+#. module: hr
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr "Manager Resurse Umane"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr.field_hr_job__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
+msgid "ID Card Copy"
+msgstr "Copia buletinului de identitate"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "ID utilizat pentru identificare angajat."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_icon
+msgid "Icon"
+msgstr "Pictogramă"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Pictograma pentru a indica o activitate de excepție."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
+#: model:ir.model.fields,field_description:hr.field_res_users__identification_id
+msgid "Identification No"
+msgstr "Nr de identificare"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_job__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__active
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgstr "Dacă câmpul activ este setat pe Fals, vă permite să ascundeți resursa fără să o ștergeți."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
+msgid "If you have more than one car, just separate the plates by a space."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
+msgid "Image"
+msgstr "Imagine"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
+msgid "Image 1024"
+msgstr "Imagine 1024"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__image_128
+msgid "Image 128"
+msgstr "Imagine 128"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
+msgid "Image 256"
+msgstr "Imagine 256"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
+msgid "Image 512"
+msgstr "Imagine 512"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "Import Template for Employees"
+msgstr "Importare Model de Anagajat"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_interim
+msgid "Interim"
+msgstr "Interim"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_is_follower
+msgid "Is Follower"
+msgstr "Este urmăritor"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__is_system
+msgid "Is System"
+msgstr "Este sistem"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+msgid "Job"
+msgstr "Loc de munca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__description
+msgid "Job Description"
+msgstr "Fișa postului"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__name
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Job Position"
+msgstr "Funcție"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_view_hr_job
+msgid "Job Positions"
+msgstr "Pozitii functie"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Summary"
+msgstr "Rezumatul postului"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
+#: model:ir.model.fields,field_description:hr.field_res_users__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "Job Title"
+msgstr "Funcție"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Jobs"
+msgstr "Locuri de munca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__lang
+msgid "Lang"
+msgstr "Limbă"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Language"
+msgstr "Limba"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity
+msgid "Last Activity"
+msgstr "Ultima activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
+msgid "Last Activity Time"
+msgstr "Dată ultima Activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "Activități întârziate"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Launch Plan"
+msgstr "Plan de Lansare"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "Launch Plans"
+msgstr "Planuri de Lansare"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Lead the entire sales cycle"
+msgstr "Conduce întregul ciclu de vânzări"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
+msgid "Legal Cohabitant"
+msgstr "Coabitant Legal"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
+msgid "Let's create a job position."
+msgstr "Haide să creăm a poziție de muncă."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Location"
+msgstr "Locație"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
+msgid "Location Number"
+msgstr "Numărul Locației"
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_hrm
+msgid "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Atașament principal"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
+msgid "Male"
+msgstr "Barbat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__manager
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Manager"
+msgstr "Manager"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "Manager of employee %s is not set."
+msgstr "Managager Angajat %s nu este setat."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__marital
+#: model:ir.model.fields,field_description:hr.field_res_users__marital
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Marital Status"
+msgstr "Stare civila"
+
+#. module: hr
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr "Manager Marketing și Comunitate"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
+msgid "Married"
+msgstr "Casatorit(a)"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
+msgid "Master"
+msgstr "Master"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
+msgid "Master Department"
+msgstr "Departament Master"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Master demos of our software"
+msgstr "Demonstrații Master ale software-ului nostru"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
+msgid "Member of department"
+msgstr "Membru al departamentului"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
+msgid "Members"
+msgstr "Membri"
+
+#. module: hr
+#: model:ir.model,name:hr.model_ir_ui_menu
+msgid "Menu"
+msgstr "Meniu"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error
+msgid "Message Delivery error"
+msgstr "Eroare livrare mesaj"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_ids
+msgid "Messages"
+msgstr "Mesaje"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Must Have"
+msgstr "Trebuie să aibă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Data limită a activității mele"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Department"
+msgstr "Departamentul meu"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/user_menu/my_profile.js:0
+#, python-format
+msgid "My Profile"
+msgstr "Profilul Meu"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Team"
+msgstr "Echipa mea"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
+msgid "Nationality (Country)"
+msgstr "Naționalitate (Țara)"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Negotiate and contract"
+msgstr "Negociază și contractează"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Următoarea activitate din calendar"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Data limită pentru următoarea activitate"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sumarul următoarei activități"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tip de activitate urmatoare"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_employee_activity_kanban
+msgid "Next Activity:"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Nice to have"
+msgstr "Dorit"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No dumb managers, no stupid tools to use, no rigid working hours"
+msgstr "Fără manageri proști, fără instrumente stupide de folosit, fără ore de lucru rigide"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "No specific user given on activity %s."
+msgstr "Nu a fost specificat niciun utilizator specific despre activitate %s."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr "Fără pierderi de timp în procesele de afaceri, responsabilități reale și autonomie"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Not available"
+msgstr "Nu este disponibil"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__note
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
+msgid "Note"
+msgstr "Notă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__notes
+msgid "Notes"
+msgstr "Note"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Număr de acțiuni"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__children
+#: model:ir.model.fields,field_description:hr.field_res_users__children
+msgid "Number of Dependent Children"
+msgstr "Numărul copiilor dependenți"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
+msgid "Number of employees currently occupying this job position."
+msgstr "Numărul de angajati care ocupa in prezent aceasta functie."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error_counter
+msgid "Number of errors"
+msgstr "Numărul de erori"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
+msgid "Number of hired employees for this job position during recruitment phase."
+msgstr "Numărul de muncitori angajați pentru acest post în faza de recrutare."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Număr de mesaje ce necesită intervenție"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Numărul de mesaje cu eroare de livrare"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
+msgid "Number of new employees you expect to recruit."
+msgstr "Numărul angajatilor noi pe care planuiti sa ii recrutati."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contacts_count
+msgid "Number of related contacts"
+msgstr "Numărul de contacte înrudite"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                    related to employees by departments: expenses, timesheets,\n"
+"                    leaves, recruitments, etc."
+msgstr ""
+"Odoo's department structure is used to manage all documents\n"
+"                    legate de angajați pe departamente: cheltuieli, fișe de timp,\n"
+"                    concedii, recrutări etc."
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                time off, recruitments, etc."
+msgstr ""
+"Structura departamentului Odoo este utilizată pentru a gestiona toate documentele\n"
+"               legate de angajați pe departamente: cheltuieli, fișe de timp,\n"
+"                timp liber, recrutări etc."
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer: Manage all employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "On/Offboarding Plans"
+msgstr "Planuri de On/Offboarding"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operațiunea nu este acceptată"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
+msgid "Other"
+msgstr "Altul"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Other Responsible"
+msgstr "Altă persoană responsabilă"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Our Product"
+msgstr "Produsul Nostru"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
+msgid "PIN"
+msgstr "PIN"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "PIN Code"
+msgstr "Cod PIN"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
+msgid "PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application."
+msgstr "PIN folosit pentru Check In/Out în modul Kiosk al aplicației de prezență (dacă este activată în Configurație) și pentru a schimba casierul în aplicația de vânzări."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
+msgid "Parent Department"
+msgstr "Departament Superior"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
+msgid "Parent Path"
+msgstr "Cale părinte"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
+msgid "Partner-related data of the user"
+msgstr "Datele utilizatorului legate de partener"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Passion for software products"
+msgstr "Pasiune pentru produse software"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
+#: model:ir.model.fields,field_description:hr.field_res_users__passport_id
+msgid "Passport No"
+msgstr "Nr pasaport"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Payroll"
+msgstr "Stat de plată"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perfect written English"
+msgstr "Engleză perfectă scrisă"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perks"
+msgstr "Avantaje"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_permanent
+msgid "Permanent"
+msgstr "Permanent"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Personal Evolution"
+msgstr "Evoluție personală"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#, python-format
+msgid "Personal information update."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__place_of_birth
+msgid "Place of Birth"
+msgstr "Locul nașterii"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_employee_activity
+#: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+msgid "Plan"
+msgstr "Plan"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+msgid "Plan Activities"
+msgstr "Activități planificate"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Plan Name"
+msgstr "Nume plan"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_wizard
+msgid "Plan Wizard"
+msgstr "Asistent Planificator"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_activity_type
+msgid "Plan activity type"
+msgstr "Planificare tip activitate "
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
+msgid "Planning"
+msgstr "Planificare"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+msgid "Plans"
+msgstr "Planuri"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
+msgid "Plans Count"
+msgstr "Număr planuri"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Play any sport with colleagues, <br>the bill is covered."
+msgstr "Joacă orice sport cu colegii, <br>factura este acoperită."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Politica de a posta un mesaj pe document folosind mailgateway.\n"
+"- toată lumea: toată lumea poate posta\n"
+"- parteneri: numai parteneri autentificați\n"
+"- adepți: numai adepți ai documentului aferent sau membri ai canalelor următoare\n"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence Control"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence of employees"
+msgstr "Prezența Angajațiilor"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence reporting screen, email and IP address control."
+msgstr "Prezentarea ecranului de raportare, a adresei de e-mail și a adresei IP."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
+msgid "Present"
+msgstr "Prezent"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
+msgid "Present but not active"
+msgstr "Prezent dar nu este activ"
+
+#. module: hr
+#: model:ir.actions.report,name:hr.hr_employee_print_badge
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Print Badge"
+msgstr "Tipărire ecuson"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Private Address"
+msgstr "Adresă privată"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
+msgid "Private Car Plate"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_city
+msgid "Private City"
+msgstr "Localitate Privată"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Contact"
+msgstr "Contact Privat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
+msgid "Private Country"
+msgstr "Țara Privată"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
+#: model:ir.model.fields,field_description:hr.field_res_users__private_email
+msgid "Private Email"
+msgstr "Email Privat "
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Information"
+msgstr "Informații private"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+msgid "Private Phone"
+msgstr "Telefon Privat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
+msgid "Private State"
+msgstr "Stat Privat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street
+msgid "Private Street"
+msgstr "Stradă Privată"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street2
+msgid "Private Street2"
+msgstr "Stradă Privată 2"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_zip
+msgid "Private Zip"
+msgstr "Cod Poștal Privat"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Angajați Publici "
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Qualify the customer needs"
+msgstr "Calificați nevoile clientului"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
+msgid "Ready to recruit more efficiently?"
+msgstr "Sunteți pregătit să recrutezi mai eficient?"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Real responsibilities and challenges in a fast evolving company"
+msgstr "Responsabilități și provocări reale într-o companie cu evoluție rapidă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
+msgid "Reason"
+msgstr "Motiv"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_recruitment
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "Recrutare"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
+#, python-format
+msgid "Register Departure"
+msgstr "Înregistrare Plecare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
+msgid "Related Contact"
+msgstr "Contacte Asociate"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Related Contacts"
+msgstr "Contacte Asociate"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
+#, python-format
+msgid "Related Employees"
+msgstr "Angajați Asociați"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Related User"
+msgstr "Utilizator asociat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
+msgid "Related employee"
+msgstr "Angajat aferent"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee_ids
+msgid "Related employees based on their private address"
+msgstr "Angajați aferenți pe baza adresei private"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Numele utilizatorului asociat resursei pentru a-i gestiona accesul."
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_hr_reports
+#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+msgid "Reporting"
+msgstr "Raportare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__requirements
+msgid "Requirements"
+msgstr "Cerințe"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_resigned
+msgid "Resigned"
+msgstr "Demisionat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
+msgid "Resource"
+msgstr "Resursă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
+msgid "Resource Calendar"
+msgstr "Calendar resurse"
+
+#. module: hr
+#: model:ir.model,name:hr.model_resource_resource
+msgid "Resources"
+msgstr "Resurse"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Responsibilities"
+msgstr "Responsabilități"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
+msgid "Responsible"
+msgstr "Responsabil"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_user_id
+msgid "Responsible User"
+msgstr "Utilizator responsabil"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_retired
+msgid "Retired"
+msgstr "Pensionat"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
+msgid "SIN No"
+msgstr "CNP"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
+msgid "SSN No"
+msgstr "CNP"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
+msgid "Save"
+msgstr "Salvează"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Schedule"
+msgstr "Programare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
+#: model:ir.model.fields,field_description:hr.field_res_users__study_school
+msgid "School"
+msgstr "Școală"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,help:hr.field_res_users__coach_id
+msgid ""
+"Select the \"Employee\" who is the coach of this employee.\n"
+"The \"Coach\" has no specific rights or responsibilities by default."
+msgstr ""
+"Selectați \"Angajatul\" care este antrenorul acestui angajat.\n"
+"Antrenorul nu are drepturi sau responsabilități specifice în mod implicit."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_job__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Set default company schedule to manage your employees working time"
+msgstr "Setați programul implicit al companiei pentru a vă gestiona timpul de lucru al angajaților"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
+msgid "Settings"
+msgstr "Setări"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__show_hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
+msgid "Show Hr Icon Display"
+msgstr "Afișează iconița Hr"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
+#, python-format
+msgid "Show employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
+msgid "Single"
+msgstr "Necasatorit(a)"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
+msgid "Skills Management"
+msgstr "Management Competențe "
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__sinid
+msgid "Social Insurance Number"
+msgstr "Numar Asigurari Sociale"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
+msgid "Social Security Number"
+msgstr "Numar Asigurare Sociala"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
+msgid "Specific responsible of activity if not linked to the employee."
+msgstr "Responsabil specific de activitate, dacă nu este legat de angajat."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Sport Activity"
+msgstr "Activitate sportivă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
+msgid "Spouse Birthdate"
+msgstr "Dată Naștere Soție"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
+msgid "Spouse Complete Name"
+msgstr "Nume Complet Soție"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "State"
+msgstr "Stare"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Status"
+msgstr "Stare"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Stare bazată pe activități\n"
+"Întârziată: data scadentă este deja trecută\n"
+"Astăzi: activității pentru astăzi\n"
+"Planificate: activități viitoare."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
+msgid "Steps Count"
+msgstr "Număr de pași"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street 2..."
+msgstr "Strada 2..."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street..."
+msgstr "Strada..."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Strong analytical skills"
+msgstr "Abilități analitice puternice"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__student
+msgid "Student"
+msgstr "Student"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__summary
+msgid "Summary"
+msgstr "Sumar"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
+msgid "Tag Name"
+msgstr "Nume eticheta"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
+msgid "Tag name already exists!"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Tags"
+msgstr "Etichete"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
+msgid "Target"
+msgstr "Țintă"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Technical Expertise"
+msgstr "Expertiză tehnică"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
+msgid "Technical field, bind user to this employee on create"
+msgstr "Câmp tehnic, atașați utilizatorul acestui angajat la creare"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee
+msgid "Technical field, whether to create an employee"
+msgstr "Câmp tehnic, dacă să creeați un angajat"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_temporary
+msgid "Temporary"
+msgstr "Temporar"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
+msgid "The Badge ID must be unique, this one is already assigned to another employee."
+msgstr "ID-ul de Ecuson trebuie să fie unic, acesta este deja atribuit unui alt angajat."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Codul ISO al țării din două caractere.\n"
+"Puteți utiliza acest câmp pentru căutări rapide."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The PIN must be a sequence of digits."
+msgstr "PIN-ul trebuie să fie o secvență de cifre."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The employee %s should be linked to a user."
+msgstr "Angajatul %s trebuie să fie legat de un utilizator."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
+msgid "The employee address has a company linked"
+msgstr "Adresa angajatului are o companie legată"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,help:hr.field_res_users__employee_type
+msgid "The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History."
+msgstr "Tipul angajatului. Deși scopul principal poate părea a fi de a categoriza angajații, acest câmp are și un impact în Istoricul Contractului. Numai Tipul Angajatului este supus unui contract și va avea un Istoric Contract."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The employees should belong to the same company."
+msgstr "Angajații trebuie să aparțină aceleiași companii."
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
+msgid "The expected number of new employees must be positive."
+msgstr "Numărul așteptat de noi angajați trebuie să fie pozitiv."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The fields \"%s\" you try to read is not available on the public employee profile."
+msgstr "Câmpurile \"%s\" pe care încercați să le citiți nu sunt disponibile pe profilul angajaților publici."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#, python-format
+msgid "The following fields were modified by %s"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The manager of %s should be linked to a user."
+msgstr "Managerul %s trebuie să fie legat de un utilizator."
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
+msgid "The name of the job position must be unique per department in company!"
+msgstr "Numele postului de muncă trebuie să fie unic pentru fiecare departament din companie!"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s cannot be launched: <br><ul>"
+msgstr "Planul %s nu poate fi lansat: <br><ul>"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s has been started"
+msgstr "Planul %s a fost lansat"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The user of %s's coach is not set."
+msgstr ""
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "The user will be able to approve document created by employees."
+msgstr "Utilizatorul va putea aproba documentele create de angajați."
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid "The user will have access to the human resources configuration as well as statistic reports."
+msgstr "Utilizatorul va avea acces la configurația resurselor umane, precum și la rapoarte statistice"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The work permit of %(employee)s expires at %(date)s."
+msgstr "Permisul de muncă al %(employee)s expiră la %(date)s."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "This employee already has an user."
+msgstr "Acest angajat are deja un utilizator."
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_public__tz
+msgid "This field is used in order to define in which timezone the resources will work."
+msgstr "Acest câmp este utilizat pentru a defini în ce fus orar vor funcționa resursele."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
+msgid "Timezone"
+msgstr "Fus orar"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
+msgid "To Define"
+msgstr "Pentru definire"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead."
+msgstr "Pentru a evita problemele de companie multiplă (pierderea accesului la contractele anterioare, concediile, ...), ar trebui să creați un alt angajat în noua companie."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
+msgid "To define"
+msgstr "Pentru a defini"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "Activitățile de astăzi"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
+msgid "Total Employee"
+msgstr "Numărul total de angajați"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
+msgid "Total Forecasted Employees"
+msgstr "Total Angajati Estimati"
+
+#. module: hr
+#: model:hr.job,name:hr.job_trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__trainee
+msgid "Trainee"
+msgstr "Stagiar"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Trainings"
+msgstr "Instruiri"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipul activității de excepție din înregistrare."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
+msgid "Undetermined"
+msgstr "Nedeterminat"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Unread Messages"
+msgstr "Mesaje necitite"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
+msgid "User"
+msgstr "Operator"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
+msgid "User's partner"
+msgstr "Partener Utilizator"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies:"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
+msgid "Valid IP addresses"
+msgstr "IP-uri adrese valabile"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Valid work permit for Belgium"
+msgstr "Permis de muncă valabil pentru Belgia"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
+msgid "Visa Expire Date"
+msgstr "Data expirarii vizei"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_no
+msgid "Visa No"
+msgstr "Nr viza"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
+#, python-format
+msgid "Warning"
+msgstr "Atenție"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What We Offer"
+msgstr "Ce oferim"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What's great in the job?"
+msgstr "Ce este bun in job?"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
+msgid "Whether the employee is a member of the active user's department or one of it's child department."
+msgstr "Indica daca angajatul este membru al departamentului activ al utilizatorului sau al unui departament copil."
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
+msgid "Widower"
+msgstr "Vaduv"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                    can easily find all the information you need for each person;\n"
+"                    contact data, job position, availability, etc."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+"Cu o privire rapidă pe ecranul angajaților Odoo, puteți\n"
+"                găsi cu ușurință toate informațiile de care aveți nevoie pentru fiecare persoană;\n"
+"                date de contact, poziția postului, disponibilitate etc"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__address_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_id
+msgid "Work Address"
+msgstr "Adresă loc de muncă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
+msgid "Work Contact"
+msgstr "Contact loc de muncă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
+#: model:ir.model.fields,field_description:hr.field_res_users__work_email
+msgid "Work Email"
+msgstr "Email serviciu"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "Informații lucru"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__name
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
+msgid "Work Location"
+msgstr "Loc muncă"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_work_location_action
+#: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
+msgid "Work Locations"
+msgstr "Locuri muncă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
+msgid "Work Mobile"
+msgstr "Mobil serviciu"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr "Organizare lucru"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "Permis de munca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
+msgid "Work Permit Expiration Date"
+msgstr "Data expirării permisului de muncă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
+#: model:ir.model.fields,field_description:hr.field_res_users__permit_no
+msgid "Work Permit No"
+msgstr "Nr permis de munca"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
+msgid "Work Permit Scheduled Activity"
+msgstr "Activitate programată permis de muncă"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__work_phone
+msgid "Work Phone"
+msgstr "Telefon la serviciu"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
+msgid "Working Hours"
+msgstr "Program de lucru"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#, python-format
+msgid "You are only allowed to update your preferences. Please contact a HR officer to update other information."
+msgstr "Vi se permite doar să vă actualizați preferințele. Vă rugăm să contactați un responsabil cu resurse umane pentru a actualiza alte informații."
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/thread_service_patch.js:0
+#, python-format
+msgid "You can only chat with employees that have a dedicated user."
+msgstr "Puteți discuta numai cu angajații care au un utilizator dedicat."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_department.py:0
+#, python-format
+msgid "You cannot create recursive departments."
+msgstr "Nu puteți crea departamente recursive."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr "Nu aveți acces la acest document."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_trainee
+msgid ""
+"You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.\n"
+"You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),\n"
+"to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,\n"
+"to suggest improvements in order to cover the new domains of the software.\n"
+"You join the Implementation Assistance department. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be\n"
+"to animate webinars in order to show the different functionalities of the software.\n"
+"to be involved in the support of the customers and\n"
+"to answer to their questions.\n"
+"You help the support manager to set up new support services by\n"
+"being involved in the treatment of new cases,\n"
+"contributing to the set up of a new politic,\n"
+"being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_config_settings.py:0
+#, python-format
+msgid "You should select at least one Advanced Presence Control option."
+msgstr "Ar trebui să selectați cel puțin o opțiune Advanced Presence Control."
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_cto
+msgid ""
+"You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.\n"
+"\n"
+"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "ZIP"
+msgstr "Cod poștal"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/mail_alias.py:0
+#, python-format
+msgid "addresses linked to registered employees"
+msgstr "adresele asociate angajaților înregistrați"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+msgid "department"
+msgstr "departament"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "e.g. John Doe"
+msgstr "ex. John Doe"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "e.g. Onboarding"
+msgstr "ex. Onboarding"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr "ex. Director vânzări"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan
+msgid "plan"
+msgstr "plan"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/models.py:0
+#, python-format
+msgid "restricted to employees"
+msgstr "limitat la angajați"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//li[hasclass('backend-button')]" position="before">
+            <li t-if="pos.mainScreen.component.name == 'FloorScreen'" class="menu-item navbar-button edit-button" t-on-click="toggleEditMode">
+                <a class="dropdown-item py-2">Edit Plan</a>
+            </li>
+            <li t-if="pos.mainScreen.component.name == 'FloorScreen'" class="menu-item navbar-button" t-on-click="onSwitchButtonClick">
+                <a class="dropdown-item py-2">Switch Floor View</a>
+            </li>
+        </xpath>
+    </t>
+
+</templates>

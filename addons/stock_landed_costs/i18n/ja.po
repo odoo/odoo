@@ -1,0 +1,747 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_landed_costs
+# 
+# Translators:
+# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid " already out"
+msgstr " すでに出荷"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "<span class=\"o_stat_text\">Valuation</span>"
+msgstr "<span class=\"o_stat_text\">評価</span>"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"在庫可能品は在庫管理対象の製品です。在庫アプリのインストールが必要です。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではない製品です。\n"
+"サービス品は物理的なモノが存在しない無形の製品です。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
+msgid "Account"
+msgstr "勘定科目"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
+msgid "Account Journal"
+msgstr "会計仕訳帳"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外活動文字装飾"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
+msgstr "活動状態"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Additional Costs"
+msgstr "追加コスト"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
+msgid "Additional Landed Cost"
+msgstr "追加仕入諸掛"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
+msgid "Apply On"
+msgstr "適用対象"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
+msgid "By Current Cost"
+msgstr "現在原価比"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_quantity
+msgid "By Quantity"
+msgstr "数量比"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_volume
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_volume
+msgid "By Volume"
+msgstr "容積比"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_weight
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_weight
+msgid "By Weight"
+msgstr "重量比"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
+msgid "Cancelled"
+msgstr "取消済"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Compute"
+msgstr "集計日"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
+msgid "Cost"
+msgstr "原価"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
+msgid "Cost Line"
+msgstr "諸掛明細"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cost Lines"
+msgstr "諸掛明細"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr "コストの調整明細が一致していません。あなたはおそらく輸送コストを再計算する必要があります。"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+msgid "Create Landed Costs"
+msgstr "仕入諸掛を作成"
+
+#. module: stock_landed_costs
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid "Create a new landed cost"
+msgstr "仕入諸掛を作成しましょう。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__currency_id
+msgid "Currency"
+msgstr "通貨"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Date"
+msgstr "日付"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Default Journal"
+msgstr "デフォルト仕訳帳"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method"
+msgstr "デフォルトの分割方法"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method when used for Landed Cost"
+msgstr "仕入諸掛用に使用される際のデフォルトの分割方法"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__name
+msgid "Description"
+msgstr "説明"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Done"
+msgstr "完了"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Draft"
+msgstr "ドラフト"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__equal
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__equal
+msgid "Equal"
+msgstr "等分"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid ""
+"Equal: Cost will be equally divided.\n"
+"By Quantity: Cost will be divided according to product's quantity.\n"
+"By Current cost: Cost will be divided according to product's current cost.\n"
+"By Weight: Cost will be divided depending on its weight.\n"
+"By Volume: Cost will be divided depending on its volume."
+msgstr ""
+"平等: 原価は均等に分配されます。\n"
+"数量ごと: 原価はプロダクトの数量に応じて分割されます。\n"
+"現在の原価ごと: 原価は製品の現在の原価に応じて分割されます。\n"
+"重量ごと: 原価はプロダクトの重量に応じて分割されます。\n"
+"体積ごと: 原価は体積に応じて分割されます。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr "今後の活動"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外活動を示すアイコン"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
+msgstr "そのプロダクトが仕入諸掛であるかどうかを示します。仕入先請求書を受け取る際、この原価を先行する領収書に割り当てることができます。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中　"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
+msgid "Is Landed Costs Line"
+msgstr "仕入諸掛明細"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr "仕入諸掛"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
+msgid "Item Description"
+msgstr "項目説明"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳項目"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed Cost"
+msgstr "仕入諸掛"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
+#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
+msgid "Landed Costs"
+msgstr "仕入諸掛"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
+msgid "Landed Costs Visible"
+msgstr "仕入諸掛表示"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Landed cost validated"
+msgstr "仕入諸掛検証済"
+
+#. module: stock_landed_costs
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid ""
+"Landed costs allow you to include additional costs (shipment, insurance, "
+"customs duties, etc) into the cost of the product."
+msgstr "仕入諸掛によって追加原価(送料、保険料、関税など)をプロダクト原価に含めることができます。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr "遅れた活動"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
+msgid "Lc Journal"
+msgstr "Lc 仕訳帳"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動期限"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Name"
+msgstr "名称"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "New"
+msgstr "新規"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
+msgid "New Value"
+msgstr "新しい値"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "次の活動期限"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr "次の活動概要"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
+msgstr "次の活動タイプ"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクション数"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーが発生されたメッセージ数"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Only draft landed costs can be validated"
+msgstr "ドラフトのの仕入諸掛のみを検証することができます"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
+msgid "Original Value"
+msgstr "取得価格"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Picking"
+msgstr "ピッキング"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please configure Stock Expense Account for product: %s."
+msgstr "製品：%s の在庫経費勘定を設定してください。"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please define %s on which those additional costs should apply."
+msgstr "これらの追加原価が適用される%sを定義して下さい。"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
+msgid "Posted"
+msgstr "記帳済"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_product_template
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__product_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__product_id
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
+msgid "Product Type"
+msgstr "プロダクトタイプ"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "購買オーダ明細"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
+msgid "Quantity"
+msgstr "数量"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__rating_ids
+msgid "Ratings"
+msgstr "評価"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr "担当ユーザ"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid "Split Method"
+msgstr "配賦方法"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
+msgid "State"
+msgstr "都道府県・州"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Status"
+msgstr "状態"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr "在庫仕入諸掛"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
+msgid "Stock Landed Cost Line"
+msgstr "在庫仕入諸掛明細"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr "在庫評価レイヤ"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
+msgid "Total"
+msgstr "合計"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
+msgid "Transfers"
+msgstr "移動"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外活動の種類。"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Validate"
+msgstr "検証"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr "一旦検証された仕入諸掛は取り消せません。必要に応じてマイナスの仕入諸掛を作成してください。"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Valuation Adjustment Lines"
+msgstr "評価調整明細"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation Adjustments"
+msgstr "評価調整"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
+msgid "Vendor Bill"
+msgstr "仕入先請求書"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
+msgid "Volume"
+msgstr "容積"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "ウェブサイトメッセージ"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "ウェブサイト通信履歴"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
+msgid "Weight"
+msgstr "重量"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr "選択した%sに仕入諸掛を適用することはできません。仕入諸掛を適用できるのは、先入先出法または平均原価計算法のプロダクトのみです。"
+
+#. module: stock_landed_costs
+#. odoo-python
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr "そのプロダクトが会計仕訳明細で使用されているため、プロダクトタイプを変更したり、仕入諸掛オプションを無効にしたりすることはできません。"

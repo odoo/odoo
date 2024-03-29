@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_stage_view_tree" model="ir.ui.view">
+        <field name="name">project.project.stage.view.tree</field>
+        <field name="model">project.project.stage</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" sample="1" delete="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name" placeholder="e.g. To Do"/>
+                <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="fold" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_form_quick_create" model="ir.ui.view">
+        <field name="name">project.project.stage.view.form.quick.create</field>
+        <field name="model">project.project.stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" placeholder="e.g. To Do"/>
+                    <field name="mail_template_id"/>
+                    <field name="fold"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_form" model="ir.ui.view">
+        <field name="name">project.project.stage.view.form</field>
+        <field name="model">project.project.stage</field>
+        <field name="arch" type="xml">
+            <form delete="0">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <h1><field name="name" placeholder="e.g. To Do"/></h1>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="mail_template_id" context="{'default_model': 'project.project'}"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_kanban" model="ir.ui.view">
+        <field name="name">project.project.stage.view.kanban</field>
+        <field name="model">project.project.stage</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" quick_create_view="project.project_project_stage_view_form_quick_create">
+                <field name="name"/>
+                <field name="mail_template_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_record oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <br/>
+                            <span class="text-muted" invisible="not mail_template_id">
+                                <field name="mail_template_id"/>
+                                <br/>
+                            </span>
+                            <span groups="base.group_multi_company" invisible="not company_id">
+                                <field name="company_id"/>
+                                <br/>
+                            </span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_project_stage_view_search" model="ir.ui.view">
+        <field name="name">project.project.stage.view.search</field>
+        <field name="model">project.project.stage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="mail_template_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_project_stage_configure" model="ir.actions.act_window">
+        <field name="name">Project Stages</field>
+        <field name="res_model">project.project.stage</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No stages found. Let's create one!
+            </p><p>
+              Define the steps your projects move through from creation to completion.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_project_stage_configure_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_project_stage_view_tree"/>
+        <field name="act_window_id" ref="project_project_stage_configure"/>
+    </record>
+
+    <record id="project_project_stage_configure_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_project_stage_view_kanban"/>
+        <field name="act_window_id" ref="project_project_stage_configure"/>
+    </record>
+
+    <record id="project_project_stage_configure_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_project_stage_view_form"/>
+        <field name="act_window_id" ref="project_project_stage_configure"/>
+    </record>
+
+    <record id="unlink_project_stage_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="project.model_project_project_stage"/>
+        <field name="binding_model_id" ref="project.model_project_project_stage"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.unlink_wizard(stage_view=True)</field>
+    </record>
+</odoo>

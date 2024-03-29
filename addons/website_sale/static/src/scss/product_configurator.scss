@@ -1,0 +1,315 @@
+.css_attribute_color {
+    position: relative;
+    display: inline-block;
+    border: 5px solid $input-border-color;
+    border-radius: 50%;
+    text-align: center;
+    transition: $input-transition;
+
+    @include o-field-pointer();
+
+    &:before {
+        content: "";
+        display: block;
+        @include o-position-absolute(-3px, -3px, -3px, -3px);
+        border: 4px solid white;
+        border-radius: 50%;
+        box-shadow: inset 0 0 3px rgba(black, 0.3);
+    }
+
+    input {
+        margin: 8px;
+        height: 13px;
+        width: 13px;
+        opacity: 0;
+    }
+
+    &.active {
+        border: 5px solid map-get($theme-colors, 'primary');
+    }
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+}
+
+.css_not_available_msg {
+    display: none;
+}
+
+.css_not_available.js_product {
+    .css_quantity {
+        display: none !important;
+    }
+
+    .css_not_available_msg {
+        display: block;
+    }
+
+    .js_add,
+    .oe_price,
+    .oe_default_price,
+    .oe_optional {
+        display: none;
+    }
+}
+
+.css_quantity {
+    width: initial; // We don't want the quantity form to be full-width
+
+    .btn, input {
+        border-color: $input-border-color;
+    }
+
+    input {
+        // Needs !important because themes customize btns' padding direclty
+        // rather than change '$input-btn-padding-X' (shared with inputs).
+        height: auto !important;
+        max-width: 5ch;
+    }
+}
+
+option.css_not_available {
+    color: #ccc;
+}
+
+$-arrow-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#000'><polygon points='0,0 100,0 50,50'/></svg>");
+
+select.form-select.css_attribute_select {
+    background-image: str-replace($-arrow-url, "#000", str-replace(#{$input-color}, "#", "%23"));
+    background-size: 20px;
+    background-position: 100% 65%;
+    background-repeat: no-repeat;
+    max-width: 400px;
+}
+// In the case of a modal, we cannot rely on '$input-color' to define the color
+// of the select arrow because '$input-color' is set based on the background
+// color of the body. In modals, the input color is adjusted based on the
+// modal's background color (see 'bootstrap_review_frontend.scss').
+@if ($modal-content-color == null) and ($form-select-bg == $body-bg) {
+    .modal-content {
+        select.form-select.css_attribute_select {
+            background-image: str-replace($-arrow-url, "#000", str-replace(#{color-contrast($modal-content-bg)}, "#", "%23"));
+        }
+    }
+}
+
+label, .o_variant_pills {
+    &.css_not_available {
+        opacity: 0.6;
+    }
+}
+
+label.css_attribute_color.css_not_available {
+    opacity: 1;
+
+    &:after {
+        content: "";
+        @include o-position-absolute(-5px, -5px, -5px, -5px);
+        border: 2px solid map-get($theme-colors, 'danger');
+        border-radius: 50%;
+        background: str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='39' height='39'><line y2='0' x2='39' y1='39' x1='0' style='stroke:#{map-get($theme-colors, 'danger')};stroke-width:2'/><line y2='1' x2='40' y1='40' x1='1' style='stroke:rgb(255,255,255);stroke-width:1'/></svg>"), "#", "%23") ;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+.variant_attribute {
+    padding-bottom: 1rem;
+
+    .attribute_name {
+        display: flex;
+        align-items: center;
+        @include font-size(0.9rem);
+        text-transform: uppercase;
+        padding-bottom: 0.5rem;
+
+        &:after {
+            content: '';
+            margin-left: $spacer;
+            flex-grow: 1;
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    .radio_input_value {
+        font-weight: 400;
+
+        &:not(.o_variant_pills_input_value) {
+            margin-right: $spacer;
+
+            &, > span {
+                vertical-align: middle;
+            }
+        }
+        &.o_variant_pills_input_value {
+            .badge {
+                color: map-get($grays, '600');
+                background: white;
+                border: 1px solid map-get($theme-colors, 'primary');
+
+                &, > span {
+                    vertical-align: middle;
+                }
+
+                .sign_badge_price_extra {
+                    @include font-size(1.1rem);
+                }
+            }
+        }
+    }
+
+    .variant_custom_value {
+        margin-bottom: 0.7rem;
+
+        &.custom_value_radio {
+            display: inline-block;
+        }
+    }
+
+    select {
+        margin-bottom: 0.5rem;
+    }
+
+    ul.list-inline {
+        margin-left: 0;
+    }
+
+    .o_variant_pills {
+        padding: $spacer/2 $spacer;
+        margin-right: 0.2rem;
+        border: none;
+        cursor: default !important;
+
+        &.btn.active {
+            background-color: map-get($theme-colors, 'primary');
+        }
+        &:not(.active) {
+            color: map-get($grays, '600');
+            background-color: map-get($grays, '200');
+        }
+
+        input {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            opacity: 0;
+        }
+    }
+
+    .radio_input_value, select, label {
+        .badge {
+            margin-left: 3px;
+            padding-left: 3px;
+        }
+
+        .sign_badge_price_extra {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            color: map-get($theme-colors, 'primary');
+            background: white;
+            line-height: 1rem;
+            border-radius: 50%;
+        }
+    }
+}
+
+.o_product_configurator {
+    .product_detail_img {
+        max-height: 240px;
+    }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    .o_select_options {
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+
+    .o_total_row {
+        @include font-size(1.2rem);
+    }
+}
+
+.modal.o_technical_modal .oe_advanced_configurator_modal .btn.js_add_cart_json {
+    padding: 0.075rem 0.75rem;
+}
+
+.js_product {
+
+    .td-product_name {
+        word-wrap: break-word;
+    }
+
+    .td-product_name {
+        min-width: 140px;
+    }
+
+    .td-img {
+        width: 100px;
+    }
+
+    .td-qty {
+        width: 200px;
+        a.input-group-addon {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .input-group {
+            display: inline-flex;
+        }
+    }
+    .td-action {
+        width: 30px;
+    }
+
+    .td-price,
+    .td-price-total {
+        width: 120px;
+    }
+
+    @include media-breakpoint-down(md) {
+        .td-img,
+        .td-price-total {
+            display: none;
+        }
+
+        .td-qty {
+            width: 60px;
+        }
+
+        .td-price {
+            width: 80px;
+        }
+    }
+
+    @media (max-width: 476px) {
+        .td-qty {
+            width: 60px;
+        }
+
+        #modal_optional_products table thead,
+        .oe_cart table thead {
+            display: none;
+        }
+
+        #modal_optional_products table td.td-img,
+        .oe_cart table td.td-img {
+            display: none;
+        }
+    }
+}
+
+.o_total_row {
+    height: 50px;
+}
+
+.oe_striked_price {
+    text-decoration: line-through;
+    white-space: nowrap;
+}

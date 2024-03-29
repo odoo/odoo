@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_project_stage_delete_wizard" model="ir.ui.view">
+        <field name="name">project.project.stage.delete.wizard.form</field>
+        <field name="model">project.project.stage.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Project Stage">
+                <field name="projects_count" invisible="1" />
+                <field name="stages_active" invisible="1" />
+                <div invisible="projects_count &gt; 0">
+                    <p>Are you sure you want to delete these stages?</p>
+                </div>
+                <div invisible="not stages_active or projects_count == 0">
+                    <p>You cannot delete stages containing projects. You can either archive them or first delete all of their projects.</p>
+                </div>
+                <div invisible="stages_active or projects_count == 0">
+                    <p>You cannot delete stages containing projects. You should first delete all of their projects.</p>
+                </div>
+                <footer>
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or projects_count == 0" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="projects_count &gt; 0" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn btn-primary" invisible="not (stages_active or projects_count)" />
+                    <button string="Discard" special="cancel" data-hotkey="x" invisible="stages_active or projects_count" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_project_stage_unarchive_wizard" model="ir.ui.view">
+        <field name="name">project.project.stage.delete.wizard.form</field>
+        <field name="model">project.project.stage.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>Would you like to unarchive all of the projects contained in these stages as well?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_unarchive_project" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

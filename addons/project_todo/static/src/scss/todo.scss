@@ -1,0 +1,53 @@
+.o_todo_form_view {
+    .o_form_sheet_bg {
+        .o_form_statusbar {
+            margin: 0;
+
+            .o_field_many2many_tags,
+            .o_field_many2many_avatar_user {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+            }
+
+            .o_input {
+                border: none;
+            }
+
+            .o_dropdown_button {
+                display: none;
+            }
+        }
+
+        .o_form_sheet {
+            flex: 1;
+
+            .oe_pad {
+                flex: 1;
+                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                .oe_pad_content {
+                    border: none;
+                    flex: 1;
+                }
+            }
+            .o_widget_todo_archived > .ribbon {
+                margin-top: 0px;
+            }
+        }
+        .o_field_html .note-editable {
+            border: none !important;
+            min-height: 300px;
+        }
+    }
+
+    &.o_form_readonly {
+        .oe_description {
+            padding: $o-sheet-vpadding $o-horizontal-padding;
+        }
+    }
+}
+.o_todo_kanban_card_body {
+    padding-left: 9px;
+}

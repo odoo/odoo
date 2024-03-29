@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.AttendeeCalendarCommonPopover.body" t-inherit="web.CalendarCommonPopover.body" t-inherit-mode="primary">
+        <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]" position="attributes">
+            <attribute name="t-if">isEventDetailsVisible</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-grow-1')]" position="attributes">
+            <attribute name="t-if">!fieldInfo.options.shouldOpenRecord</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('flex-grow-1')]" position="after">
+            <t t-if="fieldInfo.options.shouldOpenRecord">
+                <a href="#" t-on-click="onClickOpenRecord">
+                    <t t-out="props.record.rawRecord.res_model_name"/>
+                </a>
+        </t>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='isEventEditable']" position="after">
+            <t t-elif="isEventViewable">
+                <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">View</a>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='isEventDeletable']" position="after">
+            <a t-if="isEventArchivable and isEventDetailsVisible" href="#" class="btn btn-secondary o_cw_popover_archive_g" t-on-click="onClickArchive">Delete</a>
+            <t t-if="displayAttendeeAnswerChoice">
+                <div class="btn-group w-100 w-lg-auto ms-lg-auto order-first order-lg-0 px-2 px-lg-0">
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'Yes' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('accepted')">Yes</button>
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'No' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('declined')">No</button>
+                    <button class="btn"
+                            t-attf-class="#{selectedStatusInfo.text === 'Maybe' ? 'btn-secondary active' : 'btn-outline-secondary'}"
+                            t-on-click="() => this.changeAttendeeStatus('tentative')">Maybe</button>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

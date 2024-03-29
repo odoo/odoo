@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="product.badge_extra_price">
+        <span class="badge ms-1 ps-1 text-bg-info rounded-pill">
+            <span t-out="this.props.price > 0 ? '+' : '-'" class="me-1"/>
+            <i t-out="getFormattedPrice()"/>
+        </span>
+    </t>
+</templates>

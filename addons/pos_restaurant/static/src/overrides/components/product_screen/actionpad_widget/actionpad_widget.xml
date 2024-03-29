@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('actionpad')]" position="attributes">
+            <attribute name="t-att-class">{'w-50' : this.swapButton}</attribute>
+        </xpath>
+
+        <!-- Replace the payment button by the order button -->
+        <xpath expr="//button[hasclass('validation')]" position="after">
+            <button
+                t-if="this.swapButton"
+                t-attf-class="submit-order h-100 {{getMainButtonClasses()}}"
+                t-att-class="swapButtonClasses"
+                t-on-click="submitOrder"
+                style="width: 170px;">
+                <i class="fa fa-cutlery"></i>
+                Order
+                <div t-if="displayCategoryCount.length" class="break-line fw-normal fs-6 w-100  border-top mt-1 pt-1">
+                    <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                        <div class="d-flex justify-content-start g-0 my-1 w-100">
+                            <label class="rounded px-2 py-0 me-1" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                            <label class="text-truncate ps-0" ><t t-esc="categoryCountLine.name"/></label>
+                        </div>
+                    </t>
+                </div>
+                <t t-if="isCategoryCountOverflow">
+                    <div class="position-absolute bottom-0">...</div>
+                </t>
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('validation')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+
+        <!-- Replace the customer button by the payment button, the customer button will be added in the mixins -->
+        <xpath expr="//button[hasclass('set-partner')]" position="after">
+            <button t-if="this.swapButton"
+                t-on-click="() => pos.get_order().pay()" 
+                class="button pay-order-button btn btn-lg rounded-0" 
+                t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}" 
+                >
+                <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                Payment
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('set-partner')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+    </t>
+</templates>

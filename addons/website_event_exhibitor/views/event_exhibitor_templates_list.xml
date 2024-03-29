@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_exhibitors" name="Event Exhibitors">
+    <t t-call="website_event.layout">
+        <div class="o_wevent_online o_wesponsor_index container">
+            <!-- Topbar -->
+            <t t-call="website_event_exhibitor.exhibitors_topbar"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div class="o_wesponsor_container">
+                <div class="row">
+                    <t t-call="website_event_exhibitor.exhibitors_search"/>
+                </div>
+                <div class="row">
+                    <t t-call="website_event_exhibitor.exhibitors_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure mb-5"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- TOPBAR: BASE NAVIGATION -->
+<!-- ============================================================ -->
+
+<!-- TOPBAR: BASE NAVIGATION -->
+
+<!-- Main topbar -->
+<template id="exhibitors_topbar" name="Exhibitor Tools">
+    <div class="d-flex d-print-none justify-content-end flex-wrap gap-2 w-100 mt-3">
+        <h3 class="my-0 me-auto pe-sm-4">Exhibitors</h3>
+        <form class="o_wevent_event_tags_form d-none d-lg-block" action="#" method="POST">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="o_wesponsor_topbar_filters o_wevent_index_topbar_filters d-flex gap-2"/>
+        </form>
+        <div class="o_wevent_search d-flex w-100 w-lg-auto">
+            <div class="o_wevent_event_search_box d-flex align-items-center flex-wrap flex-grow-1">
+                <t t-call="website_event_exhibitor.exhibitor_search_box">
+                    <t t-set="search" t-value="search_key" />
+                    <t t-set="placeholder" t-value="'Search an exhibitor ...'"/>
+                </t>
+            </div>
+            <button class="btn btn-light position-relative ms-2 d-lg-none"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#o_wevent_exhibitors_offcanvas">
+                <i class="fa fa-sliders"/>
+            </button>
+        </div>
+    </div>
+    <!-- Off canvas filters on mobile-->
+    <div id="o_wevent_exhibitors_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible mw-75">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+        </div>
+        <div class="offcanvas-body p-0">
+            <form class="o_wevent_event_tags_mobile_form" action="#" method="POST">
+                <div class="o_wesponsor_topbar_filters_mobile accordion accordion-flush"/>
+            </form>
+        </div>
+    </div>
+</template>
+
+<!-- Topbar: optional country filters -->
+<template id="exhibitors_topbar_country"
+    inherit_id="website_event_exhibitor.exhibitors_topbar"
+    name="Filter by Country"
+    active="True">
+    <xpath expr="//div[hasclass('o_wesponsor_topbar_filters')]" position="inside">
+        <div class="dropdown flex-grow-1">
+            <a href="#" role="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
+                By Country
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item o_dropdown_reset_tags">
+                    All Countries
+                </a>
+                <t t-foreach="sponsor_countries" t-as="sponsor_country">
+                    <label t-attf-class="dropdown-item {{ 'active' if sponsor_country.id in search_countries.ids else '' }}">
+                        <input class="d-none" type="checkbox" name="sponsor_country" multiple="multiple"
+                            t-att-value="sponsor_country.id"
+                            t-att-checked="'checked' if sponsor_country.id in search_countries.ids else None"/>
+                        <t t-out="sponsor_country.name"/>
+                    </label>
+                </t>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wesponsor_topbar_filters_mobile')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wevent_offcanvas_country"
+                    aria-expanded="false"
+                    aria-controls="o_wevent_offcanvas_country">
+                    By Country
+                </button>
+            </h2>
+            <div class="o_wevent_offcanvas_country accordion-collapse collapse">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a t-att-href="'/event/%s/exhibitors?%s' % (
+                                        slug(event),
+                                        keep_query('*', search_countries='')
+                                    )">
+                                All Countries
+                            </a>
+                        </li>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <t t-foreach="sponsor_countries" t-as="sponsor_country">
+                            <label t-attf-class="dropdown-item {{ 'active' if sponsor_country.id in search_countries.ids else '' }}">
+                                <input class="d-none" type="checkbox" name="sponsor_country" multiple="multiple"
+                                    t-att-value="sponsor_country.id"
+                                    t-att-checked="'checked' if sponsor_country.id in search_countries.ids else None"/>
+                                <t t-out="sponsor_country.name"/>
+                            </label>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Topbar: optional sponsorship filters -->
+<template id="exhibitors_topbar_sponsorship"
+    inherit_id="website_event_exhibitor.exhibitors_topbar"
+    name="Filter by Sponsorship"
+    active="True">
+    <xpath expr="//div[hasclass('o_wesponsor_topbar_filters')]" position="inside">
+        <div class="dropdown flex-grow-1">
+            <a href="#" role="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown">
+                By Level
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item o_dropdown_reset_tags">
+                    All Levels
+                </a>
+                <t t-foreach="sponsor_types" t-as="sponsor_type">
+                    <label t-attf-class="dropdown-item {{ 'active' if sponsor_type.id in search_sponsorships.ids else '' }}">
+                        <input class="d-none" type="checkbox" name="sponsor_type" multiple="multiple"
+                            t-att-value="sponsor_type.id"
+                            t-att-checked="'checked' if sponsor_type.id in search_sponsorships.ids else None"/>
+                        <t t-out="sponsor_type.name"/>
+                    </label>
+                </t>
+            </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wesponsor_topbar_filters_mobile')]" position="inside">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target=".o_wevent_offcanvas_country"
+                    aria-expanded="false"
+                    aria-controls="o_wevent_offcanvas_country">
+                    By Level
+                </button>
+            </h2>
+            <div class="o_wevent_offcanvas_country accordion-collapse collapse">
+                <div class="accordion-body pt-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a >
+                                All Levels
+                            </a>
+                        </li>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <t t-foreach="sponsor_types" t-as="sponsor_type">
+                            <label t-attf-class="dropdown-item {{ 'active' if sponsor_type.id in search_sponsorships.ids else '' }}">
+                                <input class="d-none" type="checkbox" name="sponsor_type" multiple="multiple"
+                                    t-att-value="sponsor_type.id"
+                                    t-att-checked="'checked' if sponsor_type.id in search_sponsorships.ids else None"/>
+                                <t t-out="sponsor_type.name"/>
+                            </label>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Search Box -->
+<template id="exhibitor_search_box" inherit_id="website.website_search_box" primary="True" name="Exhibitors: Search Box">
+    <xpath expr="//button" position="attributes">
+        <attribute name="type">button</attribute>
+    </xpath>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<!-- Exhibitors Main Display -->
+<template id="exhibitors_main" name="Exhibitors: Main Display">
+    <!-- No exhibitors -->
+    <div t-if="not sponsor_categories" class="col-12 text-center">
+        <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+        <h2>No exhibitor found.</h2>
+        <p t-if="search_key">We could not find any exhibitor matching your search for: <strong t-out="search_key"/>.</p>
+        <p t-else="">We could not find any exhibitor at this moment.</p>
+        <div class="o_not_editable my-3" groups="event.group_event_user">
+            <a class="btn o_wevent_cta" target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
+                <span class="fa fa-plus me-1"/> Add Exhibitors
+            </a>
+        </div>
+    </div>
+    <!-- Cards -->
+    <div class="col-12" t-call="website_event_exhibitor.exhibitors_display_cards"/>
+</template>
+
+<!-- Exhibitors: Cards-based display -->
+<template id="exhibitors_display_cards" name="Exhibitors Cards">
+    <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
+        <div class="col-12 mt-3 mb-2">
+            <h4 class="h5 m-0" t-out="sponsor_category['sponsorship'].name"/>
+        </div>
+        <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
+            <t t-call="website_event_exhibitor.exhibitor_card"/>
+        </div>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- TOOL TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_card" name="Exhibitor Card">
+    <article class="o_wesponsor_card card h-100"
+        itemscope="itemscope" itemtype="http://schema.org/Event">
+        <div class="row g-0 h-100" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
+            <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
+            <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
+                <div class="d-block h-100 w-100">
+                    <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
+                        t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
+                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
+                            <i class="fa fa-ban me-2"/>Unpublished
+                        </small>
+                        <img class="position-absolute me-3 mt-3"
+                            style="right: 0; top: 0; max-height: 20px;"
+                            t-if="sponsor.partner_id.country_id"
+                            t-att-src="sponsor.partner_id.country_id.image_url"
+                            t-att-alt="sponsor.partner_id.country_id.name"/>
+                    </div>
+                    <div t-else="" class="o_wesponsor_gradient card-img-top"
+                        style="padding-top: 50%">
+                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
+                            <i class="fa fa-ban me-2"/>Unpublished
+                        </small>
+                    </div>
+                </div>
+            </header>
+            <div class="col-12 h-100 border-top">
+                <main class="card-body">
+                    <!-- Title -->
+                    <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
+                        <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
+                        <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
+                            class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
+                        </span>
+                    </h5>
+                    <!-- Catchy sentence -->
+                    <span class="text-muted" t-out="sponsor.subtitle"/>
+                </main>
+            </div>
+        </div>
+        <div class="o_wesponsor_connect_button"
+            t-att-data-sponsor-url="sponsor.website_url"
+            t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
+            t-att-data-is-participating="event.is_participating"
+            t-att-data-sponsor-id="sponsor.id"
+            t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
+            t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
+            t-att-data-user-event-manager="is_event_user">
+            <a href="#" class="btn btn-primary h3">
+                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
+                    Register
+                </t>
+                <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
+                <t t-else="">More info</t>
+            </a>
+        </div>
+    </article>
+</template>
+
+<!-- Searched terms -->
+<template id="exhibitors_search" name="Exhibitors: search terms">
+    <div class="d-flex flex-wrap align-items-center mb-3">
+        <t t-foreach="search_countries" t-as="country">
+            <t t-call="website_event_exhibitor.exhibitors_search_tag">
+                <t t-set="value" t-value="country.id"/>
+                <t t-set="field" t-value="'sponsor_country'"/>
+                <t t-set="label" t-value="country.display_name"/>
+            </t>
+        </t>
+        <t t-foreach="search_sponsorships" t-as="sponsorship">
+            <t t-call="website_event_exhibitor.exhibitors_search_tag">
+                <t t-set="value" t-value="sponsorship.id"/>
+                <t t-set="field" t-value="'sponsor_type'"/>
+                <t t-set="label" t-value="sponsorship.display_name"/>
+            </t>
+        </t>
+    </div>
+</template>
+
+<template id="exhibitors_search_tag" name="Exhibitors: term">
+    <span t-att-data-field="field" t-att-data-value="value"
+        class="o_search_tag d-flex align-items-baseline ps-2 my-2 me-2 border rounded bg-white">
+        <i class="fa fa-tag me-2 text-muted"/>
+        <t t-out="label"/>
+        <span class="btn border-0 py-1 px-2">&#215;</span>
+    </span>
+</template>
+
+</odoo>

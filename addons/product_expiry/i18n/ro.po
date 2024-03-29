@@ -1,0 +1,464 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_expiry
+#
+# Translators:
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Martin Trigaux, 2022
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid "<span class=\"badge text-bg-danger\" attrs=\"{'invisible': [('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days after receipt</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days before expiration date</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__alert_date
+msgid "Alert Date"
+msgstr "Data alertei"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "Data alertei a fost atinsă"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "B.b."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Best Before Date"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
+msgid "Best before Date"
+msgstr "Consum înainte de"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant_reserve_line
+msgid "Choose quantity to reserve from each stock quant"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Confirmă"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "Confirmare Expirare"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Confirmare"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
+msgid "Date to determine the expired lots and serial numbers using the filter \"Expiration Alerts\"."
+msgstr "Data pentru a determina loturile expirate și numerele de serie folosind filtrul „Alerte de expirare”."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Dates"
+msgstr "Date"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "Descriere"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Exp."
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "Alterte expirare"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve_line__expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Expiration Date"
+msgstr "Data expirării"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr "Lot (uri) expirat"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Lot"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Lot/Serial"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant_reserve
+msgid "Manually reserve stock"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
+msgid "Number of days after the receipt of the products (from the vendor or in stock after production) after which the goods may become dangerous and must not be consumed. It will be computed on the lot/serial number."
+msgstr "Număr de zile după primirea produselor (de la vânzător sau în stoc după producție) după care mărfurile pot deveni periculoase și nu trebuie consumate. Acesta va fi calculat pe lot / număr de serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid "Number of days before the Expiration Date after which an alert should be raised on the lot/serial number. It will be computed on the lot/serial number."
+msgstr "Număr de zile înainte de data de expirare după care ar trebui să apară o alertă pe lot / număr de serie. Acesta va fi calculat pe lot / număr de serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid "Number of days before the Expiration Date after which the goods should be removed from the stock. It will be computed on the lot/serial number."
+msgstr "Număr de zile înainte de data de expirare după care mărfurile trebuie eliminate din stoc. Acesta va fi calculat pe lot / număr de serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid "Number of days before the Expiration Date after which the goods starts deteriorating, without being dangerous yet. It will be computed on the lot/serial number."
+msgstr "Număr de zile înainte de data de expirare după care mărfurile încep să se deterioreze, fără a fi încă periculoase. Acesta va fi calculat pe lot / număr de serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Ridicare"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+msgstr "Continuați cu excepția unuia expirat"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Grup de aprovizionare"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product"
+msgstr "Produs"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
+msgid "Product Expiry Alert"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Mișcări de produs (linie mișcare stoc)"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product Variant"
+msgstr "Variantă produs"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "Poziții de stoc"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+msgid "Removal Date"
+msgstr "Data eliminării"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "Afișați loturi"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Mișcare stoc"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
+msgid "The Expiration Date has been reached."
+msgstr "Data de expirare a fost atinsă."
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "A fost atinsă data de alertă pentru acest lot / număr de serie"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve_line__expiration_date
+msgid "This is the date on which the goods with this Serial Number may become dangerous and must not be consumed."
+msgstr "Aceasta este data la care marfa cu acest Numar de Serie poate deveni periculoasa si nu trebuie consumata."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
+msgid "This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy."
+msgstr "Aceasta este data la care mărfurile cu acest număr de serie ar trebui eliminate din stoc. Această dată va fi utilizată în strategia de eliminare FEFO."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
+msgid "This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet."
+msgstr "Aceasta este data la care marfa cu acest Numar de Serie incepe sa se deterioreze, fara a fi periculoasa inca."
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
+msgid "This lot is expired"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
+msgid "This lot is expired."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "Transfer"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_reserve__show_expiry
+msgid "Use Expiration Date"
+msgstr "Folosiți data de expirare"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_reserve__show_expiry
+msgid "When this box is ticked, you have the possibility to specify dates to manage product expiration, on the product and on the corresponding lot/serial numbers"
+msgstr "Când această casetă este bifată, aveți posibilitatea să specificați datele pentru a gestiona expirarea produsului, pe produs și pe lotul / numerele de serie corespunzătoare."
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^A0N,44,33^FDUse by:"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,150"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDBest before:"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,200\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200^BY3"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FS"
+msgstr "^FS"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,250^BY3"
+msgstr ""

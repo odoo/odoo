@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ConfirmationPage">
+        <div t-if="this.state.onReload" class="self_order_success_loader position-absolute vh-100 w-100 d-flex justify-content-center align-items-center opacity-50 bg-dark">
+            <div class="page-loader d-flex justify-content-center align-items-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center flex-column h-100 px-3 text-center">
+            <h1 t-if="state.payment and selfOrder.config.self_ordering_pay_after !== 'each'" class="mb-4">Hope you enjoyed your meal!</h1>
+            <h1 t-else="" class="mb-4">We're preparing your order!</h1>
+            <h3 t-if="state.payment and confirmedOrder.state !== 'paid'" class="mt-3 text-muted">Pay at the cashier <t t-esc="selfOrder.formatMonetary(confirmedOrder.amount_total)" /></h3>
+            <div class="d-inline-flex flex-column border rounded py-4 px-5 bg-view mb-3">
+                <span class="fs-2 text-muted">Your order number</span>
+                <span class="number lh-1" t-esc="confirmedOrder.trackingNumber" />
+            </div>
+            <h3 t-if="selfOrder.table.name || confirmedOrder.table_stand_number" class="text-muted mb-3">
+                Service at table
+                <t t-if="selfOrder.config.self_ordering_mode === 'mobile'" t-esc="selfOrder.table.name + ' (' + selfOrder.table.floor_name + ')'" />
+                <t t-else="" t-esc="confirmedOrder.table_stand_number" />
+            </h3>
+            <h3 t-else="">Order to pick-up at the counter</h3>
+        </div>
+        <div class="px-3 py-4 text-center">
+            <button class="btn btn-primary btn-lg" t-on-click="backToHome">
+                <t t-if="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
+                <t t-else="">Ok</t>
+            </button>
+        </div>
+    </t>
+</templates>

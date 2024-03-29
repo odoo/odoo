@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_mercury.PaymentTransactionPopup">
+            <div class="popup">
+                <p class="title">
+                    <t t-esc="props.title"></t>
+                </p>
+                <p class="body">
+                    <t t-esc="state.message"></t>
+                </p>
+                <div t-if="state.confirmButtonIsShown" class="footer">
+                    <div class="button cancel" t-on-click="confirm">
+                        <t t-esc="props.confirmText"></t>
+                    </div>
+                </div>
+            </div>
+    </t>
+
+</templates>

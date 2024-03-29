@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_share_wizard_view_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Share Project">
+                <p class="text-muted" invisible="access_mode != 'edit'">
+                    When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.
+                    Collaborators will be able to view and modify part of the tasks' information.
+                </p>
+                <p class="text-muted" invisible="access_mode == 'edit'">
+                    When sharing a project in read-only mode, you are giving people access to the tasks in their portal.
+                    These people will be able to view the tasks, but not edit them.
+                </p>
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <field name="display_access_mode" invisible="1" />
+                <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
+                <group>
+                    <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode" class="mb-4"/>
+                    <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}" invisible="access_mode == 'edit'" string="Link" class="mb-4"/>
+                    <div class="o_td_label mb-4">
+                        <label for="partner_ids" string="Invite People" invisible="access_mode == 'read'"/>
+                        <label for="partner_ids" invisible="access_mode == 'edit'"/>
+                    </div>
+                    <field name="partner_ids" widget="many2many_tags_email" options="{'no_quick_create': True}" placeholder="Add contacts to share the project..." nolabel="1" context="{'form_view_ref': 'base.view_partner_simple_form'}" class="mb-4"/>
+                </group>
+                <field name="note" placeholder="Add a note" nolabel="1"/>
+                <footer>
+                    <button string="Send" name="action_share_record" invisible="access_warning != ''" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_wizard_confirm_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <p>People invited to collaborate on the project will have portal access rights.</p>
+                <p>They can edit shared project tasks and view specific documents in read-only mode on your website. This includes leads/opportunities, quotations/sales orders, purchase orders, invoices and bills, timesheets, and tickets.</p>
+                <p>You have full control and can revoke portal access anytime. Are you ready to proceed?</p>
+                <footer>
+                    <button string="Grant Portal Access" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_wizard_action" model="ir.actions.act_window">
+        <field name="name">Share Project</field>
+        <field name="res_model">project.share.wizard</field>
+        <field name="binding_model_id" ref="model_project_project"/>
+        <field name="view_mode">form</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_picking_batch" model="ir.actions.report">
+            <field name="name">Batch Transfer</field>
+            <field name="model">stock.picking.batch</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_picking_batch.report_picking_batch</field>
+            <field name="report_file">stock_picking_batch.report_picking_batch</field>
+            <field name="binding_model_id" ref="model_stock_picking_batch"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

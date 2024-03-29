@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ProjectMilestone">
+        <div class="list-group mb-2">
+            <div class="o_rightpanel_milestone list-group-item list-group-item-action d-flex justify-content-evenly px-0 cursor-pointer" t-att-class="state.colorClass">
+                <span t-on-click="toggleIsReached">
+                    <i class="fa position-absolute pt-1" t-att-class="state.checkboxIcon"/>
+                </span>
+                <div class="o_milestone_detail d-flex justify-content-between ps-3 pe-2 col-11" t-on-click="onOpenMilestone">
+                    <div class="text-truncate col-7" t-att-title="milestone.name">
+                        <t t-esc="milestone.name"/>
+                    </div>
+                    <span class="d-flex justify-content-center align-items-center">
+                        <t t-esc="deadline"/>
+                    </span>
+                </div>
+                <span class="d-flex align-items-center">
+                    <a t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"/></a>
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

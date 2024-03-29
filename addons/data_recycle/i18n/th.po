@@ -1,0 +1,385 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_recycle
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid ""
+"' recycling rule.<br/>\n"
+"You can validate those changes"
+msgstr ""
+"' กฎการรีไซเคิล<br/>\n"
+"คุณสามารถตรวจสอบการเปลี่ยนแปลงเหล่านั้นได้"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "**Record Deleted**"
+msgstr "**ลบบันทึกแล้ว**"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">ทุก</span>"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
+msgid "Archive"
+msgstr "เก็บถาวร"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
+msgid "Automatic"
+msgstr "โดยอัตโนมัติ"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
+msgid "Configuration"
+msgstr "การกำหนดค่า"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "กำหนดค่ากฎเพื่อระบุบันทึกที่จะล้าง"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
+msgid "Data Cleaning"
+msgstr "การล้างข้อมูล"
+
+#. module: data_recycle
+#: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
+msgid "Data Recycle: Clean Records"
+msgstr "การรีไซเคิลข้อมูล: บันทึกที่สะอาด"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "Data to Recycle"
+msgstr "ข้อมูลเพื่อรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
+msgid "Days"
+msgstr "วัน"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
+msgid "Delta"
+msgstr "เดลต้า"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
+msgid "Delta Unit"
+msgstr "หน่วยเดลต้า"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Discard"
+msgstr "ละทิ้ง"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Discarded"
+msgstr "ละทิ้งแล้ว"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
+msgid "Field Recycle Records"
+msgstr "ฟิลด์บันทึกรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
+msgid "Filter"
+msgstr "ตัวกรอง"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
+msgid "Include Archived"
+msgstr "รวมที่เก็บถาวรแล้ว"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
+msgid "Last Notification"
+msgstr "การแจ้งเตือนล่าสุด"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: data_recycle
+#: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "List of users to notify when there are new records to recycle"
+msgstr "รายชื่อผู้ใช้ที่ต้องแจ้งให้ทราบเมื่อมีบันทึกใหม่ที่จะถูกรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
+msgid "Manual"
+msgstr "ด้วยตัวเอง"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_id
+msgid "Model"
+msgstr "โมเดล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_name
+msgid "Model Name"
+msgstr "ชื่อโมเดล"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__months
+msgid "Months"
+msgstr "เดือน"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "No cleaning suggestions"
+msgstr "ไม่มีคำแนะนำสำหรับการล้าง"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
+msgid "Notify"
+msgstr "แจ้งเตือน"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "แจ้งเตือนช่วงความถี่"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "Notify Users"
+msgstr "แจ้งเตือนผู้ใช้"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
+msgid "Record ID"
+msgstr "ไอดีบันทึก"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__name
+msgid "Record Name"
+msgstr "ชื่อบันทึก"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Records"
+msgstr "บันทึก"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
+msgid "Records To Recycle"
+msgstr "บันทึกที่จะรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
+msgid "Recycle Action"
+msgstr "การดำเนินการรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
+msgid "Recycle Mode"
+msgstr "โหมดรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
+msgid "Recycle Model"
+msgstr "โมเดลรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
+msgid "Recycle Record"
+msgstr "รีไซเคิลบันทึก"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
+msgid "Recycle Records"
+msgstr "รีไซเคิลบันทึก"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Recycle Rule"
+msgstr "กฎการรีไซเคิล"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Recycle Rules"
+msgstr "กฎการรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_model
+msgid "Recycling Model"
+msgstr "โมเดลการรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_record
+msgid "Recycling Record"
+msgstr "กำลังรีไซเคิลบันทึก"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
+msgid "Recyle Records Rules"
+msgstr "กฎการบันทึกการรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
+msgid "Rules"
+msgstr "กฏ"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Run Now"
+msgstr "เรียกใช้ตอนนี้"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Select a model to configure recycling actions"
+msgstr "เลือกแบบจำลองเพื่อกำหนดค่าการดำเนินการรีไซเคิล"
+
+#. module: data_recycle
+#: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "ความถี่ในการแจ้งเตือนควรมากกว่า 0"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "This model doesn't manage archived records. Only deletion is possible."
+msgstr "โมเดลนี้ไม่ได้จัดการบันทึกที่ถูกเก็บถาวร ทำได้เพียงลบเท่านั้น"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
+msgid "Time Field"
+msgstr "ฟิลด์เวลา"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "Undefined Name"
+msgstr "ชื่อที่ไม่ได้กำหนด"
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "ยกเลิกการเลือก"
+
+#. module: data_recycle
+#. odoo-javascript
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+#, python-format
+msgid "Validate"
+msgstr "ตรวจสอบ"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "We've identified"
+msgstr "เราได้ระบุแล้ว"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__weeks
+msgid "Weeks"
+msgstr "สัปดาห์"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__years
+msgid "Years"
+msgstr "ปี"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "here"
+msgstr "ที่นี้"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "records to clean with the '"
+msgstr "บันทึกการล้างด้วย '"

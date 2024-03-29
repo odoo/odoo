@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Product Suppliers-->
+        <record id="product_supplierinfo_tree_view2" model="ir.ui.view">
+            <field name="name">product.supplierinfo.tree.view2</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+                <xpath expr="//tree" position="inside">
+                    <field name="company_id" column_invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                    <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='delay']" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_supplier_inherit" model="ir.ui.view">
+            <field name="name">product.template.supplier.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='purchase']" position="attributes">
+                    <attribute name="invisible" remove="1" separator=" or "></attribute>
+                    <attribute name="groups">purchase.group_purchase_user</attribute>
+                </xpath>
+                <group name="purchase" position="before">
+                    <field name="seller_ids" context="{'default_product_tmpl_id': id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &gt; 1" readonly="product_variant_count &gt; 1"/>
+                    <field name="variant_seller_ids" context="{'model': 'product.template', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}" nolabel="1" invisible="product_variant_count &lt;= 1" readonly="product_variant_count &lt;= 1"/>
+                </group>
+                <group name="bill" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager</attribute>
+                </group>
+                <group name="bill" position="inside">
+                    <field name="purchase_method" widget="radio"/>
+                </group>
+                <group name="purchase" position="inside">
+                    <group col="1">
+                        <group string="Purchase Description">
+                           <field name="description_purchase" nolabel="1" colspan="2"
+                                placeholder="This note is added to purchase orders."/>
+                        </group>
+                        <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
+                            <field name="purchase_line_warn" nolabel="1" colspan="2"/>
+                            <field name="purchase_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
+                                invisible="purchase_line_warn == 'no-message'"
+                                readonly="purchase_line_warn == 'no-message'"
+                                required="purchase_line_warn != 'no-message'"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_product_product_supplier_inherit" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="seller_ids" position="attributes">
+                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+                </field>
+                <field name="variant_seller_ids" position="attributes">
+                    <attribute name="context">{'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_supplierinfo_tree_view2'}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_account_purchase_ok_form" model="ir.ui.view">
+            <field name="name">product.template.account.purchase.ok.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name='supplier_taxes_id' position="replace" >
+                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" readonly="purchase_ok == 0" context="{'default_type_tax_use':'purchase'}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_product_template_purchase_buttons_from" model="ir.ui.view">
+            <field name="name">product.template.purchase.button.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="action_view_po"
+                        groups="purchase.group_purchase_user"
+                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                <field name="uom_name"  class="oe_inline"/>
+                            </span>
+                            <span class="o_stat_text">Purchased</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="product_normal_form_view_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.product.purchase.order</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="action_view_po"
+                        groups="purchase.group_purchase_user"
+                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                <field name="uom_name"  class="oe_inline"/>
+                            </span>
+                            <span class="o_stat_text">Purchased</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="product_template_search_view_purchase" model="ir.ui.view">
+            <field name="name">product.template.search.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='categ_id']" position="after">
+                    <field string="Vendor" name="seller_ids"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Product catalog -->
+        <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+            <field name="name">product.view.kanban.catalog.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="default_code" position="after">
+                    <field name="uom_po_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_view_search_catalog" model="ir.ui.view">
+            <field name="name">product.view.search.catalog.inherit.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_view_search_catalog"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                    <field name="seller_ids" string="Vendor"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

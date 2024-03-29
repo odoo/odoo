@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_product_expiry
+# 
+# Translators:
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: mrp_product_expiry
+#: model_terms:ir.ui.view,arch_db:mrp_product_expiry.confirm_expiry_view_mrp_inherit
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: mrp_product_expiry
+#: model:ir.model,name:mrp_product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "Підтвердити термін дії"
+
+#. module: mrp_product_expiry
+#. odoo-python
+#: code:addons/mrp_product_expiry/models/mrp_production.py:0
+#, python-format
+msgid "Confirmation"
+msgstr "Підтвердження"
+
+#. module: mrp_product_expiry
+#: model_terms:ir.ui.view,arch_db:mrp_product_expiry.confirm_expiry_view_mrp_inherit
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: mrp_product_expiry
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__production_ids
+msgid "Production"
+msgstr "Виробництво"
+
+#. module: mrp_product_expiry
+#: model:ir.model,name:mrp_product_expiry.model_mrp_production
+msgid "Production Order"
+msgstr "Замовлення на виробництво"
+
+#. module: mrp_product_expiry
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__workorder_id
+msgid "Workorder"
+msgstr "Робоче замовлення"
+
+#. module: mrp_product_expiry
+#. odoo-python
+#: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to use some expired components.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+"Ви збираєтеся використовувати протерміновані компоненти.\n"
+"Ви підтверджуєте, що бажаєте продовжити?"
+
+#. module: mrp_product_expiry
+#. odoo-python
+#: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to use the component %(product_name)s, %(lot_name)s which is expired.\n"
+"Do you confirm you want to proceed?"
+msgstr ""
+"Ви збираєтеся використати компонент %(product_name)s, %(lot_name)s який вже протермінований.\n"
+"Ви підтверджуєте, що хочете продовжити?"

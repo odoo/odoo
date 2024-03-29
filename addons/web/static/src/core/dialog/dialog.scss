@@ -1,0 +1,100 @@
+.modal.o_technical_modal {
+    .modal-content {
+        .modal-header .modal-title {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+    
+    .modal-footer {
+        text-align: left;
+
+        // FIXME: These selectors should not be necessary if we used buttons
+        // as direct children of the modal-footer as normally required
+        footer, .o_form_buttons_edit, .o_form_buttons_view {
+            display: flex;
+            flex-wrap: wrap;
+            flex: 1 1 auto;
+            justify-content: flex-start;
+            gap: map-get($spacers, 1);
+
+            @include media-breakpoint-down(md) {
+                justify-content: space-around;
+            }
+        }
+
+        button {
+            margin: 0; // Reset boostrap.
+        }
+        
+        @include media-breakpoint-down(md) {
+            .btn {
+                width: 45%;
+                text-overflow: ellipsis;
+                white-space: inherit;
+            }
+        }
+
+    }
+
+    @include media-breakpoint-down(sm) {
+        &.o_modal_full {
+            .modal-dialog {
+                margin: 0px;
+                height: 100%;
+
+                .modal-content {
+                    height: 100%;
+                    border: none;
+
+                    .modal-header {
+                        background: $o-navbar-background;
+
+                        .modal-title, .btn {
+                            color: $o-navbar-entry-color;
+                        }
+                    }
+
+                    .modal-body {
+                        height: 100%;
+                        overflow-y: auto;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.modal.o_inactive_modal {
+    z-index: $zindex-modal-backdrop - 1;
+}
+
+.o_dialog > .modal {
+    display: block;
+}
+
+@include media-breakpoint-up(sm) {
+    .modal-fs {
+        width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
+        max-width: none;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .modal {
+        &.o_modal_full .modal-content {
+            .modal-header {
+                align-items: center;
+                height: $o-navbar-height;
+                padding: 0 1rem;
+            }
+
+            .modal-footer {
+                @include o-webclient-padding($top: 1rem, $bottom: 0.5rem);
+                box-shadow: 0 1rem 2rem black;
+                z-index: 0;
+            }
+        }
+    }
+}

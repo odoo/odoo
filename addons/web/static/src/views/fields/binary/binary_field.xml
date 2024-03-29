@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BinaryField">
+        <t t-if="!props.readonly">
+            <t t-if="props.record.data[props.name]">
+                <div class="w-100 d-inline-flex gap-1">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        onUploaded.bind="update"
+                    >
+                        <t t-if="props.record.resId and !props.record.dirty">
+                            <button
+                                class="btn btn-link btn-sm lh-1 fa fa-download o_download_file_button"
+                                data-tooltip="Download"
+                                aria-label="Download"
+                                t-on-click="onFileDownload"
+                            >
+                            </button>
+                        </t>
+                        <t t-set-slot="toggler">
+                            <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
+                            <button
+                                class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
+                                data-tooltip="Edit"
+                                aria-label="Edit"
+                            >
+                            </button>
+                        </t>
+                        <button
+                            class="btn btn-link btn-sm lh-1 fa fa-trash o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="() => this.update({})"
+                        >
+                        </button>
+                    </FileUploader>
+                </div>
+            </t>
+            <t t-else="">
+                <label class="o_select_file_button btn btn-primary">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        onUploaded.bind="update"
+                    >
+                        <t t-set-slot="toggler">
+                            Upload your file
+                        </t>
+                    </FileUploader>
+                </label>
+            </t>
+        </t>
+        <t t-elif="props.record.resId and props.record.data[props.name]">
+            <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
+                <span class="fa fa-download me-2" />
+                <t t-if="fileName" t-esc="fileName" />
+            </a>
+        </t>
+    </t>
+
+    <t t-name="web.ListBinaryField" t-inherit="web.BinaryField">
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="replace">
+            <label class="o_select_file_button btn btn-sm btn-link p-0">
+                <FileUploader
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    onUploaded.bind="update"
+                >
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-upload fa-fw"/> Upload your file
+                    </t>
+                </FileUploader>
+            </label>
+        </xpath>
+    </t>
+
+</templates>

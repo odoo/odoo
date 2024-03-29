@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mailing_sms_test_view_form" model="ir.ui.view">
+        <field name="name">mailing.sms.test.view.form</field>
+        <field name="model">mailing.sms.test</field>
+        <field name="arch" type="xml">
+            <form string="Send a Sample SMS">
+                <p class="text-muted">
+                    Send a sample SMS for testing purpose to the numbers below.
+                </p>
+                <group>
+                    <field name="numbers" placeholder="+32 495 85 85 77&#10;+33 545 55 55 55"/>
+                    <field name="mailing_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Send Test" name="action_send_sms" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_sms_test_action" model="ir.actions.act_window">
+        <field name="name">Test Mailing</field>
+        <field name="res_model">mailing.sms.test</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SaleDetailsButton">
+        <div t-att-class="{'oe_status cursor-pointer': props.isHeaderButton }" t-on-click="onClick">
+            <div class="js_connected oe_icon text-white"
+                title="Print a report with all the sales of the current PoS Session">
+                <i class="fa fa-fw fa-print" role="img" aria-label="Print"></i>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_qr_code_emv
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_qr_code_emv
+#: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банковские Счета"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_code
+msgid "Country Code"
+msgstr "Код страны"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
+msgid "Display Qr Setting"
+msgstr "Настройка дисплея Qr"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "EMV Merchant-Presented QR-code"
+msgstr "EMV QR-код, представляемый продавцом"
+
+#. module: account_qr_code_emv
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "EMV QR Configuration"
+msgstr "Конфигурация EMV QR"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include Reference"
+msgstr "Включить ссылку"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include the reference in the QR code."
+msgstr "Включите ссылку в QR-код."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant Account Information."
+msgstr "Отсутствие информации о торговом счете."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant City."
+msgstr "Пропавший Купеческий город."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Type."
+msgstr "Отсутствует Тип прокси."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Value."
+msgstr "Отсутствующее значение прокси."
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
+msgid "None"
+msgstr "Нет"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "Тип прокси"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Proxy Value"
+msgstr "Значение прокси"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Код страны ISO в двух символах.\n"
+"Вы можете использовать это поле для быстрого поиска."

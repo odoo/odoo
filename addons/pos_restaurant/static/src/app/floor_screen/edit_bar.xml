@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.EditBar">
+        <div class="edit-bar-top d-flex align-items-center justify-content-between px-3 border-bottom bg-view overflow-x-auto h-54 w-100">
+            <div class="flex-fill d-flex justify-content-center">
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="props.createTable">
+                    <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
+                    <span class="text-button d-block">Table</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-att-class="{ 'disabled': props.selectedTables.length == 0 }" t-on-click.stop="props.changeSeatsNum">
+                    <i class="fa fa-user icon-button" role="img" aria-label="Seats" title="Seats"></i>
+                    <span class="text-button d-block">Seats</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase button-option round" t-if="getSelectedTablesShape() == 'square'" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeToCircle">
+                    <i class="fa fa-circle-o icon-button" role="img" aria-label="Round Shape" title="Round Shape"></i>
+                    <span class="text-button d-block">Shape</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase button-option square" t-else="" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeToSquare">
+                    <i class="fa fa-square-o icon-button" role="img" aria-label="Square Shape" title="Square Shape"></i>
+                    <span class="text-button d-block">Shape</span>
+                </span>
+                <span t-if="!props.isColorPicker" role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="props.toggleColorPicker">
+                    <i class="fa fa-paint-brush icon-button" role="img" aria-label="Tint" title="Tint"></i>
+                    <span class="text-button d-block">Fill</span>
+                </span>
+                <span t-else="" role="button" class="edit-button text-center d-flex flex-column is-active btn btn-secondary text-uppercase" t-on-click.stop="props.toggleColorPicker">
+                    <i class="fa fa-paint-brush icon-button" role="img" aria-label="Tint" title="Tint"></i>
+                    <span class="text-button d-block">Fill</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-att-class="{ disabled: props.selectedTables.length > 1 }" t-on-click.stop="props.renameTable">
+                    <i class="fa fa-pencil-square-o icon-button" role="img" aria-label="Rename" title="Rename"></i>
+                    <span class="text-button d-block">Rename</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column btn btn-light text-uppercase" t-on-click.stop="props.duplicateTableOrFloor">
+                    <i class="fa fa-clone icon-button" role="img" aria-label="Copy" title="Copy"></i>
+                    <span class="text-button d-block">Copy</span>
+                </span>
+                <span role="button" class="edit-button text-center d-flex flex-column trash btn btn-light text-uppercase" t-on-click.stop="props.deleteFloorOrTable">
+                    <i class="fa fa-trash icon-button" role="img" aria-label="Delete" title="Delete"></i>
+                    <span class="text-button d-block">Delete</span>
+                </span>
+            </div>
+            <span class="edit-button d-flex flex-row-reverse border-0 flex-shrink-1 text-uppercase text-end last-edit-button">
+                <div class="d-flex justify-content-end">
+                    <div role="button" class="btn btn-light d-flex flex-column align-items-center close-edit-button" t-on-click.stop="props.toggleEditMode">
+                        <i class="fa fa-times icon-button" role="img" aria-label="Close" title="Close"></i>
+                        <span class="text-button d-block">Close</span>
+                    </div>
+                </div>
+            </span>
+        </div>
+        <div t-if="props.isColorPicker and props.selectedTables.length > 0" class="color-picker d-flex justify-content-center align-items-center bg-200 h-54">
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#FFFFFF" role="img" aria-label="White" title="White" t-on-click.stop="() => props.setTableColor('#FFFFFF')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#EB6D6D" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setTableColor('#EB6D6D')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#35D374" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setTableColor('#35D374')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#6C6DEC" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setTableColor('#6C6DEC')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#EBBF6D" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setTableColor('#EBBF6D')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#EBEC6D" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setTableColor('#EBEC6D')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#AC6DAD" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setTableColor('#AC6DAD')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#6C6D6D" role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setTableColor('#6C6D6D')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setTableColor('#ACADAD')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setTableColor('#4ED2BE')" />
+        </div>
+        <div t-if="props.isColorPicker and props.selectedTables.length == 0" class="color-picker d-flex justify-content-center align-items-center bg-200 h-54">    
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(249, 250, 251)" role="img" aria-label="White" title="White" t-on-click.stop="() => props.setFloorColor('rgb(249, 250, 251)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setFloorColor('rgb(244, 149, 149)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setFloorColor('rgb(130, 233, 171)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(136, 137, 242)" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setFloorColor('rgb(136, 137, 242)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(255, 214, 136)" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setFloorColor('rgb(255, 214, 136)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(254, 255, 154)" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setFloorColor('rgb(254, 255, 154)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(209, 171, 210)" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setFloorColor('rgb(209, 171, 210)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(75, 75, 75)"    role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setFloorColor('rgb(75, 75, 75)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(210, 210, 210)" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setFloorColor('rgb(210, 210, 210)')" />
+            <span class="color py-4 cursor-pointer float-start"  style="background-color:rgb(127, 221, 236)" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setFloorColor('rgb(127, 221, 236)')" />
+        </div>
+    </t>
+
+</templates>

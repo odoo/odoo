@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_mrp
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# 湘子 南 <1360857908@qq.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">制造</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">采购</span>"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "BOM总览报表"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "物料清单"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "物料清单明细行"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "Components cost share have to be positive or equals to zero."
+msgstr "分担的费用必须为正数或等于零。"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
+msgid "Cost Share (%)"
+msgstr "成本分摊(%)"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr "统计 MO 来源计数"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr "生成PO计数"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "日记账项目"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "生产订单 MO 概览报告"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/purchase.py:0
+#, python-format
+msgid "Manufacturing Source of %s"
+msgstr "制造来源 %s"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr "ERP 无法生成 anglo saxon 条目。%s 的总计价为零."
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "生产订单"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "采购订单"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "采购订单明细"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "从 %s生成采购订单"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr "采购套件时组件重新划分成本的百分比。所有部件的总成本必须等于100."
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "The total cost share for a BoM's component have to be 100"
+msgstr "BoM组件的总成本份额必须为100"

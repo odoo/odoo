@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_raw">
+        <xpath expr='//t[@t-call="sale.report_saleorder_document"]' position="attributes">
+            <attribute name="t-if" add="doc.company_id.country_code != 'BR'" separator=" and "/>
+        </xpath>
+        <xpath expr='//t[@t-call="sale.report_saleorder_document"]' position="after">
+            <t t-elif="doc.company_id.country_code == 'BR'"
+                t-call="l10n_br_sales.report_saleorder_document_brazil" t-lang="doc.partner_id.lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document" primary="True">
+        <th name="th_taxes" position="replace"/>
+        <td name="td_taxes" position="replace"/>
+        <th name="th_subtotal" position="replace"/>
+        <td name="td_subtotal" position="replace"/>
+        <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
+            <t t-call="l10n_br_sales.document_tax_totals_brazil"/>
+        </xpath>
+        <!-- hide subsection subtotals, because they don't include tax -->
+        <td name="td_section_subtotal" position="replace"/>
+    </template>
+</odoo>

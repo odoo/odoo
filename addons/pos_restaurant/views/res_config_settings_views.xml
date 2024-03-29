@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_restaurant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="warning_text_pos_restaurant" position="replace"/>
+            <block id="restaurant_section" position="inside">
+                <setting id="floor_and_table_map" string="Floors &amp; Tables Map" help="Design floors and assign orders to tables" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
+                    <div class="content-group">
+                        <div class="mt16">
+                            <label string="Floors" for="pos_floor_ids" class="o_light_label me-2"/>
+                            <field name="pos_floor_ids" widget="many2many_tags" readonly="pos_has_active_session" />
+                        </div>
+                        <div>
+                            <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="oi-arrow-right" type="action" string="Floors" class="btn-link"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes"  invisible="not pos_module_pos_restaurant">
+                    <field name="pos_iface_orderline_notes"/>
+                </setting>
+                <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
+                    <field name="pos_iface_printbill"/>
+                </setting>
+                <setting help="Split total or order lines" id="iface_splitbill"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
+                    <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
+                </setting>
+                <setting help="Online reservation for restaurant"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
+                    <field name="pos_module_pos_restaurant_appointment" string="Table Booking" widget="upgrade_boolean" />
+                    <div class="content-group" id="pos_table_booking" invisible="not pos_module_pos_restaurant_appointment">
+                        <div class="text-warning mt16 mb4">
+                            Save this page and come back here to set up the feature.
+                        </div>
+                    </div>
+                </setting>
+            </block>
+            <div id="tip_product" position="after">
+                <div invisible="not pos_module_pos_restaurant or not pos_iface_tipproduct">
+                    <field name="pos_set_tip_after_payment" class="oe_inline"/>
+                    <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

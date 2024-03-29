@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="website.PageDependencies">
+    <t t-if="!!Object.keys(state.dependencies).length">
+        <t t-if="props.mode === 'popover'">
+            <t t-set="depTemplate">
+                <t t-call="{{ constructor.popoverTemplate }}"/>
+            </t>
+            <t t-if="props.type === 'key'">
+                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
+                    It looks like your file is being called by
+                    <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>.
+                    Changing its name will break these calls.
+                </div>
+            </t>
+            <t t-else="">
+                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
+                    (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="state.depText" /></a>)
+                </div>
+            </t>
+        </t>
+        <t t-else="">
+            <p class="text-warning">We found these ones:</p>
+            <div t-foreach="state.dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
+                <a class="collapsed" data-bs-toggle="collapse"
+                t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
+                t-attf-href="#collapseDependencies{{ dependency_index }}"
+                aria-expanded="false">
+                    <i class="fa fa-caret-right me-1"/>
+                    <t t-esc="dependency"/>:
+                    <span class="text-muted"> <t t-esc="dependency_value.length"/> found(s)</span>
+                </a>
+                <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
+                    <ul>
+                        <li t-foreach="dependency_value" t-as="item" t-key="item_index">
+                            <t t-set="link_text">This URL is contained in the '%s' of the following '%s'</t>
+                            <a t-att-href="item.link" target="_blank">
+                                <t t-out="sprintf(link_text, item.field_name, item.model_name)"/>: <b t-out="item.record_name"/>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </t>
+    </t>
+</t>
+
+<t t-name="website.PageDependencies.Tooltip">
+    <t t-foreach="dependencies" t-as="dependency" t-key="dependency">
+        <b><t t-esc="dependency"/></b>
+        <ul>
+            <li t-foreach="dependency_value" t-as="item" t-key="item_index">
+                <a t-att-href="item.link" t-att-title="item.record_name" class="o_text_overflow" target="_blank">
+                    <t t-out="item.record_name"/>
+                </a>
+            </li>
+        </ul>
+    </t>
+</t>
+
+<t t-name="website.DeletePageDialog">
+    <WebsiteDialog title="title" close="props.close">
+        <p t-if="props.resIds.length > 1">Are you sure you want to delete those pages?</p>
+        <p t-else="">Are you sure you want to delete this page?</p>
+        <p class="text-warning">Don't forget to update all links referring to it.</p>
+        <PageDependencies resIds="props.resIds" resModel="props.resModel" mode="'collapse'"/>
+        <CheckBox value="state.confirm" onChange.bind="onConfirmCheckboxChange">
+            <p class="text-warning">I am sure about this.</p>
+        </CheckBox>
+
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
+                Ok
+            </button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                Cancel
+            </button>
+        </t>
+    </WebsiteDialog>
+</t>
+
+<t t-name="website.PagePropertiesDialog" t-inherit="web.FormViewDialog">
+    <xpath expr="//t[@t-set-slot='footer']" position="inside">
+        <button class="btn btn-link order-last ms-auto" t-on-click="clonePage"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
+        <button class="btn btn-link order-last" t-on-click="deletePage"><i class="fa fa-fw fa-trash"/>Delete Page</button>
+    </xpath>
+</t>
+
+</templates>

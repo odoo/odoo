@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.DatePickerPopup">
+            <div class="popup">
+                <div class="modal-header">
+                    <h4 class="modal-title title">
+                        <t t-esc="props.title" />
+                    </h4>
+                </div>
+                <main class="modal-body">
+                    <input class="form-control form-control-lg w-75 mx-auto" type="date" t-model="state.shippingDate" t-ref="input" t-att-min="_today()"/>
+                </main>
+                <div class="footer footer-flex modal-footer">
+                    <div class="button confirm highlight btn btn-lg btn-primary" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </div>
+            </div>
+    </t>
+
+</templates>

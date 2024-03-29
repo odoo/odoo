@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_form_view_inherit" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='warning_text_employees']" position='replace'>
+                <field name="company_id" invisible="1" />
+                <div class="row">
+                    <label for="basic_employee_ids" string="Basic rights" class="col-lg-4 o_light_label" />
+                    <field name="basic_employee_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" />
+                </div>
+                <div class="row">
+                    <label for="advanced_employee_ids" string="Advanced rights" class="col-lg-4 o_light_label" />
+                    <field name="advanced_employee_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

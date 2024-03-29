@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="sale_product_configurator.product_product_1_product_template" model="product.template">
+            <field name="website_sequence">9980</field>
+            <field name="is_published" eval="True"/>
+        </record>
+    <record id="product.product_product_4_product_template" model="product.template">
+        <field name="optional_product_ids" eval="[(6,0,[ref('product.product_product_11_product_template'), ref('website_sale.product_product_1_product_template')])]"/>
+    </record>
+</odoo>

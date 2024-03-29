@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="base.module_category_sales_point_of_sale">
+        <field name="description">Helps you get the most out of your points of sale with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more.</field>
+        <field name="sequence">21</field>
+    </record>
+
+    <record id="group_pos_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
+    </record>
+    <record id="group_pos_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
+        <field name="implied_ids" eval="[(4, ref('group_pos_user')), (4, ref('stock.group_stock_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <data noupdate="1">
+
+    <record id="rule_pos_bank_statement_account_user" model="ir.rule">
+        <field name="name">Point Of Sale Bank Statement Accountant</field>
+        <field name="model_id" ref="account.model_account_bank_statement" />
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="rule_pos_bank_statement_line_user" model="ir.rule">
+        <field name="name">Point Of Sale Bank Statement Line POS User</field>
+        <field name="model_id" ref="account.model_account_bank_statement_line" />
+        <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        <field name="domain_force">[('pos_session_id', '!=', False)]</field>
+    </record>
+    <record id="rule_pos_bank_statement_line_account_user" model="ir.rule">
+        <field name="name">Point Of Sale Bank Statement Line Accountant</field>
+        <field name="model_id" ref="account.model_account_bank_statement_line" />
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="rule_pos_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Order</field>
+        <field name="model_id" ref="model_pos_order" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_pos_session_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Session</field>
+        <field name="model_id" ref="model_pos_session" />
+        <field name="domain_force">[('config_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_pos_config_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Config</field>
+        <field name="model_id" ref="model_pos_config" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_pos_order_report_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Order Analysis multi-company</field>
+        <field name="model_id" ref="model_report_pos_order"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_pos_payment_method_multi_company" model="ir.rule">
+        <field name="name">PoS Payment Method</field>
+        <field name="model_id" ref="model_pos_payment_method" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_pos_payment_multi_company" model="ir.rule">
+        <field name="name">PoS Payment</field>
+        <field name="model_id" ref="model_pos_payment" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_invoice_pos_user" model="ir.rule">
+        <field name="name">Invoice POS User</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        <field name="domain_force">[('pos_order_ids', '!=', False)]</field>
+    </record>
+
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
+        </record>
+    </data>
+</odoo>

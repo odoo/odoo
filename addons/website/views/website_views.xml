@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ====== Actions ====================================================
+        ==================================================================== -->
+        <record id="action_website_add_features" model="ir.actions.act_window">
+            <field name="name">Apps</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
+        </record>
+
+        <record id="action_website_view_hierarchy" model="ir.actions.client">
+            <field name="name">View Hierarchy</field>
+            <field name="tag">website_view_hierarchy</field>
+        </record>
+
+        <!-- ====== website views ==============================================
+        ==================================================================== -->
+        <record id="view_website_form" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <form string="Website Settings">
+                    <sheet>
+                        <group name="domain">
+                            <field name="name"/>
+                            <field name="domain"/>
+                            <field name="logo" widget="image" class="oe_avatar w-auto float-start"/>
+                            <field name="language_count" invisible="1"/>
+                            <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="language_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="default_lang_id" options="{'no_open': True, 'no_create': True}"
+                                    invisible="language_count &lt;= 1"/>
+                        </group>
+                        <notebook>
+                            <page string="Custom Code" name="page_custom_code" groups="base.group_no_one">
+                                <label for="custom_code_head"/>
+                                <field name="custom_code_head" widget="code" options="{'mode': 'xml'}"/>
+
+                                <label for="custom_code_footer"/>
+                                <field name="custom_code_footer" widget="code" options="{'mode': 'xml'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_website_form_view_themes_modal" model="ir.ui.view">
+            <field name="name">website.modal.form</field>
+            <field name="model">website</field>
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <footer>
+                        <button name="create_and_redirect_configurator" type="object" string="Create" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </xpath>
+                <xpath expr="//notebook" position="replace"/>
+                <xpath expr="//field[@name='logo']" position="replace"/>
+            </field>
+        </record>
+
+        <record id="view_website_tree" model="ir.ui.view">
+            <field name="name">website.tree</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <tree string="Websites">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="domain"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="default_lang_id"/>
+                    <field name="theme_id" groups="base.group_no_one"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_website_list" model="ir.actions.act_window">
+            <field name="name">Websites</field>
+            <field name="res_model">website</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_website_tree"/>
+            <field name="target">current</field>
+        </record>
+
+        <!-- ====== website.menu views =========================================
+        ==================================================================== -->
+        <record id="website_menus_form_view" model="ir.ui.view">
+            <field name="name">website.menu.form</field>
+            <field name="model">website.menu</field>
+            <field name="arch" type="xml">
+                <form string="Website Menus Settings">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="url"/>
+                                <field name="page_id"/>
+                                <field name="controller_page_id"/>
+                                <field name="is_mega_menu"/>
+                            </group>
+                            <group>
+                                <field name="new_window"/>
+                                <field name="sequence"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                            </group>
+                            <group>
+                                <field name="parent_id" context="{'display_website': True}"/>
+                            </group>
+                        </group>
+                        <label for="child_id" string="Child Menus"/>
+                        <field name="child_id">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="url"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="menu_tree" model="ir.ui.view">
+            <field name="name">website.menu.tree</field>
+            <field name="model">website.menu</field>
+            <field name="arch" type="xml">
+                <tree string="Website menu">
+                    <field name="sequence" widget="handle"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="is_mega_menu"/>
+                    <field name="new_window"/>
+                    <field name="parent_id" context="{'display_website': True}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="menu_search" model="ir.ui.view">
+            <field name="name">website.menu.search</field>
+            <field name="model">website.menu</field>
+            <field name="arch" type="xml">
+                <search string="Search Menus">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="website_id" groups="website.group_multi_website"/>
+                    <group string="Group By">
+                        <filter string="Name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="Website"  name="group_by_website_id" domain="[]" context="{'group_by':'website_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_website_menu" model="ir.actions.act_window">
+            <field name="name">Website Menu</field>
+            <field name="res_model">website.menu</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_group_by_website_id':1}</field>
+            <field name="view_id" ref="menu_tree"/>
+            <field name="target">current</field>
+        </record>
+
+        <!-- ====== ir.ui.view views ============================================
+        ==================================================================== -->
+        <record id="reset_view_arch_wizard_view" model="ir.ui.view">
+            <field name="model">reset.view.arch.wizard</field>
+            <field name="inherit_id" ref="base.reset_view_arch_wizard_view"/>
+            <field name="arch" type="xml">
+                <field name="compare_view_id" position="attributes">
+                    <attribute name="context">{'display_website': True}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_arch_only" model="ir.ui.view">
+            <field name="name">website.ir_ui_view.arch_only</field>
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="arch"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ====== Dashboard ==================================================
+        ==================================================================== -->
+        <record id="backend_dashboard" model="ir.actions.client">
+            <field name="name">Analytics</field>
+            <field name="tag">backend_dashboard</field>
+        </record>
+
+        <record id="website_preview" model="ir.actions.client">
+            <field name="name">Website Preview</field>
+            <field name="tag">website_preview</field>
+        </record>
+
+        <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
+            <field name="name">Website: Dashboard</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_dashboard_redirect()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="ir_actions_server_website_analytics" model="ir.actions.server">
+            <field name="name">Website: Analytics</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="state">code</field>
+            <field name="code">action = model.env.ref('website.backend_dashboard').sudo().read()[0]</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- ====== Themes =====================================================
+        ==================================================================== -->
+        <!-- Custom module kanban : install button (even if already installed) which -->
+        <!-- redirects to website after (fake or not) installation + live preview button -->
+        <record model="ir.ui.view" id="theme_view_kanban">
+            <field name="name">Themes Kanban</field>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <kanban create="false" default_order="state,sequence,name" js_class="theme_preview_kanban">
+                    <field name="icon"/>
+                    <field name="summary"/>
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="url"/>
+                    <field name="image_ids"/>
+                    <field name="category_id"/>
+                    <field name="display_name"/>
+                    <field name="is_installed_on_current_website"/>
+                    <templates>
+                        <div t-name="kanban-box" t-attf-class="o_theme_preview #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
+                            <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
+                            <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
+                            <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
+
+                            <div class="o_theme_preview_top bg-white mb4 border">
+                                <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
+                                <div t-if="record.is_installed_on_current_website.raw_value" class="o_button_area">
+                                    <button type="object" name="button_refresh_theme" class="btn btn-primary">Update theme</button>
+                                    <hr />
+                                    <button type="object" name="button_remove_theme" class="btn btn-secondary">Remove theme</button>
+                                </div>
+                                <div t-else="" class="o_button_area">
+                                    <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
+                                    <hr t-if="record.url.value"/>
+                                    <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
+                                </div>
+                            </div>
+                            <div class="o_theme_preview_bottom clearfix">
+                                <h5 t-if="record.summary.value" class="text-uppercase float-start">
+                                    <b><t t-esc="record.summary.value.split(',')[0]"/></b>
+                                </h5>
+                                <h6 t-if="record.display_name.value" class="text-muted float-end">
+                                    <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
+                                </h6>
+                            </div>
+                        </div>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="theme_view_search">
+            <field name="name">Themes Search</field>
+            <field name="model">ir.module.module</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name', 'ilike', self)]" string="Theme"/>
+                    <field name="category_id" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('category_id', 'ilike', self)]" string="Category"/>
+                    <group>
+                        <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- themes should be installed through website settings -->
+        <record id="base.open_module_tree" model="ir.actions.act_window">
+            <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
+        </record>
+
+        <!-- Actions to list themes with custom kanban (launched on module installation) -->
+        <record id="theme_view_form_preview" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false" delete="0" js_class="theme_preview_form">
+                  <div class="o_preview_frame h-100">
+                        <field name="url" widget='iframe' class="d-block m-0 h-100"/>
+                  </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="theme_install_kanban_action" model="ir.actions.act_window">
+            <field name="name">Pick a Theme</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="website.theme_view_kanban" />
+            <field name="target">fullscreen</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('website.theme_view_kanban')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('website.theme_view_form_preview')})]"/>
+            <field name="search_view_id" ref="theme_view_search"/>
+            <field name="domain" model="ir.module.module" eval="obj().get_themes_domain()"/>
+        </record>
+
+        <!-- ====== Menu Items =================================================
+        ==================================================================== -->
+        <menuitem name="Website"
+            id="menu_website_configuration"
+            sequence="95"
+            groups="base.group_user"
+            web_icon="website,static/description/icon.png"/>
+
+        <menuitem id="menu_site"
+            name="Site"
+            sequence="10"
+            parent="website.menu_website_configuration"/>
+
+        <menuitem id="menu_website_preview"
+            parent="menu_site"
+            sequence="10"
+            name="Homepage"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_edit_menu"
+            parent="menu_site"
+            sequence="20"
+            name="Menu Editor"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_content"
+            parent="menu_site"
+            sequence="30"
+            name="Content"/>
+
+        <menuitem id="menu_current_page"
+            parent="menu_site"
+            sequence="40"
+            name="This page"/>
+
+        <menuitem id="menu_page_properties"
+            parent="menu_current_page"
+            sequence="10"
+            name="Properties"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_optimize_seo"
+            parent="menu_current_page"
+            name="Optimize SEO"
+            sequence="20"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_ace_editor"
+            parent="menu_current_page"
+            sequence="30"
+            name="HTML / CSS Editor"
+            action="website.website_preview"/>
+
+        <menuitem id="custom_menu_edit_menu"
+            parent="menu_current_page"
+            name="Edit Menu"
+            sequence="40"
+            action="website.website_preview"/>
+
+        <menuitem id="menu_reporting"
+            name="Reporting"
+            sequence="30"
+            parent="website.menu_website_configuration"/>
+
+        <menuitem id="menu_website_dashboard"
+            name="eCommerce"
+            sequence="20"
+            parent="menu_reporting"
+            action="website.ir_actions_server_website_dashboard"
+            active="0"/>
+
+        <menuitem id="menu_website_analytics"
+            name="Analytics"
+            sequence="10"
+            parent="menu_reporting"
+            action="website.ir_actions_server_website_analytics"/>
+
+        <!-- Configurator actions -->
+        <record id="website_configurator" model="ir.actions.client">
+            <field name="name">Website Configurator</field>
+            <field name="tag">website_configurator</field>
+            <field name="target">fullscreen</field>
+        </record>
+
+        <record id="action_open_website_configurator" model="ir.actions.client">
+            <field name="name">Open Website Configurator</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'action_id': ref('website_configurator'), 'menu_id': ref('menu_website_configuration')}"/>
+        </record>
+
+        <record id="website_configurator_todo" model="ir.actions.todo">
+            <field name="name">Start Website Configurator</field>
+            <field name="action_id" ref="action_open_website_configurator"/>
+        </record>
+    </data>
+</odoo>

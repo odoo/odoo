@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="base_automation.ActionsOne2ManyField">
+        <div class="d-flex align-items-center" t-ref="root">
+            <t t-if="currentActions.length === 0">
+                <span class="text-muted">no action defined...</span>
+            </t>
+            <t t-foreach="currentActions" t-as="action" t-key="action.id">
+                <div style="min-width: fit-content;" t-att-data-action-id="action.id">
+                    <div class="fs-5 d-flex align-items-center">
+                        <i
+                            data-name="server_action_icon"
+                            t-att-title="getActionType(action)"
+                            class="fa"
+                            t-att-class="{
+                                'code': 'fa-file-code-o',
+                                'object_create': 'fa-edit',
+                                'object_write': 'fa-refresh',
+                                'multi': 'fa-list-ul',
+                                'mail_post': 'fa-envelope',
+                                'followers': 'fa-user-o',
+                                'remove_followers': 'fa-user-times',
+                                'next_activity': 'fa-clock-o',
+                                'sms': 'fa-comments-o',
+                            }[action.data.state]"
+                        />
+                        <div class="ps-2" t-esc="action.data.name" />
+                    </div>
+                </div>
+                <div t-if="!action_last" class="px-3 align-self-center" t-att-data-action-id="action.id">
+                    <i class="fa fa-lg fa-plus text-primary"></i>
+                </div>
+            </t>
+            <t t-if="hiddenActionsCount">
+                <div class="fs-3 align-self-center text-muted">
+                    <t t-out="moreText"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

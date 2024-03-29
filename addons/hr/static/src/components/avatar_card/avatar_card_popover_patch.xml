@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="inside">
+            <button class="btn btn-secondary btn-sm" t-if="user.employee_ids?.length > 0" t-on-click.stop="onClickViewEmployee">View profile</button>
+        </xpath>
+    </t>
+
+    <t t-name="hr.avatarCardUserInfos">
+        <small class="text-muted" t-if="user.job_title" t-esc="user.job_title"/>
+        <span class="text-muted" t-if="user.department_id" data-tooltip="Department" t-esc="user.department_id[1]"/>
+    </t>
+</templates>

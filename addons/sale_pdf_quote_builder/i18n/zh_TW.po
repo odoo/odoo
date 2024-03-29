@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and '報價單 － %s' % (object.name)) or '銷售訂單 "
+"－ %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/> 下載範例"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales customer.\n"
+"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"Confirmed order: the document will be sent to and accessible by customers.\n"
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+msgstr ""
+"允許您在銷售中與客戶共享文檔。\n"
+"如果不想與銷售客戶共享此文檔，請將其留空。\n"
+"報價: 文件將發送給客戶，客戶可隨時訪問。\n"
+"例如，該選項可用於共享產品描述文件。\n"
+"確認訂單：該文件將發送給客戶並供其訪問。\n"
+"例如，此選項可用於共享用戶手冊或在電子商務上購買的數字內容。\n"
+"內部引用:文件將包含在報價單的PDF文件中,位於頁眉和報價表之間。"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr "頁尾"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr "頁首"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr "內部引用"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "請參閱使用說明，以了解更多。"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr "加入頁首、產品描述及頁尾，令報價單更具吸引力。"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "Only PDF documents can be attached inside a quote."
+msgstr "報價中只能附加 PDF文檔。"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "PDF Quote Builder"
+msgstr "PDF 報價生成工具"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "PDF Quote builder"
+msgstr "PDF 報價生成器"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+msgid "Product Document"
+msgstr "產品文件"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Products descriptions are pdf documents you can add directly on products.\n"
+"                            To do so, go on a product, find the \"product documents\" button, then add a\n"
+"                            new pdf document with a visibility set as \"Inside Quotes\". For each product\n"
+"                            in the quote, if the product has an \"inside quotes\" document, this document\n"
+"                            will be added after header pages and before the quotation details."
+msgstr ""
+"產品說明是 PDF文檔，您可以直接添加到產品上。\n"
+"                            為此，請進入一個產品，找到 \"產品文檔 \"按鈕，然後添加一個\n"
+"                            新的 pdf 文檔，其可見性設置為 \"內部報價\"。對於報價中的每個產品\n"
+"                            如果該產品有 \"內部報價\"文檔, 則該文檔\n"
+"                            將添加在頁眉之後和報價詳情之前。"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation\n"
+"                            with more information about your company, your products and your services.\n"
+"                            The pdf of your quotes will be built by putting together header pages,\n"
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
+msgstr ""
+"利用頁首及頁尾，製作有吸引力的報價單，提供更多\n"
+"                            有關你公司、產品及服務的資訊。\n"
+"                            建立你的報價單 PDF 時，會首先加入頁首資料，然後列出\n"
+"                            產品描述及報價詳情，最後加入頁尾資料。\n"
+"                            如果留空，它將使用公司設定內定義的資料。<br/>"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "報價單/訂單"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Quotation Template"
+msgstr "報價單範本"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "報表動作"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
+msgid "Sale Footer Name"
+msgstr "銷售頁尾名稱"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
+msgid "Sale Header Name"
+msgstr "銷售頁首名稱"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Some information specific to the quote (customer name, quotation reference, ... )\n"
+"                            can be injected in these documents using pdf forms.\n"
+"                            Refer to the documentation to know more about this feature."
+msgstr ""
+"報價的一些特定資料（客戶名稱、報價參考....）\n"
+"                            可使用 pdf表單注入到這些文檔中。\n"
+"                            有關此功能的更多資料，請參閱使用說明。"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
+msgid "Visible at"
+msgstr "可見在"

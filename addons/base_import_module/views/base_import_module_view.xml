@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_base_module_import" model="ir.ui.view">
+            <field name="name">base.import.module.form</field>
+            <field name="model">base.import.module</field>
+            <field name="arch" type="xml">
+                <form string="Install the application">
+                    <field name="state" invisible="1"/>
+                    <p class="alert alert-danger" role="alert" invisible="not with_demo or state == 'done'">
+                        Demo data should only be used on test databases. Once they are loaded, they cannot be entirely removed!
+                    </p>
+                    <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files and static assets)</p>
+                    <field name="modules_dependencies" readonly="1" nolabel="1" invisible="state == 'done'"/>
+                    <group invisible="state != 'init'">
+                        <field name="module_file" string="Module file (.zip)" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
+                        <field name="force" groups="base.group_no_one"/>
+                        <field name="with_demo" string="Import demo data"/>
+                    </group>
+                    <group invisible="state != 'done'">
+                        <field name="import_message" nolabel="1" readonly="1"/>
+                    </group>
+                    <footer>
+                        <div invisible="state != 'init'">
+                            <button name="import_module" string="Install" type="object" class="btn-primary" data-hotkey="q"/>
+                            <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                        </div>
+                        <div invisible="state != 'done'">
+                            <button special="cancel" data-hotkey="x" string="Close" class="btn-secondary"/>
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_import" model="ir.actions.act_window">
+            <field name="name">Import Module</field>
+            <field name="res_model">base.import.module</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Import Module"
+            action="action_view_base_module_import"
+            id="menu_view_base_module_import"
+            parent="base.menu_management"
+            groups="base.group_no_one"
+            sequence="100"/>
+
+</odoo>

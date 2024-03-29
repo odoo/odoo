@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+     <t t-name="point_of_sale.eWalletButton">
+        <t t-set="_order" t-value="pos.get_order()" />
+        <t t-set="_orderTotal" t-value="_order.get_total_with_tax()" />
+        <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
+        <t t-set="_eWalletRewards" t-value="_getEWalletRewards(_order)" />
+        <span class="control-button btn btn-light rounded-0 fw-bolder" t-att-class="_shouldBeHighlighted(_orderTotal, _eWalletPrograms, _eWalletRewards) ? 'highlight' : ''" t-on-click="_onClickWalletButton">
+            <i class="fa fa-credit-card me-1"></i>
+            <span> </span>
+            <span><t t-esc="_getText(_orderTotal, _eWalletPrograms, _eWalletRewards)" /></span>
+        </span>
+    </t>
+
+ </templates>

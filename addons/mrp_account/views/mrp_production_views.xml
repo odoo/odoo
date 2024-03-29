@@ -1,0 +1,65 @@
+<odoo>
+    <record id="view_production_tree_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.tree.view.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="analytic_distribution" widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       options="{'product_field': 'product_id', 'business_domain': 'manufacturing_order'}"
+                       optional="hide" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_production_form_view_inherited" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherited</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="before">
+                <field name="show_valuation" invisible="1" groups="stock.group_stock_manager"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <t groups="stock.group_stock_manager">
+                    <button type="object"
+                        name="action_view_stock_valuation_layers"
+                        class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
+                        invisible="not show_valuation" >
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Valuation</span>
+                        </div>
+                    </button>
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_analytic_accounts"
+                        icon="fa-bar-chart-o"
+                        invisible="not analytic_distribution or state in ['draft', 'cancel']"
+                        groups="analytic.group_analytic_accounting">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Analytic Account</span>
+                        </div>
+                    </button>
+                </t>
+            </xpath>
+            <xpath expr="//page[@name='miscellaneous']//field[@name='date_deadline']" position="after">
+                <t groups="stock.group_stock_manager">
+                    <field name="analytic_distribution" widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       options="{'product_field': 'product_id', 'business_domain': 'manufacturing_order'}"/>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_production_graph_inherit_mrp_account" model="ir.ui.view">
+        <field name="name">mrp.production.graph.inherited.mrp.account</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_production_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="extra_cost" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

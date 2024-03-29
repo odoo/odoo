@@ -1,0 +1,827 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* resource
+# 
+# Translators:
+# lasch a <bmail440@gmail.com>, 2023
+# Robin Calvin, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Björn Hayer, 2023
+# Simon S, 2023
+# Martin Trigaux, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Lasse L, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#: code:addons/resource/models/resource_resource.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Time Off</span>"
+msgstr "<span class=\"o_stat_text\">Fritid</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Work Resources</span>"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__active
+#: model:ir.model.fields,field_description:resource.field_resource_resource__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__afternoon
+msgid "Afternoon"
+msgstr "Eftermiddag"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Archived"
+msgstr "Arkiverad"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch this calendar to 1 week calendar? All "
+"entries will be lost"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch this calendar to 2 weeks calendar? All "
+"entries will be lost"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Attendances can't overlap."
+msgstr "Närvaron får inte överlappa varandra."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
+msgid "Average Hour per Day"
+msgstr "Genomsnittligt antal timmar per dag"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
+msgid ""
+"Average hours per day a resource is supposed to work with this calendar."
+msgstr ""
+"Genomsnittligt antal timmar per dag en resurs förväntas arbeta med den här "
+"kalendern."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "Gå sönder"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
+msgid "Calendar in 2 weeks mode"
+msgstr "Kalender i 2-veckors läge"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
+msgid "Closing Days"
+msgstr "Avslutande dagar"
+
+#. module: resource
+#: model:ir.model,name:resource.model_res_company
+msgid "Companies"
+msgstr "Bolag"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
+#: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Company"
+msgstr "Bolag"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__create_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
+msgid "Day Period"
+msgstr "Period på dagen"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
+msgid "Day of Week"
+msgstr "Veckodag"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
+msgid "Default Working Hours"
+msgstr "Standard arbetstid"
+
+#. module: resource
+#: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"Define working hours and time table that could be scheduled to your project "
+"members"
+msgstr ""
+"Definiera arbetstid och schema som skall utgöra underlag för tidsplanering "
+"av dina projektdeltagare"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
+msgid "Display Type"
+msgstr "Visningstyp"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "Varaktighet (dagar)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "Varaktighet (timmar)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
+msgid "Efficiency Factor"
+msgstr "Effektivitetsfaktor"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
+msgid "End Date"
+msgstr "Slutdatum"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
+msgid "Explanation"
+msgstr "Förklaring"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
+msgid "First"
+msgstr "Första"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+#, python-format
+msgid "First week"
+msgstr "Första veckan"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
+msgid "Friday"
+msgstr "fredag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Friday Afternoon"
+msgstr "Fredag eftermiddag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Friday Lunch"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Friday Morning"
+msgstr "Fredag morgon"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
+msgid "Gives the sequence of this line when displaying the resource calendar."
+msgstr "Anger sekvensen för denna rad vid visning av resurskalendern."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
+msgid "Global Time Off"
+msgstr "Global frånvaro"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Group By"
+msgstr "Gruppera efter"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+msgid "Hours"
+msgstr "Timmar"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Human"
+msgstr "Mänsklig"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_resource__id
+msgid "ID"
+msgstr "ID"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
+msgid ""
+"If empty, this is a generic time off for the company. If a resource is set, "
+"the time off is only for this resource"
+msgstr ""
+"Om det är tomt är detta en generisk ledighet för företaget. Om en resurs är "
+"angiven är ledigheten endast för denna resurs"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Om det aktiva fältet är satt till False, kommer det att du kan dölja "
+"resursposten utan att ta bort det."
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr ""
+"Om det aktiva fältet är inställt på false kan du dölja arbetstiden utan att "
+"ta bort den."
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr ""
+"I en kalender med 2-veckorsläge måste alla perioder finnas i sektionerna."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_resource__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__write_date
+#: model:ir.model.fields,field_description:resource.field_resource_resource__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Material"
+msgstr "Material"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
+msgid "Monday"
+msgstr "måndag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Monday Afternoon"
+msgstr "Måndag eftermiddag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Monday Lunch"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Monday Morning"
+msgstr "Måndag morgon"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__morning
+msgid "Morning"
+msgstr "Morgon"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__name
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__name
+#: model:ir.model.fields,field_description:resource.field_resource_resource__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
+msgid "Other"
+msgstr "Annat"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Period"
+msgstr "Period"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Reason"
+msgstr "Anledning"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Relaterat användarnamn för resursen vid administration av dess rättigheter."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
+#: model:ir.ui.menu,name:resource.menu_resource_config
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Resource"
+msgstr "Resurs"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_mixin
+msgid "Resource Mixin"
+msgstr "Mixin för resurser"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
+msgid "Resource Time Off"
+msgstr "Resurs Avstängd tid"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Resurs Time Off Detalj"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Resursens arbetstid"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
+msgid "Resource's Calendar"
+msgstr "Resursens kalender"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
+#: model:ir.model,name:resource.model_resource_resource
+#: model:ir.model.fields,field_description:resource.field_res_users__resource_ids
+#: model:ir.ui.menu,name:resource.menu_resource_resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_tree
+msgid "Resources"
+msgstr "Resurser"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
+msgid "Resources Time Off"
+msgstr "Resurser Fritid"
+
+#. module: resource
+#: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
+#: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
+msgstr ""
+"Med resurser kan du skapa och hantera resurser som bör vara inblandade i en "
+"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
+"arbetsbelastning utifrån deras veckoarbetstid."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
+msgid "Saturday"
+msgstr "lördag"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Search Resource"
+msgstr "Sök resurs"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Search Working Period Time Off"
+msgstr "Sökning Arbetsperiod Fritid"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Search Working Time"
+msgstr "Sök arbetstid"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
+msgid "Second"
+msgstr "Sekund"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+#, python-format
+msgid "Second week"
+msgstr "Andra veckan"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
+msgid "Section"
+msgstr "Sektion"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/res_company.py:0
+#, python-format
+msgid "Standard 40 hours/week"
+msgstr "Standard 40 timmar/vecka"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__hour_from
+msgid ""
+"Start and End time of working.\n"
+"A specific value of 24:00 is interpreted as 23:59:59.999999."
+msgstr ""
+"Start- och sluttid för arbetet.\n"
+"Ett specifikt värde på 24:00 tolkas som 23:59:59.999999."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
+msgid "Starting Date"
+msgstr "Startdatum"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Time Off"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
+msgid "Sunday"
+msgstr "Söndag"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 1 week calendar"
+msgstr "Växla till 1 veckas kalender"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 2 weeks calendar"
+msgstr "Växla till 2 veckors kalender"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
+msgid "Technical field for UX purpose."
+msgstr "Tekniskt område för UX-ändamål."
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "The current week (from %s to %s) correspond to the  %s one."
+msgstr "Den aktuella veckan (från %s till %s) motsvarar %s."
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_leaves.py:0
+#, python-format
+msgid "The start date of the time off must be earlier than the end date."
+msgstr "Ledighetens startdatum måste vara tidigare än slutdatumet."
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__tz
+#: model:ir.model.fields,help:resource.field_resource_mixin__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+"Detta fält används för att definiera i vilken tidszon resurserna ska arbeta."
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
+msgid ""
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
+msgstr ""
+"Det här fältet används för att beräkna den förväntade tidsåtgången för en "
+"arbetsorder på det här produktionsgrupp. Om en arbetsorder till exempel tar "
+"en timme och effektivitetsfaktorn är 100 % är den förväntade tidsåtgången en"
+" timme. Om effektivitetsfaktorn är 200 % kommer den förväntade tidsåtgången "
+"att vara 30 minuter."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
+msgid "Thursday"
+msgstr "Torsdag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Thursday Afternoon"
+msgstr "Torsdag eftermiddag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Thursday Lunch"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Thursday Morning"
+msgstr "Torsdag morgon"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
+msgid "Time Off"
+msgstr "Ledighet"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Time Off Detail"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
+msgid "Time Type"
+msgstr "Tidstyp"
+
+#. module: resource
+#: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
+msgid "Time efficiency must be strictly positive"
+msgstr "Tidseffektiviteten måste vara strikt positiv"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__tz
+#: model:ir.model.fields,field_description:resource.field_resource_resource__tz
+msgid "Timezone"
+msgstr "Tidszon"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz_offset
+msgid "Timezone offset"
+msgstr "Offset tidsskillnad"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
+msgid "Tuesday"
+msgstr "Tisdag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Tuesday Afternoon"
+msgstr "Tisdag eftermiddag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Tuesday Lunch"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Tuesday Morning"
+msgstr "Tisdag morgon"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Type"
+msgstr "Typ"
+
+#. module: resource
+#: model:ir.model,name:resource.model_res_users
+#: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "User"
+msgstr "Användare"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Wednesday Afternoon"
+msgstr "Onsdag eftermiddag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Wednesday Lunch"
+msgstr ""
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Wednesday Morning"
+msgstr "Onsdag morgon"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
+msgid "Week Number"
+msgstr "Veckonummer"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
+msgid ""
+"Whether this should be computed as a time off or as work time (eg: "
+"formation)"
+msgstr ""
+"Om detta ska beräknas som ledig tid eller som arbetstid (t.ex. utbildning)"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Arbetsdetaljer"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
+msgid "Work from"
+msgstr "Arbeta från"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
+msgid "Work to"
+msgstr "Arbeta till"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Working Hours"
+msgstr "Arbetstid"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Working Hours of %s"
+msgstr "Arbetstider för %s"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
+#: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Working Time"
+msgstr "Arbetstid"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "You can't delete section between weeks."
+msgstr "Du kan inte radera sektioner mellan veckor."
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "first"
+msgstr "första"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+#, python-format
+msgid "other week"
+msgstr "andra veckan"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "second"
+msgstr "sekund"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+#, python-format
+msgid "this week"
+msgstr "denna vecka"

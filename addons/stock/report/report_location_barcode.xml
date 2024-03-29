@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="report_generic_barcode">
+    <t t-call="web.basic_layout">
+        <t t-call="web.html_container">
+            <div class="oe_structure"></div>
+            <t t-set="nRows" t-value="7"/>
+            <t t-set="nCols" t-value="4"/>
+            <t t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs">
+                <div class="o_label_sheet" style="padding: 10mm 3mm;">
+                    <table class="my-0 table table-sm table-borderless">
+                        <t t-foreach="range(nRows)" t-as="row">
+                            <tr>
+                                <t t-foreach="range(nCols)" t-as="col">
+                                    <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                    <t t-if="barcode_index &lt; len(page_docs)">
+                                        <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                        <td>
+                                            <div class="o_label_full" style="width:47mm;height:37.1mm;border: 1px solid black;">
+                                                <div class="o_label_name text-center">
+                                                    <strong><span t-field="o.name">WH/Stock</span></strong>
+                                                </div>
+                                                <div class="text-center mt-3">
+                                                    <span t-if="o.barcode" t-field="o.barcode" style="padding:0"
+                                                        t-options="{'widget': 'barcode', 'humanreadable': 1, 'symbology': 'auto', 'img_style': 'width:47mm;height:11mm'}">1234567890</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </t>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </t>
+        <div class="oe_structure"></div>
+    </t>
+</template>
+
+<template id="report_location_barcode">
+    <t t-set="title">Locations</t>
+    <t t-call="stock.report_generic_barcode"/>
+</template>
+</data>
+</odoo>

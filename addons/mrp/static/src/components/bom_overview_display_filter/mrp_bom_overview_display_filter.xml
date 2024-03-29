@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewDisplayFilter">
+        <Dropdown class="'btn-group flex-grow-1 flex-md-grow-0'" togglerClass="'btn btn-secondary'" showCaret="true">
+            <t t-set-slot="toggler">
+                <span class="fa fa-filter"/>
+                Display
+            </t>
+            <t t-foreach="displayableOptions" t-as="optionKey" t-key="optionKey">
+                <DropdownItem parentClosingMode="'none'" class="{ o_menu_item: true, selected: props.showOptions[optionKey] }" onSelected="() => this.props.changeDisplay(optionKey)" t-esc="displayOptions[optionKey]"/>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

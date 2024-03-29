@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_cards" name="Menu - Cards" groups="base.group_user">
+    <section class="s_mega_menu_cards pt16 pb16 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <nav class="row">
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_1"/>
+                    <t t-set="_title">Our team</t>
+                    <t t-set="_text">Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_2"/>
+                    <t t-set="_title">Departments</t>
+                    <t t-set="_text">Do you need specific information? Our specialists will help you with pleasure.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_3"/>
+                    <t t-set="_title">Products</t>
+                    <t t-set="_text">We offer tailor-made products according to your needs and your budget.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_4"/>
+                    <t t-set="_title">Customers</t>
+                    <t t-set="_text">Find out how we were able helping them and set in place solutions adapted to their needs.</t>
+                </t>
+
+                <div class="w-100 d-none d-md-block"/>
+
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_5"/>
+                    <t t-set="_title">Events</t>
+                    <t t-set="_text">From seminars to team building activities, we offer a wide choice of events to organize.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_6"/>
+                    <t t-set="_title">Blog</t>
+                    <t t-set="_text">Stay informed of our latest news and discover what will happen in the next weeks.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_7"/>
+                    <t t-set="_title">Deliveries</t>
+                    <t t-set="_text">Find all information about our deliveries, express deliveries and all you need to know to return a product.</t>
+                </t>
+                <t t-call="website.s_mega_menu_cards_item">
+                    <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_cards_default_image_8"/>
+                    <t t-set="_title">Points of sale</t>
+                    <t t-set="_text">Need to pick up your order at one of our stores? Discover the nearest to you.</t>
+                </t>
+            </nav>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_cards_item">
+    <div class="col-12 col-sm-6 col-md" data-name="Menu Item">
+        <a href="#" class="nav-link o_default_snippet_text rounded text-wrap text-center p-3">
+            <img t-att-src="_img_src" class="mb-3 rounded shadow img-fluid" alt=""/>
+            <h4 t-esc="_title"/>
+            <p class="o_default_snippet_text mb-0 small"><t t-esc="_text"/></p>
+        </a>
+    </div>
+</template>
+
+<record id="website.s_mega_menu_cards_000_scss" model="ir.asset">
+    <field name="name">Menu - Cards 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_cards/000.scss</field>
+</record>
+
+</odoo>

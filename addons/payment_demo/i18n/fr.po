@@ -1,0 +1,298 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_demo
+# 
+# Translators:
+# Wil Odoo, 2023
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Successful payment\">\n"
+"                        Successful\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Payment processing\">\n"
+"                        Pending\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Payment canceled by customer\">\n"
+"                        Canceled\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Processing error\">\n"
+"                        Error\n"
+"                    </option>\n"
+"                </select>"
+msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Paiement réussi\">\n"
+"                        Réussi\n"
+"                    </option>\n"
+"                    <option value=\"pending\" title=\"Paiement en cours\">\n"
+"                        En attente\n"
+"                    </option>\n"
+"                    <option value=\"cancel\" title=\"Paiement annulé par le client\">\n"
+"                        Annulé\n"
+"                    </option>\n"
+"                    <option value=\"error\" title=\"Erreur de traitement\">\n"
+"                        Erreur\n"
+"                    </option>\n"
+"                </select>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>City</b></small>"
+msgstr "<small><b>Ville</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Country</b></small>"
+msgstr "<small><b>Pays</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Name</b></small>"
+msgstr "<small><b>Nom</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Street and Number</b></small>"
+msgstr "<small><b>Rue et numéro</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small><b>Zip Code</b></small>"
+msgstr "<small><b>Code postal</b></small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small>Email</small>"
+msgstr "<small>Email</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "<small>Payment Details (test data)</small>"
+msgstr "<small>Données de paiement (données test)</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "<small>Payment Status</small>"
+msgstr "<small>Statut du paiement</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+msgid "<small>Street 2</small>"
+msgstr "<small>Rue 2</small>"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Authorize"
+msgstr "Autoriser"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__cancel
+msgid "Canceled"
+msgstr "Annulé"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_transaction__capture_manually
+msgid "Capture Amount Manually"
+msgstr "Capturer le montant manuellement"
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_transaction__capture_manually
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed.\n"
+"Use this if you want to charge your customers cards only when\n"
+"you are sure you can ship the goods to them."
+msgstr ""
+"Capturez le montant depuis Odoo quand la livraison est effectuée.\n"
+"Utilisez cette option si vous voulez uniquement débiter les cartes de vos clients lorsque\n"
+"vous êtes sûr de pouvoir leur livrer la marchandise."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Close"
+msgstr "Fermer"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_provider__code
+msgid "Code"
+msgstr "Code"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Confirm"
+msgstr "Confirmer"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__done
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_provider__code__demo
+msgid "Demo"
+msgstr "Démo"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Demo Express Checkout"
+msgstr "Démo paiement rapide"
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_provider.py:0
+#, python-format
+msgid "Demo providers should never be enabled."
+msgstr "Les fournisseurs démo ne devraient jamais être activés."
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
+msgid "Error"
+msgstr "Erreur"
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Aucune transaction ne correspond à la référence %s."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Pay"
+msgstr "Payer"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Pay with Demo"
+msgstr "Payer avec Démo"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_provider
+msgid "Payment Provider"
+msgstr "Fournisseur de paiement"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_token
+msgid "Payment Token"
+msgstr "Jeton de paiement"
+
+#. module: payment_demo
+#: model:ir.model,name:payment_demo.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction de paiement"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
+#, python-format
+msgid "Payment processing failed"
+msgstr "Échec du traitement du paiement"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid "Payments made with this payment method will be <b>successful</b>."
+msgstr ""
+"Les paiements effectués avec ce mode de paiement seront <b>réussis</b>."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid ""
+"Payments made with this payment method will be automatically "
+"<b>canceled</b>."
+msgstr ""
+"Les paiements effectués avec ce mode de paiement seront automatiquement "
+"<b>annulés</b>."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid "Payments made with this payment method will remain <b>pending</b>."
+msgstr ""
+"Les paiements effectués avec ce mode de paiement resteront <b>en "
+"attente</b>."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+msgid ""
+"Payments made with this payment method will simulate a processing "
+"<b>error</b>."
+msgstr ""
+"Les paiements effectués avec ce mode de paiement simuleront une "
+"<b>erreur</b> de traitement."
+
+#. module: payment_demo
+#: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
+msgid "Pending"
+msgstr "En attente"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+msgid "Set to Error"
+msgstr "Définir sur Erreur"
+
+#. module: payment_demo
+#: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
+msgid "Simulated State"
+msgstr "Statut simulé"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Test Mode"
+msgstr "Mode test"
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
+msgid "The state in which transactions created from this token should be set."
+msgstr ""
+"Le statut dans lequel les transactions créées à partir de ce jeton doivent "
+"être mises."
+
+#. module: payment_demo
+#: model:ir.model.fields,help:payment_demo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Le code technique de ce fournisseur de paiement."
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "La transaction n'est pas liée à un jeton."
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+msgid "Unpublished"
+msgstr "Non publié"
+
+#. module: payment_demo
+#: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+msgid "XXXX XXXX XXXX XXXX"
+msgstr "XXXX XXXX XXXX XXXX"
+
+#. module: payment_demo
+#. odoo-python
+#: code:addons/payment_demo/models/payment_transaction.py:0
+#, python-format
+msgid "You selected the following demo payment status: %s"
+msgstr "Vous avez sélectionné le statut de paiement démo suivant : %s"

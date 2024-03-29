@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RecipientList">
+        <div class="o-mail-RecipientList p-2 overflow-auto">
+            <ul class="list-unstyled mb-0">
+                <li t-foreach="props.thread.recipients" t-as="recipient" t-key="recipient.id">
+                    <t t-out="getRecipientText(recipient)"/>
+                </li>
+                <span t-if="!props.thread.recipientsFullyLoaded" class="btn btn-link w-100" t-on-click="() => threadService.loadMoreRecipients(props.thread)" t-ref="load-more">Load more</span>
+            </ul>
+        </div>
+    </t>
+
+</templates>

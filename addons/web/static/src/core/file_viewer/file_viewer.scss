@@ -1,0 +1,46 @@
+.o-FileViewer {
+    z-index: -1;
+    outline: none;
+}
+
+.o-FileViewer-navigation {
+    width: 40px;
+    height: 40px;
+}
+
+.o-FileViewer-header {
+    height: $o-navbar-height;
+}
+
+.o-FileViewer-main {
+    z-index: -1;
+    padding: ($o-navbar-height * 1.125) 0;
+}
+
+.o-FileViewer-zoomer {
+    padding: ($o-navbar-height * 1.125) 0;
+}
+
+.o-FileViewer-headerButton:hover {
+    background-color: rgba($white, 0.1);
+    color: lighten($gray-400, 15%);
+}
+
+.o-FileViewer-toolbarButton {
+    background-color: var(--file-viewer-toolbarButton-background-color, #{$o-gray-800});
+    color: #fff;
+
+    &:hover {
+        filter: brightness(1.3);
+    }
+}
+
+.o-FileViewer-view {
+    background-color: #000000;
+    box-shadow: 0 0 40px #000000;
+    outline: none;
+
+    &.o-isText {
+        background: $white;
+    }
+}

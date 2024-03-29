@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.StandNumberPage">
+        <div class="self_order_stand_number d-flex flex-column flex-grow-1 justify-content-between px-3 overflow-y-auto">
+
+            <div class="text-center pt-3">
+                <h1>Get a tracker and enter its number here</h1>
+                <div class="input-number form-contol form-control-lg text-center">
+                    <span t-esc="tableInput" class="display-1"/>
+                </div>
+            </div>
+            <div class="d-flex justify-content-around align-items-center py-4 py-md-5 my-auto">
+                <div class="numpad row g-0 row-cols-3 border">
+                    <div t-on-click="numberClick" data="1" class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">1</div>
+                    <div t-on-click="numberClick" data="2"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">2</div>
+                    <div t-on-click="numberClick" data="3"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">3</div>
+                    <div t-on-click="numberClick" data="4"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">4</div>
+                    <div t-on-click="numberClick" data="5"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">5</div>
+                    <div t-on-click="numberClick" data="6"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">6</div>
+                    <div t-on-click="numberClick" data="7"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">7</div>
+                    <div t-on-click="numberClick" data="8"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">8</div>
+                    <div t-on-click="numberClick" data="9"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">9</div>
+                    <div t-on-click="numberClick" data="clear"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">
+                        <i class="oi oi-close" aria-hidden="true"></i>
+                    </div>
+                    <div t-on-click="numberClick" data="0"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">0</div>
+                    <div t-on-click="numberClick" data="reset"  class="touch-key col btn btn-light d-flex align-items-center justify-content-center border rounded-0 fs-1">&#9003;</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between p-3 bg-view border-top">
+            <button class="btn btn-secondary btn-lg" t-on-click="() => this.router.back()"><i class="oi oi-chevron-left me-2" aria-hidden="true"/>Back</button>
+            <button class="btn btn-primary btn-lg" t-att-class="{'disabled': !state.standNumber}" t-on-click="confirm">Pay</button>
+        </div>
+    </t>
+</templates>

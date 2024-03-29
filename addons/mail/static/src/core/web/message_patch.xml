@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Message-textContent')]/*[1]" position="before">
+            <t t-if="message.type === 'notification' or message.is_transient or message.trackingValues.length > 0" name="hasTrackingValue">
+                <div>
+                    <t t-if="message.subtype_description">
+                        <p class="mb-0">
+                            <t t-out="messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
+                        </p>
+                    </t>
+                    <t t-if="message.trackingValues.length">
+                        <ul class="mb-0 ps-4">
+                            <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+                                <li class="o-mail-Message-tracking mb-1" role="group">
+                                    <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.oldValue)"/>
+                                    <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-1 text-600"/>
+                                    <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.newValue)"/>
+                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-esc="trackingValue.changedField"/>)</span>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+                    <div t-if="message.body" class="o-mail-Message-body text-break mb-0 w-100" t-ref="body">
+                        <t t-out="messageSearch?.highlight(message.body) ?? message.body"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Message-avatarContainer')]" position="attributes">
+            <attribute name="t-att-class">{ 'cursor-pointer': hasAuthorClickable() }</attribute>
+            <attribute name="t-att-aria-label">getAuthorText()</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Message-author')]" position="attributes">
+            <attribute name="t-att-class">{ 'cursor-pointer': hasAuthorClickable() }</attribute>
+            <attribute name="t-att-aria-label">getAuthorText()</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
+    </t>
+</templates>

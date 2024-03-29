@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('product-information-tag')]" position="attributes">
+            <attribute name="t-att-class">{'red-tag' : !isSelfOrderAvailable(props.productId)}</attribute>
+        </xpath>
+    </t>
+</templates>

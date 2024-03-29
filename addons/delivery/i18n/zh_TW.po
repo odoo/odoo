@@ -1,0 +1,857 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+#, python-format
+msgid "%(carrier)s Error"
+msgstr "%(carrier)s 錯誤"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "%(old_name)s (copy)"
+msgstr "%(old_name)s（副本）"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>獲取費率"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Buy Odoo Enterprise now to get more providers.\n"
+"                </p>"
+msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    現在購買 Odoo企業版獲取更多的服務商。\n"
+"                </p>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
+"                                <span class=\"o_stat_text\">Environment</span>"
+msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">測試</span>\n"
+"                                <span class=\"o_stat_text\">環境</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
+msgstr "<span class=\"o_stat_text text-danger\">沒有除錯</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "<span class=\"text-success\">Debug requests</span>"
+msgstr "<span class=\"text-success\">測試需求</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"<span class=\"text-success\">Production</span>\n"
+"                                <span class=\"o_stat_text\">Environment</span>"
+msgstr ""
+"<span class=\"text-success\">正式運行</span>\n"
+"                                <span class=\"o_stat_text\">環境</span>"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
+msgid "<strong>Shipping Description:</strong>"
+msgstr "<strong>運輸描述：</strong>"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
+msgid ""
+"A description of the delivery method that you want to communicate to your "
+"customers on the Sales Order and sales confirmation email.E.g. instructions "
+"for customers to follow."
+msgstr "您希望在銷售訂單和銷售確認電子郵件中與客戶溝通的交貨方式的描述，例如，客戶要遵循的指示。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
+msgid "Action while validating Delivery Orders"
+msgstr "在驗證交貨訂單時的操作"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
+msgid "Active"
+msgstr "啟用"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Add"
+msgstr "加入"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: code:addons/delivery/wizard/choose_delivery_carrier.py:0
+#, python-format
+msgid "Add a shipping method"
+msgstr "增加運輸方法"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "Add shipping"
+msgstr "加入運送方式"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Additional margin"
+msgstr "額外利潤率"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
+msgid "Amount"
+msgstr "金額"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr "免費送貨的訂單金額，以公司本位貨幣顯示"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Archived"
+msgstr "已封存"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
+msgid "Available Carriers"
+msgstr "可用的承運商"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
+msgid "Based on Rules"
+msgstr "根據規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
+msgid "Can Generate Return"
+msgstr "可以生成退貨"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+msgid "Carrier"
+msgstr "承運商"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
+msgid "Carrier Description"
+msgstr "承運商描述"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Condition"
+msgstr "條件"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
+msgid "Cost"
+msgstr "成本"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
+msgid "Countries"
+msgstr "國家"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
+msgid "Customer"
+msgstr "客戶"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
+msgid "Debug logging"
+msgstr "偵錯記錄"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Default delivery method used in sales orders."
+msgstr "銷售訂單中使用的預設交貨方法。"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid "Define a new delivery method"
+msgstr "定義新交貨方法"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Delivery Carrier"
+msgstr "交貨承運商"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_choose_delivery_carrier
+msgid "Delivery Carrier Selection Wizard"
+msgstr "貨運承運商選擇介面"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+msgid "Delivery Cost"
+msgstr "運輸成本"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
+msgid "Delivery Message"
+msgstr "發貨消息"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
+msgid "Delivery Method"
+msgstr "交貨方法"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
+msgid "Delivery Price"
+msgstr "交貨價格"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_price_rule
+msgid "Delivery Price Rules"
+msgstr "運輸價格規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
+msgid "Delivery Product"
+msgstr "交貨產品"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
+msgid "Delivery Rating Success"
+msgstr "交付評級成功"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
+msgid "Delivery Set"
+msgstr "設置運貨方式"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_zip_prefix
+msgid "Delivery Zip Prefix"
+msgstr "送貨郵編字首"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
+msgid "Delivery cost should be recomputed"
+msgstr "應重新計算貨運成本"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid ""
+"Delivery zip prefixes are assigned to delivery carriers to restrict\n"
+"            which zips it is available to."
+msgstr ""
+"送貨郵編字首被分配給交貨承運商，\n"
+"            以限制其可用的郵編範圍。"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Description"
+msgstr "說明"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Destination Availability"
+msgstr "目的地有效性"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
+msgid "Determine the display order"
+msgstr "決定顯示順序"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"            UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"            to each method."
+msgstr ""
+"每個承運商（例如 UPS）可以有多種遞送方式（例如：\n"
+"            UPS Express、UPS Standard），每種方式都\n"
+"            有自己一套定價規則。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
+msgid "Environment"
+msgstr "環境"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr "錯誤：此傳遞方法不適用於此地址。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
+msgid ""
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping."
+msgstr "預計成本：會以預算運費向客戶開立發票。"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
+msgid "Estimated cost"
+msgstr "估計費用"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
+msgid "Fill this field if you plan to invoice the shipping based on picking."
+msgstr "如果您打算根據發貨的實際數量開具帳單的話，就填寫這一欄位."
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Filling this form allows you to filter delivery carriers according to the "
+"delivery address of your customer."
+msgstr "填寫此表格，您可以根據您的客戶送貨地址進行過濾。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
+msgid "Fixed Margin"
+msgstr "固定利潤率"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
+msgid "Fixed Price"
+msgstr "固定價格"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "免費送貨"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
+msgid "Free if order amount is above"
+msgstr "訂單額度超過 時，免費"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "Generate Return Label"
+msgstr "生成退貨單"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
+msgid "Get Rate"
+msgstr "獲取費率"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
+msgid "Get Rate and Create Shipment"
+msgstr "獲取費率並建立裝運"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Group By"
+msgstr "分組依據"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
+msgid ""
+"If the order total amount (shipping excluded) is above or equal to this "
+"value, the customer benefits from a free shipping"
+msgstr "如果訂單總額（不包括運費）高於或等於此值，客戶可享受免費送貨服務"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Install more Providers"
+msgstr "增加更多供應商"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
+msgid "Insurance Percentage"
+msgstr "保險百分比"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
+msgid "Integration Level"
+msgstr "整合等級"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
+msgid "Invoicing Message"
+msgstr "憑單訊息"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
+msgid "Invoicing Policy"
+msgstr "開立應收憑單策略"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
+msgid "Is a Delivery"
+msgstr "是交貨"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_local_delivery
+#: model:product.template,name:delivery.product_product_local_delivery_product_template
+msgid "Local Delivery"
+msgstr "本地送貨"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
+msgid "Log requests in order to ease debugging"
+msgstr "記錄請求以便於偵錯"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
+msgid "Manage delivery zip prefixes"
+msgstr "管理送貨郵政編碼字首"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
+msgid "Margin"
+msgstr "毛利"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
+msgid "Margin cannot be lower than -100%"
+msgstr "毛利不得低於 -100%"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Margin on Rate"
+msgstr "利潤率"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
+msgid "Maximum Value"
+msgstr "最大值"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "New Providers"
+msgstr "新服務商"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "Not available for current order"
+msgstr "目前訂單不可用"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
+msgid "Operator"
+msgstr "客服人員"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__order_id
+msgid "Order"
+msgstr "訂單"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Please select a country before choosing a state or a zip prefix."
+msgstr "請在選擇州或郵政編碼前選擇國家/地區。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
+msgid "Prefix"
+msgstr "前綴"
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
+msgid "Prefix already exists!"
+msgstr "字首已存在"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
+msgid ""
+"Prefixes of zip codes that this carrier applies to. Note that regular "
+"expressions can be used to support countries with varying zip code lengths, "
+"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
+"will only match '100' and not '1000')"
+msgstr ""
+"該承運商適用的郵編前綴。請注意，正則表達式可用於支持不同國家/地區的不同郵編長度，例如，可將「$」添加至郵編前綴的末尾，以匹配具體郵編（例如，「100$」"
+" 只匹配「100」，而不匹配 「1000」）"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__price
+msgid "Price"
+msgstr "價格"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+msgid "Price Rules"
+msgstr "價格規則"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Pricing"
+msgstr "價目表"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
+msgid "Pricing Rules"
+msgstr "定價規則"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
+msgid "Product Qty"
+msgstr "產品數量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_type
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+msgid "Provider"
+msgstr "服務商"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__quantity
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__quantity
+msgid "Quantity"
+msgstr "數量"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid "Return Label Accessible from Customer Portal"
+msgstr "退貨單可由客戶帳號介面中下載"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
+msgid "Sale Base Price"
+msgstr "以銷售為基礎的價格"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
+msgid "Sale Price"
+msgstr "銷售價格"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
+msgid "Sequence"
+msgstr "序列號"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
+msgid "Service Product"
+msgstr "服務產品"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
+msgid "Set to True if your credentials are certified for production."
+msgstr "如果您的證書已通過生產認證，請設定為 True。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Shipping Method"
+msgstr "郵寄方式"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "寄送方式"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
+msgid "Shipping Weight"
+msgstr "發貨重量"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
+msgid ""
+"Shipping insurance is a service which may reimburse senders whose parcels "
+"are lost, stolen, and/or damaged in transit."
+msgstr "運輸保險服務，可為包裹在運輸途中丟失、被盜和/或損壞的寄件人提供補償。"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid ""
+"Shipping method details to be included at bottom sales orders and their "
+"confirmation emails. E.g. Instructions for customers to follow."
+msgstr "送貨方式詳細資料將包含在底部銷售訂單及其確認電子郵件中。例如，客戶要遵循的指示。"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Standard delivery"
+msgstr "標準送貨"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
+msgid "States"
+msgstr "狀態"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
+msgid "Supports Shipping Insurance"
+msgstr "支援貨運保險"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "郵政"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
+msgid ""
+"The return label can be downloaded by the customer from the customer portal."
+msgstr "客戶可以從外部客戶帳號介面下載退貨單。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
+msgid "The return label is automatically generated at the delivery."
+msgstr "退貨訂單於交貨時自動生成."
+
+#. module: delivery
+#: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
+msgid "The shipping insurance must be a percentage between 0 and 100."
+msgstr "運輸保險必須是介於 0 和 100 之間的百分比。"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/delivery_carrier.py:0
+#, python-format
+msgid "The shipping is free since the order amount exceeds %.2f."
+msgstr "由於訂單金額超過 %.2f.，因此免運。"
+
+#. module: delivery
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"These methods allow to automatically compute the delivery price\n"
+"            according to your settings; on the sales order (based on the\n"
+"            quotation) or the invoice (based on the delivery orders)."
+msgstr ""
+"這些方法允許自動計算交貨價格，分別\n"
+"            根據您的設定、銷售訂單（基於\n"
+"            報價單）或發票（基於交貨單）。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
+msgid "This fixed amount will be added to the shipping price."
+msgstr "該固定金額將被添加到運費。"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
+msgid "This percentage will be added to the shipping price."
+msgstr "這個百分比將被添加到航運價格。"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
+msgid "Total Order Weight"
+msgstr "訂單總重量"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid "Update"
+msgstr "更新"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+#, python-format
+msgid "Update shipping cost"
+msgstr "更新運費"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
+msgid "Variable"
+msgstr "可變"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
+msgid "Variable Factor"
+msgstr "可變係數"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__volume
+msgid "Volume"
+msgstr "音量"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__weight
+msgid "Weight"
+msgstr "重量"
+
+#. module: delivery
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__wv
+#: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__wv
+msgid "Weight * Volume"
+msgstr "重量* 體積"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
+msgid "Weight Uom Name"
+msgstr "重量單位名稱"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"您無法更新已開具應收憑單的訂單的運費!\n"
+"\n"
+"已處理以下交貨明細 (產品、應收憑單數量和價格)!\n"
+"\n"
+
+#. module: delivery
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
+msgid "Zip Prefix"
+msgstr "郵政編碼字首"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
+msgid "Zip Prefixes"
+msgstr "郵編字首"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "e.g. UPS Express"
+msgstr "例如，UPS快遞"

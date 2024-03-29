@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
+        <tr id="order_total_untaxed" position="before">
+            <tr id="order_delivery" t-if="website_sale_order and website_sale_order.carrier_id">
+                <td colspan="2" class="ps-0 pt-0 pb-2 border-0 text-muted"
+                    title="Delivery will be updated after choosing a new delivery method">
+                    Delivery
+                </td>
+                <td class="text-end pe-0 pt-0 pb-2 border-0 text-muted">
+                    <span t-field="website_sale_order.amount_delivery"
+                          class="monetary_field"
+                          style="white-space: nowrap;"
+                          t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
+                </td>
+            </tr>
+        </tr>
+    </template>
+
+    <template id="payment_delivery_methods">
+        <input class="pe-none" t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" t-att-delivery_type="delivery.delivery_type" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+        <label class="label-optional" t-field="delivery.name"/>
+        <span class="o_wsale_delivery_badge_price float-end fw-bold" name="price">Select to compute delivery rate</span>
+        <t t-set='delivery_method' t-value="delivery.delivery_type+'_use_locations'" />
+        <div class="small">
+            <div class="d-none">
+                <span class="o_order_location">
+                    <b class="o_order_location_name"/>
+                    <br/>
+                    <i class="o_order_location_address"/>
+                </span>
+                <span class="fa fa-times ms-2 o_remove_order_location" aria-label="Remove this location" title="Remove this location"/>
+            </div>
+            <t t-if="delivery_method in delivery.fields_get() and delivery[delivery_method]">
+                <div class="o_show_pickup_locations"/>
+                <div class="o_list_pickup_locations"/>
+            </t>
+        </div>
+        <t t-if="delivery.website_description">
+            <div t-field="delivery.website_description" class="text-muted mt8"/>
+        </t>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
+        <!-- //t[@t-if='website_sale_order.amount_total'] should be removed in master -->
+        <xpath expr="//t[@name='website_sale_non_free_cart'] | //t[@t-if='website_sale_order.amount_total']" position="before">
+            <div t-if="deliveries" id="delivery_carrier">
+                <t t-set="delivery_nb" t-value="len(deliveries)"/>
+                <h4>Choose a delivery method</h4>
+                <div class="card border-0" id="delivery_method">
+                    <ul class="list-group">
+                    <t t-foreach="deliveries" t-as="delivery">
+                        <li class="list-group-item o_delivery_carrier_select">
+                            <t t-call="website_sale.payment_delivery_methods"/>
+                        </li>
+                    </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

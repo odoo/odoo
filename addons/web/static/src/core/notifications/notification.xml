@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.NotificationWowl">
+        <div t-on-mouseenter="this.props.freeze" t-on-mouseleave="this.props.refresh" t-attf-class="o_notification {{props.className}} border border-{{props.type}} mb-2 position-relative"
+         role="alert" aria-live="assertive" aria-atomic="true">
+            <strong t-if="props.title" t-attf-class="o_notification_title d-block text-{{props.type}} py-2 ps-3 pe-5" t-out="props.title"/>
+            <button type="button" class="o_notification_close btn" aria-label="Close" t-on-click="props.close">
+                <i class="oi oi-close"/>
+            </button>
+            <div t-attf-class="o_notification_body ps-3 pe-5 py-2">
+                <div t-if="props.message" class="me-auto o_notification_content" t-out="props.message"/>
+                <div t-if="props.buttons.length" class="o_notification_buttons d-flex gap-2 mt-2">
+                    <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index"
+                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-secondary'}}" t-on-click="button.onClick">
+                    <t t-if="button.icon">
+                        <i t-if="button.icon.indexOf('fa-') === 0" role="img"
+                        t-att-aria-label="button.name" t-att-title="button.name"
+                        t-attf-class="fa fa-fw o_button_icon {{button.icon}}"/>
+                        <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                    </t>
+                    <span t-esc="button.name"/>
+                </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

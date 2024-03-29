@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            In demo only, enable the USD currency.
+            The rationale is that, without demo, you shouldn't enable any currency by default,
+            so you do not land in a multi-currency database by default.
+            e.g. if USD was enabled by default even without demo, and you install the accounting for Belgium,
+            installing the Belgian Chart Of Account, it would enable the EUR currency,
+            therefore leaving you with the USD and EUR currency enabled,
+            and therefore in a multi-currency environment.
+            But, with demo, you need to enable the currency used by the company by default,
+            so the monetary fields display the currency symbol even when invoicing (account) is not installed.
+            e.g. install a demo database with just CRM, you want the $ to appear next to the expected revenue field.
+        -->
+        <record id="USD" model="res.currency">
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

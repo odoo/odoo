@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_skill_report_view_pivot" model="ir.ui.view">
+        <field name="model">hr.employee.skill.report</field>
+        <field name="arch" type="xml">
+            <pivot disable_linking="True">
+                <field name="employee_id" type="row"/>
+                <field name="skill_type_id" type="col"/>
+                <field name="skill_id" type="col"/>
+                <field name="level_progress" type="measure" widget="percentage"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_report_view_list" model="ir.ui.view">
+        <field name="model">hr.employee.skill.report</field>
+        <field name="arch" type="xml">
+            <tree expand="0">
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="skill_type_id"/>
+                <field name="skill_id"/>
+                <field name="skill_level"/>
+                <field name="level_progress" widget="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_report_view_search" model="ir.ui.view">
+        <field name="model">hr.employee.skill.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="skill_id"/>
+                <field name="skill_type_id"/>
+                <separator/>
+                <filter string="Employees with Skills" name="employees_with_skills" domain="[('skill_id', '!=', False)]"/>
+                <filter string="Employees without Skills" name="employees_without_skills" domain="[('skill_id', '=', False)]"/>
+                <separator/>
+                <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                <separator/>
+                <filter string="Skill Type" name="skill_type" context="{'group_by': 'skill_type_id'}"/>
+                <filter string="Skill" name="skill" context="{'group_by': 'skill_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_employee_skill_report_action" model="ir.actions.act_window">
+        <field name="name">Employee Skills</field>
+        <field name="res_model">hr.employee.skill.report</field>
+        <field name="search_view_id" ref="hr_employee_skill_report_view_search"/>
+        <field name="view_mode">tree,pivot</field>
+        <field name="context">{
+            'search_default_employee': 1,
+            'search_default_employees_with_skills': 1,
+        }</field>
+    </record>
+
+    <menuitem
+        id="hr_employee_skill_report_menu"
+        name="Skills"
+        action="hr_employee_skill_report_action"
+        parent="hr.hr_menu_hr_reports"
+        sequence="15"/>
+</odoo>

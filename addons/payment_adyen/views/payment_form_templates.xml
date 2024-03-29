@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Only load the SDK on pages with the payment form. -->
+    <template id="payment_adyen.form" inherit_id="payment.form">
+        <xpath expr="." position="inside">
+            <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"
+                    integrity="sha384-xEeOeJS9noqG6GBdLeyfdybymyC6T4EG+kKvvii2xJkChmwENEgCTpP+XvET9NDG"
+                    crossorigin="anonymous"
+            />
+            <link rel="stylesheet"
+                  href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"
+                  integrity="sha384-wfFaUCatOjF81fz/vsj2zdQuPWekgx9HbIMfEUjEHzTKX7v/juxeM+zIJA0QKJtO"
+                  crossorigin="anonymous"
+            />
+        </xpath>
+    </template>
+
+    <template id="payment_adyen.method_form" inherit_id="payment.method_form">
+        <xpath expr="//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-adyen-inline-form-values">
+                provider_sudo._adyen_get_inline_form_values(pm_sudo.code, amount, currency)
+            </attribute>
+        </xpath>
+    </template>
+
+</odoo>

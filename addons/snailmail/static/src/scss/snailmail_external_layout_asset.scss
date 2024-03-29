@@ -1,0 +1,54 @@
+/* Fix header height */
+div .header.o_company_1_layout > div[class$="_header"] {
+    overflow: hidden !important;
+    max-height: 150px;
+}
+
+/*Modifications for the Standard and Boxed document layouts */
+.article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
+    > .pt-5 {
+        padding-top: 0 !important;
+    }
+}
+
+/* Modifications for all layouts */
+div .address.row {
+    height: 56mm;
+    max-height: 56mm;
+    > div[name="address"] {
+        font-size: 95%;
+        background-color: #fff;
+        padding-top: 25mm;
+        padding-left: 4mm;
+        margin-bottom: 2mm;
+        margin-left: 56% !important;
+        width: 45.5%;
+        height: 56mm;
+        max-height: 56mm;
+        // Hide VAT number line
+        > span:not(:first-child) {
+            display: none;
+        }
+    }
+}
+
+/* Follow-up Letters */
+div .row.fallback_header {
+    height: 56mm;
+    max-height: 56mm;
+    > div.col-5.offset-7 {
+        font-size: 95%;
+        background-color: #fff;
+        padding-top: 25mm;
+        padding-left: 4mm;
+        margin-bottom: 2mm;
+        margin-left: 56%;
+        width: 45.5%;
+        height: 56mm;
+        max-height: 56mm;
+        // Hide VAT number line
+        > span:not(:first-child) {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,604 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "<b>การสื่อสาร: </b>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"ชำระเงินตอนนี้</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> ชำระเงินตอนนี้"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Authorized</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> ได้รับอนุญาต</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> Paid</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\"/>\n"
+"                <span class=\"d-none d-md-inline\"> ชำระเงินแล้ว</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> ชำระเงินแล้ว"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> อยู่ระหว่างการพิจารณา"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
+msgstr "<span class=\"d-none d-md-inline\"> อยู่ระหว่างการพิจารณา</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "<span class=\"o_stat_text\">Payment Transaction</span>"
+msgstr "<span class=\"o_stat_text\">ธุรกรรมการชำระเงิน</span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid ""
+"<strong>No suitable payment method could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website\n"
+"                                administrator."
+msgstr ""
+"<strong>ไม่พบวิธีการชำระเงินที่เหมาะสม</strong><br/>\n"
+"                                หากคุณเชื่อว่าเป็นข้อผิดพลาด โปรดติดต่อผู้ดูแลเว็บไซต์\n"
+"                                "
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> There is a refund pending for this payment.\n"
+"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
+"                        few minutes, please check your payment provider configuration."
+msgstr ""
+"<strong>คำเตือน!</strong> มีการคืนเงินที่รอดำเนินการสำหรับการชำระเงินนี้\n"
+"                        รอสักครู่เพื่อให้ดำเนินการ หากการคืนเงินยังรอดำเนินการในอีกไม่กี่นาที\n"
+"                        โปรดตรวจสอบการกำหนดค่าผู้ให้บริการชำระเงินของคุณ"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+#, python-format
+msgid "A payment transaction with reference %s already exists."
+msgstr "มีธุรกรรมการชำระเงินที่มีการอ้างอิง %s อยู่แล้ว"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+#, python-format
+msgid "A token is required to create a new payment transaction."
+msgstr "ต้องใช้โทเค็นเพื่อสร้างธุรกรรมการชำระเงินใหม่"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Activate Stripe"
+msgstr "เปิดใช้งาน Stripe"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
+msgid "Amount Available For Refund"
+msgstr "จำนวนเงินที่สามารถขอคืนเงินได้"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
+#: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
+msgid "Amount paid"
+msgstr "จำนวนที่จ่าย"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต? "
+"การดำเนินการนี้ไม่สามารถยกเลิกได้"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__authorized_transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__authorized_transaction_ids
+msgid "Authorized Transactions"
+msgstr "ธุรกรรมที่ได้รับอนุญาต"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Capture Transaction"
+msgstr "จับการทำธุรกรรม"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Close"
+msgstr "ปิด"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr ""
+"เสร็จสิ้น การชำระเงินออนไลน์ของคุณได้รับการดำเนินการเรียบร้อยแล้ว "
+"ขอขอบคุณสำหรับการสั่งซื้อของคุณ."
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Enable credit & debit card payments supported by Stripe."
+msgstr "เปิดใช้งานการชำระเงินด้วยบัตรเครดิตและเดบิตที่รองรับโดย Stripe"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
+msgid "Full Only"
+msgstr "เต็มรูปแบบเท่านั้น"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "สร้างลิงก์การชำระเงินสำหรับการขาย"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
+msgid "Generate a Payment Link"
+msgstr "สร้างลิงก์การชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
+msgid "Has a pending refund"
+msgstr "มีการคืนเงินที่ค้างอยู่"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
+msgid ""
+"In test mode, a fake payment is processed through a test payment interface.\n"
+"This mode is advised when setting up the provider."
+msgstr ""
+"ในโหมดทดสอบ การชำระเงินปลอมจะถูกประมวลผลผ่านอินเทอร์เฟซการชำระเงินทดสอบ\n"
+"แนะนำให้ใช้โหมดนี้เมื่อตั้งค่าผู้ให้บริการ"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
+msgid "Invoice Online Payment"
+msgstr "ออนไลน์"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
+msgid "Invoice(s)"
+msgstr "ใบแจ้งหนี้"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoice_ids
+#, python-format
+msgid "Invoices"
+msgstr "การแจ้งหนี้"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
+msgid "Invoices Count"
+msgstr "จำนวนใบแจ้งหนี้"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_journal
+msgid "Journal"
+msgstr "สมุดรายวัน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
+msgid "Maximum Refund Allowed"
+msgstr "อนุญาตให้คืนเงินได้สูงสุด"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
+msgid ""
+"Note that only tokens from providers allowing to capture the amount are "
+"available."
+msgstr ""
+"โปรดทราบว่ามีเพียงโทเค็นจากผู้ให้บริการที่อนุญาตให้บันทึกจำนวนเงินที่มีอยู่เท่านั้น"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
+msgid ""
+"Note that tokens from providers set to only authorize transactions (instead "
+"of capturing the amount) are not available."
+msgstr ""
+"โปรดทราบว่าโทเค็นจากผู้ให้บริการที่ตั้งค่าให้อนุญาตเฉพาะธุรกรรม "
+"(แทนที่จะบันทึกจำนวนเงิน) จะไม่สามารถใช้ได้"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Onboarding Online Payments"
+msgstr "การเริ่มต้นใช้งานการชำระเงินออนไลน์"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "ขั้นตอนการเริ่มใช้งาน"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Online Payments"
+msgstr "การชำระเงินออนไลน์"
+
+#. module: account_payment
+#: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__partial
+msgid "Partial"
+msgstr "บางส่วน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_res_config_settings__pay_invoices_online
+msgid "Pay Invoices Online"
+msgstr "ชำระใบแจ้งหนี้ออนไลน์"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay Now"
+msgstr "ชำระตอนนี้"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "ชำระเงินตอนนี้"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Pay with"
+msgstr "ชำระด้วย"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__payment_id
+msgid "Payment"
+msgstr "การชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
+msgid "Payment Amount"
+msgstr "จำนวนชำระ"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
+msgid "Payment Journal"
+msgstr "สมุดรายวันชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_method
+#: model:ir.model,name:account_payment.model_account_payment_method_line
+#: model:ir.ui.menu,name:account_payment.payment_method_menu
+msgid "Payment Methods"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_provider
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
+msgid "Payment Provider"
+msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_provider_menu
+msgid "Payment Providers"
+msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_refund_wizard
+msgid "Payment Refund Wizard"
+msgstr "โปรแกรมการคืนเงินการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_token_menu
+msgid "Payment Tokens"
+msgstr "โทเค็นการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_payment_transaction
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_transaction_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__transaction_id
+msgid "Payment Transaction"
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.ui.menu,name:account_payment.payment_transaction_menu
+msgid "Payment Transactions"
+msgstr "ธุรกรรมการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment
+msgid "Payments"
+msgstr "การชำระเงิน"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+#, python-format
+msgid "Provider"
+msgstr "ผู้ให้บริการ"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment.py:0
+#: code:addons/account_payment/models/account_payment.py:0
+#: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+#, python-format
+msgid "Refund"
+msgstr "คืนเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
+msgid "Refund Amount"
+msgstr "จำนวนเงินคืน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
+msgid "Refunded Amount"
+msgstr "จำนวนเงินที่คืน"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
+msgid "Refunds"
+msgstr "การคืนเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
+msgid "Refunds Count"
+msgstr "จำนวนการคืนเงิน"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_register
+msgid "Register Payment"
+msgstr "ลงทะเบียนการชำระเงิน"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
+msgid "SETUP"
+msgstr "การตั้งค่า"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
+msgid "Saved Payment Token"
+msgstr "โทเค็นการชำระเงินที่บันทึกไว้"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
+msgid "Saved payment token"
+msgstr "โทเค็นการชำระเงินที่บันทึกไว้"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
+msgid "Source Payment"
+msgstr "แหล่งที่มาของการชำระเงิน"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
+msgid "State"
+msgstr "สถานะ"
+
+#. module: account_payment
+#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
+msgid "Step Completed!"
+msgstr "ขั้นตอนเสร็จสมบูรณ์!"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
+msgid "Suitable Payment Token"
+msgstr "โทเค็นการชำระเงินที่เหมาะสม"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "โทเค็นการเข้าถึงไม่ถูกต้อง"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/wizards/payment_refund_wizard.py:0
+#, python-format
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
+msgstr "จำนวนเงินที่จะคืนต้องเป็นจำนวนบวกและไม่อาจเหนือกว่าได้ %s"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
+msgid "The journal in which the successful transactions are posted."
+msgstr "สมุดรายวันที่มีการผ่านรายการธุรกรรมที่สำเร็จ"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The payment related to the transaction with reference %(ref)s has been "
+"posted: %(link)s"
+msgstr ""
+"การชำระเงินที่เกี่ยวข้องกับธุรกรรมที่มีการอ้างอิง %(ref)s "
+"ได้รับการผ่านรายการแล้ว: %(link)s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/controllers/payment.py:0
+#: code:addons/account_payment/controllers/payment.py:0
+#, python-format
+msgid "The provided parameters are invalid."
+msgstr "พารามิเตอร์ที่ระบุไม่ถูกต้อง"
+
+#. module: account_payment
+#: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
+msgid "The source payment of related refund payments"
+msgstr "แหล่งที่มาของการชำระเงินของการคืนเงินที่เกี่ยวข้อง"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: invalid invoice."
+msgstr "เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: ใบแจ้งหนี้ไม่ถูกต้อง"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: "
+"ปัญหาเกี่ยวกับการตรวจสอบรหัสบัตรเครดิต"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr "เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: ธุรกรรมล้มเหลว<br/>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr "เกิดข้อผิดพลาดในการดำเนินการชำระเงินของคุณ: รหัสบัตรเครดิตไม่ถูกต้อง"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__transaction_ids
+msgid "Transactions"
+msgstr "ธุรกรรม"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
+msgid "Type of Refund Supported"
+msgstr "ประเภทของการคืนเงินที่รองรับ"
+
+#. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
+#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
+msgid "Use Electronic Payment Method"
+msgstr "ใช้วิธีการชำระเงินทางอิเล็กทรอนิกส์"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
+msgid "Void Transaction"
+msgstr "ธุรกรรมที่เป็นโมฆะ"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_payment_method_line.py:0
+#, python-format
+msgid ""
+"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"Linked providers(s): %s"
+msgstr ""
+"คุณไม่สามารถลบวิธีการชำระเงินที่เชื่อมโยงกับผู้ให้บริการในสถานะเปิดใช้งานหรือทดสอบได้\n"
+"ผู้ให้บริการที่เชื่อมโยง: %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
+msgstr ""
+"คุณไม่สามารถถอนการติดตั้งโมดูลนี้ได้ "
+"เนื่องจากการชำระเงินโดยใช้วิธีการชำระเงินนี้มีอยู่แล้ว"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment provider before deleting its journal.\n"
+"Linked providers: %s"
+msgstr ""
+"คุณต้องปิดการใช้งานผู้ให้บริการชำระเงินก่อน จึงจะลบสมุดรายวันได้\n"
+"ผู้ให้บริการที่เชื่อมโยง: %s"

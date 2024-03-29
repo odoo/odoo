@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <template id="website_payment.donation_mail_body" name="Donation mail">
+        <table border="0" cellpadding="0" style="background-color: white; padding: 0px; border-collapse:separate;">
+            <tr style="height: 48px;"><td valign="top"><span style="font-size: 24px; font-weight: bold;">
+                <t t-if="is_internal_notification">Donation notification</t>
+                <t t-else="">Donation</t>
+            </span></td></tr>
+            <t t-if="not is_internal_notification">
+                <tr><td valign="top">
+                    Dear <t t-out="tx.partner_name"/>,
+                </td></tr>
+                <tr><td valign="top">
+                    <div style="margin: 16px 0px 16px 0px;">
+                        Thank you for your donation of <span t-out="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/> made on <t t-out="tx.create_date" t-options="{'widget': 'date'}"/>.
+                        <br/>
+                        We appreciate your support for our organization as such.
+                        <br/>
+                        Regards.
+                    </div>
+                </td></tr>
+            </t>
+            <tr><td valign="top">
+                <div style="margin: 16px 0px 16px 0px;">
+                    <table border="0" cellpadding="0" cellspacing="5" width="100%">
+                        <tr>
+                            <td><b>Donor Name:</b></td>
+                            <td><t t-out="tx.partner_name"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Donor Email:</b></td>
+                            <td><t t-out="tx.partner_email"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Donation Date:</b></td>
+                            <td><t t-out="tx.create_date.date()"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Amount(<t t-out="tx.currency_id.symbol"/>):</b></td>
+                            <td><t t-out="tx.amount"/></td>
+                        </tr>
+                        <tr t-if="is_internal_notification and comment">
+                            <td><b>Comment:</b></td>
+                            <td><t t-out="comment"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Payment Method:</b></td>
+                            <td><t t-out="tx.provider_code"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Payment ID:</b></td>
+                            <td><t t-out="tx.reference"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </td></tr>
+        </table>
+    </template>
+</data>
+</odoo>

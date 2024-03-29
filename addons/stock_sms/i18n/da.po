@@ -1,0 +1,153 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_sms
+# 
+# Translators:
+# Mads Søndergaard, 2023
+# Martin Trigaux, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_sms
+#: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
+msgid ""
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': Vi er glade for at kunne informere dig om, at din ordre nummer ' + object.origin + ' er blevet afsendt.' if object.origin else object.company_id.name + ': Vi er glade for at kunne informere dig om, at din ordre er blevet afsendt.') + (' Dit sporingsnummer er ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Cancel"
+msgstr "Annullér"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_company
+msgid "Companies"
+msgstr "Virksomheder"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurer opsætning"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Confirm"
+msgstr "Bekræft"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_confirm_stock_sms
+msgid "Confirm Stock SMS"
+msgstr "Bekræft lager SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: stock_sms
+#: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
+msgid "Delivery: Send by SMS Text Message"
+msgstr "Levering: Send per SMS tekst besked"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Disable SMS"
+msgstr "Deaktiver SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
+msgid "Has Received Warning Stock Sms"
+msgstr "Har modtaget advarsel lager sms"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
+msgid "Pick"
+msgstr "Pluk"
+
+#. module: stock_sms
+#. odoo-python
+#: code:addons/stock_sms/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+#, python-format
+msgid "SMS"
+msgstr "SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Confirmation"
+msgstr "SMS beskræftelse"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Template"
+msgstr "SMS skabelon"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
+msgid "SMS Validation with stock move"
+msgstr "SMS godkendelse med lager bevægelse"
+
+#. module: stock_sms
+#: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+msgid "SMS sent to the customer once the order is delivered."
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_stock_picking
+msgid "Transfer"
+msgstr "Overfør"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid ""
+"You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+msgstr ""
+"Du skal til at bekræfte denne Leveringsordre per SMS tekst besked.<br/>\n"
+"                Denne funktion kan nemt slås fra fra Inventar Indstillinger, eller ved at klikke på \"Deaktiver SMS\".<br/>"

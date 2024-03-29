@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+    The web_editor.colorpicker template regroups section of colorpicker menu for website customization
+    (text foreground/background but also snippet background color option).
+    As it is presentend below, the colorpicker tag regroups a set of .o_colorpicker_section with name,
+    icon-class and icon-content as data. These will be used to build the colorpicker dropdowns.
+
+    Redefinition can edit section content, add sections or even remove them. If no section is found when
+    building a colorpicker dropdown, the template content will be used without changes as the colorpicker
+    dropdown content.
+
+    Sections should contain a set of button with a data-color attribute. When selecting such a button to
+    edit style, the "bg-x" class or the "text-x" will be automatically added.
+
+    If a color is no longer used you need to add the d-none class to it and not remove it from this file !!
+    Else you will no longer be able to use them.
+-->
+<template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user,base.group_portal">
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme">
+            <button data-color="o-color-1"/>
+            <button data-color="o-color-3"/>
+            <button data-color="o-color-2"/>
+            <button data-color="o-color-4" class="ms-2"/>
+            <button data-color="o-color-5"/>
+        </div>
+        <div class="o_colorpicker_section" data-name="common">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale">
+            <button data-color="black-15"></button>
+            <button data-color="black-25"></button>
+            <button data-color="black-50"></button>
+            <button data-color="black-75"></button>
+            <button data-color="white-25"></button>
+            <button data-color="white-50"></button>
+            <button data-color="white-75"></button>
+            <button data-color="white-85"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="predefined_gradients">
+            <t t-set="gradients" t-value="[
+                'linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)',
+                'linear-gradient(135deg, rgb(102, 153, 255) 0%, rgb(255, 51, 102) 100%)',
+                'linear-gradient(135deg, rgb(47, 128, 237) 0%, rgb(178, 255, 218) 100%)',
+                'linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)',
+                'linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%)',
+                'linear-gradient(135deg, rgb(255, 222, 69) 0%, rgb(69, 33, 0) 100%)',
+                'linear-gradient(135deg, rgb(222, 222, 222) 0%, rgb(69, 69, 69) 100%)',
+                'linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)'
+            ]"/>
+            <t t-foreach="gradients" t-as="gradient">
+                <button class="w-50" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
+            </t>
+        </div>
+        <div class="o_colorpicker_section o_custom_gradient_editor" data-name="custom_gradient">
+            <button class="w-50 o_custom_gradient_btn o_we_color_btn py-1 btn" title="Define a custom gradient">Custom</button>
+            <div class="o_color_picker_inputs mx-1">
+                <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent text-white'" />
+                <div class="d-flex justify-content-between my-2 o_type_row">
+                    <we-title>Type</we-title>
+                    <span class="d-flex justify-content-between">
+                        <we-button data-gradient-type="linear-gradient" class="d-flex align-items-baseline active">Linear</we-button>
+                        <we-button data-gradient-type="radial-gradient" class="d-flex align-items-baseline">Radial</we-button>
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between my-2 o_angle_row">
+                    <we-title>Angle</we-title>
+                    <span class="o_custom_gradient_input bg-black-50 px-1 d-flex align-items-baseline">
+                        <input data-name="angle" type="text" t-attf-class="{{input_classes}}" style="width: 5ch;" value="90"/>
+                        <span class="flex-grow-0 ms-1 text-white-50">deg</span>
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between my-2 o_position_row">
+                    <we-title>Position</we-title>
+                    <span class="d-flex">
+                    <span class="me-2">X</span>
+                    <span class="o_custom_gradient_input bg-black-50 px-1 d-flex">
+                        <input data-name="positionX" type="text" t-attf-class="{{input_classes}}" style="width: 3ch;" value="25"/>
+                        <span class="flex-grow-0 ms-1 text-white-50">%</span>
+                    </span>
+                    <span class="me-2 ms-3">Y</span>
+                    <span class="o_custom_gradient_input bg-black-50 px-1 d-flex">
+                        <input data-name="positionY" type="text" t-attf-class="{{input_classes}}" style="width: 3ch;" value="25"/>
+                        <span class="flex-grow-0 ms-1 text-white-50">%</span>
+                    </span>
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between my-2 o_size_row">
+                    <we-title>Size</we-title>
+                    <span class="d-flex justify-content-between">
+                        <we-button data-gradient-size="closest-side" class="d-flex align-items-baseline"
+                            title="Extend to the closest side">
+                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"/>
+                                <path d="M3 4H9V8C9 8.55228 8.55228 9 8 9H4C3.44772 9 3 8.55228 3 8V4Z" fill="#8C8C92"/>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"/>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"/>
+                                <rect x="2" y="3" width="12" height="1" fill="white"/>
+                            </svg>
+                        </we-button>
+                        <we-button data-gradient-size="closest-corner" class="d-flex align-items-baseline"
+                            title="Extend to the closest corner">
+                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"/>
+                                <path d="M2 4H9V7C9 9.20914 7.20914 11 5 11H2V4Z" fill="#8C8C92"/>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"/>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"/>
+                                <rect x="1" y="3" width="8" height="1" fill="white"/>
+                                <rect x="1" y="11" width="8" height="1" transform="rotate(-90 1 11)" fill="white"/>
+                            </svg>
+                        </we-button>
+                        <we-button data-gradient-size="farthest-side" class="d-flex align-items-baseline active"
+                            title="Extend to the farthest side">
+                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"/>
+                                <path d="M7 12C10.3137 12 14 10.2091 14 8C14 5.79086 10.3137 4 7 4C3.68629 4 2 5.79086 2 8C2 10.2091 3.68629 12 7 12Z" fill="#8C8C92"/>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"/>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"/>
+                                <rect x="14" y="4" width="1" height="12" fill="white"/>
+                            </svg>
+                        </we-button>
+                        <we-button data-gradient-size="farthest-corner" class="d-flex align-items-baseline"
+                            title="Extend to the farthest corner">
+                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="1.5" y="3.5" width="13" height="13" stroke="#AAAAAD"/>
+                                <path d="M2 4H14V10C14 13.3137 11.3137 16 8 16H2V4Z" fill="#8C8C92"/>
+                                <path d="M6 11C7.65685 11 9 9.65685 9 8C9 6.34315 7.65685 5 6 5C4.34315 5 3 6.34315 3 8C3 9.65685 4.34315 11 6 11Z" fill="#74747B"/>
+                                <path d="M6 10C7.10457 10 8 9.10457 8 8C8 6.89543 7.10457 6 6 6C4.89543 6 4 6.89543 4 8C4 9.10457 4.89543 10 6 10Z" fill="white"/>
+                                <rect x="15" y="17" width="7" height="0.999999" transform="rotate(-180 15 17)" fill="white"/>
+                                <rect x="15" y="10" width="7" height="1" transform="rotate(90 15 10)" fill="white"/>
+                            </svg>
+                        </we-button>
+                    </span>
+                </div>
+                <div class="mx-1 o_custom_gradient_scale">
+                    <div class="w-100"/>
+                </div>
+                <div class="w-100 o_slider_multi" role="group"/>
+                <we-button class="o_remove_color fa fa-fw fa-trash o_we_link o_we_hover_danger"
+                    title="Remove Selected Color" aria-label="Remove Selected Color"/>
+            </div>
+        </div>
+    </colorpicker>
+</template>
+<template id="web_editor.tests">
+    <t t-call="web.layout">
+        <t t-set="title">Odoo Editor Tests</t>
+        <t t-set="head">
+            <t t-call-assets="web_editor.assets_tests_styles" t-js="false"/>
+            <link rel="stylesheet" href="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.css"/>
+            <style type="text/css">
+                #mocha-report b.zws, #mocha-report b.tab {
+                    background-color: #833112;
+                    color: white;
+                    border-radius: 3px;
+                    padding: 1px 3px;
+                    font-size: 8px;
+                    vertical-align: middle;
+                }
+                #mocha-report b.tab {
+                    background-color: #14386e;
+                }
+            </style>
+            <script src="/web_editor/static/lib/DOMPurify.js"></script>
+            <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.js"></script>
+            <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/chai.js"></script>
+            <script>mocha.setup('bdd').fullTrace()</script>
+            <t t-call-assets="web_editor.mocha_tests"/>
+        </t>
+        <div id="mocha"></div>
+        <div id="editor-test-container"></div>
+    </t>
+</template>
+</odoo>

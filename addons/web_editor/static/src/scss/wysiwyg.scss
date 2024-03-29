@@ -1,0 +1,758 @@
+$o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
+$o-we-zindex: $o-we-overlay-zindex + 1 !default;
+
+// Use css variables to control the default style of the editor so that an
+// external assets bundle can influence it without duplicating the css.
+:root {
+    @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
+}
+
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+    .btn {
+        text-align: unset !important;
+    }
+}
+
+// Editor website toolbar
+.wysiwyg_iframe,
+.note-editor {
+    border: $o-we-border-width solid $o-we-fg-light;
+    margin: 0;
+    padding: 0;
+}
+
+// Colorpicker - Generic rules shared among backend & frontend
+.colorpicker {
+
+    // Controll the design using css variables. These values can be customized
+    // in any bundle/layout avoiding the need to override.
+    --bg: #{$o-we-toolbar-bg};
+    --text-rgb: #{red($o-we-toolbar-color-text)}, #{green($o-we-toolbar-color-text)}, #{blue($o-we-toolbar-color-text)};
+    --border-rgb: var(--text-rgb);
+
+    --tab-border-top: transparent;
+    --tab-border-bottom: #{$o-we-toolbar-border};
+
+    --btn-color-active: inset 0 0 0 2px #{$o-we-accent},
+                        inset 0 0 0 3px var(--bg),
+                        inset 0 0 0 4px rgba(var(--border-rgb), .5);
+
+    &, input {
+        color: rgba(var(--text-rgb), 1);
+    }
+
+    label {
+        color: rgba(var(--text-rgb), .5);
+    }
+
+    button {
+        outline: none;
+    }
+
+    .o_we_colorpicker_switch_panel {
+        font-size: $o-we-font-size;
+        border-bottom: 1px solid var(--tab-border-bottom);
+        box-shadow: inset 0 1px 0 var(--tab-border-top);
+    }
+
+    .o_we_colorpicker_switch_pane_btn, .o_colorpicker_reset {
+        flex: 0 0 auto;
+    }
+    .o_colorpicker_reset {
+        // TODO in master, review XML definition
+        margin-left: auto !important;
+    }
+
+    .o_colorpicker_sections {
+        background: var(--bg);
+
+        > * {
+            padding-top: $o-we-sidebar-content-field-spacing;
+
+            &:first-child {
+                padding-top: 0;
+            }
+        }
+
+        .o_colorpicker_widget {
+            .o_hex_div, .o_rgba_div  {
+                &:focus-within {
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+            }
+            .o_color_picker_inputs {
+                input, input:focus {
+                    border: none;
+                    outline: none;
+                }
+            }
+        }
+
+        .o_we_color_btn, .o_color_pick_area, .o_color_slider, .o_opacity_slider:before, .o_hex_div, .o_rgba_div {
+            box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
+        }
+
+        .o_we_color_btn {
+            position: relative;
+            float: left;
+            width: percentage(1 / 8);
+            padding-top: percentage(1 / 10);
+            margin: 0;
+            border: 1px solid var(--bg);
+
+            &.o_colorpicker_reset {
+                // TODO dead code, remove me in master
+                background-color: transparent;
+
+                &::before {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    font-family: FontAwesome !important;
+                    content: "\f00d" !important;// fa-times
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: $o-we-color-danger;
+                }
+            }
+
+            &.selected {
+                box-shadow: var(--btn-color-active);
+            }
+
+            &.o_btn_transparent::before {
+                background-color: transparent;
+            }
+        }
+
+        .o_colorpicker_section {
+            &.o_custom_gradient_editor{
+                .o_custom_gradient_btn{
+                    border: 1px solid var(--o-we-toolbar-border);
+                }
+            }
+
+            &::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"], &[data-name="custom"] {
+                .o_we_color_btn {
+                    @extend %o-preview-alpha-background;
+
+                    &::before, &::after {
+                        box-shadow: inherit;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Toolbar - Generic rules shared among backend & frontend
+.oe-toolbar {
+    display: flex;
+    align-items: center;
+
+    .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .colorpicker-menu {
+        height: auto!important;
+        box-sizing: content-box;
+        min-height: fit-content;
+    }
+
+    .dropdown-item {
+        &.active, &.selected {
+            &:not(.dropdown-item_active_noarrow):before {
+                transform: translate(-1.5em, 0);
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}
+
+// Floating Toolbar
+.oe-toolbar.oe-floating {
+    gap: $o-we-sidebar-content-field-control-item-spacing * .7;
+    align-items: stretch;
+    min-height: $o-we-toolbar-height;
+    padding: 0 $o-we-sidebar-content-field-control-item-spacing;
+    background-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
+    color: var(--o-we-toolbar-color-text, #{$o-we-toolbar-color-text});
+    font-family: $o-we-font-family;
+
+    &.toolbar-bottom:before {
+        border-bottom-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
+    }
+
+    &:not(.toolbar-bottom):before {
+        border-top-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
+    }
+
+    &.noarrow::before {
+        display: none;
+    }
+
+    > .btn-group:not(.d-none) ~ .btn-group:not(.d-none), .oe-toolbar-separator {
+        &:before {
+            content: "";
+            width: $o-we-toolbar-entries-border-width;
+            margin-right: calc(#{$o-we-toolbar-entries-gap} - #{$o-we-toolbar-entries-border-width});
+            background: var(--o-we-toolbar-border, #{$o-we-toolbar-border});
+            transform: scaleY(.6)
+        }
+    }
+
+    // Main layout of buttons
+    .btn, .dropdown-item {
+        padding: ($o-we-toolbar-entries-padding * .5) $o-we-toolbar-entries-padding;
+        color: var(--o-we-toolbar-color-clickable, #{$o-we-toolbar-color-clickable});
+
+        &:hover:not(.active) {
+            color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+            background-color: transparent;
+        }
+
+        &.active {
+            background: var(--o-we-toolbar-bg-active, #{$o-we-toolbar-bg-active});
+            box-shadow: inset 0 0 3px RGBA(var(--o-we-toolbar-bg-active, #{$o-we-toolbar-bg-active}), .5);
+        }
+    }
+
+    .btn {
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        font-weight: 400;
+
+        &.active {
+            color: var(--o-we-toolbar-color-accent, #{$o-we-toolbar-color-accent});
+        }
+    }
+
+    > .btn-group {
+        > .btn, > .colorpicker-group {
+            margin: 4px auto;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+    .show > .btn {
+        &, &:hover, &:focus {
+            color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+        }
+    }
+
+    .dropdown-toggle::after {
+        @include o-caret-down();
+        margin-left: .3em
+    }
+
+    .dropdown-menu {
+        margin: 0;
+        border: 0;
+        padding: 0;
+        max-height: none;
+        overflow: visible;
+        border-top: 1px solid var(--o-we-toolbar-border, #{$o-we-toolbar-border});
+        background-color: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
+        box-shadow: $box-shadow;
+        @include border-top-radius(0);
+        @include border-bottom-radius($o-we-item-border-radius);
+
+        &.show { // To overcome .note-XXX .dropdown-menu rules
+            min-width: 0;
+        }
+
+        &:not(.colorpicker-menu) > li:last-child {
+            margin-bottom: 1em;
+        }
+
+        &.colorpicker-menu {
+            margin-top: 0;
+            min-width: 222px !important;
+        }
+    }
+
+    .dropdown-item { // To overcome wysiwyg rules breaking this in iframes
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 $o-we-dropdown-item-height * .8;
+        min-height: $o-we-dropdown-item-height;
+
+        > * {
+            color: inherit;
+        }
+
+        &.active {
+            & > * , &:hover, &:focus {
+                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+
+                &:before {
+                    top: 0;
+                    transform: translate($o-we-dropdown-item-height * -.5, 0);
+                    line-height: $o-we-dropdown-item-height;
+                }
+            }
+        }
+    }
+
+    // Specific elements
+    #decoration {
+        #removeFormat {
+            display: flex;
+        }
+    }
+
+    #colorInputButtonGroup {
+        label:last-of-type .btn {
+            margin: 0 1px 0 -1px;
+        }
+
+        .note-back-color-preview.dropup .dropdown-menu {
+            // Highlight palette alignment
+            left: -52px;
+        }
+    }
+
+    .colorpicker-group {
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .o_we_colorpicker_switch_panel button {
+            margin-bottom: -1px;
+            border: 0;
+            padding: $btn-padding-y-sm $btn-padding-x-sm;
+            background: transparent;
+            color: var(--o-we-toolbar-color-clickable, #{$o-we-toolbar-color-clickable});
+
+            &:hover {
+                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+            }
+
+            &.active {
+                box-shadow: inset 0 ($border-width * -1) 0 var(--o-we-toolbar-color-accent, #{$o-we-toolbar-color-accent});
+                color: var(--o-we-toolbar-color-clickable-active, #{$o-we-toolbar-color-clickable-active});
+            }
+
+            &.o_colorpicker_reset {
+                background: $o-brand-primary;
+
+                &, &:hover {
+                    color: color-contrast($o-brand-primary);
+                }
+
+                &:hover {
+                    background: darken($o-brand-primary, 5%);
+                }
+            }
+        }
+    }
+
+    .colorpicker {
+        background: var(--o-we-toolbar-bg, #{$o-we-toolbar-bg});
+        box-shadow: $box-shadow;
+    }
+
+    .o_image_alt {
+        @include o-text-overflow();
+        max-width: 150px;
+    }
+
+    input#fontSizeCurrentValue {
+        width: 20px;
+        border: none;
+    }
+}
+
+// Toolbar in Sidebar (website editor, mass mailing)
+#oe_snippets > .o_we_customize_panel .oe-toolbar {
+    display: grid;
+    align-items: stretch;
+}
+
+// Floating Table Picker
+.oe-tablepicker-wrapper .oe-tablepicker {
+    .oe-tablepicker-cell {
+        border-radius: 0;
+
+        &.active {
+            background: var(--o-we-toolbar-color-accent, #{$o-we-toolbar-color-accent});
+        }
+    }
+}
+
+
+body:not(.editor_has_snippets) {
+    > .oe-toolbar {
+        // Bootstrap sets .modal z-index at 1055. Ensure toolbar is visible in
+        // modals. Only apply this to the toolbar if it's not in a snippets menu.
+        z-index: 1056;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .oe-toolbar {
+        background-color: white;
+
+        .btn {
+            color: black;
+        }
+        &::before {
+            display: none;
+        }
+        &::after {
+            display: none;
+        }
+    }
+}
+
+.oe_edited_link {
+    position: relative;
+    &:not(.nav-link) {
+        display: inline-block;
+    }
+    &::before {
+        content: '';
+        border: dashed 3px #01bad2;
+        position: absolute;
+        inset: -5px;
+        pointer-events: none;
+    }
+    &:empty::after {
+        content: "\00a0\00a0";
+    }
+}
+
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: $o-brand-primary;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+.o_we_horizontal_collapse {
+    width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+.o_we_transition_ease {
+    transition: all ease 0.35s;
+}
+
+// MODALS
+body .modal {
+    // LINK EDITOR DIALOG COLOR SELECTOR
+    .o_link_dialog {
+        input.link-style:checked + span::after {
+            content: "\f00c";
+            display: inline-block;
+            font-family: FontAwesome;
+            margin-left: 2px;
+        }
+
+        .o_link_dialog_preview {
+            border-left: var(--o-link-dialog-preview-border, #{$border-width} solid #{$border-color});
+        }
+    }
+}
+
+.o_we_progressbar:last-child {
+    hr {
+        display: none;
+    }
+}
+
+// Highlight selected image/icon
+%o-we-selected-image {
+    outline: 3px solid rgba(150, 150, 220, 0.3);
+}
+
+img.o_we_selected_image {
+    @extend %o-we-selected-image;
+}
+
+.fa.o_we_selected_image::before {
+    @extend %o-we-selected-image;
+}
+
+.o_we_media_author {
+    font-size: 11px;
+    @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .7);
+}
+
+@include media-breakpoint-down(lg) {
+    #web_editor-top-edit {
+        position: initial !important;
+        height: initial !important;
+        top: initial !important;
+        left: initial !important;
+    }
+
+    .oe-toolbar.oe-floating {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        overflow-y: visible;
+
+        .dropdown-menu {
+            max-height: 200px;
+            overflow: auto;
+
+            &.colorpicker-menu {
+                bottom: auto;
+            }
+        }
+    }
+}
+
+// User modal in edit mode
+.note-editable {
+    .modal:not(.o_technical_modal) {
+        top: 40px;
+        right: 0;
+        bottom: 0;
+        right: $o-we-sidebar-width;
+        width: auto;
+        height: auto;
+
+        .modal-dialog {
+            padding: 0.5rem 0; // To use more editor space if necessary
+        }
+    }
+}
+
+.o_wysiwyg_wrapper {
+    position: relative;
+    margin-bottom: 11px;
+}
+.o_wysiwyg_resizer {
+    background: #f5f5f5;
+    height: 10px;
+    width: 100%;
+    border-left: $o-we-border-width solid $o-we-fg-light;
+    border-bottom: $o-we-border-width solid $o-we-fg-light;
+    border-right: $o-we-border-width solid $o-we-fg-light;
+    cursor: row-resize;
+    padding-top: 1px;
+}
+.o_wysiwyg_resizer_hook {
+    width: 20px;
+    margin: 1px auto;
+    border-top: 1px solid #a9a9a9;
+}
+.note-editable {
+    border: $o-we-border-width solid $o-we-fg-light;
+    overflow: auto;
+    height: 100%;
+    padding: 4px 40px 4px 4px;
+    min-height: 10px;
+    border-radius: 3px;
+}
+
+.oe-bordered-editor .note-editable {
+    border-width: 1px;
+    padding: 4px 40px 4px 4px;
+    min-height: 180px;
+}
+
+.o_we_no_pointer_events {
+    pointer-events: none;
+}
+
+.o_we_crop_widget {
+    background-color: rgba(128, 128, 128, 0.5);
+    @include o-position-absolute(0, 0, 0, 0);
+    /* This value must be higher than dialog z-index in bootstrap */
+    z-index: 1056;
+    overflow: auto;
+
+    .o_we_cropper_wrapper {
+        position: absolute;
+    }
+
+    .o_we_crop_buttons {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        bottom: 1rem;
+
+        input[type=radio] {
+            display: none;
+        }
+
+        .btn-group {
+            border-radius: 0.25rem;
+            margin: 0.1rem;
+        }
+
+        button, label {
+            cursor: pointer !important;
+            padding: 0.2rem 0.3rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+
+            &.active {
+                background-color: $o-we-bg-darkest;
+            }
+        }
+
+        button:not(.btn), label {
+            margin: 0;
+            border: none;
+            border-right: 1px solid $o-we-bg;
+            background-color: $o-we-bg;
+            color: $o-we-color;
+
+            &:first-child {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+
+            &:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-right: none;
+            }
+        }
+    }
+}
+
+[data-oe-xpath], [data-oe-xpath] [contenteditable=true] {
+    outline: none;
+}
+
+.o_transform_removal {
+    transform: none !important;
+}
+
+.o_edit_menu_popover {
+    max-width: $popover-max-width * 1.2;
+    // Prevent UI glitch after fetching page preview (size might change)
+    width: $popover-max-width * 1.2;
+    // Prevent the edited link from being deselected when clicking between
+    // buttons in the popover
+    user-select: none;
+    box-shadow: $box-shadow;
+    border-color: rgba(0,0,0,0.025);
+
+    .popover-arrow::before {
+        border-right-color: rgba(0, 0, 0, 0.05);
+    }
+    // As the popover is displayed both in the frontend and the backend,
+    // the font styles need to be uniformized.
+    font-size: 12px;
+    font-weight: 400 !important;
+    .fw-bold {
+        font-weight: 500 !important;
+    }
+
+    .o_we_preview_favicon > img {
+        max-height: 16px;
+        max-width: 16px;
+    }
+
+    .o_we_url_link {
+        width: 100px;
+    }
+
+    .o_we_full_url {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // clamp (`-webkit-box` display toggle in js)
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+
+        &.o_we_webkit_box {
+            display: -webkit-box;
+        }
+
+        &:hover {
+            -webkit-line-clamp: unset;
+        }
+    }
+}
+textarea.o_codeview {
+    min-height: 400px;
+}
+
+@keyframes fade {
+    0%,100% { opacity: 0 }
+    30%,70% { opacity: 1 }
+  }
+.o-chatgpt-content {
+    position: absolute;
+    background: rgba(1, 186, 210, 0.5);
+    opacity: 0;
+    animation: fade 1.5s ease-in-out;
+    z-index: 1;
+    outline: 2px dashed #01bad2;
+    outline-offset: -2px;
+}
+
+.o-prompt-input {
+    position: relative;
+    // see .o-mail-Composer-input
+    > textarea {
+        padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+        padding-bottom: 10px;
+        min-height: 40px;
+        max-height: 110px;
+        resize: none;
+    }
+}
+button.o-message-insert {
+    line-height: 1;
+}
+.o-chatgpt-message > div > *:last-child, .o-chatgpt-alternative > *:last-child {
+    margin-bottom: 0;
+}
+.o-message-error {
+    color: #d44c59;
+    font-weight: bold;
+    --bg-opacity: 0.25;
+}

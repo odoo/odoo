@@ -1,0 +1,175 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and 'Báo giá - %s' % (object.name)) or "
+"'Đơn hàng - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales customer.\n"
+"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"Confirmed order: the document will be sent to and accessible by customers.\n"
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+msgstr ""
+"Cho phép bạn chia sẻ tài liệu với khách hàng của mình trong quá trình bán hàng.\n"
+"Để trống nếu bạn không muốn chia sẻ tài liệu này với khách hàng.\n"
+"Báo giá: tài liệu sẽ được gửi và khách hàng có thể truy cập bất cứ lúc nào.\n"
+"VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
+"Xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
+"VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
+"Báo giá nội bộ: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_company
+msgid "Companies"
+msgstr "Công ty"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr ""
+"Làm cho báo giá của bạn trở nên hấp dẫn bằng cách thêm các trang mở đầu, mô "
+"tả sản phẩm và trang kết thúc vào báo giá."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "Only PDF documents can be attached inside a quote."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "PDF Quote Builder"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "PDF Quote builder"
+msgstr "Trình tạo báo giá PDF"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+msgid "Product Document"
+msgstr "Tài liệu sản phẩm"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Products descriptions are pdf documents you can add directly on products.\n"
+"                            To do so, go on a product, find the \"product documents\" button, then add a\n"
+"                            new pdf document with a visibility set as \"Inside Quotes\". For each product\n"
+"                            in the quote, if the product has an \"inside quotes\" document, this document\n"
+"                            will be added after header pages and before the quotation details."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation\n"
+"                            with more information about your company, your products and your services.\n"
+"                            The pdf of your quotes will be built by putting together header pages,\n"
+"                            product descriptions, details of the quote and then the footer pages."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "Báo giá/Đơn hàng"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Quotation Template"
+msgstr "Mẫu báo giá"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "Hành động báo cáo"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
+msgid "Sale Footer Name"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
+msgid "Sale Header Name"
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Some information specific to the quote (customer name, quotation reference, ... )\n"
+"                            can be injected in these documents using pdf forms.\n"
+"                            Refer to the documentation to know more about this feature."
+msgstr ""
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
+msgid "Visible at"
+msgstr "Hiển thị ở"

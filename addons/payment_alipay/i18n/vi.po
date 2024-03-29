@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_payment_method
+msgid "Account"
+msgstr "Tài khoản"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__code__alipay
+#: model:payment.provider,name:payment_alipay.payment_provider_alipay
+msgid "Alipay"
+msgstr "Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "Email người bán Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__code
+msgid "Code"
+msgstr "Mã"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "Xuyên quốc gia"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_provider__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese merchants)"
+msgstr "Thanh toán nhanh (chỉ dành cho người bán Trung Quốc)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "Mã khoá MD5 Signature"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "ID đối tác người bán"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "Không tìm thấy giao dịch nào khớp với mã %s."
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_provider
+msgid "Payment Provider"
+msgstr "Nhà cung cấp dịch vụ thanh toán"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Giao dịch thanh toán"
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference %(r)s or txn_id %(t)s."
+msgstr "Dữ liệu đã nhận bị thiếu mã %(r)s hoặc txn_id %(t)s."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_seller_email
+msgid "The public Alipay partner email"
+msgstr "Email đối tác Alipay công khai"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__alipay_merchant_partner_id
+msgid "The public partner ID solely used to identify the account with Alipay"
+msgstr ""
+"ID đối tác công khai chỉ được sử dụng để xác định tài khoản với Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "Mã kỹ thuật của nhà cung cấp dịch vụ thanh toán này."
+
+#. module: payment_alipay
+#: model_terms:ir.ui.view,arch_db:payment_alipay.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Asiapay</strong>."
+msgstr ""
+"Nhà cung cấp này đã bị ngừng sử dụng.\n"
+"                    Hãy cân nhắc vô hiệu hoá nhà cung cấp đó và chuyển sang <strong>Asiapay</strong>."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,auth_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been authorized."
+msgstr "Thanh toán của bạn đã được uỷ quyền."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,cancel_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been cancelled."
+msgstr "Thanh toán của bạn đã bị hủy."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,pending_msg:payment_alipay.payment_provider_alipay
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Thanh toán của bạn đã được xử lý thành công nhưng đang chờ phê duyệt."
+
+#. module: payment_alipay
+#: model_terms:payment.provider,done_msg:payment_alipay.payment_provider_alipay
+msgid "Your payment has been successfully processed."
+msgstr "Thanh toán của bạn đã được xử lý thành công."
+
+#. module: payment_alipay
+#. odoo-python
+#: code:addons/payment_alipay/models/payment_transaction.py:0
+#, python-format
+msgid "received invalid transaction status: %s"
+msgstr "đã nhận trạng thái giao dịch không hợp lệ: %s"
