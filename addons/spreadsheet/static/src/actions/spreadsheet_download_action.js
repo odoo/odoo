@@ -31,7 +31,7 @@ async function downloadSpreadsheet(env, action) {
  * @param {Model} model
  * @returns {Promise<void>}
  */
-async function waitForDataLoaded(model) {
+export async function waitForDataLoaded(model) {
     const dataSources = model.config.dataSources;
     return new Promise((resolve, reject) => {
         function check() {
