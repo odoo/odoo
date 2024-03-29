@@ -1296,7 +1296,7 @@
     </div>
 
     <div data-js="TopMenuVisibility"
-         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-selector="[data-main-object]:has(input.o_page_option_data[name='header_visible']) #wrapwrap > header"
          data-no-check="true">
         <we-select string="Header Position" data-no-preview="true"
                    data-dependencies="!header_sidebar_opt">
@@ -1309,7 +1309,7 @@
     </div>
 
     <div data-js="topMenuColor"
-         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
+         data-selector="[data-main-object]:has(input.o_page_option_data[name='header_color']):has(input.o_page_option_data[name='header_text_color']) #wrapwrap > header"
          data-no-check="true">
         <we-colorpicker string="Background"
             class="o_we_sublevel_1"
@@ -1584,7 +1584,7 @@
     </div>
 
     <div data-js="HideFooter"
-        data-selector="[data-main-object^='website.page('] #wrapwrap > footer"
+        data-selector="[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer"
         data-no-check="true"
         groups="website.group_website_designer">
         <we-checkbox string="Page Visibility"

@@ -24,6 +24,7 @@ class EventEvent(models.Model):
         'website.published.multi.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'website.page_visibility_options.mixin',
     ]
 
     def _default_cover_properties(self):
