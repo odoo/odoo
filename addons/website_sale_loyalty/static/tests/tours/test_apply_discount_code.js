@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'insert discount code',
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: 'text 12345'
+            run: "edit 12345",
         },
         {
             content: 'validate the promo code',
@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'insert discount code',
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: 'text 12345'
+            run: "edit 12345",
         },
         {
             content: 'validate the promo code',

@@ -13,18 +13,18 @@ registry.category("web_tour.tours").add('test_survey', {
     }, {
         content: 'Answer Where do you live',
         trigger: 'div.js_question-wrapper:contains("Where do you live") input',
-        run: 'text Mordor-les-bains',
+        run: "edit Mordor-les-bains",
     }, {
         content: 'Answer Where do you live',
         trigger: 'div.js_question-wrapper:contains("When is your date of birth") input',
-        run: 'text 05/05/1980',
+        run: "edit 05/05/1980",
     }, {
         content: 'Answer How frequently do you buy products online',
         trigger: 'div.js_question-wrapper:contains("How frequently do you buy products online") label:contains("Once a month")',
     }, {
         content: 'Answer How many times did you order products on our website',
         trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website") input',
-        run: 'text 12',
+        run: "edit 12",
     }, {
         content: 'Submit and go to Next Page',
         trigger: 'button[value="next"]',
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('test_survey', {
     }, {
         content: 'Answer Do you have any other comments, questions, or concerns',
         trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
-        run: 'text This is great. Really.',
+        run: "edit This is great. Really.",
     }, {
         content: 'Answer How would you rate your experience on our website?',
         trigger: 'div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4")',

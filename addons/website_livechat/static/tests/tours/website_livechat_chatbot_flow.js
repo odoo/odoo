@@ -51,15 +51,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input ",
-            run: "text No, you won't get my email!",
+            run: "edit No, you won't get my email!",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain(
@@ -69,15 +65,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text okfine@fakeemail.com",
+            run: "edit okfine@fakeemail.com",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain("Your email is validated, thank you!"),
@@ -89,15 +81,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text https://www.fakeaddress.com",
+            run: "edit https://www.fakeaddress.com",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain("Great, do you want to leave any feedback for us to improve?"),
@@ -105,39 +93,27 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text Yes, actually, I'm glad you asked!",
+            run: "edit Yes, actually, I'm glad you asked!",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text I think it's outrageous that you ask for all my personal information!",
+            run: "edit I think it's outrageous that you ask for all my personal information!",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text I will be sure to take this to your manager!",
+            run: "edit I will be sure to take this to your manager!",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain("Ok bye!"),
@@ -183,15 +159,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text no",
+            run: "edit no",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain("Great, do you want to leave any feedback for us to improve?"),
@@ -199,15 +171,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "text no, nothing so say",
+            run: "edit no, nothing so say",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: messagesContain("Ok bye!"),

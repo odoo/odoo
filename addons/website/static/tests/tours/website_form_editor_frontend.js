@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=subject]",
-        run:      "text Jane Smith"
+        run:      "edit Jane Smith",
     },
     {
         content:  "Update required field status by trying to Send again",
@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "textarea[name=body_html]",
-        run:      "text A useless message"
+        run:      "edit A useless message"
     },
     {
         content:  "Update required field status by trying to Send again",
@@ -98,31 +98,33 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Check another product",
-        trigger:  "input[name='Products'][value='Xperia']"
+        trigger:  "input[name='Products'][value='Xperia']",
+        run: "click",
     },
     {
         content:  "Check a service",
-        trigger:  "input[name='Service'][value='Development Service']"
+        trigger:  "input[name='Service'][value='Development Service']",
+        run: "click",
     },
     {
         content:  "Complete Your Name field",
         trigger:  "input[name='name']",
-        run:      "text chhagan"
+        run:      "edit chhagan",
     },
     {
         content:  "Complete Email field",
         trigger:  "input[name=email_from]",
-        run:      "text test@mail.com"
+        run:      "edit test@mail.com",
     },
     {
         content: "Complete Subject field",
         trigger: 'input[name="subject"]',
-        run: 'text subject',
+        run: "edit subject",
     },
     {
         content:  "Complete Your Question field",
         trigger:  "textarea[name='description']",
-        run:      "text magan"
+        run:      "edit magan",
     },
     {
         content: "Check if conditional field is visible, it shouldn't.",
@@ -137,7 +139,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content: "Change name input",
         trigger: "input[name='name']",
-        run: "text odoo",
+        run: "edit odoo",
     },
     {
         content: "Check if conditional field is visible, it should.",
@@ -146,7 +148,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content: "Select state option",
         trigger: "select[name='State']",
-        run: 'text 44 - UK',
+        run: "select 44 - UK",
     },
     {
         content:  "Send the form",
@@ -204,10 +206,12 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     {
         content: "Fill in the subject",
         trigger: 'input[name="subject"]',
+        run: "edit Test",
     },
     {
         content: 'Fill in the message',
         trigger: 'textarea[name="description"]',
+        run: "edit Test",
     },
     {
         content: 'Send the form',

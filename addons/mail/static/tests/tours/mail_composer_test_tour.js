@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
-            run: "text blahblah @Not",
+            run: "edit blahblah @Not && blur",
         },
         {
             content: "Mention a partner",
@@ -51,14 +51,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Check composer keeps open after pushing Escape",
             trigger: ".o_mail_composer_form_view",
-            run: () => {
-                window.dispatchEvent(
-                    new KeyboardEvent("keydown", {
-                        bubbles: true,
-                        key: "Escape",
-                    })
-                );
-            },
+            run: "press Escape",
         },
         {
             content: "Check the earlier provided attachment is listed",
@@ -102,12 +95,13 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Open templates",
             trigger: '.o_field_widget[name="template_id"] input',
+            run: "edit test",
         },
         {
             content: "Check a template is listed",
             in_modal: false,
             trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
-            run() {},
+            run: "press Enter",
         },
         {
             content: "Send message",
@@ -130,7 +124,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Write something in full composer",
             trigger: ".note-editable",
-            run: "text keep the content",
+            run: "editor keep the content",
         },
         {
             content: "Close full composer",
@@ -141,7 +135,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             trigger: ".o-mail-Composer-input",
             run() {
                 if (this.anchor.value !== "keep the content") {
-                    throw new Error(
+                    console.error(
                         "Composer in chatter should contain full composer text after discarding."
                     );
                 }

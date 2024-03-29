@@ -16,11 +16,11 @@
     }, {
         content: "insert content",
         trigger: '.o_required_modifier input',
-        run: 'text Test Category',
+        run: "edit Test Category",
     }, { // try to insert a value that will raise the SQL constraint
         content: "insert invalid value",
         trigger: '.o_field_widget[name="color"] input',
-        run: 'text -1',
+        run: "edit -1",
     }, { // save
         content: "save category",
         trigger: 'button.o_form_button_save',

@@ -20,6 +20,7 @@
         trigger: 'div[name="name"] input',
         content: _t("Enter your post's title"),
         position: "bottom",
+        run: "edit Test",
     }, {
         trigger: "button.o_form_button_save",
         extra_trigger: 'div.o_field_widget[name="blog_id"]',
@@ -37,18 +38,7 @@
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Edit your title, the subtitle is optional."),
         position: "top",
-        // FIXME instead of using the default 'click' event that is used to mark
-        // DIV elements as consumed, we would like to use the 'input' event for
-        // this specific contenteditable element. However, using 'input' here
-        // makes the auto test not work as the 'text' run method stops working
-        // correctly for contenteditable element whose 'consumeEvent' is set to
-        // 'input'. The auto tests should be entirely independent of what is set
-        // as 'consumeEvent'. While this is investigated and fixed, let's use
-        // the 'mouseup' event. Indeed we cannot let it to 'click' because of
-        // the old editor currently removing all click handlers on top level
-        // editable content (which the blog post title area is).
-        consumeEvent: 'mouseup',
-        run: "text",
+        run: "editor Test",
     }, {
         trigger: "we-button[data-background]:eq(1)",
         extra_trigger: `:iframe #wrap h1[data-oe-expression="blog_post.name"]:not(:contains(''))`,
@@ -65,13 +55,10 @@
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: ":iframe #o_wblog_post_content",
+        trigger: ":iframe #o_wblog_post_content p",
         content: markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
         position: "top",
-        run: function (actions) {
-            actions.auto();
-            actions.text("Blog content", this.anchor.querySelector("p"));
-        },
+        run: "editor Blog content",
     },
     ...wTourUtils.clickOnSave(),
     {

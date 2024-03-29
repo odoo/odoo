@@ -73,19 +73,7 @@ export function search(field, searchWord) {
     return [
         {
             trigger: ".pos-search-bar input",
-            run: `text ${searchWord}`,
-        },
-        {
-            /**
-             * Manually trigger keyup event to show the search field list
-             * because the previous step do not trigger keyup event.
-             */
-            trigger: ".pos-search-bar input",
-            run: function () {
-                document
-                    .querySelector(".pos-search-bar input")
-                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
-            },
+            run: `edit ${searchWord}`,
         },
         {
             trigger: `.pos-search-bar .search ul li:contains("${field}")`,

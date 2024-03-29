@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     extra_trigger: ".o_sale_order",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
-    run: 'text Tajine Saucisse',
+    run: "edit Tajine Saucisse",
 }, {
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     auto: true,
@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: 'text event (',
+    run: "edit event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
@@ -32,6 +32,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',  // to be in the event wizard
+    run: "edit Test",
 }, {
     trigger: 'div[name="event_id"] input',
 }, {
@@ -51,14 +52,14 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '.o_data_row:nth-child(3)',  // wait for the new row to be created
-    run: 'text event (',
+    run: "edit event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) label:contains("Adult")',
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
-    run: 'text 5',
+    run: "edit 5 && blur",
 },
     configuratorTourUtils.assertPriceTotal("150.00"),
 {
@@ -66,6 +67,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',
+    run: "edit Test",
 }, {
     trigger: 'div[name="event_id"] input',
 }, {
@@ -85,7 +87,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '.o_data_row:nth-child(4)',  // wait for the new row to be created
-    run: 'text event (',
+    run: "edit event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
 }, {
@@ -97,6 +99,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: '.o_input_dropdown input',
     extra_trigger: '.o_technical_modal',
+    run: "edit Test",
 }, {
     trigger: 'div[name="event_id"] input',
 }, {

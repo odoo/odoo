@@ -45,7 +45,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Paste the popup anchor in the URL input",
         trigger: "#o_link_dialog_url_input",
-        run: "text #Win-%2420"
+        run: "edit #Win-%2420",
     },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
@@ -70,7 +70,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Add a link to the homepage in the URL input",
         trigger: "#o_link_dialog_url_input",
-        run: "text /"
+        run: "edit /",
     },
     {
         content: "Open the page anchor selector",

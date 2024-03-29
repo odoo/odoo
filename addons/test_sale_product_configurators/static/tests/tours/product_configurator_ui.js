@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     extra_trigger: '.o_sale_order'
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
-    run: 'text Tajine Saucisse',
+    run: "edit Tajine Saucisse",
 }, {
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     auto: true,
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: 'text Custo',
+    run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {

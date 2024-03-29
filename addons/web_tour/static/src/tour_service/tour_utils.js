@@ -4,7 +4,6 @@ import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { utils } from "@web/core/ui/ui_service";
-import { queryFirst, queryAll, isVisible } from "@odoo/hoot-dom";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -62,7 +61,7 @@ export function getConsumeEventType(element, runCommand) {
         tag === "textarea" ||
         (tag === "input" &&
             (!type ||
-                ["email", "number", "password", "search", "tel", "text", "url", "date"].includes(
+                ["email", "number", "password", "search", "tel", "text", "url", "date", "range"].includes(
                     type
                 )))
     ) {
@@ -150,48 +149,149 @@ export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additional
 };
 
 export class RunningTourActionHelper {
-    constructor(anchor, consume_event) {
+
+    constructor(anchor) {
         this.anchor = anchor;
-        this.consume_event = consume_event;
     }
+
+    /**
+     * @param {string|Node} selector 
+     */
+    blur(selector) {
+        if (selector?.length) {
+            hoot.click(selector);
+        } else if (this.previousActiveElement !== this.currentActiveElement) {
+            hoot.click(this.previousActiveElement);
+        } else {
+            hoot.click("body");
+        }
+    }
+
+    /**
+     * @param {string|Node} selector 
+     */
+    clear(selector) {
+        this.focus(selector);
+        hoot.clear();
+    }
+
+    /**
+     * @param {string|Node} selector 
+     */
     click(selector) {
         const element = this._get_action_element(selector);
         this._click(element);
     }
+
+    /**
+     * @param {string|Node} selector 
+     */
     dblclick(selector) {
         const element = this._get_action_element(selector);
-        this._click(element, 2);
+        hoot.dblclick(element);
     }
-    text(text, selector) {
-        const element = this._get_action_element(selector);
-        this._text(element, text);
-    }
-    remove_text(selector) {
-        const element = this._get_action_element(selector);
-        this._text(element, "\n");
-    }
-    text_blur(text, selector) {
-        const element = this._get_action_element(selector);
-        this._text_blur(element, text);
-    }
-    range(text, selector) {
-        const element = this._get_action_element(selector);
-        this._range(element, text);
-    }
+
     drag_and_drop_native(toSel, fromSel) {
         const source = this._get_action_element(fromSel);
-        const target = queryFirst(toSel);
+        const target = hoot.queryFirst(toSel);
         this._drag_and_drop(source, target);
     }
-    auto(selector) {
+
+     /**
+     * Edit input or textarea
+     * @param {string} text 
+     * @param {string|Node} selector 
+     */
+    edit(text, selector) {
+        this.focus(selector);
+        hoot.edit(text);
+    }
+
+    /**
+     * Only for editable (wysiwyg) element
+     * @param {string} text 
+     * @param {string|Node} selector 
+     */
+    editor(text, selector) {
         const element = this._get_action_element(selector);
-        const consume_event = this._get_action_consume_event(element);
-        if (consume_event === "input") {
-            this._text(element);
-        } else {
-            this._click(element);
+        this._click(element);
+        this._set_range(element, "start");
+        hoot.keyDown("_");
+        element.textContent = text;
+        hoot.manuallyDispatchProgrammaticEvent(element, "input");
+        this._set_range(element, "stop");
+        hoot.keyUp("_");
+        hoot.manuallyDispatchProgrammaticEvent(element, "change");
+    }
+
+    /**
+     * Usefull for autocomplete. With text(), it clears the input before fill it.
+     * @param {string} text 
+     * @param {string|Node} selector 
+     */
+    fill(text, selector) {
+        this.focus(selector);
+        hoot.fill(text);
+    }
+
+    /**
+     * @param {string|Node} selector 
+     */
+    focus(selector) {
+        this.previousActiveElement = hoot.getActiveElement();
+        this.currentActiveElement = this._get_action_element(selector);
+        hoot.click(this.currentActiveElement);
+        return this.currentActiveElement;
+    }
+
+    /**
+     * Only for input[type="range"]
+     * @param {string|number} value 
+     * @param {string|Node} selector 
+     */
+    range(value, selector) {
+        const element = this.focus(selector);
+        hoot.setInputRange(element, value);
+    }
+
+    press(...args) {
+        return hoot.press(...args);
+    }
+
+    /**
+     * @param {string} value
+     * @param {string|Node} selector 
+     */
+    select(value, selector) {
+        this.focus(selector);
+        hoot.select(value, { target: this.currentActiveElement });
+    }
+
+    /**
+     * Select option by its index
+     * @param {number} index starts at 0
+     * @param {string|Node} selector 
+     */
+    selectByIndex(index, selector) {
+        const element = this.focus(selector);
+        const value = hoot.queryValue(`option:eq(${index})`, { root: this.currentActiveElement });
+        if (value) {
+            hoot.select(value, { target: this.currentActiveElement });
+            element.dispatchEvent(new Event("input"));
         }
     }
+
+    /**
+     * Select option(s) by there values
+     * @param {string|RegExp} contains 
+     * @param {string|Node} selector 
+     */
+    selectByLabel(contains, selector) {
+        this.focus(selector);
+        const values = hoot.queryAllValues(`option:contains(${contains})`, { root: this.currentActiveElement });
+        hoot.select(values, { target: this.currentActiveElement });
+    }
+
     /**
      * Get Node for a selector, return this.anchor by default
      * @param {string|Node} selector
@@ -199,80 +299,25 @@ export class RunningTourActionHelper {
      */
     _get_action_element(selector) {
         if (typeof selector === "string" && selector.length) {
-            const nodes = queryAll(selector);
-            return nodes.find(isVisible) || nodes.at(0);
+            const nodes = hoot.queryAll(selector);
+            return nodes.find(hoot.isVisible) || nodes.at(0);
         } else if (selector instanceof Node) {
             return selector;
         }
         return this.anchor;
     }
-    /**
-     * Get Event to consume on selector, return this.consume_event by default
-     * @param {Node} element
-     * @returns {string}
-     */
-    _get_action_consume_event(element) {
-        if (element instanceof Node) {
-            return getConsumeEventType(element);
-        }
-        return this.consume_event;
-    }
-    _click(target, nb) {
+   
+    _click(target) {
         triggerPointerEvent(target, "pointerover", true);
         triggerPointerEvent(target, "pointerenter", false);
         triggerPointerEvent(target, "pointermove", true);
-        for (let i = 1; i <= (nb || 1); i++) {
-            triggerPointerEvent(target, "pointerdown", true);
-            triggerPointerEvent(target, "pointerup", true);
-            triggerPointerEvent(target, "click", true, { detail: i });
-            if (i % 2 === 0) {
-                triggerPointerEvent(target, "dblclick", true);
-            }
-        }
+        triggerPointerEvent(target, "pointerdown", true);
+        triggerPointerEvent(target, "pointerup", true);
+        triggerPointerEvent(target, "click", true);
         triggerPointerEvent(target, "pointerout", true);
         triggerPointerEvent(target, "pointerleave", false);
     }
-    _text(element, text) {
-        this._click(element);
-        const consume_event = this._get_action_consume_event(element);
 
-        text = text ? String(text) : "Test";
-        if (consume_event === "input") {
-            element.dispatchEvent(new KeyboardEvent("keydown", { key: text.at(-1) }));
-            element.value = text;
-            element.dispatchEvent(new KeyboardEvent("keyup", { key: text.at(-1) }));
-            element.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        } else if (element.matches("select")) {
-            const options = hoot.queryAll("option", { root: element });
-            options.forEach((option) => {
-                delete option.selected;
-            });
-            let selectedOption = options.find((option) => option.value === text);
-            if (!selectedOption) {
-                selectedOption = options.find(
-                    (option) => String(option.textContent).trim() === text
-                );
-            }
-            const regex = /option\s+([0-9]+)/;
-            if (!selectedOption && regex.test(text)) {
-                // Extract position as 1-based, as the nth selectors.
-                const position = parseInt(regex.exec(text)[1]);
-                selectedOption = options.at(position - 1); // eq is 0-based.
-            }
-            selectedOption.selected = true;
-            this._click(element);
-            // For situations where an `oninput` is defined.
-            element.dispatchEvent(new Event("input"));
-        } else {
-            this._set_range(element, "start");
-            element.dispatchEvent(new KeyboardEvent("keydown", { key: "_" }));
-            element.textContent = text;
-            element.dispatchEvent(new InputEvent("input", { bubbles: true }));
-            this._set_range(element, "stop");
-            element.dispatchEvent(new KeyboardEvent("keyup", { key: "_" }));
-        }
-        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
-    }
     // Useful for wysiwyg editor.
     _set_range(element, start_or_stop) {
         function _node_length(node) {
@@ -300,15 +345,6 @@ export class RunningTourActionHelper {
         range.setStart(node, length);
         range.setEnd(node, length);
         selection.addRange(range);
-    }
-    _text_blur(element, text) {
-        this._text(element, text);
-        element.dispatchEvent(new Event("focusout"));
-        element.dispatchEvent(new Event("blur"));
-    }
-    _range(element, text) {
-        element.value = text;
-        element.dispatchEvent(new Event("change", { bubbles: true, cancelable: false }));
     }
     /**
      * ! This function is a reduced version of "drag" in @web/../tests/helpers/utils
@@ -483,15 +519,7 @@ export const stepUtils = {
             trigger: ".o_searchview_input",
             extra_trigger: ".dropdown-menu.o_searchview_autocomplete",
             position: "bottom",
-            run() {
-                const keyEventEnter = new KeyboardEvent("keydown", {
-                    bubbles: true,
-                    cancelable: true,
-                    key: "Enter",
-                    code: "Enter",
-                });
-                this.anchor.dispatchEvent(keyEventEnter);
-            },
+            run: "press Enter",
             debugHelp: this._getHelpMessage("simulateEnterKeyboardInSearchModal"),
         };
     },
@@ -508,7 +536,7 @@ export const stepUtils = {
                 trigger: ".o_searchview_input",
                 extra_trigger: `.modal:not(.o_inactive_modal) .modal-title:contains('${modalTitle}')`,
                 position: "bottom",
-                run: `text ${valueSearched}`,
+                run: `edit ${valueSearched}`,
             },
             this.simulateEnterKeyboardInSearchModal(),
             {

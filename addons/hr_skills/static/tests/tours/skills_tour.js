@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Pick a name",
         trigger: ".o_field_widget[name='name'] input",
-        run: "text Jony McHallyFace",
+        run: "edit Jony McHallyFace",
     },
     {
         content: "Save",
@@ -32,17 +32,17 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Enter some company name",
         trigger: ".modal-body .o_field_widget[name='name'] input",
-        run: "text Mamie Rock",
+        run: "edit Mamie Rock",
     },
     {
         content: "Set start date",
         trigger: ".o_field_widget[name='date_start'] input",
-        run: "text 12/05/2017",
+        run: "edit 12/05/2017",
     },
     {
         content: "Give some description",
         trigger: ".o_field_widget[name='description'] textarea",
-        run: "text Sang some songs and played some music",
+        run: "edit Sang some songs and played some music",
     },
     {
         content: "Save it",
@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Change type",
         trigger: ".o_field_widget[name='line_type_id'] input",
-        run: "text Experience",
+        run: "edit Experience",
     },
     {
         content: "Choose experience",
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a song",
         trigger: ".o_field_widget[name='skill_id'] input",
-        run: "text Fortun",
+        run: "edit Fortun",
     },
     {
         content: "Choose the song",
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a level",
         trigger: ".o_field_widget[name='skill_level_id'] input",
-        run: "text Level",
+        run: "edit Level",
     },
     {
         content: "Choose the level",
@@ -118,7 +118,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a song", // "Music" should be already selected
         trigger: ".o_field_widget[name='skill_id'] input",
-        run: "text Mary",
+        run: "edit Mary",
     },
     {
         content: "Choose the song",
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Select a level",
         trigger: ".o_field_widget[name='skill_level_id'] input",
-        run: "text Level 7",
+        run: "edit Level 7",
     },
     {
         content: "Choose the level",

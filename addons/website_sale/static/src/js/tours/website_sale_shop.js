@@ -5,7 +5,7 @@
 
     import { markup } from "@odoo/owl";
 
-    wTourUtils.registerWebsitePreviewTour("shop", {
+    wTourUtils.registerWebsitePreviewTour("test_01_admin_shop_tour", {
         url: '/shop',
         sequence: 130,
     }, () => [{
@@ -22,6 +22,7 @@
         trigger: ".modal-dialog input[type=text]",
         content: _t("Enter a name for your new product"),
         position: "left",
+        run: "edit Test",
     }, {
         trigger: ".modal-footer button.btn-primary",
         content: markup(_t("Click on <em>Save</em> to create the product.")),
@@ -31,23 +32,19 @@
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Edit the price of this product by clicking on the amount."),
         position: "bottom",
-        run: "text 1.99",
+        run: "editor 1.99",
         timeout: 30000,
     }, {
         trigger: ":iframe #wrap img.product_detail_img",
         extra_trigger: ":iframe .product_price .o_dirty .oe_currency_value:not(:contains(/^1.00$/))",
         content: _t("Double click here to set an image describing your product."),
         position: "top",
-        run: function (actions) {
-            actions.dblclick();
-        },
+        run: "dblclick",
     }, {
         trigger: ".o_select_media_dialog .o_upload_media_button",
         content: _t("Upload a file from your local library."),
         position: "bottom",
-        run: function (actions) {
-            actions.auto(".modal-footer .btn-secondary");
-        },
+        run: "click .modal-footer .btn-secondary",
         auto: true,
     },
     wTourUtils.goBackToBlocks(),

@@ -135,7 +135,7 @@ function payWithDemo() {
     }, {
         content: 'eCommerce: add card number',
         trigger: 'input[name="customer_input"]',
-        run: 'text 4242424242424242'
+        run: "edit 4242424242424242",
     },
     pay(),
     {
@@ -186,7 +186,7 @@ function searchProduct(productName) {
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',
-            run: `text ${productName}`
+            run: `edit ${productName}`,
         },
         wTourUtils.clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
     ];

@@ -20,7 +20,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     {
         content: "type Parseltongue",
         trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-        run: 'text Parseltongue',
+        run: "edit Parseltongue",
     },
     {
         content: 'select Parseltongue',
@@ -57,7 +57,7 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
     {
         content: "insert website name",
         trigger: 'div[name="name"] input',
-        run: 'text Website EN'
+        run: "edit Website EN",
     },
     {
         content: "validate the website creation modal",

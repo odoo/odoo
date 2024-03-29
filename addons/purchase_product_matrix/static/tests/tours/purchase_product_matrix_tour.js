@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     extra_trigger: ".o_purchase_order"
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
-    run: 'text Agrolait',
+    run: "edit Agrolait",
 }, {
     trigger: '.ui-menu-item > a:contains("Agrolait")',
     auto: true,
@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: "a:contains('Add a product')"
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: "text Matrix",
+    run: "edit Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
 }, {
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     extra_trigger: '.o_form_status_indicator_buttons.invisible',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: 'text Matrix',
+    run: "edit Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
 }, {

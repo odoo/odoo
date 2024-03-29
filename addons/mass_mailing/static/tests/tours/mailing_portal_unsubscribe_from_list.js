@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list', 
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
-            run: "text My feedback",
+            run: "edit My feedback",
         }, {
             content: "Hit Send",
             trigger: "button#button_feedback",
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
-            run: "text My feedback",
+            run: "edit My feedback",
         }, {
             content: "Hit Send",
             trigger: "button#button_feedback",

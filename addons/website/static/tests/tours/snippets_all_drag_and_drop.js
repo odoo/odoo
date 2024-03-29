@@ -58,7 +58,7 @@ for (const snippet of snippetsNames) {
         trigger: ".o_we_add_snippet_btn",
         run: function (actions) {
             document.body.removeAttribute("test-dd-snippet-removed");
-            actions.auto();
+            actions.click();
         },
     }];
 

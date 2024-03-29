@@ -20,7 +20,7 @@
     }, {
         trigger: '.modal-dialog div[name="name"] input',
         content: markup(_t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training")),
-        run: 'text Technical Training',
+        run: "edit Technical Training",
         position: "left",
     }, {
         trigger: '.modal-dialog div[name=date_begin]',

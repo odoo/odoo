@@ -26,6 +26,7 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: "open website switcher",
             trigger: "input[id^='website_id']",
+            run: `edit ${websiteName}`,
         },
         {
             content: `select ${websiteName} in the website switcher`,

@@ -12,16 +12,12 @@ export const start = [
     {
         content: "Say hello!",
         trigger: ".o-mail-Composer-input",
-        run: "text Hello Sir!",
+        run: "edit Hello Sir!",
     },
     {
         content: "Send the message",
         trigger: ".o-mail-Composer-input",
-        run() {
-            this.anchor.dispatchEvent(
-                new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-            );
-        },
+        run: "press Enter",
     },
     {
         content: "Verify your message has been typed",
@@ -64,7 +60,7 @@ export const feedback = [
     {
         content: "Type a feedback",
         trigger: "textarea[placeholder='Explain your note']",
-        run: "text ;-) This was really helpful. Thanks ;-)!",
+        run: "edit ;-) This was really helpful. Thanks ;-)!",
     },
     {
         content: "Send the feedback",
@@ -81,7 +77,7 @@ export const transcript = [
     {
         content: "Type your email",
         trigger: "input[placeholder='mail@example.com']",
-        run: "text deboul@onner.com",
+        run: "edit deboul@onner.com",
     },
     {
         content: "Send the conversation to your email address",

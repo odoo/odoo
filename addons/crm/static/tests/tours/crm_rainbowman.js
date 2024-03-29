@@ -17,18 +17,18 @@
         }, {
             trigger: ".o_field_widget[name=name] input",
             content: "complete name",
-            run: "text Test Lead 1",
+            run: "edit Test Lead 1",
         }, {
             trigger: ".o_field_widget[name=expected_revenue] input",
             content: "complete expected revenue",
-            run: "text 999999997",
+            run: "edit 999999997",
         }, {
             trigger: "button.o_kanban_add",
             content: "create lead",
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move to won stage",
-            run: "drag_and_drop_native .o_opportunity_kanban .o_kanban_group:eq(3) "
+            run: "drag_and_drop_native (.o_opportunity_kanban .o_kanban_group:eq(3))",
         }, {
             trigger: ".o_reward_rainbow",
             extra_trigger: ".o_reward_rainbow",
@@ -47,11 +47,11 @@
         }, {
             trigger: ".o_field_widget[name=name] input",
             content: "complete name",
-            run: "text Test Lead 2",
+            run: "edit Test Lead 2",
         }, {
             trigger: ".o_field_widget[name=expected_revenue] input",
             content: "complete expected revenue",
-            run: "text 999999998",
+            run: "edit 999999998",
         }, {
             trigger: "button.o_kanban_add",
             content: "create lead",

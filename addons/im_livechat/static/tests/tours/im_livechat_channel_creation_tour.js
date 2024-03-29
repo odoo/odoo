@@ -24,15 +24,11 @@ registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_messa
         ...requestChatSteps,
         {
             trigger: ".o-mail-Composer-input",
-            run: "text Hello, I need help please !",
+            run: "edit Hello, I need help please !",
         },
         {
             trigger: ".o-mail-Composer-input",
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-                );
-            },
+            run: "press Enter",
         },
         {
             trigger: ".o-mail-Message:contains('Hello, I need help')",

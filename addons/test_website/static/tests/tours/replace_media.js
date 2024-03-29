@@ -108,7 +108,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         content: "enter a video URL",
         trigger: ".o_select_media_dialog #o_video_text",
         // Design your first web page.
-        run: `text ${VIDEO_URL}`,
+        run: `edit ${VIDEO_URL}`,
     },
     {
         content: "wait for preview to appear",

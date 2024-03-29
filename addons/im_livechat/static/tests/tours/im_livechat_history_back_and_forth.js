@@ -5,20 +5,15 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
     steps: () => [
         {
             trigger: "body",
-            // Open Command Palette
-            run() {
-                this.anchor.dispatchEvent(
-                    new KeyboardEvent("keydown", { key: "K", ctrlKey: true, bubbles: true })
-                );
-            },
+            run: "press ctrl+k"
         },
         {
             trigger: ".o_command_palette_search input",
-            run: "text /",
+            run: "fill /",
         },
         {
             trigger: ".o_command_palette_search input",
-            run: "text Live Chat",
+            run: "fill Live Chat",
         },
         {
             trigger: ".o_command:contains(Sessions History)",

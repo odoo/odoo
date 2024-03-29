@@ -33,8 +33,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "customize snippet",
         trigger: ":iframe #wrapwrap .s_banner h1",
-        run: "text",
-        consumeEvent: "input",
+        run: "editor Test",
     },
     {
         content: "save custom snippet",
@@ -62,7 +61,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "set name",
         trigger: ".oe_snippet[name='Custom Banner'] input",
-        run: "text Bruce Banner",
+        run: "edit Bruce Banner",
     },
     {
         content: "confirm rename",
