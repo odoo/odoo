@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('o-mail-Message-textContent')]/*[1]" position="before">
+        <xpath expr="//div[@name='notification body']" position="replace">
             <t t-if="message.message_type === 'notification' or message.is_transient or message.trackingValues.length > 0" name="hasTrackingValue">
                 <div>
                     <t t-if="message.subtype_description">
@@ -26,6 +26,7 @@
                     </div>
                 </div>
             </t>
+            <t t-else="">$0</t>
         </xpath>
         <xpath expr="//div[hasclass('o-mail-Message-avatarContainer')]" position="attributes">
             <attribute name="t-att-class">{ 'cursor-pointer': hasAuthorClickable() }</attribute>

@@ -1,5 +1,4 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageHighlight } from "@mail/utils/common/hooks";
@@ -49,9 +48,6 @@ export class Chatter extends Component {
             thread: undefined,
             isSearchOpen: false,
         });
-        this.attachmentUploader = useAttachmentUploader(
-            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
-        );
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         this.messageHighlight = useMessageHighlight();
@@ -61,7 +57,7 @@ export class Chatter extends Component {
         });
 
         onMounted(() => {
-            this.changeThread(this.props.threadModel, this.props.threadId, this.props.webRecord);
+            this.changeThread(this.props.threadModel, this.props.threadId);
             if (!this.env.chatter || this.env.chatter?.fetchData) {
                 if (this.env.chatter) {
                     this.env.chatter.fetchData = false;
@@ -74,7 +70,7 @@ export class Chatter extends Component {
                 this.props.threadId !== nextProps.threadId ||
                 this.props.threadModel !== nextProps.threadModel
             ) {
-                this.changeThread(nextProps.threadModel, nextProps.threadId, nextProps.webRecord);
+                this.changeThread(nextProps.threadModel, nextProps.threadId);
             }
             if (!this.env.chatter || this.env.chatter?.fetchData) {
                 if (this.env.chatter) {
@@ -93,10 +89,8 @@ export class Chatter extends Component {
         return [];
     }
 
-    changeThread(threadModel, threadId, webRecord) {
+    changeThread(threadModel, threadId) {
         this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
-        this.state.thread.name = webRecord?.data?.display_name || undefined;
-        this.attachmentUploader.thread = this.state.thread;
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({
@@ -109,11 +103,6 @@ export class Chatter extends Component {
                     model: threadModel,
                 });
             }
-            this.state.composerType = false;
-        } else {
-            this.onThreadCreated?.(this.state.thread);
-            this.onThreadCreated = null;
-            this.closeSearch();
         }
     }
 
@@ -135,10 +124,6 @@ export class Chatter extends Component {
         this.load(this.state.thread, this.afterPostRequestList);
     }
 
-    async unlinkAttachment(attachment) {
-        await this.attachmentUploader.unlink(attachment);
-    }
-
     onClickSearch() {
         this.state.composerType = false;
         this.state.isSearchOpen = !this.state.isSearchOpen;
@@ -146,16 +131,6 @@ export class Chatter extends Component {
 
     closeSearch() {
         this.state.isSearchOpen = false;
-    }
-
-    async onClickAttachFile(ev) {
-        if (this.state.thread.id) {
-            return;
-        }
-        const saved = await this.props.saveRecord?.();
-        if (!saved) {
-            return false;
-        }
     }
 
     onScroll() {

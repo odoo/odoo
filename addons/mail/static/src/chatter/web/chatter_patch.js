@@ -6,6 +6,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 
 import { markup, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -33,7 +34,9 @@ Chatter.props.push(
     "hasParentReloadOnMessagePosted?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
-    "isInFormSheetBg?"
+    "isInFormSheetBg?",
+    "saveRecord?",
+    "webRecord?"
 );
 
 Object.assign(Chatter.defaultProps, {
@@ -61,6 +64,9 @@ patch(Chatter.prototype, {
             showActivities: true,
             showAttachmentLoading: false,
         });
+        this.attachmentUploader = useAttachmentUploader(
+            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
+        );
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
@@ -190,34 +196,16 @@ patch(Chatter.prototype, {
         return _t("Unfollow");
     },
 
-    changeThreadIfNeeded(nextProps) {
-        const props = nextProps ? nextProps : this.props;
-        if (
-            this.props.threadId !== nextProps?.threadId ||
-            this.props.threadModel !== nextProps?.threadModel
-        ) {
-            this.state.thread.name = props.webRecord?.data?.display_name || undefined;
-            this.attachmentUploader.thread = this.state.thread;
-            if (props.threadId === false) {
-                if (this.state.thread.messages.length === 0) {
-                    this.state.thread.messages.push({
-                        id: this.store.getNextTemporaryId(),
-                        author: this.store.self,
-                        body: _t("Creating a new record..."),
-                        message_type: "notification",
-                        trackingValues: [],
-                        res_id: props.threadId,
-                        model: props.threadModel,
-                    });
-                }
-                this.state.composerType = false;
-            } else {
-                this.onThreadCreated?.(this.state.thread);
-                this.onThreadCreated = null;
-                this.closeSearch();
-            }
+    changeThread(threadModel, threadId) {
+        super.changeThread(...arguments);
+        this.attachmentUploader.thread = this.state.thread;
+        if (threadId === false) {
+            this.state.composerType = false;
+        } else {
+            this.onThreadCreated?.(this.state.thread);
+            this.onThreadCreated = null;
+            this.closeSearch();
         }
-        super.changeThreadIfNeeded(...arguments);
     },
 
     async _follow(thread) {
@@ -246,6 +234,16 @@ patch(Chatter.prototype, {
         if (this.state.isAttachmentBoxOpened) {
             this.rootRef.el.scrollTop = 0;
             this.state.thread.scrollTop = 0;
+        }
+    },
+
+    async onClickAttachFile(ev) {
+        if (this.state.thread.id) {
+            return;
+        }
+        const saved = await this.props.saveRecord?.();
+        if (!saved) {
+            return false;
         }
     },
 
@@ -342,7 +340,7 @@ patch(Chatter.prototype, {
     },
 
     async unlinkAttachment(attachment) {
-        await super.unlinkAttachment(attachment);
+        await this.attachmentUploader.unlink(attachment);
         if (this.props.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
