@@ -678,8 +678,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const actionName = event.data.actionName;
         const params = event.data.params;
         switch (actionName) {
-            case 'get_page_option':
-                 return event.data.onSuccess(this.pageOptions[params[0]].value);
+            case 'get_page_option': {
+                const optionName = params[0];
+                const value = optionName in this.pageOptions ? this.pageOptions[optionName].value : null;
+                return event.data.onSuccess(value);
+            }
             case 'toggle_page_option':
                 this._togglePageOption(...params);
                 return event.data.onSuccess();
@@ -704,6 +707,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      */
     _togglePageOption(params) {
         const pageOption = this.pageOptions[params.name];
+        if (!pageOption) {
+            // The option does not exist... we might want to warn to ease
+            // development but it is a correct use case at the moment ("toggle
+            // the page option if it exists").
+            return;
+        }
         pageOption.value = params.value === undefined ? !pageOption.value : params.value;
     }
     /**

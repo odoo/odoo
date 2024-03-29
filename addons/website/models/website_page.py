@@ -15,6 +15,7 @@ class WebsitePage(models.Model):
     _inherit = [
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.page_options.mixin',
     ]
     _description = 'Page'
     _order = 'website_id'
@@ -28,13 +29,6 @@ class WebsitePage(models.Model):
     is_homepage = fields.Boolean(compute='_compute_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
     is_new_page_template = fields.Boolean(string="New Page Template", help='Add this page to the "+New" page templates. It will be added to the "Custom" category.')
-
-    # Page options
-    header_overlay = fields.Boolean()
-    header_color = fields.Char()
-    header_text_color = fields.Char()
-    header_visible = fields.Boolean(default=True)
-    footer_visible = fields.Boolean(default=True)
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
