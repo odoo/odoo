@@ -1781,6 +1781,73 @@ class TestSinglePicking(TestStockCommon):
         move_line.lot_id = lot1
         delivery_order._action_done()
 
+    def test_use_create_lot_use_existing_lot_5(self):
+        """Check if a quant without lot exist, it will be decrease even if a
+        quant with the right lot exists but is empty"""
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_in)\
+            .write({
+                'use_create_lots': False,
+                'use_existing_lots': False,
+            })
+        self.productA.tracking = 'lot'
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 2
+        receipt.move_ids.picked = True
+
+        receipt._action_done()
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.productA.id),
+            ('location_id', '=', self.stock_location),
+            ('lot_id', '=', False),
+        ])
+        self.assertTrue(quant, 'A quant without lot should exist')
+        self.assertEqual(quant.quantity, 2, 'The quantity of the quant without lot should be 2')
+        lot = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.productA.id,
+            'company_id': self.env.company.id,
+        })
+        new_quant = self.env['stock.quant'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'lot_id': lot.id,
+        })
+        out_move = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.move_line_ids.lot_id = lot
+        out_move.move_line_ids.quantity = 1
+        out_move.picked = True
+        out_move._action_done()
+        self.assertEqual(new_quant.quantity, 0, 'The quant with lot should remain untouched  1')
+        self.assertEqual(quant.quantity, 1, 'The quantity of the quant without lot should be 1')
+
     def test_merge_moves_1(self):
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location,
