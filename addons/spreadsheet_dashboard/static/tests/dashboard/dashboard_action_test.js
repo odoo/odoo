@@ -75,6 +75,18 @@ QUnit.test("Fold/unfold the search panel", async function (assert) {
     assert.containsOnce(fixture, ".o_spreadsheet_dashboard_search_panel");
 });
 
+QUnit.test(
+    "Fold button invisible in the search panel without any dashboard",
+    async function (assert) {
+        const serverData = getDashboardServerData();
+        serverData.models["spreadsheet.dashboard"].records = [];
+        serverData.models["spreadsheet.dashboard.group"].records = [];
+        await createSpreadsheetDashboard({ serverData });
+        const fixture = getFixture();
+        assert.containsNone(fixture, ".o_spreadsheet_dashboard_search_panel button");
+    }
+);
+
 QUnit.test("load action with specific dashboard", async (assert) => {
     await createSpreadsheetDashboard({ spreadsheetId: 3 });
     const active = getFixture().querySelector(".o_search_panel li.active");
