@@ -87,7 +87,7 @@ export class Thread extends Component {
             "load-older",
             () => {
                 if (this.loadOlderState.isVisible) {
-                    this.threadService.fetchMoreMessages(this.props.thread);
+                    this.threadService.fetchMoreMessages(toRaw(this.props.thread));
                 }
             },
             { ready: false }
@@ -96,7 +96,7 @@ export class Thread extends Component {
             "load-newer",
             () => {
                 if (this.loadNewerState.isVisible) {
-                    this.threadService.fetchMoreMessages(this.props.thread, "newer");
+                    this.threadService.fetchMoreMessages(toRaw(this.props.thread), "newer");
                 }
             },
             { ready: false }
@@ -147,7 +147,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                this.threadService.fetchNewMessages(this.props.thread);
+                this.threadService.fetchNewMessages(toRaw(this.props.thread));
             }
         });
         useEffect(
@@ -164,7 +164,7 @@ export class Thread extends Component {
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
             if (detail.model === model && detail.id === id) {
-                this.threadService.fetchNewMessages(this.props.thread);
+                this.threadService.fetchNewMessages(toRaw(this.props.thread));
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -175,7 +175,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                this.threadService.fetchNewMessages(nextProps.thread);
+                this.threadService.fetchNewMessages(toRaw(nextProps.thread));
             }
         });
     }
