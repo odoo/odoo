@@ -51,4 +51,5 @@ class AccountEdiXmlUBL21(models.AbstractModel):
             'pint_jp': 'urn:peppol:pint:billing-1@jp-1',
             'pint_sg': 'urn:peppol:pint:billing-1@sg-1',
             'pint_my': 'urn:peppol:pint:billing-1@my-1',
+            'oioubl_21': 'OIOUBL-2.1',
         }
