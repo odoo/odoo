@@ -134,9 +134,9 @@ export class SelfOrder extends Reactive {
         // If a command line does not have a quantity greater than 0, we consider it deleted
         this.currentOrder.lines = this.currentOrder.lines.filter((o) => o.qty > 0);
     }
-    async confirmationPage(screen_mode, device, access_token = "") {
+    async confirmationPage(screen_mode, device) {
         this.router.navigate("confirmation", {
-            orderAccessToken: access_token || this.currentOrder.access_token,
+            orderAccessToken: this.currentOrder.access_token,
             screenMode: screen_mode,
         });
         if (device === "kiosk") {
@@ -165,8 +165,8 @@ export class SelfOrder extends Reactive {
         // if the amount is 0, we don't need to go to the payment page
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
-            const order = await this.sendDraftOrderToServer();
-            this.confirmationPage("order", device, order.access_token);
+            await this.sendDraftOrderToServer();
+            this.confirmationPage("order", device);
             return;
         }
 
@@ -195,7 +195,13 @@ export class SelfOrder extends Reactive {
     }
 
     get currentOrder() {
-        if (this.editedOrder && this.editedOrder.state === "draft") {
+        if (
+            this.editedOrder &&
+            (this.editedOrder.state === "draft" ||
+                (this.editedOrder.state === "paid" &&
+                    this.editedOrder.amount_total === 0 &&
+                    this.config.self_ordering_mode === "kiosk"))
+        ) {
             return this.editedOrder;
         }
         const existingOrder = this.orders.find(
@@ -438,7 +444,7 @@ export class SelfOrder extends Reactive {
             this.updateOrdersFromServer([order], [order.access_token]);
             this.editedOrder.updateLastChanges();
 
-            if (this.config.self_ordering_pay_after === "each" && order.amount_total > 0) {
+            if (this.config.self_ordering_pay_after === "each") {
                 this.editedOrder = null;
             }
 
@@ -525,10 +531,7 @@ export class SelfOrder extends Reactive {
         this.notification.add(message, {
             type: "success",
         });
-
-        if (this.router.activeSlot !== "confirmation") {
-            this.router.navigate("default");
-        }
+        this.router.navigate("default");
     }
 
     updateOrderFromServer(order) {

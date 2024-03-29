@@ -11,6 +11,7 @@ import werkzeug.wrappers
 
 from odoo import _, http, tools
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
@@ -280,7 +281,7 @@ class WebsiteForum(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
         # Compatibility pre-v14
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)), code=301)
+        return request.redirect(_build_url_w_params("/forum/%s/%s" % (slug(forum), slug(question)), request.params), code=301)
 
     def sitemap_forum_post(env, rule, qs):
         ForumPost = env['forum.post']
@@ -367,7 +368,7 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
         question.close(reason_id=int(post.get('reason_id', False)))
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):

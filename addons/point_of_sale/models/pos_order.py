@@ -592,7 +592,7 @@ class PosOrder(models.Model):
                             })
 
                     else:
-                        self.env['account.move.line'].sudo().with_context(skip_invoice_sync=True).create({
+                        self.env['account.move.line'].with_context(skip_invoice_sync=True).create({
                             'balance': -rounding_applied,
                             'quantity': 1.0,
                             'partner_id': new_move.partner_id.id,
@@ -735,7 +735,7 @@ class PosOrder(models.Model):
 
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
-        if self.config_id.cash_rounding and cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
+        if self.config_id.cash_rounding and cash_rounding and not self.config_id.only_round_cash_method:
             amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
             if not self.currency_id.is_zero(amount_currency):
                 balance = company_currency.round(amount_currency * rate)
@@ -876,14 +876,13 @@ class PosOrder(models.Model):
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
-            moves += new_move
-            payment_moves = order._apply_invoice_payments()
-
             # Send and Print
             if self.env.context.get('generate_pdf', True):
                 template = self.env.ref(new_move._get_mail_template())
                 new_move.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
 
+            moves += new_move
+            payment_moves = order._apply_invoice_payments()
 
             if order.session_id.state == 'closed':  # If the session isn't closed this isn't needed.
                 # If a client requires the invoice later, we need to revers the amount from the closing entry, by making a new entry for that.
@@ -984,7 +983,7 @@ class PosOrder(models.Model):
     def _create_order_picking(self):
         self.ensure_one()
         if self.shipping_date:
-            self.sudo().lines._launch_stock_rule_from_pos_order_lines()
+            self.lines._launch_stock_rule_from_pos_order_lines()
         else:
             if self._should_create_picking_real_time():
                 picking_type = self.config_id.picking_type_id
@@ -1418,13 +1417,7 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
         if self.order_id.shipping_date:
-            # get timezone from user
-            # and convert to UTC to avoid any timezone issue
-            # because shipping_date is date and date_planned is datetime
-            from_zone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-            shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
-            shipping_date = from_zone.localize(shipping_date)
-            date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)
+            date_deadline = self.order_id.shipping_date
         else:
             date_deadline = self.order_id.date_order
 

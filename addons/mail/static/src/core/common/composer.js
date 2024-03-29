@@ -258,9 +258,6 @@ export class Composer extends Component {
     }
 
     get SEND_TEXT() {
-        if (this.props.composer.message) {
-            return _t("Save editing");
-        }
         return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 

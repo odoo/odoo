@@ -168,7 +168,7 @@ export class PartnerListScreen extends Component {
     }
     async saveChanges(processedChanges) {
         const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await this.pos._loadPartners([partnerId]);
+        await this.pos.load_new_partners();
         this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
         this.confirm();
     }

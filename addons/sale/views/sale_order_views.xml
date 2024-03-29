@@ -214,7 +214,7 @@
                 <attribute name="optional">hide</attribute>
             </field>
             <field name="amount_to_invoice" position="attributes">
-                <attribute name="column_invisible">1</attribute>
+                <attribute name="invisible">1</attribute>
             </field>
         </field>
     </record>
@@ -282,7 +282,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             </header>
             <div
-                 class="alert alert-warning" role="alert"
+                 class="alert alert-warning mb-0" role="alert"
                  invisible="partner_credit_warning == ''">
                 <field name="partner_credit_warning"/>
             </div>

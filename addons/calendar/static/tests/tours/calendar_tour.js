@@ -38,11 +38,6 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: `text ${todayDate()}`,
         },
         {
-            trigger: "#duration_0",
-            content: "Give a duration to the new event",
-            run: "text 02:00",
-        },
-        {
             trigger: ".fa-cloud-upload",
             content: "Save the new event",
             run: "click",
@@ -53,7 +48,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: '.scale_button_selection',
+            trigger: '.dropdown-toggle:contains("Week")',
             content: "Click to change calendar view",
             run: "click",
         },

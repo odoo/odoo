@@ -86,12 +86,10 @@ class IrActions(models.Model):
         return res
 
     def unlink(self):
-        """unlink ir.action.todo/ir.filters which are related to actions which will be deleted.
+        """unlink ir.action.todo which are related to actions which will be deleted.
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
         todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
         todos.unlink()
-        filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
-        filters.unlink()
         res = super(IrActions, self).unlink()
         # self.get_bindings() depends on action records
         self.env.registry.clear_cache()
@@ -924,9 +922,7 @@ class IrActionsServer(models.Model):
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
-            if records.ids:
-                # check access rules on real records only; base automations of
-                # type 'onchange' can run server actions on new records
+            if records:
                 try:
                     records.check_access_rule('write')
                 except AccessError:

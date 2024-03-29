@@ -3,12 +3,12 @@
 # 	* account
 # 
 # Translators:
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Yazi Tian, 2024
 # Wil Odoo, 2024
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
+# Chloe Wang, 2024
+# Yazi Tian, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
-# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr ""
 "\n"
 "凭证 (%s) 不平衡。\n"
 "借记总额为%s，贷记总额为%s。\n"
-"您可以在日记账“%s”中预设默认账户，以便系统自动平衡各分录项."
+"您可能在日记账“%s”中预设默认账户，以便系统自动移动余额."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -56,14 +56,15 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"- 税项组：税项为一组子税项。\n"
-"- 固定：无论价格如何，税额保持不变。\n"
-"- 价格百分比：税额是价格的一定百分比：\n"
-"    例如：100 * (1 + 10%) = 110（不含价格）\n"
-"    例如：110 / (1 + 10%) = 100（包含价格）\n"
-"- 含税价格的百分比：税额是价格的一部分：\n"
-"    例如：180 / (1 - 10%) = 200（不含价格）\n"
-"    例如：200 * (1 - 10%) = 180（含价格）"
+"    - 税项组：税项为一组子税项。\n"
+"    - 固定税项：无论价格如何，税额保持不变。\n"
+"    - 价格百分比：按价格的一定百分比计算税额：\n"
+"       例如，100*10％=110（不含价格）\n"
+"       例如，110/（1+10％）=100（含价格）\n"
+"    - 含税价格的百分比：税额等于价格除以一定百分比：\n"
+"       例如，180/（1-10％）=200（不含价格）\n"
+"       例如，200*（1-10％）=180（含价格）\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -212,7 +213,7 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one suspense line."
 msgstr ""
 "%s相关对账明细处于无效状态。\n"
-"为保持一致，日记账分录必须始终有一个暂记行."
+"为保持一致，日记账分录必须始终有一个暂记行。"
 
 #. module: account
 #. odoo-python
@@ -7073,7 +7074,7 @@ msgstr "有资金转账警告消息"
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_payment__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "有已核对分录"
+msgstr "有已对账分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
@@ -7089,7 +7090,7 @@ msgstr "具有关联行"
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "有未核对分录"
+msgstr "有未对账分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9038,9 +9039,9 @@ msgid ""
 "Check: Pay bills by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
-"手动：以 ERP 以外的任何方法支付。\n"
-"支票：用支票支付账单，并从 ERP 打印出来。\n"
-"SEPA 贷方转账：通过向您的银行提交 SEPA 贷方转账文件，在SEPA 区付款。模块 account_sepa 是必需的.\n"
+"手动：使用 ERP 以外的任何方法进行付款。\n"
+"支票：用支票支付账单，并从 ERP 打印。\n"
+"单一欧元支付区 SEPA 贷方转账：向银行提交单一欧元支付区贷方转账文件，以在单一欧元支付区完成付款。需要模块account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -9159,7 +9160,7 @@ msgstr "正在匹配类别"
 msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
-msgstr "此明细的匹配编号，如果仅部分核对，则为\"P\"，如果存在完全核对，则匹配编号。"
+msgstr "此明细的匹配编号，如果仅部分协调，则为\"P\", 如果存在完全对账，则匹配编号."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
@@ -9465,13 +9466,6 @@ msgstr "净"
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
 msgid "Never"
 msgstr "从不"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "New"
-msgstr "新建"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10042,7 +10036,7 @@ msgid ""
 "Only users with the 'Adviser' role can edit accounts prior to and inclusive "
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
-msgstr "仅具有“顾问”身份的用户可以编辑该日期含之前的科目。例如，用于在开放会计年度中锁定期间."
+msgstr "仅具有“顾问”身份的用户可以编辑该日期（含）之前的科目。例如，用于在开放会计年度中锁定期间。"
 
 #. module: account
 #. odoo-python
@@ -10417,7 +10411,7 @@ msgstr "已付/已收"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
 msgid "Paired Internal Transfer Payment"
-msgstr "配对的内部转账付款"
+msgstr "配对的内部转让付款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
@@ -10954,15 +10948,6 @@ msgstr "请从会计科目表菜单创建新科目。"
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "请在付款中定义付款方式行。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr "所选付款方式不适用于此次付款，请重新选择付款方式。"
 
 #. module: account
 #. odoo-python
@@ -11619,14 +11604,6 @@ msgstr "如果发现不一致，请重新载入会计数据（税款、账户等
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "对日记账分录进行重新排序。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "Removed"
-msgstr "已移除"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -14183,7 +14160,7 @@ msgstr ""
 "该对账模型仅在标签满足以下条件时应用：\n"
 "        * 包含：建议标签须包含该字符串（不区分大小写）。\n"
 "        * 不包含：“包含”的反义词。\n"
-"        * 匹配表达式：定义您的正则表达式."
+"        * 匹配表达式：定义您的正则表达式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -14821,7 +14798,7 @@ msgstr "该经常性分录源自%s"
 #: model:ir.model.fields,help:account.field_account_move__auto_post_until
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
-msgstr "该循环性分录将在该含日期前过账."
+msgstr "该经常性分录将在该日期（含）前过账。"
 
 #. module: account
 #. odoo-python
@@ -16276,13 +16253,6 @@ msgstr "不能创建处于已过账状态的分录。请创建分录草稿，并
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "You cannot create recursive groups."
-msgstr "不能创建递归组。"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16308,15 +16278,6 @@ msgstr "您不能删除此分录，因为它已经消耗了一个序列号并且
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"You cannot delete this report (%s), it is used by the accounting PDF "
-"generation engine."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16332,8 +16293,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"您不能对已核对的日记账分录执行此修改。您可以只更改部分非法定字段，或者必须先取消核对。\n"
-"日记账分录(id): %s (%s)"
+"您不能对已对账的会计凭证执行此修改. 您可以只更改部分字段，或者必须先取消对账.\n"
+"会计凭证(id): %s (%s)"
 
 #. module: account
 #. odoo-python

@@ -2,7 +2,6 @@
 
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { patch } from "@web/core/utils/patch";
-import { useState } from "@odoo/owl";
 
 patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services, "rpc"],
@@ -12,11 +11,9 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params, { rpc }) {
         super.setup(...arguments);
         this.rpc = rpc;
+        this.googleIsSync = true;
         this.googlePendingSync = false;
-        this.state = useState({
-            googleIsSync: true,
-            googleIsPaused: false,
-        });
+        this.googleIsPaused = false;
     },
 
     /**
@@ -54,11 +51,11 @@ patch(AttendeeCalendarModel.prototype, {
             },
         );
         if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
-            this.state.googleIsSync = false;
+            this.googleIsSync = false;
         } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
-            this.state.googleIsSync = true;
+            this.googleIsSync = true;
         }
-        this.state.googleIsPaused = result.status == "sync_paused";
+        this.googleIsPaused = result.status == "sync_paused";
         this.googlePendingSync = false;
         return result;
     },

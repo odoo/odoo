@@ -1027,66 +1027,6 @@ class TestCompute(common.TransactionCase):
         obj.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment")
         self.assertTrue(obj.active)
 
-    def test_multiple_mail_triggers(self):
-        lead_model = self.env["ir.model"]._get("base.automation.lead.test")
-        with self.assertRaises(ValidationError):
-            create_automation(self, trigger="on_message_sent", model_id=lead_model.id)
-
-        lead_thread_model = self.env["ir.model"]._get("base.automation.lead.thread.test")
-
-        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
-            "state": "object_write",
-            "update_path": "active",
-            "update_boolean_value": "false"
-        })
-        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
-            "state": "object_write",
-            "evaluation_type": "equation",
-            "update_path": "name",
-            "value": "record.name + '!'"
-        })
-
-        ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
-        internal_partner = self.env["res.users"].browse(2).partner_id
-
-        obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
-        obj.message_subscribe([ext_partner.id, internal_partner.id])
-
-        obj.message_post(author_id=internal_partner.id, message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.assertFalse(obj.active)
-        self.assertEqual(obj.name, "test!")
-
-    def test_compute_on_create(self):
-        lead_model = self.env['ir.model']._get('base.automation.lead.test')
-        stage_field = self.env['ir.model.fields']._get('base.automation.lead.test', 'stage_id')
-        new_stage = self.env['test_base_automation.stage'].create({'name': 'New'})
-
-        create_automation(
-            self,
-            model_id=lead_model.id,
-            trigger='on_stage_set',
-            trigger_field_ids=[stage_field.id],
-            _actions={
-                'state': 'object_create',
-                'crud_model_id': self.env['ir.model']._get('res.partner').id,
-                'value': "Test Partner Automation",
-            },
-            filter_domain=repr([('stage_id', '=', new_stage.id)]),
-        )
-
-        # Tricky case: the record is created with 'stage_id' being false, and
-        # the field is marked for recomputation.  The field is then recomputed
-        # while evaluating 'filter_domain', which causes the execution of the
-        # automation.  And as the domain is satisfied, the automation is
-        # processed again, but it must detect that it has just been run!
-        self.env['base.automation.lead.test'].create({
-            'name': 'Test Lead',
-        })
-
-        # check that the automation has been run once
-        partner_count = self.env['res.partner'].search_count([('name', '=', 'Test Partner Automation')])
-        self.assertEqual(partner_count, 1, "Only one partner should have been created")
-
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):

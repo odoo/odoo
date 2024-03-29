@@ -1838,8 +1838,7 @@ class MailThread(models.AbstractModel):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason, default_create_value), to be managed by Chatter. """
         result = dict((res_id, []) for res_id in self.ids)
-        user_field = self._fields.get('user_id')
-        if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
+        if 'user_id' in self._fields:
             for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:
                     continue
@@ -4449,7 +4448,7 @@ class MailThread(models.AbstractModel):
 
         if author_name:
             title = "%s: %s" % (author_name, title)
-            icon = "/web/image/res.partner/%d/avatar_128" % author_id[0]
+            icon = "/web/image/res.users/%d/avatar_128" % author_id[0]
 
         payload = {
             'title': title,

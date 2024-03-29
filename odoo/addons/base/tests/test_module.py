@@ -60,7 +60,7 @@ class TestModuleManifest(BaseCase):
             'name': f'Temp {self.module_name}',
             'new_page_templates': {},
             'post_init_hook': '',
-            'post_load': '',
+            'post_load': None,
             'pre_init_hook': '',
             'sequence': 100,
             'summary': '',

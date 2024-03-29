@@ -48,9 +48,6 @@ export class Link extends Component {
     ];
     setup() {
         this.state = useState({});
-        // We need to wait for the `onMounted` changes to be done before
-        // accessing `this.$el`.
-        this.mountedPromise = new Promise(resolve => this.mountedResolve = resolve);
 
         onWillStart(() => this._updateState(this.props));
         let started = false;
@@ -85,10 +82,8 @@ export class Link extends Component {
             this.$el.find('[name="url"]').on('change', this._onURLInputChange.bind(this));
 
             await this.start();
-            this.mountedResolve();
         });
-        onWillUpdateProps(async (newProps) => {
-            await this.mountedPromise;
+        onWillUpdateProps((newProps) => {
             this._updateState(newProps);
             this.state.url = newProps.link.getAttribute('href') || '';
             this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
@@ -187,7 +182,7 @@ export class Link extends Component {
      * Focuses the url input.
      */
     focusUrl() {
-        const urlInput = this.$el[0].querySelector('input[name="url"]');
+        const urlInput = this.linkComponentWrapperRef.el.querySelector('input[name="url"]');
         urlInput.focus();
         urlInput.select();
     }
@@ -475,17 +470,13 @@ export class Link extends Component {
                 $link.html(this.state.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
-                const text = $link[0].innerText.replaceAll("\u200B", "").trim();
-                // Update the first not ZWS child element that has the same inner text
+                // Update the first child element that has the same inner text
                 // as the link with the new content while preserving child
                 // elements within the link. (e.g. the link is bold and italic)
-                let child;
-                do {
-                    contentWrapperEl = child || contentWrapperEl;
-                    child = [...contentWrapperEl.children].find(
-                        (element) => !element.hasAttribute("data-o-link-zws")
-                    );
-                } while (child?.innerText.replaceAll('\u200B', '').trim() === text);
+                while (contentWrapperEl.firstElementChild
+                    && (contentWrapperEl.firstElementChild.innerText === $link[0].innerText)) {
+                    contentWrapperEl = contentWrapperEl.firstElementChild;
+                }
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);

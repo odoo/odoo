@@ -973,11 +973,11 @@
                 <input type="checkbox"
                        name="tags"
                        class="form-check-input"
-                       t-attf-id="tag_#{tag.id}"
+                       t-att-id="tag.id"
                        t-att-value="tag.id"
                        t-att-checked="'checked' if tag.id in tags else None"
                 />
-                <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
+                <label class="form-check-label fw-normal" t-att-for="tag.id" t-field="tag.name"/>
             </div>
         </t>
     </template>
@@ -1605,7 +1605,7 @@
                             <t t-if="line.discount">
                                 <del t-attf-class="#{'text-danger mr8'}"
                                      style="white-space: nowrap;"
-                                     t-out="line._get_displayed_unit_price() * line.product_uom_qty"
+                                     t-out="line.price_unit * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
                             <t t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"

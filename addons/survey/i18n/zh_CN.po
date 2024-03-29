@@ -5,8 +5,8 @@
 # Translators:
 # Wil Odoo, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Chloe Wang, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
-# Chloe Wang, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
@@ -72,8 +72,8 @@ msgstr "% 完成"
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
-msgid "%(participant)s just participated in \"%(survey_title)s\"."
-msgstr "%(participant)s刚刚参加了\"%(survey_title)s\"。"
+msgid "%(participant) just participated in \"%(survey_title)s\"."
+msgstr "%（参与者）刚刚参加了\"%(survey_title)s\"。"
 
 #. module: survey
 #. odoo-python
@@ -496,10 +496,10 @@ msgstr "<span class=\"d-block text-warning\">部分</span>"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
-"tooltip\"> or press CTRL+Enter</span>"
+"tooltip\"> or press Enter</span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
-"tooltip\"> 或 按 CTRL+Enter</span>"
+"tooltip\">或者按下回车键</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -516,12 +516,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
-"                </span>"
+"                        <span id=\"enter-tooltip\">or press Enter</span>\n"
+"                    </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">或 按CTRL+Enter</span>\n"
-"                </span>"
+"                        <span id=\"enter-tooltip\">或者按下回车键</span>\n"
+"                    </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -3685,11 +3685,6 @@ msgstr "打印"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "产品"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
-msgid "Progress bar"
-msgstr "进度条"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id

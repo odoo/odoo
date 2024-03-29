@@ -543,11 +543,6 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        # set the nomenclature to GS1
-        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
-        self.main_pos_config.company_id.write({
-            'nomenclature_id': barcodes_gs1_nomenclature.id
-        })
 
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
@@ -563,7 +558,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {"active_id": gift_card_program.id}
         ).create({"coupon_qty": 1, 'points_granted': 5}).generate_coupons()
         # Change the code of the gift card.
-        gift_card_program.coupon_ids.code = '043123456'
+        gift_card_program.coupon_ids.code = '044123456'
         # Run the tour. It will pay the gift card and use it.
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
@@ -1517,117 +1512,5 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour10",
-            login="pos_user",
-        )
-
-    def test_loyalty_program_with_next_order_coupon_free_product(self):
-        self.env['loyalty.program'].search([]).write({'active': False})
-
-        free_product = self.env['product.product'].create({
-                'name': 'Free Product',
-                'type': 'product',
-                'list_price': 1,
-                'available_in_pos': True,
-                'taxes_id': False,
-            })
-        self.env['product.product'].create({
-                'name': 'Product Test',
-                'type': 'product',
-                'list_price': 50,
-                'available_in_pos': True,
-                'taxes_id': False,
-            })
-
-        loyalty_program = self.env['loyalty.program'].create({
-            'name': 'Next Order Coupon Program',
-            'program_type': 'next_order_coupons',
-            'applies_on': 'future',
-            'trigger': 'auto',
-            'portal_visible': True,
-            'rule_ids': [(0, 0, {
-                'reward_point_mode': 'unit',
-                'minimum_amount': 100,
-                'minimum_qty': 0,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_id': free_product.id,
-                'reward_product_qty': 1,
-                'required_points': 1,
-            })],
-        })
-
-        self.env['res.partner'].create({'name': 'AAA Partner'})
-        self.pos_user.write({
-            'groups_id': [
-                (4, self.env.ref('stock.group_stock_user').id),
-            ]
-        })
-        self.main_pos_config.open_ui()
-        self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
-            "PosLoyaltyTour11.1",
-            login="pos_user",
-        )
-        coupon = loyalty_program.coupon_ids
-        self.assertEqual(len(coupon), 1, "Coupon not generated")
-        self.assertEqual(coupon.points, 3, "Coupon not generated with correct points")
-        coupon.write({"code": "123456"})
-
-        self.main_pos_config.open_ui()
-        self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
-            "PosLoyaltyTour11.2",
-            login="pos_user",
-        )
-        self.assertEqual(coupon.points, 0, "Coupon not used")
-
-    def test_loyalty_program_with_tagged_buy_x_get_y(self):
-        self.env['loyalty.program'].search([]).write({'active': False})
-
-        free_product_tag = self.env['product.tag'].create({'name': 'Free Product'})
-
-        self.env['product.product'].create([
-            {
-                'name': 'Free Product A',
-                'type': 'product',
-                'list_price': 1,
-                'available_in_pos': True,
-                'taxes_id': False,
-                'product_tag_ids': [(4, free_product_tag.id)],
-            },
-            {
-                'name': 'Free Product B',
-                'type': 'product',
-                'list_price': 1,
-                'available_in_pos': True,
-                'taxes_id': False,
-                'product_tag_ids': [(4, free_product_tag.id)],
-            },
-        ])
-
-        self.env['loyalty.program'].create({
-            'name': 'Buy X get Y with Tag',
-            'program_type': 'buy_x_get_y',
-            'applies_on': 'current',
-            'trigger': 'auto',
-            'portal_visible': True,
-            'rule_ids': [(0, 0, {
-                'reward_point_mode': 'unit',
-                'minimum_qty': 1,
-                'product_tag_id': free_product_tag.id,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_tag_id': free_product_tag.id,
-                'reward_product_qty': 1,
-                'required_points': 2,
-            })],
-        })
-
-        self.main_pos_config.open_ui()
-        self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
-            "PosLoyaltyTour12",
             login="pos_user",
         )

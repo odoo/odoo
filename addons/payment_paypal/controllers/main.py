@@ -65,12 +65,11 @@ class PaypalController(http.Controller):
     @http.route(
         _cancel_url, type='http', auth='public', methods=['GET'], csrf=False, save_session=False
     )
-    def paypal_return_from_canceled_checkout(self, tx_ref, return_access_tkn):
+    def paypal_return_from_canceled_checkout(self, tx_ref, access_token):
         """ Process the transaction after the customer has canceled the payment.
 
         :param str tx_ref: The reference of the transaction having been canceled.
-        :param str return_access_tkn: The access token to verify the authenticity of the request.
-                                      PayPal forbids any parameter with the name "token" inside.
+        :param str access_token: The access token to verify the authenticity of the request.
         """
         _logger.info(
             "Handling redirection from Paypal for cancellation of transaction with reference %s",
@@ -80,7 +79,7 @@ class PaypalController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'paypal', {'item_number': tx_ref}
         )
-        if not payment_utils.check_access_token(return_access_tkn, tx_ref):
+        if not payment_utils.check_access_token(access_token, tx_ref):
             raise Forbidden()
         tx_sudo._handle_notification_data('paypal', {})
 

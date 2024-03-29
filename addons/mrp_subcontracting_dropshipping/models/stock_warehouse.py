@@ -12,7 +12,7 @@ class StockWarehouse(models.Model):
         help="Dropship subcontractors with components")
 
     subcontracting_dropshipping_pull_id = fields.Many2one(
-        'stock.rule', 'Subcontracting-Dropshipping MTS Rule', copy=False
+        'stock.rule', 'Subcontracting-Dropshipping MTS Rule'
     )
 
     @api.model_create_multi

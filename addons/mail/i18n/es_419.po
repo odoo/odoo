@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Lucia Pacheco, 2024
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -424,11 +424,6 @@ msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">Color del encabezado</span>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr "<span class=\"me-1 oe_inline\">@</span>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"me-1\">@</span>"
 msgstr "<span class=\"me-1\">@</span>"
@@ -769,7 +764,7 @@ msgstr "Plan de actividad"
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_plan
 msgid "Activity Plans"
-msgstr "Planes de actividad"
+msgstr "Planes de actividades"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2145,12 +2140,6 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
-msgid "Companies using this domain as default for sending mails"
-msgstr ""
-"Empresas que usan este dominio de forma predeterminada para enviar correos"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__company_id
@@ -2737,18 +2726,6 @@ msgid "Default Values"
 msgstr "Valores predeterminados"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
-msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
-"'notifications@example.com' to override all outgoing emails."
-msgstr ""
-"Predeterminado cuando no coincide con los filtros de servidor saliente. "
-"Puede ser una parte local, por ejemplo, \"notificaciones\" o una dirección "
-"de correo electrónico completa, por ejemplo, \"notificaciones@ejemplo.com\" "
-"para anular todos los correos electrónicos salientes."
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "Destinatarios predeterminados"
@@ -3054,11 +3031,6 @@ msgstr "Nombre del documento"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
 msgstr "Documento: \""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Domain"
-msgstr "Dominio"
 
 #. module: mail
 #. odoo-javascript
@@ -3429,17 +3401,6 @@ msgstr "CC del correo electrónico"
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Asistente de redacción de correo electrónico"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
-#: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
-msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
-"Dominio del correo electrónico, por ejemplo, \"ejemplo.com\" en "
-"\"odoo@ejemplo.com\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -4169,7 +4130,7 @@ msgstr "Tiene actividad de correo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
 msgid "Has Mail Blacklist"
-msgstr "Tiene exclusión de correo"
+msgstr "Tiene lista negra de correo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -5400,25 +5361,6 @@ msgid "Local-part based incoming detection"
 msgstr "Detección de entradas basada en partes locales"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
-msgid ""
-"Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
-"'catchall@example.com'"
-msgstr ""
-"Parte local del correo electrónico que se utiliza como \"responder a\" para "
-"recibir respuestas, por ejemplo, \"catchall\" en \"catchall@ejemplo.com\""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
-msgid ""
-"Local-part of email used for Return-Path used when emails bounce e.g. "
-"'bounce' in 'bounce@example.com'"
-msgstr ""
-"Parte local del correo electrónico que se utiliza como \"ruta de retorno\" "
-"en caso de que los correos se devuelvan, por ejemplo, \"devolucion\" en "
-"\"devolucion@ejemplo.com\""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -5525,12 +5467,12 @@ msgstr "Tipo de actividad del correo electrónico"
 #: model:ir.model,name:mail.model_mail_blacklist
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Blacklist"
-msgstr "Exclusión del correo "
+msgstr "Lista de exclusión del correo "
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_blacklist
 msgid "Mail Blacklist mixin"
-msgstr "Mixin de exclusión de correos"
+msgstr "Mixin de la lista negra de correos"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -7922,7 +7864,7 @@ msgstr "Restablecer plantilla"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Resetting Your Password"
-msgstr "Restablecer su contraseña"
+msgstr "Reestablecer su contraseña"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -9850,13 +9792,6 @@ msgstr "Unidad de retraso"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
-msgid "Unknown"
-msgstr "Desconocido"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -10064,11 +9999,6 @@ msgstr "Utilizar plantilla"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
 msgstr "Usar la función pulsar para hablar"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Used In"
-msgstr "Se utiliza en"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10825,13 +10755,6 @@ msgid "Your name"
 msgstr "Su nombre"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
-msgid "[%(name)s] (no email address)"
-msgstr "[%(name)s] (sin dirección de correo electrónico)"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -11033,26 +10956,6 @@ msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
 "por ejemplo:  \"Bienvenido a MiEmpresa\" o \"Gusto en conocerlo, {{ "
 "object.name }}\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"bounce\""
-msgstr "Por ejemplo, \"devolucion\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"catchall\""
-msgstr "Por ejemplo, \"catchall\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"mycompany.com\""
-msgstr "Por ejemplo, \"miempresa.com\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"notifications\""
-msgstr "Por ejemplo, \"notificaciones\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

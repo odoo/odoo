@@ -15,8 +15,6 @@ const modifierFields = [
     'originalSrc',
     'resizeWidth',
     'aspectRatio',
-    "bgSrc",
-    "mimetypeBeforeConversion",
 ];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
@@ -600,7 +598,7 @@ export function getDataURLBinarySize(dataURL) {
     return dataURL.split(',')[1].length / 4 * 3;
 }
 
-export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
+export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields, 'aspectRatio'];
 
 export default {
     applyModifications,

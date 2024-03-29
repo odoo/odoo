@@ -1,34 +1,27 @@
-# Amazon Payment Services
+# Amazon payment Services
 
-## Technical details
+## Implementation details
 
-API: [Redirection API](https://paymentservices-reference.payfort.com/docs/api/build/index.html#redirection)
-
-This module integrates Amazon Payment Services using the generic payment with redirection flow based
-on form submission provided by the `payment` module.
-
-## Supported features
+### Supported features
 
 - Payment with redirection flow
-- Webhook notifications
+- Payment by several global and local credit
+  [cards](https://paymentservices.amazon.com/docs/EN/24a.html).
+- [Webhook](https://paymentservices-reference.payfort.com/docs/api/build/index.html#transaction-feedback)
 
-## Not implemented features
+### API and gateway
 
-- [Tokenization with or without payment](https://paymentservices-reference.payfort.com/docs/api/build/index.html#safe-tokenization)
+We choose to integrate with the
+[Redirection](https://paymentservices-reference.payfort.com/docs/api/build/index.html#redirection)
+API as it is the gateway that covers the best our needs, out of the three that Amazon Payment
+Services offers as of July 2022. See the task's dev notes for the details on the other gateways.
 
-## Module history
+## Merge details
 
-- `16.0`
-  - The first version of the module is merged. odoo/odoo#95860
+The first version of the module was specified in task
+[2802678](https://www.odoo.com/web#id=2802678&model=project.task) and merged with PR odoo/odoo#95860
+in `saas-15.5`.
 
 ## Testing instructions
 
 https://paymentservices.amazon.com/docs/EN/12.html
-
-### VISA
-
-**Card Number**: `4111111111111111`
-
-**Expiry Date**: any date in the future
-
-**CVC Code**: any

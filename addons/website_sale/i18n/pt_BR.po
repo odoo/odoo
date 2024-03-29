@@ -1028,8 +1028,17 @@ msgstr "Pode publicar"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "You can't use a video as the product's main image."
-msgstr "Não é possível usar um vídeo como imagem principal do produto."
+msgid "Can not resequence a video at first position."
+msgstr "Não é possível ressequenciar um vídeo na primeira posição."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Can not resequence embedded image/video with a non compatible image."
+msgstr ""
+"Não é possível ressequenciar um vídeo/imagem incorporado com uma imagem não "
+"compatível."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4680,11 +4689,6 @@ msgstr "Vendas do e-Commerce"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "Loja do e-Commerce"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
-msgid "eCommerce cart"
-msgstr "Carrinho do e-Commerce"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

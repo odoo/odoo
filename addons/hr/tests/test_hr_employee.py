@@ -21,28 +21,6 @@ class TestHrEmployee(TestHrCommon):
             'image_1920': False
         })
 
-    def test_employee_smart_button_multi_company(self):
-        partner = self.env['res.partner'].create({'name': 'Partner Test'})
-        company_A = self.env['res.company'].create({'name': 'company_A'})
-        company_B = self.env['res.company'].create({'name': 'company_B'})
-        self.env['hr.employee'].create({
-            'name': 'employee_A',
-            'work_contact_id': partner.id,
-            'company_id': company_A.id,
-        })
-        self.env['hr.employee'].create({
-            'name': 'employee_B',
-            'work_contact_id': partner.id,
-            'company_id': company_B.id
-        })
-
-        partner.with_company(company_A)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 1)
-        partner.with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 1)
-        partner.with_company(company_A).with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 2)
-
     def test_employee_linked_partner(self):
         user_partner = self.user_without_image.partner_id
         work_contact = self.employee_without_image.work_contact_id
@@ -264,23 +242,3 @@ class TestHrEmployee(TestHrCommon):
         # change user back -> check that there is no company error
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
-
-    def test_avatar(self):
-        # Check simple employee has a generated image (initials)
-        employee_georgette = self.env['hr.employee'].create({'name': 'Georgette Pudubec'})
-        self.assertTrue(employee_georgette.image_1920)
-        self.assertTrue(employee_georgette.avatar_1920)
-
-        self.assertTrue(employee_georgette.work_contact_id)
-        self.assertTrue(employee_georgette.work_contact_id.image_1920)
-        self.assertTrue(employee_georgette.work_contact_id.avatar_1920)
-
-        # Check user has a generate image
-        user_norbert = self.env['res.users'].create({'name': 'Norbert Comidofisse', 'login': 'Norbert6870'})
-        self.assertTrue(user_norbert.image_1920)
-        self.assertTrue(user_norbert.avatar_1920)
-
-        # Check that linked employee got user image
-        employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
-        self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
-        self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)

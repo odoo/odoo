@@ -18,7 +18,7 @@ patch(OrderWidget.prototype, {
             return super.buttonToShow;
         }
 
-        if (order.amount_total === 0 && !isNoLine && mode !== "each") {
+        if (order.amount_total === 0 && !isNoLine) {
             return { label: _t("Order"), disabled: false };
         }
 

@@ -5,15 +5,14 @@
 # Translators:
 # Wil Odoo, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-08 07:29+0000\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +25,7 @@ msgstr ""
 #: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
 #, python-format
 msgid "%s is not a valid year."
-msgstr "%snení platný rok."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -36,13 +35,18 @@ msgid ""
 "'%s' is not a valid period. Supported formats are \"21/12/2022\", "
 "\"Q1/2022\", \"12/2022\", and \"2022\"."
 msgstr ""
-"'%s' není platnou periodou. Podporované formáty jsou \"21/12/2022\", "
-"\"Q1/2022\", \"12/2022\" a \"2022\"."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_account_account
 msgid "Account"
 msgstr "Účet"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "Account type."
+msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -54,28 +58,36 @@ msgstr "Společnosti"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total balance for the specified account(s) and period."
-msgstr "Získat celkový zůstatek pro zadaný účet (účty) a období."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total credit for the specified account(s) and period."
-msgstr "Získat celkový kredit pro zadaný účet (účty) a období."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Get the total debit for the specified account(s) and period."
-msgstr "Získat celkový debet pro zadaný účet (účty) a období."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 #, python-format
 msgid "Journal items for account prefix %s"
-msgstr "Položky deníku pro předčíslí účtu %s"
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "Reference date."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -83,10 +95,6 @@ msgstr "Položky deníku pro předčíslí účtu %s"
 #, python-format
 msgid "Returns the account ids of a given group."
 msgstr ""
-"Vrátí id účtů dané skupiny.\n"
-"skupina\n"
-"\n"
-"Může se v Odoo používat buď na: - Označení přístupových skupin - Seskupování záznamů - Číselníků skupin pro různé datasety"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -94,7 +102,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Returns the ending date of the fiscal year encompassing the provided date."
-msgstr "Vrací datum konce fiskálního roku zahrnující zadané datum."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -102,7 +110,7 @@ msgstr "Vrací datum konce fiskálního roku zahrnující zadané datum."
 #, python-format
 msgid ""
 "Returns the starting date of the fiscal year encompassing the provided date."
-msgstr "Vrací počáteční datum fiskálního roku zahrnující zadané datum."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -116,28 +124,21 @@ msgstr "Zobrazit záznamy"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Set to TRUE to include unposted entries."
-msgstr "Nastavte na hodnotu TRUE pro zahrnutí nezveřejněných záznamů."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "The account type (income, expense, asset_current,...)."
-msgstr "Typ účtu (výnosy, náklady, aktuální_majetek,...)."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_datasource.js:0
 #, python-format
 msgid "The company fiscal year could not be found."
-msgstr "Fiskální rok společnosti se nepodařilo zjistit."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company to target (Advanced)."
-msgstr "Společnost, na kterou se zaměřit (\"Pokročilé\")."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -145,7 +146,7 @@ msgstr "Společnost, na kterou se zaměřit (\"Pokročilé\")."
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The company."
-msgstr "Společnost."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -155,33 +156,17 @@ msgid ""
 "The date range. Supported formats are \"21/12/2022\", \"Q1/2022\", "
 "\"12/2022\", and \"2022\"."
 msgstr ""
-"Rozsah data. Podporované formáty jsou \"21/12/2022\", \"Q1/2022\", "
-"\"12/2022\" a \"2022\"."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "The day from which to extract the fiscal year end."
-msgstr "Den, od kterého se vybírá konec fiskálního roku."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "The day from which to extract the fiscal year start."
-msgstr "Den, od kterého se vybírá počátek fiskálního roku."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "The prefix of the accounts."
-msgstr "Předčíslí účtů."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Year offset applied to date_range."
-msgstr "Posunutí roku aplikováno na date_range."
+msgstr ""

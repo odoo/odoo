@@ -76,7 +76,7 @@
                     <div id="title" class="oe_title">
                         <h2><field name="name" class="w-100"
                             placeholder="e.g. Time Off type (From validity start to validity end / no limit)"
-                            invisible="state != 'confirm'" readonly="True" force_save="True"/>
+                            invisible="state != 'confirm'" readonly="True"/>
                         <field name="name_validity" invisible="state == 'confirm'"/></h2>
                     </div>
                     <group>
@@ -121,10 +121,10 @@
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="0"/>
+                                    readonly="state == 'validate'"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="0"/>
+                                    readonly="state == 'validate'"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>

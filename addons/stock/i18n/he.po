@@ -26,9 +26,9 @@
 # Martin Trigaux, 2023
 # hed shefer <hed@laylinetech.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
+# yael terner, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Roy Sayag, 2024
-# yael terner, 2024
 # 
 msgid ""
 msgstr ""
@@ -36,13 +36,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2024\n"
+"Last-Translator: Roy Sayag, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: stock
 #. odoo-python
@@ -1163,7 +1163,7 @@ msgstr "שייך"
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
 #, python-format
 msgid "Assign All"
-msgstr "שייך הכל "
+msgstr "שייך כל "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -3251,7 +3251,7 @@ msgstr "חזוי"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "Forecasted Date"
-msgstr " תאריך צפוי"
+msgstr "צפי תאריך"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -3304,7 +3304,7 @@ msgstr "מלאי חזוי"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__forecast_weight
 msgid "Forecasted Weight"
-msgstr "משקל חזוי"
+msgstr "תחזית משקל"
 
 #. module: stock
 #. odoo-javascript
@@ -4686,11 +4686,6 @@ msgstr "אצווה"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
-msgid "Lot Label Report"
 msgstr ""
 
 #. module: stock
@@ -7538,14 +7533,6 @@ msgstr ""
 "ובקטגוריות מוצרים"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_location.py:0
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "הודעת כלל"
@@ -8302,7 +8289,7 @@ msgstr "מיקום מלאי"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "מיקומי מלאי"
+msgstr "מיקום מלאי"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -10420,15 +10407,6 @@ msgid ""
 msgstr ""
 "אתה לא יכול להעביר את אותו תוכן החבילה יותר מפעם אחת באותו העברה או לפצל את "
 "אותה החבילה לשני מיקום."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You cannot pack products into the same package when they are from different "
-"transfers with different operation types."
-msgstr ""
 
 #. module: stock
 #. odoo-python

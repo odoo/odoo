@@ -22,7 +22,7 @@ class WebsiteSaleProductConfiguratorController(Controller):
 
         already_configured = bool(combination)
         if not force_dialog and not has_optional_products and (
-            not product.has_configurable_attributes or already_configured
+            product.product_variant_count <= 1 or already_configured
         ):
             # The modal is not shown if there are no optional products and
             # the main product either has no variants or is already configured

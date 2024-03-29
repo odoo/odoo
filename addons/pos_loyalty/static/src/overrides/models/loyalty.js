@@ -1354,9 +1354,8 @@ patch(Order.prototype, {
         for (const line of this.get_orderlines()) {
             if (line.get_product().id === product.id) {
                 available += line.get_quantity();
-            } else if (reward.reward_product_ids.includes(line.reward_product_id)) {
+            } else if (line.reward_product_id === product.id) {
                 if (line.reward_id == reward.id) {
-                    remainingPoints += line.points_cost;
                     claimed += line.get_quantity();
                 } else {
                     shouldCorrectRemainingPoints = true;
@@ -1365,7 +1364,7 @@ patch(Order.prototype, {
         }
         let freeQty;
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+            if (this._isRewardProductPartOfRules(reward, product)) {
                 // OPTIMIZATION: Pre-calculate the factors for each reward-product combination during the loading.
                 // For points not based on quantity, need to normalize the points to compute free quantity.
                 const appliedRulesIds = this.couponPointChanges[coupon_id].appliedRules;
@@ -1422,7 +1421,7 @@ patch(Order.prototype, {
     },
     _computePotentialFreeProductQty(reward, product, remainingPoints) {
         if (reward.program_id.trigger == "auto") {
-            if (this._isRewardProductPartOfRules(reward, product) && reward.program_id.applies_on !== 'future') {
+            if (this._isRewardProductPartOfRules(reward, product)) {
                 const line = this.get_orderlines().find(
                     (line) => line.reward_product_id === product.id
                 );

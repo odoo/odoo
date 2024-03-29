@@ -10916,12 +10916,12 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=1"]',
+            'img[data-src*="/web/image"][data-src$="&id=1&unique="]',
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id="]',
+            'img[data-src*="/web/image"][data-src$="&id=&unique="]',
             "image url should contain an empty id if partner_id is not set"
         );
     });

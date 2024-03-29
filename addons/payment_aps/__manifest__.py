@@ -6,7 +6,6 @@
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "An Amazon payment provider covering the MENA region.",
-    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_aps_templates.xml',

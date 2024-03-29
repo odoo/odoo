@@ -58,8 +58,7 @@ export function useViewButtons(model, ref, options = {}) {
                 if (!_continue) {
                     return;
                 }
-                const closeDialog =
-                    (clickParams.close || clickParams.special) && env.dialogData?.close;
+                const closeDialog = (clickParams.close || clickParams.special) && env.closeDialog;
                 const params = getResParams();
                 const resId = params.resId;
                 const resIds = params.resIds || model.resIds;

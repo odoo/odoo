@@ -264,26 +264,3 @@ export function isInvoiceButtonChecked() {
         }
     ]
 }
-
-export function clickShipLaterButton() {
-    return [
-        {
-            content: 'click ship later button',
-            trigger: '.button:contains("Ship Later")',
-        },
-        {
-            content: 'click confirm button',
-            trigger: '.button.confirm',
-        },
-    ]
-}
-
-export function shippingLaterHighlighted(){
-    return [
-        {
-            content: 'Shipping later button is highlighted',
-            trigger: '.button:contains("Ship Later").highlight',
-            isCheck: true
-        }
-    ]
-}

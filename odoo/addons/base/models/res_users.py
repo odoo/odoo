@@ -612,10 +612,6 @@ class Users(models.Model):
             if user.partner_id.company_id:
                 user.partner_id.company_id = user.company_id
             user.partner_id.active = user.active
-            # Generate employee initals as avatar for internal users without image
-            if not user.image_1920 and not user.share and user.name:
-                user.image_1920 = user.partner_id._avatar_generate_svg()
-
         return users
 
     def _apply_groups_to_existing_employees(self):
@@ -701,9 +697,6 @@ class Users(models.Model):
         default_user_template = self.env.ref('base.default_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
-        user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
-        if user_admin and user_admin in self:
-            raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
         self.env.registry.clear_cache()
         if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))

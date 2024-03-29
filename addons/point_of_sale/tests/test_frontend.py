@@ -48,6 +48,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('account.group_account_invoice').id),
             ],
         })
         cls.pos_admin = cls.env['res.users'].create({
@@ -527,7 +528,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'iface_tipproduct': True,
             'tip_product_id': self.tip.id,
-            'ship_later': True
         })
 
         # open a session, the /pos/ui controller will redirect to it

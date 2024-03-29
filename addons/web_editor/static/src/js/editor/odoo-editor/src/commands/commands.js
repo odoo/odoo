@@ -642,9 +642,7 @@ export const editorCommands = {
                             ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                             !isWhitespace(node.textContent) &&
                             !node.classList.contains('btn') &&
-                            !node.querySelector('font')) &&
-                            node.nodeName !== 'A' &&
-                            !(node.nodeName === 'SPAN' && node.style['fontSize'])) {
+                            !node.querySelector('font'))) {
                     // Node is a visible text or inline node without font nor a button:
                     // wrap it in a <font>.
                     const previous = node.previousSibling;
@@ -812,11 +810,6 @@ export const editorCommands = {
         const cells = [...closestElement(cell, 'tr').querySelectorAll('th, td')];
         const index = cells.findIndex(td => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
-        if (table.style.width) {
-            const tableRect = table.getBoundingClientRect();
-            const cellRect = cell.getBoundingClientRect();
-            table.style.width = tableRect.width - cellRect.width + 'px';
-        }
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach(td => td.remove());
         siblingCell ? setSelection(...startPos(siblingCell)) : editorCommands.deleteTable(editor, table);
     },

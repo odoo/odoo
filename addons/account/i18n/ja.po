@@ -4,9 +4,9 @@
 # 
 # Translators:
 # 764374359f7a865bd0df682e21e54552_335e00f <6548f6be8d222d7d28a3e8d58aa819d1_1128047>, 2023
-# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Wil Odoo, 2024
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Junko Augias, 2024
 # 
 msgid ""
@@ -3007,7 +3007,7 @@ msgstr "残高"
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #, python-format
 msgid "Balance Sheet"
-msgstr "貸借対照表"
+msgstr "バランスシート"
 
 #. module: account
 #. odoo-python
@@ -9470,13 +9470,6 @@ msgid "Never"
 msgstr "しない"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "New"
-msgstr "新規"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "新しい仕訳名"
@@ -10958,15 +10951,6 @@ msgstr "支払時に支払い方法の明細を定義して下さい。"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -11620,14 +11604,6 @@ msgstr "不整合に気づいたら、会計データ(税金、勘定科目な�
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "仕訳の付番を作り直す"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "Removed"
-msgstr "削除済"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -12973,12 +12949,12 @@ msgstr "ステップ完了！"
 #. module: account
 #: model:account.account,name:account.1_stock_out
 msgid "Stock Interim (Delivered)"
-msgstr "出庫済未請求在庫"
+msgstr "預け在庫（発送済）"
 
 #. module: account
 #: model:account.account,name:account.1_stock_in
 msgid "Stock Interim (Received)"
-msgstr "入荷済未請求在庫"
+msgstr "預かり在庫（入荷済）"
 
 #. module: account
 #: model:account.account,name:account.1_stock_valuation
@@ -13515,7 +13491,7 @@ msgstr "取引条件: %s"
 #: model:ir.model.fields,field_description:account.field_account_payment__narration
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Terms and Conditions"
-msgstr "諸条件"
+msgstr "利用規約"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
@@ -16287,13 +16263,6 @@ msgstr "すでに投稿された状態のムーブを作成することはでき
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "You cannot create recursive groups."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16316,15 +16285,6 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr "この仕訳は既に付番の番号を消費しており、連携の最後のものではないため、削除することはできません。その代わりに元に戻す方が良いでしょう。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"You cannot delete this report (%s), it is used by the accounting PDF "
-"generation engine."
-msgstr ""
 
 #. module: account
 #. odoo-python

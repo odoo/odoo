@@ -129,7 +129,7 @@ class Binary(http.Controller):
                 elif js and bundle.javascripts:
                     attachment = bundle.js()
             except ValueError as e:
-                _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)
+                _logger.error(e.args[0])
                 raise request.not_found() from e
         if not attachment:
             raise request.not_found()

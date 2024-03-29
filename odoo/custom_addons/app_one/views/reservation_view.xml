@@ -1,0 +1,26 @@
+<odoo>
+    <record id="reservation_view_tree" model="ir.ui.view">
+        <field name="name">reservation tree</field>
+        <field name="model">reservation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nom" />
+                <field name="salle_id" />
+                <field name="date_debut" />
+                <field name="date_fin" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+    <record id="reservation_action" model="ir.actions.act_window">
+        <field name="name">Reservation Actions</field>
+        <field name="res_model">reservation</field>
+
+    </record>
+    <menuitem
+        id="reservation_root_item"
+        name="Reservations"
+        parent = "reservations"
+        action = "reservation_action"
+    />
+</odoo>

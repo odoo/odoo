@@ -9,11 +9,10 @@ import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_erro
 import { _t } from "@web/core/l10n/translation";
 
 function rpcErrorHandler(env, error, originalError) {
-    const rpcError = error instanceof RPCError ? error : (originalError instanceof RPCError ? originalError : null);
-    if (rpcError) {
-        const { message, data } = rpcError;
-        if (odooExceptionTitleMap.has(rpcError.exceptionName)) {
-            const title = odooExceptionTitleMap.get(rpcError.exceptionName).toString();
+    if (error instanceof RPCError) {
+        const { message, data } = error;
+        if (odooExceptionTitleMap.has(error.exceptionName)) {
+            const title = odooExceptionTitleMap.get(error.exceptionName).toString();
             env.services.popup.add(ErrorPopup, { title, body: data.message });
         } else {
             env.services.popup.add(ErrorTracebackPopup, {

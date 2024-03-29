@@ -25,7 +25,9 @@ export function unhideConditionalElements() {
     }
 }
 
-export function setUtmsHtmlDataset() {
+document.addEventListener('DOMContentLoaded', () => {
+    // Transfer cookie/session data as HTML element's attributes so that CSS
+    // selectors can be based on them.
     const htmlEl = document.documentElement;
     const cookieNamesToDataNames = {
         'utm_source': 'utmSource',
@@ -39,17 +41,11 @@ export function setUtmsHtmlDataset() {
             htmlEl.dataset[dsName] = cookie.replace(/(^["']|["']$)/g, '');
         }
     }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Transfer cookie/session data as HTML element's attributes so that CSS
-    // selectors can be based on them.
-    setUtmsHtmlDataset();
-    const htmlEl = document.documentElement;
     const country = session.geoip_country_code;
     if (country) {
         htmlEl.dataset.country = country;
     }
+
     htmlEl.dataset.logged = !session.is_website_user;
 
     unhideConditionalElements();

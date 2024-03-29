@@ -1954,8 +1954,6 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
-        if property_name and field.type != 'property':
-            warnings.warn(f"Ignore the {property_name!r} part of {aggregate_spec!r}, this notation is reserved for the Property field")
 
         sql_field = self._field_to_sql(self._table, access_fname, query)
         sql_expr = READ_GROUP_AGGREGATE[func](self._table, sql_field)
@@ -6270,16 +6268,11 @@ class BaseModel(metaclass=MetaModel):
             records.sorted(key=lambda r: r.name)
         """
         if key is None:
-            if any(self._ids):
-                ids = self.search([('id', 'in', self.ids)])._ids
-            else:  # Don't support new ids because search() doesn't work on new records
-                ids = self._ids
-            ids = tuple(reversed(ids)) if reverse else ids
-        else:
-            if isinstance(key, str):
-                key = itemgetter(key)
-            ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+            recs = self.search([('id', 'in', self.ids)])
+            return self.browse(reversed(recs._ids)) if reverse else recs
+        if isinstance(key, str):
+            key = itemgetter(key)
+        return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
 
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """

@@ -12,7 +12,6 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
-# Lancelot Semal, 2024
 # Will Sensors, 2024
 # 
 msgid ""
@@ -109,8 +108,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in (\"draft\", \"sent\") and \"Piedāvājumu - %s\" % "
-"(object.name)) or \"Pasūtījumu - %s\" % (object.name)"
+"(object.state in (\"draft\", \"sent\") un \"Quotation - %s\" % "
+"(object.name)) vai \"Order - %s\" % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -724,14 +723,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
-"<i class=\"fa fa-comment\"/> Sazinieties ar mums, lai saņemtu jaunu "
-"piedāvājumu."
+msgstr "<i class=\"fa fa-comment\"/> Sazinieties ar mums par jauno piedāvājumu."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr "<i class=\"fa fa-comment\"/> Atsauksme"
+msgstr "<i class=\"fa fa-comment\"/> Atsauksme vai atbilde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -749,11 +746,6 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> Autorizēts"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Apmaksāts"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -791,7 +783,7 @@ msgid ""
 "                    Locked"
 msgstr ""
 "<i class=\"fa fa-lock\"/>\n"
-"                    Slēgts"
+"                    Bloķēts"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -806,7 +798,7 @@ msgstr "<i class=\"fa fa-times\"/> Atcelt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr "<small class=\"text-muted\">Jūsu kontakts</small>"
+msgstr "<small class=\"text-muted\">Jūsu kontaktinformācija</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -819,7 +811,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Klienta pasūtījums #</span>\n"
+"<span class=\"d-none d-md-inline\">Pārdošanas pasūtījums #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
@@ -854,7 +846,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr "<span>Apstprināja:</span>"
+msgstr "<span>Apsitprināja:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -916,7 +908,7 @@ msgstr "<strong class=\"mr16\">Starpsumma</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr "<strong>Derīguma termiņš:</strong><br/>"
+msgstr "<strong>Derīguma termiņš beidzas:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1384,7 +1376,7 @@ msgstr "Bloķēšanas ziņa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Pamata saturs ir tāds pats kā veidnē"
+msgstr "Ķermeņa saturs ir tāds pats kā veidnē"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1407,7 +1399,7 @@ msgstr "Veicot šo <u>pirmo iemaksu</u>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying this proposal, I agree to the following terms:"
-msgstr "Apmaksājot šo piedāvājumu, es piekrītu šādiem noteikumiem:"
+msgstr "Apmaksājot šo priekšlikumu, es piekrītu šādiem noteikumiem:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1662,7 +1654,7 @@ msgstr "Konsolidēti rēķini"
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
-msgstr "Kontakts"
+msgstr "Kontaktpersona"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
@@ -2029,7 +2021,7 @@ msgstr "Depozīts"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Depozīta produkts"
+msgstr "Deposit Product"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -2237,8 +2229,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Priekšapmaksas rēķinu izveido, kad veido rēķinu no klienta pasūtījuma. Tie "
-"nekopējas, kad dublē kienta pasūtījumu."
+"Down payments are made when creating invoices from a sales order. They are "
+"not copied when duplicating a sales order."
 
 #. module: sale
 #. odoo-python
@@ -2377,8 +2369,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Šī atskaite attēlo klientam piestādīto rēķinu summu. Ja vēlas personalizēt "
-"atskaiti, var izmantot meklētāja filtrus."
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2418,12 +2411,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "Saņemt brīdinājumus par produktiem vai klientiem"
+msgstr "Get warnings in orders for products or customers"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr "Vispārēja atlaide"
+msgstr "Globālā atlaide"
 
 #. module: sale
 #. odoo-javascript
@@ -2452,12 +2445,12 @@ msgstr "Grupēt pēc"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr "Aktīva cenu lapa"
+msgstr "Ir aktīvs cenrādis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr "Apstiprināts pasūtījums"
+msgstr "Ir apstiprināts pasūtījums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2555,7 +2548,7 @@ msgstr "Importēt veidni produktiem"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr "Pasūtījumā"
+msgstr "Iepirkšanas Pasūtījums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5263,7 +5256,7 @@ msgstr "Šodienas aktivitātes"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr "Kopā"
+msgstr "Summa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
@@ -5762,5 +5755,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
+"{{ object.company_id.name }} {{ object.type_name }} Atcelts (Ref {{ "
 "object.name or 'n/a' }})"

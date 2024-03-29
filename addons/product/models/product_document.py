@@ -1,8 +1,7 @@
 
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 
 
 class ProductDocument(models.Model):
@@ -20,16 +19,6 @@ class ProductDocument(models.Model):
         ondelete='cascade')
 
     active = fields.Boolean(default=True)
-
-    @api.onchange('url')
-    def _onchange_url(self):
-        for attachment in self:
-            if attachment.type == 'url' and attachment.url and\
-                not attachment.url.startswith(('https://', 'http://', 'ftp://')):
-                raise ValidationError(_(
-                    "Please enter a valid URL.\nExample: https://www.odoo.com\n\nInvalid URL: %s",
-                    attachment.url
-                ))
 
     #=== CRUD METHODS ===#
 

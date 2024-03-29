@@ -110,9 +110,6 @@
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
             </tree>
-            <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
-                <attribute name="widget">many2one</attribute>
-            </xpath>
             <field name="user_ids" position="replace">
                 <field name="portal_user_names" string="Assignees"/>
             </field>
@@ -204,7 +201,7 @@
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" invisible="state in ['1_done', '1_canceled']" decoration-danger="date_deadline &lt; current_date" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                    <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
+                                    <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
                                             invisible="project_id or project_id != id"/>

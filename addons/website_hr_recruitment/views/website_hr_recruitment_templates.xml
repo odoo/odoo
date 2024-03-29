@@ -60,9 +60,9 @@
                                                 <h3 t-field="job.name"/>
                                                 <span t-if="not job.website_published" class="badge bg-danger mb8 p-2">unpublished</span>
                                             </div>
-                                            <h5 t-if="job.no_of_recruitment >= 3" class="text-reset">
-                                                <span t-field="job.no_of_recruitment"/> open positions
-                                            </h5>
+                                            <h5 t-if="job.no_of_recruitment >= 3"
+                                                class="text-reset"
+                                                t-out="'%s open positions' % job.no_of_recruitment"/>
                                             <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                             <div class="oe_empty text-muted mb16"
                                                  t-field="job.description"
@@ -323,15 +323,12 @@
                             <span class="text-muted small">Job</span>
                             <h6 t-field="job.name"/>
                         </div>
-                        <div class="d-flex flex-column align-items-baseline">
+                        <div t-if="job.address_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Location</span>
-                            <h6 t-if="job.address_id" t-field="job.address_id" t-options='{
-                                "widget": "contact",
+                            <h6 t-field="job.address_id" t-options='{
                                 "fields": ["city"],
-                                "no_tag_br": True,
-                                "no_marker": True
+                                "no_tag_br": True
                             }'/>
-                            <h6 t-else="">Remote</h6>
                         </div>
                         <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Department</span>

@@ -16,9 +16,10 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2023
 # Netta Waizer, 2023
 # NoaFarkash, 2023
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Roy Sayag, 2023
 # Moshe Flam <pashute@gmail.com>, 2023
 # MichaelHadar, 2023
+# Yihya Hugirat <hugirat@gmail.com>, 2023
 # Ha Ketem <haketem@gmail.com>, 2023
 # yacov mosbacher <ymosba@gmail.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
@@ -26,24 +27,23 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # hed shefer <hed@laylinetech.com>, 2023
 # yael terner, 2023
-# Martin Trigaux, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
-# Roy Sayag, 2024
-# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-21 08:38+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2024\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -74,14 +74,6 @@ msgstr "החזר כספי"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
 msgstr "השתמש במדפסת המחוברת לקופסת IoT"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#, python-format
-msgid "% Disc"
-msgstr "%הנחה"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1052,13 +1044,6 @@ msgid "Bank Statement Line"
 msgstr "שורת דף בנק"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Barcode"
-msgstr "ברקוד"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "מונחי ברקוד"
@@ -1080,13 +1065,6 @@ msgstr "סורק ברקוד"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Scanner/Card Reader"
 msgstr "סורק ברקודים או קורא כרטיסים"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Base"
-msgstr "בסיס"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1471,13 +1449,6 @@ msgid ""
 msgstr ""
 "בחר במעמד פיסקלי מסוים בהזמנה בהתאם לסוג הלקוח (פטור ממס, במקום לעומת טייק "
 "אווי, וכו')."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "City"
-msgstr "עיר"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2518,13 +2489,6 @@ msgstr "משקל אלקטרוני"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Email"
-msgstr "דוא\"ל"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 #, python-format
 msgid "Email sent."
@@ -2606,6 +2570,13 @@ msgstr ""
 #, python-format
 msgid "Error: no internet connection."
 msgstr "שגיאה: אין חיבור אינטרנט"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "ExVAT"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2910,20 +2881,6 @@ msgid "Header"
 msgstr "כותרת עליונה"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
-#, python-format
-msgid "Hide Category Images"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
-#, python-format
-msgid "Hide Product Images"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
 msgstr "הסתר שימוש במסוף תשלום"
@@ -3171,14 +3128,11 @@ msgid "Invoice payment for %s (%s) using %s"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-#, python-format
 msgid "Invoiced"
 msgstr "חויב"
 
@@ -3666,13 +3620,6 @@ msgid "Misc"
 msgstr "שונות"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Mobile"
-msgstr "נייד"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
@@ -3706,13 +3653,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Multi Employees per Session"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#, python-format
-msgid "Multiple Invoiced Orders Selected"
 msgstr ""
 
 #. module: point_of_sale
@@ -3814,6 +3754,11 @@ msgstr ""
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "מתקן לעיתונים"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "הפעילות הבאה ביומן"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4089,7 +4034,6 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Only administrators can edit receipt headers and footers"
@@ -4701,13 +4645,6 @@ msgid ""
 msgstr "האדם המשתמש בקופה.יכול להיות מחליף, עובד זמני או מתלמד."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Phone"
-msgstr "טלפון"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product categories are available"
 msgstr "בחירת קטגוריות מוצרים זמינות"
@@ -5244,8 +5181,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #, python-format
 msgid "Price"
 msgstr "מחיר"
@@ -5271,8 +5206,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 #, python-format
-msgid "Price excl. Tax:"
-msgstr ""
+msgid "Price excl. VAT:"
+msgstr "מחיר לא כולל מס"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
@@ -5605,14 +5540,6 @@ msgstr "אזהרת פרוקסי"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#, python-format
-msgid "Qty"
-msgstr "כמות"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__qty
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5633,6 +5560,11 @@ msgstr "סיבה"
 #, python-format
 msgid "REFUNDED:"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
+msgid "Ratings"
+msgstr "דירוגים"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6441,20 +6373,6 @@ msgid "Shopping cart"
 msgstr "עגלת קניות"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
-#, python-format
-msgid "Show Category Images"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
-#, python-format
-msgid "Show Product Images"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show checkout to customers through a second display"
 msgstr ""
@@ -6673,13 +6591,6 @@ msgid "Stock should be updated at closing"
 msgstr "יש לעדכן מלאי בסגירה"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Street"
-msgstr "רחוב"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Stripe"
 msgstr "Stripe"
@@ -6774,20 +6685,12 @@ msgstr "שגיאת סנכרון"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #, python-format
-msgid "TAX%"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
 msgid "TOTAL"
 msgstr "סה\"כ"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/fiscal_position_button/fiscal_position_button.js:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: model:ir.model,name:point_of_sale.model_account_tax
 #, python-format
 msgid "Tax"
@@ -7622,7 +7525,7 @@ msgstr "סה\"כ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
-msgid "Total (Tax excluded)"
+msgid "Total (VAT excluded)"
 msgstr ""
 
 #. module: point_of_sale
@@ -7675,8 +7578,8 @@ msgstr "מחיר כולל"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_info_popup/product_info_popup.xml:0
 #, python-format
-msgid "Total Price excl. Tax:"
-msgstr ""
+msgid "Total Price excl. VAT:"
+msgstr "מחיר כולל ללא מס"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
@@ -7939,6 +7842,20 @@ msgstr "מזהה ייחודי גלובלי"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "VAT"
+msgstr "ח.פ / ע.מ"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "VAT%"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #, python-format
@@ -8190,15 +8107,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#, python-format
-msgid ""
-"You have selected orderlines from multiple invoiced orders. To proceed "
-"refund, please select orderlines from the same invoiced order."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #, python-format
 msgid "You have to round your payments lines. is not rounded."
@@ -8279,13 +8187,6 @@ msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
-#, python-format
-msgid "Zip"
-msgstr "מיקוד"
 
 #. module: point_of_sale
 #. odoo-javascript

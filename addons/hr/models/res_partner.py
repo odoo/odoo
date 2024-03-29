@@ -14,18 +14,17 @@ class Partner(models.Model):
 
     def _compute_employees_count(self):
         for partner in self:
-            partner.employees_count = len(partner.employee_ids.filtered(lambda e: e.company_id in self.env.companies))
+            partner.employees_count = len(partner.employee_ids)
 
     def action_open_employees(self):
         self.ensure_one()
-        if self.employees_count > 1:
+        if len(self.employee_ids) > 1:
             return {
                 'name': _('Related Employees'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'hr.employee',
-                'view_mode': 'kanban',
-                'domain': [('id', 'in', self.employee_ids.ids),
-                           ('company_id', 'in', self.env.companies.ids)],
+                'view_mode': 'form',
+                'domain': [('id', 'in', self.employee_ids.ids)],
             }
         return {
             'name': _('Employee'),

@@ -6,8 +6,8 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # Wil Odoo, 2024
-# Yazi Tian, 2024
 # Chloe Wang, 2024
+# Yazi Tian, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # 
@@ -2462,7 +2462,7 @@ msgstr "通过此仓库的默认路线"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr "设置一个最小库存规则，ERP 会依据规则自动创建报价单或确认制造单，以满足最小库存补给量."
+msgstr "设置一个最小库存规则，so ERP 会依据规则自动创建报价单或确认制造单，以满足最小库存补给量."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -4717,11 +4717,6 @@ msgstr "批次"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "自动打印的批次标签格式"
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
-msgid "Lot Label Report"
-msgstr "批次标签报告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -7575,14 +7570,6 @@ msgid ""
 msgstr "将会为这些补充仓库创建路线，而且您可以在产品和产品类别选择它们"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_location.py:0
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr "规则%s属于%s，而路径属于%s。"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "规则消息"
@@ -10240,7 +10227,7 @@ msgstr ""
 "您可以在这里定义贯穿于整个仓库的主要路线，\n"
 "与此同时这也决定了产品的流向。\n"
 "这些路径可以被设置在产品、产品类别上，\n"
-"或者应用于补货和销售订单上。"
+" 或者应用于补货和销售订单上。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -10423,15 +10410,6 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr "您不能在同一调拨中多次调拨同一包裹内容，或将同一包裹拆分到两个位置。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You cannot pack products into the same package when they are from different "
-"transfers with different operation types."
-msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10887,7 +10865,7 @@ msgstr "stock.putaway.rule"
 msgid ""
 "the warehouse to consider for the route selection on the next procurement "
 "(if any)."
-msgstr "下次补货（如果有的话）时考虑路线选择的仓库。"
+msgstr "仓库在下一次采购（如有）时考虑路线选择。"
 
 #. module: stock
 #. odoo-javascript

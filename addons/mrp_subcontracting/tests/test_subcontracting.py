@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from freezegun import freeze_time
-
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
@@ -22,43 +20,6 @@ class TestSubcontractingBasic(TransactionCase):
         company2 = self.env['res.company'].create({'name': 'Test Company'})
         self.assertTrue(company2.subcontracting_location_id)
         self.assertTrue(self.env.company.subcontracting_location_id != company2.subcontracting_location_id)
-
-    def test_duplicating_warehouses_recreates_their_routes_and_operation_types(self):
-        """ Duplicating a warehouse should result in the creation of new routes and operation types.
-        Not reusing the existing routes and operation types"""
-        wh_original = self.env['stock.warehouse'].search([], limit=1)
-        wh_copy = wh_original.copy(default={'name': 'Dummy Warehouse (copy)', 'code': 'Dummy'})
-
-        # Check if warehouse routes got RECREATED (instead of reused)
-        route_types = [
-            "route_ids",
-            "pbm_route_id",
-            "subcontracting_route_id",
-            "crossdock_route_id",
-            "reception_route_id",
-            "delivery_route_id"
-        ]
-        for route_type in route_types:
-            original_route_set = wh_original[route_type]
-            copy_route_set = wh_copy[route_type]
-            error_message = f"At least one {route_type} (route) got reused on duplication (should have been recreated)"
-            self.assertEqual(len(original_route_set & copy_route_set), 0, error_message)
-
-        # Check if warehouse operation types (picking.type) got RECREATED (instead of reused)
-        operation_types = [
-            "subcontracting_type_id",
-            "subcontracting_resupply_type_id",
-            "pick_type_id",
-            "pack_type_id",
-            "out_type_id",
-            "in_type_id",
-            "int_type_id"
-        ]
-        for operation_type in operation_types:
-            original_type_set = wh_original[operation_type]
-            copy_type_set = wh_copy[operation_type]
-            error_message = f"At least one {operation_type} (operation_type) got reused on duplication (should have been recreated)"
-            self.assertEqual(len(original_type_set & copy_type_set), 0, error_message)
 
 
 @tagged('post_install', '-at_install')
@@ -946,60 +907,6 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
 
-    @freeze_time('2024-01-01')
-    def test_bom_overview_availability(self):
-        # Create routes for components and the main product
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.finished.product_tmpl_id.id,
-            'partner_id': self.subcontractor_partner1.id,
-            'price': 1.0,
-            'delay': 10
-        })
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.comp1.product_tmpl_id.id,
-            'partner_id': self.subcontractor_partner1.id,
-            'price': 648.0,
-            'delay': 5
-        })
-        self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.comp2.product_tmpl_id.id,
-            'partner_id': self.subcontractor_partner1.id,
-            'price': 648.0,
-            'delay': 5
-        })
-
-        self.bom.produce_delay = 1
-        self.bom.days_to_prepare_mo = 3
-
-        # Add 4 units of each component to subcontractor's location
-        subcontractor_location = self.env.company.subcontracting_location_id
-        self.env['stock.quant']._update_available_quantity(self.comp1, subcontractor_location, 4)
-        self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
-
-        # Generate a report for 3 products: all products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
-
-        self.assertTrue(bom_data['lines']['components_available'])
-        for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'available')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
-        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
-
-        # Generate a report for 5 products: only 4 products should be ready for production
-        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
-
-        self.assertFalse(bom_data['lines']['components_available'])
-        for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
-        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
-        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
-        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
-        self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
-
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
@@ -1628,38 +1535,3 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         self.assertEqual(picking_receipt.state, 'done')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.env.ref('stock.stock_location_stock')), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.raw_material, self.subcontractor.property_stock_subcontractor, allow_negative=True), -quantity)
-
-    def test_bom_subcontracting_product_dynamic_attribute(self):
-        """
-            Test that the report BOM data is available for a product with an dynamic attribute
-            but without variant.
-        """
-        dynamic_attribute = self.env['product.attribute'].create({
-            'name': 'flavour',
-            'create_variant': 'dynamic',
-        })
-        value_1 = self.env['product.attribute.value'].create({
-            'name': 'Vanilla',
-            'attribute_id': dynamic_attribute.id,
-        })
-        value_2 = self.env['product.attribute.value'].create({
-            'name': 'Chocolate',
-            'attribute_id': dynamic_attribute.id,
-        })
-        product_template = self.env['product.template'].create({
-            'name': 'Cake',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'detailed_type': 'product',
-        })
-        self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': product_template.id,
-            'attribute_id': dynamic_attribute.id,
-            'value_ids': [Command.set([value_1.id, value_2.id])],
-        })
-        bom = self.env['mrp.bom'].create({
-            'product_tmpl_id': product_template.id,
-            'type': 'subcontract',
-            'subcontractor_ids': [Command.set([self.subcontractor.id])],
-        })
-        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id, searchVariant=False)
-        self.assertTrue(report_values)

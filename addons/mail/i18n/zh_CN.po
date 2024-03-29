@@ -6,10 +6,10 @@
 # 何彬 <vnsoft.he@gmail.com>, 2023
 # Chill Liao <chill421@qq.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# Chloe Wang, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -414,11 +414,6 @@ msgstr "<span class=\"d-block w-75 py-2\">按钮颜色</span>"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">标题颜色</span>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2081,11 +2076,6 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
-msgid "Companies using this domain as default for sending mails"
-msgstr "默认使用此域名发送邮件的公司"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__company_id
@@ -2660,15 +2650,6 @@ msgid "Default Values"
 msgstr "默认值"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
-msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
-"'notifications@example.com' to override all outgoing emails."
-msgstr ""
-"当不匹配外发服务器筛选器时的默认值。它可以是一个本地部分，例如'notifications'，也可以是完整的电子邮件地址，如'notifications@example.com'，用于覆盖所有外发电子邮件。"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "默认收件人"
@@ -2965,11 +2946,6 @@ msgstr "单据名称"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
 msgstr "文档：“"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Domain"
-msgstr "域"
 
 #. module: mail
 #. odoo-javascript
@@ -3328,15 +3304,6 @@ msgstr "邮件抄送"
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "EMail撰写向导"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
-#: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
-msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "电子邮件域名，例如 'odoo@example.com' 中的 'example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5226,21 +5193,6 @@ msgstr "本地服务器"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "基于本地部件的来件检测"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
-msgid ""
-"Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
-"'catchall@example.com'"
-msgstr "电子邮件的本地部分用于回复至以捕获答案，例如在'catchall@example.com'中的'catchall'。"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
-msgid ""
-"Local-part of email used for Return-Path used when emails bounce e.g. "
-"'bounce' in 'bounce@example.com'"
-msgstr ""
-"电子邮件的本地部分用于在电子邮件反弹时用作Return-Path的使用，例如在'bounce@example.com'中的'bounce'。"
 
 #. module: mail
 #. odoo-javascript
@@ -9524,13 +9476,6 @@ msgstr "延迟单位"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
-msgid "Unknown"
-msgstr "未知"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -9733,11 +9678,6 @@ msgstr "使用模版"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
 msgstr "使用一键通话功能"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Used In"
-msgstr "用于"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10458,13 +10398,6 @@ msgid "Your name"
 msgstr "您的名字"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
-msgid "[%(name)s] (no email address)"
-msgstr "[%(name)s] (没有邮件地址)"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10662,26 +10595,6 @@ msgstr "例如“欢迎电子邮件”"
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr "例如“欢迎来到我的公司”或“很高兴认识你，{{ object.name }}”"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"bounce\""
-msgstr "例如 \"bounce\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"catchall\""
-msgstr "例如 \"catchall\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"mycompany.com\""
-msgstr "例如 \"mycompany.com\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"notifications\""
-msgstr "e.g. \"通知\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

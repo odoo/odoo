@@ -59,7 +59,7 @@ class ormcache(object):
         self.method = method
         self.determine_key()
         lookup = decorator(self.lookup, method)
-        lookup.__cache__ = self
+        lookup.cache = self
         return lookup
 
     def add_value(self, *args, cache_value=None, **kwargs):
@@ -173,7 +173,7 @@ def log_ormcache_stats(sig=None, frame=None):
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
     model = bound_method.__self__
-    ormcache = bound_method.__cache__
+    ormcache = bound_method.cache
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter

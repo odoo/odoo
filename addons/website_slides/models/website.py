@@ -8,7 +8,7 @@ from odoo.addons.http_routing.models.ir_http import url_for
 class Website(models.Model):
     _inherit = "website"
 
-    website_slide_google_app_key = fields.Char('Google Doc Key', groups='base.group_system')
+    website_slide_google_app_key = fields.Char('Google Doc Key')
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()

@@ -36,15 +36,15 @@
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2023
 # Miku Laitinen <miku.laitinen@gmail.com>, 2023
 # Pekka Ikonen, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Tommi Rintala <tommi.rintala@gmail.com>, 2023
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Konsta Aavaranta, 2023
 # Joakim Weckman, 2024
 # Simo Suurla <simo@suurla.fi>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Konsta Aavaranta, 2024
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Konsta Aavaranta, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9761,13 +9761,6 @@ msgid "Never"
 msgstr "Ei koskaan"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "New"
-msgstr "Uusi"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "New Journal Name"
 msgstr "Uusi päiväkirjan nimi"
@@ -10634,7 +10627,7 @@ msgstr "Täsmäyttämättömiä maksuja"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Outstanding debits"
-msgstr "Avoimia laskuja"
+msgstr "Maksamatta olevat maksut"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11285,15 +11278,6 @@ msgstr "Luo uudet tilit tilikartta-valikosta."
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Määrittele maksutaparivi maksussasi."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -11960,14 +11944,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "Luo päiväkirjavientien sekvenssi uudelleen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "Removed"
-msgstr "Poistettu"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -14963,8 +14939,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
-"Lukitusta ajanjaksosta on vielä kirjaamattomia vientejä. Sinun pitäisi joko "
-"kirjata tai poistaa ne."
+"Lukitusta ajanjaksosta on vielä kirjaamattomia merkintöjä. Sinun pitäisi "
+"joko lähettää tai poistaa ne."
 
 #. module: account
 #. odoo-python
@@ -15828,12 +15804,12 @@ msgstr "Kirjaamatta"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr "Kirjaamattomia vientejä"
+msgstr "Kirjaamattomat viennit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Kirjaamattomia päiväkirjavientejä"
+msgstr "Kirjaamattomat päiväkirjaviennit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16890,13 +16866,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "You cannot create recursive groups."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16923,15 +16892,6 @@ msgid ""
 msgstr ""
 "Et voi poistaa tätä merkintää, koska se on jo kuluttanut järjestysnumeron "
 "eikä ole ketjun viimeinen. Todennäköisimmin sinun tulisi palauttaa se."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"You cannot delete this report (%s), it is used by the accounting PDF "
-"generation engine."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17661,7 +17621,7 @@ msgstr "avoimia tositteita"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
-msgstr "avoimia laskuja"
+msgstr "maksamatta olevat maksut"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form

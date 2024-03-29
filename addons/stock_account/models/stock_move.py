@@ -82,7 +82,7 @@ class StockMove(models.Model):
         for move_line in self.move_line_ids:
             if not move_line.picked:
                 continue
-            if move_line._should_exclude_for_valuation():
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
                 continue
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
                 res.add(move_line.id)
@@ -112,7 +112,7 @@ class StockMove(models.Model):
         for move_line in self.move_line_ids:
             if not move_line.picked:
                 continue
-            if move_line._should_exclude_for_valuation():
+            if move_line.owner_id and move_line.owner_id != move_line.company_id.partner_id:
                 continue
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
                 res |= move_line
@@ -551,14 +551,6 @@ class StockMove(models.Model):
             if analytic_line_vals:
                 move.analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(analytic_line_vals)
 
-    def _should_exclude_for_valuation(self):
-        """Determines if this move should be excluded from valuation based on its partner.
-        :return: True if the move's restrict_partner_id is different from the company's partner (indicating
-                it should be excluded from valuation), False otherwise.
-        """
-        self.ensure_one()
-        return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
-
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
@@ -566,7 +558,8 @@ class StockMove(models.Model):
         if self.product_id.type != 'product':
             # no stock valuation for consumable products
             return am_vals
-        if self._should_exclude_for_valuation():
+        if self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id:
+            # if the move isn't owned by the company, we don't make any valuation
             return am_vals
 
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False

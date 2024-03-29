@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2023
 # Dylan Kiss, 2023
-# Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -7779,7 +7779,7 @@ msgstr "Inkomende betaalmethodes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "Toevoegen aan analytische kosten"
+msgstr "Toevoegen aan analytische kostprijs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -9637,7 +9637,7 @@ msgstr "Maandelijks"
 #: model:ir.model.fields,field_description:account.field_account_move_send__move_ids
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 msgid "Move"
-msgstr "Factuur"
+msgstr "Verplaatsingen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -9719,7 +9719,9 @@ msgstr "Naam doorzoekbaar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Navigeer eenvoudig door rapporten en zie wat er achter de cijfers zit"
+msgstr ""
+"Navigeer gemakkelijk doorheen rapportages en zie wat er achter de cijfers "
+"zit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -9765,13 +9767,6 @@ msgstr "Netto"
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
 msgid "Never"
 msgstr "Nooit"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "New"
-msgstr "Nieuw"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -11301,17 +11296,6 @@ msgstr "Definieer een betaalmethoderegel op je betaling."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"De geselecteerde betaalmethode is niet beschikbaar voor deze betaling. "
-"Selecteer de betaalmethode opnieuw."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
@@ -11970,20 +11954,12 @@ msgid ""
 " This action is irreversible."
 msgstr ""
 "Laad boekhoudgegevens (belastingen, rekeningen...) opnieuw als je "
-"tegenstrijdigheden opmerkt. Deze actie is onomkeerbaar."
+"tegenstredigheden opmerkt. Deze actie is onomkeerbaar."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
 msgstr "Hernummer een reeks voor dit dagboek."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid "Removed"
-msgstr "Verwijderd"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rent
@@ -12216,7 +12192,7 @@ msgstr "Boekingen omkeren"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Tegenboeken en factuur aanmaken"
+msgstr "Terugboeken en factuur aanmaken"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -16980,13 +16956,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "You cannot create recursive groups."
-msgstr "Je kunt geen recursieve groepen maken."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -17016,15 +16985,6 @@ msgstr ""
 "Je kunt deze invoer niet verwijderen, omdat deze al een volgnummer heeft "
 "gebruikt en niet de laatste in de keten is. Waarschijnlijk moet je de "
 "boeking omdraaien."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"You cannot delete this report (%s), it is used by the accounting PDF "
-"generation engine."
-msgstr ""
 
 #. module: account
 #. odoo-python

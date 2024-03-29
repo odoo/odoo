@@ -15,7 +15,6 @@ from unittest.mock import patch
 
 from odoo import release
 from odoo.addons import __path__ as __addons_path__
-from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
@@ -78,39 +77,9 @@ class TestImportModule(odoo.tests.TransactionCase):
         files = [
             ('foo/__manifest__.py', b"foo")
         ]
-        error_message = "Error while importing module 'foo'"
-        with (
-            mute_logger("odoo.addons.base_import_module.models.ir_module"),
-            self.assertRaises(UserError, msg=error_message),
-        ):
-            self.import_zipfile(files)
-
-    def test_import_zip_invalid_data(self):
-        """Assert no data remains in the db if module import fails"""
-        files = [
-            ('foo/__manifest__.py', b"{'data': ['foo.xml', 'bar.xml']}"),
-            ('foo/foo.xml', b"""
-                <data>
-                    <record id="foo" model="res.partner">
-                        <field name="name">foo</field>
-                    </record>
-                </data>
-            """),
-            # typo in model to throw an error
-            ('foo/bar.xml', b"""
-                <data>
-                    <record id="bar" model="res.prtner">
-                        <field name="name">bar</field>
-                    </record>
-                </data>
-            """),
-        ]
-        with (
-            mute_logger("odoo.addons.base_import_module.models.ir_module"),
-            self.assertRaises(UserError),
-        ):
-            self.import_zipfile(files)
-        self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
+        with mute_logger("odoo.addons.base_import_module.models.ir_module"):
+            result = self.import_zipfile(files)
+        self.assertIn("Error while importing module 'foo'", result[0])
 
     def test_import_zip_data_not_in_manifest(self):
         """Assert a data file not mentioned in the manifest is not imported"""
@@ -146,9 +115,8 @@ class TestImportModule(odoo.tests.TransactionCase):
         ]
         with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
-            self.assertEqual(len(log_catcher.output), 2)
+            self.assertEqual(len(log_catcher.output), 1)
             self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
-            self.assertIn("Successfully imported module 'foo'", log_catcher.output[1])
             self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_extract_only_useful(self):

@@ -5,6 +5,7 @@
 # Translators:
 # Marek Pontus, 2023
 # Wanradt Koell <wanradt@gmail.com>, 2023
+# Birgit Vijar, 2023
 # Maidu Targama <m.targama@gmail.com>, 2023
 # Andre Roomet <andreroomet@gmail.com>, 2023
 # Patrick-Jordan Kiudorv, 2023
@@ -21,11 +22,10 @@
 # Katrin Kampura, 2023
 # Mihkel avalah, 2023
 # Peeter Mark, 2024
+# Martin Trigaux, 2024
+# Leaanika Randmets, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
 # Anna, 2024
-# Leaanika Randmets, 2024
-# Martin Trigaux, 2024
-# Birgit Vijar, 2024
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Birgit Vijar, 2024\n"
+"Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -416,11 +416,6 @@ msgstr "<span class=\"d-block w-75 py-2\">Nupu värv</span>"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">Päise värv</span>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2090,11 +2085,6 @@ msgid "Companies"
 msgstr "Ettevõtted"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
-msgid "Companies using this domain as default for sending mails"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__company_id
@@ -2614,7 +2604,7 @@ msgstr "Tere"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr "Hea saatja"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -2671,14 +2661,6 @@ msgid "Default Values"
 msgstr "Vaikeväärtused"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
-msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
-"'notifications@example.com' to override all outgoing emails."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "Vaikimisi saajad"
@@ -2694,7 +2676,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr "Vaikimisi kasutaja"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -2980,11 +2962,6 @@ msgid "Document: \""
 msgstr "Dokument: \""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Domain"
-msgstr "Domeen"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
@@ -3036,7 +3013,7 @@ msgstr "Laadi alla"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Download Files"
-msgstr "Lae failid alla"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3050,7 +3027,7 @@ msgstr "Laadi alla logid"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "Download:"
-msgstr "Lae alla:"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3219,7 +3196,7 @@ msgstr "E-posti must nimekiri"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_secondary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_secondary_color
 msgid "Email Button Color"
-msgstr "e-maili nupu värv"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -3345,15 +3322,6 @@ msgid "Email composition wizard"
 msgstr "E-maili koostamise juhend"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
-#: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
-msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
@@ -3432,7 +3400,7 @@ msgstr "Alusta"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Enter Full Screen"
-msgstr "Aktiveeri täisekraan"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3501,7 +3469,7 @@ msgstr "Erand"
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 #, python-format
 msgid "Exit Full Screen"
-msgstr "Välju täisekraanilt"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3773,12 +3741,12 @@ msgstr "Ainult jälgijad"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to add"
-msgstr "Lisa jälgijad"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Followers to remove"
-msgstr "Eemalda jälgijad"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -3902,14 +3870,14 @@ msgstr "Tulevased tegevused"
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF"
-msgstr "GIF"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "GIF Category"
-msgstr "GIF kategooria"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4762,7 +4730,7 @@ msgstr "Kutsu jälgijad"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #, python-format
 msgid "Invite a User"
-msgstr "Kutsu kasutaja"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4783,7 +4751,7 @@ msgstr "Kutsu kanalisse"
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 #, python-format
 msgid "Invite to Group Chat"
-msgstr "Kutsu grupi vestlusesse"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -4882,7 +4850,7 @@ msgstr "Saadab kasutaja videot"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr "jagab ekraani"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -5117,7 +5085,7 @@ msgstr "Viimati uuendatud"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__last_used
 msgid "Last Used"
-msgstr "Viimati kasutatud"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_seen_dt
@@ -5165,7 +5133,7 @@ msgstr "Lahku"
 #: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories.js:0
 #, python-format
 msgid "Leave Conversation"
-msgstr "Lahku vestlusest"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5204,7 +5172,7 @@ msgstr "Nimekiri praeguses kanalis olevates kasutajatest"
 #: code:addons/mail/static/src/core/common/thread.xml:0
 #, python-format
 msgid "Load More"
-msgstr "Lae rohkem"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5239,20 +5207,6 @@ msgstr "Kohalik server"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Lokaalne osa, mis põhineb sissetulevate tuvastamisel"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
-msgid ""
-"Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
-"'catchall@example.com'"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
-msgid ""
-"Local-part of email used for Return-Path used when emails bounce e.g. "
-"'bounce' in 'bounce@example.com'"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5313,7 +5267,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
 msgid "Logged in as %s"
-msgstr "Sisselogitud kui %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -5553,7 +5507,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/notification_item.xml:0
 #, python-format
 msgid "Mark As Read"
-msgstr "Märgi loetuks"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5595,7 +5549,7 @@ msgstr "Märgi tähistatuks"
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 #, python-format
 msgid "Mark as Unread"
-msgstr "Märgi mitteloetuks"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5751,7 +5705,7 @@ msgstr "Sõnumi salvestusnimi"
 #: model:ir.model,name:mail.model_mail_message_translation
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Message Translation"
-msgstr "Sõnumi tõlge"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__google_translate_api_key
@@ -5982,12 +5936,12 @@ msgstr "Vaigista"
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #, python-format
 msgid "Mute Channel"
-msgstr "Vaigista kanal"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
 msgid "Mute notifications until"
-msgstr "Vaigista teated kuni"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6160,7 +6114,7 @@ msgstr "Andmed puuduvad"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
 msgid "No activities."
-msgstr "Tegevused puuduvad."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6202,7 +6156,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 #, python-format
 msgid "No messages found"
-msgstr "Sõnumeid ei leitud"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6427,7 +6381,7 @@ msgstr "Teavitused on lubatud"
 #: code:addons/mail/static/src/core/common/notification_permission_service.js:0
 #, python-format
 msgid "Notifications blocked"
-msgstr "Teated blokeeritud."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -9551,13 +9505,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
-msgid "Unknown"
-msgstr "Tundmatu"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -9760,11 +9707,6 @@ msgstr "Kasuta malli"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
 msgstr "Kasuta push-to-talk funktsiooni"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Used In"
-msgstr "Kasutatud"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10474,13 +10416,6 @@ msgid "Your name"
 msgstr "Sinu nimi"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
-msgid "[%(name)s] (no email address)"
-msgstr ""
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10678,26 +10613,6 @@ msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
 "nt. \"Tere tulemast ettevõttesse!\" või \"Meeldiv tutvuda, {{ object.name "
 "}}\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"bounce\""
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"catchall\""
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"mycompany.com\""
-msgstr "nt. \"mycompany.com\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"notifications\""
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

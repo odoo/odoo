@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_join
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -48,10 +46,7 @@ class Product(models.Model):
     def _compute_product_website_url(self):
         for product in self:
             attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
-            url = product.product_tmpl_id.website_url
-            if attributes:
-                url = url_join(url, f"#attr={attributes}")
-            product.website_url = url
+            product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)
@@ -75,13 +70,22 @@ class Product(models.Model):
         This returns a list and not a recordset because the records might be
         from different models (template, variant and image).
 
-        It contains in this order: the main image of the variant (which will fall back on the main
-        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
+        It contains in this order: the main image of the variant (if set), the
+        Variant Extra Images, and the Template Extra Images.
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        template_images = list(self.product_tmpl_id.product_template_image_ids)
-        return [self] + variant_images + template_images
+        if self.image_variant_1920:
+            # if the main variant image is set, display it first
+            variant_images = [self] + variant_images
+        else:
+            # If the main variant image is empty, it will fallback to template
+            # image, in this case insert it after the other variant images, so
+            # that all variant images are first and all template images last.
+            variant_images = variant_images + [self]
+        # [1:] to remove the main image from the template, we only display
+        # the template extra images here
+        return variant_images + self.product_tmpl_id._get_images()[1:]
 
     def _get_combination_info_variant(self, **kwargs):
         """Return the variant info based on its combination.

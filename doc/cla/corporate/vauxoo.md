@@ -72,4 +72,3 @@ Andrea Geraldo myrna.andrea@vauxoo.com https://github.com/AndreaGeraldo
 Andrea Gidalti andreag@vauxoo.com  https://github.com/andreagidaltig
 German Loredo german@vauxoo.com https://github.com/xmglord 
 Antonio Aguilar antonio@vauxoo.com https://github.com/antonag32
-Christihan Laurel laurel@vauxoo.com https://github.com/CLaurelB

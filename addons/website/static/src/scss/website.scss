@@ -177,22 +177,18 @@ $-seen-urls: ();
     @include print-variable('custom-colors', $custom-colors);
 }
 
-@mixin body-image-bg-style() {
-    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
-    background-position: center;
-    background-attachment: fixed;
-    @if o-website-value('body-image-type') == 'pattern' {
-        background-size: auto;
-        background-repeat: repeat;
-    } @else {
-        background-size: cover;
-        background-repeat: no-repeat;
-    }
-};
-
 #wrapwrap {
     @if o-website-value('body-image') {
-        @include body-image-bg-style();
+        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+        background-position: center;
+        background-attachment: fixed;
+        @if o-website-value('body-image-type') == 'pattern' {
+            background-size: auto;
+            background-repeat: repeat;
+        } @else {
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
     }
 
     @if o-website-value('layout') != 'full' {
@@ -375,7 +371,7 @@ $-header-nav-link-height: $nav-link-height;
         font-size: o-website-value('header-font-size');
 
         .dropdown-menu, .btn {
-            font-size: inherit !important;
+            font-size: inherit;
         }
     }
 }
@@ -1403,11 +1399,7 @@ header {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
-                    @if o-website-value('body-image') {
-                        @include body-image-bg-style();
-                    } @else {
-                        background-color: $body-bg;
-                    }
+                    background-color: $body-bg;
                 }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
@@ -2438,7 +2430,7 @@ input[value*="data-oe-translation-initial-sha"] {
         display: inline-block;
         line-height: normal;
         white-space: pre-wrap;
-        isolation: isolate;
+        z-index: 1;
 
         > * {
             text-decoration: none;

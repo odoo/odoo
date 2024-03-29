@@ -85,7 +85,6 @@ export class ListDataSource extends OdooViewsDataSource {
                     spec[field.name] = {};
                     spec[field.currency_field] = {
                         fields: {
-                            ...spec[field.currency_field]?.fields,
                             name: {}, // currency code
                             symbol: {},
                             decimal_places: {},
@@ -96,12 +95,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 case "many2one":
                 case "many2many":
                 case "one2many":
-                    spec[field.name] = {
-                        fields: {
-                            display_name: {},
-                            ...spec[field.name]?.fields,
-                        },
-                    };
+                    spec[field.name] = { fields: { display_name: {} } };
                     break;
                 default:
                     spec[field.name] = field;

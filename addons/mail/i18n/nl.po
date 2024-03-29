@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Jolien De Paepe, 2024
 # Wil Odoo, 2024
+# Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
@@ -422,11 +422,6 @@ msgstr "<span class=\"d-block w-75 py-2\">Knopkleur</span>"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">Koptekstkleur</span>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2142,12 +2137,6 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
-msgid "Companies using this domain as default for sending mails"
-msgstr ""
-"Bedrijven die dit domein standaard gebruiken voor het verzenden van e-mails."
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__company_id
@@ -2731,18 +2720,6 @@ msgid "Default Values"
 msgstr "Standaardwaarden"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
-msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
-"'notifications@example.com' to override all outgoing emails."
-msgstr ""
-"Standaard wanneer het niet overeenkomt met uitgaande serverfilters. Kan "
-"zowel een lokaal deel zijn, bijvoorbeeld 'meldingen', als een volledig "
-"e-mailadres, bijvoorbeeld 'notifications@example.com', om alle uitgaande "
-"e-mails te overschrijven."
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "Standaard ontvangers"
@@ -3049,11 +3026,6 @@ msgstr "Documentnaam"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
 msgstr "Document: \""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Domain"
-msgstr "Domein"
 
 #. module: mail
 #. odoo-javascript
@@ -3424,15 +3396,6 @@ msgstr "E-mail cc"
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Wizard e-mail opstellen"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
-#: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
-msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-maildomein bijv. 'example.com' in 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5118,8 +5081,8 @@ msgstr "Origineel bewaren"
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
-"Bewaar een kopie van de inhoud van de e-mail indien e-mails worden "
-"verwijderd (enkel bulkmailing)"
+"Bewaar een kopie van de inhoud van de e)mail indien e-mails worden "
+"verwijderd (enkel mass mailing)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
@@ -5386,24 +5349,6 @@ msgstr "Lokale server"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Lokale deelgebaseerde inkomende detectie"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
-msgid ""
-"Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
-"'catchall@example.com'"
-msgstr ""
-"Lokaal-deel van e-mail gebruikt voor Reply-To om antwoorden op te vangen, "
-"bijvoorbeeld 'catchall' in 'catchall@example.com'"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
-msgid ""
-"Local-part of email used for Return-Path used when emails bounce e.g. "
-"'bounce' in 'bounce@example.com'"
-msgstr ""
-"Lokaal-deel van e-mail gebruikt voor Return-Path gebruikt wanneer e-mails "
-"terugkomen, bijvoorbeeld 'bounce' in 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -9823,13 +9768,6 @@ msgstr "Eenheid van vertraging"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
-msgid "Unknown"
-msgstr "Onbekend"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -10038,11 +9976,6 @@ msgstr "Sjabloon gebruiken"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
 msgstr "Gebruik de push-to-talk-functie"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Used In"
-msgstr "Gebruikt in"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10796,13 +10729,6 @@ msgid "Your name"
 msgstr "Je naam"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
-msgid "[%(name)s] (no email address)"
-msgstr "[%(name)s] (geen e-mailadres)"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
@@ -10864,7 +10790,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "door"
+msgstr "in"
 
 #. module: mail
 #. odoo-javascript
@@ -11004,26 +10930,6 @@ msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, {{ object.name }}\""
 msgstr ""
 "bijv. \"Welkom bij MyCompany\" of \"Aangenaam kennis te maken, {{ "
 "object.name }}\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"bounce\""
-msgstr "bijv. \"bounce\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"catchall\""
-msgstr "bijv. \"catchall\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"mycompany.com\""
-msgstr "bijv. \"mijnbedrijf.com\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"notifications\""
-msgstr "bijv. \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

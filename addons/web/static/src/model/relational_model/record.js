@@ -236,11 +236,6 @@ export class Record extends DataPoint {
         return this._setInvalidField(fieldName);
     }
 
-    resetFieldValidity(fieldName) {
-        this.dirty = true;
-        this._invalidFields.delete(fieldName);
-    }
-
     switchMode(mode) {
         return this.model.mutex.exec(() => this._switchMode(mode));
     }
@@ -602,9 +597,6 @@ export class Record extends DataPoint {
             }
             if (field.type === "one2many" || field.type === "many2many") {
                 const commands = value._getCommands({ withReadonly });
-                if (!this.isNew && !commands.length && !withReadonly) {
-                    continue;
-                }
                 result[fieldName] = commands;
             } else {
                 result[fieldName] = this._formatServerValue(field.type, value);

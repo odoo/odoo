@@ -6,9 +6,9 @@
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Ana Sanjuán, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
-# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Wil Odoo, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -426,11 +426,6 @@ msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
 msgstr "<span class=\"d-block w-75 py-2\">Color del encabezado</span>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr "<span class=\"me-1 oe_inline\">@</span>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"me-1\">@</span>"
 msgstr "<span class=\"me-1\">@</span>"
@@ -663,7 +658,7 @@ msgstr "Acción requerida"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Vista de la ventana de acción"
+msgstr "Vista de acción de ventana"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1082,13 +1077,13 @@ msgstr "Estado del alias evaluado en el último mensaje recibido."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con alias"
+msgstr "Modelo con seudónimo"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_action
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
-msgstr "Alias"
+msgstr "Seudónimos"
 
 #. module: mail
 #. odoo-python
@@ -1341,7 +1336,7 @@ msgstr "Adjuntar archivos"
 #: model:ir.model.fields,field_description:mail.field_discuss_voice_metadata__attachment_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__attachment_ids
 msgid "Attachment"
-msgstr "Archivo adjunto"
+msgstr "Adjunto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_attachment_count
@@ -1373,7 +1368,7 @@ msgstr "Cargando contador de archivos adjuntos..."
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "Attachments"
-msgstr "Archivos adjuntos"
+msgstr "Adjuntos"
 
 #. module: mail
 #. odoo-javascript
@@ -1668,8 +1663,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by "
 "%(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Devolución/catchall '%(matching_alias_name)s' ya es usado por "
-"%(document_name)s. Elija otro alias o cámbielo en el otro documento."
+"Devolución/catchall '%(matching_alias_name)s' ya es usado "
+"por%(document_name)s. Elija otro alias o cámbielo en el otro documento."
 
 #. module: mail
 #. odoo-python
@@ -1802,12 +1797,12 @@ msgstr "Cancelado"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
 msgid "Canned Response / Shortcode"
-msgstr "Respuesta predefinida/código corto"
+msgstr "Respuesta preparada / código corto"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Canned Responses"
-msgstr "Respuestas predefinidas"
+msgstr "Respuestas preparadas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_search
@@ -1822,10 +1817,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
-"Las respuestas predefinidas le permiten insertar mensajes creados previamente en\n"
-"                sus mensajes al escribir <i>:atajo</i>. El atajo es\n"
-"                remplazado directamente en su mensaje, para que pueda editarlo\n"
-"                antes de enviarlo."
+"Las respuestas predefinidas te permiten insertar mensajes pre-escritas en\n"
+"                tus mensajes al escribir <i>:atajo</i>. El atajo es\n"
+"                remplazado directamente en tu mensaje, para que puedas editarlo\n"
+"                antes de mandarlo."
 
 #. module: mail
 #. odoo-python
@@ -1859,7 +1854,7 @@ msgstr "Catchall"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_alias
 msgid "Catchall Alias"
-msgstr "Alias de catchall"
+msgstr "Alias catchall"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_domain__catchall_email
@@ -2146,12 +2141,6 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
-msgid "Companies using this domain as default for sending mails"
-msgstr ""
-"Empresas que usan este dominio de forma predeterminada para enviar correos"
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__company_id
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__company_id
@@ -2175,7 +2164,7 @@ msgstr "Redactar correo electrónico"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
 msgid "Composition mode"
-msgstr "Modo de redacción"
+msgstr "Modo de composición"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -2737,18 +2726,6 @@ msgid "Default Values"
 msgstr "Valores por defecto"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__default_from
-msgid ""
-"Default from when it does not match outgoing server filters. Can be either a"
-" local-part e.g. 'notifications' either a complete email address e.g. "
-"'notifications@example.com' to override all outgoing emails."
-msgstr ""
-"Por defecto de cuando no coincide con los filtros del servidor saliente. "
-"Puede ser una parte local, por ejemplo \"notificaciones\" o una dirección de"
-" correo electrónico completa, por ejemplo \"notificaciones@ejemplo.com\", "
-"para anular todos los correos electrónicos salientes."
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default recipients"
 msgstr "Destinatarios por defecto"
@@ -2767,7 +2744,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr "Usuario por defecto"
+msgstr "Usuario predeterminado"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -2999,7 +2976,7 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
-"Muestre una opción en el documento relacionado para abrir un asistente de "
+"Mostrar una opción en el documento relacionado para abrir un asistente de "
 "composición con esta plantilla"
 
 #. module: mail
@@ -3037,7 +3014,7 @@ msgstr "Seguidores del documento"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_ids
 msgid "Document IDs"
-msgstr "IDs de documentos"
+msgstr "Identificadores de documento"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
@@ -3054,11 +3031,6 @@ msgstr "Nombre del documento"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
 msgstr "Documento: \""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Domain"
-msgstr "Dominio"
 
 #. module: mail
 #. odoo-javascript
@@ -3322,7 +3294,7 @@ msgstr "Color del encabezado del correo electrónico"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
 msgid "Email Mass Mailing"
-msgstr "Envío masivo de correos electrónicos"
+msgstr "Envío masivo de correo electrónico"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
@@ -3417,7 +3389,7 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
-"Los alias de correo electrónico %(alias_name)s no pueden usarse en varios "
+"El alias de correo electrónico %(alias_name)s no se puede usar en varios "
 "registros al mismo tiempo. Actualice los registros uno por uno."
 
 #. module: mail
@@ -3429,17 +3401,6 @@ msgstr "CC del correo electrónico"
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
 msgstr "Asistente de redacción de correo electrónico"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__name
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin__alias_domain
-#: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
-#: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
-msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
-"Dominio de correo electrónico, por ejemplo \"ejemplo.com\" en "
-"\"odoo@ejemplo.com\"."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5300,7 +5261,7 @@ msgstr "Retrasado"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
-msgstr "Actividades retrasadas"
+msgstr "Actividades tardías"
 
 #. module: mail
 #. odoo-python
@@ -5399,25 +5360,6 @@ msgstr "Servidor local"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Detección de entradas basada en partes locales"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__catchall_alias
-msgid ""
-"Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
-"'catchall@example.com'"
-msgstr ""
-"Parte local del correo electrónico que se utiliza como \"Respuesta a\" para "
-"recibir respuestas, por ejemplo, \"catchall\" en \"catchall@ejemplo.com\""
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
-msgid ""
-"Local-part of email used for Return-Path used when emails bounce e.g. "
-"'bounce' in 'bounce@example.com'"
-msgstr ""
-"Parte local del correo electrónico que se utiliza como \"ruta de retorno\" "
-"en caso de que los correos se devuelvan, por ejemplo, \"devolucion\" en "
-"\"devolucion@ejemplo.com\""
 
 #. module: mail
 #. odoo-javascript
@@ -5583,7 +5525,7 @@ msgstr "Sesión de comunicación en tiempo real por correo"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr "Mixin de renderización de correo"
+msgstr "Mail Render Mixin"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_mail_server
@@ -5790,7 +5732,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_config_settings__tenor_content_filter__medium
 msgid "Medium"
-msgstr "Medio"
+msgstr "Media"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -7100,7 +7042,7 @@ msgstr "Perfil de la empresa"
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
 msgid "Partner Readonly"
-msgstr "Contacto de sólo lectura "
+msgstr "Partner Solo Lectura "
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_partner_device
@@ -8164,12 +8106,12 @@ msgstr "Buscar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Search Alias"
-msgstr "Buscar alias"
+msgstr "Buscar seudónimo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Search Groups"
-msgstr "Buscar grupos"
+msgstr "Grupos de busqueda"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -8405,8 +8347,8 @@ msgid ""
 "value will be the author's email alias if configured, or email address."
 msgstr ""
 "Dirección del remitente (se pueden usar expresiones de campo aquí). Si no se"
-" establece, el valor por defecto será el alias de correo electrónico del "
-"autor si está configurado, o la dirección de correo electrónico."
+" establece, el valor por defecto será el alias de correo del autor si está "
+"configurado, o la dirección de correo."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -9274,7 +9216,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (Tipo de documento de Odoo) al que corresponde este alias. "
+"El modelo (Tipo de documento de Odoo) al que corresponde este seudónimo. "
 "Cualquier correo entrante que no sea respuesta a un registro existente, "
 "causará la creación de un nuevo registro de este modelo (por ejemplo, una "
 "tarea de proyecto)."
@@ -9423,8 +9365,8 @@ msgstr "Esta conversación no tiene ningún mensaje fijado."
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Este correo electrónico está en la lista negra para correos masivos. Haga "
-"clic para eliminarlo de ella."
+"Este correo electrónico está en la lista de denegación para envíos masivos. "
+"Haga clic para eliminarlo de ella."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -9848,13 +9790,6 @@ msgstr "Unidad de retraso"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
-msgid "Unknown"
-msgstr "Desconocido"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_notification.py:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__unknown
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
@@ -9901,12 +9836,12 @@ msgstr "Desfijar mensaje"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de mensajes sin leer"
+msgstr "Nº de mensajes sin leer"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes pendientes de leer"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__unrestricted_attachment_ids
@@ -10062,11 +9997,6 @@ msgstr "Usar plantilla"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__use_push_to_talk
 msgid "Use the push to talk feature"
 msgstr "Usar la función pulsar para hablar"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "Used In"
-msgstr "Utilizado en"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
@@ -10374,7 +10304,7 @@ msgstr ""
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 #, python-format
 msgid "Warning"
-msgstr "Advertencia"
+msgstr "Alerta"
 
 #. module: mail
 #. odoo-python
@@ -10593,8 +10523,7 @@ msgstr "No tiene permitido subir archivos adjuntos en este canal."
 #, python-format
 msgid ""
 "You are the administrator of this channel. Are you sure you want to leave?"
-msgstr ""
-"Es el administrador de este canal. ¿Está seguro de que desea abandonarlo?"
+msgstr "Eres el administrador de este canal. ¿Estás seguro que quieres irte?"
 
 #. module: mail
 #. odoo-javascript
@@ -10697,7 +10626,7 @@ msgstr "Ha sido asignado/a a"
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
 #, python-format
 msgid "You have been invited to #%s"
-msgstr "Le han invitado a #%s"
+msgstr "Lo han invitado a #%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
@@ -10705,8 +10634,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Puede adjuntar archivos a esta plantilla para que se agreguen a todos los "
-"correos electrónicos creados desde la misma."
+"Puede adjuntar archivos a esta plantilla, para ser añadidos a todos los "
+"e-mails creados desde ella."
 
 #. module: mail
 #. odoo-python
@@ -10823,13 +10752,6 @@ msgstr "Su navegador no permite webRTC"
 #, python-format
 msgid "Your name"
 msgstr "Su nombre"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
-msgid "[%(name)s] (no email address)"
-msgstr "[%(name)s] (sin dirección de correo electrónico)"
 
 #. module: mail
 #. odoo-python
@@ -11035,26 +10957,6 @@ msgstr ""
 "object.name }}\""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"bounce\""
-msgstr "Por ejemplo, \"devolucion\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"catchall\""
-msgstr "p. ej. \"catchall\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"mycompany.com\""
-msgstr "ej. \"miempresa.com\""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
-msgid "e.g. \"notifications\""
-msgstr "p. ej. \"notificaciones\""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "e.g. 65ea4f9e948b693N5156F350256bd152"
 msgstr "ej. 65ea4f9e948b693N5156F350256bd152"
@@ -11080,7 +10982,7 @@ msgstr "Por ejemplo, conversación de una propuesta"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "e.g. Onboarding"
-msgstr "p. ej. Incorporación"
+msgstr "Por ejemplo, Acogida"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form

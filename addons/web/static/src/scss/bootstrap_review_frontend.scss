@@ -177,9 +177,6 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     // on the 'currentColor' of the inputs.
     color: inherit;
 }
-.form-control.bg-light {
-    color: adjust-color-to-background($input-color, $light);
-}
 
 $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 // Input group text (e.g. Date time picker)
@@ -220,19 +217,5 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
                 }
             }
         }
-    }
-}
-
-// Button within input-group (e.g., "search bar")
-.input-group {
-    .btn:first-child, .btn:last-child {
-        @include border-radius($input-border-radius, 0);
-    }
-}
-
-// Dropdown
-.dropdown .dropdown-menu {
-    .text-muted {
-        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
     }
 }

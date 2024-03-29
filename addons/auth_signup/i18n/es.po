@@ -5,7 +5,6 @@
 # Translators:
 # Wil Odoo, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# Fernanda Alvarez, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -187,7 +186,7 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Estimado/a <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
-"                        Agregó a el/los siguientes usuario/s a su base de datos, pero no se han registrado aún:\n"
+"                        Agregó a el/los siguiente/s usuarios/s a su base de datos, pero no se han registrado aún:\n"
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
 "                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
@@ -493,8 +492,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Estimado/a <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
-"                         ¡Su cuenta se ha creado con éxito!<br>\n"
+"                        Apreciable <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                         ¡Se creó con éxito su cuenta!<br>\n"
 "                         Su usuario es <strong><t t-out=\"object.email or ''\">mark.brown23@ejemplo.com</t></strong><br>\n"
 "                        Puede utilizar el siguiente enlace para obtener acceso a su cuenta:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
@@ -552,7 +551,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "¿Ya tiene una cuenta?"
+msgstr "¿Ya tienes una cuenta?"
 
 #. module: auth_signup
 #. odoo-python
@@ -560,8 +559,7 @@ msgstr "¿Ya tiene una cuenta?"
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
-"Otro usuario ya se ha registrado usando esta dirección de correo "
-"electrónico."
+"Otro usuario ya se ha registrado usando esta dirección de correo electrónico"
 
 #. module: auth_signup
 #. odoo-python
@@ -681,7 +679,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Registro gratis"
+msgstr "Registro gatris"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -1057,12 +1055,12 @@ msgstr "SuCompañía"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
-msgstr "día, mes, año - hh:mm:ss (GMT)"
+msgstr "día, mes dd, yyyy - hh:mm:ss (GMT)"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "p. ej. John Doe"
+msgstr "Ej. John Doe"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email

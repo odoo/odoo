@@ -6,7 +6,6 @@
     'version': '2.0',
     'sequence': 350,
     'summary': "This module is deprecated.",
-    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_alipay_templates.xml',

@@ -60,7 +60,7 @@ class PickingType(models.Model):
         compute='_compute_use_existing_lots', store=True, readonly=False,
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     print_label = fields.Boolean(
-        'Print Label', compute="_compute_print_label", store=True, readonly=False,
+        'Print Label',
         help="If this checkbox is ticked, label will be print in this operation.")
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(
@@ -860,11 +860,6 @@ class Picking(models.Model):
                     if picking.partner_id:
                         picking.message_unsubscribe(picking.partner_id.ids)
                     picking.message_subscribe([vals.get('partner_id')])
-        if vals.get('picking_type_id'):
-            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
-            for picking in self:
-                if picking.picking_type_id != picking_type:
-                    picking.name = picking_type.sequence_id.next_by_id()
         res = super(Picking, self).write(vals)
         if vals.get('signature'):
             for picking in self:
@@ -1504,11 +1499,7 @@ class Picking(models.Model):
                 return action
         return package_id
 
-    def _package_move_lines(self, batch_pack=False):
-        # in theory, the picking_type should always be the same (i.e. for batch transfers),
-        # but customizations may bypass it and cause unexpected behavior so we avoid allowing those situations
-        if len(self.picking_type_id) > 1:
-            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
+    def _package_move_lines(self):
         quantity_move_line_ids = self.move_line_ids.filtered(
             lambda ml:
                 float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and

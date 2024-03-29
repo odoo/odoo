@@ -643,7 +643,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
-            move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
+            move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cance', 'done'])
         if 'location_dest_id' in vals:
             move_to_check_dest_location = self.filtered(lambda m: m.location_dest_id.id != vals.get('location_dest_id'))
         res = super(StockMove, self).write(vals)
@@ -1020,8 +1020,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                     # link all move lines to record 0 (the one we will keep).
                     moves.mapped('move_line_ids').write({'move_id': moves[0].id})
                     # merge move data
-                    merge_extra = self.env.context.get('merge_extra') and bool(merge_into)
-                    moves[0].write(moves.with_context(merge_extra=merge_extra)._merge_moves_fields())
+                    moves[0].write(moves._merge_moves_fields())
                     # update merged moves dicts
                     moves_to_unlink |= moves[1:]
                     merged_moves |= moves[0]
@@ -1053,10 +1052,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                     pos_move.product_uom_qty = 0
                     moves_to_cancel |= pos_move
 
-        # We are using propagate to False in order to not cancel destination moves merged in moves[0]
-        (moves_to_unlink | moves_to_cancel)._clean_merged()
-
         if moves_to_unlink:
+            # We are using propagate to False in order to not cancel destination moves merged in moves[0]
+            moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
 

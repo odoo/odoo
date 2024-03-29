@@ -860,8 +860,7 @@ class TestTax(TestTaxCommon):
         )
 
     def test_rounding_tax_included_round_per_line_03(self):
-        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line
-        and a sequence that is solely dependent on the ID, as the tax sequence is identical.
+        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line.
         The decimal precision is set to 2.
         '''
         self.tax_0_percent.company_id.currency_id.rounding = 0.01
@@ -878,8 +877,8 @@ class TestTax(TestTaxCommon):
             [
                 # base , amount
                 # -------------
-                (115.19, 0.00),
                 (115.19, 9.21),
+                (115.19, 0.00),
                 # -------------
             ],
             res1

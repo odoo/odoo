@@ -8,7 +8,6 @@ import hashlib
 import pytz
 import threading
 import re
-import warnings
 
 import requests
 from collections import defaultdict
@@ -925,7 +924,8 @@ class Partner(models.Model):
         return base64.b64encode(res.content)
 
     def _email_send(self, email_from, subject, body, on_error=None):
-        warnings.warn("Partner._email_send has not done anything but raise errors since 15.0", stacklevel=2, category=DeprecationWarning)
+        for partner in self.filtered('email'):
+            tools.email_send(email_from, [partner.email], subject, body, on_error)
         return True
 
     def address_get(self, adr_pref=None):

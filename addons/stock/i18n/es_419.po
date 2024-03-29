@@ -3,9 +3,9 @@
 # 	* stock
 # 
 # Translators:
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Wil Odoo, 2024
 # Lucia Pacheco, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -3172,7 +3172,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_scrap__tracking
 #: model:ir.model.fields,help:stock.field_stock_track_line__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Asegure la trazabilidad de los productos almacenables en su almacén."
+msgstr "Asegurar el seguimiento del producto almacenable."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -4897,11 +4897,6 @@ msgid "Lot Label Format to auto-print"
 msgstr "Formato de etiqueta de lote para autoimpresión"
 
 #. module: stock
-#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
-msgid "Lot Label Report"
-msgstr "Reportes de etiqueta del lote"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
 msgstr "Propiedades del lote"
@@ -5603,7 +5598,7 @@ msgstr "No disponible"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr "Sin posponer"
+msgstr "No pospuesto"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7812,14 +7807,6 @@ msgstr ""
 "seleccionarlas en los productos y las categorías de producto"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_location.py:0
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr "La regla %s pertenece a %s, mientras que la ruta pertenece a %s."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "Mensaje de regla"
@@ -9186,8 +9173,8 @@ msgid ""
 "The stock will be reserved for operations waiting for availability and the "
 "reordering rules will be triggered."
 msgstr ""
-"Se reservarán las existencias para operaciones que están en espera de "
-"disponibilidad y se activarán las reglas de reordenamiento."
+"Se reservarán las existencias para operaciones que están esperando "
+"disponibilidad y se activarán las reglas de reabastecimiento."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
@@ -10872,17 +10859,6 @@ msgid ""
 msgstr ""
 "No puede mover el mismo contenido del paquete más de una vez en el mismo "
 "traslado o dividir el mismo paquete en dos ubicaciones."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You cannot pack products into the same package when they are from different "
-"transfers with different operation types."
-msgstr ""
-"No puede empaquetar productos en el mismo paquete si estos productos son de "
-"diferentes transferencias con diferentes tipos de operación."
 
 #. module: stock
 #. odoo-python

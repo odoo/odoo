@@ -43,7 +43,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // While scrolling through navbar menus on medium devices, body should
         // not be scrolled with it.
         const disableScroll = function () {
-            if (uiUtils.getSize() < SIZES.LG) {
+            if (uiUtils.getSize() <= SIZES.SM) {
                 $(document.body).addClass('overflow-hidden');
             }
         };
@@ -266,7 +266,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
-                && uiUtils.getSize() >= SIZES.LG) {
+                && uiUtils.getSize() > SIZES.SM) {
             this.el.querySelectorAll(".offcanvas.show").forEach(offcanvasEl => {
                 Offcanvas.getOrCreateInstance(offcanvasEl).hide();
             });
@@ -669,7 +669,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
-        if (uiUtils.getSize() >= SIZES.LG) {
+        if (uiUtils.getSize() > SIZES.SM) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
@@ -693,7 +693,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {boolean} [doShow=true] true to show, false to hide
      */
     _updateDropdownVisibility(ev, doShow = true) {
-        if (uiUtils.getSize() < SIZES.LG) {
+        if (uiUtils.getSize() <= SIZES.SM) {
             return;
         }
         if (ev.currentTarget.closest('.o_extra_menu_items')) {
@@ -877,7 +877,7 @@ publicWidget.registry.MegaMenuDropdown = publicWidget.Widget.extend({
         // Ignore the event if the menus are not hoverable or if we are in
         // mobile view (again, the hoverable menus are clicked on mobile view).
         if (!this.el.classList.contains("o_hoverable_dropdown")
-                || megaMenuToggleEl.closest(".o_header_mobile")) {
+                || megaMenuToggleEl.closest(".o_header_mobile") && uiUtils.getSize() <= SIZES.SM) {
             return;
         }
         this._moveMegaMenu(megaMenuToggleEl);
@@ -900,35 +900,10 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     events: {
         "show.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseShow",
         "hidden.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseHidden",
+        "show.bs.modal #o_search_modal": "_onSearchModalShow",
+        "shown.bs.modal #o_search_modal": "_onSearchModalShown",
         "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
         "hidden.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
-    },
-
-    /**
-     * @override
-     */
-    start() {
-        this.searchModalEl = document.querySelector("#o_shared_blocks #o_search_modal");
-        if (this.searchModalEl) {
-            // Fix in stable because we moved '#o_search_modal' within
-            // '#o_shared_blocks' (see 'adapt_content.js'). TODO: remove this in
-            // master and add a new 'publicWidget' for '#o_search_modal'.
-            this.__onSearchModalShow = this._onSearchModalShow.bind(this);
-            this.searchModalEl.addEventListener("show.bs.modal", this.__onSearchModalShow);
-            this.__onSearchModalShown = this._onSearchModalShown.bind(this);
-            this.searchModalEl.addEventListener("shown.bs.modal", this.__onSearchModalShown);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        if (this.searchModalEl) {
-            this.searchModalEl.removeEventListener("show.bs.modal", this.__onSearchModalShow);
-            this.searchModalEl.removeEventListener("shown.bs.modal", this.__onSearchModalShown);
-        }
-        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -971,7 +946,11 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      * @private
      */
     _onSearchModalShown(ev) {
-        this.searchModalEl.querySelector(".search-query").focus();
+        const searchModalEl = this.el.querySelector("#o_search_modal");
+        const searchInputEl = this.el.querySelector(".search-query");
+        if (searchModalEl) {
+            searchInputEl.focus();
+        }
     },
 });
 

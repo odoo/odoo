@@ -905,11 +905,13 @@ class HrExpense(models.Model):
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
                 '|', '&', ('payment_mode', 'in', ('own_account', 'company_account')), ('state', 'in', ('draft', 'reported', 'submitted')),
                      '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
-            ], ['state'], ['total_amount:sum'])
-        for state, total_amount_sum in expenses:
+            ], ['state', 'currency_id'], ['total_amount_currency:sum'])
+        for state, currency, total_amount_sum in expenses:
             if state in {'draft', 'reported'}:  # Fuse the two states into only one "To Submit" state
                 state = 'to_submit'
-            expense_state[state]['amount'] += total_amount_sum
+            currency = currency or target_currency
+            amount = currency._convert(total_amount_sum, target_currency, self.env.company, fields.Date.today())
+            expense_state[state]['amount'] += amount
         return expense_state
 
     # ----------------------------------------

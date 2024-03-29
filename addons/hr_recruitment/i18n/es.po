@@ -50,7 +50,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
-"<b>Arrastra esta tarjeta</b> para calificarlo para una primera entrevista."
+"<b>Arrastra esta tarjeta</b>, para calificarlo para una primera entrevista."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -171,7 +171,7 @@ msgstr "<span>Informes</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>View</span>"
-msgstr "<span>Vista</span>"
+msgstr "<span>Ver</span>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
@@ -250,13 +250,13 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hola,\n"
 "                <br><br>\n"
-"                Le confirmamos que hemos recibido su solicitud para el puesto\n"
+"                Enviamos este correo como confirmación de que recibimos con éxito su postulación para el puesto\n"
 "                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Desarrollador experimentado</strong></a>\" en <strong t-out=\"object.company_id.name or ''\">SuEmpresa</strong>.\n"
 "                <br><br>\n"
 "                Le contactaremos pronto.\n"
 "\n"
 "                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Descripción del trabajo</a>\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Descripción del puesto</a>\n"
 "                </div>\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
@@ -264,17 +264,17 @@ msgstr ""
 "                    <h3 style=\"color:#9A6C8E;\"><strong>Su contacto:</strong></h3>\n"
 "                    <p>\n"
 "                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
-"                        <span>Correo electrónico: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                        <span>Correo electrónico: <t t-out=\"object.user_id.email or ''\">admin@suempresa.ejemplo.com</t></span><br>\n"
 "                        <span>Teléfono: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
 "                    </p>\n"
 "                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
 "                </t>\n"
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>¿Cuál es el siguiente paso?</strong></h3>\n"
-"                Normalmente <strong>respondemos las solicitudes en unos días.<br><br>\n"
-"                Siéntase libre de <strong>contactarnos si desea una\n"
-"                retroalimentación más rápida</strong> o si no recibe noticias de nosotros\n"
-"                lo suficientemente rápido (solamente responda este correo electrónico).\n"
+"                Con frecuencia <strong>respondemos las postulaciones en unos días.</strong><br><br>\n"
+"                Siéntase libre de <strong>contactarnos si desea una retroalimentación\n"
+"                más rápida</strong> o si no recibe noticias nuestras\n"
+"                tan pronto como espera (solo responda a este correo electrónico).\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
 "                <t t-set=\"location\" t-value=\"''\"></t>\n"
@@ -399,77 +399,77 @@ msgstr ""
 "    <tr>\n"
 "        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
 "            <div style=\"text-align: center\">\n"
-"                <h2>¡Enhorabuena!</h2>\n"
+"                <h2>¡Felicidades!</h2>\n"
 "                <div style=\"color:grey;\">Su currículum recibió calificaciones positivas.</div>\n"
 "            </div>\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Acabamos de revisar su currículum y nos llamó la\n"
 "                atención. Como creemos que sería la persona adecuada para el\n"
-"                puesto, su solicitud se preseleccionó para una\n"
+"                puesto, su postulación se preseleccionó para una\n"
 "                llamada o una entrevista.\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
-"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Descripción del trabajo</a>\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Descripción del puesto</a>\n"
 "                </div>\n"
 "\n"
 "                <t t-if=\"object.user_id\">\n"
-"                    Le contactaremos pronto:<br/>\n"
-"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
-"                    <span>Correo electrónico: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                    Pronto le contactará:<br>\n"
+"                    <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
+"                    <span>Correo electrónico: <t t-out=\"object.user_id.email or ''\">admin@suempresa.ejemplo.com</t></span><br>\n"
 "                    <span>Teléfono: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
-"                    <br/><br/>\n"
+"                    <br><br>\n"
 "                </t>\n"
 "                Nos vemos pronto,\n"
 "                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    -- <br/>\n"
+"                    -- <br>\n"
 "                    El equipo de RR. HH.\n"
 "                    <t t-if=\"'website_url' in object.job_id and hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
-"                        Descubra <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">todos nuestros trabajos</a>.<br/>\n"
+"                        Descubra <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">todos nuestros trabajos</a>.<br>\n"
 "                    </t>\n"
 "                </div>\n"
 "\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>¿Cuál es el siguiente paso?</strong></h3>\n"
-"                Normalmente <strong>respondemos las solicitudes en unos días</strong>.\n"
-"                <br/><br/>\n"
+"                Con frecuencia <strong>respondemos las postulaciones en unos días</strong>.\n"
+"                <br><br>\n"
 "                El siguiente paso puede ser una llamada o una reunión en nuestras oficinas.\n"
-"                <br/>\n"
+"                <br>\n"
 "                Siéntase libre de <strong>contactarnos si desea una retroalimentación\n"
-"                más rápida</strong> o si no recibe noticias de nosotros\n"
-"                lo suficientemente rápido (solamente responda este correo electrónico).\n"
-"                <br/>\n"
+"                más rápido</strong> o si no recibe noticias nuestras\n"
+"                tan pronto como espera (solo responda a este correo electrónico).\n"
+"                <br>\n"
 "\n"
-"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
-"                <t t-set=\"location\" t-value=\"''\"/>\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
+"                <t t-set=\"location\" t-value=\"''\"></t>\n"
 "                <t t-if=\"object.job_id.address_id.name\">\n"
-"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.street\">\n"
-"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.street2\">\n"
-"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.city\">\n"
 "                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
 "                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"></t>\n"
 "                </t>\n"
 "                <t t-if=\"object.job_id.address_id.zip\">\n"
 "                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"></t>\n"
 "                </t>\n"
-"                <br/>\n"
+"                <br>\n"
 "                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br/>\n"
-"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"></t>\n"
 "                </t>\n"
-"                <br/>\n"
+"                <br>\n"
 "            </div>\n"
 "        </td>\n"
 "    </tr>\n"
@@ -616,7 +616,7 @@ msgstr ""
 "                    <t t-else=\"\">\n"
 "                        -- <br>\n"
 "                        <t t-out=\"object.company_id.name or ''\">SuEmpresa</t><br>\n"
-"                        El equipo de RR. HH.\n"
+"                        El equipo de RR.HH.\n"
 "                    </t>\n"
 "                </div>\n"
 "            </div>\n"
@@ -728,7 +728,7 @@ msgstr "Correo electrónico del alias"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
 msgid "Alias ID"
-msgstr "ID del alias"
+msgstr "ID de seudónimo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_name
@@ -748,12 +748,12 @@ msgstr "Estado del alias evaluado en el último mensaje recibido."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con alias"
+msgstr "Modelo con seudónimo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr "Número de todas las solicitudes"
+msgstr "Nº de todas las solicitudes"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
@@ -954,12 +954,12 @@ msgstr "Lista de denegación"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "El teléfono en la lista negra es un móvil"
+msgstr "El teléfono de la lista negra es un móvil"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "El teléfono en la lista negra es un teléfono"
+msgstr "El teléfono de la lista negra es un teléfono"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -999,10 +999,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
-"Al establecer un alias en un puesto de trabajo, los correos electrónicos "
-"enviados a esa dirección crearán automáticamente solicitudes. Incluso puede "
-"utilizar múltiples rastreadores para obtener estadísticas de acuerdo al "
-"origen de las aplicaciones: LinkedIn, Monster, Indeed, etc."
+"Al establecer un seudónimo en un puesto de trabajo, los correos electrónicos"
+" enviados a esa dirección crearán solicitudes de forma automática. Incluso "
+"puede utilizar múltiples rastreadores para obtener estadísticas de acuerdo "
+"al origen de las aplicaciones: LinkedIn, Monster, Indeed, etc."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1012,7 +1012,7 @@ msgstr "Digitalización del CV (OCR)"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Display"
-msgstr "Pantalla de CV"
+msgstr "Visualizar CV"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -1167,7 +1167,7 @@ msgstr "Cree nuevas solicitudes enviando un correo electrónico a"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
-msgstr "Cree su primer puesto de trabajo."
+msgstr "Crea tu primer Puesto de Trabajo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1206,7 +1206,7 @@ msgstr "Mensaje rebotado personalizado"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
 msgid "Days to Close"
-msgstr "Días para cerrar"
+msgstr "Días para el cierre"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_open
@@ -1226,9 +1226,9 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Defina una dirección de contacto específica para este puesto. Si la deja "
-"vacía, se utilizará la dirección de correo electrónico predeterminada que se"
-" encuentra en la configuración de recursos humanos."
+"Define una dirección de contacto específica para este puesto. Si lo dejas en"
+" blanco, la dirección predeterminada que será usada es la que se haya "
+"definido en la configuración de recursos humanos"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1303,8 +1303,8 @@ msgstr "Resumen"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your CV to extract name and email automatically."
 msgstr ""
-"Digitalice automáticamente su CV para obtener el nombre y el correo "
-"electrónico."
+"Digitalice su CV para obtener el nombre y el correo electrónico de forma "
+"automática."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1368,7 +1368,7 @@ msgstr "Documentos"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Doesn't fit the job requirements"
-msgstr "No cumple con los requisitos para el empleo"
+msgstr "No cumple los requisitos para el empleo"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1550,7 +1550,7 @@ msgstr "Primera entrevista"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
 msgid "Folded in Kanban"
-msgstr "Plegado en kanban"
+msgstr "Doblado en Kanban"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -1747,8 +1747,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista negra, el contacto ya"
-" no recibirá correo masivo de cualquier lista."
+"Si la dirección de correo electrónico esta en la lista de denegación, el "
+"contacto ya no recibirá correo masivo de cualquier lista."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
@@ -1780,9 +1780,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono en la lista negra es un número móvil. Sirve "
-"para distinguir qué número está en la lista negra cuando hay un campo de "
-"móvil y otro de teléfono fijo en un modelo."
+"Indica si el número de teléfono de la lista negra es un número celular. "
+"Sirve para distinguir qué número está en la lista negra cuando hay un campo "
+"de celular y otro de teléfono fijo en un modelo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
@@ -1791,9 +1791,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono en la lista negra es un teléfono fijo. Sirve"
+"Indica si el número de teléfono de la lista negra es un teléfono fijo. Sirve"
 " para distinguir qué número está en la lista negra cuando hay un campo de "
-"móvil y otro de teléfono fijo en un modelo."
+"celular y otro de teléfono fijo en un modelo."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1959,7 +1959,7 @@ msgstr "Problemas con el idioma"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Last Meeting"
-msgstr "Última reunión"
+msgstr "Última junta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__last_stage_id
@@ -2079,7 +2079,7 @@ msgstr "Maestría"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__medium_id
 msgid "Medium"
-msgstr "Medio"
+msgstr "Media"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_mediums
@@ -2094,7 +2094,7 @@ msgstr "Fecha de reunión mostrada"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_display_text
 msgid "Meeting Display Text"
-msgstr "Texto de reunión mostrado"
+msgstr "Mostrar texto de junta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_ids
@@ -3039,7 +3039,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (Tipo de documento de Odoo) al que corresponde este alias. "
+"El modelo (Tipo de documento de Odoo) al que corresponde este seudónimo. "
 "Cualquier correo entrante que no sea respuesta a un registro existente, "
 "causará la creación de un nuevo registro de este modelo (por ejemplo, una "
 "tarea de proyecto)."
@@ -3274,7 +3274,7 @@ msgstr ""
 msgid ""
 "You can search into attachment's content, like resumes, with the searchbar."
 msgstr ""
-"Puede buscar en el contenido del archivo adjunto, como los currículums, con "
+"Puede buscar en el contenido del archivo adjunto, como los currículos, con "
 "la barra de búsqueda."
 
 #. module: hr_recruitment

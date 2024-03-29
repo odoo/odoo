@@ -53,8 +53,8 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "<span invisible=\"on_time_rate &gt;= 0\">No On-time Delivery Data</span>"
 msgstr ""
-"<span invisible=\"on_time_rate &gt;= 0\">Sin información de las entregas a "
-"tiempo</span>"
+"<span invisible=\"on_time_rate &gt;= 0\">No hay información de las entregas "
+"a tiempo</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -200,7 +200,7 @@ msgid ""
 "order, etc."
 msgstr ""
 "Dependiendo de los módulos instalados, esto le permitirá definir la ruta del"
-" producto: si se comprará, se fabricará, se repondrá bajo pedido, etc."
+" producto: si se comprará, fabricará, obtendrá bajo pedido, etc."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -258,7 +258,7 @@ msgid ""
 "type or cancel the request for quotation."
 msgstr ""
 "Para el producto %s, el almacén del tipo de operación (%s) no coincide con "
-"la ubicación (%s) de la regla de reabastecimiento (%s). Cambie el tipo de "
+"la ubicación (%s) de la regla de reordenamiento (%s). Cambie el tipo de "
 "operación o cancele la solicitud de presupuesto."
 
 #. module: purchase_stock
@@ -298,12 +298,12 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr "Número de envíos entrantes"
+msgstr "Cuenta de envíos entrantes"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "Envíos entrantes"
+msgstr "Envíos a recibir"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
@@ -358,8 +358,8 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
-"genera órdenes de compra para reabastecer productos, se programarán muchos "
-"días antes para hacer frente a los retrasos inesperados de los proveedores."
+"genera pedidos de compra para abastecer productos, se programarán muchos "
+"días antes para hacer frente a las demoras inesperadas de los proveedores."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -489,7 +489,7 @@ msgstr "Categoría de producto"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_replenish
 msgid "Product Replenish"
-msgstr "Reposición de producto"
+msgstr "Reabastecimiento de producto"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -614,7 +614,7 @@ msgstr "Reserva"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Recolección de devolución"
+msgstr "Albarán de devolución"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
@@ -662,12 +662,12 @@ msgstr "Movimientos de stock"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr "Informe de reposición de stock"
+msgstr "Informe de reabastecimiento de existencias"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Regla de inventario"
+msgstr "Regla de Inventario"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_valuation_layer
@@ -677,17 +677,17 @@ msgstr "Capa de valoración de stock"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Informe de regla de inventario"
+msgstr "Informe de Regla de Inventario"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock supplier replenishment information"
-msgstr "Información de reposición de stock del proveedor"
+msgstr "Información de reabastecimiento del proveedor de existencia"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr "Opción de reposición de almacén de stock"
+msgstr "Opción de reabastecimiento de almacén de stock"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_supplierinfo
@@ -709,7 +709,7 @@ msgstr "Campo técnico utilizado para mostrar la dirección de envió directo"
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr "Se ha generado la siguiente orden de reposición"
+msgstr "Se generó la siguiente orden de reabastecimiento"
 
 #. module: purchase_stock
 #. odoo-python
@@ -803,7 +803,7 @@ msgstr "Cantidad total"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Traslado"
+msgstr "Albarán"
 
 #. module: purchase_stock
 #. odoo-python
@@ -813,15 +813,15 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
-"No se puede cancelar la orden de compra %s, ya que ya se han completado "
-"algunas recepciones."
+"No se puede cancelar el pedido de compra %s, ya que algunas recepciones ya "
+"se han completado."
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr "Valide la recepción de todos los productos pedidos."
+msgstr "Validar la recepción de todos los productos pedidos."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__supplier_id

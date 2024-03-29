@@ -339,9 +339,10 @@ WHERE sub.user_id IN %%s""" % {
 
         if self.next_rank_id:
             return self.next_rank_id
+        elif not self.rank_id:
+            return self.env['gamification.karma.rank'].search([], order="karma_min ASC", limit=1)
         else:
-            domain = [('karma_min', '>', self.rank_id.karma_min)] if self.rank_id else []
-            return self.env['gamification.karma.rank'].search(domain, order="karma_min ASC", limit=1)
+            return self.env['gamification.karma.rank']
 
     def get_gamification_redirection_data(self):
         """

@@ -1,0 +1,23 @@
+<odoo>
+    <record id="salle_view_tree" model="ir.ui.view">
+        <field name="name">salle tree</field>
+        <field name="model">salle</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nom" />
+                <field name="capacite" />
+                <field name="etat" />
+            </tree>
+        </field>
+    </record>
+    <record id="salle_action" model="ir.actions.act_window">
+        <field name="name">salle actions</field>
+        <field name="res_model">salle</field>
+    </record>
+    <menuitem
+        id="salle_root_item"
+        name="Salles"
+        parent = "salles"
+        action = "salle_action"
+    />
+</odoo>

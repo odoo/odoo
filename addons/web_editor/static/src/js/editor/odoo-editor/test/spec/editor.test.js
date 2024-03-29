@@ -3314,31 +3314,9 @@ X[]
                     contentAfter: `<p>[]<br></p>`,
                 });
                 await testEditor(BasicEditor, {
-                    contentBefore: `<h1><br>[]</h1>`,
+                    contentBefore: `<h1>[]abcd</h1>`,
                     stepFunction: deleteBackward,
-                    contentAfter: `<p>[]<br></p>`,
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: `<h4><br>[]</h4>`,
-                    stepFunction: deleteBackward,
-                    contentAfter: `<p>[]<br></p>`,
-                });
-            });
-            it('should not delete the block and appends a paragraph if the element has textContent ', async () => {
-                await testEditor(BasicEditor, {
-                    contentBefore: `<h1>[]abc</h1>`,
-                    stepFunction: deleteBackward,
-                    contentAfter: `<h1>[]abc</h1>`,
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: `<h1><font style="background-color: rgb(255, 0, 0);">[]abc</font></h1>`,
-                    stepFunction: deleteBackward,
-                    contentAfter: `<h1><font style="background-color: rgb(255, 0, 0);">[]abc</font></h1>`,
-                });
-                await testEditor(BasicEditor, {
-                    contentBefore: `<table><tbody><tr><td><h1>[]ab</h1></td><td>cd</td><td>ef</td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>`,
-                    stepFunction: deleteBackward,
-                    contentAfter: `<table><tbody><tr><td><h1>[]ab</h1></td><td>cd</td><td>ef</td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>`,
+                    contentAfter: `<p>[]abcd</p>`,
                 });
             });
             describe('Nested editable zone (inside contenteditable=false element)', () => {
@@ -6729,96 +6707,6 @@ X[]
                 contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
                 stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
                 contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b<span class="a">c</span>d]</font>e</p>',
-            });
-        });
-        it('should apply background color to a list of 3 items with font size', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<ul>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '[abc' +
-                                        '</span>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            'bcd' +
-                                        '</span>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            'cde]' +
-                                        '</span>' +
-                                    '</li>' +
-                                '</ul>',
-                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'backgroundColor'),
-                contentAfter: '<ul>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                '[abc' +
-                                            '</font>' +
-                                        '</span>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                'bcd' +
-                                            '</font>' +
-                                        '</span>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                'cde]' +
-                                            '</font>' +
-                                        '</span>' +
-                                    '</li>' +
-                                '</ul>',
-            });
-        });
-        it('should apply background color to a list of 3 links', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<ul>' +
-                                    '<li>' +
-                                        '<a href="#" >' +
-                                            '[abc' +
-                                        '</a>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<a href="#" >' +
-                                            'bcd' +
-                                        '</a>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<a href="#" >' +
-                                            'cde]' +
-                                        '</a>' +
-                                    '</li>' +
-                                '</ul>',
-                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'backgroundColor'),
-                contentAfter: '<ul>' +
-                                    '<li>' +
-                                        '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                '[abc' +
-                                            '</font>' +
-                                        '</a>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                'bcd' +
-                                            '</font>' +
-                                        '</a>' +
-                                    '</li>' +
-                                    '<li>' +
-                                        '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
-                                                'cde]' +
-                                            '</font>' +
-                                        '</a>' +
-                                    '</li>' +
-                                '</ul>',
             });
         });
         it('should distribute color to texts and to button separately', async () => {
