@@ -153,6 +153,24 @@ class WebsiteCover_PropertiesMixin(models.AbstractModel):
         return True
 
 
+class WebsitePageVisibilityOptionsMixin(models.AbstractModel):
+    _name = 'website.page_visibility_options.mixin'
+    _description = "Website page/record specific visibility options"
+
+    header_visible = fields.Boolean(default=True)
+    footer_visible = fields.Boolean(default=True)
+
+
+class WebsitePageOptionsMixin(models.AbstractModel):
+    _name = 'website.page_options.mixin'
+    _inherit = ['website.page_visibility_options.mixin']
+    _description = "Website page/record specific options"
+
+    header_overlay = fields.Boolean()
+    header_color = fields.Char()
+    header_text_color = fields.Char()
+
+
 class WebsiteMultiMixin(models.AbstractModel):
     _name = 'website.multi.mixin'
 

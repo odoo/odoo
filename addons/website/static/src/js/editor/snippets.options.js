@@ -2844,6 +2844,24 @@ options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
         }
         return _super(...arguments);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'over_content_header_visibility_opt') {
+            let value;
+            this.trigger_up('action_demand', {
+                actionName: 'get_page_option',
+                params: ['header_overlay'],
+                onSuccess: v => value = v,
+            });
+            // The option might not even be available on this specific page
+            // (while the 'header_visible' one is), in this case the retrieved
+            // value is `null`
+            return value !== null;
+        }
+        return this._super(...arguments);
+    },
 });
 
 options.registry.topMenuColor = options.Class.extend({
