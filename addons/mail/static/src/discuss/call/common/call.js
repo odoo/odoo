@@ -40,7 +40,6 @@ export class Call extends Component {
 
     setup() {
         this.grid = useRef("grid");
-        this.call = useRef("call");
         this.notification = useService("notification");
         this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({
@@ -191,8 +190,8 @@ export class Call extends Component {
     }
 
     onMouseleaveMain(ev) {
-        if (ev.relatedTarget && ev.relatedTarget.closest(".o-discuss-Call-overlay")) {
-            // the overlay should not be hidden when the cursor leaves to enter the controller popover
+        if (ev.relatedTarget && ev.relatedTarget.closest(".o-dropdown--menu")) {
+            // the overlay should not be hidden when the cursor leaves to enter the controller dropdown
             return;
         }
         this.state.overlay = false;
@@ -264,7 +263,7 @@ export class Call extends Component {
     }
 
     async enterFullScreen() {
-        const el = this.call.el;
+        const el = document.body;
         try {
             if (el.requestFullscreen) {
                 await el.requestFullscreen();
