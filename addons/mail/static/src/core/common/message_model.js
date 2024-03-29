@@ -74,6 +74,7 @@ export class Message extends Record {
             }
         },
     });
+    threadAsNewest = Record.one("Thread");
     /** @type {DateTime} */
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
     starredPersonas = Record.many("Persona");
