@@ -326,13 +326,14 @@ class AccountChartTemplate(models.AbstractModel):
                         query = self.env['account.account']._search([('company_id', '=', company.id)])
                         query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
                         accounts = self.env['account.account'].browse(query)
-                        account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
-                        if account:
+                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if existing_account:
                             self.env['ir.model.data']._update_xmlids([{
                                 'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': account,
+                                'record': existing_account,
                                 'noupdate': True,
                             }])
+                            account = existing_account
 
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
