@@ -298,7 +298,8 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_style_edition', login='admin')
 
     def test_09_website_edit_link_popover(self):
-        self.start_tour('/@/', 'edit_link_popover', login='admin')
+        self.start_tour('/@/', 'edit_link_popover_1', login='admin')
+        self.start_tour('/@/', 'edit_link_popover_2', login='admin')
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
