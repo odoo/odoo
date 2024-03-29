@@ -1,7 +1,9 @@
 from datetime import date
 
+from freezegun import freeze_time
+
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -177,3 +179,41 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation_one.write({'number_of_days_display': 2, 'number_of_days': 2})
 
         allocation_one.write({'number_of_days_display': 3, 'number_of_days': 3})
+
+    @users('admin')
+    @freeze_time('2024-03-25')
+    def test_allocation_dropdown_after_period(self):
+        """
+        Test when having two allocations of the same type with different
+        time range and submitting a request will the allocations be
+        shown correctly in the dropdown menu or not
+        :return:
+        """
+        leave_type = self.env.ref('hr_holidays.holiday_status_comp')
+        allocation = self.env['hr.leave.allocation'].sudo().create({
+            'name': 'Alloc',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 3,
+            'allocation_type': 'regular',
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 4, 30)
+        })
+        allocation.action_validate()
+
+        second_allocation = self.env['hr.leave.allocation'].sudo().create({
+            'name': 'Alloc2',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 9,
+            'allocation_type': 'regular',
+            'date_from': date(2024, 5, 1),
+            'date_to': date(2024, 12, 31)
+        })
+        second_allocation.action_validate()
+        result = self.env['hr.leave.type'].with_context(
+            employee_id=self.employee.id,
+            default_date_from='2024-08-18 06:00:00',
+            default_date_to='2024-08-18 15:00:00'
+        ).name_search(args=[['id', '=', leave_type.id]])
+        self.assertEqual(result[0][1], 'Compensatory Days (72 remaining out of 72 hours)')
