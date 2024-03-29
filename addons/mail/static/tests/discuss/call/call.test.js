@@ -1,4 +1,6 @@
 import { describe, test } from "@odoo/hoot";
+import { hover, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
 import {
@@ -47,6 +49,23 @@ test("basic rendering", async () => {
     await contains("[title='Raise Hand']");
     await contains("[title='Share Screen']");
     await contains("[title='Enter Full Screen']");
+});
+
+test("keep the `more` popover active when hovering it", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await contains(".o-discuss-CallActionList");
+    await click("[title='More']");
+    const enterFullScreenSelector = ".o-dropdown-item[title='Enter Full Screen']";
+    await contains(enterFullScreenSelector);
+    hover(queryFirst(enterFullScreenSelector));
+    await animationFrame();
+    await contains(enterFullScreenSelector);
 });
 
 test("no call with odoobot", async () => {
