@@ -23,7 +23,7 @@ class ResPartner(models.Model):
     account_peppol_validity_last_check = fields.Date(
         string="Checked on",
         help="Last Peppol endpoint verification",
-        readonly=True,
+        compute="_compute_account_peppol_is_endpoint_valid", store=True,
         copy=False,
     )
     account_peppol_verification_label = fields.Selection(
@@ -37,10 +37,10 @@ class ResPartner(models.Model):
         copy=False,
     ) # field to compute the label to show for partner endpoint
 
-    @api.depends('peppol_eas', 'peppol_endpoint')
+    @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
     def _compute_account_peppol_is_endpoint_valid(self):
-        # Every change in peppol_eas or peppol_endpoint should set the validity back to False
-        self.account_peppol_is_endpoint_valid = False
+        for partner in self:
+            partner.button_account_peppol_check_partner_endpoint()
 
     @api.depends('account_peppol_is_endpoint_valid', 'account_peppol_validity_last_check')
     def _compute_account_peppol_verification_label(self):
@@ -56,8 +56,8 @@ class ResPartner(models.Model):
     def _check_peppol_participant_exists(self, edi_identification):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
-        peppol_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode', False)
-        sml_zone = 'acc.edelivery' if peppol_param == 'test' else 'edelivery'
+        peppol_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
+        sml_zone = 'acc.edelivery' if peppol_user.edi_mode == 'test' else 'edelivery'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
 
         try:
@@ -90,7 +90,7 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
 
-        if not self.peppol_eas and self.peppol_endpoint:
+        if not (self.peppol_eas and self.peppol_endpoint) or self.ubl_cii_format in (False, 'facturx', 'oioubl_201'):
             self.account_peppol_is_endpoint_valid = False
         else:
             edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
