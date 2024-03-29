@@ -768,8 +768,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
         if (this.offcanvasAndBoxedHeader) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
             this.boxedHeaderCallToActionEl.classList.add('nav-item');
             this.navbarEl.append(this.boxedHeaderCallToActionEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
     },
     /**
@@ -784,8 +786,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
         if (this.offcanvasAndBoxedHeader) {
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
             this.boxedHeaderCallToActionEl.classList.remove('nav-item');
             this.navbarEl.after(this.boxedHeaderCallToActionEl);
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
     },
 });
