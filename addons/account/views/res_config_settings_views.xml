@@ -342,7 +342,7 @@
                                 </setting>
                             </block>
                         </t>
-                        <block title="Analytics" id="analytic">
+                        <block title="Analytics" id="analytic" groups="account.group_account_user">
                             <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." groups="account.group_account_user" help="Track costs &amp; revenues by project, department, etc"
                                 documentation="/applications/finance/accounting/others/analytic_accounting.html">
                                 <field name="group_analytic_accounting"/>
@@ -351,7 +351,7 @@
                                 documentation="/applications/finance/accounting/others/adviser/budget.html">
                                 <field name="module_account_budget" widget="upgrade_boolean"/>
                             </setting>
-                            <setting id="monitor_product_margins" string="Margin Analysis" help="Monitor your product margins from invoices">
+                            <setting id="monitor_product_margins" string="Margin Analysis" help="Monitor your product margins from invoices" groups="account.group_account_user">
                                 <field name="module_product_margin"/>
                             </setting>
                         </block>
@@ -369,7 +369,7 @@
                                 </div>
                             </div>
                         </block>
-                        <block title="Storno Accounting" id="storno">
+                        <block title="Storno Accounting" id="storno" groups="account.group_account_user">
                             <setting id="enable_storno_accounting" company_dependent="1" help="Use Storno accounting" title="Allows you to use Storno accounting.">
                                 <field name="account_storno"/>
                             </setting>
