@@ -15,8 +15,8 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        this.$state = this.$('select[name="state_id"]');
-        this.$stateOptions = this.$state.filter(':enabled').find('option:not(:first)');
+        this.state = this.el.querySelector('select[name="state_id"]:enabled');
+        this.stateOptions = [...this.state.querySelectorAll('option')].filter(opt => opt.index !== 0);
         this._adaptAddressForm();
 
         return def;
@@ -30,12 +30,20 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
      * @private
      */
     _adaptAddressForm: function () {
-        var $country = this.$('select[name="country_id"]');
-        var countryID = ($country.val() || 0);
-        this.$stateOptions.detach();
-        var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
-        var nb = $displayedState.appendTo(this.$state).show().length;
-        this.$state.parent().toggle(nb >= 1);
+        const country = this.el.querySelector('select[name="country_id"]');
+        const countryID = (country.value || 0);
+        this.state.removeChild()
+        const displayedState = this.stateOptions.filter('[data-country_id=' + countryID + ']');
+        this.state.appendChild(displayedState)
+        displayedState.show();
+        const nb = displayedState.length;
+        if (nb >= 1) {
+            if (this.state.parent().offsetParent === null) { // hidden
+                this.state.parent().style.display = 'none';
+            } else {
+                this.state.parent().style.display = 'block';
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -132,6 +140,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      * @private
      */
     _adaptSearchLabel: function (elem) {
+        // TODO: MSH: Convert from here pending
         var $label = $(elem).clone();
         $label.find('span.nolabel').remove();
         this.$('input[name="search"]').attr('placeholder', $label.text().trim());
