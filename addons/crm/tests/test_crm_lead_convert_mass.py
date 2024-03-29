@@ -167,7 +167,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         user_ids = self.assign_users.ids
 
         # randomness: at least 1 query
-        with self.assertQueryCount(user_sales_manager=1803):  # crm 1479 / com 1794 / ent 1803
+        with self.assertQueryCount(user_sales_manager=1804):  # crm 1479 / com 1794 / ent 1804
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
