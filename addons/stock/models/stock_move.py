@@ -36,7 +36,8 @@ class StockMove(models.Model):
         help="Scheduled date until move is done, then date of actual move processing")
     date_deadline = fields.Datetime(
         "Deadline", readonly=True, copy=False,
-        help="Date Promise to the customer on the top level document (SO/PO)")
+        help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
+        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
