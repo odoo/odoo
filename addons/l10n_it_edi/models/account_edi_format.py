@@ -252,14 +252,14 @@ class AccountEdiFormat(models.Model):
         return {
             'buyer': {
                 'role': 'buyer',
-                'section_xpath': './/CessionarioCommittente',
+                'section_xpath': '//CessionarioCommittente',
                 'vat_xpath': '//CessionarioCommittente//IdCodice',
                 'codice_fiscale_xpath': '//CessionarioCommittente//CodiceFiscale',
                 'type_tax_use_domain': [('type_tax_use', '=', 'purchase')],
             },
             'seller': {
                 'role': 'seller',
-                'section_xpath': './/CedentePrestatore',
+                'section_xpath': '//CedentePrestatore',
                 'vat_xpath': '//CedentePrestatore//IdCodice',
                 'codice_fiscale_xpath': '//CedentePrestatore//CodiceFiscale',
                 'type_tax_use_domain': [('type_tax_use', '=', 'sale')],
