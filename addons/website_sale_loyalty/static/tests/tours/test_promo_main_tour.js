@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "add 2 Small Cabinet into cart",
             trigger: '#product_details input[name="add_qty"]',
-            run: "text 2",
+            run: "edit 2",
         },
         {
             content: "click on 'Add to Cart' button",
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "insert promo code 'testcode'",
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
-            run: "text testcode",
+            run: "edit testcode",
         },
         {
             content: "validate the coupon",
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "add one Small Cabinet",
             trigger: '#cart_products input.js_quantity',
-            run: "text 3",
+            run: "edit 3 && blur",
         },
         {
             content: "check reduction amount got recomputed when changing qty",
@@ -96,7 +96,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "add more Small Cabinet into cart",
             trigger: '#cart_products input.js_quantity',
-            run: "text 4",
+            run: "edit 4 && blur",
         },
         {
             content: "check free product is added",
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "remove one cabinet from cart",
             trigger: '#cart_products input.js_quantity[value="4"]',
-            run: "text 3",
+            run: "edit 3 && blur",
         },
         {
             content: "check free product is removed",

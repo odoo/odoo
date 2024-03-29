@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         {
             trigger: 'div[name="holiday_status_id"] input',
             content: _t("Let's try to create a Sick Time Off, select it in the list"),
-            run: `text ${leaveType.slice(0, leaveType.length - 1)}`,
+            run: `edit ${leaveType.slice(0, leaveType.length - 1)}`,
         },
         {
             trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
                 "You can select the period you need to take off, from start date to end date"
             ),
             position: "right",
-            run: `text ${leaveDateFrom}`,
+            run: `edit ${leaveDateFrom}`,
         },
         {
             trigger: "input[data-field=request_date_to]",
@@ -51,12 +51,12 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
                 "You can select the period you need to take off, from start date to end date"
             ),
             position: "right",
-            run: `text ${leaveDateTo}`,
+            run: `edit ${leaveDateTo}`,
         },
         {
             trigger: 'div[name="name"] textarea',
             content: _t("Add some description for the people that will validate it"),
-            run: `text ${description}`,
+            run: `edit ${description}`,
             position: "right",
         },
         {

@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     extra_trigger: 'button[name="add_to_cart"]',
     content: _t("Add additionnal information about your order."),
     position: 'bottom',
-    run: 'text allergy to peanuts',
+    run: "edit allergy to peanuts",
 },
 {
     trigger: 'button[name="add_to_cart"]',

@@ -6,16 +6,12 @@ const chatRequest = [
     {
         content: "Answer the chat request!",
         trigger: ".o-mail-Composer-input",
-        run: "text Hi ! What a coincidence! I need your help indeed.",
+        run: "edit Hi ! What a coincidence! I need your help indeed.",
     },
     {
         content: "Send the message",
         trigger: ".o-mail-Composer-input",
-        run() {
-            this.anchor.dispatchEvent(
-                new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
-            );
-        },
+        run: "press Enter",
     },
     {
         content: "Verify your message has been typed",

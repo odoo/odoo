@@ -19,7 +19,7 @@ stepUtils.showAppsMenuItem(),
 }, {
     content: "search the partner",
     trigger: 'div[name="partner_id"] input',
-    run: 'text Azure'
+    run: "edit Azure",
 }, {
     content: "select the partner",
     trigger: 'ul.ui-autocomplete > li > a:contains(Azure)',
@@ -28,10 +28,11 @@ stepUtils.showAppsMenuItem(),
     trigger: 'input[id="pricelist_id_0"]',
     // Wait for onchange to come back
     extra_trigger: "[name=partner_id]:contains(Fremont)",
+    run: "edit Test",
 }, {
     content: "search the pricelist",
     trigger: 'input[id="pricelist_id_0"]',
-    run: 'text Custo'
+    run: "edit Custo",
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
@@ -40,7 +41,7 @@ stepUtils.showAppsMenuItem(),
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: 'text Custo',
+    run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
 }, {

@@ -31,17 +31,17 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
         {
             trigger: "#name_0",
             content: "Give a name to the new event",
-            run: "text TEST EVENT",
+            run: "edit TEST EVENT",
         },
         {
             trigger: "#start_0",
             content: "Give a date to the new event",
-            run: `text ${todayDate()}`,
+            run: `edit ${todayDate()}`,
         },
         {
             trigger: "#duration_0",
             content: "Give a duration to the new event",
-            run: "text 02:00",
+            run: "edit 02:00",
         },
         {
             trigger: ".fa-cloud-upload",

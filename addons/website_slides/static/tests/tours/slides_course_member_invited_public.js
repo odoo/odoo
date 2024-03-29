@@ -23,7 +23,7 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_public'
     trigger: 'a:contains("login")',
 }, {
     trigger: 'input[id="password"]',
-    run: 'text portal',
+    run: "edit portal",
 }, {
     trigger: 'button:contains("Log in")',
 }, {

@@ -31,27 +31,27 @@
         steps: () => [{
         content: "Complete name",
         trigger: "input[name=contact_name]",
-        run: "text John Smith",
+        run: "edit John Smith",
     }, {
         content: "Complete phone number",
         trigger: "input[name=phone]",
-        run: "text +32 485 118.218"
+        run: "edit +32 485 118.218",
     }, {
         content: "Complete Email",
         trigger: "input[name=email_from]",
-        run: "text john@smith.com"
+        run: "edit john@smith.com",
     }, {
         content: "Complete Company",
         trigger: "input[name=partner_name]",
-        run: "text Odoo S.A."
+        run: "edit Odoo S.A.",
     }, {
         content: "Complete Subject",
         trigger: "input[name=name]",
-        run: "text Useless message"
+        run: "edit Useless message",
     }, {
         content: "Complete Subject",
         trigger: "textarea[name=description]",
-        run: "text ### TOUR DATA ###"
+        run: "edit ### TOUR DATA ###",
     }, {
         content: "Send the form",
         trigger: ".s_website_form_send"
@@ -67,11 +67,11 @@
         steps: () => [{
         content: "Complete Subject",
         trigger: "input[name=name]",
-        run: "text Useless subject"
+        run: "edit Useless subject",
     }, {
         content: "Complete Subject",
         trigger: "textarea[name=description]",
-        run: "text ### TOUR DATA PREFILL ###"
+        run: "edit ### TOUR DATA PREFILL ###",
     }, {
         content: "Send the form",
         trigger: ".s_website_form_send"

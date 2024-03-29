@@ -20,7 +20,7 @@
     }, {
         content: "insert content",
         trigger: '.o_field_widget.o_required_modifier input',
-        run: 'text test',
+        run: "edit test",
     }, {
         content: "click on moderator many2one dropdown",
         trigger: '.o_field_widget[name=moderator] input',
@@ -28,7 +28,7 @@
     }, {
         content: "insert value in moderator",
         trigger: '.o_field_widget[name=moderator] input',
-        run: 'text test',
+        run: "edit test",
     }, {
         content: "click on 'Create and Edit...'",
         trigger: '.o_field_widget[name=moderator] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit a',
@@ -36,15 +36,11 @@
         content: "insert a name into the modal form",
         trigger: '.o_field_widget[name=name] input',
         extra_trigger: '.modal',
-        run: function (action_helper) {
-            action_helper.text('user_test_' + (inc = new Date().getTime()));
-        }
+        run: `edit user_test_${(inc = new Date().getTime())}`,
     }, {
         content: "insert an email into the modal form",
         trigger: '.o_field_widget[name=login] input',
-        run: function (action_helper) {
-            action_helper.text('user_test_' + inc + '@test');
-        }
+        run: `edit user_test_${inc}@test`,
     }, {
         content: "save the modal content and create the new moderator",
         trigger: '.o_form_button_save',
@@ -81,7 +77,7 @@
     }, {
         content: "insert body a",
         trigger: '.modal-body textarea:first',
-        run: 'text a',
+        run: "edit a",
     }, {
         content: "save new message a",
         trigger: '.modal-footer .o_form_button_save',
@@ -92,7 +88,7 @@
     }, {
         content: "insert body b",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text b',
+        run: "edit b",
     }, {
         content: "save new message b",
         trigger: '.modal-footer .o_form_button_save',
@@ -100,7 +96,7 @@
         content: "insert content",
         trigger: '.o_field_widget[name=name] input',
         extra_trigger: '.o_field_widget[name="message_concat"] textarea:value([test] Mitchell Admin:a\n[test] Mitchell Admin:b)',
-        run: 'text test_trigger',
+        run: "edit test_trigger && blur",
     }, {
         content: "check onchange",
         trigger: '.o_field_widget[name="message_concat"] textarea:value([test_trigger] Mitchell Admin:a\n[test_trigger] Mitchell Admin:b)',
@@ -112,7 +108,7 @@
     }, {
         content: "change the body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text bbb',
+        run: "edit bbb",
     }, {
         content: "save changes",
         trigger: '.modal-footer .o_form_button_save',
@@ -123,7 +119,7 @@
     }, {
         content: "insert body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text c',
+        run: "edit c",
     }, {
         content: "save new message c",
         trigger: '.modal-footer .o_form_button_save',
@@ -175,7 +171,7 @@
     }, {
         content: "insert body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text d',
+        run: "edit d",
     }, {
         content: "save new message d",
         trigger: '.modal-footer .o_form_button_save',
@@ -186,7 +182,7 @@
     }, {
         content: "insert body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text e',
+        run: "edit e",
     }, {
         content: "save new message e",
         trigger: '.modal-footer .o_form_button_save',
@@ -197,7 +193,7 @@
     }, {
         content: "change the body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text aaa',
+        run: "edit aaa",
     }, {
         content: "save changes",
         trigger: '.modal-footer .o_form_button_save',
@@ -208,7 +204,7 @@
     }, {
         content: "open the many2one to select another user",
         trigger: '.o_field_widget[name="author"] input',
-        run: 'text Marc',
+        run: "edit Marc",
     }, {
         content: "select another user",
         trigger: '.o_field_widget[name="author"] .o-autocomplete--dropdown-menu li:contains(Marc Demo)',
@@ -272,7 +268,7 @@
     }, {
         content: "select another user",
         trigger: '.o_field_widget[name=author] input',
-        run: 'text Marc',
+        run: "edit Marc",
     }, {
         content: "select demo user",
         trigger: '.o_field_widget[name="author"] .o-autocomplete--dropdown-menu li:contains(Marc Demo)',
@@ -283,7 +279,7 @@
     }, {
         content: "insert body",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text ddd',
+        run: "edit ddd",
     }, {
         content: "save new message ddd",
         trigger: '.modal-footer .o_form_button_save',
@@ -319,7 +315,7 @@
         content: "edit content",
         trigger: '.o_field_widget[name=name] input',
         extra_trigger: ".o_form_editable",
-        run: 'text test_trigger2'
+        run: "edit test_trigger2 && blur",
     }, {
         content: "click outside to trigger onchange",
         trigger: '.o_form_sheet',
@@ -330,7 +326,7 @@
     }, {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text ccc'
+        run: "edit ccc && blur",
     }, {
         content: "click on other field (trigger the line onchange)",
         trigger: '.o_field_widget[name=messages] .o_field_many2one[name="author"] input',
@@ -342,7 +338,7 @@
     }, {
         content: "open the many2one to select an other user",
         trigger: '.o_field_widget[name=messages] .o_field_many2one[name="author"] input',
-        run: 'text Marc',
+        run: "edit Marc",
     }, {
         content: "select an other user",
         trigger: '.o_field_widget[name="author"] .o-autocomplete--dropdown-menu li:contains(Marc Demo)',
@@ -353,7 +349,7 @@
     }, {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text ccccc',
+        run: "edit ccccc",
     }, { // check onchange
         content: "click outside to trigger one2many onchange",
         trigger: '.o_field_widget[name=name] input',
@@ -365,6 +361,7 @@
     }, {
         content: "click outside to trigger one2many onchange",
         trigger: '.o_field_widget[name=categories] input',
+        run: "edit Test",
     }, {
         content: "add a tag",
         trigger: '.o_field_widget[name="categories"] .o-autocomplete--dropdown-menu li a:first',
@@ -394,7 +391,7 @@
     }, {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
-        run: 'text eee'
+        run: "edit eee",
     }, ...stepUtils.saveForm({ // save
         content: "save discussion",
         extra_trigger: '.o_field_widget[name="body"] textarea:value(eee)',
@@ -429,7 +426,7 @@
     }, {
         content: "set discussion title to generate dummy message",
         trigger: '.o_field_widget[name=name] input',
-        run:     'text {generate_dummy_message}',
+        run:     "edit {generate_dummy_message} && blur",
     }, {
         content: "check new dummy message happened",
         trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:contains(/^13$/)',
@@ -442,7 +439,7 @@
     }, {
         content: "empty discussion title",
         trigger: '.o_field_widget[name=name] input',
-        run:     'text removed_title',
+        run:     "edit removed_title && blur",
     }, {
         content: "onchange happened",
         trigger: '.o_field_widget[name=messages] .o_data_row td:contains([removed_title])',
@@ -450,7 +447,7 @@
     }, {
         content: "set discussion title to generate dummy message",
         trigger: '.o_field_widget[name=name] input',
-        run:     'text {generate_dummy_message}',
+        run:     "edit {generate_dummy_message} && blur",
     }, {
         content: "check update and new dummy message happened",
         trigger: '.o_field_widget[name=messages] .o_data_row .o_list_number:contains(/^22$/)',

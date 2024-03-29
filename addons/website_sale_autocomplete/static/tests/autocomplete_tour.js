@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
 { // Actual test
     content: 'Input in Street & Number field',
     trigger: 'input[name="street"]',
-    run: 'text This is a test'
+    run: "edit This is a test",
 }, {
     content: 'Check if results have appeared',
     trigger: '.js_autocomplete_result',
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
 }, {
     content: 'Input again in street field',
     trigger: 'input[name="street"]',
-    run: 'text add more'
+    run: "edit add more",
 }, {
     content: 'Click on the first result',
     trigger: '.js_autocomplete_result'

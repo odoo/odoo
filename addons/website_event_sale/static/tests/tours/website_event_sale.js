@@ -19,13 +19,13 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             content: "Select 1 unit of `Standard` ticket type",
             extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
             trigger: 'select:eq(0)',
-            run: 'text 1',
+            run: "select 1",
         },
         {
             content: "Select 2 units of `VIP` ticket type",
             extra_trigger: 'select:eq(0):has(option:contains(1):selected)',
             trigger: 'select:eq(1)',
-            run: 'text 2',
+            run: "select 2",
         },
         {
             content: "Click on `Order Now` button",

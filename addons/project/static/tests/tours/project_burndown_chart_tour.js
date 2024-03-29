@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
 }, {
     content: 'Search Burndown Chart',
     trigger: 'input.o_searchview_input',
-    run: `text Burndown`,
+    run: `edit Burndown`,
 }, {
     content: 'Validate search',
     trigger: '.o_searchview_autocomplete .o_menu_item:contains("Project")',

@@ -14,23 +14,23 @@
         }, {
             content: "Complete name",
             trigger: "input[name=partner_name]",
-            run: `text ${application.name}`,
+            run: `edit ${application.name}`,
         }, {
             content: "Complete Email",
             trigger: "input[name=email_from]",
-            run: `text ${application.email}`,
+            run: `edit ${application.email}`,
         }, {
             content: "Complete phone number",
             trigger: "input[name=partner_mobile]",
-            run: `text ${application.phone}`,
+            run: `edit ${application.phone}`,
         }, {
             content: "Complete LinkedIn profile",
             trigger: "input[name=linkedin_profile]",
-            run: `text linkedin.com/in/${application.name.toLowerCase().replace(' ', '-')}`,
+            run: `edit linkedin.com/in/${application.name.toLowerCase().replace(' ', '-')}`,
         }, {
             content: "Complete Subject",
             trigger: "textarea[name=description]",
-            run: `text ${application.subject}`,
+            run: `edit ${application.subject}`,
         }, { // TODO: Upload a file ?
             content: "Send the form",
             trigger: ".s_website_form_send",

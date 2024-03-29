@@ -20,7 +20,7 @@ function changeDescriptionContentAndSave(newContent) {
         trigger: descriptionField,
         run: async function(actions) {
             const textTriggerElement = this.anchor.querySelector(descriptionField);
-            actions.text(newText, textTriggerElement);
+            actions.editor(newText, textTriggerElement);
             await new Promise((r) => setTimeout(r, 300));
         },
     }, {

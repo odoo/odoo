@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add('website_event_pages_seo', {
     {
         content: "Fill in the title input",
         trigger: '[for="website_meta_title"] + input',
-        run: 'text Hello, world!',
+        run: "edit Hello, world!",
     },
     {
         content: "Save the dialog",

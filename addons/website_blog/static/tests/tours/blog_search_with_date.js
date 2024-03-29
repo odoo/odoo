@@ -11,12 +11,12 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     steps: () => [{
     content: "Select first month",
     trigger: 'select[name=archive]',
-    run: 'text option 2',
+    run: "selectByIndex 1",
 }, {
     content: "Enter search term",
     trigger: '.o_searchbar_form input',
     extra_trigger: '#o_wblog_posts_loop span:has(i.fa-calendar-o):has(a[href="/blog"])',
-    run: 'text a',
+    run: "edit a",
 }, {
     content: "Wait for suggestions then click on search icon",
     extra_trigger: '.o_searchbar_form .o_dropdown_menu .o_search_result_item',

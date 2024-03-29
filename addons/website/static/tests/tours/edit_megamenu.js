@@ -36,7 +36,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Write a label for the new menu item",
         trigger: '.modal-dialog .o_website_dialog input',
-        run: 'text Megaaaaa!'
+        run: "edit Megaaaaa!",
     },
     {
         content: "Confirm the mega menu label",
@@ -68,8 +68,9 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         run: () => null,
     },
     {
-        content: "Clicks on the first title item.",
+        content: "Click on the first title item.",
         trigger: ':iframe .o_mega_menu h4',
+        run: "click",
     },
     {
         content: "Press enter.",
@@ -85,7 +86,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
         trigger: ':iframe .o_mega_menu h4',
         // The content is removed in the previous step so it's now invisible.
         allowInvisible: true,
-        run: 'text New Menu Item',
+        run: "editor New Menu Item",
     },
     {
         // If this step fails, it means that a patch inside bootstrap was lost.
@@ -128,7 +129,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Write a label for the new menu item",
         trigger: '.modal-dialog .o_website_dialog input',
-        run: 'text Megaaaaa2!',
+        run: "edit Megaaaaa2!",
     },
     {
         content: "Confirm the mega menu label",

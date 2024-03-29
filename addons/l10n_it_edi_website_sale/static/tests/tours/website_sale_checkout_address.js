@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
         {
             content: "search Storage Box",
             trigger: 'form input[name="search"]',
-            run: "text Storage Box",
+            run: "edit Storage Box",
         },
         {
             content: "search Storage Box",
@@ -34,12 +34,12 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
         {
             content: "check if the fields Codice Destinatario is present",
             trigger: 'input[name="l10n_it_pa_index"]',
-            run: "text 1234567890123456789012345",
+            run: "edit 1234567890123456789012345",
         },
         {
             content: "check if the fields Codice Fiscale is present",
             trigger: 'input[name="l10n_it_codice_fiscale"]',
-            run: "text 12345678901",
+            run: "edit 12345678901",
         },
     ]
 });

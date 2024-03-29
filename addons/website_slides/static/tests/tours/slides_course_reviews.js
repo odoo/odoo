@@ -24,7 +24,7 @@ registry.category('web_tour.tours').add('course_reviews', {
 }, {
     trigger: 'div.o_portal_chatter_composer_body textarea',
     extra_trigger: 'div.modal_shown',
-    run: 'text Great course!',
+    run: "edit Great course!",
     in_modal: false,
 }, {
     trigger: 'button.o_portal_chatter_composer_btn',

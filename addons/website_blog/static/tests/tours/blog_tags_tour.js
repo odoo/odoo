@@ -24,7 +24,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Enter tag name",
         trigger: "we-customizeblock-option:contains(Tags) we-selection-items .o_we_m2o_create input",
-        run: "text testtag",
+        run: "edit testtag",
     }, {
         content: "Click Create",
         trigger: "we-customizeblock-option:contains(Tags) we-selection-items .o_we_m2o_create we-button",

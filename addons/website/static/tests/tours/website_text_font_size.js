@@ -61,7 +61,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
             trigger: `[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
-            run: `text_blur ${classNameInfo.get(fontSizeClass).end}`,
+            run: `edit ${classNameInfo.get(fontSizeClass).end} && blur`,
         }, {
             content: `[${fontSizeClass}] Go to blocks tab`,
             trigger: ".o_we_add_snippet_btn",

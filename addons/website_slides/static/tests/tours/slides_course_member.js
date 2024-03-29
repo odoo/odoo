@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add('course_member', {
     trigger: '.o_wslides_fs_share'
 }, {
     trigger: '.o_wslides_js_share_email input',
-    run: 'text friend@example.com'
+    run: "edit friend@example.com",
 }, {
     trigger: '.o_wslides_js_share_email button',
 }, {
@@ -49,10 +49,10 @@ registry.category("web_tour.tours").add('course_member', {
 // eLeaning: course completion
 {
     trigger: '.o_wslides_fs_sidebar_header',
-    run: function () {
+    run(helpers) {
         // check navigation with arrow keys
         // go back once
-        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+        helpers.press("ArrowLeft");
         // check that it selected the previous tab
         if (
             queryAll(
@@ -69,9 +69,9 @@ registry.category("web_tour.tours").add('course_member', {
 }, {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success-1',
     extra_trigger: '.o_wslides_progress_percentage:contains("40")',
-    run: function () {
+    run(helpers) {
         // check navigation with arrow keys
-        document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+        helpers.press("ArrowRight");
         // check that it selected the next/next tab
         if (
             queryAll('.o_wslides_fs_sidebar_list_item.active:contains("Home Gardening")')
@@ -90,10 +90,10 @@ registry.category("web_tour.tours").add('course_member', {
 }, {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success-2',
     extra_trigger: '.o_wslides_progress_percentage:contains("40")',
-    run: function () {
+    run(helpers) {
         // check navigation with arrow keys
         setTimeout(function () {
-            document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+            helpers.press("ArrowRight");
             // check that it selected the next/next tab
             if (
                 queryAll(
@@ -158,7 +158,7 @@ registry.category("web_tour.tours").add('course_member', {
     in_modal: false,
 }, {
     trigger: 'div.o_portal_chatter_composer_input textarea',
-    run: 'text This is a great course. Top !',
+    run: "edit This is a great course. Top !",
     in_modal: false,
 }, {
     trigger: 'button.o_portal_chatter_composer_btn',

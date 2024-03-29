@@ -13,6 +13,7 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
     trigger: ":iframe input[name=search]",
     extra_trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
     content: "Click somewhere else in the shop.",
+    run: "click",
 }, {
     trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
     extra_trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",

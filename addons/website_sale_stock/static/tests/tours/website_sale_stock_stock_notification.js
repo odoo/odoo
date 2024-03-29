@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('back_in_stock_notification_product', {
         {
             content: "Fill email form",
             trigger: 'div[id="stock_notification_form"] input[name="email"]',
-            run: 'text test@test.test',
+            run: "edit test@test.test",
         },
         {
             content: "Click on the button",
