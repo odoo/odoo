@@ -5,7 +5,13 @@
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
             <div class="page">
+<<<<<<< HEAD
                 <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>
+||||||| parent of 1db8ec33bfa8 (temp)
+                <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name"/>INV0001</strong></h3>
+=======
+                <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name">INV0001</span></strong></h3>
+>>>>>>> 1db8ec33bfa8 (temp)
 
                 <div class="mb-4 mt-3">
                     <div name="date" class="row">
