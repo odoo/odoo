@@ -1069,7 +1069,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         // with a class (in case the formating comes from the class).
         while (
             parentNode && !isBlock(parentNode) &&
-            !(parentNode.classList && parentNode.classList.length) &&
+            !(parentNode.classList && parentNode.classList.length && !parentNode.classList.contains('text-gradient')) &&
             !isUnbreakable(parentNode) && !isUnbreakable(currentNode)
         ) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&

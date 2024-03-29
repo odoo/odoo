@@ -444,8 +444,14 @@ const ColorPaletteWidget = Widget.extend({
      * @returns {Object}
      */
     _getButtonInfo: function (buttonEl) {
-        const bgColor = buttonEl.style.backgroundColor;
-        const value = buttonEl.dataset.color || (bgColor && bgColor !== 'initial' ? ColorpickerWidget.normalizeCSSColor(bgColor) : '') || '';
+        let bgColor = buttonEl.style.backgroundColor;
+        // if (weUtils.isColorGradient(bgColor) && !bgColor.startsWith('-webkit-')) {
+        //     bgColor = '-webkit-' + bgColor;
+        // }
+        let value = buttonEl.dataset.color || (bgColor && bgColor !== 'initial' ? ColorpickerWidget.normalizeCSSColor(bgColor) : '') || '';
+        // if (weUtils.isColorGradient(value) && !value.startsWith('-webkit-')) {
+        //     value = '-webkit-' + value;
+        // }
         const info = {
             target: buttonEl,
         };

@@ -5396,19 +5396,19 @@ X[]
                             stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
                             contentAfterEdit: unformat(`
                                 <p>
-                                    a<font style="color: aquamarine;">[bc</font>
+                                    a<span style="color: aquamarine;">[bc</span>
                                 </p>
                                 <table class="o_selected_table">
                                     <tbody>
                                         <tr>
                                             <td class="o_selected_td">
-                                                <font style="color: aquamarine;">a]b</font>
+                                                <span style="color: aquamarine;">a]b</span>
                                             </td>
                                             <td class="o_selected_td">
-                                                <font style="color: aquamarine;">cd</font>
+                                                <span style="color: aquamarine;">cd</span>
                                             </td>
                                             <td class="o_selected_td">
-                                                <font style="color: aquamarine;">ef</font>
+                                                <span style="color: aquamarine;">ef</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -5427,18 +5427,18 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">e[f</font>
+                                            <span style="color: aquamarine;">e[f</span>
                                         </td>
                                     </tr></tbody>
                                 </table>
                                 <p>
-                                    <font style="color: aquamarine;">a]</font>bc
+                                    <span style="color: aquamarine;">a]</span>bc
                                 </p>`),
                         });
                     });
@@ -5454,23 +5454,23 @@ X[]
                             stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
                             contentAfterEdit: unformat(`
                                 <p>
-                                    a<font style="color: aquamarine;">[bc</font>
+                                    a<span style="color: aquamarine;">[bc</span>
                                 </p>
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr></tbody>
                                 </table>
                                 <p>
-                                    <font style="color: aquamarine;">a]</font>bc
+                                    <span style="color: aquamarine;">a]</span>bc
                                 </p>`),
                         });
                     });
@@ -5491,34 +5491,34 @@ X[]
                             stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
                             contentAfterEdit: unformat(`
                                 <p>
-                                    a<font style="color: aquamarine;">[bc</font>
+                                    a<span style="color: aquamarine;">[bc</span>
                                 </p>
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr></tbody>
                                 </table>
                                 <p>
-                                    <font style="color: aquamarine;">abc</font>
+                                    <span style="color: aquamarine;">abc</span>
                                 </p>
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a]b</font>
+                                            <span style="color: aquamarine;">a]b</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr></tbody>
                                 </table>`),
@@ -5542,36 +5542,36 @@ X[]
                             stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
                             contentAfterEdit: unformat(`
                                 <p>
-                                    a<font style="color: aquamarine;">[bc</font>
+                                    a<span style="color: aquamarine;">[bc</span>
                                 </p>
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr></tbody>
                                 </table>
-                                <p><font style="color: aquamarine;">abc</font></p>
+                                <p><span style="color: aquamarine;">abc</span></p>
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr></tbody>
                                 </table>
-                                <p><font style="color: aquamarine;">a]</font>bc</p>`),
+                                <p><span style="color: aquamarine;">a]</span>bc</p>`),
                         });
                     });
                 });
@@ -5990,10 +5990,10 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a[b</font>
+                                            <span style="color: aquamarine;">a[b</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">c]d</font>
+                                            <span style="color: aquamarine;">c]d</span>
                                         </td>
                                         <td>ef</td>
                                     </tr></tbody>
@@ -6012,13 +6012,13 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a[b</font>
+                                            <span style="color: aquamarine;">a[b</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">e]f</font>
+                                            <span style="color: aquamarine;">e]f</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -6053,21 +6053,21 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a[b</font>
+                                            <span style="color: aquamarine;">a[b</span>
                                         </td>
                                         <td>cd</td>
                                         <td>ef</td>
                                     </tr>
                                     <tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td>cd</td>
                                         <td>ef</td>
                                     </tr>
                                     <tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a]b</font>
+                                            <span style="color: aquamarine;">a]b</span>
                                         </td>
                                         <td>cd</td>
                                         <td>ef</td>
@@ -6099,19 +6099,19 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a[b</font>
+                                            <span style="color: aquamarine;">a[b</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td>ef</td>
                                     </tr>
                                     <tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">c]d</font>
+                                            <span style="color: aquamarine;">c]d</span>
                                         </td>
                                         <td>ef</td>
                                     </tr>
@@ -6147,35 +6147,35 @@ X[]
                                 <table class="o_selected_table">
                                     <tbody><tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">a[b</font>
+                                            <span style="color: aquamarine;">a[b</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
-                                        </td>
-                                        <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
-                                        </td>
-                                        <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ef</font>
+                                            <span style="color: aquamarine;">ef</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">ab</font>
+                                            <span style="color: aquamarine;">ab</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">cd</font>
+                                            <span style="color: aquamarine;">cd</span>
                                         </td>
                                         <td class="o_selected_td">
-                                            <font style="color: aquamarine;">e]f</font>
+                                            <span style="color: aquamarine;">ef</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_selected_td">
+                                            <span style="color: aquamarine;">ab</span>
+                                        </td>
+                                        <td class="o_selected_td">
+                                            <span style="color: aquamarine;">cd</span>
+                                        </td>
+                                        <td class="o_selected_td">
+                                            <span style="color: aquamarine;">e]f</span>
                                         </td>
                                     </tr></tbody>
                                 </table>`),
@@ -6726,7 +6726,7 @@ X[]
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b<span class="a">c</span>d]e</p>',
                 stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
-                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b<span class="a">c</span>d]</font>e</p>',
+                contentAfter: '<p>a<span style="color: rgb(255, 0, 0);">[b<span class="a">c</span>d]</span>e</p>',
             });
         });
         it('should apply background color to a list of 3 items with font size', async () => {
@@ -6751,24 +6751,18 @@ X[]
                 stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'backgroundColor'),
                 contentAfter: '<ul>' +
                                     '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                        '<span style="font-size: 36px; background-color: rgb(255, 0, 0);">' +
                                                 '[abc' +
-                                            '</font>' +
                                         '</span>' +
                                     '</li>' +
                                     '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                        '<span style="font-size: 36px; background-color: rgb(255, 0, 0);">' +
                                                 'bcd' +
-                                            '</font>' +
-                                        '</span>' +
+                                            '</span>' +
                                     '</li>' +
                                     '<li>' +
-                                        '<span style="font-size: 36px;">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                        '<span style="font-size: 36px; background-color: rgb(255, 0, 0);">' +
                                                 'cde]' +
-                                            '</font>' +
                                         '</span>' +
                                     '</li>' +
                                 '</ul>',
@@ -6797,23 +6791,23 @@ X[]
                 contentAfter: '<ul>' +
                                     '<li>' +
                                         '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                            '<span style="background-color: rgb(255, 0, 0);">' +
                                                 '[abc' +
-                                            '</font>' +
+                                            '</span>' +
                                         '</a>' +
                                     '</li>' +
                                     '<li>' +
                                         '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                            '<span style="background-color: rgb(255, 0, 0);">' +
                                                 'bcd' +
-                                            '</font>' +
+                                            '</span>' +
                                         '</a>' +
                                     '</li>' +
                                     '<li>' +
                                         '<a href="#">' +
-                                            '<font style="background-color: rgb(255, 0, 0);">' +
+                                            '<span style="background-color: rgb(255, 0, 0);">' +
                                                 'cde]' +
-                                            '</font>' +
+                                            '</span>' +
                                         '</a>' +
                                     '</li>' +
                                 '</ul>',
@@ -6823,9 +6817,9 @@ X[]
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b<a class="btn">c</a>d]e</p>',
                 stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
-                contentAfter: '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
-                    '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
-                    '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
+                contentAfter: '<p>a<span style="color: rgb(255, 0, 0);">[b</span>' +
+                    '<a class="btn"><span style="color: rgb(255, 0, 0);">c</span></a>' +
+                    '<span style="color: rgb(255, 0, 0);">d]</span>e</p>',
             });
         });
     });

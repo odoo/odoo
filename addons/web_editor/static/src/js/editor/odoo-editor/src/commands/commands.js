@@ -595,11 +595,12 @@ export const editorCommands = {
         const selectedNodes = mode === "backgroundColor"
             ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
             : selectionNodes;
+        const fontSpanSelector = 'span[style], span[fontspan]';
         function getFonts(selectedNodes) {
             return selectedNodes.flatMap(node => {
-                let font = closestElement(node, 'font') || closestElement(node, 'span');
+                let font = closestElement(node, 'font') || closestElement(node, fontSpanSelector);
                 const children = font && descendants(font);
-                if (font && (font.nodeName === 'FONT' || (font.nodeName === 'SPAN' && font.style[mode]))) {
+                if (font) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(child => selectedNodes.includes(child));
                     if (selectedChildren.length) {
@@ -615,9 +616,9 @@ export const editorCommands = {
                     ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                     isVisibleStr(node.textContent) &&
                     !node.classList.contains('btn') &&
-                    !node.querySelector('font')) &&
-                    node.nodeName !== 'A' &&
-                    !(node.nodeName === 'SPAN' && node.style['fontSize'])
+                    !node.querySelector('font') &&
+                    !node.querySelector(fontSpanSelector)) &&
+                    node.nodeName !== 'A'
                 ) {
                     // Node is a visible text or inline node without font nor a button:
                     // wrap it in a <font>.
@@ -625,7 +626,7 @@ export const editorCommands = {
                     const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
                     if (
                         previous &&
-                        previous.nodeName === 'FONT' &&
+                        (previous.nodeName === 'FONT' || previous.nodeName === 'SPAN' && previous.matches(fontSpanSelector)) &&
                         !previous.style[mode === 'color' ? 'backgroundColor' : 'color'] &&
                         !classRegex.test(previous.className) &&
                         selectedNodes.includes(previous.firstChild) &&
@@ -635,8 +636,9 @@ export const editorCommands = {
                         // colored in the other mode: append to that.
                         font = previous;
                     } else {
-                        // No <font> found: insert a new one.
-                        font = document.createElement('font');
+                        // No <font> found: insert a new one.$
+                        font = document.createElement("span");
+                        font.setAttribute("fontspan", true);
                         node.after(font);
                     }
                     if (node.textContent) {
@@ -661,6 +663,7 @@ export const editorCommands = {
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
+            font.removeAttribute("fontspan");
             colorElement(font, color, mode);
             if ((!hasColor(font, 'color') && !hasColor(font,'backgroundColor')) && (!font.hasAttribute('style') || !color)) {
                 for (const child of [...font.childNodes]) {

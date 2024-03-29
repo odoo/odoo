@@ -292,10 +292,10 @@ QUnit.module('web_editor', {}, function () {
                 "should close the color picker");
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto toto </font>toto</p><p>tata</p>',
+                '<p>t<span style="background-color: rgb(0, 255, 255);">oto toto </span>toto</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
-            var fontElement = $field.find('.note-editable font')[0];
+            var fontElement = $field.find('.note-editable span')[0];
             var rangeControl = {
                 sc: fontElement.firstChild,
                 so: 0,
@@ -315,7 +315,7 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($('#toolbar .note-back-color-preview [style="background-color: var(--we-cp-o-color-3);"]'));
 
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
+                '<p>t<span style="background-color: rgb(0, 255, 255);">oto t</span><span class="bg-o-color-3">oto to</span>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
 
             // Make sure the reset button works too
@@ -325,7 +325,7 @@ QUnit.module('web_editor', {}, function () {
             // TODO right now the behavior is to force "inherit" as background
             // but it should remove the useless font element when possible.
             assert.strictEqual($field.find('.note-editable').html(),
-                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font>oto toto</p><p>tata</p>',
+                '<p>t<span style="background-color: rgb(0, 255, 255);">oto t</span>oto toto</p><p>tata</p>',
                 "should have properly reset the background color");
 
             // Select the whole paragraph.
@@ -810,7 +810,7 @@ QUnit.module('web_editor', {}, function () {
                 mockRPC: function (route, args) {
                     if (args.method === "write") {
                         assert.strictEqual(args.args[1].body,
-                            '<p>t<font class="bg-o-color-3">oto toto&nbsp;</font>toto</p><p>tata</p>',
+                            '<p>t<span class="bg-o-color-3">oto toto&nbsp;</span>toto</p><p>tata</p>',
                             "should save the content");
 
                     }

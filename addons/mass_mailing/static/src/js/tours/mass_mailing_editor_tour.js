@@ -164,7 +164,7 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         },
         {
             content: "Check that color was applied",
-            trigger: 'iframe p font.text-o-color-1',
+            trigger: 'iframe p span.text-o-color-1',
             run: () => null,
         },
         {

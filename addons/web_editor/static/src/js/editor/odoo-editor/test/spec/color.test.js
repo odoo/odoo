@@ -30,23 +30,23 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>ab[]cd</p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'color'),
-            contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+            contentAfter: '<p>ab<span style="color: rgb(255, 0, 0);">[]\u200B</span>cd</p>',
         });
     });
     it('should get ready to type with a different background color', async () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>ab[]cd</p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
-            contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+            contentAfter: '<p>ab<span style="background-color: rgb(255, 0, 0);">[]\u200B</span>cd</p>',
         });
     });
     it('should apply a color on empty selection', async () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'color'),
-            contentAfterEdit: '<p>[<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p>]<font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>',
+            contentAfterEdit: '<p>[<span data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</span></p>' +
+                              '<p><span data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</span></p>' +
+                              '<p>]<span data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</span></p>',
             contentAfter: '<p>[</p><p></p><p>]</p>',
         });
     });
@@ -54,9 +54,9 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
-            contentAfterEdit: '<p>[<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p><font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
-                              '<p>]<font data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>',
+            contentAfterEdit: '<p>[<span data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</span></p>' +
+                              '<p><span data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</span></p>' +
+                              '<p>]<span data-oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</span></p>',
             contentAfter: '<p>[</p><p></p><p>]</p>',
         });
     });
@@ -64,16 +64,16 @@ describe('applyColor', () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p><strong>[abcd</strong><br><strong>efghi]</strong></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'backgroundColor'),
-            contentAfter: '<p><strong><font style="background-color: rgb(255, 0, 0);">[abcd</font></strong><br>' +
-                          '<strong><font style="background-color: rgb(255, 0, 0);">efghi]</font></strong></p>',
+            contentAfter: '<p><strong><span style="background-color: rgb(255, 0, 0);">[abcd</span></strong><br>' +
+                          '<strong><span style="background-color: rgb(255, 0, 0);">efghi]</span></strong></p>',
         });
     });
     it('should not merge line on color change', async () => {
         await testEditor(BasicEditor, {
             contentBefore: '<p><strong>[abcd</strong><br><strong>efghi]</strong></p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'color'),
-            contentAfter: '<p><strong><font style="color: rgb(255, 0, 0);">[abcd</font></strong><br>' +
-                          '<strong><font style="color: rgb(255, 0, 0);">efghi]</font></strong></p>',
+            contentAfter: '<p><strong><span style="color: rgb(255, 0, 0);">[abcd</span></strong><br>' +
+                          '<strong><span style="color: rgb(255, 0, 0);">efghi]</span></strong></p>',
         });
     });
     it('should not apply color on an uneditable element', async () => {
@@ -81,9 +81,9 @@ describe('applyColor', () => {
             contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
             stepFunction: setColor('rgb(255, 0, 0)', 'color'),
             contentAfter: unformat(`
-                <p><font style="color: rgb(255, 0, 0);">[a</font></p>
+                <p><span style="color: rgb(255, 0, 0);">[a</span></p>
                 <p contenteditable="false">b</p>
-                <p><font style="color: rgb(255, 0, 0);">c]</font></p>
+                <p><span style="color: rgb(255, 0, 0);">c]</span></p>
             `),
         });
     });
