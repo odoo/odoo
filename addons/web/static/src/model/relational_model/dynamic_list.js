@@ -349,8 +349,11 @@ export class DynamicList extends DataPoint {
         }
 
         // Perform the resequence in the list of records/groups
-        const [dp] = originalList.splice(fromIndex, 1);
-        originalList.splice(toIndex, 0, dp);
+        const dp = originalList[fromIndex];
+        if (fromIndex !== toIndex) {
+            originalList.splice(fromIndex, 1);
+            originalList.splice(toIndex, 0, dp);
+        }
 
         // Creates the list of records/groups to modify
         let toReorder = originalList;

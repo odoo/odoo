@@ -12738,26 +12738,27 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
 });
 
 test.tags("desktop")("rerenders only once after resequencing records", async () => {
-    let renderCount = 0;
-    let def;
-    class MyField extends Component {
-        static template = xml`<span t-esc="renderCount"/>`;
-        static props = ["*"];
+    // Actually it's not once, because we must render directly after the drag&drop s.t. the dropped
+    // record remains where it has been dropped, once again after saving/reloading the record as
+    // we rebuild record.data, and finally after the call to resequence, to re-enable the resequence
+    // feature on the record (canResequence props).
+    let saveDef = new Deferred();
+    let resequenceDef = new Deferred();
+    const renderCounts = {};
+    patchWithCleanup(KanbanRecordLegacy.prototype, {
         setup() {
+            super.setup();
             onWillRender(() => {
-                renderCount++;
+                const id = this.props.record.resId;
+                renderCounts[id] = renderCounts[id] || 0;
+                renderCounts[id]++;
             });
-        }
-        get renderCount() {
-            return renderCount;
-        }
-    }
-    fieldRegistry.add("my_field", { component: MyField });
-    after(() => fieldRegistry.remove("my_field"));
+        },
+    });
 
-    Partner._fields.product_id = fields.Many2one({ relation: "product", onChange: () => {} });
-
-    onRpc("web_save", () => def);
+    onRpc("web_save", () => saveDef);
+    onRpc("/web/dataset/resequence", () => resequenceDef);
+    stepAllNetworkCalls();
 
     await mountView({
         type: "kanban",
@@ -12765,11 +12766,9 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         arch: `
             <kanban>
                 <templates>
-                    <field name="product_id"/>
                     <t t-name="kanban-box">
                         <div>
                             <field name="foo"/>
-                            <field name="int_field" widget="my_field"/>
                         </div>
                     </t>
                 </templates>
@@ -12777,32 +12776,58 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         groupBy: ["product_id"],
     });
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["yop1", "gnap2", "blip3", "blip4"]);
+    expect(renderCounts).toEqual({ 1: 1, 2: 1, 3: 1, 4: 1 });
 
-    def = new Deferred();
+    // drag yop to the second column
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop5"]);
+    expect(renderCounts).toEqual({ 1: 2, 2: 1, 3: 1, 4: 1 });
 
-    def.resolve();
+    saveDef.resolve();
     await animationFrame();
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop5"]);
+    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
 
-    def = new Deferred();
+    resequenceDef.resolve();
+    await animationFrame();
 
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
+
+    // drag gnap to the second column
+    saveDef = new Deferred();
+    resequenceDef = new Deferred();
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop5", "gnap6"]);
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 2, 4: 1 });
 
-    def.resolve();
+    saveDef.resolve();
     await animationFrame();
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop5", "gnap6"]);
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 3, 4: 1 });
+
+    resequenceDef.resolve();
+    await animationFrame();
+
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 4, 4: 1 });
+
+    expect([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_read_group",
+        "web_search_read",
+        "web_search_read",
+        "web_save",
+        "/web/dataset/resequence",
+        "read",
+        "web_save",
+        "/web/dataset/resequence",
+        "read",
+    ]).toVerifySteps();
 });
 
 test("sample server: _mockWebReadGroup API", async () => {
