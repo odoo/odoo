@@ -67,7 +67,7 @@
                         </setting>
                     </block>
 
-                    <block title="Email &amp; Marketing" id="website_email_marketing">
+                    <block title="Email &amp; Marketing" id="website_email_marketing_settings">
                         <setting id="livechat" string="Livechat" help="Alows your visitors to chat with you">
                             <field name="module_website_livechat"/>
                         </setting>
@@ -76,7 +76,7 @@
                         </setting>
                     </block>
 
-                    <block title="Privacy" id="website_settings" invisible="not website_id">
+                    <block title="Privacy" id="website_privacy_settings" invisible="not website_id">
                         <setting id="website_cookies_bar_setting" help="Display a customizable cookies bar on your website"
                             documentation="/applications/websites/website/configuration/cookies_bar.html">
                             <field name="website_cookies_bar"/>
@@ -93,7 +93,7 @@
                             </div>
                         </setting>
                     </block>
-                    <block title="SEO" id="website_settings" invisible="not website_id">
+                    <block title="SEO" id="website_seo_settings" invisible="not website_id">
                         <setting id="google_analytics_setting" help="Track visits using Google Analytics">
                             <field name="has_google_analytics"/>
                             <div class="content-group" invisible="not has_google_analytics">
