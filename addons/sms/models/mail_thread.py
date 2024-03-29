@@ -305,13 +305,14 @@ class MailThread(models.AbstractModel):
                 value['sanitized'] or original
                 for original, value in sanitized.items()
             ]
+            existing_partners_numbers = {vals_dict['number'] for vals_dict in sms_create_vals}
             sms_create_vals += [dict(
                 sms_base_vals,
                 partner_id=False,
                 number=n,
                 state='outgoing' if n else 'error',
                 failure_type='' if n else 'sms_number_missing',
-            ) for n in tocreate_numbers]
+            ) for n in tocreate_numbers if n not in existing_partners_numbers]
 
         # create sms and notification
         existing_pids, existing_numbers = [], []
