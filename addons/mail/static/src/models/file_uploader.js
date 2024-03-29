@@ -128,9 +128,13 @@ registerModel({
                     return;
                 }
                 try {
+                    const body = this._createFormData({ composer, file, thread });
+                    if (activity) {
+                        body.append("activity_id", activity.id);
+                    }
                     const response = await (composer || thread).messaging.browser.fetch('/mail/attachment/upload', {
                         method: 'POST',
-                        body: this._createFormData({ composer, file, thread }),
+                        body,
                         signal: uploadingAttachment.uploadingAbortController.signal,
                     });
                     const attachmentData = await response.json();
