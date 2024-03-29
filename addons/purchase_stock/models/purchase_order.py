@@ -31,7 +31,10 @@ class PurchaseOrder(models.Model):
         ('pending', 'Not Received'),
         ('partial', 'Partially Received'),
         ('full', 'Fully Received'),
-    ], string='Receipt Status', compute='_compute_receipt_status', store=True)
+    ], string='Receipt Status', compute='_compute_receipt_status', store=True,
+       help="Red: Late\n\
+            Orange: To process today\n\
+            Green: On time")
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
