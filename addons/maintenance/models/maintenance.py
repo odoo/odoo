@@ -163,6 +163,12 @@ class MaintenanceEquipment(models.Model):
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
+    customer_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Customer",
+        required=False,
+        index=True,
+        tracking=1)
 
     @api.onchange('category_id')
     def _onchange_category_id(self):

@@ -402,7 +402,7 @@
                             class="oe_stat_button"
                             context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
                             icon="fa-wrench">
-                            <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
+                            <field string="Maintenance" name="maintenance_count" widget="statinfo"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -416,6 +416,7 @@
                             <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="owner_user_id" string="Owner"/>
+                            <field name="customer_id" />
                         </group>
                         <group>
                             <field name="maintenance_team_id" context="{'default_company_id':company_id}"/>
@@ -551,6 +552,7 @@
                 <field name="partner_id" column_invisible="True"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
+                <field name="customer_id" />
             </tree>
         </field>
     </record>

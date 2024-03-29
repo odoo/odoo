@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="action_res_partner_2_maintenance_equipment" model="ir.actions.act_window">
+        <field name="name">Maintenance Equipment</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('customer_id','=',active_id)]</field>
+        <field name="context">{'default_customer_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add new equipment
+            </p>
+            <p>
+                Track equipment and link it to an employee or department.
+                You will be able to manage allocations, issues and maintenance of your equipment.
+            </p>
+        </field>
+    </record>
+
+    <record id="res_partner_view_buttons" model="ir.ui.view">
+        <field name="name">res.partner.view.buttons</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority" eval="11"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="%(action_res_partner_2_maintenance_equipment)d"
+                    class="oe_stat_button"
+                    type="action"
+                    icon="fa-gear">
+                    <field string="Equipment" name="maintenance_equipment_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
