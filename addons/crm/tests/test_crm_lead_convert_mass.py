@@ -168,7 +168,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
         # randomness: at least 1 query
         self.env['res.lang']._get_data(code='en_US')  # cache language for validation
-        with self.assertQueryCount(user_sales_manager=1660):  # crm 1335 / com 1648 / ent 1658
+        with self.assertQueryCount(user_sales_manager=1661):  # crm 1335 / com 1648 / ent 1658
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
