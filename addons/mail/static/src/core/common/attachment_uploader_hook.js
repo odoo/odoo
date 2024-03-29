@@ -36,11 +36,11 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
     const uploadingAttachmentIds = new Set();
     const state = useState({
         thread,
-        uploadData({ data, name, type }) {
+        uploadData({ data, name, type }, activity) {
             const file = new File([dataUrlToBlob(data, type)], name, { type });
-            return this.uploadFile(file);
+            return this.uploadFile(file, activity);
         },
-        async uploadFile(file) {
+        async uploadFile(file, activity) {
             const tmpId = nextId--;
             uploadingAttachmentIds.add(tmpId);
             await upload("/mail/attachment/upload", [file], {
@@ -50,6 +50,9 @@ export function useAttachmentUploader(thread, { composer, onFileUploaded } = {})
                     formData.append("thread_model", state.thread.model);
                     formData.append("is_pending", Boolean(composer));
                     formData.append("temporary_id", tmpId);
+                    if (activity) {
+                        formData.append("activity_id", activity.id);
+                    }
                 },
             }).catch((e) => {
                 if (e.name !== "AbortError") {
