@@ -36,7 +36,7 @@
                         messageToReplyTo="props.messageToReplyTo"
                         squashed="isSquashed(msg, prevMsg)"
                         highlighted="messageHighlight?.highlightedMessageId === msg.id"
-                        onParentMessageClick="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
+                        onParentMessageClick.bind="() => msg.parentMessage and env.messageHighlight?.highlightMessage(msg.parentMessage, props.thread)"
                         thread="props.thread"
                         messageEdition="props.messageEdition"
                         isFirstMessage="msg_first"
