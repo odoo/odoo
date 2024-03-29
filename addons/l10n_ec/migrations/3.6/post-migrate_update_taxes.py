@@ -15,8 +15,12 @@ def update_names(cr, env):
             (f'{company.id}_tax_withhold_profit_3440', '3440 2.75% Otras Retenciones Aplicables el 2,75%')
         ]
         for xml_id, name in taxes_to_update:
-            cr.execute("UPDATE account_tax SET name=%s "
-                       "WHERE id=(SELECT res_id FROM ir_model_data WHERE module = 'l10n_ec' AND name=%s)", (name, xml_id))
+            # There is no translation for name taxes in the l10n_ec data, which means we need to update the name for each language.
+            active_langs = env['res.lang'].search([('active', '=', True)])
+            for lang in active_langs:
+                tax = env.ref(f'l10n_ec.{xml_id}', raise_if_not_found=False)
+                if tax:
+                    tax.with_context(lang=lang.code).name = name
 
 def update_ec_codes(cr, env):
     """
