@@ -530,16 +530,6 @@ msgid ""
 msgstr "當建立別名的新記錄時，一個Python字典被提供作為預設值."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
-msgid "A bus presence must have a user or a guest."
-msgstr "總線存在必須有用戶或訪客。"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
-msgid "A channel member must be a partner or a guest."
-msgstr "頻道成員必須是合作夥伴或訪客。"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -556,11 +546,6 @@ msgid ""
 msgstr "無法建立超過 2 人的聊天。請改為建立一個群組"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
-msgid "A message reaction must be from a partner or from a guest."
-msgstr "訊息回應必須來自合作夥伴或訪客。"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
@@ -574,11 +559,6 @@ msgid ""
 "https://cloud.google.com/translate/docs/setup"
 msgstr ""
 "要啟用訊息翻譯，需要有效的 Google API 密鑰。 https://cloud.google.com/translate/docs/setup"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
-msgid "A volume setting must have a partner or a guest."
-msgstr "音量設置必須有合作夥伴或訪客"
 
 #. module: mail
 #. odoo-javascript
@@ -703,11 +683,6 @@ msgstr "活動"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "要生成的活動"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
-msgid "Activities have to be linked to records with a not null res_id."
-msgstr "活動必須連結至 res_id 值不是留空的記錄。"
 
 #. module: mail
 #. odoo-javascript
@@ -1606,11 +1581,6 @@ msgid ""
 msgstr "彈回別名 %(bounce)s 已用於另一個同名的域。請使用另一個彈回別名，或直接使用另一個別名域。"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
-msgid "Bounce emails should be unique"
-msgstr "彈回郵件應獨一無二"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1819,11 +1789,6 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr "全收別名 %(catchall)s 已用於另一個同名域名。請使用另一個全收別名，或直接使用另一個別名域。"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
-msgid "Catchall emails should be unique"
-msgstr "全收郵件應獨一無二"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2512,11 +2477,6 @@ msgstr "自訂範本"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "自訂通道名稱"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
-msgid "Customer is required for inbox / email notification"
-msgstr "客戶需要收件箱/電子信件通知"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3276,11 +3236,6 @@ msgid "Email Thread"
 msgstr "電子郵件行程"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
-msgid "Email address already exists!"
-msgstr "電子郵件地址已存在！"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3464,11 +3419,6 @@ msgid ""
 "Error without exception. Probably due to sending an email without computed "
 "recipients."
 msgstr "沒有異常例外的錯誤。可能因發送電郵時沒有經計算的收件人。"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
-msgid "Error, a partner cannot follow twice the same object."
-msgstr "錯誤，合作夥伴不能關注相同的對象兩次。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -3961,13 +3911,6 @@ msgstr "分組依據"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Group Name"
 msgstr "群組名稱"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
-msgid ""
-"Group authorization and group auto-subscription are only supported on "
-"channels."
-msgstr "只限頻道才支援群組授權及群組自動訂閱。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -6566,11 +6509,6 @@ msgid "Only custom models can be modified."
 msgstr "僅有自訂模型能被修改。"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
-msgid "Only internal user can receive notifications in Odoo"
-msgstr "只限內部用戶才可在 Odoo 內接收通知"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -7785,6 +7723,13 @@ msgid "Save as a new template"
 msgstr "儲存為新範本"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "從 Tenor API 儲存最愛 GIF"
@@ -8886,16 +8831,6 @@ msgid "The avatar has been updated!"
 msgstr "頭像已更新。"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
-msgid "The channel UUID must be unique"
-msgstr "頻道 UUID 必須是唯一的"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "頻道類型不可留空"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "目前使用者可編輯範本。"
@@ -8911,11 +8846,6 @@ msgstr "語音訊息的時長限制為 1 分鐘。"
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "EMail發到"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
-msgid "The endpoint must be unique !"
-msgstr "終端點必須獨一無二！"
 
 #. module: mail
 #. odoo-python
@@ -9057,11 +8987,6 @@ msgstr "內文的純文字開首，用作電郵預覽。"
 #, python-format
 msgid "There are no messages in this conversation."
 msgstr "此對話中沒有訊息"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
-msgid "There can only be one rtc session per channel member"
-msgstr "每名頻道成員只可擁有一個 RTC 操作時段"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -9856,11 +9781,6 @@ msgid "User is online"
 msgstr "使用者上線"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
-msgid "User should not have duplicated favorite GIF"
-msgstr "使用者不應有重複的最愛 GIF"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
@@ -10462,7 +10382,7 @@ msgstr "您的姓名"
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 #, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s]（沒有電郵地址）"
 
 #. module: mail
 #. odoo-python

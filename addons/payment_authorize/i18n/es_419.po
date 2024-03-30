@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr "Número de enrutamiento ABA"
+msgstr "Número de ruta ABA"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
@@ -48,7 +49,7 @@ msgstr "Clave de cliente API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr "Id de inicio de sesión API"
+msgstr "ID de inicio de sesión de la API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
@@ -58,7 +59,7 @@ msgstr "Clave de firma API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr "API de la clave de transacción"
+msgstr "Clave de la transacción API"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -73,7 +74,7 @@ msgstr "Authorize.Net"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr "ID de perfil Authorize.Net"
+msgstr "ID de perfil de Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -119,7 +120,7 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
-"No fue posible obtener los detalles de la transacción. (código de error: %s;"
+"No fue posible obtener los detalles de la transacción. (Código de error: %s;"
 " detalles del error: %s) "
 
 #. module: payment_authorize
@@ -135,7 +136,7 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
-"No se pudo autenticar.\n"
+"Error de autenticación.\n"
 "%s"
 
 #. module: payment_authorize
@@ -193,7 +194,7 @@ msgstr "Transacción de pago"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr "Fallo al procesar el pago"
+msgstr "Error al procesar el pago"
 
 #. module: payment_authorize
 #. odoo-python
@@ -209,7 +210,7 @@ msgstr ""
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr "Se han recibido datos de solicitud de pago alterados."
+msgstr "Datos recibidos de solicitud de pago manipulados."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -227,8 +228,8 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
-"La llave de cliente pública. Para generarla directamente desde Odoo o desde "
-"el backend de Authorize.Net."
+"La llave de cliente pública. Para generarla desde Odoo o el backend de "
+"Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -242,7 +243,7 @@ msgstr "El código técnico de este proveedor de pagos."
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
 msgstr ""
-"La transacción no está en un estado en el que se pueda reembolsar. (estado: "
+"La transacción no está en un estado en el que se pueda reembolsar. (Estado: "
 "%s, detalles: %s)"
 
 #. module: payment_authorize
@@ -258,8 +259,8 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
-"Esto contiene la única referencia para esta combinación de partner/token el "
-"backend de Authorize.net"
+"La referencia única para la combinación de contacto y token en el backend de"
+" Authorize.Net."
 
 #. module: payment_authorize
 #. odoo-python

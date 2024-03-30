@@ -24,7 +24,6 @@
 # Harcogourmet, 2023
 # eriiikgt, 2023
 # ericrolo, 2023
-# Josep Anton Belchi, 2023
 # Martin Trigaux, 2023
 # Quim - eccit <quim@eccit.com>, 2023
 # Jonatan Gk, 2024
@@ -36,6 +35,7 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # Iván Infantes Castarnado, 2024
 # Pere Martínez, 2024
+# Josep Anton Belchi, 2024
 # Santiago Payà <santiagopim@gmail.com>, 2024
 # 
 msgid ""
@@ -1408,9 +1408,9 @@ msgid ""
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Un registre de caixa us permet gestionar entrades de caixa en efectiu\n"
-"                revistes. Aquesta característica proporciona una manera fàcil de fer un seguiment de l'efectiu\n"
-"                pagaments diaris."
+"Un registre de caixa us permet gestionar entrades d'efectiu als seus diaris\n"
+"                d'efectiu. Aquesta característica proporciona una manera fàcil de fer un seguiment diari de\n"
+"                pagaments d'efectiu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -2497,7 +2497,7 @@ msgstr "Permetre configurar impostos amb criteris de caixa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "Revistes permeses"
+msgstr "Diaris permesos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
@@ -5525,8 +5525,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
-"Definiu en quines revistes es pot utilitzar aquest compte. Si està buit, es "
-"pot utilitzar a totes les revistes."
+"Definiu en quins diaris es pot utilitzar aquest compte. Si està buit, es pot"
+" utilitzar a totes les revistes."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6485,7 +6485,7 @@ msgstr "Moviment d'intercanvi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
-msgstr "Revistes Excloses"
+msgstr "Diaris exclosos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -7037,7 +7037,7 @@ msgstr "De comptes no comercials"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From P&L accounts"
-msgstr "De comptes PL"
+msgstr "De comptes P&G"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8587,7 +8587,7 @@ msgstr "Diari"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
 msgid "Journal Currency"
-msgstr "Moneda de la revista"
+msgstr "Moneda del diari"
 
 #. module: account
 #. odoo-javascript
@@ -10661,7 +10661,7 @@ msgstr "Cobraments pendents"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "Comptes importants"
+msgstr "Compte de cobraments pendents"
 
 #. module: account
 #. odoo-python
@@ -10696,7 +10696,7 @@ msgstr "Pagament vençut, data de venciment superada"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
-msgstr "Comptes PL"
+msgstr "Comptes P&G"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13645,7 +13645,7 @@ msgstr "Grup d'impostos"
 #: model:ir.actions.act_window,name:account.action_tax_group
 #: model:ir.ui.menu,name:account.menu_action_tax_group
 msgid "Tax Groups"
-msgstr "Grups de impostos"
+msgstr "Grups d'impostos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13992,8 +13992,8 @@ msgid ""
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
 "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
 msgstr ""
-"El %(date_field)s (%(date)s) no coincideix amb el número de seqüència del relacionat %(model)s (%(sequence)s)\n"
-"Haureu d'esborrar el %(model)s's %(sequence_field)s per a procedir.\n"
+"La %(date_field)s (%(date)s) no coincideix amb el número de seqüència de %(model)s (%(sequence)s)\n"
+"Haureu d'esborrar el %(sequence_field)s de %(model)s per a procedir.\n"
 "En fer-ho, és possible que vulgueu tornar a ordenar les vostres entrades per mantenir una seqüència contínua basada en dates."
 
 #. module: account
@@ -14447,7 +14447,7 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
-"La moneda estrangera establerta a la revista  '%(journal)s' i al compte "
+"La moneda estrangera establerta al diari  '%(journal)s' i al compte "
 "'%(account)s' han de ser la mateixa."
 
 #. module: account
@@ -15884,7 +15884,7 @@ msgstr "Encara no definit"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Undistributed Profits/Losses"
-msgstr "Pèrdues/guanys no distribuïts"
+msgstr "Pèrdues/Guanys no distribuïts"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
@@ -17059,6 +17059,17 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"No podeu eliminar aquest informe (%s) Es fa servir pel motor de generació de"
+" PDFs comptables."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17340,8 +17351,8 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
 msgstr ""
-"No podeu usar aquest compte (%s) en aquest diari, comproveu el camp 'Els "
-"diaris sagrats' en el compte relacionat."
+"No podeu usar aquest compte (%s) en aquest diari, comproveu el camp 'Diaris "
+"permesos' en el compte relacionat."
 
 #. module: account
 #. odoo-python

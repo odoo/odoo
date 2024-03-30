@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +71,7 @@ msgstr "% 完了"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "%(participant)s just participated in \"%(survey_title)s\"."
-msgstr ""
+msgstr "%(participant)sは \"%(survey_title)s\"に参加しました。"
 
 #. module: survey
 #. odoo-python
@@ -501,6 +501,8 @@ msgid ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
 "tooltip\"> or press CTRL+Enter</span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\" id=\"enter-"
+"tooltip\">またはCTRL+Enterを入力</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -520,6 +522,9 @@ msgid ""
 "                    <span id=\"enter-tooltip\">or press CTRL+Enter</span>\n"
 "                </span>"
 msgstr ""
+"<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
+"                    <span id=\"enter-tooltip\">またはCTRL+Enterを入力</span>\n"
+"                </span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -976,7 +981,7 @@ msgstr "ローミングを許可"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr "許可済のトリガとなる質問"
+msgstr "許可済のトリガーとなる質問"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -2553,7 +2558,7 @@ msgstr "針葉樹の木は硬いのか柔らかいのでしょうか？"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_placed_before_trigger
 msgid "Is this question placed before any of its trigger questions?"
-msgstr "この質問は、トリガとなる質問の前に置かれていますか？"
+msgstr "この質問は、トリガーとなる質問の前に置かれていますか？"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug4
@@ -3691,7 +3696,7 @@ msgstr "プロダクト"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Progress bar"
-msgstr ""
+msgstr "進捗バー"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -3770,7 +3775,7 @@ msgstr "質問＆回答"
 msgid ""
 "Questions containing the triggering answer(s) to display the current "
 "question."
-msgstr "現在の質問を表示するためのトリガとなる答えを含む質問"
+msgstr "現在の質問を表示するためのトリガーとなる答えを含む質問"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
@@ -4965,12 +4970,12 @@ msgstr "木"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
 msgid "Triggering Answers"
-msgstr "トリガ回答"
+msgstr "トリガー回答"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
 msgid "Triggering Questions"
-msgstr "トリガ質問"
+msgstr "トリガー質問"
 
 #. module: survey
 #. odoo-javascript
@@ -4980,7 +4985,7 @@ msgid ""
 "Triggers based on the following questions will not work because they are positioned after this question:\n"
 "\"%s\"."
 msgstr ""
-"以下の質問に基づくトリガは、この質問の後に配置されているため、機能しません。\n"
+"以下の質問に基づくトリガーは、この質問の後に配置されているため、機能しません。\n"
 "\"%s\""
 
 #. module: survey
@@ -5715,4 +5720,4 @@ msgstr "to"
 msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
-msgstr "⚠️この質問は、いくつかの、あるいはすべてのトリガの前に置かれ、スキップすることもできます。"
+msgstr "⚠️この質問は、いくつかの、あるいはすべてのトリガーの前に置かれ、スキップすることもできます。"

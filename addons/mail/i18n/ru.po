@@ -9,7 +9,6 @@
 # ILMIR <karamov@it-projects.info>, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
-# Collex100, 2023
 # Irina Fedulova <istartlin@gmail.com>, 2023
 # Alena Vlasova, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
@@ -17,6 +16,7 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -437,7 +437,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Цвет заголовка</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -558,16 +558,6 @@ msgstr ""
 "умолчанию при создании новых записей для этого псевдонима."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
-msgid "A bus presence must have a user or a guest."
-msgstr "Присутствие на шине должно иметь пользователя или гостя."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
-msgid "A channel member must be a partner or a guest."
-msgstr "Участник канала должен быть партнером или гостем."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -582,11 +572,6 @@ msgid ""
 "A chat should not be created with more than 2 persons. Create a group "
 "instead."
 msgstr "В чате не должно быть более 2 человек. Вместо этого создайте группу."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
-msgid "A message reaction must be from a partner or from a guest."
-msgstr "Реакция на сообщение должна исходить от партнера или от гостя."
 
 #. module: mail
 #. odoo-python
@@ -605,11 +590,6 @@ msgid ""
 msgstr ""
 "Для включения перевода сообщений требуется действительный ключ Google API. "
 "https://cloud.google.com/translate/docs/setup"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
-msgid "A volume setting must have a partner or a guest."
-msgstr "В настройках тома должен быть партнер или гость."
 
 #. module: mail
 #. odoo-javascript
@@ -684,7 +664,7 @@ msgid ""
 msgstr ""
 "Действия могут вызывать определенные изменения, такие как открытие просмотра"
 " календаря или автоматическая пометка, как это было сделано при загрузке "
-"документа."
+"документа"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -737,11 +717,6 @@ msgstr "Активность"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "Деятельность по созданию"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
-msgid "Activities have to be linked to records with a not null res_id."
-msgstr "Действия должны быть связаны с записями, имеющими не нулевой res_id."
 
 #. module: mail
 #. odoo-javascript
@@ -1665,11 +1640,6 @@ msgstr ""
 "Используйте другой отскок или просто используйте другой псевдоним домена."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
-msgid "Bounce emails should be unique"
-msgstr "Письма с отказом должны быть уникальными"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1885,11 +1855,6 @@ msgstr ""
 "Псевдоним catchall %(catchall)s уже используется для другого домена с тем же"
 " именем. Используйте другой псевдоним или просто используйте другой "
 "псевдоним домена."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
-msgid "Catchall emails should be unique"
-msgstr "Электронные письма должны быть уникальными"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2156,6 +2121,8 @@ msgstr "Компании"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"Компании, использующие этот домен по умолчанию, для отправки электронных "
+"писем"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2596,11 +2563,6 @@ msgid "Custom channel name"
 msgstr "Пользовательское имя канала"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
-msgid "Customer is required for inbox / email notification"
-msgstr "Клиент должен быть уведомлен о входящей почте / электронной почте"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
 msgstr "Настройка внешнего вида и настроек автоматических электронных писем"
@@ -2747,6 +2709,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Значение по умолчанию, когда оно не соответствует фильтрам исходящего "
+"сервера. Может быть либо локальной частью, например 'notifications', либо "
+"полным адресом электронной почты, например 'notifications@example.com', "
+"чтобы переопределить все исходящие сообщения."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3367,11 +3333,6 @@ msgid "Email Thread"
 msgstr "Цепочка Email"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
-msgid "Email address already exists!"
-msgstr "Адрес электронной почты уже существует!"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3438,7 +3399,7 @@ msgstr "Мастер составления Email"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Домен электронной почты, например, 'example.com' в 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3570,11 +3531,6 @@ msgid ""
 msgstr ""
 "Ошибка без исключения. Вероятно, это связано с отправкой письма без "
 "вычисленных получателей."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
-msgid "Error, a partner cannot follow twice the same object."
-msgstr "Ошибка, партнер не может дважды следовать за одним и тем же объектом."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -4076,15 +4032,6 @@ msgstr "Группировать по"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Group Name"
 msgstr "Имя группы"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
-msgid ""
-"Group authorization and group auto-subscription are only supported on "
-"channels."
-msgstr ""
-"Групповая авторизация и групповая автоподписка поддерживаются только на "
-"каналах."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -5406,6 +5353,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Локальная часть электронной почты, используемая в Reply-To для перехвата "
+"ответов, например, 'catchall' в 'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5413,6 +5362,9 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Локальная часть электронной почты, используемая для пути возврата (Return-"
+"Path), используемого, когда письма отскакивают, например, 'bounce' в "
+"'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -6777,11 +6729,6 @@ msgid "Only custom models can be modified."
 msgstr "Изменять можно только пользовательские модели."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
-msgid "Only internal user can receive notifications in Odoo"
-msgstr "Только внутренний пользователь может получать уведомления в Odoo"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -8032,6 +7979,13 @@ msgid "Save as a new template"
 msgstr "Сохранить как новый шаблон"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "Сохраняйте любимые GIF из Tenor API"
@@ -8343,7 +8297,7 @@ msgstr "Отправить сейчас"
 #: code:addons/mail/static/src/views/web/composer_patch.js:0
 #, python-format
 msgid "Send a message to followers…"
-msgstr "Отправить сообщение последователям.."
+msgstr "Отправить сообщение последователям…"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9163,16 +9117,6 @@ msgid "The avatar has been updated!"
 msgstr "Аватар был обновлен!"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
-msgid "The channel UUID must be unique"
-msgstr "UUID канала должен быть уникальным"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Тип канала не может быть пустым"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "Текущий пользователь может редактировать шаблон."
@@ -9188,11 +9132,6 @@ msgstr "Продолжительность голосовых сообщений
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "Электронное письмо, отправленное на"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
-msgid "The endpoint must be unique !"
-msgstr "Конечная точка должна быть уникальной!"
 
 #. module: mail
 #. odoo-python
@@ -9340,11 +9279,6 @@ msgstr ""
 #, python-format
 msgid "There are no messages in this conversation."
 msgstr "В этом разговоре нет сообщений."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
-msgid "There can only be one rtc session per channel member"
-msgstr "На один канал может приходиться только один сеанс rtc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -10161,11 +10095,6 @@ msgid "User is online"
 msgstr "Пользователь онлайн"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
-msgid "User should not have duplicated favorite GIF"
-msgstr "Пользователь не должен дублировать любимые GIF"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 #: code:addons/mail/models/mail_message.py:0
@@ -10802,7 +10731,7 @@ msgstr "Ваше имя"
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 #, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (без адреса электронной почты)"
 
 #. module: mail
 #. odoo-python
@@ -11010,22 +10939,22 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "например, \"отскок\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "например, \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"mycompany.com\""
-msgstr ""
+msgstr "например, \"mycompany.com\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "например, \"уведомления\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

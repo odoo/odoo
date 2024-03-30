@@ -4,9 +4,9 @@
 # 
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
-# Wil Odoo, 2024
 # Kevilyn Rosa, 2024
 # Maitê Dietze, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1056,15 +1056,6 @@ msgid "All at once"
 msgstr "Tudo de uma vez"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"All our contractual relations will be governed exclusively by United States "
-"law."
-msgstr ""
-"Todas as nossas relações contratuais serão regidas exclusivamente pela "
-"legislação dos Estados Unidos."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Todos as movimentações de devolução"
@@ -1457,14 +1448,6 @@ msgid "Before scheduled date"
 msgstr "Antes da data agendada"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr ""
-"O texto abaixo serve como sugestão e não é de responsabilidade da Odoo S.A."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Mensagem de bloqueio"
@@ -1607,25 +1590,6 @@ msgstr "Categoria"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Rotas das categorias"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can My "
-"Company (Chicago) become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to My Company "
-"(Chicago) in its entirety and does not include any costs relating to the "
-"legislation of the country in which the client is located."
-msgstr ""
-"Alguns países aplicam retenção na fonte sobre o valor das faturas, de acordo"
-" com sua legislação interna. Qualquer retenção na fonte será paga pelo "
-"cliente às autoridades fiscais. Em nenhuma circunstância a Minha Empresa "
-"(Chicago) poderá se envolver em custos relacionados à legislação de um país."
-" Portanto, o valor da fatura será devido à Minha Empresa (Chicago) em sua "
-"totalidade e não inclui quaisquer custos relacionados à legislação do país "
-"em que o cliente está localizado."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3546,6 +3510,13 @@ msgid "Generate Serials numbers"
 msgstr "Gerar números de série"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "Obter uma rastreabilidade completa dos fornecedores aos clientes"
@@ -3765,19 +3736,6 @@ msgstr "Ícone"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Ícone para indicar uma atividade excepcional."
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, My Company (Chicago) reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-"Se um pagamento ainda estiver pendente por mais de 60 (sessenta) dias após a"
-" data de vencimento, a Minha Empresa (Chicago) se reserva o direito de "
-"recorrer aos serviços de uma empresa de recuperação de dívidas. Todas as "
-"despesas legais serão pagas pelo cliente."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -4045,6 +4003,13 @@ msgid "Import Lots"
 msgstr "Importar lotes"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "Importar séries/lotes"
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -4060,19 +4025,6 @@ msgstr "No estoque"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "No tipo"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"In order for it to be admissible, My Company (Chicago) must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-"Para que seja admissível, a Minha Empresa (Chicago) deve ser notificada de "
-"qualquer reclamação por meio de uma carta enviada por entrega registrada "
-"para sua sede social no prazo de 8 dias após a entrega das mercadorias ou a "
-"prestação dos serviços."
 
 #. module: stock
 #. odoo-javascript
@@ -5292,24 +5244,6 @@ msgid "My Activity Deadline"
 msgstr "Prazo da minha atividade"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. My "
-"Company (Chicago) cannot under any circumstances, be required by the client "
-"to appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-"Minha empresa (Chicago) se compromete a fazer o melhor possível para "
-"fornecer serviços de alto desempenho em tempo hábil, de acordo com os prazos"
-" acordados. Entretanto, nenhuma de suas obrigações pode ser considerada como"
-" uma obrigação de obter resultados. A Minha empresa (Chicago) não pode, sob "
-"nenhuma circunstância, ser solicitada pelo cliente a comparecer como "
-"terceiro no contexto de qualquer reivindicação de danos apresentada contra o"
-" cliente por um consumidor final."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Minhas contagens"
@@ -5392,12 +5326,6 @@ msgstr "Nova quantidade em mãos"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Nova transferência"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Evento no calendário para a próxima atividade"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5932,23 +5860,6 @@ msgstr "Regra de reposição original"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "Outras informações"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, My Company (Chicago) reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
-msgstr ""
-"Nossas faturas devem ser pagas em até 21 dias úteis, a menos que outro prazo"
-" de pagamento seja indicado na fatura ou no pedido. Em caso de não pagamento"
-" até a data de vencimento, a Minha Empresa (Chicago) se reserva o direito de"
-" solicitar um pagamento de juros fixos no valor de 10% da soma restante "
-"devida. A Minha Empresa (Chicago) estará autorizada a suspender qualquer "
-"prestação de serviços sem aviso prévio em caso de atraso no pagamento."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7196,13 +7107,6 @@ msgid "RETURN OF"
 msgstr "DEVOLUÇÃO DE"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
-msgid "Ratings"
-msgstr "Avaliações"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7875,11 +7779,6 @@ msgstr "SSCC Demo"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "TERMOS E CONDIÇÕES PADRÕES DE VENDA"
 
 #. module: stock
 #. odoo-javascript
@@ -8915,19 +8814,6 @@ msgstr "O pedido em espera %s foi criado."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "O código de barras de um local deve ser exclusivo para cada empresa."
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-"O cliente renuncia explicitamente a seus próprios termos e condições "
-"padrões, mesmo que tenham sido elaborados após estes termos e condições "
-"padrões de venda. Para que seja válida, qualquer derrogação deve ser "
-"expressamente acordada por escrito e com antecedência."
 
 #. module: stock
 #. odoo-python
@@ -11069,12 +10955,6 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "É necessário fornecer um número de série/lote para os produtos %s."
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"É necessário atualizar este documento para refletir seus termos e condições."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -11115,15 +10995,6 @@ msgstr ""
 "Você encontrará aqui propostas de reposição inteligentes com base em previsões de inventário.\n"
 "            Escolha a quantidade a comprar ou fabricar e execute os pedidos em um clique.\n"
 "            Para economizar tempo no futuro, defina as regras como \"automáticas\"."
-
-#. module: stock
-#: model_terms:res.company,lunch_notify_message:stock.res_company_1
-msgid ""
-"Your lunch has been delivered.\n"
-"Enjoy your meal!"
-msgstr ""
-"Seu almoço foi entregue.\n"
-"Aproveite sua refeição!"
 
 #. module: stock
 #. odoo-python

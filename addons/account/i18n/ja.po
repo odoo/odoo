@@ -6357,7 +6357,7 @@ msgstr "FREE ALONGSIDE SHIP"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "FREE CARRIER"
+msgstr "無料運送会社"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
@@ -10963,7 +10963,7 @@ msgstr "支払時に支払い方法の明細を定義して下さい。"
 msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
-msgstr ""
+msgstr "選択された支払方法はこの支払に利用できません。もう一度支払方法を選択して下さい。"
 
 #. module: account
 #. odoo-python
@@ -16290,7 +16290,7 @@ msgstr "すでに投稿された状態のムーブを作成することはでき
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "再帰的グループは作成できません。"
 
 #. module: account
 #. odoo-python
@@ -16324,6 +16324,15 @@ msgstr "この仕訳は既に付番の番号を消費しており、連携の最
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
+msgstr "このレポート(%s)を削除することはできません。このレポートは、会計PDF生成エンジンで使用されます。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
 msgstr ""
 
 #. module: account
