@@ -19,14 +19,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>
-                <button class="fa fa-exclamation-triangle text-danger"
-                    title="This lot is expired." string="This lot is expired"
-                    disabled="1"
-                    invisible="not is_expired"/>
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="after" >
                 <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date or parent.picking_code != 'incoming'" readonly="picking_type_use_existing_lots"/>
+                <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
+                 decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
+                 decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
             </xpath>
         </field>
     </record>
@@ -38,14 +36,12 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
                 <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="expiration_date" force_save="1" column_invisible="context.get('picking_code') != 'incoming'" readonly="picking_type_use_existing_lots"/>
+                <field name="expiration_date" decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
+                 decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
+                 force_save="1" readonly="picking_type_use_existing_lots"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>
-                <button class="fa fa-exclamation-triangle text-danger"
-                    title="This lot is expired." string="This lot is expired"
-                    disabled="1"
-                    invisible="not is_expired"/>
             </xpath>
         </field>
     </record>
