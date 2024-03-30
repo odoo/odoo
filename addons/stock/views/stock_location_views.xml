@@ -5,8 +5,6 @@
         <field name="res_model">product.product</field>
         <field name="context">{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
                     'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}</field>
-        <field name="binding_model_id" ref="model_stock_location"/>
-        <field name="binding_view_types">form</field>
         <field name="search_view_id" ref="stock.stock_product_search_form_view"/>
     </record>
 
@@ -22,6 +20,9 @@
                                 class="oe_stat_button"
                                 icon="fa-random" name="%(location_open_putaway)d" type="action"
                                 groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
+                        <button string="Products"
+                                class="oe_stat_button" icon="fa-th-list"
+                                type="action" name="stock.act_product_location_open"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
                                 icon="fa-cubes" name="%(location_open_quants)d" type="action"/>
