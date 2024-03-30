@@ -1,32 +1,68 @@
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/17.0)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+# Odoo Room Booking Module
 
-Odoo
-----
+## Introduction
 
-Odoo is a suite of web based open source business apps.
+This module is developed to manage room reservations within a company. It allows employees to book meeting rooms and administrators to manage room availability and confirm reservations.
 
-The main Odoo Apps include an <a href="https://www.odoo.com/page/crm">Open Source CRM</a>,
-<a href="https://www.odoo.com/app/website">Website Builder</a>,
-<a href="https://www.odoo.com/app/ecommerce">eCommerce</a>,
-<a href="https://www.odoo.com/app/inventory">Warehouse Management</a>,
-<a href="https://www.odoo.com/app/project">Project Management</a>,
-<a href="https://www.odoo.com/app/accounting">Billing &amp; Accounting</a>,
-<a href="https://www.odoo.com/app/point-of-sale-shop">Point of Sale</a>,
-<a href="https://www.odoo.com/app/employees">Human Resources</a>,
-<a href="https://www.odoo.com/app/social-marketing">Marketing</a>,
-<a href="https://www.odoo.com/app/manufacturing">Manufacturing</a>,
-<a href="https://www.odoo.com/">...</a>
+## Installation
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured <a href="https://www.odoo.com">Open Source ERP</a> when you install several Apps.
+### Prerequisites
 
-Getting started with Odoo
--------------------------
+- PyCharm Community Edition
+- Python 3.10.11
+- Visual Studio Build Tools 2022
 
-For a standard installation please follow the <a href="https://www.odoo.com/documentation/17.0/administration/install/install.html">Setup instructions</a>
-from the documentation.
+### Setup
 
-To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/17.0/developer/howtos.html">the developer tutorials</a>
+1. Install the required Python version and set it as the default interpreter in PyCharm.
+2. Clone the Odoo 17 repository:
+
+```bash
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 17.0 --single-branch odoo17
+```
+
+3. Install the necessary dependencies from the `requirements.txt` file:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Create a superuser in pgAdmin4 named `odoo17` with password `odoo17` and all privileges.
+5. Configure the `odoo.conf` file with the absolute paths of the addons folder and the login of the superuser `odoo17`.
+6. Set the `odoo17` folder as the root directory and launch the application.
+7. Go to `localhost:8069` to create a new database named `admin`.
+
+## Module Description
+
+The module adds the following functionalities:
+
+- **Room Management**: Define and manage meeting rooms.
+- **Reservation Management**: Employees can book rooms, and administrators can confirm or cancel reservations.
+- **Database Integration**: Tables for rooms and reservations are created and managed.
+- **Role-based Access**: Different roles for employees and administrators with specific permissions.
+- **Automated Processes**: Reservation and confirmation processes are automated.
+
+## Adding the Module
+
+1. Add a folder called `custom_addons` with the following structure:
+
+- `models/`: Contains the Python models for the module.
+- `views/`: Contains the XML files for the module's interface.
+- `security/`: Contains the security rules for the module.
+- `__manifest__.py`: The manifest file describing the module.
+
+2. Update the `odoo.conf` file to include the `custom_addons` folder in the `addon_path`.
+3. Define models for rooms (`salle.py`) and reservations (`reservation.py`).
+4. Create views for rooms and reservations (`salle_view.xml` and `reservation_view.xml`).
+5. Update the security rules in `ir.model.access.csv` to grant appropriate access rights to the module.
+6. Add the created files to the `__manifest__.py` file.
+
+## Testing
+
+1. Launch the application and navigate to the Room Booking module.
+2. Test adding rooms and making reservations.
+3. Verify that the constraints are enforced, such as the end date being after the start date and the room being available for the requested time.
+
+## Contributor
+
+- Asma Hachaichi
