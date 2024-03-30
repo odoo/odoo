@@ -315,10 +315,26 @@ class HrEmployee(models.Model):
             'title': bh.name,
         }, public_holidays))
 
+    def _get_contextual_companies(self):
+        context_companies = self.env.companies
+        if self.env.context.get('context_domain'):
+            context_result = self.env[self.env.context.get('context_model')].sudo(False).search(
+                self.env.context.get('context_domain')
+            )
+            if self.env.context.get('context_model') == 'hr.leave':
+                context_companies = context_result.sudo().mapped('employee_id.company_id')
+            elif self.env.context.get('context_model') == 'hr.leave.report.calendar':
+                context_companies = context_result.sudo().mapped('company_id')
+
+            if not context_companies:
+                context_companies = self.env.company
+        return context_companies
+
     def _get_public_holidays(self, date_start, date_end):
+        context_companies = self._get_contextual_companies()
         domain = [
             ('resource_id', '=', False),
-            ('company_id', 'in', self.env.companies.ids),
+            ('company_id', 'in', context_companies.ids),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
         ]

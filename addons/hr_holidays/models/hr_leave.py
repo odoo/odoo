@@ -1625,7 +1625,10 @@ class HolidaysRequest(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
-        return self.env.user.employee_id.sudo(False)._get_unusual_days(date_from, date_to)
+        contextual_companies = self.env['hr.employee']._get_contextual_companies()
+        return self.env.user.employee_id.sudo(False).with_context(
+            limit_companies=contextual_companies.ids
+        )._get_unusual_days(date_from, date_to)
 
     def _get_start_or_end_from_attendance(self, hour, date, employee):
         hour = float_to_time(float(hour))

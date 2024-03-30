@@ -503,6 +503,10 @@ class ResourceCalendar(models.Model):
             domain = [('time_type', '=', 'leave')]
         if not any_calendar:
             domain = domain + [('calendar_id', 'in', [False, self.id])]
+        if self.env.context.get('limit_companies'):
+            domain = domain + [
+                ('company_id', 'in', [False] + self.env.context.get('limit_companies'))
+            ]
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
         domain = domain + [

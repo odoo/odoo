@@ -31,6 +31,8 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
     async updateSpecialDays() {
         const context = {
             'employee_id': this.props.employee_id,
+            'context_domain': this.props.model.meta.domain,
+            'context_model': this.props.model.meta.resModel,
         }
         const specialDays = await this.orm.call(
             'hr.employee', 'get_special_days_data', [
