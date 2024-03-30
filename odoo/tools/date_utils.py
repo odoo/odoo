@@ -147,7 +147,7 @@ def end_of(value, granularity):
 
     :param value: initial date or datetime.
     :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
-    :return: A date/datetime object corresponding to the start of the specified period.
+    :return: A date/datetime object corresponding to the end of the specified period.
     """
     is_datetime = isinstance(value, datetime)
     if granularity == "year":
