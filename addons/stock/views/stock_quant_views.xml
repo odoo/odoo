@@ -50,6 +50,7 @@
                 </group>
                 <group expand='0' string='Group by...'>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                    <filter string='Product Category' name="productcategorygroup" context="{'group_by': 'product_categ_id'}"/>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Storage Category' name="storagecategorygroup" domain="[]" context="{'group_by': 'storage_category_id'}"/>
                     <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
@@ -519,7 +520,7 @@ in this location. That leads to a negative stock.
         <field name="binding_model_id" ref="stock.model_stock_quant"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_manager'))]"/>
         <field name="code">
             action = records.action_set_inventory_quantity_zero()
         </field>
