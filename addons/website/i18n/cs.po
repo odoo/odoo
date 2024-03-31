@@ -15,9 +15,9 @@
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
 # Wil Odoo, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
 # Katerina Horylova, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Katerina Horylova, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9492,6 +9492,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"Společnost %(company_name)r nemůže být archivována, protože má propojenou webovou stránku %(website_name)r.\n"
+"Nejprve změňte společnost tohoto webu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11304,6 +11306,16 @@ msgid ""
 msgstr ""
 "Nemůžete smazat výchozí webovou stránku %s. Zkuste místo toho změnit její "
 "nastavení"
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Tuto nabídku webu nemůžete smazat, protože slouží jako výchozí nadřazená "
+"nabídka pro nové weby (např. /obchod, /událost, ...)."
 
 #. module: website
 #. odoo-python
