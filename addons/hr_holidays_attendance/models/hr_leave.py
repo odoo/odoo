@@ -42,7 +42,7 @@ class HRLeave(models.Model):
             employee = leave.employee_id
             duration = leave.number_of_hours_display
             overtime_duration = leave.overtime_id.sudo().duration
-            if overtime_duration != duration:
+            if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this leave.'))
                 leave.overtime_id.sudo().duration = -1 * duration
