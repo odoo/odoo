@@ -334,6 +334,9 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = False
 
     def _inverse_type(self):
+        if self._context.get('account_journal_skip_alias_sync'):
+            return
+
         # Create an alias for purchase/sales journals
         for journal in self:
             if journal.type not in ('purchase', 'sale'):
