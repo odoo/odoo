@@ -6,8 +6,8 @@
 # Andy Yiu, 2023
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2023
 # Wil Odoo, 2023
-# Junko Augias, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9539,6 +9539,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"会社 %(会社名)r にはリンクされた Web サイト %(Web サイト名)r があるため、アーカイブできません。\n"
+"まずそのウェブサイトの会社を変更して下さい。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11312,6 +11314,14 @@ msgstr "デフォルトウェブサイト%sを削除することはできませ�
 #, python-format
 msgid "You cannot duplicate this field."
 msgstr "このフィールドを複製することはできません。"
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
 
 #. module: website
 #. odoo-python
