@@ -29,7 +29,6 @@ export class KanbanArchParser {
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
-        const countLimit = xmlDoc.getAttribute("count_limit");
         const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
         const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = getActiveActions(xmlDoc);
@@ -174,7 +173,6 @@ export class KanbanArchParser {
             recordsDraggable,
             groupsDraggable,
             limit: limit && parseInt(limit, 10),
-            countLimit: countLimit && parseInt(countLimit, 10),
             progressAttributes,
             cardColorField,
             templateDocs,

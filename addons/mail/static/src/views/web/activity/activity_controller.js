@@ -39,7 +39,7 @@ export class ActivityController extends Component {
         this.activity = useService("mail.activity");
         this.ui = useState(useService("ui"));
         usePager(() => {
-            const { count, hasLimitedCount, limit, offset } = this.model.root;
+            const { count, hasEstimatedCount, limit, offset } = this.model.root;
             return {
                 offset: offset,
                 limit: limit,
@@ -50,7 +50,7 @@ export class ActivityController extends Component {
                         this.model.fetchActivityData(params),
                     ]);
                 },
-                updateTotal: hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
+                updateTotal: hasEstimatedCount ? () => this.model.root.fetchCount() : undefined,
             };
         });
     }

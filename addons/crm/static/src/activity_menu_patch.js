@@ -30,9 +30,6 @@ patch(ActivityMenu.prototype, {
             } else {
                 context["search_default_activities_" + filter] = 1;
             }
-            // Necessary because activity_ids of mail.activity.mixin has auto_join
-            // So, duplicates are faking the count and "Load more" doesn't show up
-            context["force_search_count"] = 1;
             this.action.doAction("crm.crm_lead_action_my_activities", {
                 additionalContext: context,
                 clearBreadcrumbs: true,

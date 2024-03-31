@@ -2487,10 +2487,9 @@ export class Model extends Array {
      * @param {number} limit
      * @param {number} offset
      * @param {string} order
-     * @param {number} countLimit
      * @param {KwArgs<SearchParams>} [kwargs={}]
      */
-    web_search_read(domain, fields, limit, offset, order, countLimit, kwargs = {}) {
+    web_search_read(domain, fields, limit, offset, order, kwargs = {}) {
         let _fieldNames = Object.keys(kwargs.specification);
         if (!_fieldNames.length) {
             _fieldNames = ["id"];
@@ -2509,11 +2508,8 @@ export class Model extends Array {
                 records.map((r) => r.id),
                 fieldNames
             ),
+            estimate_count: limit && length > limit,
         };
-        countLimit = kwargs.count_limit || countLimit;
-        if (countLimit) {
-            result.length = Math.min(result.length, countLimit);
-        }
         this._unityReadRecords(result.records, kwargs.specification);
         return result;
     }

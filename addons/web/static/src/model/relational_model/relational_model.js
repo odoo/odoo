@@ -28,7 +28,6 @@ import { FetchRecordError } from "./errors";
  * @property {State} [state]
  * @property {Hooks} [hooks]
  * @property {number} [limit]
- * @property {number} [countLimit]
  * @property {number} [groupsLimit]
  * @property {string[]} [defaultOrderBy]
  * @property {string[]} [defaultGroupBy]
@@ -56,7 +55,6 @@ import { FetchRecordError } from "./errors";
  * @property {string} [mode]
  * @property {number} [limit]
  * @property {number} [offset]
- * @property {number} [countLimit]
  * @property {number} [groupsLimit]
  * @property {Object} [groups]
  * @property {boolean} [openGroupsByDefault]
@@ -97,7 +95,6 @@ export class RelationalModel extends Model {
     static DynamicGroupList = DynamicGroupList;
     static StaticList = StaticList;
     static DEFAULT_LIMIT = 80;
-    static DEFAULT_COUNT_LIMIT = 10000;
     static DEFAULT_GROUP_LIMIT = 80;
     static DEFAULT_OPEN_GROUP_LIMIT = 10;
     static MAX_NUMBER_OPENED_GROUPS = 10;
@@ -129,7 +126,6 @@ export class RelationalModel extends Model {
 
         this.initialLimit = params.limit || this.constructor.DEFAULT_LIMIT;
         this.initialGroupsLimit = params.groupsLimit;
-        this.initialCountLimit = params.countLimit || this.constructor.DEFAULT_COUNT_LIMIT;
         this.defaultOrderBy = params.defaultOrderBy;
         this.defaultGroupBy = params.defaultGroupBy;
         this.maxGroupByDepth = params.maxGroupByDepth;
@@ -322,12 +318,8 @@ export class RelationalModel extends Model {
         }
         Object.assign(config, {
             limit: config.limit || this.initialLimit,
-            countLimit: "countLimit" in config ? config.countLimit : this.initialCountLimit,
             offset: config.offset || 0,
         });
-        if (config.countLimit !== Number.MAX_SAFE_INTEGER) {
-            config.countLimit = Math.max(config.countLimit, config.offset + config.limit);
-        }
         return this._loadUngroupedList({
             ...config,
             context: {
@@ -552,8 +544,6 @@ export class RelationalModel extends Model {
             order: orderByToString(config.orderBy),
             limit: config.limit,
             context: { bin_size: true, ...config.context },
-            count_limit:
-                config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
         return this.orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
@@ -632,9 +622,7 @@ export class RelationalModel extends Model {
      * @returns {Promise<number>}
      */
     async _updateCount(config) {
-        const count = await this.keepLast.add(this.orm.searchCount(config.resModel, config.domain));
-        config.countLimit = Number.MAX_SAFE_INTEGER;
-        return count;
+        return await this.keepLast.add(this.orm.searchCount(config.resModel, config.domain));
     }
 
     /**

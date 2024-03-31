@@ -150,7 +150,7 @@ export class ListController extends Component {
         });
 
         usePager(() => {
-            const { count, hasLimitedCount, isGrouped, limit, offset } = this.model.root;
+            const { count, hasEstimatedCount, isGrouped, limit, offset } = this.model.root;
             return {
                 offset: offset,
                 limit: limit,
@@ -167,7 +167,7 @@ export class ListController extends Component {
                     }
                 },
                 updateTotal:
-                    !isGrouped && hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
+                    !isGrouped && hasEstimatedCount ? () => this.model.root.fetchCount() : undefined,
             };
         });
 
@@ -213,7 +213,6 @@ export class ListController extends Component {
             state: this.props.state?.modelState,
             groupByInfo,
             limit: this.archInfo.limit || this.props.limit,
-            countLimit: this.archInfo.countLimit,
             defaultOrderBy: this.archInfo.defaultOrder,
             defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
             groupsLimit: this.archInfo.groupsLimit,

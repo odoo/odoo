@@ -229,7 +229,7 @@ test("updateTotal props: click on total", async () => {
     });
 
     expect(".o_pager_value").toHaveText("1-5");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_limit_fetch");
@@ -260,19 +260,19 @@ test("updateTotal props: click next", async () => {
     });
 
     expect(".o_pager_value").toHaveText("1-5");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_next");
     await animationFrame();
     expect(".o_pager_value").toHaveText("6-10");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_next");
     await animationFrame();
     expect(".o_pager_value").toHaveText("11-15");
-    expect(".o_pager_limit").toHaveText("15+");
+    expect(".o_pager_limit").toHaveText("~15");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_next");
@@ -303,7 +303,7 @@ test("updateTotal props: edit input", async () => {
     });
 
     expect(".o_pager_value").toHaveText("1-5");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_value");
@@ -313,7 +313,7 @@ test("updateTotal props: edit input", async () => {
     await animationFrame();
 
     expect(".o_pager_value").toHaveText("3-8");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_value");
@@ -340,14 +340,14 @@ test("updateTotal props: can use next even if single page", async () => {
     });
 
     expect(".o_pager_value").toHaveText("1-5");
-    expect(".o_pager_limit").toHaveText("5+");
+    expect(".o_pager_limit").toHaveText("~5");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_next");
     await animationFrame();
 
     expect(".o_pager_value").toHaveText("6-10");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 });
 
@@ -369,7 +369,7 @@ test("updateTotal props: click previous", async () => {
     });
 
     expect(".o_pager_value").toHaveText("1-5");
-    expect(".o_pager_limit").toHaveText("10+");
+    expect(".o_pager_limit").toHaveText("~10");
     expect(".o_pager_limit").toHaveClass("o_pager_limit_fetch");
 
     click(".o_pager_previous");
