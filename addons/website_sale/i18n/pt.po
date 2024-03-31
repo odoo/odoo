@@ -23,6 +23,7 @@
 # Vasco Rodrigues, 2024
 # Rita Bastos, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
+# Samuel Afonso, 2024
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 15:00+0000\n"
-"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024\n"
+"Last-Translator: Samuel Afonso, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -254,7 +255,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "<option value=\"\" selected=\"true\">-</option>"
-msgstr ""
+msgstr "<option value=\"\" selected=\"true\">-</option>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -264,7 +265,7 @@ msgstr "<option value=\"\">País...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "<option value=\"\">Distrito...</option>"
 
 #. module: website_sale
 #. odoo-python
@@ -558,6 +559,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTEÚDO -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">HÁ ARTIGOS NO SEU CARRINHO.</h1>\n"
+"                    Deseja finalizar a sua compra?<br><br>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Conjunto de mesa</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Conjunto de mesa Conjunto de mesa, preto-castanho: cadeira + mesa + gaveteiro.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10.000</t> <t t-out=\"line.product_uom.name or ''\">unidades</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Continuar pedido\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
+"                    <div style=\"text-align: center;\"><strong>Agradecemos por comprar na <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -744,7 +787,7 @@ msgstr "Adicionar ao Carrinho"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Add to Cart Button"
-msgstr ""
+msgstr "Adicionar ao botão do carrinho"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -825,7 +868,7 @@ msgstr "Tem a certeza que quer apagar este emblema ?"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment"
-msgstr ""
+msgstr "Atribuição"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -842,7 +885,7 @@ msgstr "Atributos"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically send abandoned checkout emails"
-msgstr ""
+msgstr "Automaticamente, enviar e-mails de checkout abandonado"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1552,6 +1595,8 @@ msgstr "Predefinição (1/1)"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
 msgstr ""
+"COLOQUE OS BLOCOS DE CONSTRUÇÃO AQUI PARA DISPONIBILIZÁ-LOS EM TODOS OS "
+"PRODUTOS"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -2091,6 +2136,10 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Se estiver a fazer o pedido para uma pessoa externa, faça a sua encomenda "
+"através do back-end. Se deseja alterar o seu nome ou endereço de e-mail, por"
+" favor, faça-o nas definições da conta ou entre em contato com o "
+"administrador."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -2298,6 +2347,7 @@ msgstr "Imagem principal"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Gerir Promoções, cupões, cartões de fidelidade, Cartões-presente e eWallet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4020,6 +4070,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Para enviar convites em modo B2B, abra um contacto ou selecione vários na "
+"visão de lista e clique na opção 'Gestão de Acesso ao Portal' no menu "
+"*Ação*."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
