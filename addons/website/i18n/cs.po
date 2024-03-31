@@ -15,8 +15,8 @@
 # Wil Odoo, 2023
 # Jakub Krkoška, 2023
 # Tomáš Píšek, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11345,6 +11345,16 @@ msgid ""
 msgstr ""
 "Nemůžete smazat výchozí webovou stránku %s. Zkuste místo toho změnit její "
 "nastavení"
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Tuto nabídku webu nemůžete smazat, protože slouží jako výchozí nadřazená "
+"nabídka pro nové weby (např. /obchod, /událost, ...)."
 
 #. module: website
 #: code:addons/website/controllers/backend.py:0

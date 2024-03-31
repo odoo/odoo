@@ -14,7 +14,6 @@
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2021
 # Ye Ye <vrio.ua@gmail.com>, 2021
-# Collex100, 2021
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2021
 # Андрей Гусев <gaussgss@gmail.com>, 2021
 # Sergey Vilizhanin, 2021
@@ -38,6 +37,7 @@
 # alenafairy, 2023
 # Wil Odoo, 2024
 # Смородин Даниил, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Смородин Даниил, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10231,6 +10231,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Выбранный способ оплаты недоступен для данного платежа, пожалуйста, выберите"
+" способ оплаты еще раз."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -16027,9 +16029,23 @@ msgstr ""
 "Пожалуйста, создайте черновик хода и опубликуйте его после."
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Вы не можете создавать рекурсивные группы."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
 msgstr ""
 
 #. module: account
@@ -16042,6 +16058,16 @@ msgstr ""
 "Вы не можете удалить эту запись, поскольку она уже использовала порядковый "
 "номер и не является последней в цепочке. Вероятно, вместо этого ее следует "
 "вернуть."
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Вы не можете удалить этот отчет (%s), он используется механизмом "
+"формирования PDF-файлов бухгалтерского учета."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

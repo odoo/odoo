@@ -15,7 +15,6 @@
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # Denis Baranov <baranov@itlibertas.com>, 2021
 # Gennady Marchenko <gennadym@gmail.com>, 2021
-# Collex100, 2021
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2021
 # Sergey Vilizhanin, 2021
 # Amaro Vita <vita.amaro@gmail.com>, 2021
@@ -30,6 +29,7 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Смородин Даниил, 2023
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3909,6 +3909,8 @@ msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
 msgstr ""
+"Не копируйте и не вставляйте код, который вы не понимаете, это может "
+"поставить ваши данные под угрозу."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -5005,6 +5007,7 @@ msgid ""
 "Google doesn't need to be pinged anymore. It will automatically fetch your "
 "/sitemap.xml."
 msgstr ""
+"Google больше не нужно пинговать. Он автоматически получит ваш /sitemap.xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -11370,6 +11373,14 @@ msgstr ""
 "настройки"
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11492,6 +11503,8 @@ msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
 msgstr ""
+"Ваш сниппет Embed Code ничего не отображает. Нажмите на Edit, чтобы изменить"
+" его."
 
 #. module: website
 #. openerp-web
