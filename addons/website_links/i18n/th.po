@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
-# Odoo Thaidev <odoothaidev@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
-#
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
-"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_links
@@ -47,8 +44,13 @@ msgstr "<strong>แคมเปญ</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Label</strong>"
+msgstr "<strong>ป้ายกำกับ</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>สื่อกลาง</strong>"
+msgstr "<strong>วิธีที่เข้ามา</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -78,10 +80,8 @@ msgstr "เวลาทั้งหมด"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+"Campaign\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the context of your link. It might be an event you want to promote or a special promotion.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -99,6 +99,7 @@ msgstr "คัดลอก"
 
 #. module: website_links
 #. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
@@ -122,6 +123,13 @@ msgid "Icon"
 msgstr "ไอคอน"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"Label\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines a label to ease reporting.\"/>"
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
 msgstr "เดือนที่แล้ว"
@@ -142,10 +150,8 @@ msgstr "ตัวติดตามลิงก์"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+"Medium\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -175,15 +181,14 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"แชร์หน้านี้ด้วย<strong>ลิงก์สั้น</strong> ที่รวมตัว <strong>ติดตามการวิเคราะห์</strong>"
+"แชร์หน้านี้ด้วย<strong>ลิงก์สั้น</strong> ที่รวมตัว "
+"<strong>ติดตามการวิเคราะห์</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+"Source\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source from which your traffic will come from, Facebook or Twitter for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -208,6 +213,8 @@ msgstr "ไม่สามารถเว้นโค้ดว่างได้
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "ไม่มีข้อมูลที่จะแสดง"
 
@@ -221,11 +228,12 @@ msgstr "โค้ดนี้ถูกใช้ไปแล้ว"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"เครื่องมือติดตามเหล่านั้นสามารถใช้ใน Google Analytics เพื่อติดตามการคลิกและผู้เยี่ยมชม "
-"หรือใช้ในรายงาน Odoo เพื่อติดตามโอกาสและรายได้ที่เกี่ยวข้อง"
+"เครื่องมือติดตามเหล่านั้นสามารถใช้ใน Google Analytics "
+"เพื่อติดตามการคลิกและผู้เยี่ยมชม หรือใช้ในรายงาน Odoo "
+"เพื่อติดตามโอกาสและรายได้ที่เกี่ยวข้อง"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -280,22 +288,27 @@ msgid "copy"
 msgstr "ทำสำเนา"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr ""
+
+#. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
-msgstr ""
+msgstr "เช่น InMails, โฆษณา, โซเชียล, ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
-msgstr ""
+msgstr "เช่น ลดราคาเดือนมิถุนายน โรดโชว์ปารีส ..."
 
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
-msgstr ""
+msgstr "เช่น LinkedIn, Facebook, ลูกค้าเป้าหมาย, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
