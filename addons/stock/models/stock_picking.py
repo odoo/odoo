@@ -61,7 +61,7 @@ class PickingType(models.Model):
         help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
     print_label = fields.Boolean(
         'Print Label', compute="_compute_print_label", store=True, readonly=False,
-        help="If this checkbox is ticked, label will be print in this operation.")
+        help="Check this box if you want to generate shipping label in this operation.")
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(
         'Show Detailed Operations', default=False,
