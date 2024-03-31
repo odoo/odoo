@@ -3,9 +3,9 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -392,7 +392,7 @@ msgstr "<br/><strong>現在の在庫:</strong>"
 msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
-msgstr "<br>ニーズは<b>%sで</b>作成され、それを満たすためにルールがトリガーされます。"
+msgstr "<br>ニーズは<b>%sで</b>作成され、それを満たすために規則がトリガーされます。"
 
 #. module: stock
 #. odoo-python
@@ -400,7 +400,7 @@ msgstr "<br>ニーズは<b>%sで</b>作成され、それを満たすために�
 msgid ""
 "<br>If the products are not available in <b>%s</b>, a rule will be triggered"
 " to bring products in this location."
-msgstr "<br>プロダクトが<b>%s</b>で利用できない場合、このロケーションにプロダクトを移動するルールがトリガーされます。"
+msgstr "<br>プロダクトが<b>%s</b>で利用できない場合、このロケーションにプロダクトを移動する規則がトリガーされます。"
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -986,7 +986,7 @@ msgstr "高度なスケジューリング"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "高度：調達ルールの適用"
+msgstr "高度：調達規則の適用"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1008,13 +1008,6 @@ msgstr "全ての倉庫"
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
 msgid "All at once"
 msgstr "一括"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"All our contractual relations will be governed exclusively by United States "
-"law."
-msgstr "当社のすべての契約関係は、米国法にのみ準拠します。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -1388,13 +1381,6 @@ msgid "Before scheduled date"
 msgstr "予定された日より前"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr "以下の文章は提案であり、Odoo S.A.ではその責任を負いかねます。"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "阻止メッセージ"
@@ -1537,21 +1523,6 @@ msgstr "カテゴリー"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "カテゴリルート"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can My "
-"Company (Chicago) become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to My Company "
-"(Chicago) in its entirety and does not include any costs relating to the "
-"legislation of the country in which the client is located."
-msgstr ""
-"一部の国では、国内法に従い、請求書の金額に対して源泉徴収が適用されます。源泉徴収は、クライアントが税務当局に支払うことになります。いかなる場合においても、My"
-" Company（Chicago）は、その国の法律に関連する費用に関与することはできません。従って、請求書の金額は、その全額がMy Company "
-"(Chicago)に対するものであり、顧客が所在する国の法律に関連する費用は含まれません。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3378,6 +3349,12 @@ msgid "Generate Serials numbers"
 msgstr "シリアル番号を生成"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Generate Serials/Lots"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "仕入から販売までの在庫追跡"
@@ -3587,17 +3564,6 @@ msgid "Icon to indicate an exception activity."
 msgstr "例外活動を示すアイコン"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, My Company (Chicago) reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-"支払期日から 60日以上経過しても支払いが未納の場合、My Company (Chicago) "
-"は債権回収会社に依頼する権利を有します。弁護士費用は全てお客様のご負担となります。"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "全てのプロダクトが同じ時"
@@ -3784,7 +3750,7 @@ msgstr "チェックすると、移動するパッケージ全体を選択でき
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "チェックを外すと、削除せずにルールを非表示にすることができます。"
+msgstr "チェックを外すと、削除せずに規則を非表示にすることができます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
@@ -3802,6 +3768,12 @@ msgstr "インポート"
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
 msgstr "ロットをインポート"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+msgid "Import Serials/Lots"
+msgstr "シリアル/ロットをインポートする"
 
 #. module: stock
 #. odoo-python
@@ -3823,16 +3795,6 @@ msgstr "入荷タイプ"
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "In internal locations"
 msgstr "内部ロケーションで"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"In order for it to be admissible, My Company (Chicago) must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-"請求が認められるためには、商品の配送またはサービスの提供から8日以内に、配達記録郵便で登録事務所に送付された書簡により、My　Company(Chicago)に請求が通知される必要があります。"
 
 #. module: stock
 #. odoo-javascript
@@ -4612,7 +4574,7 @@ msgstr "自動印刷するロット・ラベル・フォーマット"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "ロットラベルレポート"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -4895,7 +4857,7 @@ msgstr "最小数量"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "最小在庫ルール"
+msgstr "最小在庫規則"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__orderpoint_ids
@@ -4975,7 +4937,7 @@ msgid ""
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
 msgstr ""
-"このオーダポイントを介して作成された移動は、この調達グループに配置されます。何も指定されていない場合、ストックルールによって生成された動きは1つの大きなピッキングにグループ化されます。"
+"このオーダポイントを介して作成された移動は、この調達グループに配置されます。何も指定されていない場合、在庫規則によって生成された動きは1つの大きなピッキングにグループ化されます。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -5002,18 +4964,6 @@ msgstr "1つのプロダクトに複数の容量規則"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "活動期限"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. My "
-"Company (Chicago) cannot under any circumstances, be required by the client "
-"to appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-"当社(Chicago)は、合意された時間枠に従い、履行可能なサービスを期限内に提供するために最善を尽くすことを約束します。しかし、その義務はいずれも、結果を出す義務であるとは見なされません。当社(Chicago)は、いかなる場合においても、最終消費者が顧客に対して行った損害賠償請求において、第三者として出廷することを要求されることはありません。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -5096,12 +5046,6 @@ msgstr "新しい手持数量"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "新規運送"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "次の活動カレンダーイベント"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5223,7 +5167,7 @@ msgstr "入荷が見つかりません。作成しましょう！"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr "並べ替えルールが見つかりません"
+msgstr "並べ替え規則が見つかりません"
 
 #. module: stock
 #. odoo-python
@@ -5237,7 +5181,7 @@ msgstr " %rに%rを補充する規則は見つかりませんでした。プロ�
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "No source location defined on stock rule: %s!"
-msgstr "ストックルールにソースの場所が定義されていません:%s\""
+msgstr "在庫規則にソースの場所が定義されていません:%s\""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -5597,26 +5541,12 @@ msgstr "元の移動"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr "元の並べ替えルール"
+msgstr "元の再オーダ規則"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "その他情報"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, My Company (Chicago) reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
-msgstr ""
-"当社の請求書は、請求書または注文書のいずれかに別の支払期限が記載されていない限り、21営業日以内に支払われるものとします。支払期日までにお支払いがない場合、当社"
-" (Chicago) は、残額の10%に相当する固定金利の支払いを要求する権利を留保します。当社 (Chicago) "
-"は、支払いが遅延した場合、事前の警告なしにサービスの提供を停止する権限を有します。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -6809,13 +6739,6 @@ msgid "RETURN OF"
 msgstr "以下の返品:"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
-msgid "Ratings"
-msgstr "評価"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7020,7 +6943,7 @@ msgstr "最小数量の再注文"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "並べ替えルール"
+msgstr "再オーダ規則"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -7384,14 +7307,13 @@ msgstr "これらの補給倉庫にルートが作成され、プロダクトお
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_rule.py:0
-#, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "規則 %sは %sに属し、ルートは %sに属します。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
-msgstr "ルールメッセージ"
+msgstr "規則メッセージ"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_rules_form
@@ -7416,7 +7338,7 @@ msgstr "製品に関する規則"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__rule_ids
 msgid "Rules used"
-msgstr "使用されるルール"
+msgstr "使用される規則"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
@@ -7462,11 +7384,6 @@ msgstr "SSCCデモ"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "標準的な販売条件"
 
 #. module: stock
 #. odoo-javascript
@@ -8371,7 +8288,7 @@ msgstr "在庫を消費"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
 msgid "Take From Stock, if unavailable, Trigger Another Rule"
-msgstr "在庫から取得、利用できない場合は、別のルールをトリガーします"
+msgstr "在庫から取得、利用できない場合は、別の規則をトリガーします"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -8380,9 +8297,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
-"在庫から取得:製品は、ソースロケーションの利用可能な在庫から取得されます。\n"
-"別のルールをトリガーする:システムは、製品をソースの場所に持ってくるための在庫ルールを見つけようとします。利用可能な在庫は無視されます。\n"
-"在庫から取得、利用できない場合は、別のルールをトリガーします:製品は、ソースロケーションの利用可能な在庫から取得されます。利用可能な在庫がない場合、システムは、ソースロケーションに製品を持ち込むためのルールを見つけようとします。"
+"在庫から取得:プロダクトは、ソースロケーションの利用可能な在庫から取得されます。\n"
+"別の規則をトリガーする:システムは、プロダクトをソースの場所に持ってくるための在庫規則を見つけようとします。利用可能な在庫は無視されます。\n"
+"在庫から取得、利用できない場合は、別の規則をトリガーします:プロダクトは、ソースロケーションの利用可能な在庫から取得されます。利用可能な在庫がない場合、システムは、ソースロケーションにプロダクトを持ち込むための規則を見つけようとします。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -8438,16 +8355,6 @@ msgstr "バックオーダ%sが作成されました。"
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "ロケーション用のバーコードは会社ごとに一意である必要があります。"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-"標準的な当該販売条件の後に作成されたものであっても、顧客は、顧客自身の標準販売条件を明示的に放棄するものとします。いかなる逸脱も、それを有効にするためには事前に書面で明示的に合意されなければなりません。"
 
 #. module: stock
 #. odoo-python
@@ -8637,7 +8544,7 @@ msgstr "梱包が行われた在庫作業"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__rule_id
 msgid "The stock rule that created this stock move"
-msgstr "この在庫移動を作成した在庫ルール"
+msgstr "この在庫移動を作成した在庫規則"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -8653,7 +8560,7 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
-"倉庫は、作成された移動/調達に伝播します。この倉庫は、このルールが必要な倉庫とは異なる場合があります(たとえば、別の倉庫からの再供給ルールの場合)"
+"倉庫は、作成された移動/調達に伝播します。この倉庫は、この規則が必要な倉庫とは異なる場合があります(たとえば、別の倉庫からの再供給規則の場合)"
 
 #. module: stock
 #. odoo-python
@@ -8824,7 +8731,7 @@ msgid ""
 " would create duplicated operations)"
 msgstr ""
 "このピッキングは別の操作で連鎖しているように見えます。\n"
-"後で返品する製品を受け取った場合は、返品されたピッキングを<b>逆戻り</b>して、ロジスティックルールが再度適用されないようにしてください(重複した操作を作成しないよう)"
+"後で返品する製品を受け取った場合は、返品されたピッキングを<b>逆戻り</b>して、ロジスティック規則が再度適用されないようにしてください(重複した操作を作成しないよう)"
 
 #. module: stock
 #. odoo-python
@@ -9193,7 +9100,7 @@ msgstr "他の規則をトリガ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule If No Stock"
-msgstr "在庫がない場合は別のルールをトリガーする"
+msgstr "在庫がない場合は別の規則をトリガーする"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9849,7 +9756,7 @@ msgstr "チェックを入れると、運送会社が展開されます。"
 msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
-msgstr "チェックを入れると、このルールで作成された移動がキャンセルされると、次の移動もキャンセルされます。"
+msgstr "チェックを入れると、この規則で作成された移動が取消されると、次の移動も取消されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -10140,11 +10047,10 @@ msgstr "同じ転送で同じパッケージコンテンツを複数回移動し
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
-msgstr ""
+msgstr "異なるオペレーションタイプの異なる運送からのプロダクトを同じパッケージに梱包することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -10312,11 +10218,6 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "製品%sのロット/シリアル番号を指定する必要があります。"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "You should update this document to reflect your T&amp;C."
-msgstr "お客様のT&amp;Cを反映させるために、この文書を更新する必要があります。"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
@@ -10328,7 +10229,7 @@ msgstr "倉庫%sでタイプ%sを選択するための進行中の操作がま�
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr "この製品には、まだいくつかのアクティブな並べ替えルールがあります。最初にアーカイブまたは削除してください。"
+msgstr "このプロダクトには、まだいくつかのアクティブな並べ替え規則があります。最初にアーカイブまたは削除して下さい。"
 
 #. module: stock
 #. odoo-javascript
@@ -10346,15 +10247,8 @@ msgid ""
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
 "ここでは、在庫予測に基づいたスマートな補充の提案を見つけることができます。\n"
-"購入または製造する数量を選択し、クリックで注文を開始します。\n"
-"将来の時間を節約するために、ルールを'自動化'として設定します。"
-
-#. module: stock
-#: model_terms:res.company,lunch_notify_message:stock.res_company_1
-msgid ""
-"Your lunch has been delivered.\n"
-"Enjoy your meal!"
-msgstr "ランチが届きました。お食事をお楽しみ下さい！"
+"購買または製造する数量を選択し、クリックでオーダを開始します。\n"
+"将来の時間を節約するために、規則を'自動化'として設定します。"
 
 #. module: stock
 #. odoo-python
@@ -10513,7 +10407,7 @@ msgstr "後入先出"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "manually to trigger the reordering rules right now."
-msgstr "手動で並べ替えルールを今すぐトリガーします。"
+msgstr "手動で並べ替え規則を今すぐトリガーします。"
 
 #. module: stock
 #. odoo-javascript

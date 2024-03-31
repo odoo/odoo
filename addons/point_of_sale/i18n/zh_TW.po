@@ -49,9 +49,10 @@ msgstr " 使用連接到 IoT 盒的印表機"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
-msgstr ""
+msgstr "% 折扣"
 
 #. module: point_of_sale
 #. odoo-python
@@ -980,6 +981,12 @@ msgid "Bank Statement Line"
 msgstr "銀行對帳單明細"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Barcode"
+msgstr "條碼"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "條碼命名規則"
@@ -1352,6 +1359,12 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr "根據客戶的類型選擇訂單上的具體財務狀況(免稅、現場與外賣等)。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "City"
+msgstr "縣市"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2334,6 +2347,12 @@ msgstr "電子秤"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Email"
+msgstr "電郵"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Email sent."
 msgstr "發送電子郵件."
@@ -3242,7 +3261,7 @@ msgstr "本地客戶展示"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "以員工身份登入"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -3378,6 +3397,12 @@ msgstr "方法名稱"
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
 msgstr "雜項"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Mobile"
+msgstr "行動電話"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -4320,9 +4345,15 @@ msgid ""
 msgstr "使用出銀機的人可以是救援者、學生或者臨時工。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Phone"
+msgstr "電話"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr ""
+msgstr "選擇可用的產品 PoS 類別"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4831,6 +4862,7 @@ msgstr "前一個訂單列表"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Price"
 msgstr "價格"
@@ -5022,7 +5054,7 @@ msgstr "商品"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS catefories"
-msgstr ""
+msgstr "產品及 PoS 類別"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
@@ -5178,6 +5210,7 @@ msgstr "代理警告"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Qty"
 msgstr "數量"
@@ -5955,7 +5988,7 @@ msgstr "顯示員工登入介面"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr ""
+msgstr "顯示利潤率及成本"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6075,7 +6108,7 @@ msgstr "開始類別應屬於可用的類別"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Start selling from a default product PoS category"
-msgstr ""
+msgstr "從預設產品POS類別開始銷售"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -6138,6 +6171,12 @@ msgstr "%s庫存出貨"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "庫存應在結束時更新"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Street"
+msgstr "街道"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6219,7 +6258,7 @@ msgstr "同步斷開"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/back_button/back_button.xml:0
 msgid "TABLES"
-msgstr ""
+msgstr "餐桌"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7793,3 +7832,9 @@ msgstr "使用"
 #: code:addons/point_of_sale/static/src/app/debug/order_import_popup/order_import_popup.xml:0
 msgid "were duplicates of existing orders"
 msgstr "與目前訂單重複"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Zip"
+msgstr "郵遞區號"

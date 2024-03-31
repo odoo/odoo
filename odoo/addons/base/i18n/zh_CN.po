@@ -7,6 +7,7 @@
 # Chloe Wang, 2024
 # qilong zhong <zhongqilong001@gmail.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-27 08:25+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31692,7 +31693,7 @@ msgstr "计划行动触发器"
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid "Scheduled action disabled"
-msgstr ""
+msgstr "已禁用预定动作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -37536,6 +37537,15 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 msgid "You cannot delete the %s record."
 msgstr "不能删除 %s 记录。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #. odoo-python

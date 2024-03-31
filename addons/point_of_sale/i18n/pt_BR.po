@@ -49,6 +49,7 @@ msgstr "Use uma impressora conectada à IoT Box"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
 msgstr "% desc"
@@ -1022,6 +1023,12 @@ msgid "Bank Statement Line"
 msgstr "Linha de extrato bancário"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Barcode"
+msgstr "Código de barras"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "Nomenclatura de código de barras"
@@ -1405,6 +1412,12 @@ msgid ""
 msgstr ""
 "Escolha uma posição fiscal específica no pedido, dependendo do tipo de "
 "cliente (isento de impostos, no local ou para viagem, etc.)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "City"
+msgstr "Cidade"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2395,6 +2408,12 @@ msgstr "Balança eletrônica"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Email sent."
 msgstr "E-mail enviado."
@@ -3320,7 +3339,7 @@ msgstr "Display voltado para o cliente local"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "Faça login no app Funcionários"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -3462,6 +3481,12 @@ msgstr "Nome do método"
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
 msgstr "Diversos"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Mobile"
+msgstr "Celular"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -4427,9 +4452,15 @@ msgstr ""
 "ou um empregado interino."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Phone"
+msgstr "Telefone"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr ""
+msgstr "Escolha quais categorias de produto do PDV estão disponíveis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4948,6 +4979,7 @@ msgstr "Lista de pedido anterior"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Price"
 msgstr "Preço"
@@ -5141,7 +5173,7 @@ msgstr "Produto"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS catefories"
-msgstr ""
+msgstr "Produtos e categorias do PDV"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
@@ -5297,6 +5329,7 @@ msgstr "Alerta do proxy"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Qty"
 msgstr "Qtd"
@@ -6079,7 +6112,7 @@ msgstr "Exibir tela de login de funcionário"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr ""
+msgstr "Mostrar margens e custos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6207,7 +6240,7 @@ msgstr "A categoria inicial deve pertencer às categorias disponíveis."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Start selling from a default product PoS category"
-msgstr ""
+msgstr "Comece a vender a partir de uma categoria de produto padrão do PDV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -6270,6 +6303,12 @@ msgstr "Saída de estoque para %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "O estoque deve ser atualizado no fechamento"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Street"
+msgstr "Rua"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6351,7 +6390,7 @@ msgstr "Sincronização desconectada"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/back_button/back_button.xml:0
 msgid "TABLES"
-msgstr ""
+msgstr "MESAS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8066,3 +8105,9 @@ msgstr "usando"
 #: code:addons/point_of_sale/static/src/app/debug/order_import_popup/order_import_popup.xml:0
 msgid "were duplicates of existing orders"
 msgstr "eram duplicatas de pedidos existentes"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Zip"
+msgstr "CEP"

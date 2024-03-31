@@ -16115,7 +16115,7 @@ msgstr "إلغاء الترقية"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot aggregate on %s parameter"
-msgstr ""
+msgstr "لا يمكن التجميع في معيار %s "
 
 #. module: base
 #. odoo-python
@@ -16155,7 +16155,7 @@ msgstr "لا يمكن استنساخ التهيئة! "
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot groupby on %s parameter"
-msgstr ""
+msgstr "لا يمكن \"التجميع حسب\" في معيار %s "
 
 #. module: base
 #. odoo-python
@@ -16533,7 +16533,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codabox_bridge_wizard
 msgid "CodaBox Bridge Wizard"
-msgstr "معالج وسيط CodaBox "
+msgstr "معالج CodaBox وسيط "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -22972,7 +22972,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "Invalid domain: %s"
-msgstr "نطاق غير صحيح: %s "
+msgstr "النطاق غير صالح: %s "
 
 #. module: base
 #. odoo-python
@@ -32057,7 +32057,7 @@ msgstr "مشغلات الإجراءات المجدولة "
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid "Scheduled action disabled"
-msgstr ""
+msgstr "تم تعطيل الإجراء المجدول "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -35243,9 +35243,9 @@ msgid ""
 "and automatically import CODA and SODA statements for their clients in Odoo.\n"
 "The connection must be done by the Accounting Firm.\n"
 msgstr ""
-"This module allows Accounting Firms to connect to CodaBox\n"
-"and automatically import CODA and SODA statements for their clients in Odoo.\n"
-"The connection must be done by the Accounting Firm.\n"
+"يتيح هذا التطبيق للمؤسسات المحاسبية الاتصال بـ CodaBox\n"
+"واستيراد كشوفات CODA و SODA تلقائياً لعملائهم في أودو.\n"
+"يجب أن يتم الاتصال بواسطة المؤسسة المحاسبية.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_fedex
@@ -35598,6 +35598,8 @@ msgid ""
 "This scheduled action has been disabled because its interval number is not a"
 " strictly positive value."
 msgstr ""
+"لقد تم تعطيل هذا الإجراء المجدول نظراً لأن قيمة الفترة الزمنية به ليست قيمة "
+"موجبة فقط. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -35714,7 +35716,7 @@ msgstr "Timor-Leste"
 #: model:ir.model.fields,field_description:base.field_res_partner_title__name
 #: model:ir.model.fields,field_description:base.field_res_users__title
 msgid "Title"
-msgstr "العنوان"
+msgstr "اللقب "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
@@ -38057,6 +38059,17 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 msgid "You cannot delete the %s record."
 msgstr "لا يمكنك حذف سجل %s. "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"لا يمكنك حذف المستخدم المدير لأنه مستخدَم في عدة أماكن مختلفة (كتهيئات "
+"الأمان، ...). قم بأرشفته عوضاً عن ذلك. "
 
 #. module: base
 #. odoo-python

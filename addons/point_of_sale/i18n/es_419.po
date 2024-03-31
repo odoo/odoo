@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -50,6 +50,7 @@ msgstr " Utilizar una impresora conectada a la caja IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
 msgstr "% de desc."
@@ -1026,6 +1027,12 @@ msgid "Bank Statement Line"
 msgstr "Línea de un estado de cuenta bancario"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Barcode"
+msgstr "Código de barras"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "Nomenclatura del código de barras"
@@ -1414,6 +1421,12 @@ msgid ""
 msgstr ""
 "Elija una posición fiscal específica en la orden en función del tipo de "
 "cliente (exento de impuestos, \"en el lugar\" vs. \"para llevar\", etc.)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "City"
+msgstr "Ciudad"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2411,6 +2424,12 @@ msgstr "Báscula electrónica"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Email"
+msgstr "Correo electrónico"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Email sent."
 msgstr "Correo electrónico enviado."
@@ -3340,7 +3359,7 @@ msgstr "Pantalla local orientada al cliente"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "Iniciar sesión como empleado"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -3484,6 +3503,12 @@ msgstr "Nombre del método"
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
 msgstr "Varios"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Mobile"
+msgstr "Celular"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -3674,7 +3699,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4447,9 +4472,17 @@ msgstr ""
 "estudiante o un empleado interino."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Phone"
+msgstr "Teléfono"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
 msgstr ""
+"Seleccione qué categorías del punto de venta están disponibles en el "
+"producto."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4968,6 +5001,7 @@ msgstr "Lista de órdenes anterior"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Price"
 msgstr "Precio"
@@ -5161,7 +5195,7 @@ msgstr "Producto"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS catefories"
-msgstr ""
+msgstr "Categorías de producto y Punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
@@ -5317,6 +5351,7 @@ msgstr "Advertencia del proxy"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Qty"
 msgstr "Cant."
@@ -6102,7 +6137,7 @@ msgstr "Mostrar pantalla de inicio de sesión de empleado"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr ""
+msgstr "Mostrar márgenes y costos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6231,6 +6266,8 @@ msgstr "La categoría de inicio debe pertenecer a las categorías disponibles."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Start selling from a default product PoS category"
 msgstr ""
+"Comience a vender desde una categoría de producto predeterminada del Punto "
+"de venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -6293,6 +6330,12 @@ msgstr "Salida de existencias para %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "Las existencias se deben actualizar al cierre"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Street"
+msgstr "Calle"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6374,7 +6417,7 @@ msgstr "Sincronización desconectada"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/back_button/back_button.xml:0
 msgid "TABLES"
-msgstr ""
+msgstr "MESAS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8094,3 +8137,9 @@ msgstr "usando"
 #: code:addons/point_of_sale/static/src/app/debug/order_import_popup/order_import_popup.xml:0
 msgid "were duplicates of existing orders"
 msgstr "eran duplicados de órdenes existentes"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Zip"
+msgstr "Código postal"

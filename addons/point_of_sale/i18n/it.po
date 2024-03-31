@@ -50,6 +50,7 @@ msgstr " Utilizza una stampante collegata all'IoT Box"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
 msgstr "% Sconto"
@@ -1026,6 +1027,12 @@ msgid "Bank Statement Line"
 msgstr "Riga estratto conto bancario"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Barcode"
+msgstr "Codice a barre"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
 msgstr "Nomenclatura codice a barre"
@@ -1410,6 +1417,12 @@ msgid ""
 msgstr ""
 "Scegliere un posizione fiscale specifica per l'ordine a seconda del tipo di "
 "cliente (esentasse, in loco vs da asporto ecc.)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "City"
+msgstr "Città"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2401,6 +2414,12 @@ msgstr "Bilancia elettronica"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid "Email sent."
 msgstr "E-mail inviata."
@@ -3329,7 +3348,7 @@ msgstr "Schermo lato cliente locale"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
-msgstr ""
+msgstr "Accedi con Dipendenti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -3470,6 +3489,12 @@ msgstr "Nome metodo"
 #: model:pos.category,name:point_of_sale.pos_category_miscellaneous
 msgid "Misc"
 msgstr "Varie"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Mobile"
+msgstr "Cellulare"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
@@ -4436,9 +4461,15 @@ msgstr ""
 " lavoratore interinale."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Phone"
+msgstr "Telefono"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr ""
+msgstr "Scegli quali categorie prodotto POS sono disponibili"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4957,6 +4988,7 @@ msgstr "Elenco ordini precedente"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_template.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Price"
 msgstr "Prezzo"
@@ -5149,7 +5181,7 @@ msgstr "Prodotto"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS catefories"
-msgstr ""
+msgstr "Categorie prodotto e POS"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute_custom_value
@@ -5305,6 +5337,7 @@ msgstr "Avviso del proxy"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Qty"
 msgstr "Q.tà"
@@ -6090,7 +6123,7 @@ msgstr "Mostra schermo di accesso dipendente"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr ""
+msgstr "Mostra margini e costi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6220,7 +6253,7 @@ msgstr "La categoria di partenza deve appartenere alle categorie disponibili."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Start selling from a default product PoS category"
-msgstr ""
+msgstr "Inizia la vendita da una categoria prodotto POS predefinita"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
@@ -6283,6 +6316,12 @@ msgstr "Uscita scorte per %s"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "Le scorte devono essere aggiornate alla chiusura"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Street"
+msgstr "Indirizzo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6364,7 +6403,7 @@ msgstr "Sincronizzazione disattiva"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/back_button/back_button.xml:0
 msgid "TABLES"
-msgstr ""
+msgstr "TAVOLI"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8092,3 +8131,9 @@ msgstr "usando"
 #: code:addons/point_of_sale/static/src/app/debug/order_import_popup/order_import_popup.xml:0
 msgid "were duplicates of existing orders"
 msgstr "erano duplicati di ordini esistenti"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.js:0
+msgid "Zip"
+msgstr "CAP"

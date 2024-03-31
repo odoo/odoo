@@ -16837,7 +16837,7 @@ msgstr "Dettagli azienda"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr "Numero REA"
+msgstr "ID Azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -25480,7 +25480,7 @@ msgstr "Signor"
 #: model:ir.module.module,shortdesc:base.module_web_mobile
 #: model_terms:ir.ui.view,arch_db:base.contact
 msgid "Mobile"
-msgstr "Cellulare"
+msgstr "Dispositivo mobile"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__mobile_view_mode
@@ -32243,7 +32243,7 @@ msgstr "Trigger di azioni pianificate"
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid "Scheduled action disabled"
-msgstr ""
+msgstr "Azione pianificata annullata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -35841,6 +35841,8 @@ msgid ""
 "This scheduled action has been disabled because its interval number is not a"
 " strictly positive value."
 msgstr ""
+"L'azione pianificata è stata disabilitata perché il numero di intervallo non"
+" è un valore strettamente positivo."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -38342,6 +38344,18 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 msgid "You cannot delete the %s record."
 msgstr "Impossibile eliminare il record %s."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"Non è possibile eliminare l'utente amministratore perché è utilizzato in "
+"vari posti (come nelle impostazioni relative alla sicurezza...). In "
+"alternativa, è possibile archiviarlo."
 
 #. module: base
 #. odoo-python

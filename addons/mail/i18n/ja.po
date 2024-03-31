@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -380,7 +380,7 @@ msgstr "<span class=\"d-block w-75 py-2\">ヘッダ色</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1161,7 +1161,7 @@ msgstr "ローンチ時に聞く"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Assign to ..."
-msgstr "以下に割当:"
+msgstr "担当者..."
 
 #. module: mail
 #. odoo-javascript
@@ -1972,7 +1972,7 @@ msgstr "会社"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "このドメインをデフォルトでメール送信に使用している会社"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2525,6 +2525,8 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"送信サーバフィルタに一致しない場合のデフォルト。'notifications' "
+"のようなローカルパートか、'notifications@example.com'のような完全なメールアドレスを指定し、全ての送信メールを上書きすることができます。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3163,7 +3165,7 @@ msgstr "メール作成アシスタント"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Eメールドメイン例 'example.com' in 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -4974,7 +4976,7 @@ msgstr "ローカルパートに基づく着信検知"
 msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
-msgstr ""
+msgstr "返信先に使用され、回答を受取るためのメールのローカルパート例：'catchall@example.com'の'catchall'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -4982,6 +4984,7 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"'bounce@example.com'内の'bounce'など、メールがバウンスしたときに使用される返信パスに使用されるメールのローカルパート。"
 
 #. module: mail
 #. odoo-javascript
@@ -7400,6 +7403,12 @@ msgid "Save as a new template"
 msgstr "新しいテンプレートとして保存"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "Save editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "Tenor APIからお気に入りのGIFを保存"
@@ -9054,7 +9063,6 @@ msgstr "遅延の単位"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
-#, python-format
 msgid "Unknown"
 msgstr "不明"
 
@@ -9913,9 +9921,8 @@ msgstr "名前"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
-#, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (eメールアドレスなし)"
 
 #. module: mail
 #. odoo-python
@@ -10103,12 +10110,12 @@ msgstr "例:  \"MyCompanyへようこそ\" または \"こんにちは、 {{ obj
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "例 \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "例 \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10118,7 +10125,7 @@ msgstr "例:  \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "例 \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
