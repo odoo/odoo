@@ -1,5 +1,5 @@
 import { useAutofocus } from "../utils/hooks";
-import { clamp } from "../utils/numbers";
+import { clamp, humanNumber } from "../utils/numbers";
 
 import { Component, useExternalListener, useState } from "@odoo/owl";
 
@@ -39,6 +39,10 @@ export class Pager extends Component {
         });
         this.inputRef = useAutofocus();
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
+    }
+
+    get estimatedTotal() {
+        return humanNumber(this.props.total);
     }
 
     /**

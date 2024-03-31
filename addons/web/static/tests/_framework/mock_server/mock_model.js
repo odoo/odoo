@@ -2513,6 +2513,7 @@ export class Model extends Array {
         countLimit = kwargs.count_limit || countLimit;
         if (countLimit) {
             result.length = Math.min(result.length, countLimit);
+            result.estimate_count = result.length > countLimit;
         }
         this._unityReadRecords(result.records, kwargs.specification);
         return result;

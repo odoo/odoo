@@ -97,7 +97,7 @@ export class RelationalModel extends Model {
     static DynamicGroupList = DynamicGroupList;
     static StaticList = StaticList;
     static DEFAULT_LIMIT = 80;
-    static DEFAULT_COUNT_LIMIT = 10000;
+    static DEFAULT_COUNT_LIMIT = 1000;
     static DEFAULT_GROUP_LIMIT = 80;
     static DEFAULT_OPEN_GROUP_LIMIT = 10;
     static MAX_NUMBER_OPENED_GROUPS = 10;

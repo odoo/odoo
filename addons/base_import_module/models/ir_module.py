@@ -283,7 +283,7 @@ class IrModule(models.Model):
         return res
 
     @api.model
-    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=1000):
         if _domain_asks_for_industries(domain):
             fields_name = list(specification.keys())
             modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)

@@ -11,7 +11,7 @@ from odoo import _, _lt, api, fields, models
 from odoo.fields import Command
 from odoo.models import BaseModel, NewId
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, unique
+from odoo.tools import SQL, unique
 from odoo.tools.misc import OrderedSet, get_lang
 from odoo.exceptions import AccessError, UserError
 from collections import defaultdict
@@ -42,28 +42,34 @@ class Base(models.AbstractModel):
 
     @api.model
     @api.readonly
-    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=1000):
         records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
 
-    def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
-        if not records:
-            return {
-                'length': 0,
-                'records': [],
-            }
+    def _estimate_count(self, domain, count_limit=1000):
+        [[(plan,)]] = self.env.execute_query(SQL("EXPLAIN (FORMAT JSON) %s", self._search(domain).select()))
+        estimate = plan.get('Plan', {}).get('Plan Rows', 0)
+        if estimate > count_limit:
+            str_estimate = str(estimate)
+            if estimate <= 10:
+                return 10, True
+            elif estimate <= 100:  # keep one significant digit
+                return int(str_estimate[:1] + "0" * (len(str_estimate) - 1)), True
+            else:  # keep two significant digits
+                return int(str_estimate[:2] + "0" * (len(str_estimate) - 2)), True
+        return self.search_count(domain), False
+
+    def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=1000):
         current_length = len(records) + offset
-        limit_reached = len(records) == limit
-        force_search_count = self._context.get('force_search_count')
-        count_limit_reached = count_limit and count_limit <= current_length
-        if limit and ((limit_reached and not count_limit_reached) or force_search_count):
-            length = self.search_count(domain, limit=count_limit)
-        else:
-            length = current_length
+        estimate = limit and len(records) == limit
+        if estimate:
+            estimate_lenght, estimate = self._estimate_count(domain, count_limit)
+            current_length = max(estimate_lenght, current_length)
         return {
-            'length': length,
+            'length': current_length,
             'records': records,
+            'estimate_count': estimate,
         }
 
     def web_save(self, vals, specification: dict[str, dict], next_id=None) -> list[dict]:
