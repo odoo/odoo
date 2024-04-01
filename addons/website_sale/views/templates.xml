@@ -1030,12 +1030,16 @@
                         </div>
                         <div class="col-lg-6 d-flex align-items-center">
                             <ol class="breadcrumb p-0 mb-2 m-lg-0">
-                                <li class="breadcrumb-item o_not_editable">
+                                <t t-set="num" t-value="request.params.get('page')"/>
+                                <li class="breadcrumb-item o_not_editable" t-if="category">
                                     <a t-att-href="keep(category=0)">All Products</a>
+                                </li>
+                                <li class="breadcrumb-item o_not_editable" t-else="">
+                                    <a t-att-href="keep('/shop/page/'+ num if num else None)">All Products</a>
                                 </li>
                                 <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
                                     t-if="category" class="breadcrumb-item">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
+                                    <a t-att-href="keep('/shop/category/%s' % slug(category) + '/page/'+ num if num else '/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
                                 </li>
                                 <li class="breadcrumb-item active">
                                     <span t-field="product.name" />

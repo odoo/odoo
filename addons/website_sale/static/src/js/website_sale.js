@@ -39,6 +39,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        'click .oe_product' : '_onClickProductCard',
     }),
 
     /**
@@ -71,6 +72,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             .forEach((product) => {
             $('input.js_product_change', product).first().trigger('change');
         });
+
+        const lastScrollPosition = sessionStorage.getItem(
+            "last_scroll_position" + window.location.pathname
+        );
+        if (lastScrollPosition) {
+            this._restoreScrollPosition(lastScrollPosition);
+        }
 
         // This has to be triggered to compute the "out of stock" feature and the hash variant changes
         this.triggerVariantChange(this.$el);
@@ -172,7 +180,19 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
         }
     },
-
+    _restoreScrollPosition: function (lastScrollPosition) {
+        const contentEl = document.getElementById('wrapwrap');
+        contentEl.scrollTo({
+            top: lastScrollPosition,
+            behavior: 'smooth'
+        });
+        sessionStorage.removeItem("last_scroll_position" + window.location.pathname);
+    }, 
+    _onClickProductCard: function () {
+        //store the last scroll position in /shop path
+        const contentEl = document.getElementById('wrapwrap');
+        sessionStorage.setItem("last_scroll_position" + window.location.pathname, contentEl.scrollTop);
+    },
     /**
      * Sets the url hash from the selected product options.
      *
