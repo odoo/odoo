@@ -109,14 +109,14 @@ export class SwitchCompanyMenu extends Component {
         );
         useChildSubEnv({ companySelector: this.companySelector });
     }
+
+    get isSingleCompany() {
+        return Object.values(this.companyService.allowedCompaniesWithAncestors ?? {}).length === 1;
+    }
 }
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,
-    isDisplayed(env) {
-        const { allowedCompanies } = env.services.company;
-        return Object.keys(allowedCompanies).length > 1;
-    },
 };
 
 registry.category("systray").add("SwitchCompanyMenu", systrayItem, { sequence: 1 });

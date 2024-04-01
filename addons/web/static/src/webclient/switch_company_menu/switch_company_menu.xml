@@ -4,8 +4,8 @@
 <t t-name="web.SwitchCompanyMenu">
     <div class="o_switch_company_menu d-none d-md-block">
         <DropdownGroup group="'web-navbar-group'">
-            <Dropdown position="'bottom-end'">
-                <button>
+            <Dropdown disabled="isSingleCompany" position="'bottom-end'">
+                <button t-att-disabled="isSingleCompany">
                     <i class="fa fa-building d-lg-none"/>
                     <span class="oe_topbar_name d-none d-lg-block" t-esc="companyService.currentCompany.name"/>
                 </button>
