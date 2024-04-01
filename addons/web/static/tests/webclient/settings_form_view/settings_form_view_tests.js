@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeLocalizationService, makeMockXHR } from "@web/../tests/helpers/mock_services";
 import {
     click,
     editInput,
@@ -12,6 +12,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { editSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { browser } from "@web/core/browser/browser";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
@@ -41,6 +42,25 @@ QUnit.module("SettingsFormView", (hooks) => {
                     fields: {
                         foo: { string: "Foo", type: "boolean" },
                         bar: { string: "Bar", type: "boolean" },
+                        task_id: {
+                            string: "many2one field",
+                            type: "many2one",
+                            relation: "task",
+                            default: 100,
+                        },
+                        file: {
+                            string: "related binary field",
+                            type: "binary",
+                            relation: "task",
+                            related: "task_id.file",
+                            default: "coucou==\n",
+                        },
+                        file_name: {
+                            string: "related file name",
+                            type: "char",
+                            related: "task_id.file_name",
+                            default: "coucou.txt",
+                        },
                         tasks: { string: "one2many field", type: "one2many", relation: "task" },
                         baz: {
                             string: "Baz",
@@ -54,7 +74,17 @@ QUnit.module("SettingsFormView", (hooks) => {
                     },
                 },
                 task: {
-                    fields: {},
+                    fields: {
+                        file: { string: "Binary", type: "binary" },
+                        file_name: { string: "File Name", type: "char"}
+                    },
+                    records: [
+                        {
+                            id: 100,
+                            file: "coucou==\n",
+                            file_name: "coucou.txt",
+                        },
+                    ],
                 },
             },
         };
@@ -1867,5 +1897,100 @@ QUnit.module("SettingsFormView", (hooks) => {
         await doAction(webClient, 1);
         await click(target.querySelector("button[name='2']"));
         assert.verifySteps(["/web/action/run"]);
+    });
+
+    QUnit.test("BinaryField is correctly rendered in Settings form view", async function (assert) {
+
+        async function send(data) {
+            assert.ok(data instanceof FormData);
+            assert.strictEqual(
+                data.get("field"),
+                "file",
+                "we should download the field document"
+            );
+            assert.strictEqual(
+                data.get("data"),
+                "coucou==\n",
+                "we should download the correct data"
+            );
+
+            this.status = 200;
+            this.response = new Blob([data.get("data")], { type: "text/plain" });
+        }
+        const MockXHR = makeMockXHR("", send);
+
+        patchWithCleanup(browser, { XMLHttpRequest: MockXHR });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="Sale" name="sale">
+                    <block title="Title of group Bar">
+                        <setting>
+                            <field name="task_id" invisible="1"/>
+                            <field name="file" filename="file_name"/>
+                            <field name="file_name"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>`,
+        });
+
+        assert.containsOnce(
+            target,
+            '.o_field_widget[name="file"] .fa-download',
+            "Download button should be display in settings form view"
+        );
+        assert.strictEqual(
+            target.querySelector('.o_field_widget[name="file"].o_field_binary .o_input').value,
+            "coucou.txt",
+            "the binary field should display the file name in the input"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_clear_file_button",
+            "there shoud be a button to clear the file"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char input").value,
+            "coucou.txt",
+            "the filename field should have the file name as value"
+        );
+
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(target.querySelector(".fa-download"));
+        await prom;
+
+        await click(target.querySelector(".o_field_binary .o_clear_file_button"));
+
+        assert.isNotVisible(
+            target.querySelector(".o_field_binary input"),
+            "the input should be hidden"
+        );
+        assert.containsOnce(
+            target,
+            ".o_field_binary .o_select_file_button",
+            "there should be a button to upload the file"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_char input").value,
+            "",
+            "the filename field should be empty since we removed the file"
+        );
     });
 });
