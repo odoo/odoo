@@ -361,3 +361,28 @@ test("companies can be logged in even if some toggled within delay", async () =>
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
     expect(["2"]).toVerifySteps();
 });
+
+test("always show the name of the company on the top right of the app", async () => {
+    // initialize a single company
+    const companyName = "Single company";
+    patchWithCleanup(session.user_companies, {
+        allowed_companies: {
+            1: { id: 1, name: companyName, sequence: 1, parent_id: false, child_ids: [] },
+        },
+        disallowed_ancestor_companies: {},
+        current_company: 1,
+    });
+
+    function onSetCookie(key, values) {
+        if (key === "cids") {
+            expect.step(values);
+        }
+    }
+    await createSwitchCompanyMenu({ onSetCookie });
+    expect(["1"]).toVerifySteps();
+
+    // in case of a single company, drop down button should be displayed but disabled
+    expect(".dropdown-toggle").toBeDisplayed();
+    expect(".dropdown-toggle").not.toBeEnabled();
+    expect(".dropdown-toggle").toHaveText(companyName);
+});
