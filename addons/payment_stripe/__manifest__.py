@@ -19,7 +19,11 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_stripe/static/src/**/*',
+            'payment_stripe/static/src/js/express_checkout_form.js',
+            'payment_stripe/static/src/js/payment_form.js',
+            'payment_stripe/static/src/js/stripe_options.js',
+            # scss
+            'payment_stripe/static/src/scss/payment_stripe_templates.scss',
         ],
     },
     'license': 'LGPL-3',

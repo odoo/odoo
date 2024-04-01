@@ -17,7 +17,7 @@ It allows for comparing products from the wishlist
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_comparison_wishlist/static/src/**/*',
+            'website_sale_comparison_wishlist/static/src/js/wishlist.js',
         ],
     },
     'auto_install': True,

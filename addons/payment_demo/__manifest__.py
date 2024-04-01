@@ -20,7 +20,9 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_demo/static/src/js/**/*',
+            'payment_demo/static/src/js/express_checkout_form.js',
+            'payment_demo/static/src/js/payment_demo_mixin.js',
+            'payment_demo/static/src/js/payment_form.js',
         ],
     },
     'license': 'LGPL-3',

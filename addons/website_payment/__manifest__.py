@@ -30,7 +30,8 @@ This is a bridge module that adds multi-website support for payment providers.
             'website_payment/static/src/snippets/s_donation/options.xml',
         ],
         'web.assets_frontend': [
-            'website_payment/static/src/js/**/*',
+            'website_payment/static/src/js/payment_form.js',
+            'website_payment/static/src/js/website_payment_donation.js',
         ],
     },
     'license': 'LGPL-3',

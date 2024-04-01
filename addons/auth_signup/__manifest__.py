@@ -28,7 +28,7 @@ Allow users to sign up and reset their password
     'bootstrap': True,
     'assets': {
         'web.assets_frontend': [
-            'auth_signup/static/**/*',
+            'auth_signup/static/src/js/signup.js',
         ],
     },
     'license': 'LGPL-3',

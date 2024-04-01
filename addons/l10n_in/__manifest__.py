@@ -62,8 +62,8 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
             'l10n_in/static/src/helpers/*.js',
         ],
         'web.assets_frontend': [
-            'l10n_in/static/src/components/tests_shared_js_python/*',
-            'l10n_in/static/src/helpers/*.js',
+            'l10n_in/static/src/components/tests_shared_js_python/tests_shared_js_python.js',
+            'l10n_in/static/src/helpers/hsn_summary.js',
         ],
     },
 }

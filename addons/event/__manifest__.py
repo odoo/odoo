@@ -56,7 +56,8 @@ Key Features
             'event/static/src/js/tours/**/*',
         ],
         'web.assets_frontend': [
-            'event/static/src/js/tours/**/*',
+            'event/static/src/js/tours/event_steps.js',
+            'event/static/src/js/tours/event_tour.js',
         ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_badge_report.scss',

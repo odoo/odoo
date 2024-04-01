@@ -230,7 +230,11 @@ Odoo Web Editor widget.
             ('include', 'web_editor.assets_media_dialog'),
 
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
-            'web_editor/static/src/js/common/**/*',
+            'web_editor/static/src/js/common/grid_layout_utils.js',
+            'web_editor/static/src/js/common/column_layout_mixin.js',
+            'web_editor/static/src/js/common/wysiwyg_utils.js',
+            'web_editor/static/src/js/common/utils.js',
+            'web_editor/static/src/js/common/browser_extensions.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
             'web_editor/static/src/js/wysiwyg/fonts.js',
 

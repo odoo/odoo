@@ -104,8 +104,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',
             'account/static/src/js/account_portal.js',
-            'account/static/src/components/tests_shared_js_python/*',
-            'account/static/src/helpers/*.js',
+            'account/static/src/components/tests_shared_js_python/tests_shared_js_python.js',
+            'account/static/src/helpers/account_tax.js',
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',

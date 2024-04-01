@@ -49,7 +49,10 @@ The automatic assignment is figured from the weight of partner levels and the ge
     'installable': True,
     'assets': {
         'web.assets_frontend': [
-            'website_crm_partner_assign/static/src/**/*',
+            'website_crm_partner_assign/static/src/js/crm_partner_assign.js',
+            'website_crm_partner_assign/static/src/img/quotation.svg',
+            'website_crm_partner_assign/static/src/img/leads.svg',
+            'website_crm_partner_assign/static/src/scss/crm_partner_assign.scss',
         ],
     },
     'license': 'LGPL-3',

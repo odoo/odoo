@@ -38,7 +38,14 @@
     'assets': {
         'web.assets_frontend': [
             'payment/static/lib/jquery.payment/jquery.payment.js',
-            'payment/static/src/**/*',
+            'payment/static/src/js/express_checkout_form.js',
+            'payment/static/src/js/payment_button.js',
+            'payment/static/src/js/payment_form.js',
+            'payment/static/src/js/post_processing.js',
+            'payment/static/src/scss/payment_form.scss',
+            'payment/static/src/scss/payment_provider.scss',
+            'payment/static/src/scss/portal_templates.scss',
+            'payment/static/src/xml/payment_form_templates.xml',
         ],
         'web.assets_backend': [
             'payment/static/src/scss/payment_provider.scss',

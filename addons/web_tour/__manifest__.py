@@ -22,9 +22,21 @@ Odoo Web tours.
             'web/static/lib/hoot-dom/**/*',
         ],
         'web.assets_frontend': [
-            'web_tour/static/src/tour_pointer/**/*',
-            'web_tour/static/src/tour_service/**/*',
-            'web/static/lib/hoot-dom/**/*',
+            # tour_pointer
+            'web_tour/static/src/tour_pointer/tour_pointer.xml',
+            'web_tour/static/src/tour_pointer/tour_pointer.scss',
+            'web_tour/static/src/tour_pointer/tour_pointer.js',
+            # tour_service
+            'web_tour/static/src/tour_service/tour_state.js',
+            'web_tour/static/src/tour_service/tour_utils.js',
+            'web_tour/static/src/tour_service/tour_service.js',
+            'web_tour/static/src/tour_service/tour_compilers.js',
+            'web_tour/static/src/tour_service/tour_pointer_state.js',
+            # hoot-dom
+            'web/static/lib/hoot-dom/hoot_dom_utils.js',
+            'web/static/lib/hoot-dom/hoot-dom.js',
+            'web/static/lib/hoot-dom/helpers/dom.js',
+            'web/static/lib/hoot-dom/helpers/events.js',
         ],
         'web.qunit_suite_tests': [
             'web_tour/static/tests/**/*',

@@ -110,7 +110,38 @@ Featuring
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
             'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
-            'website_slides/static/src/js/public/**/*',
+            # category_add_dialog
+            'website_slides/static/src/js/public/components/category_add_dialog/category_add_dialog.xml',
+            'website_slides/static/src/js/public/components/category_add_dialog/category_add_dialog.js',
+            # slide_share_dialog
+            'website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.xml',
+            'website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.js',
+            'website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml',
+            'website_slides/static/src/js/public/components/slide_share_dialog/slide_share_dialog.js',
+            # slide_quiz_finish_dialog
+            'website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.js',
+            'website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_xp_progress_bar.xml',
+            'website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog.xml',
+            'website_slides/static/src/js/public/components/slide_quiz_finish_dialog/slide_xp_progress_bar.js',
+            # course_tag_add_dialog
+            'website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js',
+            'website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.xml',
+            # slide_upload_dialog
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.js',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.js',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog_select.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_install_module.js',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml',
+            'website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_source_types.js',
+            # slide_unsubscribe_dialog
+            'website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.xml',
+            'website_slides/static/src/js/public/components/slide_unsubscribe_dialog/slide_unsubscribe_dialog.js',
         ],
         'website.assets_editor': [
             'website_slides/static/src/js/systray_items/*.js',

@@ -31,8 +31,11 @@ Then it can be made specific at the product level.
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            'website_sale_stock/static/src/js/**/*',
-            'website_sale_stock/static/src/xml/**/*',
+        'website_sale_stock/static/src/js/variant_mixin.js',
+        'website_sale_stock/static/src/js/website_sale.js',
+        'website_sale_stock/static/src/js/website_sale_reorder.js',
+        'website_sale_stock/static/src/js/tours/website_sale_stock_reorder_from_portal.js',
+        'website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml',
         ],
         'web.assets_tests': [
             'website_sale_stock/static/tests/tours/website_sale_stock_multilang.js',

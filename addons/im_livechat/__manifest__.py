@@ -60,10 +60,12 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/primary_variables.scss',
         ],
         'web.assets_frontend': [
-            'web/static/src/views/fields/file_handler.*',
+            'web/static/src/views/fields/file_handler.js',
+            'web/static/src/views/fields/file_handler.xml',
             'web/static/src/views/fields/formatters.js',
             ('include', 'im_livechat.assets_embed_core'),
-            'im_livechat/static/src/embed/frontend/**/*',
+            'im_livechat/static/src/embed/frontend/boot_service.js',
+            'im_livechat/static/src/embed/frontend/livechat_root.js',
         ],
         'web.assets_backend': [
             'im_livechat/static/src/js/colors_reset_button/*',

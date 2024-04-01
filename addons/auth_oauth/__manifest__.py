@@ -19,7 +19,7 @@ Allow users to login through OAuth2 Provider.
     ],
     'assets': {
         'web.assets_frontend': [
-            'auth_oauth/static/**/*',
+            'auth_oauth/static/src/scss/auth_oauth.scss',
         ],
     },
     'license': 'LGPL-3',

@@ -24,7 +24,8 @@ Allows customers to pay for their orders at a shop, instead of paying online.
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'website_sale_picking/static/src/**/*.js'
+            'website_sale_picking/static/src/js/payment_button.js',
+            'website_sale_picking/static/src/js/payment_form.js',
         ],
         'web.assets_tests': [
             'website_sale_picking/static/tests/tours/**/*.js'

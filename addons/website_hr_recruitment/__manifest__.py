@@ -27,7 +27,7 @@
     'auto_install': ['hr_recruitment', 'website_mail'],
     'assets': {
         'web.assets_frontend': [
-            'website_hr_recruitment/static/src/scss/**/*',
+            'website_hr_recruitment/static/src/scss/website_hr_recruitment.scss',
             'website_hr_recruitment/static/src/js/website_hr_applicant_form.js',
         ],
         'website.assets_wysiwyg': [

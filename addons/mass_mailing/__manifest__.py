@@ -153,7 +153,7 @@
             'mass_mailing/static/src/js/snippets.editor.js',
         ],
         'web.assets_frontend': [
-            'mass_mailing/static/src/js/tours/**/*',
+            'mass_mailing/static/src/js/tours/mass_mailing_tour.js',
         ],
         'web.assets_tests': [
             'mass_mailing/static/tests/tours/**/*',

@@ -18,6 +18,11 @@ Allow the user to select if he wants to receive email notifications when a produ
     'assets': {
         'web.assets_frontend': [
             'website_sale_stock_wishlist/static/src/**/*',
+            'website_sale_stock_wishlist/static/src/js/wishlist.js',
+            'website_sale_stock_wishlist/static/src/js/website_sale.js',
+            'website_sale_stock_wishlist/static/src/js/variant.js',
+            'website_sale_stock_wishlist/static/src/xml/product_availability.xml',
+            'website_sale_stock_wishlist/static/src/scss/website_sale_stock_wishlist.scss',
         ],
         'web.assets_tests': [
             'website_sale_stock_wishlist/static/tests/tours/website_sale_stock_wishlist_stock_notification.js',

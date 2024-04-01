@@ -8,7 +8,8 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'auth_password_policy_signup/static/src/public/**/*',
+            'auth_password_policy_signup/static/src/public/components/password_meter/password_meter.js',
+            'auth_password_policy_signup/static/src/public/components/password_meter/password_meter.xml',
             'auth_password_policy/static/src/password_meter.js',
             'auth_password_policy/static/src/password_policy.js',
         ],

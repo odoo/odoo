@@ -25,8 +25,11 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_slides/static/src/js/**/*',
-            'website_sale_slides/static/src/xml/**/*',
+        'website_sale_slides/static/src/js/slides_course_join.js',
+        'website_sale_slides/static/src/js/slides_course_quiz.js',
+        'website_sale_slides/static/src/xml/website_sale_slides_quiz.xml',
+        'website_sale_slides/static/src/xml/website_slides_unsubscribe.xml',
+        'website_sale_slides/static/src/xml/slide_course_join.xml'
         ],
         'web.assets_tests': [
             'website_sale_slides/static/tests/tours/*.js',

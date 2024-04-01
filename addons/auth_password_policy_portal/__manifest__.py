@@ -6,7 +6,7 @@
     'data': ['views/templates.xml'],
     'assets': {
         'web.assets_frontend': [
-            'auth_password_policy_portal/static/**/*',
+            'auth_password_policy_portal/static/src/scss/portal_policy.scss',
         ],
     },
     'license': 'LGPL-3',
