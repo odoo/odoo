@@ -25,6 +25,12 @@ body {
     direction: ltr;
 }
 
+.o_skip_to_content {
+    // We require the z-index property to ensure that the "Skip to Content"
+    // button appears above the header.
+    z-index: $zindex-fixed + 1;
+}
+
 header {
     .navbar-brand {
         flex: 0 0 auto;
