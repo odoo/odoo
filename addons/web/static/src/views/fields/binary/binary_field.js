@@ -47,19 +47,23 @@ export class BinaryField extends Component {
         return this.props.record.update(changes);
     }
 
+    getDownloadData() {
+        return {
+            model: this.props.record.resModel,
+            id: this.props.record.resId,
+            field: this.props.name,
+            filename_field: this.fileName,
+            filename: this.fileName || "",
+            download: true,
+            data: isBinarySize(this.props.record.data[this.props.name])
+                ? null
+                : this.props.record.data[this.props.name],
+        };
+    }
+
     async onFileDownload() {
         await download({
-            data: {
-                model: this.props.record.resModel,
-                id: this.props.record.resId,
-                field: this.props.name,
-                filename_field: this.fileName,
-                filename: this.fileName || "",
-                download: true,
-                data: isBinarySize(this.props.record.data[this.props.name])
-                    ? null
-                    : this.props.record.data[this.props.name],
-            },
+            data: this.getDownloadData(),
             url: "/web/content",
         });
     }
