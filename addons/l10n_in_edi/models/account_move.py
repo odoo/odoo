@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         if not self._get_l10n_in_edi_response_json():
             raise UserError(_("There is no Indian E-invoice found."))
         return {
-                'type': 'ir.actions.act_url',
-                'url': f'/l10n_in_edi/vieweinvoice/{self.id}',
-                'target': 'new',
-           }
+            'type': 'ir.actions.act_url',
+            'url': f'/l10n_in_edi/vieweinvoice/{self.id}',
+            'target': 'new',
+        }
