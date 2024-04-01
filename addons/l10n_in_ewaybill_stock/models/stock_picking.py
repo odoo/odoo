@@ -11,7 +11,7 @@ class StockPicking(models.Model):
 
     def _compute_ewaybill_id(self):
         for picking in self:
-            picking.ewaybill_id = self.env['l10n.in.ewaybill'].search([('stock_picking_id', '=', picking.id)], limit=1)
+            picking.ewaybill_id = self.env['l10n.in.ewaybill'].search([('picking_id', '=', picking.id)], limit=1)
 
     def _get_l10n_in_ewaybill_form_action(self):
         return self.env.ref('l10n_in_ewaybill_stock.l10n_in_ewaybill_form_action').read()[0]
@@ -31,7 +31,7 @@ class StockPicking(models.Model):
         if self.ewaybill_id:
             raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
-        action['context'] = {'default_stock_picking_id': self.id}
+        action['context'] = {'default_picking_id': self.id}
         return action
 
     def action_open_l10n_in_ewaybill(self):

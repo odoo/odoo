@@ -9,7 +9,7 @@ class Ewaybill(models.Model):
     def _compute_document_partners_details(self):
         super()._compute_document_partners_details()
         for ewaybill in self:
-            sale_id = ewaybill.stock_picking_id.sale_id
+            sale_id = ewaybill.picking_id.sale_id
             if sale_id:
                 if ewaybill.picking_type_code == 'incoming':
                     ewaybill.partner_bill_to_id = sale_id.company_id.partner_id

@@ -113,6 +113,7 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("product is required to get HSN code"))
         return error_message
 
+    @api.model
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
         url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -35,8 +34,6 @@ class StockMove(models.Model):
             if line.ewaybill_id:
                 if line.ewaybill_id.state == 'pending':
                     line.ewaybill_price_unit = line.product_id.uom_id._compute_price(line.product_id.with_company(line.company_id).standard_price, line.product_uom)
-            else:
-                line.ewaybill_price_unit = 0
 
     @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'ewaybill_id')
     def _compute_tax_ids(self):
@@ -48,8 +45,6 @@ class StockMove(models.Model):
                         line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.supplier_taxes_id.filtered_domain(company_domain))
                     else:
                         line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.taxes_id.filtered_domain(company_domain))
-            else:
-                line.ewaybill_tax_ids = False
 
     def _get_l10n_in_fiscal_position(self, taxes):
         fiscal_position = self.env['account.chart.template'].ref('fiscal_position_in_inter_state', raise_if_not_found=False)
@@ -59,5 +54,4 @@ class StockMove(models.Model):
                 In case of inter state transaction tax is not auto changed to IGST""")
         if fiscal_position and self.ewaybill_id.transaction_type == "inter_state":
             return fiscal_position.map_tax(taxes)
-        else:
-            return taxes
+        return taxes

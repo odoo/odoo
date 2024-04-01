@@ -6,13 +6,12 @@ import base64
 import pytz
 from datetime import datetime
 from collections import defaultdict
-from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
-from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi
+from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 
 class Ewaybill(models.Model):
@@ -23,7 +22,7 @@ class Ewaybill(models.Model):
     # Ewaybill details generated from the API
     name = fields.Char("e-Way bill Number", copy=False, readonly=True, tracking=True)
     ewaybill_date = fields.Date("e-Way bill Date", copy=False, readonly=True, tracking=True)
-    ewaybill_expiry_date = fields.Date("e-Way bill Valid Upto", copy=False, readonly=True,tracking=True)
+    ewaybill_expiry_date = fields.Date("e-Way bill Valid Upto", copy=False, readonly=True, tracking=True)
 
     state = fields.Selection(string='Status', selection=[
         ('pending', 'Pending'),
@@ -32,9 +31,14 @@ class Ewaybill(models.Model):
     ], required=True, readonly=True, copy=False, tracking=True, default='pending')
 
     # Stock picking details
-    stock_picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
-    move_ids = fields.One2many(comodel_name='stock.move', related="stock_picking_id.move_ids", inverse_name='ewaybill_id', store=True)
-    picking_type_code = fields.Selection(related='stock_picking_id.picking_type_id.code')
+    picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
+    move_ids = fields.One2many(
+        comodel_name='stock.move',
+        related="picking_id.move_ids",
+        inverse_name='ewaybill_id',
+        store=True
+    )
+    picking_type_code = fields.Selection(related='picking_id.picking_type_id.code')
 
     # Document details
     document_date = fields.Datetime("Document Date", compute="_compute_document_details", store=True)
@@ -45,10 +49,34 @@ class Ewaybill(models.Model):
         ("O", "Outward"),
         ("I", "Inward")
     ], compute="_compute_supply_type")
-    partner_bill_from_id = fields.Many2one("res.partner", string='Bill From', compute="_compute_document_partners_details", store=True, readonly=False)
-    partner_bill_to_id = fields.Many2one("res.partner", string='Bill To', compute="_compute_document_partners_details", store=True, readonly=False)
-    partner_ship_from_id = fields.Many2one("res.partner", string='Dispatch From', compute="_compute_document_partners_details", store=True, readonly=False)
-    partner_ship_to_id = fields.Many2one('res.partner', string='Ship To', compute='_compute_document_partners_details', store=True, readonly=False)
+    partner_bill_from_id = fields.Many2one(
+        "res.partner",
+        string='Bill From',
+        compute="_compute_document_partners_details",
+        store=True,
+        readonly=False
+    )
+    partner_bill_to_id = fields.Many2one(
+        "res.partner",
+        string='Bill To',
+        compute="_compute_document_partners_details",
+        store=True,
+        readonly=False
+    )
+    partner_ship_from_id = fields.Many2one(
+        "res.partner",
+        string='Dispatch From',
+        compute="_compute_document_partners_details",
+        store=True,
+        readonly=False
+    )
+    partner_ship_to_id = fields.Many2one(
+        'res.partner',
+        string='Ship To',
+        compute='_compute_document_partners_details',
+        store=True,
+        readonly=False
+    )
 
     # Fields to determine which partner details are editable
     is_bill_to_editable = fields.Boolean(compute="_compute_is_editable")
@@ -116,38 +144,39 @@ class Ewaybill(models.Model):
 
     def _compute_supply_type(self):
         for ewaybill in self:
-            ewaybill.supply_type = 'I' if ewaybill.picking_type_code == 'incoming' else 'O'
+            ewaybill.supply_type = ewaybill.picking_type_code == 'incoming' and 'I' or 'O'
 
     @api.depends('partner_bill_to_id', 'partner_bill_from_id')
     def _compute_document_details(self):
         for ewaybill in self:
-            stock_picking_id = ewaybill.stock_picking_id
-            ewaybill.document_number = stock_picking_id.name
-            ewaybill.company_id = stock_picking_id.company_id.id
-            ewaybill.document_date = stock_picking_id.date_done or stock_picking_id.scheduled_date
+            picking_id = ewaybill.picking_id
+            ewaybill.document_number = picking_id.name
+            ewaybill.company_id = picking_id.company_id.id
+            ewaybill.document_date = picking_id.date_done or picking_id.scheduled_date
 
-    @api.depends('stock_picking_id')
+    @api.depends('picking_id')
     def _compute_document_partners_details(self):
         for ewaybill in self:
-            stock_picking_id = ewaybill.stock_picking_id
+            picking_id = ewaybill.picking_id
             if ewaybill.picking_type_code == 'incoming':
-                ewaybill.partner_bill_to_id = stock_picking_id.company_id.partner_id
-                ewaybill.partner_bill_from_id = stock_picking_id.partner_id
-                ewaybill.partner_ship_to_id = stock_picking_id.picking_type_id.warehouse_id.partner_id
-                ewaybill.partner_ship_from_id = stock_picking_id.partner_id
+                ewaybill.partner_bill_to_id = picking_id.company_id.partner_id
+                ewaybill.partner_bill_from_id = picking_id.partner_id
+                ewaybill.partner_ship_to_id = picking_id.picking_type_id.warehouse_id.partner_id
+                ewaybill.partner_ship_from_id = picking_id.partner_id
             else:
-                ewaybill.partner_bill_to_id = stock_picking_id.partner_id
-                ewaybill.partner_bill_from_id = stock_picking_id.company_id.partner_id
-                ewaybill.partner_ship_to_id = stock_picking_id.partner_id
-                ewaybill.partner_ship_from_id = stock_picking_id.picking_type_id.warehouse_id.partner_id
+                ewaybill.partner_bill_to_id = picking_id.partner_id
+                ewaybill.partner_bill_from_id = picking_id.company_id.partner_id
+                ewaybill.partner_ship_to_id = picking_id.partner_id
+                ewaybill.partner_ship_from_id = picking_id.picking_type_id.warehouse_id.partner_id
 
     @api.depends('partner_bill_from_id', 'partner_bill_to_id')
     def _compute_transaction_type(self):
         for ewaybill in self:
-            if ewaybill.partner_bill_from_id.state_id == ewaybill.partner_bill_to_id.state_id:
-                ewaybill.transaction_type = 'intra_state'
-            else:
-                ewaybill.transaction_type = 'inter_state'
+            ewaybill.transaction_type = (
+                ewaybill.partner_bill_from_id.state_id == ewaybill.partner_bill_to_id.state_id and
+                'intra_state' or
+                'inter_state'
+            )
 
     @api.depends('partner_ship_from_id', 'partner_ship_to_id', 'partner_bill_from_id', 'partner_bill_to_id')
     def _compute_is_editable(self):
@@ -182,8 +211,7 @@ class Ewaybill(models.Model):
 
     def generate_ewaybill(self):
         for ewaybill in self:
-            errors = ewaybill._check_configuration()
-            if errors:
+            if errors := ewaybill._check_configuration():
                 raise UserError('\n'.join(errors))
             ewaybill._generate_ewaybill_direct()
 
@@ -211,14 +239,11 @@ class Ewaybill(models.Model):
 
     def _is_overseas(self):
         self.ensure_one()
-        gst_treatment = self._get_gst_treatment()[1]
-        if gst_treatment in ('overseas', 'special_economic_zone'):
-            return True
-        return False
+        return self._get_gst_treatment()[1] in ('overseas', 'special_economic_zone')
 
     def _check_configuration(self):
         error_message = []
-        methods_to_check =[
+        methods_to_check = [
             self._check_partners,
             self._check_document_number,
             self._check_lines,
@@ -239,13 +264,18 @@ class Ewaybill(models.Model):
 
     def _check_partners(self):
         error_message = []
-        partners = {self.partner_bill_to_id, self.partner_bill_from_id, self.partner_ship_to_id, self.partner_ship_from_id}
+        partners = {
+            self.partner_bill_to_id, self.partner_bill_from_id, self.partner_ship_to_id, self.partner_ship_from_id
+        }
         for partner in partners:
             error_message += self._l10n_in_validate_partner(partner)
         return error_message
 
     @api.model
-    def _l10n_in_validate_partner(self, partner, is_company=False):
+    def _l10n_in_validate_partner(self, partner):
+        """
+        Validation method for Stock Ewaybill (different from the one in EDI Ewaybill)
+        """
         message = []
         if partner.country_id.code == "IN":
             if partner.state_id and not partner.state_id.l10n_in_tin:
@@ -255,7 +285,7 @@ class Ewaybill(models.Model):
             if not partner.zip or not re.match("^[0-9]{6}$", partner.zip):
                 message.append(_("- Zip code required and should be 6 digits"))
         if message:
-            message.insert(0, "%s" % (partner.display_name))
+            message.insert(0, "%s" % partner.display_name)
         return message
 
     def _check_document_number(self):
@@ -265,8 +295,9 @@ class Ewaybill(models.Model):
 
     def _check_lines(self):
         error_message = []
+        AccountEDI = self.env['account.edi.format']
         for line in self.move_ids:
-            hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
+            hsn_code = AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
             if not hsn_code:
                 error_message.append(_("HSN code is not set in product %s", line.product_id.name))
             elif not re.match("^[0-9]+$", hsn_code):
@@ -301,6 +332,28 @@ class Ewaybill(models.Model):
         })
         self.write(response_vals)
 
+    def _handle_internal_warning_if_present(self, response):
+        if warnings := response.get('odoo_warning'):
+            for warning in warnings:
+                if warning.get('message_post'):
+                    odoobot = self.env.ref("base.partner_root")
+                    self.message_post(
+                        author_id=odoobot.id,
+                        body=warning.get('message')
+                    )
+                else:
+                    self._write_error(warning.get('message'))
+
+    def handle_error_if_present(self, ewaybill_error):
+        if is_error := isinstance(ewaybill_error, EWayBillError):
+            self._handle_internal_warning_if_present(ewaybill_error.error_json)
+            error_message = ewaybill_error.get_all_error_message()
+            blocking_level = "error"
+            if "404" in ewaybill_error.error_codes:
+                blocking_level = "warning"
+            self._write_error(error_message, blocking_level)
+        return is_error
+
     def _ewaybill_cancel(self):
         cancel_json = {
             "ewbNo": int(self.name),
@@ -309,107 +362,29 @@ class Ewaybill(models.Model):
         }
         ewb_api = EWayBillApi(self.company_id)
         response = ewb_api._ewaybill_cancel(cancel_json)
-        if response.get("error"):
-            error = response["error"]
-            error_codes = [e.get("code") for e in error]
-            if "238" in error_codes:
-                # Invalid token eror then create new token and send generate request again.
-                # This happens when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = ewb_api._ewaybill_authenticate()
-                if not authenticate_response.get("error"):
-                    error = []
-                    response = ewb_api._ewaybill_cancel(cancel_json)
-                    if response.get("error"):
-                        error = response["error"]
-                        error_codes = [e.get("code") for e in error]
-            if "312" in error_codes:
-                # E-waybill is already canceled
-                # this happens when timeout from the Government portal but IRN is generated
-                error_message = Markup("<br/>").join([Markup("[%s] %s") % (
-                e.get("code"), e.get("message")) for e in error])
-                error = []
-                response = {"data": ""}
-                odoobot = self.env.ref("base.partner_root")
-                self.message_post(author_id=odoobot.id, body=
-                Markup("%s<br/>%s:<br/>%s") % (
-                    _("Somehow this E-waybill has been canceled in the government portal before. You can verify by checking the details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"),
-                    _("Error"),
-                    error_message
-                ))
-            if "no-credit" in error_codes:
-                error_message = self._l10n_in_edi_get_iap_buy_credits_message(self.company_id)
-                self._write_error(error_message)
-            elif error:
-                error_message = Markup("<br/>").join([Markup("[%s] %s") % (
-                e.get("code"), e.get("message")) for e in error])
-                blocking_level = "error"
-                if "404" in error_codes:
-                    blocking_level = "warning"
-                self._write_error(error_message, blocking_level)
-        # Not use else because we re-send request in case of invalid token error
-        if not response.get("error"):
+        if not self.handle_error_if_present(response):
             self._write_successfully_response({'state': 'cancel'})
 
     def _generate_ewaybill_direct(self):
         ewb_api = EWayBillApi(self.company_id)
         generate_json = self._ewaybill_generate_direct_json()
         response = ewb_api._ewaybill_generate(generate_json)
-        if response.get("error"):
-            error = response["error"]
-            error_codes = [e.get("code") for e in error]
-            if "238" in error_codes:
-                # Invalid token eror then create new token and send generate request again.
-                # This happens when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = ewb_api._ewaybill_authenticate()
-                if not authenticate_response.get("error"):
-                    error = []
-                    response = ewb_api._ewaybill_generate(generate_json)
-                    if response.get("error"):
-                        error = response["error"]
-                        error_codes = [e.get("code") for e in error]
-            if "604" in error_codes:
-                # Get E-waybill by details in case of E-waybill is already generated
-                # this happens when timeout from the Government portal but E-waybill is generated
-                response = ewb_api._ewaybill_get_by_consigner(generate_json.get("docType"), generate_json.get("docNo"))
-                if not response.get("error"):
-                    error = []
-                    odoobot = self.env.ref("base.partner_root")
-                    self.message_post(author_id=odoobot.id, body=
-                    _("Somehow this E-waybill has been generated in the government portal before. You can verify by checking the invoice details into the government (https://ewaybillgst.gov.in/Others/EBPrintnew.asp)")
-                                      )
-            if "no-credit" in error_codes:
-                error_message = self._l10n_in_edi_get_iap_buy_credits_message(self.company_id)
-                self._write_error(error_message)
-            elif error:
-                error_message = "<br/>".join([
-                    "[%s] %s" % (
-                        e.get("code"),
-                        html_escape(e.get("message"))
-                    )
-                for e in error])
-                blocking_level = "error"
-                if "404" in error_codes:
-                    blocking_level = "warning"
-                self._write_error(error_message, blocking_level)
-        # Not use else because we re-send request in case of invalid token error
-        if not response.get("error"):
+        if not self.handle_error_if_present(response):
+            self._handle_internal_warning_if_present(response)
             self.state = 'generated'
             response_data = response.get("data")
+            time_format = '%d/%m/%Y %I:%M:%S %p'
             self._write_successfully_response({
                 'name': response_data.get("ewayBillNo"),
-                'ewaybill_date': self._indian_timezone_to_odoo_utc(response_data.get('ewayBillDate'), '%d/%m/%Y %I:%M:%S %p'),
-                'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(response_data.get('validUpto'), '%d/%m/%Y %I:%M:%S %p'),
+                'ewaybill_date': self._indian_timezone_to_odoo_utc(
+                    response_data.get('ewayBillDate'),
+                    time_format
+                ),
+                'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
+                    response_data.get('validUpto'),
+                    time_format
+                ),
             })
-
-    @api.model
-    def _l10n_in_edi_get_iap_buy_credits_message(self, company):
-        url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
-        return Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
-            _("You have insufficient credits to send this document!"),
-            _("Please buy more credits and retry: "),
-            url,
-            _("Buy Credits")
-        )
 
     @api.model
     def _indian_timezone_to_odoo_utc(self, str_date, time_format="%Y-%m-%d %H:%M:%S"):
@@ -424,54 +399,25 @@ class Ewaybill(models.Model):
     def _get_partner_state_code(self, partner):
         return int(partner.state_id.l10n_in_tin) if partner.country_id.code == "IN" else 99
 
-    @api.model
-    def _get_partner_zip(self, partner):
-        return int(partner.zip) if partner.country_id.code == "IN" else 999999
-
-    @api.model
-    def _get_partner_gst_number(self, partner):
-        return partner.commercial_partner_id.vat or "URP"
-
-    @api.model
-    def _l10n_in_edi_extract_digits(self, string):
-        if not string:
-            return string
-        matches = re.findall(r"\d+", string)
-        result = "".join(matches)
-        return result
-
-    @api.model
-    def _l10n_in_round_value(self, amount, precision_digits=2):
-        """
-            This method is call for rounding.
-            If anything is wrong with rounding then we quick fix in method
-        """
-        value = round(amount, precision_digits)
-        # avoid -0.0
-        return value if value else 0.0
-
-    @api.model
-    def _l10n_in_tax_details(self, ewaybill):
-        tax_details = {'line_tax_details': defaultdict(dict), 'tax_details':defaultdict(float)}
-        for move in ewaybill.move_ids:
+    def _l10n_in_tax_details(self):
+        tax_details = {
+            'line_tax_details': defaultdict(dict),
+            'tax_details': defaultdict(float)
+        }
+        for move in self.move_ids:
             line_tax_vals = self._l10n_in_tax_details_by_line(move)
             tax_details['line_tax_details'][move.id] = line_tax_vals
-            tax_details['tax_details']['total_excluded'] += line_tax_vals['total_excluded']
-            tax_details['tax_details']['total_included'] += line_tax_vals['total_included']
-            tax_details['tax_details']['total_void'] += line_tax_vals['total_void']
+            for val_field in ['total_excluded', 'total_included', 'total_void']:
+                tax_details['tax_details'][val_field] += line_tax_vals[val_field]
             for tax in ['igst', 'cgst', 'sgst', 'cess_non_advol', 'cess', 'other']:
                 for taxes in line_tax_vals['taxes']:
-                    rate_key = "%s_rate" % (tax)
-                    amount_key = "%s_amount" % (tax)
-                    if rate_key in taxes:
-                        tax_details['tax_details'][rate_key] += taxes[rate_key]
-                    if amount_key in taxes:
-                        tax_details['tax_details'][amount_key] += taxes[amount_key]
+                    for field_key in ["rate", "amount"]:
+                        if (key := f"{tax}_{field_key}") in taxes:
+                            tax_details['tax_details'][key] += taxes[key]
         return tax_details
 
     def _l10n_in_tax_details_by_line(self, move):
         taxes = move.ewaybill_tax_ids.compute_all(price_unit=move.ewaybill_price_unit, quantity=move.quantity)
-        tax_vals = {}
         for tax in taxes['taxes']:
             tax_id = self.env['account.tax'].browse(tax['id'])
             tax_name = "other"
@@ -480,8 +426,8 @@ class Ewaybill(models.Model):
                     tax_name = gst_tax_name
             if self.env.ref("l10n_in.tax_tag_cess").id in tax['tag_ids']:
                 tax_name = tax_id.amount_type != "percent" and "cess_non_advol" or "cess"
-            rate_key = "%s_rate" % (tax_name)
-            amount_key = "%s_amount" % (tax_name)
+            rate_key = "%s_rate" % tax_name
+            amount_key = "%s_amount" % tax_name
             tax.setdefault(rate_key, 0)
             tax.setdefault(amount_key, 0)
             tax[rate_key] += tax_id.amount
@@ -489,111 +435,133 @@ class Ewaybill(models.Model):
         return taxes
 
     def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
-        round_value = self._l10n_in_round_value
+        AccountEDI = self.env['account.edi.format']
+        product = line.product_id
         line_details = {
-            "productName": line.product_id.name,
-            "hsnCode": self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code),
-            "productDesc": line.product_id.name,
+            "productName": product.name,
+            "hsnCode": AccountEDI._l10n_in_edi_extract_digits(product.l10n_in_hsn_code),
+            "productDesc": product.name,
             "quantity": line.quantity,
-            "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[
+            "qtyUnit": product.uom_id.l10n_in_code and product.uom_id.l10n_in_code.split("-")[
                 0] or "OTH",
-            "taxableAmount": round_value(tax_details['total_excluded']),
+            "taxableAmount": AccountEDI._l10n_in_round_value(tax_details['total_excluded']),
         }
-        if tax_details.get('igst_rate'):
-            line_details.update({"igstRate": round_value(tax_details.get("igst_rate", 0.00))})
+        if igst_rate := tax_details.get('igst_rate'):
+            line_details.update({"igstRate": AccountEDI._l10n_in_round_value(igst_rate)})
         else:
             line_details.update({
-                "cgstRate": round_value(tax_details.get("cgst_rate", 0.00)),
-                "sgstRate": round_value(tax_details.get("sgst_rate", 0.00)),
+                "cgstRate": AccountEDI._l10n_in_round_value(tax_details.get("cgst_rate", 0.00)),
+                "sgstRate": AccountEDI._l10n_in_round_value(tax_details.get("sgst_rate", 0.00)),
             })
-        if tax_details.get("cess_rate"):
-            line_details.update({"cessRate": round_value(tax_details.get("cess_rate", 0.00))})
-        if tax_details.get("cess_non_advol_amount"):
-            line_details.update({"cessNonadvol": round_value(tax_details.get("cess_non_advol_amount", 0.00))})
+        if cess_rate := tax_details.get("cess_rate"):
+            line_details.update({"cessRate": AccountEDI._l10n_in_round_value(cess_rate)})
+        if cess_non_advol := tax_details.get("cess_non_advol_amount"):
+            line_details.update({
+                "cessNonadvol": AccountEDI._l10n_in_round_value(cess_non_advol)
+            })
         return line_details
 
-    def _ewaybill_generate_direct_json(self):
-        for ewaybill in self:
-            def get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details):
-                """
-                    1 - Regular
-                    2 - Bill To - Ship To
-                    3 - Bill From - Dispatch From
-                    4 - Combination of 2 and 3
-                """
-                if seller_details != dispatch_details and buyer_details != ship_to_details:
-                    return 4
-                elif seller_details != dispatch_details:
-                    return 3
-                elif buyer_details != ship_to_details:
-                    return 2
-                else:
-                    return 1
+    def _prepare_ewaybill_base_json_payload(self):
 
-            partner_bill_to_id = self.partner_bill_to_id
-            partner_bill_from_id = self.partner_bill_from_id
-            partner_ship_to_id = self.partner_ship_to_id
-            partner_ship_from_id = self.partner_ship_from_id
-            json_payload = {
+        def get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details):
+            """
+                1 - Regular
+                2 - Bill To - Ship To
+                3 - Bill From - Dispatch From
+                4 - Combination of 2 and 3
+            """
+            if seller_details != dispatch_details and buyer_details != ship_to_details:
+                return 4
+            elif seller_details != dispatch_details:
+                return 3
+            elif buyer_details != ship_to_details:
+                return 2
+            else:
+                return 1
+
+        def prepare_details(key_paired_function, partner_detail):
+            return {
+                f"{place}{key}": fun(partner)
+                for key, fun in key_paired_function
+                for place, partner in partner_detail
+            }
+
+        return {
                 # document details
                 "supplyType": self.supply_type,
                 "subSupplyType": self.type_id.sub_type_code,
                 "docType": self.type_id.code,
-                "transactionType": get_transaction_type(partner_bill_from_id, partner_ship_from_id, partner_bill_to_id, partner_ship_to_id),
+                "transactionType": get_transaction_type(
+                    self.partner_bill_from_id,
+                    self.partner_ship_from_id,
+                    self.partner_bill_to_id,
+                    self.partner_ship_to_id
+                ),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
                 "docDate": self.document_date.strftime("%d/%m/%Y"),
-                # Bill from
-                "fromGstin": self._get_partner_gst_number(partner_bill_from_id),
-                "fromTrdName": partner_bill_from_id.commercial_partner_id.name,
-                "fromStateCode": self._get_partner_state_code(partner_bill_from_id),
-                # Ship from
-                "fromAddr1": partner_ship_from_id.street and partner_ship_from_id.street[:120] or "",
-                "fromAddr2": partner_ship_from_id.street2 and partner_ship_from_id.street2[:120] or "",
-                "fromPlace": partner_ship_from_id.city and partner_ship_from_id.city[:50] or "",
-                "fromPincode": self._get_partner_zip(partner_ship_from_id),
-                "actFromStateCode": self._get_partner_state_code(partner_ship_from_id),
-                # Bill to
-                "toGstin": self._get_partner_gst_number(partner_bill_to_id),
-                "toTrdName": partner_bill_to_id.commercial_partner_id.name,
-                "actToStateCode": self._get_partner_state_code(partner_bill_to_id),
-                # Ship to
-                "toAddr1": partner_ship_to_id.street and partner_ship_to_id.street[:120] or "",
-                "toAddr2": partner_ship_to_id.street2 and partner_ship_to_id.street2[:120] or "",
-                "toPlace": partner_ship_to_id.city and partner_ship_to_id.city[:50] or "",
-                "toStateCode": self._get_partner_state_code(partner_ship_to_id),
-                "toPincode": self._get_partner_zip(partner_ship_to_id),
-            }
+                # bill details
+                **prepare_details(
+                    key_paired_function={
+                        'Gstin': lambda p: p.commercial_partner_id.vat or "URP",
+                        'TrdName': lambda p: p.commercial_partner_id.name,
+                        'StateCode': self._get_partner_state_code,
+                    }.items(),
+                    partner_detail={'from': self.partner_bill_from_id, 'to': self.partner_bill_to_id}.items()
+                ),
+                # shipping details
+                **prepare_details(
+                    key_paired_function={
+                        "Addr1": lambda p: p.street and p.street[:120] or "",
+                        "Addr2": lambda p: p.street2 and p.street2[:120] or "",
+                        "Place": lambda p: p.city and p.city[:50] or "",
+                        "Pincode": lambda p: int(p.zip) if p.country_id.code == "IN" else 999999,
+                    }.items(),
+                    partner_detail={'from': self.partner_ship_from_id, 'to': self.partner_ship_to_id}.items()
+                ),
+                "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
+                "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
+        }
 
-            transportations_details = {
-                "transporterId": self.transporter_id.vat or "",
-                "transporterName": self.transporter_id.name or "",
-                "transMode": self.mode or "",
-                "transDocNo": self.transportation_doc_no or "",
-                "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y") or "",
-                "vehicleNo": self.vehicle_no or "",
-                "vehicleType": self.vehicle_type or "",
+    def _prepare_ewaybill_transportation_json_payload(self):
+        transportations_details = {
+                "transporterId": self.transporter_id.vat,
+                "transporterName": self.transporter_id.name,
+                "transMode": self.mode,
+                "transDocNo": self.transportation_doc_no,
+                "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
+                "vehicleNo": self.vehicle_no,
+                "vehicleType": self.vehicle_type,
             }
-            # only pass transporter details when value is exist
-            json_payload.update({k: v for k, v in transportations_details.items() if v})
+        # only pass transporter details when value is exist
+        return dict(
+            filter(lambda kv: kv[1], transportations_details.items())
+        )
 
-            tax_details = self._l10n_in_tax_details(ewaybill)
-            round_value = self._l10n_in_round_value
-            json_payload.update({
-                "itemList": [
-                    self._get_l10n_in_ewaybill_line_details(line, tax_details['line_tax_details'][line.id])
-                    for line in ewaybill.move_ids
-                ],
-                "totalValue": round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
-                "cgstValue": round_value(tax_details.get('cgst_amount', 0.00)),
-                "sgstValue": round_value(tax_details.get('sgst_amount', 0.00)),
-                "igstValue": round_value(tax_details.get('igst_amount', 0.00)),
-                "cessValue": round_value(tax_details.get('cess_amount', 0.00)),
-                "cessNonAdvolValue": round_value(tax_details.get('cess_non_advol_amount', 0.00)),
-                "otherValue": round_value(tax_details.get('other_amount', 0.00)),
-                "totInvValue": round_value(tax_details['tax_details'].get('total_included', 0.00)),
-            })
-            return json_payload
+    def _prepare_ewaybill_tax_details_json_payload(self):
+        tax_details = self._l10n_in_tax_details()
+        round_value = self.env['account.edi.format']._l10n_in_round_value
+        return {
+            "itemList": [
+                self._get_l10n_in_ewaybill_line_details(line, tax_details['line_tax_details'][line.id])
+                for line in self.move_ids
+            ],
+            "totalValue": round_value(tax_details['tax_details'].get('total_excluded', 0.00)),
+            **{
+                f'{tax_type}Value': round_value(tax_details.get(f'{tax_type}_amount', 0.00))
+                for tax_type in ['cgst', 'sgst', 'igst', 'cess']
+            },
+            "cessNonAdvolValue": round_value(tax_details.get('cess_non_advol_amount', 0.00)),
+            "otherValue": round_value(tax_details.get('other_amount', 0.00)),
+            "totInvValue": round_value(tax_details['tax_details'].get('total_included', 0.00)),
+        }
+
+    def _ewaybill_generate_direct_json(self):
+        return {
+            **self._prepare_ewaybill_base_json_payload(),
+            **self._prepare_ewaybill_transportation_json_payload(),
+            **self._prepare_ewaybill_tax_details_json_payload(),
+        }
 
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_prevent(self):

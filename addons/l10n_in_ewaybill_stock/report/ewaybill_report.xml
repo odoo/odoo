@@ -46,13 +46,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Mode:<t t-out="dict(doc._fields['mode']._description_selection(doc.env)).get(doc.mode, '')"/></td>
-                                    <td colspan="3">Approx Distance: <t t-out="doc.distance"/> km</td>
+                                    <td>
+                                        Mode:<t t-out="dict(doc._fields['mode']._description_selection(doc.env)).get(doc.mode, '')"/>
+                                    </td>
+                                    <td colspan="3">
+                                        Approx Distance: <t t-out="doc.distance"/> km
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>Type: <t t-out="doc.supply_type"/> - <t t-out="doc.type_id.sub_type"/>-<t t-out="doc.type_description"/>
+                                    <td>
+                                        Type: <t t-out="doc.supply_type"/> - <t t-out="doc.type_id.sub_type"/>-<t t-out="doc.type_description"/>
                                     </td>
-                                    <td colspan="2">Document Details:<t t-out="doc.type_id.name"/> - <t t-out="doc.stock_picking_id.name"/> - <t t-out="doc.ewaybill_date"/></td>
+                                    <td colspan="2">
+                                        Document Details:<t t-out="doc.type_id.name"/> - <t t-out="doc.picking_id.name"/> - <t t-out="doc.ewaybill_date"/>
+                                    </td>
                                     <td>Transaction Type:
                                         <t t-if="generate_json['transactionType'] == 2">
                                             Bill To - Ship To
@@ -146,16 +153,32 @@
                             <div class="border-bottom border-dark">
                                 <table>
                                     <tr>
-                                        <td>Total Taxable Amount <strong><t t-out="generate_json['totalValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>CGST Amount <strong><t t-out="generate_json['cgstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>SGST Amount <strong><t t-out="generate_json['sgstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>IGST Amount <strong><t t-out="generate_json['igstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>CESS Amount <strong><t t-out="generate_json['cessValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
+                                        <td>
+                                            Total Taxable Amount <strong><t t-out="generate_json['totalValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            CGST Amount <strong><t t-out="generate_json['cgstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            SGST Amount <strong><t t-out="generate_json['sgstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            IGST Amount <strong><t t-out="generate_json['igstValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            CESS Amount <strong><t t-out="generate_json['cessValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>CESS Non.Advol Amt <strong><t t-out="generate_json['cessNonAdvolValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>Other Amt <strong><t t-out="generate_json['otherValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
-                                        <td>Total Inv. Amt <strong><t t-out="generate_json['totInvValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong></td>
+                                        <td>
+                                            CESS Non.Advol Amt <strong><t t-out="generate_json['cessNonAdvolValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            Other Amt <strong><t t-out="generate_json['otherValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
+                                        <td>
+                                            Total Inv. Amt <strong><t t-out="generate_json['totInvValue']" t-options='{"widget": "monetary", "display_currency": doc.company_currency_id}'/></strong>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
