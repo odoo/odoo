@@ -485,7 +485,7 @@ function _isMobileView(targetEl) {
  * @returns {string}
  */
 function _getLinkLabel(linkEl) {
-    return linkEl.innerText.trim().replaceAll("\u200B", "");
+    return linkEl.textContent.replaceAll("\u200B", "");
 }
 
 export default {
