@@ -4,7 +4,7 @@
 from ast import literal_eval
 
 from pytz import timezone, UTC, utc
-from datetime import timedelta
+from datetime import timedelta, date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -72,9 +72,16 @@ class HrEmployeeBase(models.AbstractModel):
 
     def _compute_newly_hired(self):
         new_hire_field = self._get_new_hire_field()
-        new_hire_date = fields.Datetime.now() - timedelta(days=90)
         for employee in self:
-            employee.newly_hired = employee[new_hire_field] > new_hire_date
+            # `new_hire_field` can be a boolean if employee not linked to a contract,
+            # a Date if hr_payroll is not installed
+            # and a Datetime if employee is linked to a contract
+            new_hire_date = fields.Date.today() - timedelta(days=90) if \
+                (isinstance(employee[new_hire_field], date)) else \
+                (fields.Datetime.now() - timedelta(days=90))
+
+            employee.newly_hired = employee[new_hire_field] > new_hire_date if \
+                not isinstance(employee[new_hire_field], bool) else False
 
     def _search_newly_hired(self, operator, value):
         new_hire_field = self._get_new_hire_field()
