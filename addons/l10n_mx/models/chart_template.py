@@ -47,15 +47,3 @@ class AccountChartTemplate(models.Model):
             'show_on_dashboard': True,
         })
         return res
-
-    @api.model
-    def _create_liquidity_journal_suspense_account(self, company, code_digits):
-        if not self == self.env.ref('l10n_mx.mx_coa'):
-            return super()._create_liquidity_journal_suspense_account(company, code_digits)
-        return self.env['account.account'].create({
-            'name': _("Bank Suspense Account"),
-            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
-            'account_type': 'asset_current',
-            'company_id': company.id,
-            'tag_ids': self.env.ref('l10n_mx.tag_credit_balance_account')
-        })

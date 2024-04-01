@@ -101,10 +101,9 @@ class IrQWeb(models.AbstractModel):
         # update options
 
         irQweb = irQweb.with_context(website_id=current_website.id)
-
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
             if editable:
-                # in edit mode add brancding on ir.ui.view tag nodes
+                # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor and not translatable:
                 # will add the branding on fields (into values)
@@ -187,7 +186,7 @@ class IrQWeb(models.AbstractModel):
                 _, _, _, id_unique, name = bundle_url.split('/')
                 attachment_id, unique = id_unique.split('-')
                 url_pattern = f'/web/assets/%s-%s/{website.id}/{name}'
-                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))])
+                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))], limit=1)
                 if existing:
                     if f'-{unique}/' in existing.url:
                         continue

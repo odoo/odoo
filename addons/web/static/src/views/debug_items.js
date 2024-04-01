@@ -11,6 +11,7 @@ import { evalDomain } from "@web/views/utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 import { Component, onWillStart, useState, xml } from "@odoo/owl";
+import {serializeDate, serializeDateTime} from "../core/l10n/dates";
 
 const debugRegistry = registry.category("debug");
 
@@ -288,9 +289,15 @@ class SetDefaultDialog extends Component {
         if (!this.state.fieldToSet) {
             return;
         }
-        const fieldToSet = this.defaultFields.find((field) => {
+        let fieldToSet = this.defaultFields.find((field) => {
             return field.name === this.state.fieldToSet;
         }).value;
+
+        if(fieldToSet.constructor.name.toLowerCase() === "date"){
+            fieldToSet = serializeDate(fieldToSet);
+        } else if (fieldToSet.constructor.name.toLowerCase() === "datetime"){
+            fieldToSet = serializeDateTime(fieldToSet);
+        }
         await this.orm.call("ir.default", "set", [
             this.props.resModel,
             this.state.fieldToSet,

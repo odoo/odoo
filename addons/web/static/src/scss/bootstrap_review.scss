@@ -215,15 +215,8 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
     // body is white, the text will not be visible on modals with a white
     // background.
 
-    // Check if the body text color is light.
-    $-is-body-text-light: color-contrast($body-color) == $color-contrast-dark;
-
     @if $modal-content-color == null {
-        color: if(
-            $-is-body-text-light,
-            color-contrast($modal-content-bg, $body-color, $color-contrast-dark),
-            color-contrast($modal-content-bg, $color-contrast-light, $body-color)
-        );
+        color: adjust-color-to-background($body-color, $modal-content-bg);
 
         .table-striped > tbody > tr:nth-of-type(odd) > * {
             // When the website background is dark (resulting in light-colored
@@ -266,9 +259,82 @@ $o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
             }
         }
     }
-    @if $-is-body-text-light {
-        .text-muted {
-            color: color-contrast($modal-content-bg, $text-muted, mute-color($color-contrast-dark)) !important;
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $modal-content-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}
+
+// Popover
+.popover {
+    // The popover can have a different background color than that of the body.
+    // Here, we adjust the text color of the popover in case the body color
+    // (used by default for the text color of popovers) is not visible inside a
+    // popover due to a lack of contrast (e.g. on a website with a dark
+    // background).
+    @if $popover-header-color == null {
+        .popover-header {
+            color: adjust-color-to-background($body-color, $popover-header-bg);
         }
+    }
+    @if $popover-body-color == $body-color {
+        .popover-body {
+            color: adjust-color-to-background($body-color, $popover-bg);
+        }
+    }
+}
+
+$-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
+// Input group text (e.g. Date time picker)
+.input-group-text {
+    // Adapt only if the variables have their default values.
+    @if ($input-group-addon-bg == $gray-200) and ($input-group-addon-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+// File upload button
+.form-control::file-selector-button {
+    @if ($form-file-button-bg == $gray-200) and ($form-file-button-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+
+// offcanvas
+.offcanvas {
+    @if $offcanvas-color == null {
+        color: adjust-color-to-background($body-color, $offcanvas-bg-color);
+
+        @if $form-check-input-bg == $body-bg {
+            .form-check-input:where(:not(:checked)) {
+                background-color: $offcanvas-bg-color;
+            }
+        }
+        @if $form-range-thumb-bg == $body-bg {
+            .form-range{
+                &::-webkit-slider-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+                &::-moz-range-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Button within input-group (e.g., "search bar")
+.input-group {
+    .btn:first-child, .btn:last-child {
+        @include border-radius($input-border-radius, 0);
+    }
+}
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
     }
 }

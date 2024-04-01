@@ -112,18 +112,22 @@ $-seen-urls: ();
     @include print-variable('custom-colors', $custom-colors);
 }
 
+@mixin body-image-bg-style() {
+    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+    background-position: center;
+    background-attachment: fixed;
+    @if o-website-value('body-image-type') == 'pattern' {
+        background-size: auto;
+        background-repeat: repeat;
+    } @else {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+};
+
 #wrapwrap {
     @if o-website-value('body-image') {
-        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
-        background-position: center;
-        background-attachment: fixed;
-        @if o-website-value('body-image-type') == 'pattern' {
-            background-size: auto;
-            background-repeat: repeat;
-        } @else {
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
+        @include body-image-bg-style();
     }
 
     @if o-website-value('layout') != 'full' {
@@ -819,10 +823,6 @@ $-transition-duration: 200ms;
     }
 }
 
-.o_hoverable_dropdown .nav-link.dropdown-toggle:focus {
-    outline: none;
-}
-
 // Navbar
 .navbar .o_extra_menu_items > .show {
     > li {
@@ -1061,6 +1061,9 @@ header {
                     // Hide the language switcher button because it does not
                     // make sense to show it if the dropdown is always open.
                     display: none;
+                }
+                @if o-website-value('header-template') == 'slogan' {
+                    justify-content: unset !important;
                 }
             }
             @if o-website-value('header-template') == 'vertical' {
@@ -1389,7 +1392,11 @@ header {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
-                    background-color: $body-bg;
+                    @if o-website-value('body-image') {
+                        @include body-image-bg-style();
+                    } @else {
+                        background-color: $body-bg;
+                    }
                 }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
@@ -1413,6 +1420,20 @@ header {
 
         > * {
             vertical-align: middle;
+        }
+    }
+
+    @if index(
+        ('default', 'slogan', 'Contact', 'centered_logo', 'image'),
+        o-website-value('header-template')
+    ) != null {
+        @include media-breakpoint-down(md) {
+            .dropdown-toggle {
+                display: block;
+            }
+            .dropdown-menu {
+                position: static;
+            }
         }
     }
 }
@@ -1585,8 +1606,8 @@ $ribbon-padding: 100px;
 }
 
 .o_website_btn_loading {
-    cursor: wait;
     opacity: $btn-disabled-opacity;
+
     .fa:not(.fa-spin) {
         display: none;
     }

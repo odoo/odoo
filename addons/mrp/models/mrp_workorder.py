@@ -8,6 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 from odoo.tools import float_compare, float_round, format_datetime
 
 
@@ -155,26 +156,27 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
     def _compute_state(self):
-        # Force the flush of the production_availability, the wo state is modify in the _compute_reservation_state
-        # It is a trick to force that the state of workorder is computed as the end of the
-        # cyclic depends with the mo.state, mo.reservation_state and wo.state
+        # Force to compute the production_availability right away.
+        # It is a trick to force that the state of workorder is computed at the end of the
+        # cyclic depends with the mo.state, mo.reservation_state and wo.state and avoid recursion error
+        self.mapped('production_availability')
         for workorder in self:
             if workorder.state == 'pending':
                 if all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
-                    workorder.state = 'ready' if workorder.production_id.reservation_state == 'assigned' else 'waiting'
+                    workorder.state = 'ready' if workorder.production_availability == 'assigned' else 'waiting'
                     continue
             if workorder.state not in ('waiting', 'ready'):
                 continue
             if not all([wo.state in ('done', 'cancel') for wo in workorder.blocked_by_workorder_ids]):
                 workorder.state = 'pending'
                 continue
-            if workorder.production_id.reservation_state not in ('waiting', 'confirmed', 'assigned'):
+            if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
                 continue
-            if workorder.production_id.reservation_state == 'assigned' and workorder.state == 'waiting':
+            if workorder.production_availability == 'assigned' and workorder.state == 'waiting':
                 workorder.state = 'ready'
-            elif workorder.production_id.reservation_state != 'assigned' and workorder.state == 'ready':
+            elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
                 workorder.state = 'waiting'
 
     @api.depends('production_state', 'date_planned_start', 'date_planned_finished')
@@ -680,16 +682,22 @@ class MrpWorkorder(models.Model):
             workorder.with_context(bypass_duration_calculation=True).write(vals)
         return True
 
+    def _domain_mrp_workcenter_productivity(self, doall):
+        domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
+        if not doall:
+            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+        return domain
+
     def end_previous(self, doall=False):
         """
         @param: doall:  This will close all open time lines on the open work orders when doall = True, otherwise
         only the one of the current user
         """
         # TDE CLEANME
-        domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
-        if not doall:
-            domain.append(('user_id', '=', self.env.user.id))
-        self.env['mrp.workcenter.productivity'].search(domain, limit=None if doall else 1)._close()
+        self.env['mrp.workcenter.productivity'].search(
+            self._domain_mrp_workcenter_productivity(doall),
+            limit=None if doall else 1
+        )._close()
         return True
 
     def end_all(self):

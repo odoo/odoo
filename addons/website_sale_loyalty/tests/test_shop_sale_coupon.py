@@ -118,6 +118,31 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             })],
         })
 
+        vip_program = self.env['loyalty.program'].create({
+            'name': 'VIP',
+            'trigger': 'auto',
+            'program_type': 'loyalty',
+            'portal_visible': True,
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'mode': 'auto',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 21,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 50,
+            })],
+        })
+
+        self.env['loyalty.card'].create({
+            'partner_id': self.env.ref('base.partner_admin').id,
+            'program_id': vip_program.id,
+            'point_name': "Points",
+            'points': 371.03,
+        })
+
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/", 'shop_sale_loyalty', login="admin")
 
@@ -287,3 +312,31 @@ class TestWebsiteSaleCoupon(TransactionCase):
         order._gc_abandoned_coupons()
 
         self.assertEqual(len(order.applied_coupon_ids), 0, "The coupon should've been removed from the order as more than 4 days")
+
+    def test_02_remove_coupon(self):
+        # 1. Simulate a frontend order (website, product)
+        order = self.empty_order
+        order.website_id = self.env['website'].browse(1)
+        self.env['sale.order.line'].create({
+            'product_id': self.env['product.product'].create({
+                'name': 'Product A', 'list_price': 100, 'sale_ok': True
+            }).id,
+            'name': 'Product A',
+            'order_id': order.id,
+        })
+
+        # 2. Apply the coupon
+        self._apply_promo_code(order, self.coupon.code)
+
+        # 3. Remove the coupon
+        coupon_line = order.website_order_line.filtered(
+            lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
+        )
+
+        kwargs = {
+            'line_id': None, 'product_id': coupon_line.product_id.id, 'add_qty': None, 'set_qty': 0
+        }
+        order._cart_update(**kwargs)
+
+        msg = "The coupon should've been removed from the order"
+        self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)

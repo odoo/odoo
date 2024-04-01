@@ -176,6 +176,9 @@ class WebsiteSale(http.Controller):
         order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
+    def _add_search_subdomains_hook(self, search):
+        return []
+
     def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
@@ -187,6 +190,9 @@ class WebsiteSale(http.Controller):
                 if search_in_description:
                     subdomains.append([('website_description', 'ilike', srch)])
                     subdomains.append([('description_sale', 'ilike', srch)])
+                extra_subdomain = self._add_search_subdomains_hook(srch)
+                if extra_subdomain:
+                    subdomains.append(extra_subdomain)
                 domains.append(expression.OR(subdomains))
 
         if category:
@@ -537,6 +543,20 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
+        """
+        Move the product image in the given direction and update all images' sequence.
+
+        :param str image_res_model: The model of the image. It can be 'product.template',
+                                    'product.product', or 'product.image'.
+        :param str image_res_id: The record ID of the image to move.
+        :param str move: The direction of the move. It can be 'first', 'left', 'right', or 'last'.
+        :raises NotFound: If the user does not have the required permissions, if the model of the
+                          image is not allowed, or if the move direction is not allowed.
+        :raise ValidationError: If the product is not found.
+        :raise ValidationError: If the image to move is not found in the product images.
+        :raise ValidationError: If a video is moved to the first position.
+        :return: None
+        """
         if (
             not request.env.user.has_group('website.group_website_restricted_editor')
             or image_res_model not in ['product.product', 'product.template', 'product.image']
@@ -546,8 +566,6 @@ class WebsiteSale(http.Controller):
 
         image_res_id = int(image_res_id)
         image_to_resequence = request.env[image_res_model].browse(image_res_id)
-        product = request.env['product.product']
-        product_template = request.env['product.template']
         if image_res_model == 'product.product':
             product = image_to_resequence
             product_template = product.product_tmpl_id
@@ -577,28 +595,34 @@ class WebsiteSale(http.Controller):
         # no-op resequences
         if new_image_idx == image_idx:
             return
-        # We can not move an embedded image to the first position (main product image)
-        if image_res_model == 'product.image' and image_to_resequence.video_url and product_images[new_image_idx]._name != 'product.image':
-            raise ValidationError(_("Can not resequence embedded image/video with a non compatible image."))
 
-        # Swap images
-        other_image = product_images[new_image_idx]
-        source_field = hasattr(image_to_resequence, 'video_url') and image_to_resequence.video_url and 'video_url' or 'image_1920'
-        target_field = hasattr(other_image, 'video_url') and other_image.video_url and 'video_url' or 'image_1920'
-        if target_field == 'video_url' and image_res_model == 'product.product':
-            raise ValidationError(_("Can not resequence a video at first position."))
-        previous_data = other_image[target_field]
-        other_image[source_field] = image_to_resequence[source_field]
-        image_to_resequence[target_field] = previous_data
-        if source_field == 'video_url' and target_field != 'video_url':
-            image_to_resequence.video_url = False
-        if target_field == 'video_url' and source_field != 'video_url':
-            other_image.video_url = False
+        # Reorder images locally.
+        product_images.insert(new_image_idx, product_images.pop(image_idx))
 
-        if hasattr(other_image, 'video_url'):
-            other_image._onchange_video_url()
-        if hasattr(image_to_resequence, 'video_url'):
-            image_to_resequence._onchange_video_url()
+        # If the main image has been reordered (i.e. it's no longer in first position), use the
+        # image that's now in first position as main image instead.
+        # Additional images are product.image records. The main image is a product.product or
+        # product.template record.
+        main_image_idx = next(
+            idx for idx, image in enumerate(product_images) if image._name != 'product.image'
+        )
+        if main_image_idx != 0:
+            main_image = product_images[main_image_idx]
+            additional_image = product_images[0]
+            if additional_image.video_url:
+                raise ValidationError(_("You can't use a video as the product's main image."))
+            # Swap records.
+            product_images[main_image_idx], product_images[0] = additional_image, main_image
+            # Swap image data.
+            main_image.image_1920, additional_image.image_1920 = (
+                additional_image.image_1920, main_image.image_1920
+            )
+            additional_image.name = main_image.name  # Update image name but not product name.
+
+        # Resequence additional images according to the new ordering.
+        for idx, product_image in enumerate(product_images):
+            if product_image._name == 'product.image':
+                product_image.sequence = idx
 
     @http.route(['/shop/product/is_add_to_cart_allowed'], type='json', auth="public", website=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
@@ -1374,6 +1398,7 @@ class WebsiteSale(http.Controller):
             return redirection
 
         order.order_line._compute_tax_id()
+        self._update_so_external_taxes(order)
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info_option')
@@ -1381,6 +1406,13 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/extra_info")
 
         return request.redirect("/shop/payment")
+
+    def _update_so_external_taxes(self, order):
+        try:
+            order.validate_taxes_on_sales_order()
+        # Ignore any error here. It will be handled in next step of the checkout process (/shop/payment).
+        except ValidationError:
+            pass
 
     # ------------------------------------------------------
     # Extra step

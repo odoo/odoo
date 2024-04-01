@@ -67,13 +67,19 @@ class Paymentprovider(models.Model):
                     _logger.exception(
                         "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload),
                     )
-                    response_content = response.json()
-                    error_code = response_content.get('error')
-                    error_message = response_content.get('message')
-                    raise ValidationError("Mercado Pago: " + _(
-                        "The communication with the API failed. Mercado Pago gave us the following "
-                        "information: '%s' (code %s)", error_message, error_code
-                    ))
+                    try:
+                        response_content = response.json()
+                        error_code = response_content.get('error')
+                        error_message = response_content.get('message')
+                        raise ValidationError("Mercado Pago: " + _(
+                            "The communication with the API failed. Mercado Pago gave us the"
+                            " following information: '%s' (code %s)", error_message, error_code
+                        ))
+                    except ValueError:  # The response can be empty when the access token is wrong.
+                        raise ValidationError("Mercado Pago: " + _(
+                            "The communication with the API failed. The response is empty. Please"
+                            " verify your access token."
+                        ))
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
             raise ValidationError(

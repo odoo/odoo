@@ -1167,7 +1167,11 @@ const UnitUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
+        return isSuperActive && (
+            this._floatToStr(parseFloat(this._value)) !== '0'
+            // Or is a composite value.
+            || !!this._value.match(/\d+\s+\d+/)
+        );
     },
     /**
      * @override
@@ -1309,16 +1313,26 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
                 const input = ev.currentTarget;
-                let value = parseFloat(input.value || input.placeholder);
-                if (isNaN(value)) {
-                    value = 0.0;
+                let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
+                if (!parts) {
+                    parts = [input.value || input.placeholder];
                 }
-                let step = parseFloat(params.step);
-                if (isNaN(step)) {
-                    step = 1.0;
-                }
-                value += (ev.which === $.ui.keyCode.UP ? step : -step);
-                input.value = this._floatToStr(value);
+                input.value = parts.map(part => {
+                    let value = parseFloat(part);
+                    if (isNaN(value)) {
+                        value = 0.0;
+                    }
+                    let step = parseFloat(params.step);
+                    if (isNaN(step)) {
+                        step = 1.0;
+                    }
+                    value += (ev.which === $.ui.keyCode.UP ? step : -step);
+                    if (parts.length > 1 && value < 0) {
+                        // No negative for composite values.
+                        value = 0.0;
+                    }
+                    return this._floatToStr(value);
+                }).join(" ");
                 // We need to know if the change event will be triggered or not.
                 // Change is triggered if there has been a "natural" input event
                 // from the user. Since we are triggering a "fake" input event,
@@ -3421,10 +3435,14 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         let hasUserValue = false;
-        for (let i = cssProps.length - 1; i > 0; i--) {
-            hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+        const applyAllCSS = (values) => {
+            for (let i = cssProps.length - 1; i > 0; i--) {
+                hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+            }
+            hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
         }
-        hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
+
+        applyAllCSS([...values]);
 
         function applyCSS(cssProp, cssValue, styles) {
             if (typeof params.forceStyle !== 'undefined') {
@@ -3432,34 +3450,11 @@ const SnippetOptionWidget = Widget.extend({
                 return true;
             }
 
-            // This condition requires extraClass to NOT be set.
             if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                // Property must be set => extraClass will be enabled.
-                if (params.extraClass) {
-                    // The extraClass is temporarily removed during selectStyle
-                    // because it is enabled only if the element style is set
-                    // by the option. (E.g. add the bootstrap border class only
-                    // if there is a border width.) Unfortunately the
-                    // extraClass might specify default !important properties,
-                    // therefore determining whether !important is needed
-                    // requires the class to be applied.
-                    this.$target[0].classList.add(params.extraClass);
-                    // Set inline style only if different from value defined
-                    // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                        this.$target[0].style.setProperty(cssProp, cssValue);
-                    }
-                } else {
-                    // Inline style required.
-                    this.$target[0].style.setProperty(cssProp, cssValue);
-                }
+                this.$target[0].style.setProperty(cssProp, cssValue);
                 // If change had no effect then make it important.
-                // This condition requires extraClass to be set.
                 if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
-                }
-                if (params.extraClass) {
-                    this.$target[0].classList.remove(params.extraClass);
                 }
                 return true;
             }
@@ -3468,6 +3463,13 @@ const SnippetOptionWidget = Widget.extend({
 
         if (params.extraClass) {
             this.$target.toggleClass(params.extraClass, hasUserValue);
+            if (hasUserValue) {
+                // Might have changed because of the class.
+                for (const cssProp of cssProps) {
+                    this.$target[0].style.removeProperty(cssProp);
+                }
+                applyAllCSS(values);
+            }
         }
 
         _restoreTransitions();
@@ -4246,8 +4248,10 @@ const SnippetOptionWidget = Widget.extend({
                 return;
             }
 
+            this.__willReload = requiresReload;
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
+            this.__willReload = false;
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
@@ -4445,8 +4449,8 @@ registry.sizing = SnippetOptionWidget.extend({
             self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
 
             const cursor = $handle.css('cursor') + '-important';
-            const $body = $(this.ownerDocument.body);
-            $body.addClass(cursor);
+            const $iframeWindow = $(this.ownerDocument.defaultView);
+            $iframeWindow[0].document.body.classList.add(cursor);
 
             const bodyMouseMove = function (ev) {
                 ev.preventDefault();
@@ -4491,9 +4495,9 @@ registry.sizing = SnippetOptionWidget.extend({
                 }
             };
             const bodyMouseUp = function () {
-                $body.off('mousemove', bodyMouseMove);
-                $body.off('mouseup', bodyMouseUp);
-                $body.removeClass(cursor);
+                $iframeWindow.off("mousemove", bodyMouseMove);
+                $iframeWindow.off("mouseup", bodyMouseUp);
+                $iframeWindow[0].document.body.classList.remove(cursor);
                 $handle.removeClass('o_active');
 
                 // If we are in grid mode, removes the background grid.
@@ -4527,8 +4531,8 @@ registry.sizing = SnippetOptionWidget.extend({
                     self.options.wysiwyg.odooEditor.historyStep();
                 }, 0);
             };
-            $body.on('mousemove', bodyMouseMove);
-            $body.on('mouseup', bodyMouseUp);
+            $iframeWindow.on("mousemove", bodyMouseMove);
+            $iframeWindow.on("mouseup", bodyMouseUp);
         });
 
         _.each(resizeValues, (value, key) => {
@@ -5974,7 +5978,6 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async crop() {
-        this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
         new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
@@ -6873,7 +6876,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             delete parts.url;
-            this.$target.removeClass('oe_img_bg o_bg_img_center');
+            this.$target[0].classList.remove(
+                "oe_img_bg",
+                "o_bg_img_center",
+                "o_modified_image_to_save",
+            );
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);

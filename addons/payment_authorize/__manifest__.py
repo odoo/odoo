@@ -6,6 +6,7 @@
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "An payment provider covering the US, Australia, and Canada.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_authorize_templates.xml',

@@ -47,7 +47,7 @@ _DEFAULT_MANIFEST = {
     'live_test_url': '',  # website themes
     #name, mandatory
     'post_init_hook': '',
-    'post_load': None,
+    'post_load': '',
     'pre_init_hook': '',
     'sequence': 100,
     'snippet_lists': {},  # website themes
@@ -511,7 +511,7 @@ def get_modules():
             _logger.warning("addons path does not exist: %s", ad)
             continue
         plist.extend(listdir(ad))
-    return list(set(plist))
+    return sorted(set(plist))
 
 def get_modules_with_version():
     modules = get_modules()

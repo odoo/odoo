@@ -1595,3 +1595,57 @@ QUnit.test("checks that href is correctly used", async (assert) => {
     await nextTick();
     assert.verifySteps(["command_with_link_clicked"]);
 });
+
+QUnit.test("searchValue must not change without edition", async (assert) => {
+    const provideDef = makeDeferred();
+    let debounceDef;
+
+    patchWithCleanup(browser, {
+        clearTimeout: () => {},
+        setTimeout: async (later) => {
+            // debounce the search "deb"
+            await debounceDef;
+            later();
+        },
+    });
+
+    mount(TestComponent, target, { env });
+    const providers = [
+        {
+            provide: async (env, { searchValue }) => {
+                if (searchValue === "abc") {
+                    await provideDef;
+                }
+                return [
+                    {
+                        name: searchValue,
+                        action: () => {},
+                    },
+                ];
+            },
+        },
+    ];
+    const config = {
+        providers,
+    };
+    env.services.dialog.add(CommandPalette, {
+        config,
+    });
+
+    await nextTick();
+
+    await editSearchBar("abc");
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "abc");
+
+    debounceDef = makeDeferred();
+    await editSearchBar("deb");
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "deb");
+
+    provideDef.resolve();
+    await nextTick();
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "deb");
+
+    debounceDef.resolve();
+    await nextTick();
+    assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "deb");
+});

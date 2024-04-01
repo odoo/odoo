@@ -420,11 +420,13 @@ var AbstractView = Factory.extend({
         this.loadParams = _.extend(this.loadParams, {
             context: searchQuery.context,
             domain: searchQuery.domain,
-            groupedBy: searchQuery.groupBy,
         });
         this.loadParams.orderedBy = Array.isArray(searchQuery.orderedBy) && searchQuery.orderedBy.length ?
                                         searchQuery.orderedBy :
                                         this.loadParams.orderedBy;
+        this.loadParams.groupedBy = Array.isArray(searchQuery.groupBy) && searchQuery.groupBy.length ?
+            searchQuery.groupBy :
+            this.loadParams.groupedBy || [];
         if (searchQuery.timeRanges) {
             this.loadParams.timeRanges = searchQuery.timeRanges;
             this.rendererParams.timeRanges = searchQuery.timeRanges;

@@ -20,9 +20,12 @@ class AccountChartTemplate(models.Model):
         ('<tax_group_record_id>', '<payable_account_code>', '<receivable_account_code>')
         '''
         _TAX_GROUPS_ACCOUNTS_LIST = [
+            ('tax_group_vat_05', '21070102', '11050202'),
             ('tax_group_vat_08', '21070102', '11050202'),
             ('tax_group_vat_12', '21070102', '11050202'),
+            ('tax_group_vat_13', '21070102', '11050202'),
             ('tax_group_vat14', '21070102', '11050202'),
+            ('tax_group_vat_15', '21070102', '11050202'),
             ('tax_group_vat0', '21070102', '11050202'),
             ('tax_group_vat_not_charged', '21070102', '11050202'),
             ('tax_group_vat_exempt', '21070102', '11050202'),

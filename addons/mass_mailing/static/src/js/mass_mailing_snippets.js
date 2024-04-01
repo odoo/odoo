@@ -64,7 +64,10 @@ options.registry.mass_mailing_sizing_x = options.Class.extend({
                     self.change_width(event, self.$target.prev(), sib_width, sib_offset, true);
                 }
                 if (compass === 'image') {
-                    self.change_width(event, self.$target, target_width, offset, true);
+                    const maxWidth = self.$target.closest("div").width();
+                    // Equivalent to `self.change_width` but ensuring `maxWidth` is the maximum:
+                    self.$target.css("width", Math.min(maxWidth, Math.round(event.pageX - offset)));
+                    self.trigger_up('cover_update');
                 }
             });
             $body.one("mouseup", function () {

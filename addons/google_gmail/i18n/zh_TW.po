@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -65,6 +65,7 @@ msgid "Access Token Expiration Timestamp"
 msgstr "訪問代碼到期時間戳"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
@@ -72,6 +73,7 @@ msgid "An error occur during the authentication process."
 msgstr "驗證過程中發生錯誤。"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
@@ -95,6 +97,7 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -105,6 +108,7 @@ msgstr ""
 "您將被重定向到Gmail登錄頁面，在那裡您需要接受該權限。"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -151,6 +155,7 @@ msgid "Incoming Mail Server"
 msgstr "收信伺服器"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -164,18 +169,21 @@ msgid "Mail Server"
 msgstr "信件伺服器"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
 msgstr "只有管理員可以連結一個Gmail郵件服務器。"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "請設定你的 Gmail 登入資訊。"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -185,6 +193,7 @@ msgid ""
 msgstr "請在\"用戶名稱\"一欄填寫 Gmail 用戶名（電子郵件地址）。該帳戶應與 Gmail OAuthentication 代碼使用的帳戶一致。"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -233,14 +242,6 @@ msgstr "在一般設定中設置你的 Gmail API 登入資訊，以連結至 Gma
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr "以生成Google的授權碼的網址"
-
-#. module: google_gmail
-#: code:addons/google_gmail/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"This server %r can only be used for your personal email address. Please fill"
-" the \"from_filter\" field with %r."
-msgstr "此伺服器 %r 只能用於你的個人電子郵件地址。請在 from_filter 欄位填寫 %r。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

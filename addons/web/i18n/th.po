@@ -11,15 +11,15 @@
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 # Odoo Thaidev <odoothaidev@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Ped Sansiri, 2023
+# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2024-01-25 10:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -325,8 +325,10 @@ msgstr "<span class=\"text-nowrap\">ภาษี 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>สหรัฐอเมริกา</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2236,6 +2238,7 @@ msgstr "องค์กร"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "ผิดพลาด"
@@ -2404,7 +2407,6 @@ msgstr "ไฟล์"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "อัปโหลดไฟล์"
@@ -2613,6 +2615,19 @@ msgstr "จัดการ"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "ข้อความส่วนหัวแสดงที่ด้านบนของรายงานทั้งหมด"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"ระวัง! การเปลี่ยนแปลงล่าสุดของคุณมีขนาดใหญ่เกินกว่าจะบันทึกโดยอัตโนมัติ "
+"โปรดคลิกปุ่ม<i class=\"fa fa-cloud-upload fa-"
+"fw\"></i>ตอนนี้เพื่อให้แน่ใจว่างานของคุณได้รับการบันทึกไว้ก่อนที่คุณจะออกจากแท็บนี้"
 
 #. module: web
 #. odoo-javascript
@@ -4547,6 +4562,13 @@ msgid "Request timeout"
 msgstr "หมดเวลาการร้องขอ"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "รีเซ็ตโดเมน"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "รีเซ็ตเป็นสีโลโก้"
@@ -5248,8 +5270,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "ไฟล์ที่เลือก (%sB) มีขนาดเกินขนาดไฟล์สูงสุดที่อนุญาต (%sB)"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "ไฟล์ที่ถูกเลือกมีขนาดใหญ่เกิน %s"
@@ -6515,8 +6543,8 @@ msgstr "มันยังคงโหลด..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6551,14 +6579,14 @@ msgstr "น้อยกว่าหรือเท่ากับ"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "ถูกใจ"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "menus"
-msgstr ""
+msgstr "เมนู"
 
 #. module: web
 #. odoo-javascript
@@ -6595,7 +6623,7 @@ msgstr "ms"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "new tab"
-msgstr ""
+msgstr "แท็บใหม่"
 
 #. module: web
 #. odoo-javascript
@@ -6610,7 +6638,7 @@ msgstr "ไม่มีคำอธิบายให้"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "ไม่มี"
 
 #. module: web
 #. odoo-javascript
@@ -6633,7 +6661,7 @@ msgstr "ไม่อยู่ใน"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "not like"
-msgstr ""
+msgstr "ไม่ชอบ"
 
 #. module: web
 #. odoo-javascript
@@ -6664,7 +6692,7 @@ msgstr "ของ:"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
+msgstr "บนหน้าจอใดก็ได้เพื่อแสดงการวางซ้อนทางลัดและ"
 
 #. module: web
 #. odoo-javascript
@@ -6767,7 +6795,7 @@ msgstr "ตั้งค่า (จริง)"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "to trigger a shortcut."
-msgstr ""
+msgstr "เพื่อเรียกใช้ทางลัด"
 
 #. module: web
 #. odoo-javascript
@@ -6781,4 +6809,4 @@ msgstr ""
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
-msgstr ""
+msgstr "— กด"

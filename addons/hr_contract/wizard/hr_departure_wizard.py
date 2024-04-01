@@ -9,7 +9,10 @@ class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
     def _get_employee_departure_date(self):
-        expired_contract = self.env['hr.contract'].search([('employee_id', '=', self.env.context['active_id']), ('state', '=', 'close')], limit=1, order='date_end desc')
+        employee = self.env['hr.employee'].browse(self.env.context['active_id'])
+        if employee.contract_id.state == "open":
+            return False
+        expired_contract = self.env['hr.contract'].search([('employee_id', '=', employee.id), ('state', '=', 'close')], limit=1, order='date_end desc')
         if expired_contract:
             return expired_contract.date_end
         return super()._get_employee_departure_date()

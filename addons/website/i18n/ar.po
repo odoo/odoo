@@ -12,15 +12,16 @@
 # Abdullah J <bosaeed4@gmail.com>, 2022
 # Niyas Raphy, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,20 @@ msgstr "\" تنبيه مع"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s إرسال الاستمارة\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "لا يمكن ترك \"رابط URL من\" فارغاً. "
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -511,6 +520,7 @@ msgstr "<b>إضافة</b> الصورة التي تم تحديدها. "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -1477,6 +1487,13 @@ msgstr "من نحن "
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "من نحن"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "تم رفض الوصول "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -3855,6 +3872,15 @@ msgid "Display this website when users visit this domain"
 msgstr "عرض هذا الموقع الإلكتروني عندما يزور المستخدمون هذا النطاق "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr "لا تقم بنسخ/لصق كود لا تفهمه. قد يُعرّض ذلك بياناتك للخطر. "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -3876,6 +3902,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "هل ترغب في تثبيت تطبيق \"%s\"؟ "
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "التوثيق"
@@ -4930,6 +4957,18 @@ msgid "Google Search Console"
 msgstr "أداة بحث Google "
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"لم يعد Google بحاجة إلى إرسال إشارة. سيقوم تلقائياً بجلب /sitemap.xml الخاص "
+"بك. "
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5258,8 +5297,8 @@ msgid "Home page of the current website"
 msgstr "الصفحة الرئيسية للموقع الإلكتروني الحالي "
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5445,6 +5484,15 @@ msgid ""
 msgstr ""
 "إذا قمت بتجاهل التعديلات الحالية، سوف تضيع كافة التغييرات غير المحفوظة. "
 "بإمكانك إلغاء الإجراء للعودة إلى وضع التحرير. "
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -6596,6 +6644,7 @@ msgid "Men"
 msgstr "الرجال "
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -6635,7 +6684,7 @@ msgstr "القوائم"
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "معالج دمج الشريك"
+msgstr "معالج دمج الوكيل "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -8073,6 +8122,11 @@ msgid "Qweb Field Contact"
 msgstr "جهة اتصال حقل Qweb"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "حقل Qweb من النوع HTML"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr "رادار "
@@ -9477,6 +9531,17 @@ msgid "The chosen name already exists"
 msgstr "الاسم الذي اخترته موجود بالفعل "
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+"لا يمكن أرشفة الشركة %(company_name)r لأنها تملك موقعاً إلكترونياً مرتبطاً %(website_name)r.\n"
+"قم بتغيير شركة ذلك الموقع الإلكتروني أولاً. "
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "المؤسسة التي ينتمي إليها هذا الموقع الإلكتروني "
@@ -9789,6 +9854,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9861,6 +9927,13 @@ msgstr "تم تعديل بناء هذا العرض. "
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "ليس لهذا الموقع الإلكتروني نطاق مهيأ. "
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid ""
@@ -9869,13 +9942,6 @@ msgid ""
 msgstr ""
 "لم تتم تهيئة نطاق لهذا الموقع الإلكتروني. لتجنب التصرفات غير المتوقعة أثناء تحرير الموقع الإلكتروني، نوصي بإغلاق (أو تحديث) علامات تبويب المتصفح الأخرى. \n"
 "لإزالة هذه الرسالة، يرجى إعداد نطاق في إعدادات موقعك الإلكتروني "
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "ليس لهذا الموقع الإلكتروني نطاق مهيأ. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -10025,7 +10091,7 @@ msgstr "الأعلى "
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "Top Menu for Website %s"
-msgstr "القائمة العلوية للموقع الإلكترونية %s "
+msgstr "القائمة العلوية للموقع الإلكتروني %s "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -11286,6 +11352,14 @@ msgstr ""
 "ذلك "
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
@@ -11301,13 +11375,6 @@ msgid ""
 " engines."
 msgstr ""
 "لقد قمت بإخفاء هذه الصفحة من نتائج البحث. لن تقوم محركات البحث بفهرستها."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "لم تقم بتحديد النطاق الخاص بك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11368,6 +11435,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "بريدك الإلكتروني "
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
 
 #. module: website
 #. odoo-javascript

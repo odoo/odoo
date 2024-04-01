@@ -11,7 +11,6 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2022
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Johanna Valkonen <miujohanna@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
@@ -19,15 +18,16 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Petri Laakso, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +140,6 @@ msgstr "10% tilauksesta"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
@@ -918,6 +917,11 @@ msgid "Discount Mode"
 msgstr "Alennustila"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+msgid "Discount Product"
+msgstr "Alennustuote"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
 msgstr "Alennustuotteen domain"
@@ -938,6 +942,11 @@ msgstr "Alennuskoodi"
 #, python-format
 msgid "Discount point(s)"
 msgstr "Alennuspisteet"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Discount product"
+msgstr "Alennustuote"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1116,16 +1125,16 @@ msgid "Generate Gift Cards"
 msgstr "Luo lahjakortteja"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate eWallet"
-msgstr "Luo eWallet"
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers."
 msgstr "Luo ja jaa ainutlaatuisia kuponkeja asiakkaidesi kanssa."
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "Generate eWallet"
+msgstr "Luo eWallet"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1551,7 +1560,7 @@ msgid "Product Variant"
 msgstr "Tuotevariaatio"
 
 #. module: loyalty
-#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr "Tuote, jota käytetään myyntitilauksessa alennuksen soveltamiseen."
 
@@ -1603,13 +1612,6 @@ msgstr "Ohjelman liipaisin"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promotion Program"
-msgstr "Myynninedistämisohjelma"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
 msgid "Promo point(s)"
 msgstr "Myynninedistämispisteet"
 
@@ -1620,6 +1622,13 @@ msgstr "Myynninedistämispisteet"
 #, python-format
 msgid "Promos"
 msgstr "Myynninedistämiset"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Promotion Program"
+msgstr "Myynninedistämisohjelma"
 
 #. module: loyalty
 #. odoo-python

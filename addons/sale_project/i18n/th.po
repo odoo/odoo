@@ -7,14 +7,15 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2023
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -520,6 +521,11 @@ msgid "Quantity"
 msgstr "ปริมาณ"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "บรรทัดเทมเพลตใบเสนอราคา"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr "บรรลุเหตุการณ์สำคัญแล้ว"
@@ -651,13 +657,6 @@ msgstr "ค้นหาในใบแจ้งหนี้"
 #, python-format
 msgid "Search in Sales Order"
 msgstr "ค้นหาในคำสั่งขาย"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr "ค้นหาในรายการคำสั่งขาย"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id

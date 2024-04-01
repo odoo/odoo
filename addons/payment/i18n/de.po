@@ -6,16 +6,17 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Kimlong Mai, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
-# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-07 12:37+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -328,6 +329,11 @@ msgid "Bank"
 msgstr "Bank"
 
 #. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Bank Account"
+msgstr "Bankkonto"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Bankname"
@@ -450,6 +456,11 @@ msgid "Color"
 msgstr "Farbe"
 
 #. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Communication"
+msgstr "Kommunikation"
+
+#. module: payment
 #: model:ir.model,name:payment.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
@@ -568,6 +579,7 @@ msgstr "Kredit- & Debitkarte, UPI (Powered by Razorpay)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
 msgstr "Kredit- und Debitkarte (über Stripe)"
 
@@ -610,6 +622,7 @@ msgstr "Währung"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
 msgstr "Benutzerdefinierte Zahlungsanweisungen"
 
@@ -698,8 +711,8 @@ msgid "Error"
 msgstr "Fehler"
 
 #. module: payment
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -761,10 +774,14 @@ msgid "Full Only"
 msgstr "Nur vollständig"
 
 #. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Zahlungslink erstellen"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Zahlungslink für den Auftrag generieren"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -795,11 +812,13 @@ msgstr "Meldung, wenn Hilfe benötigt"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__new_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
 msgstr "Ich habe kein Paypal-Konto"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__existing_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
 msgstr "Ich habe ein Paypal-Konto"
 
@@ -1182,6 +1201,7 @@ msgstr "Zahlen"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
 #: model:payment.provider,name:payment.payment_provider_paypal
 msgid "PayPal"
 msgstr "PayPal"
@@ -1350,6 +1370,17 @@ msgstr "Bitte wählen Sie nur eine Zahlungsmöglichkeit aus."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Bestimmen Sie einen kleineren Betrag als %s."
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the following transfer details"
+msgstr "Bitte verwenden Sie folgende Transferinformationen."
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the order name as communication reference."
+msgstr ""
+"Bitte verwenden Sie den Bestellnamen als Referenz bei Kommunikationen."
 
 #. module: payment
 #. odoo-javascript
@@ -2198,7 +2229,6 @@ msgstr "Ihre Zahlung wurde empfangen, muss jedoch manuell bestätigt werden."
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."

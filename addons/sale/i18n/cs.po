@@ -12,18 +12,18 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Ivana Bartonkova, 2023
-# Jakub Smolka, 2023
 # Tomáš Píšek, 2023
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-# Wil Odoo, 2023
+# Larissa Manderfeld, 2024
+# Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,8 +81,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('návrh', 'odesláno') and 'Nabídka- %s' % (object.name)) or"
-" 'Objednávka - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Nabídka- %s' % (object.name)) or "
+"'Objednávka - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -625,6 +625,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Zaplaceno</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Čekání na platbu</b>"
 
@@ -660,7 +665,7 @@ msgstr "<i class=\"fa fa-times\"/> Odmítnout"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr "<small><b class=\"text-muted\">Tato nabídka vyprší v</b></small>"
+msgstr "<small><b class=\"text-muted\">Tato nabídka vyprší</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1726,7 +1731,7 @@ msgstr "Vklad"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Vkladový produkt"
+msgstr "Zálohový produkt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -4109,11 +4114,6 @@ msgid "Tax Country"
 msgstr "Daň země"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "DIČ"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Tax Total"
@@ -4331,9 +4331,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
-"Produkt používaný k fakturaci akontace by měl mít zásadu faktury nastavenou "
-"na \"Objednané množství\". Aktualizujte svůj vkladový produkt, abyste mohli "
-"vytvořit vkladovou fakturu."
+"Produkt používaný k vystavení zálohové faktury by měl mít fakturační "
+"politiku nastavenou na \"Objednané množství\". Aktualizujte svůj zálohový "
+"produkt, abyste mohli vytvořit zálohovou fakturu."
 
 #. module: sale
 #. odoo-python

@@ -11,7 +11,6 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
 # Halil, 2022
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2022
@@ -21,14 +20,15 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # Melih Melik Sonmez, 2023
+# Umur Akın <umura@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Melih Melik Sonmez, 2023\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,6 +124,7 @@ msgid "Activity Type Icon"
 msgstr "Aktivite Simge Tipi"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
@@ -142,6 +143,7 @@ msgid "Add to"
 msgstr "Ekle: "
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
@@ -170,6 +172,7 @@ msgid "Allowed Picking"
 msgstr "İzin Verilen Transferler"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid "Assigned to %s Responsible"
@@ -229,6 +232,7 @@ msgid "Batch"
 msgstr "Batch"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
@@ -284,6 +288,7 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
@@ -295,12 +300,14 @@ msgid "Check Availability"
 msgstr "Uygunluk Kontrolü"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
 msgstr "Etiket Düzenini Seç"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
@@ -457,6 +464,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -624,6 +632,7 @@ msgid "Picking Type"
 msgstr "Toplama Türü"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
@@ -724,6 +733,11 @@ msgid "Show Clear Qty Button"
 msgstr "Miktarı Temizle Düğmesini Göster"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "Lot Metinlerini Göster"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
 msgstr "Miktar Ayarla Düğmesini Göster"
@@ -805,6 +819,7 @@ msgid "Summary:"
 msgstr "Özet:"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
@@ -843,24 +858,28 @@ msgstr ""
 "saat 13:00'te yapılacak) da yararlı olabilir."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
 msgstr "Seçilen operasyonlar benzersiz bir şirkete ait olmalıdır."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
 msgstr "Seçilen toplamalar benzersiz bir şirkete ait olmalıdır."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
 msgstr "Seçilen transferler benzersiz bir şirkete ait olmalıdır."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
@@ -888,6 +907,7 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
@@ -956,12 +976,14 @@ msgid "When checked, create the batch in draft status"
 msgstr "İşaretlendiğinde, toplu işi taslak durumunda oluşturun"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
 msgstr "Bitti durumundaki batch transferi silemezsiniz."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."

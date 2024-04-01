@@ -9,10 +9,8 @@ from json import dumps
 import math
 import re
 from textwrap import shorten
-from unittest.mock import patch
 
 from odoo import api, fields, models, _, Command
-from odoo.addons.base.models.decimal_precision import DecimalPrecision
 from odoo.addons.account.tools import format_rf_reference
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.tools import (
@@ -183,6 +181,7 @@ class AccountMove(models.Model):
     # cancel that part too.
     tax_cash_basis_rec_id = fields.Many2one(
         comodel_name='account.partial.reconcile',
+        index='btree_not_null',
         string='Tax Cash Basis Entry of',
     )
     tax_cash_basis_origin_move_id = fields.Many2one(
@@ -682,6 +681,9 @@ class AccountMove(models.Model):
         self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
 
         for move in self:
+            if move.state == 'cancel':
+                continue
+
             move_has_name = move.name and move.name != '/'
             if move_has_name or move.state != 'posted':
                 if not move.posted_before and not move._sequence_matches_date():
@@ -1208,6 +1210,7 @@ class AccountMove(models.Model):
                             price_subtotal=values['price_subtotal'],
                             is_refund=move.move_type in ('out_refund', 'in_refund'),
                             handle_price_include=False,
+                            extra_context={'_extra_grouping_key_': 'epd'},
                         ))
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 if move.invoice_cash_rounding_id:
@@ -1310,7 +1313,7 @@ class AccountMove(models.Model):
     @api.depends('currency_id')
     def _compute_display_inactive_currency_warning(self):
         for move in self.with_context(active_test=False):
-            move.display_inactive_currency_warning = move.currency_id and not move.currency_id.active
+            move.display_inactive_currency_warning = move.state == 'draft' and move.currency_id and not move.currency_id.active
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -3152,7 +3155,6 @@ class AccountMove(models.Model):
                         'name': _("Early Payment Discount (%s)", tax.name),
                         'amount_currency': aml.currency_id.round(tax_detail['amount_currency'] * percentage_paid),
                         'balance': aml.company_currency_id.round(tax_detail['balance'] * percentage_paid),
-                        'tax_tag_invert': True,
                     }
 
                 for grouping_dict, base_detail in base_per_percentage[aml.discount_percentage].items():
@@ -3635,7 +3637,7 @@ class AccountMove(models.Model):
     def _link_invoice_origin_to_purchase_orders(self, timeout=10):
         for move in self.filtered(lambda m: m.move_type in self.get_purchase_types()):
             references = [move.invoice_origin] if move.invoice_origin else []
-            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout)
+            move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
 
     # -------------------------------------------------------------------------
@@ -4171,12 +4173,7 @@ class AccountMove(models.Model):
         The reasonning is that if the document that we are importing has a discount, it
         shouldn't be rounded to the local settings.
         """
-        original_precision_get = DecimalPrecision.precision_get
-        def precision_get(self, application):
-            if application == 'Discount':
-                return 100
-            return original_precision_get(self, application)
-        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
+        with self._disable_recursion({'records': self}, 'ignore_discount_precision'):
             yield
 
     # -------------------------------------------------------------------------
@@ -4235,6 +4232,7 @@ class AccountMove(models.Model):
 
         disabled = container['records'].env.context.get(key, default) == target
         previous_values = {}
+        previous_envs = set(self.env.transaction.envs)
         if not disabled:  # it wasn't disabled yet, disable it now
             for env in self.env.transaction.envs:
                 previous_values[env] = env.context.get(key, EMPTY)
@@ -4246,6 +4244,9 @@ class AccountMove(models.Model):
                 if val != EMPTY:
                     env.context = frozendict({**env.context, key: val})
                 else:
+                    env.context = frozendict({k: v for k, v in env.context.items() if k != key})
+            for env in (self.env.transaction.envs - previous_envs):
+                if key in env.context:
                     env.context = frozendict({k: v for k, v in env.context.items() if k != key})
 
     # ------------------------------------------------------------
@@ -4271,11 +4272,11 @@ class AccountMove(models.Model):
 
         # Search for partners in copy.
         cc_mail_addresses = email_split(msg_dict.get('cc', ''))
-        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain) if partner]
+        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain=extra_domain) if partner]
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
-        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain) if partner]
+        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain=extra_domain) if partner]
 
         # Search for partners using the user.
         if not senders:
@@ -4288,7 +4289,7 @@ class AccountMove(models.Model):
                 body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
                 partners = [
                     partner
-                    for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain)
+                    for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain=extra_domain)
                     if not is_internal_partner(partner) and partner.company_id.id in (False, company.id)
                 ]
         # Little hack: Inject the mail's subject in the body.

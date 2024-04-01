@@ -655,7 +655,6 @@ class PurchaseOrder(models.Model):
             'move_type': move_type,
             'narration': self.notes,
             'currency_id': self.currency_id.id,
-            'invoice_user_id': self.user_id and self.user_id.id or self.env.user.id,
             'partner_id': partner_invoice.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(partner_invoice)).id,
             'payment_reference': self.partner_ref or '',
@@ -968,7 +967,7 @@ class PurchaseOrderLine(models.Model):
         string='Expected Arrival', index=True,
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.")
-    taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)], context={'active_test': False})
+    taxes_id = fields.Many2many('account.tax', string='Taxes', context={'active_test': False})
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
@@ -1449,8 +1448,9 @@ class PurchaseOrderLine(models.Model):
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
+        price_unit = seller.price if seller else product_id.standard_price
         price_unit = self.env['account.tax']._fix_tax_included_price_company(
-            seller.price, product_taxes, taxes, company_id) if seller else 0.0
+            price_unit, product_taxes, taxes, company_id)
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())

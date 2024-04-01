@@ -70,13 +70,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
             if (_.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
-                let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
-                                  .filter((attr) => attr !== undefined);
-                let { confirmed, payload } = await this.showPopup('ProductConfiguratorPopup', {
-                    product: product,
-                    attributes: attributes,
-                });
-
+                let { confirmed, payload } = await this._openProductConfiguratorPopup(product);
                 if (confirmed) {
                     description = payload.selected_attributes.join(', ');
                     price_extra += payload.price_extra;
@@ -157,6 +151,34 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
 
             return { draftPackLotLines, quantity: weight, description, price_extra };
+        }
+        async _openProductConfiguratorPopup(product) {
+            let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
+                                  .filter((attr) => attr !== undefined);
+
+            // avoid opening the popup when each attribute has only one available option.
+            if (_.some(attributes, (attribute) => attribute.values.length > 1 || _.some(attribute.values, (value) => value.is_custom))) {
+                return await this.showPopup('ProductConfiguratorPopup', {
+                    product: product,
+                    attributes: attributes,
+                });
+            };
+
+            let selected_attributes = [];
+            let price_extra = 0.0;
+
+            attributes.forEach((attribute) => {
+                selected_attributes.push(attribute.values[0].name);
+                price_extra += attribute.values[0].price_extra;
+            });
+
+            return {
+                confirmed: true,
+                payload: {
+                    selected_attributes,
+                    price_extra,
+                }
+            };
         }
         async _addProduct(product, options) {
             this.currentOrder.add_product(product, options);

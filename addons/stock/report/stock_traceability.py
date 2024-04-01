@@ -52,7 +52,7 @@ class MrpStockReport(models.TransientModel):
         return lines_seen - move_lines
 
     @api.model
-    def get_lines(self, line_id=None, **kw):
+    def get_lines(self, line_id=False, **kw):
         context = dict(self.env.context)
         model = kw and kw['model_name'] or context.get('model')
         rec_id = kw and kw['model_id'] or context.get('active_id')
@@ -172,7 +172,7 @@ class MrpStockReport(models.TransientModel):
         return False, False
 
     @api.model
-    def _lines(self, line_id=None, model_id=False, model=False, level=0, move_lines=[], **kw):
+    def _lines(self, line_id=False, model_id=False, model=False, level=0, move_lines=None, **kw):
         final_vals = []
         lines = move_lines or []
         if model and line_id:

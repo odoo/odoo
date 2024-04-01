@@ -598,6 +598,47 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
+    QUnit.test("ReferenceField with model field", async function (assert) {
+        serverData.models.partner.onchanges = {
+            color(obj) {
+                if (obj.color === "black") {
+                    obj.model_id = 20;
+                    obj.reference = "product,37";
+                } else {
+                    obj.model_id = 17;
+                    obj.reference = "partner,1";
+                }
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="color" />
+                    <field name="model_id" invisible="1"/>
+                    <field name="reference" options="{'model_field': 'model_id'}" />
+                </form>`,
+            mockRPC(route, { args, method }) {
+                if (method === "write") {
+                    assert.step("write");
+                    assert.strictEqual(args[1].reference, "partner,4");
+                }
+            },
+        });
+        await editSelect(target, "select", '"black"');
+        await editSelect(target, "select", '"red"');
+
+        await editInput(target, ".o_field_widget[name=reference] input", "aaa");
+
+        await click(target, ".ui-autocomplete .ui-menu-item:first-child");
+        await clickSave(target);
+        assert.verifySteps(["write"]);
+    });
+
     QUnit.test("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
 

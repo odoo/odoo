@@ -12,14 +12,15 @@
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -193,6 +194,13 @@ msgstr "%s شامل الضريبة "
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s كشف الحساب %s "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -219,13 +227,6 @@ msgid ""
 msgstr ""
 "لقد وصل %s إلى حالة لا تصلح فيما يتعلق ببند كشف الحساب ذي الصلة.\n"
 "حتى تكون منتظماً، يجب أن يحتوي قيد اليومية على بند تعليق واحد فقط. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s كشف الحساب %s "
 
 #. module: account
 #. odoo-python
@@ -669,11 +670,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">مسودة</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -1222,11 +1222,6 @@ msgid ""
 msgstr ""
 "<strong class=\"text-center\">قم بإجراء المسح الضوئي عن طريق تطبيقك "
 "البنكي.</strong><br/><br/>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>المبلغ المستحق</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2857,17 +2852,6 @@ msgstr "قوالب الحسابات المقترنة"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__at_date
 msgid "At Date"
 msgstr "بتاريخ"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"يجب تحميل تطبيق أقلمة واحد على الأقل حتى يمكن تحميل الحسابات على قاعدة "
-"البيانات "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
@@ -5298,6 +5282,11 @@ msgid "December"
 msgstr "ديسمبر"
 
 #. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "الدقة العشرية"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__decimal_separator
 msgid "Decimal Separator"
@@ -5483,6 +5472,26 @@ msgstr "عنوان التوصيل "
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr "عنوان التوصيل للفاتورة الحالية. "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "حساب أجور المدراء التنفيذيين التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "حساب رأس المال التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "حساب بيع الأرض التجريبي "
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "حساب المخزون التجريبي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -6029,7 +6038,7 @@ msgstr "تقارير ديناميكية"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr "النطاق المستخدم للعلامة التي يمكن تعيينها على الضريبة"
+msgstr "نطاق ديناميكي يُستخدم للعلامة التي يمكن تعيينها على الضريبة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6480,6 +6489,11 @@ msgstr "دفتر اليومية المالي "
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "علامات التصنيف المالية "
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_financing
+msgid "Financing Activities"
+msgstr "الأنشطة المالية "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7091,7 +7105,7 @@ msgstr "يحتوي على ثغرات في التسلسل "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr "يحتوي على سطور البيان"
+msgstr "يحتوي على بنود كشف الحساب البنكي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -7815,6 +7829,13 @@ msgstr "نطاق الرمز البريدي خاطئ. الرجاء تكوينه �
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "النطاق غير صالح للتعبير '%s' للبند '%s': %s "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -7824,6 +7845,11 @@ msgstr "آخر أيام السنة المالية غير صحيح "
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "عكس علامات التصنيف "
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_investing
+msgid "Investing & Extraordinary Activities"
+msgstr "الاستثمار والأنشطة غير الاعتيادية "
 
 #. module: account
 #. odoo-python
@@ -8067,7 +8093,7 @@ msgstr "تمت الفوترة "
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr "الفواتير"
+msgstr "فواتير العملاء "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
@@ -9336,6 +9362,11 @@ msgid "Memo:"
 msgstr "بيان:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "معالج دمج الوكيل "
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9618,6 +9649,16 @@ msgstr "قيم جديدة "
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "الأحدث أولاً "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10022,6 +10063,11 @@ msgid "Off-Balance Sheet"
 msgstr "خارج الميزانية العمومية "
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "أثاث مكتبي "
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10207,6 +10253,11 @@ msgstr "تم ترحيل الحركة الافتتاحية "
 #, python-format
 msgid "Opening balance"
 msgstr "الرصيد الافتتاحي"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_operating
+msgid "Operating Activities"
+msgstr "الأنشطة التشغيلية "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10648,6 +10699,13 @@ msgid "Partners"
 msgstr "الشركاء"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "يمكن دمج الشركاء المستَخدَمين في القيود المشفرة. "
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "سدد قيمة فواتيرك بنقرة واحدة باستخدام خدمة Euro SEPA"
@@ -10964,7 +11022,7 @@ msgstr "نسبة من السعر"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "يشمل ضريبة نسبة من السعر "
+msgstr "نسبة من السعر شاملة الضريبة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -11045,6 +11103,17 @@ msgstr "يرجى إنشاء حسابات جديدة من قائمة شجرة ا�
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "الرجاء تحديد بند لطريقة الدفع في دفعتك. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"طريقة الدفع المختارة غير متاحة لهذه الدفعة، الرجاء اختر طريقة الدفع مرة "
+"أخرى."
 
 #. module: account
 #. odoo-python
@@ -11621,7 +11690,7 @@ msgstr "الرقم المرجعي. "
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, python-format
 msgid "Reference"
-msgstr "الرقم المرجعي "
+msgstr "المرجع "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
@@ -14270,6 +14339,7 @@ msgstr ""
 "  مثال: .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14580,6 +14650,21 @@ msgid ""
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 "لن يبدأ التسلسل مجددا أبداً.\n"
+"العدد المتزايد في هذه الحالة هو '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"سوف يبدأ التسلسل مجدداً من 1 عند بداية كل عام مالي.\n"
+"بداية السنة المالية التي تم رصدها هنا '%(year)s'.\n"
+"نهاية السنة المالية التي تم رصدها هنا '%(year_end)s'.\n"
 "العدد المتزايد في هذه الحالة هو '%(formatted_seq)s'."
 
 #. module: account
@@ -15054,8 +15139,7 @@ msgstr "سوف يتم ترحيل هذه الحركة في التاريخ الم�
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "ستتسبب هذه العملية في إحداث ثغرة في التسلسل. "
@@ -16254,13 +16338,6 @@ msgstr "يمكنك فقط تغيير الفترة/الحساب لعناصر ال
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr "يمكنك فقط طباعة المستند الأصلي لمستندات الشراء. "
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -16531,6 +16608,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "لا يمكنك إنشاء مجموعات متداخلة."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16562,6 +16646,27 @@ msgid ""
 msgstr ""
 "لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
 "السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"لا يمكنك حذف هذا التقرير (%s)، لأنه مستخدَم من قِبَل محرّك إنشاء ملفات PDF "
+"للمحاسبة. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"لا يمكنك حذف علامة التصنيف هذه (%s)، لأنها مستخدمة في تعريف شجرة الحسابات. "
 
 #. module: account
 #. odoo-python
@@ -16658,6 +16763,13 @@ msgstr ""
 "لا يمكنك استيراد \"openning_balance\" إذا تم ترحيل الحركة الافتتاحية (%s) "
 "بالفعل. إذا كنت متأكداً تماماً من أنك ترغب في تعديل الرصيد الافتتاحي "
 "لحساباتك، قم بإعادة تعيين الحركة إلى مسودة. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "لا يمكنك دمج الحسابات. "
 
 #. module: account
 #. odoo-python
@@ -16790,7 +16902,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
 msgstr "لا يمكنك تغيير نوع مستند مرحل. "

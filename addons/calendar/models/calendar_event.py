@@ -292,6 +292,19 @@ class Meeting(models.Model):
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
+    @api.onchange('start_date', 'stop_date')
+    def _onchange_date(self):
+        """ This onchange is required for cases where the stop/start is False and we set an allday event.
+            The inverse method is not called in this case because start_date/stop_date are not used in any
+            compute/related, so we need an onchange to set the start/stop values in the form view
+        """
+        for event in self:
+            if event.stop_date and event.start_date:
+                event.with_context(is_calendar_event_new=True).write({
+                    'start': fields.Datetime.from_string(event.start_date).replace(hour=8),
+                    'stop': fields.Datetime.from_string(event.stop_date).replace(hour=18),
+                })
+
     def _inverse_dates(self):
         """ This method is used to set the start and stop values of all day events.
             The calendar view needs date_start and date_stop values to display correctly the allday events across

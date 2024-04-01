@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2023
-# Abe Manyo, 2023
 # Febrasari Almania <febrasari.almania@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-16 09:20+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2023-07-13 13:02+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filter digunakan untuk mencari akun user di database LDAP. Filter ini adalah filter LDAP yang arbitrary di string representation. Placeholder `%s` apapun    akan diganti dengan login (pengidentifikasi) yang disediakan oleh user, filter    harus memiliki setidaknya satu placeholder seperti itu.\n"
+"\n"
+"    Filter harus memiliki persis satu (1) hasil, bila tidak login akan    dianggap tidak valid.\n"
+"\n"
+"    Contoh (atribut asli tergantung pada server dan setup LDAP):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    atau\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -61,7 +73,7 @@ msgstr "Perusahaan"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Konfigurasi LDAP Perusahaan"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -89,6 +101,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN dari cakupan pencarian user: semua turunan dari base ini akan dicari "
+"untuk user."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -109,14 +123,13 @@ msgstr "Konfigurasi LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_test__ldaps
 msgid "LDAP Parameters"
 msgstr "Parameter LDAP"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "Server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
@@ -174,6 +187,8 @@ msgstr "Informasi Login"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Tidak ada user lokal yang ditemukan untuk login LDAP dan tidak dikonfigurasi"
+" untuk membuat user"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

@@ -6,6 +6,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -1658,6 +1659,34 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity_done': 0, 'state': 'waiting'},
         ])
 
+    def test_2_steps_decrease_sol_qty_to_zero(self):
+        """
+        2 steps delivery, 'cancel next move' enabled
+        SO with one product
+        On the SO, cancel the qty of the product
+        On each picking, the SM should be canceled
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        warehouse.delivery_steps = 'pick_ship'
+        warehouse.delivery_route_id.rule_ids.propagate_cancel = True
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+            })],
+        })
+        so.action_confirm()
+
+        so.order_line.product_uom_qty = 0
+
+        self.assertEqual(so.picking_ids.move_ids.mapped('state'), ['cancel', 'cancel'])
+
     def test_2_steps_fixed_procurement_propagation_with_backorder(self):
         """
         When validating a picking (partially coming from a backorder) linked to 2 destinations moves in a 2-steps delivery,
@@ -1701,3 +1730,33 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(out1.move_line_ids.reserved_qty, 3)
         self.assertEqual(out2.state, 'assigned')
         self.assertEqual(out2.move_line_ids.reserved_qty, 1)
+
+    def test_delivery_on_negative_delivered_qty(self):
+        """
+            Tests that returns created from SO lines with negative quantities update the delivered
+            quantities negatively so that they appear on the corresponding invoice.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 100.0,
+            'detailed_type': 'product',
+            'invoice_policy': 'delivery',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'state': 'draft',
+            'order_line':[Command.create({
+                'product_id': product.id,
+                'product_uom_qty': -1,
+            })],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+        self.assertEqual(sale_order.order_line.qty_to_invoice, 0.0)
+        picking = self.env['stock.move'].browse(self.env['stock.move'].search([('sale_line_id', '=', sale_order.order_line.id)]).id).picking_id
+        picking.action_confirm()
+        picking.move_ids.move_line_ids.qty_done = 1
+        picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, -1.0)
+        self.assertEqual(sale_order.order_line.qty_to_invoice, -1.0)

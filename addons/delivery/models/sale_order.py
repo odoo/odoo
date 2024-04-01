@@ -210,3 +210,8 @@ class SaleOrderLine(models.Model):
 
         undeletable_lines = super()._check_line_unlink()
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
+
+    def _compute_pricelist_item_id(self):
+        delivery_lines = self.filtered('is_delivery')
+        super(SaleOrderLine, self - delivery_lines)._compute_pricelist_item_id()
+        delivery_lines.pricelist_item_id = False

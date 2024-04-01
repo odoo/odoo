@@ -145,7 +145,7 @@
                                     </group>
                                     <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails" attrs="{'invisible': ['|', ('type', 'not in',  ('sale' ,'purchase')), ('alias_domain', '=', False)]}">
                                         <label string="Email Alias" for="alias_name"/>
-                                        <div class="oe_inline" name="edit_alias" style="display: inline;" >
+                                        <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </div>
                                     </group>

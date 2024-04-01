@@ -122,3 +122,35 @@ class TestEdiZatca(TestSaEdiCommon):
             current_tree = self.with_applied_xpath(current_tree, self.remove_ubl_extensions_xpath)
 
             self.assertXmlTreeEqual(current_tree, expected_tree)
+
+    @freeze_time("2024-02-14 21:30:00", tz_offset=0)
+    def test_invoice_standard_with_accepted_time(self):
+
+        move = self._create_invoice(
+            name='INV/2024/00014',
+            date='2024-02-15',
+            date_due='2024-02-15',
+            partner_id=self.partner_us,
+            product_id=self.product_a,
+            price=320.0,
+            user=self.user_saudi,
+        )
+        errors = self.edi_format.with_user(self.user_saudi.id)._check_move_configuration(move)
+        msg = '- Please, make sure the invoice date is set to either the same as or before Today.'
+        self.assertFalse(msg in errors)
+
+    @freeze_time("2022-09-21 15:30:00", tz_offset=0)
+    def test_invoice_standard_with_future_time(self):
+
+        move = self._create_invoice(
+            name='INV/2024/00014',
+            date='2024-02-20',
+            date_due='2024-02-28',
+            partner_id=self.partner_us,
+            product_id=self.product_a,
+            price=320.0,
+            user=self.user_saudi,
+        )
+        errors = self.edi_format.with_user(self.user_saudi.id)._check_move_configuration(move)
+        msg = '- Please, make sure the invoice date is set to either the same as or before Today.'
+        self.assertTrue(msg in errors)

@@ -1225,6 +1225,48 @@ class TestMailgateway(TestMailCommon):
     # Thread formation
     # --------------------------------------------------
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_message_process_external_notification_reply(self):
+        """Ensure responses bot messages are discussions."""
+        bot_notification_message = self._create_gateway_message(
+            self.test_record,
+            'bot_notif_message',
+            author_id=self.env.ref('base.partner_root').id,
+            message_type='auto_comment',
+            is_internal=True,
+            subtype_id=self.env.ref('mail.mt_note').id,
+        )
+
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, '',
+            subject='Reply to bot notif',
+            extra=f'References: {bot_notification_message.message_id}'
+        )
+        new_msg = self.test_record.message_ids[0]
+        self.assertFalse(new_msg.is_internal, "Responses to messages sent by odoobot should always be public.")
+        self.assertEqual(new_msg.parent_id, bot_notification_message)
+        self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'))
+
+        # Also check the regular case
+        some_notification_message = self._create_gateway_message(
+            self.test_record,
+            'some_notif_message',
+            message_type='notification',
+            is_internal=True,
+            subtype_id=self.env.ref('mail.mt_note').id,
+        )
+
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, '',
+            subject='Reply to some notif',
+            extra=f'References: {some_notification_message.message_id}'
+        )
+        new_msg = self.test_record.message_ids[0]
+        self.assertTrue(new_msg.is_internal, "Responses to messages sent by anyone but odoobot should keep"
+                        "the 'is_internal' value of the parent.")
+        self.assertEqual(new_msg.parent_id, some_notification_message)
+        self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_note'))
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_in_reply_to(self):
         """ Incoming email using in-rely-to should go into the right destination even with a wrong destination """

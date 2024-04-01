@@ -5,14 +5,15 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Pak Wai Ho, 2023
-# Martin Trigaux, 2023
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2024-01-25 10:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -318,8 +319,10 @@ msgstr "<span class=\"text-nowrap\">Tax 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">（範例地址）\n"
+"                                       <br/>香港西營盤<br/>118 干諾道西 32 樓</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1143,14 +1146,14 @@ msgstr "清空"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CMD"
-msgstr ""
+msgstr "CMD"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #. module: web
 #. odoo-javascript
@@ -2219,6 +2222,7 @@ msgstr "企業"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "錯誤"
@@ -2387,7 +2391,6 @@ msgstr "文件"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "文件上傳"
@@ -2596,6 +2599,18 @@ msgstr "處理"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "顯示在所有報告頂部的標題文字"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"請留意！你最近的變更太大，未能自動儲存。請立即按一下 <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"按鈕，以確保在離開此分頁之前儲存你的工作。"
 
 #. module: web
 #. odoo-javascript
@@ -3385,7 +3400,7 @@ msgstr "新增： %s"
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Next"
-msgstr "下一個"
+msgstr "下一頁"
 
 #. module: web
 #. odoo-javascript
@@ -3882,7 +3897,7 @@ msgstr "頁: <span class=\"page\"/> / <span class=\"topage\"/>"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Pager"
-msgstr ""
+msgstr "頁面工具"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
@@ -4121,7 +4136,7 @@ msgstr "預覽logo"
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "上一頁"
 
 #. module: web
 #. odoo-javascript
@@ -4517,6 +4532,13 @@ msgstr "報表格式預覽"
 #, python-format
 msgid "Request timeout"
 msgstr "請求超時"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "重設域名"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -5214,8 +5236,14 @@ msgstr "操作被中斷了。這通常意味著目前的操作花費了太多時
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "所選檔案（%s B）超過檔案大小上限（%s B）。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "所選文件超出了文件的最大值設定：%s。"
@@ -5263,7 +5291,7 @@ msgstr "上載檔案時出現問題。"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
 msgid "This database is neutralized."
-msgstr ""
+msgstr "此資料庫已作失效處理。"
 
 #. module: web
 #. odoo-javascript
@@ -6470,8 +6498,8 @@ msgstr "仍在載入中⋯"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6513,7 +6541,7 @@ msgstr "like（包含大小寫相符的字串）"
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "menus"
-msgstr ""
+msgstr "選單"
 
 #. module: web
 #. odoo-javascript
@@ -6565,7 +6593,7 @@ msgstr "未提供說明"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "無"
 
 #. module: web
 #. odoo-javascript
@@ -6619,7 +6647,7 @@ msgstr "下列規則："
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
+msgstr "在任何螢幕上，以顯示捷徑覆蓋提示，以及"
 
 #. module: web
 #. odoo-javascript
@@ -6722,7 +6750,7 @@ msgstr "已設定（真）"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "to trigger a shortcut."
-msgstr ""
+msgstr "以觸發捷徑。"
 
 #. module: web
 #. odoo-javascript
@@ -6736,4 +6764,4 @@ msgstr "鍵入預設文字，或按輸入鍵"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
-msgstr ""
+msgstr "— 按"

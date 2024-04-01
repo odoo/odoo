@@ -18,17 +18,19 @@
 # Максим Дронь <dronmax@gmail.com>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # valmasone, 2022
-# Alena Vlasova, 2023
+# Alena Vlasova, 2022
 # alenafairy, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Wil Odoo, 2024
+# Смородин Даниил, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2024\n"
+"Last-Translator: Смородин Даниил, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,11 +129,6 @@ msgstr "%s Дочерняя заявка на производство"
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
 msgstr "%sневозможно удалить. Попробуйте вначале отменить."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -571,6 +568,16 @@ msgid "Add tag for the workcenter"
 msgstr "Добавить тег для рабочего центра"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
+msgid "Additional time in minutes for the cleaning."
+msgstr "Дополнительное время в минутах для очистки."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
+msgid "Additional time in minutes for the setup."
+msgstr "Дополнительное время на наладку до начала работ в минутах"
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
 msgstr "Администратор"
@@ -606,7 +613,7 @@ msgstr "Отсутствие"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_reception_report
 msgid "Allocation Report for Manufacturing Orders"
-msgstr "Отчет о планировании производственных заявок"
+msgstr "Отчет о распределении производственных заказов"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
@@ -748,8 +755,8 @@ msgid "Attachment URL"
 msgstr "URL вложения"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1055,15 +1062,6 @@ msgstr "Обзор спецификации"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
 msgstr "Тип спецификации"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr ""
-"Строка с продуктом в спецификации %s не должна совпадать с продуктом в "
-"спецификации."
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1750,8 +1748,9 @@ msgid ""
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
 "Определяет, можно ли использовать больше или меньше комплектующих, относительно количества указанного в спецификации:\n"
-" * Разрешено: разрешено всем пользователям.\n"
-" * Разрешено с предупреждением: разрешено всем пользователям с суммированием разницы в использовании при закрытии заявки на производство. Обратите внимание, что если использование комплектующих регистрируется исключительно вручную, предупреждения об использовании все равно будут появляться, когда это необходимо.\n"
+" * Разрешено: разрешено всем производственным пользователям.\n"
+" * Разрешено с предупреждением: разрешено всем производственным  пользователям с суммированием разницы в использовании при закрытии заявки на производство.\n"
+"  Обратите внимание, что если использование комплектующих регистрируется исключительно вручную, предупреждения об использовании все равно будут появляться, когда это необходимо.\n"
 " * Заблокировано: только менеджер может закрыть заявку на производство при несоблюдении использования, указанного в спецификации."
 
 #. module: mrp
@@ -2140,7 +2139,7 @@ msgstr "Иконка со шрифтом Font awesome, например. fa-task
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Принудительно"
 
 #. module: mrp
 #. odoo-javascript
@@ -2552,6 +2551,7 @@ msgstr "Это был разблокирован."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -3139,8 +3139,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Правило минимального остатка"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3498,8 +3498,8 @@ msgstr ""
 "определенную продолжительность."
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -4575,7 +4575,7 @@ msgstr "Показать планирование"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_apply
 msgid "Show Apply"
-msgstr ""
+msgstr "Показать Применить"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_backorders
@@ -5024,6 +5024,7 @@ msgstr ""
 "продуктами: %s."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5298,16 +5299,6 @@ msgstr "Трекер времени"
 #, python-format
 msgid "Time Tracking: %(user)s"
 msgstr "Учет времени: %(user)s"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Additional time in minutes for the cleaning."
-msgstr "Дополнительное время в минутах для очистки."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Additional time in minutes for the setup."
-msgstr "Дополнительное время на наладку до начала работ в минутах"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5704,7 +5695,6 @@ msgstr "Подтвердить"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid ""
@@ -5734,7 +5724,7 @@ msgstr "Просмотреть производственное задание"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "View and allocate manufactured quantities"
-msgstr "Просматривайте и отслеживайте количество изготовленных продуктов."
+msgstr "Просмотр и распределение произведенных объемов"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days

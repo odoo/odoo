@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <group name="bill" position="inside">
-                    <field name="landed_cost_ok" attrs="{'invisible':[('type', '!=', 'service')]}"/>
+                    <field name="landed_cost_ok" attrs="{'invisible':[('detailed_type', '!=', 'service')]}"/>
                     <field name="split_method_landed_cost" attrs="{'invisible': ['|', ('landed_cost_ok', '=', False), ('type', '!=', 'service')]}"/>
                 </group>
             </field>

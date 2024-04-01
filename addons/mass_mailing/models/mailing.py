@@ -87,7 +87,7 @@ class MassMailing(models.Model):
     email_from = fields.Char(
         string='Send From',
         compute='_compute_email_from', readonly=False, required=True, store=True,
-        default=lambda self: self.env.user.email_formatted)
+        precompute=True)
     favorite = fields.Boolean('Favorite', copy=False, tracking=True)
     favorite_date = fields.Datetime(
         'Favorite Date',
@@ -238,12 +238,12 @@ class MassMailing(models.Model):
                     _("The saved filter targets different recipients and is incompatible with this mailing.")
                 )
 
-    @api.depends('mail_server_id')
+    @api.depends('mail_server_id', 'create_uid')
     def _compute_email_from(self):
-        user_email = self.env.user.email_formatted
         notification_email = self.env['ir.mail_server']._get_default_from_address()
 
         for mailing in self:
+            user_email = mailing.create_uid.email_formatted or self.env.user.email_formatted
             server = mailing.mail_server_id
             if not server:
                 mailing.email_from = mailing.email_from or user_email
@@ -1410,6 +1410,9 @@ class MassMailing(models.Model):
                 )
 
             return content
+        except UnidentifiedImageError:
+            _logger.warning('This file could not be decoded as an image file.', exc_info=True)
+            raise
         except Exception as e:
             _logger.exception(e)
             raise ImportValidationError(_("Could not retrieve URL: %s", url)) from e

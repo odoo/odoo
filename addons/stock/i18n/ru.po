@@ -21,7 +21,6 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
 # Viktor Pogrebniak <vp@aifil.ru>, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
-# Collex100, 2022
 # Martin Trigaux, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2022
@@ -30,14 +29,17 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # alenafairy, 2023
 # Walid Hanniche, 2023
+# Wil Odoo, 2024
+# Смородин Даниил, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Walid Hanniche, 2023\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,6 +169,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (копия)(%(id)s)"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: Поставляемый продукт от %(supplier)s"
 
@@ -174,6 +183,7 @@ msgstr "%(warehouse)s: Поставляемый продукт от %(supplier)s
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -1218,8 +1228,8 @@ msgid "Automatic No Step Added"
 msgstr "Автоматически без добавления шагов"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1842,6 +1852,11 @@ msgstr ""
 "одной категории. Преобразование будет сделано на основе коэффициентов."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Ряд (X)"
@@ -2086,8 +2101,7 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
-"При создании нового склада автоматически активизируется настройка Места "
-"хранения"
+"Создание нового склада автоматически активирует настройку Места хранения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
@@ -2337,9 +2351,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Определите правило минимального запаса, чтобы система автоматически создала "
-"запросы на коммерческие предложения или черновики заявок на производство для"
-" восполнения запасов."
+"Задайте правило минимального запаса, чтобы система создавала запросы на "
+"коммерческие предложения или подтвержденные заказы на производство для "
+"пополнения ваших запасов."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3018,6 +3032,13 @@ msgid "First SN"
 msgstr "Первый SN"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Статичный"
@@ -3583,7 +3604,7 @@ msgid ""
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
 msgstr ""
-"Если этот флажок установлен, Odoo автоматически предварительно заполнит "
+"Если этот флажок установлен, система автоматически предварительно заполнит "
 "подробные операции с соответствующими продуктами, местоположениями и "
 "номерами партий / серийными номерами."
 
@@ -3611,9 +3632,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Если это будет обозначено, строки комплектования будут представлять "
-"детальные складские операции. Если нет, то строка комплектования "
-"представлять совокупность детальных складских операций."
+"Если этот флажок установлен, строки комплектации будут отображать подробные "
+"складские операции. Если нет, строки комплектации будут отображать "
+"совокупность подробных складских операций."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -3860,6 +3881,7 @@ msgstr "Недопустимый левый операнд домена %s "
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Недопустимый оператор домена %s "
@@ -3867,6 +3889,7 @@ msgstr "Недопустимый оператор домена %s "
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr "Недопустимый домена '%s'. Он должен быть типа Integer/Float"
@@ -4084,8 +4107,21 @@ msgstr "Невозможно заказать больше товаров %s ч�
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Невозможно восстановить больше товаров %s чем у вас на складе."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -5184,8 +5220,8 @@ msgid "Normal"
 msgstr "Нормальный"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -5987,7 +6023,7 @@ msgstr "Печать штрих-кодов GS1 для номеров парти�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr "Печать штрих-кодов GS1 для номеров партий и серийных номеров"
+msgstr "Печать штрих-кодов GS1 для партий и серийных номеров"
 
 #. module: stock
 #. odoo-javascript
@@ -7204,6 +7240,14 @@ msgid ""
 msgstr ""
 "Маршруты будут созданы для этих складов снабжения, и вы сможете выбирать их "
 "в продуктах и категориях продукции"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "Правило %s принадлежит %s, а маршрут - %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8780,6 +8824,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Этот префикс последовательности уже используется другим типом операции. "
+"Рекомендуется выбрать уникальный префикс, чтобы избежать проблем и/или "
+"повторных значений ссылок, или назначить существующую последовательность "
+"ссылок этому типу операций."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9322,8 +9370,8 @@ msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
 msgstr ""
-"Использовать номенклатурную матрицу GS1 при печати штрихкодов для партий и "
-"серийных номеров."
+"Использовать номенклатурную матрицу данных GS1 при печати штрих-кодов для "
+"партий и серийных номеров."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -9787,8 +9835,8 @@ msgid ""
 msgstr ""
 "При подтверждении перемещения:\n"
 " * Спрашивать: пользователям предлагается выбрать, хотят ли они сделать отложенный заказ на оставшиеся продукты\n"
-" * Всегда: автоматически создается отложенный заказ на оставшиеся товары\n"
-" * Никогда: оставшиеся товары аннулируются"
+" * Всегда: автоматически создается отложенный заказ на оставшиеся продукты\n"
+" * Никогда: оставшиеся продукты аннулируются"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -10086,6 +10134,26 @@ msgid ""
 msgstr ""
 "Вы не можете переместить одно и то же содержимое пакета более одного раза в "
 "одном перемещении или разделите этот пакет на два места хранения."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Нельзя упаковывать продукты в одну упаковку, если они получены из разных "
+"пересылок с разными типами операций."
 
 #. module: stock
 #. odoo-python
@@ -10412,6 +10480,7 @@ msgid "e.g. CW"
 msgstr "например, CW"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "например, центральный склад"

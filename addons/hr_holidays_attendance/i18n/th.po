@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +23,19 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
 msgstr "%s ชั่วโมงที่มีอยู่"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "การเข้าร่วม"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Available"
@@ -45,7 +52,7 @@ msgid "Count Extra Hours"
 msgstr "จำนวนชั่วโมงพิเศษ"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Days"
@@ -73,11 +80,12 @@ msgstr "ชั่วโมงพิเศษ"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form_overtime
 msgid "Extra Hours Available"
 msgstr "ชั่วโมงพิเศษที่พร้อม"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Hours"
@@ -119,6 +127,7 @@ msgid "Save"
 msgstr "บันทึก"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -126,12 +135,14 @@ msgid ""
 msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขยายเวลาการจัดสรรนี้"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขยายเวลาการลานี้"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -139,6 +150,7 @@ msgid ""
 msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขอการจัดสรรนี้"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
@@ -146,6 +158,7 @@ msgid "The employee does not have enough extra hours to request this leave."
 msgstr "พนักงานไม่มีชั่วโมงพิเศษเพียงพอที่จะขอลานี้"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -179,6 +192,7 @@ msgid "User"
 msgstr "ผู้ใช้"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format

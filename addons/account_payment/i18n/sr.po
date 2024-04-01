@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
-# Milan Bojovic, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Milan Bojovic, 2023\n"
+"Last-Translator: Milan Bojovic <mbojovic@outlook.com>, 2023\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -548,7 +548,7 @@ msgstr ""
 #, python-format
 msgid ""
 "To uninstall this module, please remove first the corresponding payment "
-"method line in the outgoing payments tab defined on the bank journal."
+"method line in the incoming payments tab defined on the bank journal."
 msgstr ""
 
 #. module: account_payment
@@ -576,25 +576,12 @@ msgstr "Ništavna transakcija"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
-"Ne možete da obrišete način plaćanja koji je povezan sa provajderom u omogućenom ili testnom statusu.\n"
-"Povezani provajder(i): %s"
-
-#. module: account_payment
-#. odoo-python
-#: code:addons/account_payment/models/payment_provider.py:0
-#, python-format
-msgid ""
-"You cannot uninstall this module as payment method transactions already "
-"exist."
-msgstr ""
-"Ne možete da deinstalirate ovaj modul jer transakcije odabranog načina "
-"plaćanja već postoje."
 
 #. module: account_payment
 #. odoo-python

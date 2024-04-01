@@ -698,7 +698,7 @@ class MrpProduction(models.Model):
     @api.depends('company_id', 'bom_id', 'product_id', 'product_qty', 'product_uom_id', 'location_src_id')
     def _compute_move_raw_ids(self):
         for production in self:
-            if production.state != 'draft':
+            if production.state != 'draft' or self.env.context.get('skip_compute_move_raw_ids'):
                 continue
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
@@ -726,13 +726,14 @@ class MrpProduction(models.Model):
         for production in self:
             if production.state != 'draft':
                 updated_values = {}
-                if production.date_planned_finished:
+                if production.date_finished or production.date_planned_finished:
                     updated_values['date'] = production.date_planned_finished
                 if production.date_deadline:
                     updated_values['date_deadline'] = production.date_deadline
                 if 'date' in updated_values or 'date_deadline' in updated_values:
                     production.move_finished_ids = [
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
+                        if m.state != 'done'
                     ]
                 continue
             # delete to remove existing moves from database and clear to remove new records
@@ -1671,7 +1672,7 @@ class MrpProduction(models.Model):
             (production.move_raw_ids | production.move_finished_ids).origin = production._get_origin()
             backorder_vals = production.copy_data(default=production._get_backorder_mo_vals())[0]
             backorder_qtys = amounts[production][1:]
-            production.product_qty = amounts[production][0]
+            production.with_context(skip_compute_move_raw_ids=True).product_qty = amounts[production][0]
 
             next_seq = max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
 

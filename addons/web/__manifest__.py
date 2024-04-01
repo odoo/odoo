@@ -146,6 +146,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/dialog.xml',
             'web/static/src/legacy/js/core/owl_dialog.js',
             'web/static/src/legacy/js/core/popover.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/local_storage.js',
             'web/static/src/legacy/js/core/mixins.js',
@@ -302,6 +303,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
             'web/static/src/legacy/js/core/menu.js',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/public/lazyloader.js',
         ],
         'web.assets_frontend': [
@@ -470,6 +472,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
             ('remove', 'web/static/src/legacy/js/core/menu.js'),
+            ('remove', 'web/static/src/legacy/js/core/minimal_dom.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
         ],
         'web.assets_backend_prod_only': [
@@ -658,6 +661,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.qunit_suite_tests': [
             'web/static/tests/env_tests.js',
+            'web/static/tests/reactivity_tests.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/search/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),

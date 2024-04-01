@@ -138,6 +138,11 @@ class Web_Editor(http.Controller):
 
             :returns PNG image converted from given font
         """
+        # For custom icons, use the corresponding custom font
+        if icon.isdigit():
+            if int(icon) == 57467:
+                font = "/web/static/fonts/tiktok_only.woff"
+
         size = max(width, height, 1) if width else size
         width = width or size
         height = height or size
@@ -493,7 +498,7 @@ class Web_Editor(http.Controller):
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
-        excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+        excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         # First check the t-call-assets used in the related views
         url_infos = dict()

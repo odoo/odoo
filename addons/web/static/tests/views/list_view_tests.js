@@ -563,6 +563,22 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("list view with button with invisible: true attrs", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <button name="a" type="object" icon="fa-car" attrs="{'invisible': true}"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "th", 3);
+        assert.containsNone(target, "td.o_list_button button");
+    });
+
     QUnit.test("list view with adjacent buttons and optional field", async function (assert) {
         await makeView({
             type: "list",
@@ -3496,6 +3512,35 @@ QUnit.module("Views", (hooks) => {
             "No (1)"
         );
     });
+
+    QUnit.test(
+        "groups can be sorted when list is grouped by date with granularity",
+        async function (assert) {
+            serverData.models.foo.fields.date = { sortable: true };
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                groupBy: ["date:year"],
+                arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="date"/>
+                </tree>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.step(args.kwargs.orderby || "default order");
+                    }
+                },
+            });
+
+            assert.containsN(target, ".o_group_header", 2);
+            assert.containsNone(target, ".o_data_row");
+
+            await click(target.querySelector(".o_column_sortable[data-name='date']"));
+            assert.verifySteps(["default order", "date ASC"]);
+        }
+    );
 
     QUnit.test(
         "groups can't be sorted on aggregates if there is no record",
@@ -15138,11 +15183,11 @@ QUnit.module("Views", (hooks) => {
             patchWithCleanup(browser.localStorage, {
                 getItem(key) {
                     assert.step("getItem " + key);
-                    return forceLocalStorage ? "m2o" : this._super(arguments);
+                    return forceLocalStorage ? "m2o" : this._super(...arguments);
                 },
                 setItem(key, value) {
                     assert.step("setItem " + key + " to " + JSON.stringify(String(value)));
-                    return this._super(arguments);
+                    return this._super(...arguments);
                 },
             });
 
@@ -15215,6 +15260,87 @@ QUnit.module("Views", (hooks) => {
                     .is(":visible"),
                 "should have a visible reference field"
             );
+        }
+    );
+
+    QUnit.test(
+        "list view with optional fields from local storage being the empty array",
+        async function (assert) {
+            patchWithCleanup(browser.localStorage, {
+                getItem(key) {
+                    assert.step("getItem " + key);
+                    return this._super(...arguments);
+                },
+                setItem(key, value) {
+                    assert.step("setItem " + key + " to " + JSON.stringify(String(value)));
+                    return this._super(...arguments);
+                },
+            });
+
+            const verifyHeaders = (namedHeaders) => {
+                const headers = [...target.querySelectorAll(".o_list_table thead th")];
+                assert.hasClass(headers[0], "o_list_record_selector");
+                assert.hasClass(headers[headers.length - 1], "o_list_actions_header");
+                assert.equal(
+                    headers.length,
+                    namedHeaders.length + 2,
+                    `list has ${namedHeaders.length + 2} headers`
+                );
+                for (let i = 1; i < headers.length - 1; i++) {
+                    assert.equal(
+                        headers[i].dataset.name,
+                        namedHeaders[i - 1],
+                        `header at index ${i} is ${namedHeaders[i - 1]}`
+                    );
+                }
+            };
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Action 1",
+                    res_model: "foo",
+                    type: "ir.actions.act_window",
+                    views: [[42, "list"]],
+                    search_view_id: [1, "search"],
+                },
+            };
+            serverData.views = {
+                "foo,1,search": "<search></search>",
+                "foo,42,list": `
+                    <tree>
+                        <field name="foo"/>
+                        <field name="m2o" optional="hide"/>
+                        <field name="reference" optional="show"/>
+                    </tree>`,
+            };
+            const localStorageKey = "optional_fields,foo,list,42,foo,m2o,reference";
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1);
+
+            // verify initialization
+            assert.verifySteps(["getItem " + localStorageKey]);
+            verifyHeaders(["foo", "reference"]);
+            // open optional columns headers dropdown
+            await click(target.querySelector("table .o_optional_columns_dropdown button"));
+            assert.containsN(
+                target,
+                "div.o_optional_columns_dropdown span.dropdown-item",
+                2,
+                "dropdown has 2 optional column headers"
+            );
+            // disable optional field "reference" (no optional column enabled)
+            await click(
+                target.querySelectorAll(
+                    "div.o_optional_columns_dropdown span.dropdown-item input"
+                )[1]
+            );
+            assert.verifySteps(["setItem " + localStorageKey + ' to ""']);
+            verifyHeaders(["foo"]);
+            // mount again to ensure that active optional columns will not be reset while empty
+            await doAction(webClient, 1);
+            assert.verifySteps(["getItem " + localStorageKey]);
+            verifyHeaders(["foo"]);
         }
     );
 
