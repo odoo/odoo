@@ -29,3 +29,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         willis.parent_id = self.user_demo.partner_id.id
         self.start_tour("/", 'portal_load_homepage', login="portal")
         self.assertEqual(willis.phone, "+1 555 666 7788")
+
+    def test_03_skip_to_content(self):
+        self.start_tour("/", "skip_to_content", login="portal")
