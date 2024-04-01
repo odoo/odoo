@@ -5,6 +5,9 @@
             <attribute name="t-attf-class" add="#{request.env['res.lang']._get_data(code=request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
+        <xpath expr="//div[@id='wrapwrap']/header" position="before">
+            <a class="o_skip_to_content btn btn-primary rounded-0 visually-hidden-focusable position-absolute start-0" href="#wrap" tabindex="2" groups="!base.group_user">Skip to Content</a>
+        </xpath>
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
             <t t-cache="res_company">
                 <nav class="navbar navbar-expand navbar-light bg-light">
