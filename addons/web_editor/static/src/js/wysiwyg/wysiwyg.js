@@ -1929,14 +1929,18 @@ export class Wysiwyg extends Component {
                 return;
             }
             $image.transfo({document: this.odooEditor.document});
+            const destroyTransfo = () => {
+                $image.transfo('destroy');
+                $(this.odooEditor.document).off('mousedown', mousedown).off('mouseup', mouseup);
+                this.odooEditor.document.removeEventListener('keydown', keydown);
+            }
             const mouseup = () => {
                 $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
             };
             $(this.odooEditor.document).on('mouseup', mouseup);
             const mousedown = mousedownEvent => {
                 if (!$(mousedownEvent.target).closest('.transfo-container').length) {
-                    $image.transfo('destroy');
-                    $(this.odooEditor.document).off('mousedown', mousedown).off('mouseup', mouseup);
+                    destroyTransfo();
                 }
                 if ($(mousedownEvent.target).closest('#image-transform').length) {
                     $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
@@ -1944,6 +1948,13 @@ export class Wysiwyg extends Component {
                 $image.trigger('content_changed');
             };
             $(this.odooEditor.document).on('mousedown', mousedown);
+            const keydown = keydownEvent => {
+                if (keydownEvent.key === 'Escape') {
+                    keydownEvent.stopImmediatePropagation();
+                    destroyTransfo();
+                }
+            };
+            this.odooEditor.document.addEventListener('keydown', keydown);
         });
         $toolbar.find('#image-delete').click(e => {
             if (!this.lastMediaClicked) {
