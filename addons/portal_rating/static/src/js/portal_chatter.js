@@ -5,6 +5,7 @@ import PortalChatter from "@portal/js/portal_chatter";
 import { rpc } from "@web/core/network/rpc";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 /**
  * PortalChatter
@@ -294,13 +295,22 @@ PortalChatter.include({
         var messageIndex = $source.data("mes_index");
         var ratingId = this.messages[messageIndex].rating.id;
 
-        rpc('/website/rating/comment', {
-            "rating_id": ratingId,
-            "publisher_comment": '' // Empty publisher comment means no comment
-        }).then(function (res) {
-            self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
-            self._getCommentButton($source).removeClass("d-none");
-            self._getCommentContainer($source).empty();
+        this.call("dialog", "add", ConfirmationDialog, {
+            title: _t("Delete confirmation"),
+            body: _t("Are you sure you want to permanently delete this comment?"),
+            confirm: () => {
+                rpc("/website/rating/comment", {
+                    "rating_id": ratingId,
+                    "publisher_comment": "" // Empty publisher comment means no comment
+                }).then(function (res) {
+                    self.messages[messageIndex].rating = self._preprocessCommentData(res, messageIndex);
+                    self._getCommentButton($source).removeClass("d-none");
+                    self._getCommentContainer($source).empty();
+                });
+            },
+            confirmLabel: _t("Delete"),
+            cancel: () => {},
+            cancelLabel: _t("Discard"),
         });
     },
 
