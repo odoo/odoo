@@ -164,7 +164,7 @@ const LinkTools = Link.extend({
      * @returns {string}
      */
     _getLinkLabel(linkEl) {
-        return linkEl.innerText.trim().replaceAll("\u200B", "");
+        return linkEl.textContent.replaceAll("\u200B", "");
     },
     /**
      * @override
