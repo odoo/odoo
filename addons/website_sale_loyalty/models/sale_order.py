@@ -246,3 +246,10 @@ class SaleOrder(models.Model):
         lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
         lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
         return lines
+
+    def _check_carrier_quotation(self, **kwargs):
+        check = super()._check_carrier_quotation(**kwargs)
+        if check and not self.only_services:
+            self._update_programs_and_rewards()
+            self.validate_taxes_on_sales_order()
+        return check
