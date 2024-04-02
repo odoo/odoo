@@ -474,7 +474,16 @@ export class RecordList extends Array {
                 deleteCount,
                 ...newRecordsProxy.map((newRecordProxy) => toRaw(newRecordProxy)._raw.localId)
             );
-            recordList._proxy.data = list;
+            if (isOne(recordList) && start === 0 && deleteCount === 1) {
+                // avoid replacing whole list, to avoid triggering observers too much
+                if (list.length === 0) {
+                    recordList._proxy.data.pop();
+                } else {
+                    recordList._proxy.data[0] = list[0];
+                }
+            } else {
+                recordList._proxy.data = list;
+            }
             recordList._.syncLength(recordList);
             for (const oldRecordProxy of oldRecordsProxy) {
                 const oldRecord = toRaw(oldRecordProxy)._raw;
@@ -526,8 +535,7 @@ export class RecordList extends Array {
                 }
                 recordList._.insert(recordList, last, function recordListAddInsertOne(record) {
                     if (record.localId !== recordList.data[0]) {
-                        recordList.pop.call(recordList._proxy);
-                        recordList.push.call(recordList._proxy, record);
+                        recordList.splice.call(recordList._proxy, 0, 1, record);
                     }
                 });
                 return;

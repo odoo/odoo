@@ -17,6 +17,7 @@ export class ChannelSelector extends Component {
     static template = "discuss.ChannelSelector";
 
     setup() {
+        super.setup();
         this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.store = useState(useService("mail.store"));
         this.threadService = useState(useService("mail.thread"));

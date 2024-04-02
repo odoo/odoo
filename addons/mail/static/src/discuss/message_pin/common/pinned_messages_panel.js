@@ -19,6 +19,7 @@ export class PinnedMessagesPanel extends Component {
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {
+        super.setup();
         onWillStart(() => {
             this.props.thread.fetchPinnedMessages();
         });

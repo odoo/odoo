@@ -11,6 +11,7 @@ export class CallInvitations extends Component {
     static template = "discuss.CallInvitations";
 
     setup() {
+        super.setup();
         this.rtc = useState(useService("discuss.rtc"));
         this.store = useState(useService("mail.store"));
     }

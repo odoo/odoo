@@ -10,6 +10,7 @@ export class NotificationSettings extends Component {
     static template = "discuss.NotificationSettings";
 
     setup() {
+        super.setup();
         this.threadService = useState(useService("mail.thread"));
     }
 

@@ -19,6 +19,7 @@ export class FollowerList extends Component {
     static props = ["onAddFollowers?", "onFollowerChanged?", "thread", "dropdown"];
 
     setup() {
+        super.setup();
         this.action = useService("action");
         this.messaging = useState(useService("mail.messaging"));
         this.threadService = useState(useService("mail.thread"));

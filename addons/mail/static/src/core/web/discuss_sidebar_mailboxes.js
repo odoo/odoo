@@ -16,6 +16,7 @@ export class DiscussSidebarMailboxes extends Component {
     static components = { ThreadIcon };
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.threadService = useState(useService("mail.thread"));
     }

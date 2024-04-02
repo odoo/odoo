@@ -95,6 +95,7 @@ export class Message extends Component {
     static template = "mail.Message";
 
     setup() {
+        super.setup();
         rpc = rpcWithEnv(this.env);
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({

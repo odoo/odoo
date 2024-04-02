@@ -20,6 +20,7 @@ export class ActivityMarkAsDone extends Component {
     }
 
     setup() {
+        super.setup();
         this.threadService = useState(useService("mail.thread"));
         this.textArea = useRef("textarea");
         onMounted(() => {

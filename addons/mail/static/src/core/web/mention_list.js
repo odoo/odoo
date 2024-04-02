@@ -15,6 +15,7 @@ export class MentionList extends Component {
         type: { type: String },
     };
     setup() {
+        super.setup();
         this.state = useState({
             searchTerm: "",
             options: [],

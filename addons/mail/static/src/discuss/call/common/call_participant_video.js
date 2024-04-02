@@ -11,6 +11,7 @@ export class CallParticipantVideo extends Component {
     static template = "discuss.CallParticipantVideo";
 
     setup() {
+        super.setup();
         this.rtc = useState(useService("discuss.rtc"));
         this.root = useRef("root");
         onMounted(() => this._update());

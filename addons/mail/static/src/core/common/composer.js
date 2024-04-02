@@ -86,6 +86,7 @@ export class Composer extends Component {
     static template = "mail.Composer";
 
     setup() {
+        super.setup();
         rpc = rpcWithEnv(this.env);
         this.SEND_KEYBIND_TO_SEND = markup(
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })

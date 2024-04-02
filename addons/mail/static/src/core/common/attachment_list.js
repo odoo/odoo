@@ -19,6 +19,7 @@ export class AttachmentList extends Component {
     static template = "mail.AttachmentList";
 
     setup() {
+        super.setup();
         this.ui = useState(useService("ui"));
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;

@@ -15,6 +15,7 @@ export class AttachmentView extends Component {
     static props = ["threadId", "threadModel"];
 
     setup() {
+        super.setup();
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");

@@ -15,6 +15,7 @@ export class DiscussSidebarCallIndicator extends Component {
     static components = {};
 
     setup() {
+        super.setup();
         this.rtc = useState(useService("discuss.rtc"));
     }
 }

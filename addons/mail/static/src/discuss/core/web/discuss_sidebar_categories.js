@@ -27,6 +27,7 @@ export class DiscussSidebarCategories extends Component {
     static components = { ChannelSelector, ImStatus, ThreadIcon };
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.discussCoreWebService = useState(useService("discuss.core.web"));
         this.threadService = useState(useService("mail.thread"));

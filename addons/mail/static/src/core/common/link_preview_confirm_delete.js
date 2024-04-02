@@ -19,6 +19,7 @@ export class LinkPreviewConfirmDelete extends Component {
     static template = "mail.LinkPreviewConfirmDelete";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         rpc = rpcWithEnv(this.env);
     }

@@ -12,6 +12,7 @@ export class CallActionList extends Component {
     static template = "discuss.CallActionList";
 
     setup() {
+        super.setup();
         this.rtc = useState(useService("discuss.rtc"));
     }
 

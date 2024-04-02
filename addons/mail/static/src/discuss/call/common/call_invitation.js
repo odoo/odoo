@@ -7,6 +7,7 @@ export class CallInvitation extends Component {
     static template = "discuss.CallInvitation";
 
     setup() {
+        super.setup();
         this.threadService = useService("mail.thread");
         this.rtc = useService("discuss.rtc");
     }

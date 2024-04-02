@@ -23,6 +23,7 @@ export class SearchMessagesPanel extends Component {
     static template = "mail.SearchMessagesPanel";
 
     setup() {
+        super.setup();
         this.state = useState({ searchTerm: "", searchedTerm: "" });
         this.messageSearch = useMessageSearch(this.props.thread);
         useAutofocus();

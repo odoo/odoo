@@ -20,6 +20,7 @@ export class DiscussClientAction extends Component {
     static template = "mail.DiscussClientAction";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.messaging = useState(useService("mail.messaging"));
         this.threadService = useService("mail.thread");

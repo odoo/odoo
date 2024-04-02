@@ -24,6 +24,7 @@ export class NavigableList extends Component {
     static defaultProps = { position: "bottom", isLoading: false };
 
     setup() {
+        super.setup();
         this.rootRef = useRef("root");
         this.state = useState({
             activeIndex: null,
