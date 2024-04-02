@@ -87,6 +87,19 @@ export class Thread extends Record {
         onDelete: (r) => r.delete(),
         sort: (m1, m2) => m1.id - m2.id,
     });
+    typingMembers = Record.many("ChannelMember", { inverse: "threadAsTyping" });
+    otherTypingMembers = Record.many("ChannelMember", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.typingMembers.filter((member) => !member.persona?.eq(this._store.self));
+        },
+    });
+    hasOtherMembersTyping = Record.attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.otherTypingMembers.length > 0;
+        },
+    });
     rtcSessions = Record.many("RtcSession", {
         /** @this {import("models").Thread} */
         onDelete(r) {

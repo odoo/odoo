@@ -1,4 +1,6 @@
 import { Record } from "@mail/core/common/record";
+import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 export class ChannelMember extends Record {
@@ -32,6 +34,20 @@ export class ChannelMember extends Record {
     });
     fetched_message_id = Record.one("Message");
     seen_message_id = Record.one("Message");
+    threadAsTyping = Record.one("Thread", {
+        onAdd() {
+            browser.clearTimeout(this.typingTimeoutId);
+            this.typingTimeoutId = browser.setTimeout(
+                () => (this.threadAsTyping = undefined),
+                OTHER_LONG_TYPING
+            );
+        },
+        onDelete() {
+            browser.clearTimeout(this.typingTimeoutId);
+        },
+    });
+    /** @type {number} */
+    typingTimeoutId;
 
     /**
      * @returns {string}

@@ -47,7 +47,6 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
-        this.typingService = useState(useService("discuss.typing"));
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
