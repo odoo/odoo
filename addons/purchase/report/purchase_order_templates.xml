@@ -37,25 +37,31 @@
                     <strong>Your Order Reference</strong>
                     <div t-field="o.partner_ref"/>
                 </div>
-                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col">
-                    <strong>Order Date</strong>
-                    <div t-field="o.date_approve"/>
+                <div t-if="o.state in ['purchase','done'] and o.date_approve" class="col-3 bm-2">
+                    <strong>Order Date:</strong>
+                    <p t-field="o.date_approve" t-options="{'date_only': 'true'}" class="m-0"/>
                 </div>
-                <div t-elif="o.date_order" class="col">
-                    <strong>Order Deadline</strong>
-                    <div t-field="o.date_order"/>
+                <div t-elif="o.date_order" class="col-2 bm-2">
+                    <strong>Order Deadline:</strong>
+                    <p t-field="o.date_order" t-options="{'date_only': 'true'}" class="m-0"/>
+                </div>
+                <div t-if="o.date_planned" class="col-2 bm-2">
+                    <strong>Expected Arrival:</strong>
+                    <p t-field="o.date_planned" t-options="{'date_only': 'true'}" class="m-0"/>
                 </div>
             </div>
 
             <table class="o_has_total_table table o_main_table table-borderless">
                 <thead>
                     <tr>
-                        <th name="th_description" class="text-start">Description</th>
-                        <th name="th_taxes">Taxes</th>
-                        <th name="th_date_req" class="text-center">Date Req.</th>
-                        <th name="th_quantity" class="text-end">Qty</th>
-                        <th name="th_price_unit" class="text-end">Unit Price</th>
-                        <th name="th_subtotal" class="text-end">Amount</th>
+                        <th name="th_description" class="text-start"><strong>Description</strong></th>
+                        <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
+                        <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
+                        <th name="th_discount" class="text-end"><strong>Disc.</strong></th>
+                        <th name="th_taxes" class="text-end"><strong>Taxes</strong></th>
+                        <th name="th_subtotal" class="text-end">
+                            <strong>Amount</strong>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,15 +71,8 @@
 
                         <tr t-att-class="'fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
-                                <td id="product">
+                                <td id="product" class="text-start">
                                     <span t-field="line.name"/>
-                                </td>
-                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
-                                <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
-                                </td>
-                                <td class="text-center">
-                                    <span t-field="line.date_planned"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.product_qty"/>
@@ -84,6 +83,12 @@
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_unit"/>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-align-bottom"><span t-field="line.discount"/>%</span>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="', '.join(map(lambda x: x.description or x.name, line.taxes_id))"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_subtotal"
@@ -129,6 +134,9 @@
 
             <p t-field="o.notes" class="mt-4"/>
             <div class="oe_structure"/>
+
+            <strong>Payment Terms: </strong>
+            <span t-field="o.payment_term_id" class="mt-4"></span>
 
             <t t-set="base_address" t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
             <t t-set="portal_url" t-value="base_address + '/my/purchase/' + str(o.id) + '#portal_connect_software_modal'"/>
