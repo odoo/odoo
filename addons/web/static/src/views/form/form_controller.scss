@@ -238,7 +238,9 @@
 
     // Sheet BG
     .o_form_sheet_bg {
-        --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
+        @include media-only(screen) {
+            --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
+        }
 
         padding-top: map-get($spacers, 2);
         padding-left: var(--formView-sheetBg-padding-x);
@@ -537,10 +539,20 @@
                     // Full width on first x2many or on second x2many if first is invisible
                     &:not(.o_group), &.o_invisible_modifier {
                         .o_field_x2many.o_field_x2many_list .o_list_renderer {
-                            --ListRenderer-margin-x: var(--notebook-margin-x);
-                            --ListRenderer-table-padding-x: var(--notebook-padding-x);
+                            @include media-only(screen) {
+                                --ListRenderer-margin-x: var(--notebook-margin-x);
+                                --ListRenderer-table-padding-x: var(--notebook-padding-x);
 
-                            margin-top: -$o-horizontal-padding;
+                                margin-top: -$o-horizontal-padding;
+                            }
+
+                            @include media-only(print) {
+                                --ListRenderer-margin-x: 0;
+                                --ListRenderer-table-padding-x: var(--notebook-padding-x);
+
+                                margin-top: -$o-horizontal-padding * 0.5;
+                            }
+
 
                             // use original padding-left for handle cell in editable list
                             tr > :first-child.o_handle_cell {

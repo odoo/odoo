@@ -212,7 +212,7 @@ export class FormCompiler extends ViewCompiler {
     compileForm(el, params) {
         const sheetNode = el.querySelector("sheet");
         const displayClasses = sheetNode
-            ? `d-flex {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
+            ? `d-flex d-print-block {{ __comp__.uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`
             : "d-block";
         const stateClasses =
             "{{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";

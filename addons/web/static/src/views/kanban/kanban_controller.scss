@@ -1,7 +1,9 @@
 // ------- Kanban View -------
 .o_kanban_view {
     @include media-breakpoint-down(md) {
-        --ControlPanel-border-bottom: none;
+        @include media-only(screen) {
+            --ControlPanel-border-bottom: none;
+        }
 
         &.o_field_x2many_kanban .o_kanban_ghost {
             display: none;
@@ -60,8 +62,16 @@
     padding: var(--Kanban-padding);
     gap: var(--Kanban-gap);
 
-    @include media-breakpoint-down(md) {
-        --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
+    @include media-only(print) {
+        --Kanban-gap: #{map-get($spacers, 2)};
+        --KanbanGroup-padding-h: 0;
+        --KanbanRecord-margin-h: 0;
+    }
+
+    @include media-only(print) {
+        @include media-breakpoint-down(md) {
+            --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
+        }
     }
 
     // New Kanban
@@ -79,6 +89,10 @@
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
+
+        @include media-only(print) {
+            font-size: 0.8rem;
+        }
 
         &:not(.o_kanban_ghost) {
             padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);

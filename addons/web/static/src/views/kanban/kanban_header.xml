@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanHeader">
-        <div class="o_kanban_header position-sticky top-0 z-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-2' : 'py-2' }}">
+        <div class="o_kanban_header position-sticky top-0 z-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'd-print-none pt-2' : 'py-2 pt-print-0' }}">
             <div class="o_kanban_header_title position-relative d-flex lh-lg">
                 <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1"
                      t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
@@ -15,7 +15,7 @@
                       t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
                     />
                 <t t-if="env.isSmall or !group.isFolded">
-                    <div class="o_kanban_config">
+                    <div class="o_kanban_config d-print-none">
                         <Dropdown menuClass="'o-dropdown--kanban-config-menu'" position="'bottom-end'">
                             <button class="btn px-2">
                                 <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
@@ -29,7 +29,7 @@
                             </t>
                         </Dropdown>
                     </div>
-                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
+                    <button t-if="canQuickCreate()" class="o_kanban_quick_add d-print-none btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
                         <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>

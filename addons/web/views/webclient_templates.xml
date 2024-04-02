@@ -293,15 +293,17 @@
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
                     }
                 </script>
+                <t t-call-assets="web.assets_web_print" media="print" t-js="false"/>
+
                 <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
-                    <t t-call-assets="web.assets_web_dark"/>
+                    <t t-call-assets="web.assets_web_dark" media="screen"/>
                 </t>
                 <t t-else="">
-                    <t t-call-assets="web.assets_web"/>
+                    <t t-call-assets="web.assets_web" media="screen"/>
                 </t>
-                <t t-call="web.conditional_assets_tests"/>
+                <t t-call="web.conditional_assets_tests" media="screen"/>
             </t>
-            <t t-set="head" t-value="head_web + (head or '')"/>
+            <t t-set="head" t-value="head_web + (head or '')" media="screen"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
         </t>
     </template>

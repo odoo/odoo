@@ -20,7 +20,7 @@
                         <t t-foreach="columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'"
                                 t-att-data-name="column.name"
-                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
+                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover w-print-auto'"
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
@@ -41,11 +41,11 @@
                                           t-on-pointerdown.stop.prevent="this.columnWidths.onStartResize"/>
                                 </t>
                             </th>
-                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view"/>
-                        <th t-if="hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header position-sticky end-0">
-                            <div t-if="displayOptionalFields" class="o_optional_columns_dropdown text-center border-top-0">
+                        <th t-if="hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
+                        <th t-if="hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0">
+                            <div t-if="displayOptionalFields" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'">
                                     <button class="btn p-0" tabindex="-1">
                                         <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
@@ -88,10 +88,11 @@
                             <td t-if="aggregate" class="o_list_number" >
                                 <span t-esc="aggregate.value" t-att-data-tooltip="aggregate.help"/>
                             </td>
+                            <td t-elif="column.type != 'field'" class="w-print-auto"/>
                             <td t-else=""/>
                         </t>
-                        <td t-if="props.onOpenFormView"/>
-                        <td t-if="displayOptionalFields or activeActions.onDelete" />
+                        <td t-if="props.onOpenFormView" class="w-print-0 p-print-0"/>
+                        <td t-if="displayOptionalFields or activeActions.onDelete" class="w-print-0 p-print-0" />
                     </tr>
                 </tfoot>
             </table>
@@ -246,7 +247,7 @@
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalInvisible(button.invisible, record)"
                                 className="button.className"
@@ -271,7 +272,7 @@
             </t>
 
             <t t-if="props.onOpenFormView">
-                <td class="o_list_record_open_form_view text-center"
+                <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                     t-on-click.stop="() => isX2Many and record.isNew ? this.displaySaveNotification() : props.onOpenFormView(record)"
                     tabindex="-1"
@@ -288,12 +289,12 @@
             <t t-set="hasX2ManyAction" t-value="isX2Many and (useUnlink ? activeActions.unlink : activeActions.delete)" />
             <t t-if="displayOptionalFields or hasX2ManyAction">
                 <t t-if="hasX2ManyAction">
-                    <td class="o_list_record_remove text-center"
+                    <td class="o_list_record_remove w-print-0 p-print-0 text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         t-on-click.stop="() => this.onDeleteRecord(record)"
                         tabindex="-1"
                     >
-                        <button class="fa"
+                        <button class="fa d-print-none"
                             t-att-class="{
                                 'fa-trash-o': !useUnlink and activeActions.delete,
                                 'fa-times': useUnlink and activeActions.unlink,
@@ -304,7 +305,7 @@
                         />
                     </td>
                 </t>
-                <td t-else="" tabindex="-1" />
+                <td t-else="" tabindex="-1" class="w-print-0 p-print-0"/>
             </t>
         </tr>
     </t>
