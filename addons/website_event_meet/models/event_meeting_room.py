@@ -52,3 +52,9 @@ class EventMeetingRoom(models.Model):
             ("room_participant_count", "=", 0),
             ("room_last_activity", "<", fields.Datetime.now() - self._DELAY_CLEAN),
         ]).active = False
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.event_id.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/event/{slug(self.event_id)}/meeting_room/{slug(self)}')
