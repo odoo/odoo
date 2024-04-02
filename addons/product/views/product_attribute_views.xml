@@ -21,12 +21,14 @@
             <field name="number_related_products" invisible="1"/>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button class="oe_stat_button" name="action_open_related_products"
-                            type="object" icon="fa-bars"
+                    <button name="action_open_product_template_attribute_lines"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
                             invisible="not number_related_products">
                         <div class="o_stat_info">
                             <span class="o_stat_value"><field name="number_related_products"/></span>
-                            <span class="o_stat_text">Related Products</span>
+                            <span class="o_stat_text">Products</span>
                         </div>
                     </button>
                 </div>
@@ -35,7 +37,10 @@
                         <label for="name" string="Attribute Name"/>
                         <field name="name" nolabel="1"/>
                         <field name="display_type" widget="radio"/>
-                        <field name="create_variant" widget="radio" readonly="number_related_products != 0"/>
+                        <field name="create_variant"
+                               widget="radio"
+                               readonly="number_related_products != 0 or display_type == 'multi'"
+                               force_save="1"/>
                     </group>
                 </group>
                 <notebook>
@@ -45,14 +50,24 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="is_custom" groups="product.group_product_variant" column_invisible="parent.display_type == 'multi'"/>
-                                <field name="html_color" column_invisible="parent.display_type != 'color'" invisible="image" widget="color"/>
-                                <field name="image"
-                                       class="oe_avatar text-start float-none"
+                                <field name="is_custom"
+                                       column_invisible="parent.display_type == 'multi'"/>
+                                <field name="html_color"
+                                       widget="color"
                                        column_invisible="parent.display_type != 'color'"
+                                       invisible="image"/>
+                                <field name="image"
+                                       widget="image"
                                        options="{'size': [70, 70]}"
-                                       widget="image"/>
+                                       class="oe_avatar text-start float-none"
+                                       column_invisible="parent.display_type != 'color'"/>
                                 <field name="default_extra_price"/>
+                                <button name="action_open_product_template_attribute_value"
+                                        type="object"
+                                        string="View products"
+                                        class="w-100 text-end"
+                                        column_invisible="parent.number_related_products &lt; 1"
+                                        invisible="not id"/>
                             </tree>
                         </field>
                     </page>
@@ -96,7 +111,8 @@
         <field name="name">product.template.attribute.value.view.tree</field>
         <field name="model">product.template.attribute.value</field>
         <field name="arch" type="xml">
-            <tree string="Attributes" create="0" delete="0">
+            <tree string="Attributes" create="0" delete="0" multi_edit="1">
+                <field name="product_tmpl_id" string="Product" column_invisible="context.get('product_invisible', False)"/>
                 <field name="attribute_id" optional="hide"/>
                 <field name="name"/>
                 <field name="display_type" optional="hide"/>

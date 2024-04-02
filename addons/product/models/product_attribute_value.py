@@ -36,8 +36,8 @@ class ProductAttributeValue(models.Model):
 
     default_extra_price = fields.Float()
     is_custom = fields.Boolean(
-        string="Is custom value",
-        help="Allow users to input custom values for this attribute value")
+        string="Free text",
+        help="Allow customers to set their own value")
     html_color = fields.Char(
         string="Color",
         help="Here you can set a specific HTML color index (e.g. #ff0000)"
@@ -125,3 +125,12 @@ class ProductAttributeValue(models.Model):
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
+
+    def action_open_product_template_attribute_value(self):
+        return {
+            'type': 'ir.actions.act_window',
+            "name": _("Product Variant Values"),
+            'res_model': 'product.template.attribute.value',
+            'view_mode': 'tree',
+            'domain': [('product_attribute_value_id.id', '=', self.id)],
+        }

@@ -265,5 +265,6 @@ class ProductTemplateAttributeLine(models.Model):
             ],
             'context': {
                 'search_default_active': 1,
+                'product_invisible': True,
             },
         }

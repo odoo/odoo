@@ -33,7 +33,7 @@ class ProductTemplateAttributeValue(models.Model):
         required=True, ondelete='cascade', index=True)
     # configuration fields: the price_extra and the exclusion rules
     price_extra = fields.Float(
-        string="Value Price Extra",
+        string="Extra Price",
         default=0.0,
         digits='Product Price',
         help="Extra price for the variant with this attribute value on sale price."
