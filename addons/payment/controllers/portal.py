@@ -312,10 +312,12 @@ class PaymentPortal(portal.CustomerPortal):
         # Prepare create values
         if flow in ['redirect', 'direct']:  # Direct payment or payment with redirection
             provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
+            payment_method_sudo = request.env['payment.method'].sudo().browse(payment_method_id)
             token_id = None
             tokenize = bool(
                 # Don't tokenize if the user tried to force it through the browser's developer tools
                 provider_sudo.allow_tokenization
+                and payment_method_sudo.support_tokenization
                 # Token is only created if required by the flow or requested by the user
                 and (provider_sudo._is_tokenization_required(**kwargs) or tokenization_requested)
             )
