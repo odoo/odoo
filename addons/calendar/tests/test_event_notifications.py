@@ -179,13 +179,12 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
         self.assertEqual(len(capt.records), 1)
         self.assertLessEqual(capt.records.call_at, now)
-
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
-                'message_type': 'user_notification',
-                'subtype': 'mail.mt_note',
-            }):
-                self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder()
+            self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=25))._send_reminder()
+            self.env.flush_all()
+            new_messages = self.env['mail.message'].search([('model', '=', 'calendar.event'), ('res_id', '=', self.event.id), ('subject', '=', 'test event - Reminder')])
+            user_message = new_messages.filtered(lambda x: self.event.user_id.partner_id in x.partner_ids)
+            self.assertTrue(user_message, "Organizer must receive a reminder")
 
     def test_email_alarm_recurrence(self):
         # test that only a single cron trigger is created for recurring events.

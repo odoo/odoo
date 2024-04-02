@@ -172,11 +172,13 @@ class Attendee(models.Model):
     def _should_notify_attendee(self):
         """ Utility method that determines if the attendee should be notified.
             By default, we do not want to notify (aka no message and no mail) the current user
-            if he is part of the attendees.
+            if he is part of the attendees. But for reminders, mail_notify_author could be forced
             (Override in appointment to ignore that rule and notify all attendees if it's an appointment)
         """
         self.ensure_one()
-        return self.partner_id != self.env.user.partner_id
+        partner_not_sender = self.partner_id != self.env.user.partner_id
+        mail_notify_author = self.env.context.get('mail_notify_author')
+        return partner_not_sender or mail_notify_author
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """
