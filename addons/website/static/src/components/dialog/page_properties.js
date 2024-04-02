@@ -110,18 +110,7 @@ export class DeletePageDialog extends Component {
 
 export class DuplicatePageDialog extends Component {
     static components = { WebsiteDialog };
-    static template = xml`
-    <WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-        <div class="mb-3 row">
-            <label class="col-form-label col-md-3">
-                Page Name
-            </label>
-            <div class="col-md-9">
-                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
-            </div>
-        </div>
-    </WebsiteDialog>
-    `;
+    static template = "website.DuplicatePageDialog";
     static props = {
         onDuplicate: Function,
         close: Function,
