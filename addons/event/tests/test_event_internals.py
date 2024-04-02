@@ -84,7 +84,7 @@ class TestEventData(TestEventInternalsCommon):
             event.write({
                 'date_begin': datetime(2020, 1, 31, 14, 30, 0),
                 'date_end': datetime(2020, 2, 1, 2, 0, 0),
-                'date_tz': 'Mexico/General'
+                'date_tz': 'America/Mexico_City'
             })
             self.assertTrue(event.is_one_day)
 
@@ -96,7 +96,7 @@ class TestEventData(TestEventInternalsCommon):
         event.write({
             'date_begin': datetime(2020, 1, 31, 14, 30, 0),
             'date_end': datetime(2020, 2, 1, 2, 0, 0),
-            'date_tz': 'Mexico/General'
+            'date_tz': 'America/Mexico_City'
         })
         self.assertTrue(event.is_one_day)
         self.assertFalse(event.is_ongoing)

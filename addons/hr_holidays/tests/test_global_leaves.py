@@ -111,7 +111,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         """
         calendar_asia = self.env['resource.calendar'].create({
             'name': 'Asia calendar',
-            'tz': 'Asia/Calcutta', # UTC +05:30
+            'tz': 'Asia/Kolkata', # UTC +05:30
             'hours_per_day': 8.0,
             'attendance_ids': []
         })
@@ -124,12 +124,12 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         # Expectation:
         # 6:00:00 in UTC (data from the browser) --> 8:00:00 for Europe/Brussel (UTC +02:00)
-        # 8:00:00 for Asia/Calcutta (UTC +05:30) --> 2:30:00 in UTC
+        # 8:00:00 for Asia/Kolkata (UTC +05:30) --> 2:30:00 in UTC
         self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 2, 30))
         self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 11, 30))
         # Note:
         # The user in Europe/Brussels timezone see 4:30 and not 2:30 because he is in UTC +02:00.
-        # The user in Asia/Calcutta timezone (determined via the browser) see 8:00 because he is in UTC +05:30
+        # The user in Asia/Kolkata timezone (determined via the browser) see 8:00 because he is in UTC +05:30
 
     def test_global_leave_number_of_days_with_new(self):
         """

@@ -216,7 +216,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'mon': True,
             'count': '2',
-            'event_tz': 'US/Eastern',  # DST change on 2002/10/27
+            'event_tz': 'America/New_York',  # DST change on 2002/10/27
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         self.assertEventDates(recurrence.calendar_event_ids, [
@@ -226,9 +226,9 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     def test_ambiguous_dst_time_winter(self):
         """ Test hours stays the same, regardless of DST changes """
-        eastern = pytz.timezone('US/Eastern')
+        eastern = pytz.timezone('America/New_York')
         dt = eastern.localize(datetime(2002, 10, 20, 1, 30, 00)).astimezone(pytz.utc).replace(tzinfo=None)
-        # Next occurence happens at 1:30am on 27th Oct 2002 which happened twice in the US/Eastern
+        # Next occurence happens at 1:30am on 27th Oct 2002 which happened twice in the America/New_York
         # timezone when the clocks where put back at the end of Daylight Saving Time
         self.event.start = dt
         self.event.stop = dt + relativedelta(hours=1)
@@ -237,7 +237,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'sun': True,
             'count': '2',
-            'event_tz': 'US/Eastern'  # DST change on 2002/4/7
+            'event_tz': 'America/New_York'  # DST change on 2002/4/7
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEqual(events.mapped('duration'), [1, 1])
@@ -248,10 +248,10 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     def test_ambiguous_dst_time_spring(self):
         """ Test hours stays the same, regardless of DST changes """
-        eastern = pytz.timezone('US/Eastern')
+        eastern = pytz.timezone('America/New_York')
         dt = eastern.localize(datetime(2002, 3, 31, 2, 30, 00)).astimezone(pytz.utc).replace(tzinfo=None)
         # Next occurence happens 2:30am on 7th April 2002 which never happened at all in the
-        # US/Eastern timezone, as the clocks where put forward at 2:00am skipping the entire hour
+        # America/New_York timezone, as the clocks where put forward at 2:00am skipping the entire hour
         self.event.start = dt
         self.event.stop = dt + relativedelta(hours=1)
         self.event._apply_recurrence_values({
@@ -259,7 +259,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'weekly',
             'sun': True,
             'count': '2',
-            'event_tz': 'US/Eastern'  # DST change on 2002/4/7
+            'event_tz': 'America/New_York'  # DST change on 2002/4/7
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEqual(events.mapped('duration'), [1, 1])
