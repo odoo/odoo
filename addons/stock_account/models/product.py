@@ -118,13 +118,93 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
 
+<<<<<<< 8066e9f6a2d48ffce4a6a61f9a956eac8b3f04c0
     @api.depends_context('to_date', 'company')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
 
+||||||| 6baa1d0029350d1b1d73cd5a79de66496ff2e33f
+    def write(self, vals):
+        if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
+            self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
+        return super(ProductProduct, self).write(vals)
+
+    @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date', 'company')
+    def _compute_value_svl(self):
+        """Compute totals of multiple svl related values"""
+        company_id = self.env.company
+        self.company_currency_id = company_id.currency_id
+        domain = [
+            *self.env['stock.valuation.layer']._check_company_domain(company_id),
+            ('product_id', 'in', self.ids),
+        ]
+        if self.env.context.get('to_date'):
+            to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
+            domain.append(('create_date', '<=', to_date))
+        groups = self.env['stock.valuation.layer']._read_group(
+            domain,
+            groupby=['product_id'],
+            aggregates=['value:sum', 'quantity:sum'],
+        )
+        # Browse all products and compute products' quantities_dict in batch.
+        group_mapping = {product: aggregates for product, *aggregates in groups}
+=======
+    def write(self, vals):
+        if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
+            self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
+        return super(ProductProduct, self).write(vals)
+
+    def _get_valuation_layer_group_domain(self):
+        company_id = self.env.company.id
+        domain = [
+            *self.env['stock.valuation.layer']._check_company_domain(company_id),
+            ('product_id', 'in', self.ids),
+        ]
+        if self.env.context.get('to_date'):
+            to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
+            domain.append(('create_date', '<=', to_date))
+        return domain
+
+    def _get_valuation_layer_group_fields_aggregate(self):
+        return ['value:sum', 'quantity:sum']
+
+    def _get_valuation_layer_groups(self):
+        domain = self._get_valuation_layer_group_domain()
+        group_fields_aggregate = self._get_valuation_layer_group_fields_aggregate()
+        return self.env['stock.valuation.layer']._read_group(
+            domain,
+            groupby=['product_id'],
+            aggregates=group_fields_aggregate,
+        )
+
+    def _prepare_valuation_layer_field_values(self, aggregates):
+        self.ensure_one()
+        value_sum, quantity_sum = aggregates
+        value_svl = self.env.company.currency_id.round(value_sum)
+        avg_cost = 0
+        if not float_is_zero(quantity_sum, precision_rounding=self.uom_id.rounding):
+            avg_cost = value_svl / quantity_sum
+        return {
+            "value_svl": value_svl,
+            "quantity_svl": quantity_sum,
+            "avg_cost": avg_cost,
+            "total_value": avg_cost * self.sudo(False).qty_available
+        }
+
+    @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date', 'company')
+    def _compute_value_svl(self):
+        """Compute totals of multiple svl related values"""
+        self.company_currency_id = self.env.company.currency_id
+        valuation_layer_groups = self._get_valuation_layer_groups()
+        # Browse all products and compute products' quantities_dict in batch.
+        group_mapping = {product: aggregates for product, *aggregates in valuation_layer_groups}
+>>>>>>> 63bf32523a6645f040d6a94bf2bd657fe1da593d
         for product in self:
+<<<<<<< 8066e9f6a2d48ffce4a6a61f9a956eac8b3f04c0
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             qty_available = product.sudo(False).with_context(at_date=at_date).qty_available
             if product.lot_valuated:
@@ -151,6 +231,21 @@ class ProductProduct(models.Model):
         if old_price:
             self._change_standard_price(old_price)
         return res
+||||||| 6baa1d0029350d1b1d73cd5a79de66496ff2e33f
+            value_sum, quantity_sum = group_mapping.get(product._origin, (0, 0))
+            value_svl = company_id.currency_id.round(value_sum)
+            avg_cost = 0
+            if not float_is_zero(quantity_sum, precision_rounding=product.uom_id.rounding):
+                avg_cost = value_svl / quantity_sum
+            product.value_svl = value_svl
+            product.quantity_svl = quantity_sum
+            product.avg_cost = avg_cost
+            product.total_value = avg_cost * product.sudo(False).qty_available
+=======
+            aggregates = group_mapping.get(product._origin, (0, 0))
+            vals = product._prepare_valuation_layer_field_values(aggregates)
+            product.update(vals)
+>>>>>>> 63bf32523a6645f040d6a94bf2bd657fe1da593d
 
     # -------------------------------------------------------------------------
     # Private
