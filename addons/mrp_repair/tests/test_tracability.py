@@ -7,11 +7,6 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @tagged('post_install', '-at_install')
 class TestRepairTraceability(TestMrpCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-
     def test_tracking_repair_production(self):
         """
         Test that removing a tracked component with a repair does not block the flow of using that component in another
@@ -99,9 +94,6 @@ class TestRepairTraceability(TestMrpCommon):
             mo.button_mark_done()
             return mo
 
-
-        stock_location = self.env.ref('stock.stock_location_stock')
-
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
             'is_storable': True,
@@ -115,7 +107,9 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': component.id,
             'name': 'USN01',
         })
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.env['stock.quant']._update_available_quantity(
+            component, self.stock_location, 1, lot_id=sn_lot
+        )
 
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')

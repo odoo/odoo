@@ -421,8 +421,8 @@ class TestOldRules(TestStockCommon):
         partners = self.env['res.partner'].search([], limit=2)
         partner0 = partners[0]
         partner1 = partners[1]
-        procurement_group1 = self.env['procurement.group'].create({'partner_id': partner0.id})
-        procurement_group2 = self.env['procurement.group'].create({'partner_id': partner1.id})
+        procurement_group1 = self.env['procurement.group'].create({'partner_id': partner0.id, 'name': 'p1'})
+        procurement_group2 = self.env['procurement.group'].create({'partner_id': partner1.id, 'name': 'p2'})
 
         move1 = self.env['stock.move'].create({
             'name': 'first out move',
