@@ -14,6 +14,7 @@ export class ActivityMenu extends Component {
     static template = "mail.ActivityMenu";
 
     setup() {
+        super.setup();
         this.discussSystray = useDiscussSystray();
         this.store = useState(useService("mail.store"));
         this.action = useService("action");
@@ -46,7 +47,7 @@ export class ActivityMenu extends Component {
             this.action.doAction("mail.mail_activity_without_access_action", {
                 additionalContext: {
                     active_ids: group.activity_ids,
-                    active_model: 'mail.activity',
+                    active_model: "mail.activity",
                 },
             });
             return;

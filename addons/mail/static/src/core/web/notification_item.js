@@ -31,6 +31,7 @@ export class NotificationItem extends Component {
     static template = "mail.NotificationItem";
 
     setup() {
+        super.setup();
         this.ui = useState(useService("ui"));
         this.markAsReadRef = useRef("markAsRead");
         this.rootHover = useHover("root");

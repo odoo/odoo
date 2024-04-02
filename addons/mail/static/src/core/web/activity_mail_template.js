@@ -18,6 +18,7 @@ export class ActivityMailTemplate extends Component {
     static template = "mail.ActivityMailTemplate";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
     }
 

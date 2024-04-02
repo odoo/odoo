@@ -15,6 +15,7 @@ export class RecipientList extends Component {
     static props = ["thread", "close?"];
 
     setup() {
+        super.setup();
         this.threadService = useState(useService("mail.thread"));
         this.loadMoreState = useVisible("load-more", () => {
             if (this.loadMoreState.isVisible) {

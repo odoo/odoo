@@ -14,6 +14,7 @@ export class DiscussSidebarStartMeeting extends Component {
     static components = {};
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
     }
 

@@ -1,10 +1,12 @@
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     contains,
     defineMailModels,
     insertText,
+    observeRenders,
     openDiscuss,
+    prepareObserveRenders,
     start,
     startServer,
     step,
@@ -13,6 +15,7 @@ import {
 import { onWillRender } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Message } from "@mail/core/common/message";
+import { Composer } from "@mail/core/common/composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -32,11 +35,12 @@ test("posting new message should only render relevant part", async () => {
         );
     }
     messageIds.pop(); // remove last as it might need re-render (it was the newest message before)
-    let messagePosted = false;
+    let posting = false;
+    prepareObserveRenders();
     patchWithCleanup(Message.prototype, {
         setup() {
             onWillRender(() => {
-                if (messagePosted) {
+                if (posting) {
                     if (messageIds.includes(this.message.id)) {
                         throw new Error(
                             "Should not re-render old messages again on posting a new message"
@@ -56,7 +60,13 @@ test("posting new message should only render relevant part", async () => {
     await assertSteps(messageIds.map((id) => `${id}`)); // all messages rendered
     await contains(".o-mail-Message", { count: 10 });
     await insertText(".o-mail-Composer-input", "Test");
-    messagePosted = true;
+    const stopObserve = observeRenders();
+    posting = true;
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 11 });
+    posting = false;
+    const result = stopObserve();
+    // LessThan because renders could be batched
+    expect(result.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
+    expect(result.get(Message)).toBeLessThan(4); // 3|2: (new temp msg) + new genuine msg + prev msg -- new temp msg usually batched destroyed
 });

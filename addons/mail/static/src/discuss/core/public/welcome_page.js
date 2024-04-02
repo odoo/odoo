@@ -10,6 +10,7 @@ export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.personaService = useService("mail.persona");
         this.state = useState({

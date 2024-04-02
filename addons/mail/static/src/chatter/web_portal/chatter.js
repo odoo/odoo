@@ -38,6 +38,7 @@ export class Chatter extends Component {
     static defaultProps = { threadId: false };
 
     setup() {
+        super.setup();
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
         this.threadService = useService("mail.thread");

@@ -58,6 +58,7 @@ import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
+import { Component, onRendered, onWillDestroy, status } from "@odoo/owl";
 
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
@@ -527,4 +528,57 @@ export function prepareRegistriesWithCleanup() {
     registryNamesToCloneWithCleanup.forEach((registryName) =>
         cloneRegistryWithCleanup(registry.category(registryName))
     );
+}
+
+const observeRenderResults = new Map();
+let nextObserveRenderResults = 0;
+/**
+ * Patch component `onWillRender` to track amount of renders.
+ * This only prepares with the patching. To effectively observe the amount of renders,
+ * should call @see observeRenders
+ * Having both function allow to track renders as side-effect on specific actions, rather
+ * than aggregate all renders including setup: as this value requires some thinking on
+ * which render comes from what, usually the less with brief explanations the better.
+ */
+export function prepareObserveRenders() {
+    patchWithCleanup(Component.prototype, {
+        setup(...args) {
+            onRendered(() => {
+                for (const result of observeRenderResults.values()) {
+                    if (!result.has(this.constructor)) {
+                        result.set(this.constructor, 0);
+                    }
+                    result.set(this.constructor, result.get(this.constructor) + 1);
+                }
+            });
+            onWillDestroy(() => {
+                for (const result of observeRenderResults.values()) {
+                    // owl could invoke onrendered and cancel immediately to re-render, so should compensate
+                    if (result.has(this.constructor) && status(this) === "cancelled") {
+                        result.set(this.constructor, result.get(this.constructor) - 1);
+                    }
+                }
+            });
+            return super.setup(...args);
+        },
+    });
+    after(() => observeRenderResults.clear());
+}
+
+/**
+ * This function tracks renders of components.
+ * Should be prepared before mounting affected components with @see prepareObserveRenders
+ * This function returns a function to stop observing, which itself returns
+ * a Map of amount of renders per component. Key of map is Component constructor.
+ *
+ * @returns {() => Map<Component.constructor, number>}
+ */
+export function observeRenders() {
+    const id = nextObserveRenderResults++;
+    observeRenderResults.set(id, new Map());
+    return () => {
+        const result = observeRenderResults.get(id);
+        observeRenderResults.delete(id);
+        return result;
+    };
 }

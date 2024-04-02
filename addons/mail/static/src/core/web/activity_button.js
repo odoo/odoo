@@ -12,6 +12,7 @@ export class ActivityButton extends Component {
     static template = "mail.ActivityButton";
 
     setup() {
+        super.setup();
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.buttonRef = useRef("button");
         this.env = useEnv();

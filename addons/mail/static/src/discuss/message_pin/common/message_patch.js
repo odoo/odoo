@@ -7,9 +7,6 @@ patch(Message, {
 });
 
 patch(Message.prototype, {
-    setup() {
-        super.setup();
-    },
     get isAlignedRight() {
         return !this.env.messageCard && super.isAlignedRight;
     },

@@ -9,6 +9,7 @@ export class Dropzone extends Component {
     static template = "mail.Dropzone";
 
     setup() {
+        super.setup();
         this.root = useRef("root");
         this.state = useState({
             isDraggingInside: false,

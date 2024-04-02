@@ -12,6 +12,7 @@ export class MessageReactionButton extends Component {
     static props = ["message"];
 
     setup() {
+        super.setup();
         this.messageService = useState(useService("mail.message"));
         this.store = useState(useService("mail.store"));
         this.emojiPickerRef = useRef("emoji-picker");

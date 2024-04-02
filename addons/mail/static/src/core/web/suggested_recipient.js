@@ -16,6 +16,7 @@ export class SuggestedRecipient extends Component {
     static props = ["thread", "recipient", "onSuggestedRecipientAdded"];
 
     setup() {
+        super.setup();
         this.dialogService = useService("dialog");
         this.threadService = useService("mail.thread");
     }
