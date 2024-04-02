@@ -5,7 +5,7 @@
 <template id='slide_share_social' name="Slides Media Share">
     <t t-if="not website_share_url">
         <t t-set="website_share_url"
-           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_absolute_url"/>
     </t>
     <div class="btn-group" role="group">
         <div class="s_share">
@@ -118,7 +118,7 @@
 <template id="slide_share_link">
     <t t-if="not website_share_url">
         <t t-set="website_share_url"
-           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_absolute_url"/>
     </t>
     <h5>Share Link</h5>
     <div class="input-group">

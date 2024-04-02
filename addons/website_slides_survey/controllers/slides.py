@@ -153,7 +153,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
         # 4. Getting all course url for each badge
         certification_slides = request.env['slide.slide'].sudo().search([('survey_id', 'in', certification_badges.mapped('survey_id').ids)])
-        certification_badge_urls = {slide.survey_id.certification_badge_id.id: slide.channel_id.website_url for slide in certification_slides}
+        certification_badge_urls = {slide.survey_id.certification_badge_id.id: slide.channel_id.website_absolute_url for slide in certification_slides}
 
         # 5. Applying changes
         values.update({

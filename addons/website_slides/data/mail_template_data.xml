@@ -113,14 +113,14 @@
                         Hello<br/><br/>
                         <t t-out="user.name or ''">Mitchell Admin</t> shared the <strong t-out="object.name or ''">document</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a t-att-href="object.website_url">
+                            <a t-att-href="object.website_absolute_url">
                                 <img t-att-alt="object.name"
                                     t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256"
                                     style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
-                            <a t-att-href="object.website_url"
+                            <a t-att-href="object.website_absolute_url"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px;
                                 text-decoration: none; color: #fff; border-radius: 5px;">
                                 View <strong t-out="object.name or ''">Document</strong></a>
