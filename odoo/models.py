@@ -5081,12 +5081,13 @@ class BaseModel(metaclass=MetaModel):
     def _load_records_create(self, values):
         return self.create(values)
 
-    def _load_records(self, data_list, update=False):
+    def _load_records(self, data_list, update=False, ignore_duplicates=False):
         """ Create or update records of this model, and assign XMLIDs.
 
             :param data_list: list of dicts with keys `xml_id` (XMLID to
                 assign), `noupdate` (flag on XMLID), `values` (field values)
             :param update: should be ``True`` when upgrading a module
+            :param ignore_duplicates: if true, inputs that match records already in the DB will be ignored
 
             :return: the records corresponding to ``data_list``
         """
@@ -5144,8 +5145,11 @@ class BaseModel(metaclass=MetaModel):
                 to_create.append(data)
 
         # update existing records
-        for data in to_update:
-            data['record']._load_records_write(data['values'])
+        if ignore_duplicates:
+            data_list = [data for data in data_list if data not in to_update]
+        else:
+            for data in to_update:
+                data['record']._load_records_write(data['values'])
 
         # check for records to create with an XMLID from another module
         module = self.env.context.get('install_module')
