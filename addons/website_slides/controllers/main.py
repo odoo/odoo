@@ -90,6 +90,9 @@ class WebsiteSlides(WebsiteProfile):
             most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
 
         channel_slides_ids = slide.channel_id.slide_content_ids.ids
+
+        if slide.id not in channel_slides_ids:
+            raise UserError(_("Slide you are trying to access is not found"))
         slide_index = channel_slides_ids.index(slide.id)
         previous_slide = slide.channel_id.slide_content_ids[slide_index-1] if slide_index > 0 else None
         next_slide = slide.channel_id.slide_content_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
