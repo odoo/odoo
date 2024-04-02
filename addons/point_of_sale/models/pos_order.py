@@ -3,13 +3,11 @@
 import logging
 from datetime import datetime
 from markupsafe import Markup
-from functools import partial
 from itertools import groupby
 from collections import defaultdict
 
 import psycopg2
 import pytz
-import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
@@ -22,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class PosOrder(models.Model):
     _name = "pos.order"
-    _inherit = ["portal.mixin", "pos.bus.mixin"]
+    _inherit = ["portal.mixin", "pos.bus.mixin", "pos.load.mixin"]
     _description = "Point of Sale Orders"
     _order = "date_order desc, name desc, id desc"
 
@@ -75,6 +73,10 @@ class PosOrder(models.Model):
     def _compute_tracking_number(self):
         for record in self:
             record.tracking_number = str((record.session_id.id % 10) * 100 + record.sequence_number % 100).zfill(3)
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('state', '=', 'draft'), ('session_id', '=', data['pos.session']['data'][0]['id'])]
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -928,19 +930,13 @@ class PosOrder(models.Model):
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
-        config_id = False
-        if self.env.context.get('config_id'):
-            config_id = self.env['pos.config'].browse(self.env.context.get('config_id'))
-        else:
-            config_id = pos_order_ids[0].config_id
-        params = self.env["pos.session"]._load_data_params(config_id)
-
+        config_id = pos_order_ids[0].config_id.id if pos_order_ids else False
         return {
-            'pos.order': pos_order_ids.read(params["pos.order"]["fields"], load=False),
-            'pos.payment': pos_order_ids.payment_ids.read(params["pos.payment"]["fields"], load=False),
-            'pos.order.line': pos_order_ids.lines.read(params["pos.order.line"]["fields"], load=False),
-            'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(params["pos.pack.operation.lot"]["fields"], load=False),
-            "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(params["product.attribute.custom.value"]["fields"], load=False)
+            'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     def _is_the_same_order(self, data, existing_order):
@@ -1152,6 +1148,7 @@ class PosOrderLine(models.Model):
     _name = "pos.order.line"
     _description = "Point of Sale Order Lines"
     _rec_name = "product_id"
+    _inherit = ['pos.load.mixin']
 
     company_id = fields.Many2one('res.company', string='Company', related="order_id.company_id", store=True)
     name = fields.Char(string='Line No', required=True, copy=False)
@@ -1193,6 +1190,17 @@ class PosOrderLine(models.Model):
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
 
     combo_line_id = fields.Many2one('pos.combo.line', string='Combo Line')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('order_id', 'in', [order['id'] for order in data['pos.order']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note',
+            'product_id', 'discount', 'tax_ids', 'combo_line_id', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_line_id'
+        ]
 
     @api.model
     def _is_field_accepted(self, field):
@@ -1472,15 +1480,24 @@ class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
     _description = "Specify product lot/serial number in pos order line"
     _rec_name = "lot_name"
+    _inherit = ['pos.load.mixin']
 
     pos_order_line_id = fields.Many2one('pos.order.line')
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['lot_name', 'pos_order_line_id']
 
 class AccountCashRounding(models.Model):
-    _inherit = 'account.cash.rounding'
+    _name = 'account.cash.rounding'
+    _inherit = ['account.cash.rounding', 'pos.load.mixin']
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):
@@ -1488,3 +1505,11 @@ class AccountCashRounding(models.Model):
         if open_session:
             raise ValidationError(
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config']['data'][0]['rounding_method'])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'rounding', 'rounding_method']

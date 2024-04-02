@@ -14,6 +14,7 @@ class PosPayment(models.Model):
     _name = "pos.payment"
     _description = "Point of Sale Payments"
     _order = "id desc"
+    _inherit = ['pos.load.mixin']
 
     name = fields.Char(string='Label', readonly=True)
     pos_order_id = fields.Many2one('pos.order', string='Order', required=True, index=True)
@@ -33,6 +34,10 @@ class PosPayment(models.Model):
     is_change = fields.Boolean(string='Is this payment change?', default=False)
     account_move_id = fields.Many2one('account.move')
     uuid = fields.Char(string='Uuid', readonly=True, copy=False)
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_id', 'in', [order['id'] for order in data['pos.order']['data']])]
 
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):

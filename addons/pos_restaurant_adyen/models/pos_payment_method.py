@@ -1,7 +1,7 @@
 # coding: utf-8
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class PosPaymentMethod(models.Model):
@@ -15,3 +15,9 @@ class PosPaymentMethod(models.Model):
             'adjust': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
             'capture': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/capture',
         }
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params += ['adyen_merchant_account']
+        return params

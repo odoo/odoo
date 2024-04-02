@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
-from odoo import models
+from odoo import models, api
 
 
 class PosSession(models.Model):
-
     _inherit = 'pos.session'
 
-    def _load_data_params(self, config_id):
-        params = super()._load_data_params(config_id)
+    @api.model
+    def _load_pos_data_models(self, config_id):
+        data = super()._load_pos_data_models(config_id)
+        if self.env.company.country_id.code == 'AR':
+            data += ['l10n_ar.afip.responsibility.type', 'l10n_latam.identification.type']
+        return data
 
-        if self.company_id.country_code == 'AR':
-            params['l10n_ar.afip.responsibility.type'] = {'domain': [], 'fields': ['name']}
-            params['l10n_latam.identification.type'] = {
-                'domain': [('l10n_ar_afip_code', '!=', False), ('active', '=', True)],
-                'fields': ['name']
-            }
-
-        return params
-
-    def load_data(self, models_to_load, only_data=False):
-        response = super().load_data(models_to_load, only_data)
-
-        if not only_data:
-            response['custom']['consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
-
-        return response
+    def _load_pos_data(self, data):
+        data = super()._load_pos_data(data)
+        if self.env.company.country_id.code == 'AR':
+            data['data'][0]['_consumidor_final_anonimo_id'] = self.env.ref('l10n_ar.par_cfa').id
+        return data

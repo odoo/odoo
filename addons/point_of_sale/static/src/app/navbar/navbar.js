@@ -58,7 +58,7 @@ export class Navbar extends Component {
         this.pos.scanning = !this.pos.scanning;
     }
     get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control && this.pos.has_cash_move_perm);
+        return Boolean(this.pos.config.cash_control && this.pos.session._has_cash_move_perm);
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));

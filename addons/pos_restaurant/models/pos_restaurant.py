@@ -10,6 +10,7 @@ class RestaurantFloor(models.Model):
     _name = 'restaurant.floor'
     _description = 'Restaurant Floor'
     _order = "sequence, name"
+    _inherit = ['pos.load.mixin']
 
     name = fields.Char('Floor Name', required=True)
     pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
@@ -19,6 +20,14 @@ class RestaurantFloor(models.Model):
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     floor_background_image = fields.Image(string='Floor Background Image')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('pos_config_ids', '=', data['pos.config']['data'][0]['id'])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['name', 'background_color', 'table_ids', 'sequence', 'floor_background_image']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -76,6 +85,7 @@ class RestaurantTable(models.Model):
 
     _name = 'restaurant.table'
     _description = 'Restaurant Table'
+    _inherit = ['pos.load.mixin']
 
     name = fields.Char('Table Name', required=True, help='An internal identification of a table')
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
@@ -90,6 +100,14 @@ class RestaurantTable(models.Model):
     color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value", default="#35D374")
     parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['name', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
 
     def are_orders_still_in_draft(self):
         draft_orders_count = self.env['pos.order'].search_count([('table_id', 'in', self.ids), ('state', '=', 'draft')])

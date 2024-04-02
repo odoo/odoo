@@ -575,7 +575,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'sequence_number': 2,
             'payment_ids': payments,
             'uuid': uuid,
-            'user_id': self.env.user.id,
+            'user_id': self.env.uid,
             'to_invoice': is_invoiced,
         }
 

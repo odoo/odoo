@@ -1883,7 +1883,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.pos_config.open_ui()
         loaded_data = self.pos_config.current_session_id.load_data([])
 
-        self.assertFalse(loaded_data['data']['pos.config'][0]['pricelist_id'], False)
+        self.assertFalse(loaded_data['pos.config']['data'][0]['pricelist_id'], False)
 
     def test_refund_rounding_backend(self):
         rouding_method = self.env['account.cash.rounding'].create({

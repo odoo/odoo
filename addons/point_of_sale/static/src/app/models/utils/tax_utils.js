@@ -57,8 +57,8 @@ export const getTaxesAfterFiscalPosition = (taxes, fiscalPosition, models) => {
 
     const newTaxIds = [];
     for (const tax of taxes) {
-        if (fiscalPosition.tax_mapping_by_ids[tax.id]) {
-            for (const mapTaxId of fiscalPosition.tax_mapping_by_ids[tax.id]) {
+        if (fiscalPosition._tax_mapping_by_ids[tax.id]) {
+            for (const mapTaxId of fiscalPosition._tax_mapping_by_ids[tax.id]) {
                 newTaxIds.push(mapTaxId);
             }
         } else {

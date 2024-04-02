@@ -14,7 +14,6 @@ patch(PosStore.prototype, {
         await super.processServerData(...arguments);
         if (this.config.module_pos_hr) {
             this.reset_cashier();
-            this.employee_security = this.data.custom.employee_security;
         }
     },
     async actionAfterIdle() {
@@ -42,7 +41,6 @@ patch(PosStore.prototype, {
     },
     set_cashier(employee) {
         this.cashier = employee;
-        this.cashier.role = this.employee_security[employee.id].role;
         const o = this.get_order();
         if (o && !o.get_orderlines().length) {
             // Order without lines can be considered to be un-owned by any employee.

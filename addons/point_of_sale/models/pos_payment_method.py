@@ -6,6 +6,7 @@ class PosPaymentMethod(models.Model):
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
     _order = "sequence, id"
+    _inherit = ['pos.load.mixin']
 
     def _get_payment_terminal_selection(self):
         return []
@@ -60,6 +61,14 @@ class PosPaymentMethod(models.Model):
         help='Type of QR-code to be generated for this payment method.',
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return ['|', ('active', '=', False), ('active', '=', True)]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
