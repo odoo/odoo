@@ -20,6 +20,7 @@ from odoo.tools import (
     date_utils,
     email_re,
     email_split,
+    flatten,
     float_compare,
     float_is_zero,
     float_repr,
@@ -2080,11 +2081,9 @@ class AccountMove(models.Model):
         """ Assert the move which is about to be posted isn't a duplicated move from another posted entry"""
         move_to_duplicate_moves = self.filtered(lambda m: m.state == 'posted' and m.is_purchase_document())._fetch_duplicate_reference(matching_states=('posted',))
         if any(duplicate_move for duplicate_move in move_to_duplicate_moves.values()):
-            duplicate_move_ids = list(set(
-                move_id
-                for move_ids in ([current_move_id] + duplicate.ids for current_move_id, duplicate in move_to_duplicate_moves.items() if duplicate)
-                for move_id in move_ids
-            ))
+            duplicate_move_ids = list(set(flatten(
+                move.ids + dup_moves.ids for move, dup_moves in move_to_duplicate_moves.items() if dup_moves
+            )))
             action = self.env['ir.actions.actions']._for_xml_id('account.action_move_line_form')
             action['domain'] = [('id', 'in', duplicate_move_ids)]
             action['views'] = [((view_id, 'list') if view_type == 'tree' else (view_id, view_type)) for view_id, view_type in action['views']]
