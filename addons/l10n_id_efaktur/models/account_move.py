@@ -54,14 +54,14 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_kode_transaksi(self):
         for move in self:
-            move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
+            move.l10n_id_kode_transaksi = move.partner_id.commercial_partner_id.l10n_id_kode_transaksi
 
     @api.depends('partner_id', 'line_ids.tax_ids')
     def _compute_need_kode_transaksi(self):
         for move in self:
             # If there are no taxes at all on every line (0% taxes counts as having a tax) then we don't need a kode transaksi
             move.l10n_id_need_kode_transaksi = (
-                move.partner_id.l10n_id_pkp
+                move.partner_id.commercial_partner_id.l10n_id_pkp
                 and not move.l10n_id_tax_number
                 and move.move_type == 'out_invoice'
                 and move.country_code == 'ID'
@@ -135,7 +135,7 @@ class AccountMove(models.Model):
             if record.state == 'draft':
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
-            if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
+            if record.partner_id.commercial_partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
                 if not self.l10n_id_need_kode_transaksi:
                     raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
@@ -158,7 +158,8 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.state == 'posted'):
             eTax = move._prepare_etax()
 
-            nik = str(move.partner_id.l10n_id_nik) if not move.partner_id.vat else ''
+            commercial_partner = move.partner_id.commercial_partner_id
+            nik = str(commercial_partner.l10n_id_nik) if not commercial_partner.vat else ''
 
             if move.l10n_id_replace_invoice_id:
                 number_ref = str(move.l10n_id_replace_invoice_id.name) + " replaced by " + str(move.name) + " " + nik
@@ -168,10 +169,10 @@ class AccountMove(models.Model):
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
             invoice_npwp = '000000000000000'
-            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                invoice_npwp = move.partner_id.vat
-            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                invoice_npwp = move.partner_id.l10n_id_nik
+            if commercial_partner.vat and len(commercial_partner.vat) >= 12:
+                invoice_npwp = commercial_partner.vat
+            elif (not commercial_partner.vat or len(commercial_partner.vat) < 12) and commercial_partner.l10n_id_nik:
+                invoice_npwp = commercial_partner.l10n_id_nik
             invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
 
             # Here all fields or columns based on eTax Invoice Third Party
@@ -182,8 +183,8 @@ class AccountMove(models.Model):
             eTax['TAHUN_PAJAK'] = move.invoice_date.year
             eTax['TANGGAL_FAKTUR'] = '{0}/{1}/{2}'.format(move.invoice_date.day, move.invoice_date.month, move.invoice_date.year)
             eTax['NPWP'] = invoice_npwp
-            eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
+            eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else commercial_partner.l10n_id_tax_name or move.partner_id.name
+            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else commercial_partner.l10n_id_tax_address or street
             eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0, rounding_method="DOWN"))  # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
