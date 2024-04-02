@@ -196,3 +196,16 @@ class TestSaleCommon(AccountTestInvoicingCommon):
         })
 
         return company_data
+
+    @classmethod
+    def _enable_sale_salesman(cls):
+        """ Required to confirm a sale order """
+        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
+            (4, cls.env.ref('sales_team.group_sale_salesman').id),
+        ]})
+
+    @classmethod
+    def _enable_sale_manager(cls):
+        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
+            (4, cls.env.ref('sales_team.group_sale_manager').id),
+        ]})

@@ -53,18 +53,10 @@ class TestTourManualConsumption(HttpCase):
         self.assertEqual(move_nt.quantity, 16.0)
 
 class TestManualConsumption(TestMrpCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-
     def test_manual_consumption_backorder(self):
         """Test when use_auto_consume_components_lots is set, manual consumption
         of the backorder is correctly set.
         """
-        picking_type = self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')])[0]
-
         mo, _, _final, c1, c2 = self.generate_mo('none', 'lot', 'none', qty_final=2)
 
         self.assertTrue(mo.move_raw_ids.filtered(lambda m: m.product_id == c1).manual_consumption)

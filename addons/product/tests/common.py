@@ -35,6 +35,13 @@ class ProductCommon(UomCommon):
         ]).action_archive()
 
     @classmethod
+    def _enable_product_variant(cls):
+        """ Required for `product_id` to be visible in the view """
+        cls.env.ref('base.group_user').sudo().write({'implied_ids': [
+            (4, cls.env.ref('product.group_product_variant').id),
+        ]})
+
+    @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
         return groups | cls.quick_ref('base.group_system')
@@ -155,49 +162,4 @@ class ProductVariantsCommon(ProductAttributesCommon):
 
 
 class TestProductCommon(ProductVariantsCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        # Product environment related data
-        cls.uom_dunit = cls.env['uom.uom'].create({
-            'name': 'DeciUnit',
-            'category_id': cls.uom_unit.category_id.id,
-            'factor_inv': 0.1,
-            'factor': 10.0,
-            'uom_type': 'smaller',
-            'rounding': 0.001,
-        })
-
-        cls.product_1, cls.product_2 = cls.env['product.product'].create([{
-            'name': 'Courage',  # product_1
-            'type': 'consu',
-            'default_code': 'PROD-1',
-            'uom_id': cls.uom_dunit.id,
-            'uom_po_id': cls.uom_dunit.id,
-        }, {
-            'name': 'Wood',  # product_2
-        }])
-
-        # Kept for reduced diff in other modules (mainly stock & mrp)
-        cls.prod_att_1 = cls.color_attribute
-        cls.prod_attr1_v1 = cls.color_attribute_red
-        cls.prod_attr1_v2 = cls.color_attribute_blue
-        cls.prod_attr1_v3 = cls.color_attribute_green
-
-        cls.product_7_template = cls.product_template_sofa
-
-        cls.product_7_attr1_v1 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[0]
-        cls.product_7_attr1_v2 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[1]
-        cls.product_7_attr1_v3 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[2]
-
-        cls.product_7_1 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v1)
-        cls.product_7_2 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v2)
-        cls.product_7_3 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v3)
+    pass

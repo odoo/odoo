@@ -31,7 +31,7 @@ class TestReplenishWizard(TestStockCommon):
 
         # Additional Values required by the replenish wizard
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.wh = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.user.id)], limit=1)
+        cls.wh = cls.warehouse_1
 
     def test_replenish_buy_1(self):
         """ Set a quantity to replenish via the "Buy" route and check if
@@ -363,7 +363,8 @@ class TestReplenishWizard(TestStockCommon):
             'delay' : 0
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        self.env.company.days_to_purchase = 0
+        with self.with_user('admin'):
+            self.company.days_to_purchase = 0
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
@@ -376,7 +377,8 @@ class TestReplenishWizard(TestStockCommon):
             })
             wizard.supplier_id = supplier1
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
-            self.env.company.days_to_purchase = 5
+            with self.with_user('admin'):
+                self.company.days_to_purchase = 5
             # change the supplier to trigger the date computation
             wizard.supplier_id = supplier2
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard.date_planned)
@@ -396,7 +398,8 @@ class TestReplenishWizard(TestStockCommon):
             'delay': 2
         })
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', True)
-        self.env.company.days_to_purchase = 5
+        with self.with_user('admin'):
+            self.company.days_to_purchase = 5
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({

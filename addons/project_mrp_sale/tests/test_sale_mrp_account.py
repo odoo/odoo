@@ -8,6 +8,8 @@ from odoo.tests import common
 class TestSaleMrpAccount(TestMultistepManufacturing):
     def test_mo_get_project_from_so(self):
         """ ensure the project of MO is inherited from the SO if no project is set """
+        with self.with_user('admin'):
+            self.user.groups_id += self.env.ref('project.group_project_manager')
         project = self.env['project.project'].create({
             'name': 'SO Project',
         })

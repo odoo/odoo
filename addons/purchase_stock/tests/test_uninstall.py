@@ -32,7 +32,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
 
         self.assertEqual(purchase_order.order_line.qty_received, 1)
 
-        stock_moves_option = self.env['ir.model.fields.selection'].search([
+        stock_moves_option = self.env['ir.model.fields.selection'].sudo().search([
             ('field_id.model', '=', 'purchase.order.line'),
             ('field_id.name', '=', 'qty_received_method'),
             ('value', '=', 'stock_moves'),

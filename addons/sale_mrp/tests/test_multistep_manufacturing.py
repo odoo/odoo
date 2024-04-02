@@ -3,28 +3,21 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.addons.sale.tests.common import TestSaleCommonBase
 
 
-class TestMultistepManufacturing(TestMrpCommon):
+class TestMultistepManufacturing(TestMrpCommon, TestSaleCommonBase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # Required for `uom_id ` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
-        # Required for `manufacture_steps` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('stock.group_adv_location')
-        # Required for `product_id` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('product.group_product_variant')
+        cls._enable_adv_location()
+        cls._enable_product_variant()
+        cls._enable_sale_salesman()
 
         cls.env.ref('stock.route_warehouse0_mto').active = True
         cls.MrpProduction = cls.env['mrp.production']
-        # Create warehouse
-        warehouse_form = Form(cls.env['stock.warehouse'])
-        warehouse_form.name = 'Test'
-        warehouse_form.code = 'Test'
-        cls.warehouse = warehouse_form.save()
+        cls.warehouse = cls.warehouse_1
         cls.warehouse.mto_pull_id.route_id.rule_ids.procure_method = "make_to_order"
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -33,7 +26,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Stick'
         product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
+        # product_form.uom_po_id = cls.uom_unit
         product_form.route_ids.clear()
         product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
@@ -43,7 +36,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Raw Stick'
         product_form.uom_id = cls.uom_unit
-        product_form.uom_po_id = cls.uom_unit
+        # product_form.uom_po_id = cls.uom_unit
         cls.product_raw = product_form.save()
 
         # Create bom for manufactured product

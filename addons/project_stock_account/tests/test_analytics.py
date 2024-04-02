@@ -1,25 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from odoo.addons.analytic.tests.common import AnalyticCommon
+from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.exceptions import ValidationError
 
 
-class TestAnalytics(TestStockCommon):
+class TestAnalytics(TestStockCommon, TestProjectCommon, AnalyticCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.plan1, cls.plan2 = cls.env['account.analytic.plan'].create([{'name': 'Plan 1'}, {'name': 'Plan 2'}])
-        cls.plan1_name = cls.plan1._column_name()
-        cls.plan2_name = cls.plan2._column_name()
+        cls._enable_project_manager()
+        cls._enable_analytic_accounting()
+        cls.plan1_name = cls.analytic_plan_1._column_name()
+        cls.plan2_name = cls.analytic_plan_2._column_name()
         cls.analytic_account1, cls.analytic_account2 = cls.env['account.analytic.account'].create([
             {
                 'name': 'Account 1',
-                'plan_id': cls.plan1.id,
+                'plan_id': cls.analytic_plan_1.id,
             },
             {
                 'name': 'Account 2',
-                'plan_id': cls.plan2.id,
+                'plan_id': cls.analytic_plan_2.id,
             },
         ])
         cls.project = cls.env['project.project'].create({
@@ -42,17 +45,17 @@ class TestAnalytics(TestStockCommon):
 
     def test_analytic_lines_generation_delivery(self):
         picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'project_id': self.project.id,
         })
         picking_out.picking_type_id.analytic_costs = True
         move_values = {
             'product_uom': self.uom_unit.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         }
         self.MoveObj.create([
             {
@@ -91,17 +94,17 @@ class TestAnalytics(TestStockCommon):
             profitability' right side panel and displayed under the 'costs -> materials' section.
         """
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'project_id': self.project.id,
         })
         picking_in.picking_type_id.analytic_costs = True
         move_values = {
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
         }
         self.MoveObj.create([
             {
@@ -146,13 +149,13 @@ class TestAnalytics(TestStockCommon):
     def test_mandatory_analytic_plan_picking(self):
         self.env['account.analytic.applicability'].create({
             'business_domain': 'stock_picking',
-            'analytic_plan_id': self.plan1.id,
+            'analytic_plan_id': self.analytic_plan_1.id,
             'applicability': 'mandatory',
         })
         picking_in = self.PickingObj.create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'project_id': self.project.id,
         })
         picking_in.picking_type_id.analytic_costs = True
@@ -161,8 +164,8 @@ class TestAnalytics(TestStockCommon):
             'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': picking_in.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_id': self.product2.id,
             'product_uom_qty': 5,
         })

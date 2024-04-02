@@ -10,11 +10,11 @@ from odoo.tests.common import new_test_user
 from odoo import fields, Command
 
 
-class TestMrpAccount(TestMrpCommon):
+class TestMrpAccountCommon(TestMrpCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMrpAccount, cls).setUpClass()
+        super().setUpClass()
         cls.source_location_id = cls.stock_location_14.id
         cls.warehouse = cls.env.ref('stock.warehouse0')
         # setting up alternative workcenters
@@ -141,6 +141,9 @@ class TestMrpAccount(TestMrpCommon):
         (cls.product_bolt + cls.product_screw).write({'is_storable': True})
         cls.dining_table.tracking = 'none'
 
+
+class TestMrpAccount(TestMrpAccountCommon):
+
     def test_00_production_order_with_accounting(self):
         self.product_table_sheet.standard_price = 20.0
         self.product_table_leg.standard_price = 15.0
@@ -193,9 +196,10 @@ class TestMrpAccount(TestMrpCommon):
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
 
     def test_stock_user_without_account_permissions_can_create_bom(self):
-        mrp_manager = new_test_user(
-            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
-        )
+        with self.with_user('admin'):
+            mrp_manager = new_test_user(
+                self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
+            )
 
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
         bom_form.product_id = self.dining_table

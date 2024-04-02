@@ -18,7 +18,7 @@ class TestOee(TestMrpCommon):
             'description': loss_reason.name
         })
 
-    def test_wrokcenter_oee(self):
+    def test_workcenter_oee(self):
         """  Test case workcenter oee. """
         day = datetime.date(datetime.today())
         # Make the test work the weekend. It will fails due to workcenter working hours.

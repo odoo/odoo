@@ -9,17 +9,6 @@ from odoo.tests.common import TransactionCase
 
 
 class TestMrpProductionBackorder(TestMrpCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        warehouse_form = Form(cls.env['stock.warehouse'])
-        warehouse_form.name = 'Test Warehouse'
-        warehouse_form.code = 'TWH'
-        cls.warehouse = warehouse_form.save()
-
     def test_no_tracking_1(self):
         """Create a MO for 4 product. Produce 4. The backorder button should
         not appear and hitting mark as done should not open the backorder wizard.
@@ -89,10 +78,12 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         # Required for `manufacture_steps` to be visible in the view
         self.env.user.groups_id += self.env.ref("stock.group_adv_location")
-        with Form(self.warehouse) as warehouse:
+        with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm'
 
-        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
+        production, _, _, product_to_use_1, product_to_use_2 = self.generate_mo(
+            qty_base_1=4, qty_final=4, picking_type_id=self.warehouse_1.manu_type_id
+        )
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
@@ -134,9 +125,9 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         # Required for `manufacture_steps` to be visible in the view
         self.env.user.groups_id += self.env.ref("stock.group_adv_location")
-        with Form(self.warehouse) as warehouse:
+        with Form(self.warehouse_1) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse.manu_type_id)
+        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_base_1=4, qty_final=4, picking_type_id=self.warehouse_1.manu_type_id)
 
         move_raw_ids = production.move_raw_ids
         self.assertEqual(len(move_raw_ids), 2)
@@ -195,7 +186,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'product_id': p2.id,
         })
 
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, nb_product_todo*4, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, nb_product_todo * 4, lot_id=lot_1)
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, nb_product_todo, lot_id=lot_2)
 
         active_production = production
@@ -441,9 +432,8 @@ class TestMrpProductionBackorder(TestMrpCommon):
             return mo.procurement_group_id.mrp_production_ids[-1]
 
         default_picking_type_id = self.env['mrp.production']._get_default_picking_type_id(self.env.company.id)
-        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
+        default_picking_type = self.PickingTypeObj.browse(default_picking_type_id)
         mo_sequence = default_picking_type.sequence_id
-        mo_sequence.prefix = "WH-MO-"
         initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
         production = self.generate_mo(qty_final=5)[0]
         self.assertEqual(production.name, initial_mo_name)
@@ -524,7 +514,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
 
         # Merge them back
-        expected_origin = ",".join([mo1.name, mo2.name, mo3.name])
+        expected_origin = f"{mo1.name},{mo2.name},{mo3.name}"
         action = (mo1 + mo2 + mo3).action_merge()
         mo = self.env[action['res_model']].browse(action['res_id'])
         # Check origin & initial quantity
@@ -711,11 +701,11 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'product_qty': product_qty,
             'bom_id': self.bom_1.id,
             'priority': '1',
-            'picking_type_id': picking_type_id or self.warehouse.manu_type_id.id,
+            'picking_type_id': picking_type_id or self.warehouse_1.manu_type_id.id,
         })
-        picking_type_always = self.warehouse.manu_type_id.copy({'name': "Always BO", 'sequence_code': "always", 'create_backorder': "always"})
-        picking_type_ask = self.warehouse.manu_type_id.copy({'name': "Ask BO", 'sequence_code': "ask", 'create_backorder': "ask"})
-        picking_type_never = self.warehouse.manu_type_id.copy({'name': "Never BO", 'sequence_code': "never", 'create_backorder': "never"})
+        picking_type_always = self.warehouse_1.manu_type_id.copy({'name': "Always BO", 'sequence_code': "always", 'create_backorder': "always"})
+        picking_type_ask = self.warehouse_1.manu_type_id.copy({'name': "Ask BO", 'sequence_code': "ask", 'create_backorder': "ask"})
+        picking_type_never = self.warehouse_1.manu_type_id.copy({'name': "Never BO", 'sequence_code': "never", 'create_backorder': "never"})
 
         # always + ask (backorder=yes) => both are backordered in the end
         mo_produce_all = create_mo()
