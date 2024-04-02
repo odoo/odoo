@@ -23,7 +23,7 @@ import {
     triggerEvents,
 } from "../mail_test_helpers";
 import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 
@@ -164,9 +164,28 @@ test("do not display day separator if all messages of the day are empty", async 
 });
 
 test("scroll position is kept when navigating from one channel to another", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
-    const channelId_1 = pyEnv["discuss.channel"].create({ name: "channel-1" });
-    const channelId_2 = pyEnv["discuss.channel"].create({ name: "channel-2" });
+    const channelId_1 = pyEnv["discuss.channel"].create({
+        name: "channel-1",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
+        ],
+    });
+    const channelId_2 = pyEnv["discuss.channel"].create({
+        name: "channel-2",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
+        ],
+    });
     // Fill both channels with random messages in order for the scrollbar to
     // appear.
     pyEnv["mail.message"].create(
