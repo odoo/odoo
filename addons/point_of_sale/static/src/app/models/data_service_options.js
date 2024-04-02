@@ -42,6 +42,7 @@ export class DataServiceOptions {
             "product.packaging": ["barcode"],
             "loyalty.program": ["trigger_product_ids"],
             "calendar.event": ["appointment_resource_ids"],
+            "res.partner": ["barcode"],
         };
     }
 
