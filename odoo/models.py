@@ -1633,7 +1633,7 @@ class BaseModel(metaclass=MetaModel):
         return self._fetch_query(query, fields_to_fetch)
 
     #
-    # display_name, name_get, name_create, name_search
+    # display_name, name_create, name_search
     #
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
@@ -1652,26 +1652,6 @@ class BaseModel(metaclass=MetaModel):
         else:
             for record in self:
                 record.display_name = f"{record._name},{record.id}"
-
-    def name_get(self):
-        """Returns a textual representation for the records in ``self``, with
-        one item output per input record, in the same order.
-
-        .. warning::
-
-            Although :meth:`~.name_get` can use context data for richer
-            contextual formatting, as it is the default implementation for
-            :attr:`~.display_name` it is important that it resets to the
-            "default" behaviour if the context keys are empty / missing.
-
-        .. deprecated:: 17.0
-            Deprecated method, read([`display_name`]) instead
-
-        :return: list of pairs ``(id, text_repr)`` for each record
-        :rtype: list[(int, str)]
-        """
-        warnings.warn("Since 17.0, deprecated method, read display_name instead", DeprecationWarning, 2)
-        return [(record.id, record.display_name) for record in self]
 
     @api.model
     def name_create(self, name):
