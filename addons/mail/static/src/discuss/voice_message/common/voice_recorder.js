@@ -38,6 +38,7 @@ export class VoiceRecorder extends Component {
     voiceMessageService;
 
     setup() {
+        super.setup();
         this.state = useState({
             limitWarning: false,
             isActionPending: false,

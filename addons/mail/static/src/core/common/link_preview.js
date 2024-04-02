@@ -16,6 +16,7 @@ export class LinkPreview extends Component {
     static components = {};
 
     setup() {
+        super.setup();
         this.dialogService = useService("dialog");
     }
 

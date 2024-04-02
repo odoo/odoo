@@ -39,6 +39,7 @@ export class Discuss extends Component {
     static template = "mail.Discuss";
 
     setup() {
+        super.setup();
         this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
         this.threadService = useState(useService("mail.thread"));

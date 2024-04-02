@@ -39,6 +39,7 @@ export class Call extends Component {
     overlayTimeout;
 
     setup() {
+        super.setup();
         this.grid = useRef("grid");
         this.call = useRef("call");
         this.notification = useService("notification");

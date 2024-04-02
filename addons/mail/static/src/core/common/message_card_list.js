@@ -34,6 +34,7 @@ export class MessageCardList extends Component {
     static template = "mail.MessageCardList";
 
     setup() {
+        super.setup();
         this.ui = useState(useService("ui"));
         useSubEnv({ messageCard: true });
         useVisible("load-more", (isVisible) => {

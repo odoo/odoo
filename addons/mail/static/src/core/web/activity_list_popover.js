@@ -29,6 +29,7 @@ export class ActivityListPopover extends Component {
     static template = "mail.ActivityListPopover";
 
     setup() {
+        super.setup();
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.updateFromProps(this.props);

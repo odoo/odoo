@@ -17,6 +17,7 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     setup() {
+        super.setup();
         this.discussSystray = useDiscussSystray();
         this.store = useState(useService("mail.store"));
         this.hasTouch = hasTouch;

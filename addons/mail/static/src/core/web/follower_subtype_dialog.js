@@ -27,6 +27,7 @@ export class FollowerSubtypeDialog extends Component {
     static template = "mail.FollowerSubtypeDialog";
 
     setup() {
+        super.setup();
         rpc = rpcWithEnv(this.env);
         this.store = useState(useService("mail.store"));
         this.state = useState({

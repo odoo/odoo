@@ -9,6 +9,7 @@ export class MessageInReply extends Component {
     static template = "mail.MessageInReply";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.threadService = useService("mail.thread");
     }

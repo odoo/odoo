@@ -41,6 +41,7 @@ export class ChatWindow extends Component {
     static template = "mail.ChatWindow";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.threadService = useState(useService("mail.thread"));

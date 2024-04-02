@@ -12,6 +12,7 @@ export class CallSettings extends Component {
     static props = ["thread", "className?"];
 
     setup() {
+        super.setup();
         this.notification = useService("notification");
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));

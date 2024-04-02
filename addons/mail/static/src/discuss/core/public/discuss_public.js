@@ -11,6 +11,7 @@ export class DiscussPublic extends Component {
     static template = "mail.DiscussPublic";
 
     setup() {
+        super.setup();
         this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.state = useState({

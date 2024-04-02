@@ -53,6 +53,7 @@ export class GifPicker extends Component {
     static props = ["PICKERS?", "className?", "close?", "onSelect", "state?"];
 
     setup() {
+        super.setup();
         rpc = rpcWithEnv(this.env);
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));

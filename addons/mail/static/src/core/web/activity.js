@@ -25,6 +25,7 @@ export class Activity extends Component {
     static template = "mail.Activity";
 
     setup() {
+        super.setup();
         this.activityService = useService("mail.activity");
         this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });

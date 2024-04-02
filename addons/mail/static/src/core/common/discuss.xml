@@ -8,7 +8,7 @@
             <div class="o-mail-Discuss-header px-3 bg-view border-bottom d-flex flex-shrink-0 align-items-center">
                 <div t-if="thread and ['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
                     <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
-                    <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded="(data) => this.onFileUploaded(data)">
+                    <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
                             <a href="#" class="position-absolute z-index-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
                                 <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>

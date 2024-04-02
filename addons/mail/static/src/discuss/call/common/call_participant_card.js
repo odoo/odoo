@@ -27,6 +27,7 @@ export class CallParticipantCard extends Component {
     static template = "discuss.CallParticipantCard";
 
     setup() {
+        super.setup();
         rpc = rpcWithEnv(this.env);
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");

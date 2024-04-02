@@ -12,6 +12,7 @@ export class ChannelMemberList extends Component {
     static template = "discuss.ChannelMemberList";
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.channelMemberService = useService("discuss.channel.member");
         this.threadService = useState(useService("mail.thread"));

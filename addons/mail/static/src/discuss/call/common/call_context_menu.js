@@ -16,6 +16,7 @@ export class CallContextMenu extends Component {
     rtcConnectionTypes = CONNECTION_TYPES;
 
     setup() {
+        super.setup();
         this.store = useState(useService("mail.store"));
         this.rtc = useState(useService("discuss.rtc"));
         this.state = useState({

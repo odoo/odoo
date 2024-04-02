@@ -16,9 +16,8 @@ export class SuggestedRecipientsList extends Component {
     static props = ["thread", "className", "styleString", "onSuggestedRecipientAdded"];
 
     setup() {
-        this.state = useState({
-            showMore: false,
-        });
+        super.setup();
+        this.state = useState({ showMore: false });
     }
 
     get suggestedRecipients() {

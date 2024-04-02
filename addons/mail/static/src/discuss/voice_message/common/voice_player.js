@@ -55,6 +55,7 @@ export class VoicePlayer extends Component {
     progressCtx;
 
     setup() {
+        super.setup();
         this.wrapperRef = useRef("wrapper");
         this.drawerRef = useRef("drawer");
         this.waveRef = useRef("wave");

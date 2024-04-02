@@ -7,6 +7,7 @@ export class CallMenu extends Component {
     static props = [];
     static template = "discuss.CallMenu";
     setup() {
+        super.setup();
         this.threadService = useService("mail.thread");
         this.rtc = useState(useService("discuss.rtc"));
     }

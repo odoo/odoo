@@ -14,6 +14,7 @@ export class ChannelInvitation extends Component {
     static template = "discuss.ChannelInvitation";
 
     setup() {
+        super.setup();
         this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));

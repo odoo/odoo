@@ -16,6 +16,7 @@ export class AttachmentPanel extends Component {
     static template = "mail.AttachmentPanel";
 
     setup() {
+        super.setup();
         this.sequential = useSequential();
         this.store = useService("mail.store");
         this.ormService = useService("orm");

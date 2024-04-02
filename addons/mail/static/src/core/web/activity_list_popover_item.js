@@ -28,6 +28,7 @@ export class ActivityListPopoverItem extends Component {
     static template = "mail.ActivityListPopoverItem";
 
     setup() {
+        super.setup();
         this.state = useState({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(

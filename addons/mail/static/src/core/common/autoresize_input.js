@@ -21,6 +21,7 @@ export class AutoresizeInput extends Component {
     };
 
     setup() {
+        super.setup();
         this.state = useState({
             value: this.props.value,
         });
