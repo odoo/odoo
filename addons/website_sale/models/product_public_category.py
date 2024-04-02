@@ -75,7 +75,7 @@ class ProductPublicCategory(models.Model):
 
     @api.constrains('parent_id')
     def check_parent_id(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValueError(_("Error! You cannot create recursive categories."))
 
     #=== BUSINESS METHODS ===#

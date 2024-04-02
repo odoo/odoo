@@ -480,7 +480,7 @@ class AccountTax(models.Model):
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
         for tax in self:
-            if not tax._check_m2m_recursion('children_tax_ids'):
+            if tax._has_cycle('children_tax_ids'):
                 raise ValidationError(_("Recursion found for tax %r.", tax.name))
             if any(
                 child.type_tax_use not in ('none', tax.type_tax_use)

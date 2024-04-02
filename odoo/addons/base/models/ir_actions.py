@@ -753,8 +753,8 @@ class IrActionsServer(models.Model):
                 raise ValidationError(msg)
 
     @api.constrains('child_ids')
-    def _check_recursion(self):
-        if not self._check_m2m_recursion('child_ids'):
+    def _check_child_recursion(self):
+        if self._has_cycle('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
 
     def _get_readable_fields(self):
