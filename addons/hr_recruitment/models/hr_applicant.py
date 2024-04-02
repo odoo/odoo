@@ -39,7 +39,7 @@ class Applicant(models.Model):
         inverse='_inverse_partner_email', store=True, index='trigram')
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     probability = fields.Float("Probability")
-    partner_id = fields.Many2one('res.partner', "Contact", copy=False)
+    partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
