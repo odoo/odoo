@@ -84,7 +84,7 @@ class HrWorkEntry(models.Model):
         # {(date_start, date_stop): {calendar: employees}}
         mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
         for work_entry in self:
-            if not work_entry.date_start or not work_entry.date_stop or not work_entry._is_duration_computed_from_calendar():
+            if not work_entry.date_start or not work_entry.date_stop or not work_entry._is_duration_computed_from_calendar() or not work_entry.employee_id:
                 super_work_entries |= work_entry
                 continue
             date_start = work_entry.date_start
@@ -108,7 +108,7 @@ class HrWorkEntry(models.Model):
             date_stop = work_entry.date_stop
             calendar = work_entry.contract_id.resource_calendar_id
             employee = work_entry.contract_id.employee_id
-            result[work_entry.id] = mapped_contract_data[(date_start, date_stop)][calendar][employee.id]['hours']
+            result[work_entry.id] = mapped_contract_data[(date_start, date_stop)][calendar][employee.id]['hours'] if calendar else 0.0
         return result
 
     @api.model

@@ -64,3 +64,9 @@ class ProductPackaging(models.Model):
             if new_qty == product_qty:
                 return packaging
         return self.env['product.packaging']
+
+    def write(self, vals):
+        res = super().write(vals)
+        if res and not vals.get('product_id', True):
+            self.unlink()
+        return res

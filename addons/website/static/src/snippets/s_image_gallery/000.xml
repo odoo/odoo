@@ -14,7 +14,7 @@
             <div class="carousel-inner" style="padding: 0;">
                  <t t-foreach="images" t-as="image">
                     <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
-                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image"/>
+                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image" data-o-main-image="true"/>
                     </div>
                  </t>
             </div>
@@ -53,7 +53,7 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow.lightbox">
-        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog">
+        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog" tabindex="-1">
             <div class="modal-dialog m-0" role="Picture Gallery"
                 t-attf-style="">
                 <div class="modal-content bg-transparent modal-fullscreen">

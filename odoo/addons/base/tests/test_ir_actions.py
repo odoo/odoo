@@ -8,10 +8,11 @@ import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import mute_logger
 from odoo.tests import common
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo import Command
 
 
-class TestServerActionsBase(common.TransactionCase):
+class TestServerActionsBase(TransactionCaseWithUserDemo):
 
     def setUp(self):
         super(TestServerActionsBase, self).setUp()
@@ -297,7 +298,7 @@ class TestServerActions(TestServerActionsBase):
             'code': """record.write({'date': datetime.date.today()})""",
         })
 
-        user_demo = self.env.ref("base.user_demo")
+        user_demo = self.user_demo
         self_demo = self.action.with_user(user_demo.id)
 
         # can write on contact partner
@@ -420,6 +421,17 @@ class TestCustomFields(common.TransactionCase):
             field.name = 'x_bar'
         self.assertIn('x_foo', self.env[self.MODEL]._fields)
 
+    def test_unlink_base(self):
+        """ one cannot delete a non-custom field expect for uninstallation """
+        field = self.env['ir.model.fields']._get(self.MODEL, 'ref')
+        self.assertTrue(field)
+
+        with self.assertRaisesRegex(UserError, 'This column contains module data'):
+            field.unlink()
+
+        # but it works in the context of uninstalling a module
+        field.with_context(_force_unlink=True).unlink()
+
     def test_unlink_with_inverse(self):
         """ create a custom o2m and then delete its m2o inverse """
         model = self.env['ir.model']._get(self.MODEL)
@@ -472,6 +484,31 @@ class TestCustomFields(common.TransactionCase):
         # uninstall mode: unlink dependant fields
         field.with_context(_force_unlink=True).unlink()
         self.assertFalse(dependant.exists())
+
+    def test_unlink_inherited_custom(self):
+        """ Creating a field on a model automatically creates an inherited field
+            in the comodel, and the latter can only be removed by deleting the
+            "parent" field.
+        """
+        field = self.create_field('x_foo')
+        self.assertEqual(field.state, 'manual')
+
+        inherited_field = self.env['ir.model.fields']._get(self.COMODEL, 'x_foo')
+        self.assertTrue(inherited_field)
+        self.assertEqual(inherited_field.state, 'base')
+
+        # one cannot delete the inherited field itself
+        with self.assertRaises(UserError):
+            inherited_field.unlink()
+
+        # but the inherited field is deleted when its parent field is
+        field.unlink()
+        self.assertFalse(field.exists())
+        self.assertFalse(inherited_field.exists())
+        self.assertFalse(self.env['ir.model.fields'].search_count([
+            ('model', 'in', [self.MODEL, self.COMODEL]),
+            ('name', '=', 'x_foo'),
+        ]))
 
     def test_create_binary(self):
         """ binary custom fields should be created as attachment=True to avoid

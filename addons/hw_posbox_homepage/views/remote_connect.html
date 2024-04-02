@@ -32,7 +32,7 @@
                     url:'/hw_posbox_homepage/password',
                     type: 'post',
                     contentType: 'application/json',
-                    data: JSON.stringify({ params: {action: 'view'} }),
+                    data: JSON.stringify({}),
                 }).done(function(password) {
                     $('.password').val(password['result']);
                 });

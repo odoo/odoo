@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
 
     l10n_din5008_template_data = fields.Binary(compute='_compute_l10n_din5008_template_data')
     l10n_din5008_document_title = fields.Char(compute='_compute_l10n_din5008_document_title')
-    l10n_din5008_addresses = fields.Binary(compute='_compute_l10n_din5008_addresses')
+    l10n_din5008_addresses = fields.Binary(compute='_compute_l10n_din5008_addresses', exportable=False)
 
     def _compute_l10n_din5008_template_data(self):
         for record in self:
@@ -48,3 +48,9 @@ class SaleOrder(models.Model):
             else:
                 data.append((_("Shipping Address:"), record.partner_shipping_id))
                 data.append((_("Invoicing Address:"), record.partner_invoice_id))
+
+    def check_field_access_rights(self, operation, field_names):
+        field_names = super().check_field_access_rights(operation, field_names)
+        return [field_name for field_name in field_names if field_name not in {
+            'l10n_din5008_addresses',
+        }]

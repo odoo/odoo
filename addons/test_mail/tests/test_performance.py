@@ -18,7 +18,7 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
     def setUpClass(cls):
         super(BaseMailPerformance, cls).setUpClass()
 
-        # creating partners is required notably witn template usage
+        # creating partners is required notably with template usage
         cls.user_employee.write({'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)]})
         cls.user_test = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'Paulette Testouille',
@@ -274,6 +274,24 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=15, employee=15):
             activity.action_feedback(feedback='Zizisse Done !')
+
+    @warmup
+    def test_adv_activity_mixin_batched(self):
+        records = self.env['mail.test.activity'].create([{'name': 'Test'}] * 10)
+        MailActivity = self.env['mail.activity'].with_context({
+            'default_res_model': 'mail.test.activity',
+        })
+        activity_type = self.env.ref('mail.mail_activity_data_todo')
+
+        MailActivity.create([{
+            'summary': 'Test Activity',
+            'res_id': record.id,
+            'activity_type_id': activity_type.id,
+        } for record in records])
+
+        self.env.invalidate_all()
+        with self.assertQueryCount(3):
+            records.mapped('activity_date_deadline')
 
     @users('admin', 'employee')
     @warmup

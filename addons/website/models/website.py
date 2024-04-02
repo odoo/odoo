@@ -8,6 +8,7 @@ import logging
 import operator
 import re
 import requests
+import threading
 
 from collections import defaultdict
 from functools import reduce
@@ -191,6 +192,14 @@ class Website(models.Model):
     @tools.ormcache('self.env.uid', 'self.id')
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
+
+    @tools.ormcache('self.env.uid', 'self.id')
+    def is_menu_cache_disabled(self):
+        """
+        Checks if the website menu contains a record like url.
+        :return: True if the menu contains a record like url
+        """
+        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url)))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -507,7 +516,8 @@ class Website(models.Model):
                         rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
-            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+            page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
+                              xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
             names = self.env['ir.model.data'].search([
@@ -976,7 +986,9 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = request and request.httprequest.host or ''
+        domain_name = (request and request.httprequest.host
+            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or '')
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
@@ -1164,7 +1176,7 @@ class Website(models.Model):
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
                     continue
-                for loc in func(self.env, rule, query_string):
+                for loc in func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
                     yield loc
                 continue
 
@@ -1200,7 +1212,7 @@ class Website(models.Model):
 
                     for rec in converter.generate(self.env, args=val, dom=query):
                         newval.append(val.copy())
-                        newval[-1].update({name: rec})
+                        newval[-1].update({name: rec.with_context(lang=self.default_lang_id.code)})
                 values = newval
 
             for value in values:
@@ -1236,10 +1248,30 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
+    def get_website_page_ids(self):
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            # Note that `website.pages` have `0,0,0,0` ACL rights by default for
+            # everyone except for the website designer which receive `1,0,0,0`.
+            # So the "Website/Site/Content/Pages" menu to reach the page manager
+            # is not shown to the restricted users, as the action linked model
+            # (website.page) can't be access. It's how the Odoo framework works.
+            # Still, we let the restricted editor access this resource for
+            # custos granting them read and/or write access on page.
+            raise AccessError(_("Access Denied"))
+
+        domain = [('url', '!=', False)]
+        if self:
+            domain = AND([domain, self.website_domain()])
+        pages = self.env['website.page'].sudo().search(domain)
+        if self:
+            pages = pages._get_most_specific_pages()
+        return pages.ids
+
     def _get_website_pages(self, domain=None, order='name', limit=None):
         if domain is None:
             domain = []
         domain += self.get_current_website().website_domain()
+        domain = AND([domain, [('url', '!=', False)]])
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages._get_most_specific_pages()
         return pages
@@ -1578,16 +1610,15 @@ class Website(models.Model):
         """
         fuzzy_term = False
         search_details = self._search_get_details(search_type, order, options)
+        count, results = self._search_exact(search_details, search, limit, order)
+        if count > 0:
+            return count, results, fuzzy_term
         if search and options.get('allowFuzzy', True):
             fuzzy_term = self._search_find_fuzzy_term(search_details, search)
             if fuzzy_term:
                 count, results = self._search_exact(search_details, fuzzy_term, limit, order)
                 if fuzzy_term.lower() == search.lower():
                     fuzzy_term = False
-            else:
-                count, results = self._search_exact(search_details, search, limit, order)
-        else:
-            count, results = self._search_exact(search_details, search, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, limit, order):
@@ -1742,6 +1773,18 @@ class Website(models.Model):
                 similarities=sql.SQL(', ').join(similarities)
             )
 
+            where_clause = sql.SQL("")
+            # Filter unpublished records for portal and public user for
+            # performance.
+            # TODO: Same for `active` field?
+            filter_is_published = (
+                'is_published' in model._fields
+                and model._fields['is_published'].base_field.model_name == model_name
+                and not self.env.user.has_group('base.group_user')
+            )
+            if filter_is_published:
+                where_clause = sql.SQL("WHERE is_published")
+
             from_clause = sql.SQL("FROM {table}").format(table=sql.Identifier(model._table))
             # Specific handling for fields being actually part of another model
             # through the `inherits` mechanism.
@@ -1760,12 +1803,14 @@ class Website(models.Model):
             query = sql.SQL("""
                 SELECT {table}.id, {best_similarity} AS _best_similarity
                 {from_clause}
+                {where_clause}
                 ORDER BY _best_similarity desc
                 LIMIT 1000
             """).format(
                 table=sql.Identifier(model._table),
                 best_similarity=best_similarity,
                 from_clause=from_clause,
+                where_clause=where_clause,
             )
             self.env.cr.execute(query, {'search': search})
             ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}

@@ -29,6 +29,8 @@ class AccountReconcileModel(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        if not company_ids:
+            return []
         return [
             ('company_id', populate.cartesian(company_ids.ids)),
             ('rule_type', populate.cartesian(['writeoff_button', 'writeoff_suggestion'])),
@@ -96,6 +98,12 @@ class AccountReconcileModelLine(models.Model):
             company_id = self.env['account.reconcile.model'].browse(values['model_id']).company_id.id
             return random.choice(search_account_ids(company_id).ids)
 
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
+        if not company_ids:
+            return []
         return [
             ('model_id', populate.cartesian(self.env.registry.populated_models['account.reconcile.model'])),
             ('amount_type', populate.randomize(['fixed', 'percentage', 'regex'])),

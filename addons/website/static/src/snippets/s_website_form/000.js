@@ -9,6 +9,7 @@ odoo.define('website.s_website_form', function (require) {
     var publicWidget = require('web.public.widget');
     const dom = require('web.dom');
     const concurrency = require('web.concurrency');
+    const wUtils = require('website.utils');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -40,6 +41,7 @@ odoo.define('website.s_website_form', function (require) {
         selector: '.s_website_form form, form.s_website_form', // !compatibility
         events: {
             'click .s_website_form_send, .o_website_form_send': 'send', // !compatibility
+            'submit': 'send',
         },
 
         /**
@@ -126,25 +128,16 @@ odoo.define('website.s_website_form', function (require) {
             // Because, using t-att- inside form make it non-editable
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
-            const dataForEl = document.querySelector(`[data-for='${this.$target[0].id}']`);
+            let dataForValues = wUtils.getParsedDataFor(this.$target[0].id, document);
             this.editTranslations = !!this._getContext(true).edit_translations;
             // On the "edit_translations" mode, a <span/> with a translated term
             // will replace the attribute value, leading to some inconsistencies
             // (setting again the <span> on the attributes after the editor's
             // cleanup, setting wrong values on the attributes after translating
             // default values...)
-            if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
-                const dataForValues = dataForEl ?
-                    JSON.parse(dataForEl.dataset.values
-                        // replaces `True` by `true` if they are after `,` or `:` or `[`
-                        .replace(/([,:\[]\s*)True/g, '$1true')
-                        // replaces `False` and `None` by `""` if they are after `,` or `:` or `[`
-                        .replace(/([,:\[]\s*)(False|None)/g, '$1""')
-                        // replaces the `'` by `"` if they are before `,` or `:` or `]` or `}`
-                        .replace(/'(\s*[,:\]}])/g, '"$1')
-                        // replaces the `'` by `"` if they are after `{` or `[` or `,` or `:`
-                        .replace(/([{\[:,]\s*)'/g, '$1"')
-                    ) : {};
+            if (!this.editTranslations
+                    && (dataForValues || Object.keys(this.preFillValues).length)) {
+                dataForValues = dataForValues || {};
                 const fieldNames = this.$target.serializeArray().map(el => el.name);
                 // All types of inputs do not have a value property (eg:hidden),
                 // for these inputs any function that is supposed to put a value
@@ -311,13 +304,21 @@ odoo.define('website.s_website_form', function (require) {
             // force server date format usage for existing fields
             this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
             .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                const inputEl = this.querySelector('input');
+
+                // Datetimepicker('viewDate') will return `new Date()` if the
+                // input is empty but we want to keep the empty value
+                if (!inputEl.value) {
+                    return;
+                }
+
                 var date = $(this).datetimepicker('viewDate').clone().locale('en');
                 var format = 'YYYY-MM-DD';
                 if ($(this).hasClass('s_website_form_datetime')) {
                     date = date.utc();
                     format = 'YYYY-MM-DD HH:mm:ss';
                 }
-                form_values[$(this).find('input').attr('name')] = date.format(format);
+                form_values[inputEl.getAttribute('name')] = date.format(format);
             });
 
             if (this._recaptchaLoaded) {
@@ -616,13 +617,13 @@ odoo.define('website.s_website_form', function (require) {
                 case '!set':
                     return !value;
                 case 'greater':
-                    return value > comparable;
+                    return parseFloat(value) > parseFloat(comparable);
                 case 'less':
-                    return value < comparable;
+                    return parseFloat(value) < parseFloat(comparable);
                 case 'greater or equal':
-                    return value >= comparable;
+                    return parseFloat(value) >= parseFloat(comparable);
                 case 'less or equal':
-                    return value <= comparable;
+                    return parseFloat(value) <= parseFloat(comparable);
                 case 'fileSet':
                     return value.name !== '';
                 case '!fileSet':
@@ -678,7 +679,9 @@ odoo.define('website.s_website_form', function (require) {
                 }
 
                 const formData = new FormData(this.$target[0]);
-                const currentValueOfDependency = formData.get(dependencyName);
+                const currentValueOfDependency = ["contains","!contains"].includes(comparator)
+                    ? formData.getAll(dependencyName).join()
+                    : formData.get(dependencyName);
                 return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
             };
         },

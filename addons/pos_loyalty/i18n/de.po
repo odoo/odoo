@@ -5,15 +5,16 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Technisches Feld, das verwendet wird, um mehrere Prämienzeilen derselben Prämie miteinander zu verbinden."
+"Technisches Feld, das verwendet wird, um mehrere Belohnungszeilen derselben Belohnung miteinander zu verbinden."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -90,7 +91,7 @@ msgid ""
 " You will still be able to claim it through the reward button."
 msgstr ""
 "Sind Sicher, dass Sie %s entfernen möchten? Sie können sie immer noch über "
-"die Prämienschaltfläche einfordern."
+"die Belohnungsschaltfläche einfordern."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -141,6 +142,13 @@ msgstr "Gutscheinpunkt(e)"
 #, python-format
 msgid "Current Balance:"
 msgstr "Aktuelles Saldo:"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
+#, python-format
+msgid "Customer"
+msgstr "Kunde"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -326,7 +334,14 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "No rewards available."
-msgstr "Keine Prämien verfügbar"
+msgstr "Keine Belohnungen verfügbar"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid "No valid eWallet found"
+msgstr "Keine gültige E-Geldbörse gefunden"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -345,12 +360,12 @@ msgstr "Bitte wählen Sie eine Belohnung"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_order_count
 msgid "PoS Order Count"
-msgstr "Anzahl Kassensystemaufträge"
+msgstr "Anzahl Kassenaufträge"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr "Kassensystem-Auftragsreferenz"
+msgstr "Kassenauftragsreferenz"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -362,7 +377,7 @@ msgstr "PoS Aufträge"
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS order where this coupon was generated."
-msgstr "Kassensystemauftrag, in dem dieser Gutschein generiert wurde."
+msgstr "Kassenauftrag, in dem dieser Gutschein generiert wurde."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
@@ -378,7 +393,7 @@ msgstr "Kassensystem-Konfiguration"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Auftragspositionen des Kassensystems"
+msgstr "Kassenauftragszeilen"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order
@@ -411,7 +426,7 @@ msgstr "Punktekosten"
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__pos_report_print_id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "Print Report"
-msgstr "Bericht drucken"
+msgstr "Druckdokument"
 
 #. module: pos_loyalty
 #. odoo-python
@@ -468,7 +483,7 @@ msgstr "Belohnung"
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr "Kenncode der Prämie"
+msgstr "Kenncode der Belohnung"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__scan_use
@@ -557,8 +572,8 @@ msgid ""
 "The reward \"%s\" contain an error in its domain, your domain must be "
 "compatible with the PoS client"
 msgstr ""
-"Die Prämie „%s“ enthält einen Fehler in der Domain, Ihre Domain muss mit dem"
-" Kassensystem-Client kompatibel sein"
+"Die Belohnung „%s“ enthält einen Fehler in der Domain, Ihre Domain muss mit "
+"dem Kassensystem-Client kompatibel sein"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -577,7 +592,7 @@ msgstr "Die Belohnung konnte nicht angewandt werden."
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
 msgid "There are no rewards claimable for this customer."
-msgstr "Es gibt keine einzulösenden Prämien für diesen Kunden."
+msgstr "Es gibt keine einzulösenden Belohnungen für diesen Kunden."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -623,7 +638,7 @@ msgid ""
 "There is no print report on the gift card program and your pos is set to "
 "print them."
 msgstr ""
-"Es gibt keinen Druckbericht für das Geschenkkartenprogramm und Ihr "
+"Es gibt keinen Druckdokument für das Geschenkkartenprogramm und Ihr "
 "Kassensystem ist so eingestellt, dass sie gedruckt werden."
 
 #. module: pos_loyalty
@@ -759,6 +774,16 @@ msgid "You cannot set negative quantity or price to gift card or ewallet."
 msgstr ""
 "Sie können keinen negativen Wert oder Preis für eine Geschenkkarte oder "
 "E-Geldbörse einstellen."
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
+#, python-format
+msgid ""
+"You either have not created an eWallet or all your eWallets have expired."
+msgstr ""
+"Sie haben entweder kein E-Geldbörse erstellt oder alle Ihre E-Geldbörsen "
+"sind abgelaufen."
 
 #. module: pos_loyalty
 #. odoo-python

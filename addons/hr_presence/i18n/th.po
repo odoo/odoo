@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,14 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    เรียน <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    ยกเว้นว่าหากมีข้อผิดพลาดจากทางเรา แต่ดูเหมือนว่าคุณไม่ได้อยู่ที่สำนักงานและไม่มีการขอลางานจากคุณ<br>\n"
+"                    โปรดใช้มาตรการที่เหมาะสมเพื่อดำเนินการขาดงานนี้<br>\n"
+"                    อย่าลังเลที่จะติดต่อผู้จัดการของคุณหรือฝ่ายบุคคล\n"
+"                    <br>ขอแสดงความนับถือ<br><br>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
@@ -84,7 +93,7 @@ msgstr "ส่งอีเมลแล้ว"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Employee's Presence to Define"
-msgstr ""
+msgstr "การแสดงตนของพนักงานเพื่อกำหนด"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -119,7 +128,7 @@ msgstr "การเข้างานของ HR: cron"
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "HR: อีเมลการขาดงานของพนักงาน"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -182,6 +191,7 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
 " being off"
 msgstr ""
+"ส่งด้วยตนเองในโมดูลการแสดงตัวตน เมื่อพนักงานไม่ได้ทำงานแม้จะไม่ได้ลางานก็ตาม"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -241,4 +251,4 @@ msgstr "คุณไม่มีสิทธิ์ทำเช่นนี้ �
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "การจัดการข้อความของ websocket"

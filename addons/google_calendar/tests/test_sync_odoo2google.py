@@ -19,6 +19,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
     def setUp(self):
         super().setUp()
+        self.env.user.partner_id.tz = "Europe/Brussels"
         self.google_service = GoogleCalendarService(self.env['google.service'])
         # Make sure this test will work for the next 30 years
         self.env['ir.config_parameter'].set_param('google_calendar.sync.range_days', 10000)
@@ -326,8 +327,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'name': 'New name',
             'recurrence_update': 'future_events',
         })
-        self.assertGoogleEventPatched(event.google_id, {
-            'id': event.google_id,
+        self.assertGoogleEventInserted({
+            'id': False,
             'start': {'date': str(event.start_date)},
             'end': {'date': str(event.stop_date + relativedelta(days=1))},
             'summary': 'New name',
@@ -336,9 +337,10 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'guestsCanModify': True,
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
-            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.recurrence_id.id}},
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=1;BYDAY=WE']
         }, timeout=3)
 
     @patch_api
@@ -412,8 +414,9 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'name': 'New name',
             'recurrence_update': 'all_events',
         })
-        self.assertGoogleEventPatched(recurrence.google_id, {
-            'id': recurrence.google_id,
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
+        self.assertGoogleEventInserted({
+            'id': False,
             'start': {'date': str(event.start_date)},
             'end': {'date': str(event.stop_date + relativedelta(days=1))},
             'summary': 'New name',
@@ -422,8 +425,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'guestsCanModify': True,
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
-            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
-            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         }, timeout=3)
@@ -578,8 +581,9 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'name': 'New name',
             'recurrence_update': 'all_events',
         })
-        self.assertGoogleEventPatched(recurrence.google_id, {
-            'id': recurrence.google_id,
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', recurrence.id)])
+        self.assertGoogleEventInserted({
+            'id': False,
             'start': {'dateTime': "2020-01-15T08:00:00+00:00", 'timeZone': 'Europe/Brussels'},
             'end': {'dateTime': "2020-01-15T09:00:00+00:00", 'timeZone': 'Europe/Brussels'},
             'summary': 'New name',
@@ -588,8 +592,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'guestsCanModify': True,
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
-            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
-            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
         }, timeout=3)
@@ -674,3 +678,17 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event_2.action_mass_archive('self_only')
         self.assertFalse(event_2.active)
         self.assertFalse(recurrence.active)
+
+    @patch_api
+    def test_videocall_location_on_location_set(self):
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'partner_ids': [(4, partner.id)],
+            'need_sync': False,
+            'location' : 'Event Location'
+        })
+        event._sync_odoo2google(self.google_service)
+        self.assertGoogleEventHasNoConferenceData()

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,7 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"วันที่ล็อคผู้ใช้ทั้งหมดใหม่จะต้องอยู่หลัง (หรือเท่ากับ) จากวันก่อนหน้า"
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -36,19 +38,19 @@ msgstr "หลายบริษัท"
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
-msgstr ""
+msgstr "วันที่ล็อกสำหรับนักบัญชีไม่สามารถย้อนกลับได้และไม่สามารถลบออกได้"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "วันที่ล็อคภาษีใหม่จะต้องตั้งค่าหลังจากวันที่ล็อคก่อนหน้า"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "วันที่ล็อกภาษีไม่สามารถย้อนกลับได้และไม่สามารถลบออกได้"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -57,6 +59,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"คุณไม่สามารถล็อคช่วงเวลาที่ยังไม่สิ้นสุดได้ ดังนั้น "
+"วันที่ล็อคผู้ใช้ทั้งหมดจะต้องอยู่ข้างหน้า (หรือเท่ากับ) "
+"กับวันสุดท้ายของเดือนก่อนหน้า"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -65,6 +70,8 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"คุณไม่สามารถล็อคช่วงเวลาที่ยังไม่สิ้นสุดได้ ดังนั้น "
+"วันที่ล็อกภาษีจะต้องอยู่ข้างหน้า (หรือเท่ากับ) วันสุดท้ายของเดือนก่อนหน้า"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -74,3 +81,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"คุณไม่สามารถกำหนดข้อจำกัดที่เข้มงวดกับนักบัญชีได้มากกว่าผู้ใช้ ดังนั้น "
+"วันที่ล็อคผู้ใช้ทั้งหมดจะต้องอยู่ข้างหน้า (หรือเท่ากับ) "
+"วันที่ล็อคใบแจ้งหนี้/ใบเรียกเก็บเงิน"

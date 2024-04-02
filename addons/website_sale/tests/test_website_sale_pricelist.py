@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+
 from unittest.mock import patch
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, loaded_demo_data
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
+
+_logger = logging.getLogger(__name__)
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -282,6 +287,7 @@ class TestWebsitePriceList(TransactionCase):
         returns a dict with just `price_reduce` (no discount) as key
         when the product is tax included.
         """
+        self.env.company.country_id = self.env.ref('base.us')
         tax = self.env['account.tax'].create({
             'name': "Tax 10",
             'amount': 10,
@@ -650,6 +656,9 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
             The objective is to verify that the pricelist
             changes correctly according to the user.
         """
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         website = self.env.ref('website.default_website')
         test_user = self.env['res.users'].create({
             'name': 'Toto',

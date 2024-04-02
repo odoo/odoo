@@ -96,7 +96,6 @@
 
         <record id="product.product_product_6" model="product.product">
             <field name="is_published" eval="True"/>
-            <field name="website_sequence">10010</field>
         </record>
 
         <record id="product.product_product_7" model="product.product">
@@ -226,6 +225,7 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_cabinets')])]"/>
         </record>
         <record id="product.product_product_11_product_template" model="product.template">
+            <field name="website_sequence">9990</field>
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
         </record>
         <record id="product.product_product_12_product_template" model="product.template">
@@ -271,7 +271,6 @@
         <record model="product.pricelist" id="product.list0">
             <field name="selectable" eval="True" />
             <field name="sequence">3</field>
-            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record id="benelux" model="res.country.group">

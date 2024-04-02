@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime as dt
+from datetime import datetime as dt, time
 from datetime import timedelta as td
 from freezegun import freeze_time
 
@@ -879,8 +879,9 @@ class TestReorderingRule(TransactionCase):
 
         moves = self.env['stock.move'].search([('product_id', '=', self.product_01.id)], order='id desc')
         self.assertRecordValues(moves, [
-            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
+            {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
+            {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 0},
         ])
 
     def test_add_line_to_existing_draft_po(self):
@@ -893,9 +894,8 @@ class TestReorderingRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         self.env.company.days_to_purchase = 10
-        expected_order_date = dt.combine(dt.today() + td(days=10), dt.min.time())
+        expected_order_date = dt.combine(dt.today() + td(days=10), time(12))
         expected_delivery_date = expected_order_date + td(days=1.0)
-        # expected_delivery_date = expected_delivery_date.replace(hour=12, minute=0, second=0)
 
         product_02 = self.env['product.product'].create({
             'name': 'Super Product',
@@ -969,6 +969,59 @@ class TestReorderingRule(TransactionCase):
             self.assertNotEqual(po05, po04, 'A new PO should be generated')
             self.assertEqual(po05.order_line.product_id, product_02)
 
+    def test_reordering_rule_visibility_days(self):
+        """
+            Test the visibility days on the reordering rule update the qty_to_order but do not
+            update the forecasted quantity of the current day.
+
+            ex:
+            - We are January 14th
+            - visibility days = 10
+            - A sale order is scheduled on January 20th
+            -> 2 scenarios
+            1. Today's forecasted quantity is < orderpoint's min qty
+                the sale order will be taken into account in the forecasted quantity
+            2. Todays's forecasted quantity is >= orderpoint's min qty
+                the sale order will not be taken into account in the forecasted quantity
+        """
+        # create reordering rule
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        op = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': wh.id,
+            'location_id': wh.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'visibility_days': 10,
+        })
+
+        # out move on January 20th
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product_01.id,
+            'product_uom': self.product_01.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'date': dt.today() + td(days=6),
+        })
+        move._action_confirm()
+        self.assertEqual(op.qty_to_order, 0, 'sale order is ignored')
+        # out move today to force the forecast to be negative
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product_01.id,
+            'product_uom': self.product_01.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': wh.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        move._action_confirm()
+
+        #virtual available is -1 but we need to replenish 2
+        self.product_01.virtual_available = -1
+        self.assertEqual(op.qty_to_order, 2, 'sale order is ignored')
+
     def test_update_po_line_without_purchase_access_right(self):
         """ Test that a user without purchase access right can update a PO line from picking."""
         # create a user with only inventory access right
@@ -1013,3 +1066,31 @@ class TestReorderingRule(TransactionCase):
         picking.with_user(user).action_assign()
         # check that the PO line quantity has been updated
         self.assertEqual(po_line.product_qty, 6, 'The PO line quantity should be 6')
+
+    def test_set_supplier_in_orderpoint(self):
+        """
+        Test that qty_to_order is correctly computed when setting the supplier in an orderpoint
+        Have a product with a uom in Kg and a purchase uom in Tonne (the purchase UOM should be bigger that the UOM)
+        and a supplier with a min_qty of 6T
+        Create an orderpoint with a min_qty of 500Kg and a max_qty of 0Kg
+        Set the supplier in the orderpoint and check that the qty_to_order is correctly updated to 6000Kg
+        """
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[3].id,
+            'uom_po_id': self.env.ref('uom.product_uom_categ_kgm').uom_ids[4].id,
+            'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 500,
+            'product_max_qty': 0,
+        })
+        product.seller_ids.with_context(orderpoint_id=orderpoint.id).action_set_supplier()
+        self.assertEqual(orderpoint.supplier_id, product.seller_ids, 'The supplier should be set in the orderpoint')
+        self.assertEqual(orderpoint.product_uom, product.uom_id, 'The orderpoint uom should be the same as the product uom')
+        self.assertEqual(orderpoint.qty_to_order, 6000)

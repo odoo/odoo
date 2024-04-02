@@ -10,15 +10,16 @@
 # Kimlong Mai, 2023
 # Christoph M., 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,7 +227,7 @@ msgid ""
 "                    Order Again"
 msgstr ""
 "<i class=\"fa fa-rotate-right me-1\"/>\n"
-"                    Nochmal bestellen"
+"                    Nochmal kaufen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -250,7 +251,7 @@ msgstr "<option value=\"\">Land ...</option>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Bundesland/Region/Provinz ...</option>"
+msgstr "<option value=\"\">Bundesland ...</option>"
 
 #. module: website_sale
 #. odoo-python
@@ -280,8 +281,8 @@ msgid ""
 "contact us directly for this operation.</small>"
 msgstr ""
 "<small class=\"form-text text-muted\">Eine Änderung des Unternehmensnamens "
-"oder der MwSt-Nr. ist nicht mehr möglich, sobald Dokumente für Ihr Konto "
-"ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an "
+"oder der MwSt.-Nummer ist nicht mehr möglich, sobald Dokumente für Ihr Konto"
+" ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an "
 "uns.</small>"
 
 #. module: website_sale
@@ -350,7 +351,7 @@ msgid ""
 "<span class=\"o_form_label\">Automatically send abandoned checkout "
 "emails</span>"
 msgstr ""
-"<span class=\"o_form_label\">E-Mails bei verlassenen Kassiervorgängen "
+"<span class=\"o_form_label\">E-Mails bei abgebrochenen Kassiervorgängen "
 "automatisch senden</span>"
 
 #. module: website_sale
@@ -426,7 +427,7 @@ msgid ""
 "<span>Next</span>\n"
 "                                            <i class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span>Nächste</span>\n"
+"<span>Weiter</span>\n"
 "                                            <i class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -451,6 +452,11 @@ msgid ""
 msgstr ""
 "<span>Zur Kasse</span>\n"
 "                                                    <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Menge</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -483,11 +489,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video-Vorschau</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -651,8 +652,8 @@ msgid "Abandoned Cart"
 msgstr "Verlassener Warenkorb"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -1086,10 +1087,8 @@ msgstr "Kann veröffentlichen"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Das eingebettete Bild/Video kann nicht mit einem nicht kompatiblen Bild "
-"resequenziert werden."
+msgid "You can't use a video as the product's main image."
+msgstr "Sie können kein Video als das Hauptbild des Produkts verwenden"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1107,7 +1106,7 @@ msgstr "Karten"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Carousel"
-msgstr "Karrussel"
+msgstr "Karussell"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1198,9 +1197,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Das Ändern der Umsatzsteuer-Identifikationsnummer ist nicht zulässig, sobald"
-" Dokumente für Ihr Konto ausgestellt wurden. Bitte kontaktieren Sie uns "
-"direkt für diesen Vorgang."
+"Das Ändern der MwSt.-Nummer ist nicht zulässig, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte kontaktieren Sie uns direkt für diesen "
+"Vorgang."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1208,7 +1207,7 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Eine Änderung des Namen des Unternehmens ist nicht mehr möglich, sobald "
+"Eine Änderung des Unternehmensnamens ist nicht mehr möglich, sobald "
 "Dokumente für Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen"
 " Vorgang direkt an uns."
 
@@ -1217,11 +1216,12 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
+"Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Der Name darf nicht geändert werden, sobald eine Rechnung für Sie erzeugt "
-"wurde. Bitte wenden Sie sich direkt an uns."
+"Eine Änderung Ihres Namens ist nicht mehr möglich, sobald Dokumente für Ihr "
+"Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang direkt an"
+" uns."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1313,7 +1313,10 @@ msgid "Companies"
 msgstr "Unternehmen"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "Unternehmensname"
 
@@ -1567,6 +1570,11 @@ msgid "DHL Express Connector"
 msgstr "DHL-Express-Konnektor"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr "BAUSTEINE HIER PLATZIEREN, DAMIT SIE FÜR ALLE PRODUKTE VERFÜGBAR SIND"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Standard"
@@ -1659,7 +1667,7 @@ msgstr "Legt die Reihenfolge auf der E-Commerce-Website fest"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Zusammenfassung"
+msgstr "Übersicht"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
@@ -1817,11 +1825,6 @@ msgstr "E-Commerce: Wiederaufnahme des Warenkorbs"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Edit"
 msgstr "Bearbeiten"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Im Website-Builder bearbeiten"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2053,6 +2056,20 @@ msgstr ""
 "die ihren Warenkorb verlassen haben"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Wenn Sie für eine externe Person bestellen, geben Sie Ihre Bestellung bitte "
+"über das Backend auf. Wenn Sie Ihren Namen oder Ihre E-Mail-Adresse ändern "
+"möchten, tun Sie dies bitte in den Kontoeinstellungen oder kontaktieren Sie "
+"Ihren Administrator."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2117,22 +2134,10 @@ msgstr "Sofortiger Kassiervorgang, statt Hinzufügen zum Warenkorb"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Wenn Sie für eine externe Person bestellen, geben Sie Ihre Bestellung bitte "
-"über das Backend auf. Wenn Sie Ihren Namen oder Ihre E-Mail-Adresse ändern "
-"möchten, tun Sie dies bitte in den Kontoeinstellungen oder kontaktieren Sie "
-"Ihren Administrator."
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
-"E-mail Addresse ungültig. Bitte geben Sie eine gültige E-mail Adresse ein."
+"Ungültige E-Mail-Adresse! Bitte geben Sie eine gültige E-mail E-Mail-"
+"Adresse."
 
 #. module: website_sale
 #. odoo-python
@@ -2485,8 +2490,8 @@ msgstr "Kein Produkt definiert"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
-msgstr "Kein Produkt definiert in der Kategorie „"
+msgid "No product defined in this category."
+msgstr "Kein Produkt in dieser Kategorie definiert."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -2776,9 +2781,16 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
-msgstr "Pillen"
+msgstr "Viereck"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2952,7 +2964,7 @@ msgstr "Produktkategorie"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Comparison Tool"
-msgstr "Produktvergleichswerkzeug"
+msgstr "Produktvergleichstool"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -3190,7 +3202,6 @@ msgstr "Menge:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3333,7 +3344,7 @@ msgstr "Beschränken Sie die Veröffentlichung auf dieser Website."
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr "Bestellung zusammenfassen"
+msgstr "Bestellung fortsetzen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -3381,7 +3392,7 @@ msgstr "SEO-optimiert"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sale_ribbon
 msgid "Sale"
-msgstr "Verkauf"
+msgstr "Sale"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
@@ -3739,7 +3750,7 @@ msgstr "Einheit bestimmen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
-msgstr "Bundesland / Region"
+msgstr "Bundesland"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_provider_state
@@ -3766,7 +3777,7 @@ msgstr "Straße 2"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
-msgstr "Strasse <span class=\"d-none d-md-inline\"> und Hausnummer</span>"
+msgstr "Straße <span class=\"d-none d-md-inline\"> und Hausnummer</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3804,11 +3815,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Vorgeschlagenes Zubehör im Warenkorb des E-Commerce"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "TIN / VAT"
-msgstr "USt-IdNr."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Stichwort"
@@ -3841,7 +3847,7 @@ msgstr "Text, der statt eines Preises angezeigt wird"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr "Vielen Dank für Ihre Bestellung"
+msgstr "Vielen Dank für Ihre Bestellung!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4138,7 +4144,7 @@ msgstr "Unbezahlt"
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 #, python-format
 msgid "Unpaid Orders"
-msgstr "Unbezahlte Bestellungen"
+msgstr "Unbezahlte Aufträge"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -4165,6 +4171,11 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 "API von Google Places verwenden, um durch Ihre Besucher eingegebene Adressen"
 " zu validieren"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "MwSt."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
@@ -4478,6 +4489,20 @@ msgstr ""
 "                                Diese Meldung wird angezeigt, weil Sie weder einen Filter noch eine Vorlage zur Verwendung bereitgestellt haben."
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Ihre E-Mail"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Ihr Name"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -4498,11 +4523,6 @@ msgstr "Ihr vorheriger Warenkorb wurde bereits abgeschlossen."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "PLZ"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "border-primary"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

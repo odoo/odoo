@@ -5,15 +5,15 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgid ""
 "title=\"Opportunities\"/>"
 msgstr ""
 "<i class=\"fa fa-fw fa-star\" aria-label=\"Opportunities\" role=\"img\" "
-"title=\"Chancen\"/>"
+"title=\"Opportunities\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -228,12 +228,12 @@ msgid ""
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> bei </span>"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> zu </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr "<span class=\"oe_grey p-2\"> bei </span>"
+msgstr "<span class=\"oe_grey p-2\"> zu </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -546,8 +546,8 @@ msgstr "Beschreibung hinzufügen …"
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
 msgstr ""
-"Fügen Sie einen Qualifizierungsschritts vor der Erstellung einer "
-"Verkaufschance hinzu"
+"Fügen Sie vor der Erstellung einer Verkaufschance einen "
+"Qualifizierungsschritt hinzu"
 
 #. module: crm
 #. odoo-javascript
@@ -880,7 +880,7 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Ihre Leads/Verkaufschancen in Kategorien, wie z. B. Training oder "
+"Ihre Leads/Verkaufschancen in Kategorien, wie z. B. Schulung oder "
 "Dienstleistung, einteilen und analysieren"
 
 #. module: crm
@@ -1331,8 +1331,8 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
-"Wussten Sie, dass Sie ein Unternehmen nach Name oder Umsatzsteuernummer "
-"suchen können, um sofort alle Daten einzugeben? Odoo vervollständigt alles "
+"Wussten Sie, dass Sie ein Unternehmen nach Name oder MwSt.-Nummer suchen "
+"können, um sofort alle Daten einzugeben? Odoo vervollständigt alles "
 "automatisch für Sie: Logo, Adresse, Unternehmensgröße, "
 "Geschäftsinformationen, Konten in sozialen Medien usw."
 
@@ -1351,7 +1351,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr "Zusammenfassung"
+msgstr "Übersicht"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__display_name
@@ -1376,7 +1376,7 @@ msgstr "Anzeigename"
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 "Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
-"Zusammenfassung des Benutzers."
+"Übersicht des Benutzers."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1407,7 +1407,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Dropdown menu"
-msgstr "Dropdownmenu"
+msgstr "Drop-down-Menü"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1744,7 +1744,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID des übergeordneten Alias Datensatz (Beispiel: Projekt welches den Alias "
+"ID des übergeordneten Alias-Datensatz (Beispiel: Projekt welches den Alias "
 "für die Erstellung von Aufgaben beinhaltet)."
 
 #. module: crm
@@ -3100,7 +3100,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
@@ -3175,7 +3176,7 @@ msgstr "Anteiliger Umsatz"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr "Anteilige Einkünfte"
+msgstr "Anteilige Einnahmen"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -3561,7 +3562,7 @@ msgstr "Starten Sie die Planung von Aktivitäten auf Ihren Verkaufschancen"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "State"
-msgstr "Status"
+msgstr "Bundesland"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_state
@@ -3663,7 +3664,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Das Model (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
+"Das Modell (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
 "eingehenden E-Mails ohne Bezug zu einer bereits vorhandenen E-Mail führen "
 "üblicherweise zur Erstellung eines neuen Datensatz dieses Modells (z. B. "
 "Projektaufgabe)."
@@ -4029,30 +4030,27 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
+msgid "Use the <i>New</i> button, or send an email to"
 msgstr ""
-"Verwenden Sie die Schaltfläche <i>Erstellen</i> oben links oder senden Sie "
-"eine E-Mail an"
+"Verwenden Sie die Schaltfläche <i>Neu</i> oder senden Sie eine E-Mail an"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
-"Use the top left <i>Create</i> button, or send an email to %s to test the "
-"email gateway."
+"Use the <i>New</i> button, or send an email to %s to test the email gateway."
 msgstr ""
-"Verwenden Sie die Schaltfläche \" <i>Erstellen\"</i> oben links, oder senden"
-" Sie eine E-Mail an %s, um das E-Mail-Gateway zu testen."
+"Verwenden Sie die Schaltfläche <i>Neu</i> oder senden Sie eine E-Mail an %s,"
+" um das E-Mail-Gateway zu testen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
+"Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
-"Verwenden Sie die Schaltfläche „Erstellen“ oben links, oder konfigurieren "
-"Sie einen E-Mail-Alias, um das E-Mail-Gateway zu testen."
+"Verwenden Sie die Schaltfläche „Neu“ oder konfigurieren Sie einen E-Mail-"
+"Alias, um das E-Mail-Gateway zu testen."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4082,7 +4080,7 @@ msgstr "Wert"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__variable
 msgid "Variable"
-msgstr "Variabel"
+msgstr "Variable"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__3

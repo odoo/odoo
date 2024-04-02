@@ -18,6 +18,8 @@ class SaleCommon(
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.country_id = cls.env.ref('base.us')
+
         # Not defined in product common because only used in sale
         cls.group_discount_per_so_line = cls.env.ref('product.group_discount_per_so_line')
 

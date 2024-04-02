@@ -345,9 +345,9 @@ class TestCRMLead(TestCrmCommon):
 
             # reset partner phone to a local number and prepare formatted / sanitized values
             partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
-            partner_phone_formatted = phone_format(partner_phone, 'US', '1')
+            partner_phone_formatted = phone_format(partner_phone, 'US', '1', force_format='INTERNATIONAL')
             partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
-            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1')
+            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1', force_format='INTERNATIONAL')
             partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
             partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
             self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
@@ -363,9 +363,9 @@ class TestCRMLead(TestCrmCommon):
             # as well as mobile (who does not trigger the reverse sync)
             lead_form.partner_id = partner
             self.assertEqual(lead_form.email_from, partner_email)
-            self.assertEqual(lead_form.phone, partner_phone_sanitized,
+            self.assertEqual(lead_form.phone, partner_phone_formatted,
                             'Lead: form automatically formats numbers')
-            self.assertEqual(lead_form.mobile, partner_mobile_sanitized,
+            self.assertEqual(lead_form.mobile, partner_mobile_formatted,
                             'Lead: form automatically formats numbers')
             self.assertFalse(lead_form.partner_email_update)
             self.assertFalse(lead_form.partner_phone_update)
@@ -377,9 +377,9 @@ class TestCRMLead(TestCrmCommon):
                             'Lead / Partner: partner values sent to lead')
             self.assertEqual(lead.email_normalized, partner_email_normalized,
                             'Lead / Partner: equal emails should lead to equal normalized emails')
-            self.assertEqual(lead.phone, partner_phone_sanitized,
+            self.assertEqual(lead.phone, partner_phone_formatted,
                             'Lead / Partner: partner values (formatted) sent to lead')
-            self.assertEqual(lead.mobile, partner_mobile_sanitized,
+            self.assertEqual(lead.mobile, partner_mobile_formatted,
                             'Lead / Partner: partner values (formatted) sent to lead')
             self.assertEqual(lead.phone_sanitized, partner_mobile_sanitized,
                             'Lead: phone_sanitized computed field on mobile')
@@ -404,7 +404,7 @@ class TestCRMLead(TestCrmCommon):
             lead_form.email_from = new_email
             self.assertTrue(lead_form.partner_email_update)
             new_phone = '+1 202 555 7799'
-            new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="E164")
+            new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="INTERNATIONAL")
             lead_form.phone = new_phone
             self.assertEqual(lead_form.phone, new_phone_formatted)
             self.assertTrue(lead_form.partner_email_update)
@@ -417,7 +417,7 @@ class TestCRMLead(TestCrmCommon):
 
             # LEAD/PARTNER SYNC: mobile does not update partner
             new_mobile = '+1 202 555 6543'
-            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="E164")
+            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="INTERNATIONAL")
             lead_form.mobile = new_mobile
             lead_form.save()
             self.assertEqual(lead.mobile, new_mobile_formatted)
@@ -620,6 +620,71 @@ class TestCRMLead(TestCrmCommon):
         # self.assertFalse(new_team.alias_id.alias_name)
         # self.assertFalse(new_team.alias_name)
 
+    @users('user_sales_manager')
+    def test_crm_team_alias_helper(self):
+        """Test that the help message is the right one if we are on multiple team with different settings."""
+        # archive other teams
+        self.env['crm.team'].search([]).active = False
+
+        self._activate_multi_company()
+        team_other_comp = self.team_company2
+
+        user_team_leads, team_leads, user_team_opport, team_opport = self.env['crm.team'].create([{
+            'name': 'UserTeamLeads',
+            'use_leads': True,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamLeads',
+            'use_leads': True,
+            'member_ids': [],
+        }, {
+            'name': 'UserTeamOpportunities',
+            'use_leads': False,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamOpportunities',
+            'use_leads': False,
+            'member_ids': [],
+        }])
+
+        self.env['crm.lead'].create([{
+            'name': 'LeadOurTeam',
+            'team_id': user_team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'LeadTeam',
+            'team_id': team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'OpportunityOurTeam',
+            'team_id': user_team_opport.id,
+            'type': 'opportunity',
+        }, {
+            'name': 'OpportunityTeam',
+            'team_id': team_opport.id,
+            'type': 'opportunity',
+        }])
+        self.env['crm.lead'].with_user(self.user_sales_manager_mc).create({
+            'name': 'LeadOtherComp',
+            'team_id': team_other_comp.id,
+            'type': 'lead',
+            'company_id': self.company_2.id,
+        })
+
+        # archive our team one by one and check that we have the correct help message
+        teams = [user_team_leads, team_leads, user_team_opport, team_opport, team_other_comp]
+        for team in teams:
+            team.alias_id.sudo().write({'alias_name': team.name})
+
+        for team in teams:
+            with self.subTest(team=team):
+                team_mail = f"{team.alias_name}@{team.alias_domain}"
+                if team != team_other_comp:
+                    self.assertIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                else:
+                    self.assertNotIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                team.active = False
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailgateway(self):
         new_lead = self.format_and_process(
@@ -814,4 +879,5 @@ class TestCRMLead(TestCrmCommon):
 
 class TestLeadFormatAddress(FormatAddressCase):
     def test_address_view(self):
+        self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')

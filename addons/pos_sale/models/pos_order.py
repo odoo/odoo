@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from functools import lru_cache
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
@@ -24,9 +25,19 @@ class PosOrder(models.Model):
 
     @api.depends('pricelist_id.currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
+        @lru_cache
+        def get_rate(from_currency, to_currency, company, date):
+            return self.env['res.currency']._get_conversion_rate(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                company=company,
+                date=date,
+            )
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
+            # date_order is a datetime, but the rates are looked up on a date basis,
+            # therefor converting the date_order to a date helps with sharing entries in the lru_cache
+            order.currency_rate = get_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order.date())
 
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
@@ -89,6 +100,7 @@ class PosOrder(models.Model):
                     #If the product is delivered with more than one step, we need to update the quantity of the other steps
                     for move in so_line_stock_move_ids.filtered(lambda m: m.state in ['waiting', 'confirmed'] and m.product_id == stock_move.product_id):
                         move.product_uom_qty = stock_move.product_uom_qty
+                        waiting_picking_ids.add(move.picking_id.id)
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
@@ -112,6 +124,27 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def _get_fields_for_order_line(self):
+        fields = super(PosOrder, self)._get_fields_for_order_line()
+        fields.extend([
+            'sale_order_origin_id',
+            'down_payment_details',
+            'sale_order_line_id',
+        ])
+        return fields
+
+    def _prepare_order_line(self, order_line):
+        order_line = super()._prepare_order_line(order_line)
+        if order_line.get('sale_order_origin_id'):
+            order_line['sale_order_origin_id'] = {
+                'id': order_line['sale_order_origin_id'][0],
+                'name': order_line['sale_order_origin_id'][1],
+            }
+        if order_line.get('sale_order_line_id'):
+            order_line['sale_order_line_id'] = {
+                'id': order_line['sale_order_line_id'][0],
+            }
+        return order_line
 
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
@@ -127,11 +160,13 @@ class PosOrderLine(models.Model):
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
         return result
 
-    def _order_line_fields(self, line, session_id):
+    def _order_line_fields(self, line, session_id=None):
         result = super()._order_line_fields(line, session_id)
         vals = result[2]
         if vals.get('sale_order_origin_id', False):
             vals['sale_order_origin_id'] = vals['sale_order_origin_id']['id']
         if vals.get('sale_order_line_id', False):
-            vals['sale_order_line_id'] = vals['sale_order_line_id']['id']
+            #We need to make sure the order line has not been deleted while the order was being handled in the PoS
+            order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
+            vals['sale_order_line_id'] = order_line.id if order_line else False
         return result

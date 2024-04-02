@@ -4,10 +4,11 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, tests
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
 @tests.tagged('post_install', '-at_install')
-class TestUi(tests.HttpCase):
+class TestUi(HttpCaseWithUserPortal):
 
     def test_01_tickets_questions(self):
         """ Will execute the tour that fills up two tickets with a few questions answers

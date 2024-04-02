@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, ReadonlyDict
 import logging
 from typing import Iterator, Mapping
 from collections import abc
@@ -24,14 +24,15 @@ class GoogleEvent(abc.Set):
     """
 
     def __init__(self, iterable=()):
-        self._events = {}
+        _events = {}
         for item in iterable:
             if isinstance(item, self.__class__):
-                self._events[item.id] = item._events[item.id]
+                _events[item.id] = item._events[item.id]
             elif isinstance(item, Mapping):
-                self._events[item.get('id')] = item
+                _events[item.get('id')] = item
             else:
                 raise ValueError("Only %s or iterable of dict are supported" % self.__class__.__name__)
+        self._events = ReadonlyDict(_events)
 
     def __iter__(self) ->  Iterator['GoogleEvent']:
         return iter(GoogleEvent([vals]) for vals in self._events.values())
@@ -63,10 +64,9 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence:
-            # Find the rrule in the list
-            rrule = next(rr for rr in self.recurrence if 'RRULE:' in rr)
-            return rrule[6:] # skip "RRULE:" in the rrule string
+        if self.recurrence and any('RRULE' in item for item in self.recurrence):
+            rrule = next(item for item in self.recurrence if 'RRULE' in item)
+            return rrule[6:]  # skip "RRULE:" in the rrule string
 
     def odoo_id(self, env):
         self.odoo_ids(env)  # load ids
@@ -230,3 +230,9 @@ class GoogleEvent(abc.Set):
 
     def is_available(self):
         return self.transparency == 'transparent'
+
+    def get_odoo_event(self, env):
+        if self._get_model(env)._name == 'calendar.event':
+            return env['calendar.event'].browse(self.odoo_id(self.env))
+        else:
+            return env['calendar.recurrence'].browse(self.odoo_id(self.env)).base_event_id

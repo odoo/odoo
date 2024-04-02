@@ -25,7 +25,7 @@ class m(models.Model):
     @api.model
     def leak_memory(self, size):
         if not hasattr(self, 'l'):
-            type(self).l = []
+            self.env.registry[self._name].l = []
         self.l.append([0] * size)
         return True
 

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from urllib.parse import quote as url_quote
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -19,6 +20,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         self.maxDiff = 10000  # Allow comparing large dicts.
         return_url = self._build_url('/payment/mercado_pago/return')
         webhook_url = self._build_url('/payment/mercado_pago/webhook')
+        sanitized_reference = url_quote(tx.reference)
         self.assertDictEqual(request_payload, {
             'auto_return': 'all',
             'back_urls': {
@@ -33,7 +35,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
                 'title': tx.reference,
                 'unit_price': tx.amount,
             }],
-            'notification_url': f'{webhook_url}/{tx.reference}',
+            'notification_url': f'{webhook_url}/{sanitized_reference}',
             'payer': {
                 'address': {'street_name': tx.partner_address, 'zip_code': tx.partner_zip},
                 'email': tx.partner_email,
@@ -67,3 +69,15 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         ):
             tx._process_notification_data(self.redirect_notification_data)
         self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_mercado_pago.models.payment_transaction')
+    def test_processing_notification_data_rejects_transaction(self):
+        """ Test that the transaction state to 'error' when the notification data indicate a status of
+        404 error payment. """
+        tx = self._create_transaction(flow='redirect')
+        with patch(
+            'odoo.addons.payment_mercado_pago.models.payment_provider.Paymentprovider'
+            '._mercado_pago_make_request', return_value=self.verification_data_for_error_state
+        ):
+            tx._process_notification_data(self.redirect_notification_data)
+        self.assertEqual(tx.state, 'error')

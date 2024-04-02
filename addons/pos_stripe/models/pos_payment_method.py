@@ -32,10 +32,13 @@ class PosPaymentMethod(models.Model):
                      payment_method.stripe_serial_number, existing_payment_method.display_name))
 
     def _get_stripe_payment_provider(self):
-        stripe_payment_provider = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
+        stripe_payment_provider = self.env['payment.provider'].search([
+            ('code', '=', 'stripe'),
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
 
         if not stripe_payment_provider:
-            raise UserError(_("Stripe payment provider is missing"))
+            raise UserError(_("Stripe payment provider for company %s is missing", self.env.company.name))
 
         return stripe_payment_provider
 
@@ -44,7 +47,7 @@ class PosPaymentMethod(models.Model):
         stripe_secret_key = self._get_stripe_payment_provider().stripe_secret_key
 
         if not stripe_secret_key:
-            raise ValidationError(_('Complete the Stripe onboarding.'))
+            raise ValidationError(_('Complete the Stripe onboarding for company %s.', self.env.company.name))
 
         return stripe_secret_key
 
@@ -72,17 +75,26 @@ class PosPaymentMethod(models.Model):
             raise AccessError(_("Do not have access to fetch token from Stripe"))
 
         # For Terminal payments, the 'payment_method_types' parameter must include
-        # 'card_present' and the 'capture_method' must be set to 'manual'
+        # at least 'card_present' and the 'capture_method' must be set to 'manual'.
         endpoint = 'https://api.stripe.com/v1/payment_intents'
         currency = self.journal_id.currency_id or self.company_id.currency_id
 
+        params = [
+            ("currency", currency.name),
+            ("amount", self._stripe_calculate_amount(amount)),
+            ("payment_method_types[]", "card_present"),
+            ("capture_method", "manual"),
+        ]
+
+        if currency.name == 'AUD' and self.company_id.country_code == 'AU':
+            # See https://stripe.com/docs/terminal/payments/regional?integration-country=AU
+            # This parameter overrides "capture_method": "manual" above.
+            params.append(("payment_method_options[card_present][capture_method]", "manual_preferred"))
+        elif currency.name == 'CAD' and self.company_id.country_code == 'CA':
+            params.append(("payment_method_types[]", "interac_present"))
+
         try:
-            data = werkzeug.urls.url_encode({
-                "currency": currency.name,
-                "amount": self._stripe_calculate_amount(amount),
-                "payment_method_types[]": "card_present",
-                "capture_method": "manual",
-            })
+            data = werkzeug.urls.url_encode(params)
             resp = requests.post(endpoint, data=data, auth=(self.sudo()._get_stripe_secret_key(), ''), timeout=TIMEOUT)
         except requests.exceptions.RequestException:
             _logger.exception("Failed to call stripe_payment_intent endpoint")

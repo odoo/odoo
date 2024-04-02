@@ -41,7 +41,11 @@ const baseNotificationMethods = {
     },
 
     ptp_join: async function (notification) {
-        this._createClient(notification.fromClientId);
+        const clientId = notification.fromClientId;
+        if (this.clientsInfos[clientId] && this.clientsInfos[clientId].peerConnection) {
+            return this.clientsInfos[clientId];
+        }
+        this._createClient(clientId);
     },
 
     rtc_signal_icecandidate: async function (notification) {
@@ -84,7 +88,7 @@ const baseNotificationMethods = {
                     'An offer has been received for a non-existent peer connection - client: ' +
                         notification.fromClientId,
                 );
-                console.trace(pc.connectionState);
+                console.trace(pc && pc.connectionState);
                 console.groupEnd();
             }
             return;
@@ -181,8 +185,8 @@ export class PeerToPeer {
         return Object.entries(this.clientsInfos)
             .filter(
                 ([id, infos]) =>
-                    infos.peerConnection.iceConnectionState === 'connected' &&
-                    infos.dataChannel.readyState === 'open',
+                    infos.peerConnection && infos.peerConnection.iceConnectionState === 'connected' &&
+                    infos.dataChannel && infos.dataChannel.readyState === 'open',
             )
             .map(([id]) => id);
     }
@@ -194,8 +198,8 @@ export class PeerToPeer {
         if (!clientInfos) return;
         clearTimeout(clientInfos.fallbackTimeout);
         clearTimeout(clientInfos.zombieTimeout);
-        clientInfos.dataChannel.close();
-        clientInfos.peerConnection.close();
+        clientInfos.dataChannel && clientInfos.dataChannel.close();
+        clientInfos.peerConnection && clientInfos.peerConnection.close();
         delete this.clientsInfos[clientId];
     }
 
@@ -282,7 +286,7 @@ export class PeerToPeer {
         if (this._stopped) {
             return;
         }
-        this.handleNotification({ notificationName, notificationPayload });
+        return this.handleNotification({ notificationName, notificationPayload });
     }
 
     handleNotification(notification) {
@@ -332,10 +336,10 @@ export class PeerToPeer {
             }
             const baseMethod = baseNotificationMethods[notification.notificationName];
             if (baseMethod) {
-                baseMethod.call(this, notification);
+                return baseMethod.call(this, notification);
             }
             if (this.options.onNotification) {
-                this.options.onNotification(notification);
+                return this.options.onNotification(notification);
             }
         }
     }
@@ -347,14 +351,20 @@ export class PeerToPeer {
         return new Promise((resolve, reject) => {
             const requestId = this._getRequestId();
 
-            const rejectTimeout = setTimeout(() => {
-                reject('Request took too long (more than 10 seconds).');
+            const abort = (reason) => {
+                clearTimeout(rejectTimeout);
                 delete this._pendingRequestResolver[requestId];
-            }, 10000);
+                reject(new RequestError(reason || 'Request was aborted.'));
+            };
+            const rejectTimeout = setTimeout(
+                () => abort('Request took too long (more than 10 seconds).'),
+                10000
+            );
 
             this._pendingRequestResolver[requestId] = {
                 resolve,
                 rejectTimeout,
+                abort,
             };
 
             this.notifyClient(
@@ -370,7 +380,11 @@ export class PeerToPeer {
             );
         });
     }
-
+    abortCurrentRequests() {
+        for (const { abort } of Object.values(this._pendingRequestResolver)) {
+            abort();
+        }
+    }
     _createClient(clientId, { makeOffer = true } = {}) {
         if (this._stopped) {
             return;
@@ -381,6 +395,10 @@ export class PeerToPeer {
             iceCandidateBuffer: [],
             backoffFactor: 0,
         };
+
+        if (!navigator.onLine) {
+            return this.clientsInfos[clientId];
+        }
         const pc = new RTCPeerConnection(this.options.peerConnectionConfig);
 
         if (makeOffer) {
@@ -425,10 +443,12 @@ export class PeerToPeer {
                     this.removeClient(clientId);
                     break;
                 case 'disconnected':
-                    await this._recoverConnection(clientId, {
-                        delay: 3000,
-                        reason: 'ice connection disconnected',
-                    });
+                    if (navigator.onLine) {
+                        await this._recoverConnection(clientId, {
+                            delay: 3000,
+                            reason: 'ice connection disconnected',
+                        });
+                    }
                     break;
                 case 'connected':
                     this.clientsInfos[clientId].backoffFactor = 0;
@@ -445,10 +465,12 @@ export class PeerToPeer {
                     this.removeClient(clientId);
                     break;
                 case 'disconnected':
-                    await this._recoverConnection(clientId, {
-                        delay: 3000,
-                        reason: 'connection disconnected',
-                    });
+                    if (navigator.onLine) {
+                        await this._recoverConnection(clientId, {
+                            delay: 3000,
+                            reason: 'connection disconnected',
+                        });
+                    }
                     break;
                 case 'connected':
                 case 'completed':
@@ -618,7 +640,7 @@ export class PeerToPeer {
 
         // If there is no connection after 10 seconds, terminate.
         clientInfos.zombieTimeout = setTimeout(() => {
-            if (clientInfos && clientInfos.dataChannel.readyState !== 'open') {
+            if (clientInfos && clientInfos.dataChannel && clientInfos.dataChannel.readyState !== 'open') {
                 if (debugShowLog) console.log(`%c KILL ZOMBIE ${clientId}`, 'background: red;');
                 this.removeClient(clientId);
             } else {
@@ -626,4 +648,11 @@ export class PeerToPeer {
             }
         }, 10000);
     }
+}
+
+export class RequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "RequestError";
+  }
 }

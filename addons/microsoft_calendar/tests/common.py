@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from markupsafe import Markup
 from unittest.mock import patch, MagicMock
 
+from odoo import fields
+
 from odoo.tests.common import HttpCase
 
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
@@ -54,6 +56,10 @@ class TestCommon(HttpCase):
                 'login': 'john@attendee.com',
                 'partner_id': partner.id,
             })
+
+        # Add token validity with one hour of time window for properly checking the sync status.
+        for user in [self.organizer_user, self.attendee_user]:
+            user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
 
         # -----------------------------------------------------------------------------------------
         # To create Odoo events
@@ -406,6 +412,13 @@ class TestCommon(HttpCase):
         ]
         self.env.cr.postcommit.clear()
 
+    def sync_odoo_recurrences_with_outlook_feature(self):
+        """
+        Returns the status of the recurrence synchronization feature with Outlook.
+        True if it is active and False otherwise. This function guides previous tests to abort before they are checked.
+        """
+        return False
+
     def create_events_for_tests(self):
         """
         Create some events for test purpose
@@ -443,27 +456,35 @@ class TestCommon(HttpCase):
         )
         already_created = self.recurrent_base_event
 
+        # Currently, it is forbidden to create recurrences in Odoo. A trick for deactivating the checking
+        # is needed below in this test setup: deactivating the synchronization during recurrences creation.
+        sync_previous_state = self.env.user.microsoft_synchronization_stopped
+        self.env.user.microsoft_synchronization_stopped = False
+
         if not already_created:
-            self.recurrent_base_event = self.env["calendar.event"].with_user(self.organizer_user).create(
+            self.recurrent_base_event = self.env["calendar.event"].with_context(dont_notify=True).with_user(self.organizer_user).create(
                 self.recurrent_event_values
             )
         self.recurrence = self.env["calendar.recurrence"].search([("base_event_id", "=", self.recurrent_base_event.id)])
 
         # set ids set by Outlook
         if not already_created:
-            self.recurrence.write({
+            self.recurrence.with_context(dont_notify=True).write({
                 "microsoft_id": combine_ids("REC123", "REC456"),
             })
             for i, e in enumerate(self.recurrence.calendar_event_ids.sorted(key=lambda r: r.start)):
-                e.write({
+                e.with_context(dont_notify=True).write({
                     "microsoft_id": combine_ids(f"REC123_EVENT_{i+1}", f"REC456_EVENT_{i+1}"),
                     "microsoft_recurrence_master_id": "REC123",
                 })
             self.recurrence.invalidate_recordset()
             self.recurrence.calendar_event_ids.invalidate_recordset()
 
-        self.recurrent_events = self.recurrence.calendar_event_ids.sorted(key=lambda r: r.start)
-        self.recurrent_events_count = len(self.recurrent_events)
+            self.recurrent_events = self.recurrence.calendar_event_ids.sorted(key=lambda r: r.start)
+            self.recurrent_events_count = len(self.recurrent_events)
+
+        # Rollback the synchronization status after setup.
+        self.env.user.microsoft_synchronization_stopped = sync_previous_state
 
     def assert_odoo_event(self, odoo_event, expected_values):
         """

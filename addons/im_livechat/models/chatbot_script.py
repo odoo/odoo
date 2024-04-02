@@ -10,7 +10,7 @@ class ChatbotScript(models.Model):
     _description = 'Chatbot Script'
     _inherit = ['image.mixin', 'utm.source.mixin']
     _rec_name = 'title'
-    _order = 'title'
+    _order = 'title, id'
 
     # we keep a separate field for UI since name is manipulated by 'utm.source.mixin'
     title = fields.Char('Title', required=True, translate=True, default="Chatbot")
@@ -68,13 +68,15 @@ class ChatbotScript(models.Model):
         if 'question_ids' in default:
             return clone_chatbot_script
 
-        answers_map = {
-            original_answer: clone_answer
-            for clone_answer, original_answer
-            in zip(clone_chatbot_script.script_step_ids.answer_ids, self.script_step_ids.answer_ids)
-        }
+        original_steps = self.script_step_ids.sorted()
+        clone_steps = clone_chatbot_script.script_step_ids.sorted()
 
-        for clone_step, original_step in zip(clone_chatbot_script.script_step_ids, self.script_step_ids):
+        answers_map = {}
+        for clone_step, original_step in zip(clone_steps, original_steps):
+            for clone_answer, original_answer in zip(clone_step.answer_ids.sorted(), original_step.answer_ids.sorted()):
+                answers_map[original_answer] = clone_answer
+
+        for clone_step, original_step in zip(clone_steps, original_steps):
             clone_step.write({
                 'triggering_answer_ids': [
                     (4, answer.id)

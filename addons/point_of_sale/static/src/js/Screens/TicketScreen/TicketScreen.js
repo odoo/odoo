@@ -212,6 +212,20 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return;
             }
 
+            const invoicedOrderIds = new Set(
+                allToRefundDetails
+                    .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId].state === "invoiced")
+                    .map(detail => detail.orderline.orderBackendId)
+            );
+
+            if (invoicedOrderIds.size > 1) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Multiple Invoiced Orders Selected'),
+                    body: this.env._t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+                });
+                return;
+            }
+
             // The order that will contain the refund orderlines.
             // Use the destinationOrder from props if the order to refund has the same
             // partner as the destinationOrder.
@@ -222,6 +236,15 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     ? this.props.destinationOrder
                     : this._getEmptyOrder(partner);
 
+            //Add a check too see if the fiscal position exist in the pos
+            if (order.fiscal_position_not_found) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Fiscal Position not found'),
+                    body: this.env._t('The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration.')
+                });
+                return;
+            }
+
             // Add orderline for each toRefundDetail to the destinationOrder.
             for (const refundDetail of allToRefundDetails) {
                 const product = this.env.pos.db.get_product_by_id(refundDetail.orderline.productId);
@@ -229,6 +252,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 await destinationOrder.add_product(product, options);
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
+            destinationOrder.fiscal_position = order.fiscal_position;
 
             // Set the partner to the destinationOrder.
             if (partner && !destinationOrder.get_partner()) {
@@ -310,7 +334,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         getStatus(order) {
             if (order.locked) {
-                return this.env._t('Paid');
+                return order.state === 'invoiced' ? this.env._t('Invoiced') : this.env._t('Paid');
             } else {
                 const screen = order.get_screen_data();
                 return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
@@ -457,6 +481,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                         orderPartnerId,
                         tax_ids: orderline.get_taxes().map(tax => tax.id),
                         discount: orderline.discount,
+                        pack_lot_lines: orderline.pack_lot_lines ? orderline.pack_lot_lines.map(lot => {
+                            return { lot_name: lot.lot_name };
+                        }) : false,
                     },
                     destinationOrderUid: false,
                 };
@@ -490,6 +517,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
          */
         _prepareRefundOrderlineOptions(toRefundDetail) {
             const { qty, orderline } = toRefundDetail;
+            const draftPackLotLines = orderline.pack_lot_lines ? { modifiedPackLotLines: [], newPackLotLines: orderline.pack_lot_lines} : false;
             return {
                 quantity: -qty,
                 price: orderline.price,
@@ -498,7 +526,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 refunded_orderline_id: orderline.id,
                 tax_ids: orderline.tax_ids,
                 discount: orderline.discount,
-            }
+                draftPackLotLines: draftPackLotLines
+            };
         }
         _setOrder(order) {
             this.env.pos.set_order(order);

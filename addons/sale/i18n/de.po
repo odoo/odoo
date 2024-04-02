@@ -8,15 +8,15 @@
 # Thomas, 2023
 # Michael Hofer, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -506,23 +506,23 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"></t>\n"
 "        Hallo,\n"
 "        <br><br>\n"
 "        Ihre\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Proformarechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            Pro-Forma-Rechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 $</span> ist verfügbar.\n"
+"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 €</span> ist verfügbar.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 $</span> steht zur Prüfung bereit.\n"
+"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 €</span> steht zur Prüfung bereit.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
@@ -617,8 +617,13 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Bezahlt</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Storniert</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warte auf Zahlung</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warten auf Zahlung</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -1252,7 +1257,7 @@ msgstr "Kann Produkt bearbeiten"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Stornieren"
 
 #. module: sale
 #. odoo-python
@@ -1643,7 +1648,7 @@ msgstr "Datum:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Abschlagzahlung abziehen"
+msgstr "Anzahlung abziehen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2649,8 +2654,7 @@ msgstr "Methode zum Aktualisieren der gelieferten Menge"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
-"Fehlende Pflichtfelder in der abzurechnenden Verkaufsauftragsposition."
+msgstr "Fehlende Pflichtfelder in der abzurechnenden Verkaufsauftragszeile."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2845,7 +2849,7 @@ msgstr "Online-Zahlung"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr "Online-Unterschrift"
+msgstr "Online-Signatur"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2874,7 +2878,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
-"Öffnen Sie die Verkaufs-App, um Ihr erstes Angebot mit ein paar Klicks zu "
+"Öffnen Sie die Verkaufsapp, um Ihr erstes Angebot mit ein paar Klicks zu "
 "versenden."
 
 #. module: sale
@@ -3501,7 +3505,7 @@ msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
 msgstr ""
-"Benötigt eine Online-Unterschrift und/oder eine Zahlung des Kunden, um eine "
+"Benötigt eine Online-Signatur und/oder eine Zahlung des Kunden, um eine "
 "automatische Auftragsbestätigung umzusetzen."
 
 #. module: sale
@@ -3512,7 +3516,7 @@ msgstr "Bitten Sie um eine Online-Zahlung zur Bestätigung von Aufträgen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr "Bitten Sie um eine Online-Unterschrift zur Bestätigung von Aufträgen"
+msgstr "Bitten Sie um eine Online-Signatur zur Bestätigung von Aufträgen"
 
 #. module: sale
 #. odoo-python
@@ -3748,7 +3752,7 @@ msgid ""
 msgstr ""
 "Verkaufsauftragsposition, zu der die aufgewendete Zeit hinzugefügt wird, "
 "damit sie Ihrem Kunden in Rechnung gestellt werden kann. Entfernen Sie die "
-"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nicht abrechenbar "
+"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nichtabrechenbar "
 "ist."
 
 #. module: sale
@@ -4379,7 +4383,7 @@ msgstr "Der Betrag der Anzahlung muss positiv sein."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "Zur Zeit gibt es keine Aufträge für Ihr Konto."
+msgstr "Zurzeit gibt es keine Aufträge für Ihr Konto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4911,7 +4915,7 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Sie können die Art einer Verkaufsauftragsposition nicht ändern. Stattdessen "
+"Sie können die Art einer Verkaufsauftragszeile nicht ändern. Stattdessen "
 "sollten Sie die aktuelle Position löschen und eine neue Position mit der "
 "richtigen Art erstellen."
 

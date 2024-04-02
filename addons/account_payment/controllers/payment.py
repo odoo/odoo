@@ -88,7 +88,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :return: The extended rendering context values.
         :rtype: dict
         """
-        rendering_context_values = super()._get_custom_rendering_context_values(**kwargs)
+        rendering_context_values = super()._get_custom_rendering_context_values(
+            invoice_id=invoice_id, **kwargs
+        )
         if invoice_id:
             rendering_context_values['invoice_id'] = invoice_id
 

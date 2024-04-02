@@ -6,6 +6,7 @@ from odoo import Command, fields
 
 
 from datetime import timedelta
+import pytz
 
 
 @tagged('-at_install', 'post_install')
@@ -70,9 +71,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertTrue(purchase_order.name.startswith('PO/2020/'))
 
     def test_reminder_1(self):
-        """Set to send reminder today, check if a reminder can be send to the
+        """Set to send reminder tomorrow, check if a reminder can be send to the
         partner.
         """
+        # set partner to send reminder in Company 2
+        self.partner_a.with_company(self.env.companies[1]).receipt_reminder_email = True
+        self.partner_a.with_company(self.env.companies[1]).reminder_date_before_receipt = 1
+        # Create the PO in Company 1
+        self.env.user.tz = 'Europe/Brussels'
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
@@ -84,25 +90,49 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_qty = 10
             po_line.price_unit = 200
         # set to send reminder today
-        po.date_planned = fields.Datetime.now() + timedelta(days=1)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
+        date_planned = fields.Datetime.now().replace(hour=23, minute=0) + timedelta(days=2)
+        po.date_planned = date_planned
         po = po.save()
         po.button_confirm()
+        # Check that reminder is not set in Company 1 and the mail will not be sent
+        self.assertEqual(po.company_id, self.env.companies[0])
+        self.assertFalse(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 1, "The default value should be taken from the company")
+        old_messages = po.message_ids
+        po._send_reminder_mail()
+        messages_send = po.message_ids - old_messages
+        self.assertFalse(messages_send)
+        # Set to send reminder in Company 1
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 2
+        # Invalidate the cache to ensure that the computed fields are recomputed
+        self.env.invalidate_all()
+        self.assertTrue(po.receipt_reminder_email)
+        self.assertEqual(po.reminder_date_before_receipt, 2)
+
+        # check date_planned is correctly set
+        self.assertEqual(po.date_planned, date_planned)
+        po_tz = pytz.timezone(po.user_id.tz)
+        localized_date_planned = po.date_planned.astimezone(po_tz)
+        self.assertEqual(localized_date_planned, po.get_localized_date_planned())
 
         # check vendor is a message recipient
         self.assertTrue(po.partner_id in po.message_partner_ids)
 
+        # check reminder send
         old_messages = po.message_ids
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
-        # check reminder send
         self.assertTrue(messages_send)
         self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
 
-        # check confirm button
+        # check confirm button + date planned localized in message
+        old_messages = po.message_ids
         po.confirm_reminder_mail()
+        messages_send = po.message_ids - old_messages
         self.assertTrue(po.mail_reminder_confirmed)
+        self.assertEqual(len(messages_send), 1)
+        self.assertIn(str(localized_date_planned.date()), messages_send.body)
 
     def test_reminder_2(self):
         """Set to send reminder tomorrow, check if no reminder can be send.
@@ -119,9 +149,9 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.price_unit = 200
         # set to send reminder tomorrow
         po.date_planned = fields.Datetime.now() + timedelta(days=2)
-        po.receipt_reminder_email = True
-        po.reminder_date_before_receipt = 1
         po = po.save()
+        self.partner_a.receipt_reminder_email = True
+        self.partner_a.reminder_date_before_receipt = 1
         po.button_confirm()
 
         # check vendor is a message recipient
@@ -174,7 +204,7 @@ class TestPurchase(AccountTestInvoicingCommon):
             activity.note,
         )
 
-    def test_onchange_packaging_00(self):
+    def test_compute_packaging_00(self):
         """Create a PO and use packaging. Check we suggested suitable packaging
         according to the product_qty. Also check product_qty or product_packaging
         are correctly calculated when one of them changed.
@@ -219,7 +249,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.order_line.product_qty, 12)
 
         # Do the same test but without form, to check the `product_packaging_id` and `product_packaging_qty` are set
-        # without manual call to onchanges
+        # without manual call to compute
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -237,6 +267,43 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.order_line.product_packaging_qty = 1.0
         self.assertEqual(po.order_line.product_qty, 12)
 
+    def test_compute_packaging_01(self):
+        """Create a PO and use packaging in a multicompany environment.
+        Ensure any suggested packaging matches the PO's.
+        """
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        generic_single_pack = self.env['product.packaging'].create({
+            'name': "single pack",
+            'product_id': self.product_a.id,
+            'qty': 1.0,
+            'company_id': False,
+        })
+        company2_pack_of_10 = self.env['product.packaging'].create({
+            'name': "pack of 10 by Company 2",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+            'company_id': company2.id,
+        })
+
+        po1 = self.env['purchase.order'].with_company(company1).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po1.order_line.product_packaging_id, generic_single_pack)
+        self.assertEqual(po1.order_line.product_packaging_qty, 10.0)
+
+        # verify that with the right company, we can get the other packaging
+        po2 = self.env['purchase.order'].with_company(company2).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_a.id, 'product_qty': 10.0}),
+            ]
+        })
+        self.assertEqual(po2.order_line.product_packaging_id, company2_pack_of_10)
+        self.assertEqual(po2.order_line.product_packaging_qty, 1.0)
 
     def test_with_different_uom(self):
         """ This test ensures that the unit price is correctly computed"""
@@ -291,9 +358,12 @@ class TestPurchase(AccountTestInvoicingCommon):
         pol.product_qty += 1
         self.assertEqual(pol.name, "New custom description")
 
-    def test_unit_price_precision_multicurrency(self):
+    def test_purchase_multicurrency(self):
         """
         Purchase order lines should keep unit price precision of products
+        Also the products having prices in different currencies should be
+        correctly handled when creating a purchase order i-e product having a price of 100 usd
+        and when purchasing in EUR company the correct conversion should be applied
         """
         self.env['decimal.precision'].search([
             ('name', '=', 'Product Price'),
@@ -333,6 +403,49 @@ class TestPurchase(AccountTestInvoicingCommon):
             po_line.product_id = product
         purchase_order_coco = po_form.save()
         self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
+
+        #check if the correct currency is set on the purchase order by comparing the expected price and actual price
+
+        company_a = self.company_data['company']
+        company_b = self.company_data_2['company']
+
+        company_b.currency_id = currency
+
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'rate': 2,
+            'currency_id': currency.id,
+            'company_id': company_b.id,
+        })
+
+        product_b = self.env['product.product'].with_company(company_a).create({
+            'name': 'product_2',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 0.0,
+        })
+
+        self.assertEqual(product_b.cost_currency_id, company_a.currency_id, 'The cost currency should be the one set on'
+                                                                            ' the company')
+
+        product_b = product_b.with_company(company_b)
+
+        self.assertEqual(product_b.cost_currency_id, currency, 'The cost currency should be the one set on the company,'
+                                                               ' as the product is now opened in another company')
+
+        product_b.supplier_taxes_id = False
+        product_b.update({'standard_price': 10.0})
+
+        #create a purchase order with the product from company B
+        order_b = self.env['purchase.order'].with_company(company_b).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product_b.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+            })],
+        })
+
+        self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
 
     def test_purchase_not_creating_useless_product_vendor(self):
         """ This test ensures that the product vendor is not created when the

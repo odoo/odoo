@@ -4,8 +4,16 @@
         <!-- Vorlagen: Steuerliche Positionen -->
 
         <record id="fiscal_position_template_national" model="account.fiscal.position.template">
+            <field name="name">National + EU (ohne UID)</field>
+            <field name="auto_apply" eval="True" />
+            <field name="vat_required" eval="False" />
+            <field name="country_group_id" ref="base.europe" />
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+        </record>
+        <record id="fiscal_position_template_national_w_uid" model="account.fiscal.position.template">
             <field name="name">National</field>
             <field name="auto_apply" eval="True" />
+            <field name="vat_required" eval="True" />
             <field name="country_id" ref="base.at" />
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
         </record>
@@ -55,7 +63,7 @@
         <record id="fiscal_position_tax_template_eu_vst_20_code060K" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_eu" />
             <field name="tax_src_id" ref="account_tax_template_purchase_20_misc_code060" />
-            <field name="tax_dest_id" ref="account_tax_template_purchase_rev_charge_1c" />
+            <field name="tax_dest_id" ref="account_tax_template_purchase_rev_charge_19_2_25_5" />
         </record>
         <record id="fiscal_position_tax_template_eu_vst_10_code060" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_eu" />

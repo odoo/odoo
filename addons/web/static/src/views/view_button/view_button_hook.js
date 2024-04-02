@@ -64,7 +64,7 @@ export function useViewButtons(model, ref, options = {}) {
                     enableButtons(getEl(), manuallyDisabledButtons, enableAction);
                     return;
                 }
-                const closeDialog = clickParams.close && env.closeDialog;
+                const closeDialog = (clickParams.close || clickParams.special) && env.closeDialog;
                 const params = getResParams();
                 const resId = params.resId;
                 const resIds = params.resIds || model.resIds;

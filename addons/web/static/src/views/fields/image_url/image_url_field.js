@@ -16,7 +16,7 @@ export class ImageUrlField extends Component {
 
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
-                this.state.value = nextProps.value;
+                this.state.src = nextProps.value;
             }
         });
     }

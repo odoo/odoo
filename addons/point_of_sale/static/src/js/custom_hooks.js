@@ -142,7 +142,6 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
                 event.target.classList.remove('invalid-cash-input');
             }
         }
-        
 
         onMounted(() => {
             if (cashInput.el) {
@@ -158,5 +157,21 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         })
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, useValidateCashInput };
+    function useAsyncLockedMethod(method) {
+        const component = useComponent();
+        let called = false;
+        return async (...args) => {
+            if (called) {
+                return;
+            }
+            try {
+                called = true;
+                await method.call(component, ...args);
+            } finally {
+                called = false;
+            }
+        };
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, useValidateCashInput, useAsyncLockedMethod };
 });

@@ -4,10 +4,11 @@
 import logging
 
 from ast import literal_eval
+from collections import defaultdict
 from psycopg2 import Error
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import check_barcode_encoding, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -268,6 +269,10 @@ class StockQuant(models.Model):
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
+                    if 'quants_cache' in self.env.context:
+                        self.env.context['quants_cache'][
+                            quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                        ] |= quant
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
                 else:
@@ -278,6 +283,10 @@ class StockQuant(models.Model):
                 quants |= quant
             else:
                 quant = super().create(vals)
+                if 'quants_cache' in self.env.context:
+                    self.env.context['quants_cache'][
+                        quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                    ] |= quant
                 quants |= quant
                 if self._is_inventory_mode():
                     quant._check_company()
@@ -325,16 +334,20 @@ class StockQuant(models.Model):
             'template': '/stock/static/xlsx/stock_quant.xlsx'
         }]
 
+    @api.model
+    def _get_forbidden_fields_write(self):
+        """ Returns a list of fields user can't edit when he want to edit a quant in `inventory_mode`."""
+        return ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
-        allowed_fields = self._get_inventory_fields_write()
-        if self._is_inventory_mode() and any(field for field in allowed_fields if field in vals.keys()):
+        forbidden_fields = self._get_forbidden_fields_write()
+        if self._is_inventory_mode() and any(field for field in forbidden_fields if field in vals.keys()):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            if any(field for field in vals.keys() if field not in allowed_fields):
-                raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
+            raise UserError(_("Quant's editing is restricted, you can't do this operation."))
         return super(StockQuant, self).write(vals)
 
     @api.ondelete(at_uninstall=False)
@@ -354,10 +367,13 @@ class StockQuant(models.Model):
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
             ('lot_id', '=', self.lot_id.id),
-            '|',
-                ('package_id', '=', self.package_id.id),
-                ('result_package_id', '=', self.package_id.id),
         ]
+        if self.package_id:
+            action['domain'] += [
+                '|',
+                    ('package_id', '=', self.package_id.id),
+                    ('result_package_id', '=', self.package_id.id),
+            ]
         action['context'] = literal_eval(action.get('context'))
         action['context']['search_default_product_id'] = self.product_id.id
         return action
@@ -526,10 +542,26 @@ class StockQuant(models.Model):
 
     @api.constrains('quantity')
     def check_quantity(self):
-        for quant in self:
-            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
-                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
+        sn_quants = self.filtered(lambda q: q.product_id.tracking == 'serial' and q.location_id.usage != 'inventory' and q.lot_id)
+        if not sn_quants:
+            return
+        domain = expression.OR([
+            [('product_id', '=', q.product_id.id), ('location_id', '=', q.location_id.id), ('lot_id', '=', q.lot_id.id)]
+            for q in sn_quants
+        ])
+        groups = self.read_group(
+            domain,
+            ['quantity'],
+            ['product_id', 'location_id', 'lot_id'],
+            orderby='id',
+            lazy=False,
+        )
+        for group in groups:
+            product = self.env['product.product'].browse(group['product_id'][0])
+            lot = self.env['stock.lot'].browse(group['lot_id'][0])
+            uom = product.uom_id
+            if float_compare(abs(group['quantity']), 1, precision_rounding=uom.rounding) > 0:
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (product.display_name, lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
@@ -540,11 +572,11 @@ class StockQuant(models.Model):
     @api.model
     def _get_removal_strategy(self, product_id, location_id):
         if product_id.categ_id.removal_strategy_id:
-            return product_id.categ_id.removal_strategy_id.method
+            return product_id.categ_id.removal_strategy_id.with_context(lang=None).method
         loc = location_id
         while loc:
             if loc.removal_strategy_id:
-                return loc.removal_strategy_id.method
+                return loc.removal_strategy_id.with_context(lang=None).method
             loc = loc.location_id
         return 'fifo'
 
@@ -558,10 +590,7 @@ class StockQuant(models.Model):
             return 'location_id ASC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        removal_strategy = self._get_removal_strategy(product_id, location_id)
-        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-
+    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -576,8 +605,49 @@ class StockQuant(models.Model):
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
+        return domain
 
-        return self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+        removal_strategy = self._get_removal_strategy(product_id, location_id)
+        removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
+        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
+        quants_cache = self.env.context.get('quants_cache')
+        if quants_cache is not None and strict:
+            res = self.env['stock.quant']
+            if lot_id:
+                res |= quants_cache[
+                    product_id.id, location_id.id, lot_id.id,
+                    package_id and package_id.id or False,
+                    owner_id and owner_id.id or False]
+            res |= quants_cache[
+                product_id.id, location_id.id, False,
+                package_id and package_id.id or False,
+                owner_id and owner_id.id or False]
+        else:
+            res = self.search(domain, order=removal_strategy_order).sorted(lambda q: not q.lot_id)
+        return res
+
+    def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant']._read_group(
+                domain,
+                ['ids:array_agg(id)'],
+                ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                lazy=False)
+            for group in needed_quants:
+                res[(group['product_id'][0], group['location_id'][0],
+                     group['lot_id'] and group['lot_id'][0] if group['lot_id'] else False,
+                     group['package_id'][0] if group['package_id'] else False,
+                     group['owner_id'][0] if group['owner_id'] else False)
+                    ] = self.env['stock.quant'].browse(group['ids'])
+        return res
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -767,6 +837,19 @@ class StockQuant(models.Model):
             })
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
 
+    def _raise_fix_unreserve_action(self, product_id):
+        action = self.env.ref('stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if action and self.user_has_groups('base.group_system'):
+            msg = _(
+                'It is not possible to reserve more products of %s than you have in stock.\n\n'
+                'You can fix the discrepancies by clicking on the button below.\n'
+                'The correction will remove the reservation of the impacted operations on all companies.\n'
+                'If the error persists, or you see this message appear often, '
+                'please submit a Support Ticket at https://www.odoo.com/help',
+                product_id.display_name
+            )
+            raise RedirectWarning(msg, action.id, _('Fix discrepancies'))
+
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
@@ -794,7 +877,12 @@ class StockQuant(models.Model):
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.', product_id.display_name))
+                self._raise_fix_unreserve_action(product_id)
+                raise UserError(_(
+                    'It is not possible to unreserve more products of %s than you have in stock.\n'
+                    'Please contact your system administrator to rectify this issue.',
+                    product_id.display_name
+                ))
         else:
             return reserved_quants
 
@@ -936,6 +1024,7 @@ class StockQuant(models.Model):
             'state': 'confirmed',
             'location_id': location_id.id,
             'location_dest_id': location_dest_id.id,
+            'restrict_partner_id':  self.owner_id.id,
             'is_inventory': True,
             'move_line_ids': [(0, 0, {
                 'product_id': self.product_id.id,
@@ -1148,6 +1237,8 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        # remove inventory mode
+        self = self.with_context(inventory_mode=False)
         unpacked_quants = self.env['stock.quant']
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([

@@ -110,7 +110,7 @@ export class DashboardLoader {
     getDashboard(dashboardId) {
         const dashboard = this._getDashboard(dashboardId);
         if (dashboard.status === Status.NotLoaded) {
-            this._loadDashboardData(dashboardId);
+            dashboard.promise = this._loadDashboardData(dashboardId);
         }
         return dashboard;
     }
@@ -158,11 +158,11 @@ export class DashboardLoader {
     /**
      * @private
      * @param {number} id
-     * @returns {Dashboard|undefined}
+     * @returns {Dashboard}
      */
     _getDashboard(id) {
         if (!this.dashboards[id]) {
-            throw new Error(`Dashboard ${id} does not exist`);
+            this.dashboards[id] = { status: Status.NotLoaded, id, displayName: "" };
         }
         return this.dashboards[id];
     }
@@ -181,6 +181,7 @@ export class DashboardLoader {
         } catch (error) {
             dashboard.error = error;
             dashboard.status = Status.Error;
+            throw error;
         }
     }
 

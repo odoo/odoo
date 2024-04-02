@@ -57,3 +57,6 @@ class AccountMoveLine(models.Model):
             result.setdefault('extra_context', {})
             result['extra_context']['force_price_include'] = True
         return result
+
+    def _get_extra_query_base_tax_line_mapping(self):
+        return ' AND (base_line.expense_id IS NULL OR account_move_line.expense_id = base_line.expense_id)'

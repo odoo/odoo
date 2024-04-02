@@ -641,7 +641,7 @@ class Slide(models.Model):
                     # only update keys that are not set in the incoming vals
                     slide.update({key: value for key, value in slide_metadata.items() if key not in vals.keys()})
 
-            if not 'completion_time' not in vals:
+            if 'completion_time' not in vals:
                 slide._on_change_document_binary_content()
 
             if slide.is_published and not slide.is_category:
@@ -653,6 +653,15 @@ class Slide(models.Model):
         if values.get('is_category'):
             values['is_preview'] = True
             values['is_published'] = True
+
+        # if the slide type is changed, remove incompatible url or html_content
+        # done here to satisfy the SQL constraint
+        # using a stored-computed field in place does not work
+        if 'slide_category' in values:
+            if values['slide_category'] == 'article':
+                values = {'url': False, **values}
+            elif values['slide_category'] != 'article':
+                values = {'html_content': False, **values}
 
         res = super(Slide, self).write(values)
         if values.get('is_published'):
@@ -1043,7 +1052,7 @@ class Slide(models.Model):
           (e.g: 'Video could not be found') """
 
         self.ensure_one()
-        google_app_key = self.env['website'].get_current_website().website_slide_google_app_key
+        google_app_key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         error_message = False
         try:
             response = requests.get(
@@ -1134,7 +1143,7 @@ class Slide(models.Model):
                 params['access_token'] = access_token
 
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         error_message = False
         try:

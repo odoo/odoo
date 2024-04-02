@@ -23,10 +23,10 @@ class Project(models.Model):
 
         query.order = None
         query_string, query_param = query.select(
-            'jsonb_object_keys(analytic_distribution) as account_id',
+            'jsonb_object_keys(purchase_order_line.analytic_distribution) as account_id',
             'COUNT(DISTINCT(order_id)) as purchase_order_count',
         )
-        query_string = f"{query_string} GROUP BY jsonb_object_keys(analytic_distribution)"
+        query_string = f"{query_string} GROUP BY jsonb_object_keys(purchase_order_line.analytic_distribution)"
 
         self._cr.execute(query_string, query_param)
         data = {int(record.get('account_id')): record.get('purchase_order_count') for record in self._cr.dictfetchall()}
@@ -133,7 +133,7 @@ class Project(models.Model):
             self._cr.execute(query_string, query_param)
             purchase_order_line_read = [{
                 **pol,
-                'invoice_lines': self.env['purchase.order.line'].browse(pol['id']).invoice_lines,  # One2Many cannot be queried, they are not columns
+                'invoice_lines': self.env['purchase.order.line'].browse(pol['id']).sudo().invoice_lines,  # One2Many cannot be queried, they are not columns
             } for pol in self._cr.dictfetchall()]
             purchase_order_line_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
             if purchase_order_line_read:

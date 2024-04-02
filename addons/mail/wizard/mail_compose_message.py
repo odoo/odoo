@@ -8,7 +8,6 @@ import re
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import email_re
 
 
 def _reopen(self, res_id, model, context=None):
@@ -122,6 +121,7 @@ class MailComposer(models.TransientModel):
     active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
     message_type = fields.Selection([
+        ('auto_comment', 'Automated Targeted Notification'),
         ('comment', 'Comment'),
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
@@ -466,25 +466,27 @@ class MailComposer(models.TransientModel):
 
         recipients_info = {}
         for record_id, mail_values in mail_values_dict.items():
-            mail_to = []
-            if mail_values.get('email_to'):
-                mail_to += email_re.findall(mail_values['email_to'])
-                # if unrecognized email in email_to -> keep it as used for further processing
-                if not mail_to:
-                    mail_to.append(mail_values['email_to'])
+            # add email from email_to; if unrecognized email in email_to keep
+            # it as used for further processing
+            mail_to = tools.email_split_and_format(mail_values.get('email_to'))
+            if not mail_to and mail_values.get('email_to'):
+                mail_to.append(mail_values['email_to'])
             # add email from recipients (res.partner)
             mail_to += [
                 recipient_emails[recipient_command[1]]
                 for recipient_command in mail_values.get('recipient_ids') or []
                 if recipient_command[1]
             ]
-            mail_to = list(set(mail_to))
+            # uniquify, keep ordering
+            seen = set()
+            mail_to = [email for email in mail_to if email not in seen and not seen.add(email)]
+
             recipients_info[record_id] = {
                 'mail_to': mail_to,
                 'mail_to_normalized': [
-                    tools.email_normalize(mail)
+                    tools.email_normalize(mail, strict=False)
                     for mail in mail_to
-                    if tools.email_normalize(mail)
+                    if tools.email_normalize(mail, strict=False)
                 ]
             }
         return recipients_info
@@ -525,7 +527,7 @@ class MailComposer(models.TransientModel):
             elif not mail_to:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_missing'
-            elif not mail_to_normalized or not email_re.findall(mail_to):
+            elif not mail_to_normalized:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
             elif done_emails is not None and not mailing_document_based:
@@ -548,7 +550,7 @@ class MailComposer(models.TransientModel):
             blacklist = {x[0] for x in self._cr.fetchall()}
             if not blacklist:
                 return blacklisted_rec_ids
-            if issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+            if isinstance(self.env[self.model], self.pool['mail.thread.blacklist']):
                 targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist
                 blacklisted_rec_ids.update(target['id'] for target in targets

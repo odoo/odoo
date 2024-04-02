@@ -8,15 +8,17 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
+# Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2024-01-25 10:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -320,10 +322,10 @@ msgstr "<span class=\"text-nowrap\">Impuesto del 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>Estados Unidos</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>Estados Unidos</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -509,7 +511,7 @@ msgstr "Error de acceso"
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "Access to all Enterprise Apps"
-msgstr "Acceder a todas las aplicaciones empresariales"
+msgstr "Acceso a todas las aplicaciones de Enterprise"
 
 #. module: web
 #. odoo-javascript
@@ -893,7 +895,7 @@ msgstr "¿Está seguro de que desea archivar este registro?"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #, python-format
 msgid "Are you sure that you want to remove this column ?"
-msgstr "¿Está seguro de que desea remover esta columna?"
+msgstr "¿Está seguro de que desea eliminar esta columna?"
 
 #. module: web
 #. odoo-javascript
@@ -1194,7 +1196,6 @@ msgstr "Llamar"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1562,7 +1563,7 @@ msgstr "No se pudo mostrar el PDF seleccionado"
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr "No se puede mostrar el url de la imagen especifica."
+msgstr "No se puede mostrar la URL de la imagen especifica."
 
 #. module: web
 #. odoo-javascript
@@ -1615,7 +1616,6 @@ msgstr "País"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1651,6 +1651,13 @@ msgstr "Crear \"<strong>%s</strong>\""
 #, python-format
 msgid "Create %s"
 msgstr "Crear %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr "¿Desea crear <strong>%s</strong> como un nuevo %s?"
 
 #. module: web
 #. odoo-javascript
@@ -2102,7 +2109,7 @@ msgstr "Descargar xlsx"
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr "Dibujar"
+msgstr "Trazar"
 
 #. module: web
 #. odoo-javascript
@@ -2234,6 +2241,7 @@ msgstr "Empresa"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -2402,7 +2410,6 @@ msgstr "Archivo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Subida de archivo"
@@ -2616,6 +2623,19 @@ msgstr "Texto de encabezado en la parte superior de todos los reportes."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Tome en cuenta que no es posible guardar automáticamente sus cambios "
+"recientes. Haga clic en el botón <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"ahora para guardar su trabajo antes de salir de esta pestaña."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
@@ -2669,7 +2689,7 @@ msgstr "Presione ESCAPE para DESCARTAR"
 #: code:addons/web/static/src/legacy/js/core/dialog.js:0
 #, python-format
 msgid "I am sure about this."
-msgstr "Estoy seguro de esto."
+msgstr "Estoy seguro."
 
 #. module: web
 #. odoo-javascript
@@ -2763,7 +2783,7 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
-"El nombre de la base de datos no es válido. Solo se permiten caracteres "
+"El nombre de la base de datos no es válido. Solo puede utilizar caracteres "
 "alfanuméricos, guion, guion bajo y punto. "
 
 #. module: web
@@ -2817,6 +2837,13 @@ msgstr "Campos no válidos:"
 #, python-format
 msgid "Invalid fields: "
 msgstr "Campos no válidos:"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr "Modelo no válido: %s"
 
 #. module: web
 #. odoo-javascript
@@ -3148,7 +3175,7 @@ msgstr "Coincidir"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with"
-msgstr "Coincidir registros con"
+msgstr "Buscar casos con"
 
 #. module: web
 #. odoo-javascript
@@ -3156,7 +3183,7 @@ msgstr "Coincidir registros con"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
-msgstr "Coincidir registros con la siguiente regla:"
+msgstr "Buscar casos con la siguiente regla:"
 
 #. module: web
 #. odoo-javascript
@@ -3796,6 +3823,13 @@ msgstr "Solo usted"
 #, python-format
 msgid "Open View"
 msgstr "Abrir vista"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "Abrir las herramientas de desarrollador"
 
 #. module: web
 #. odoo-javascript
@@ -4544,6 +4578,13 @@ msgid "Request timeout"
 msgstr "Tiempo de espera de la solicitud agotado"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Reestablecer dominio"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Restablecer a los colores del logo"
@@ -5025,8 +5066,8 @@ msgid ""
 "Something happened while trying to contact the server, check that the server"
 " is online and that you still have a working network connection."
 msgstr ""
-"Hubo un error al tratar de contactar al servidor, compruebe que el servidor "
-"esté en línea y que su conexión de red funcione correctamente."
+"Ocurrió un error al tratar de contactar al servidor, compruebe que el "
+"servidor esté en línea y que su conexión de red funciona."
 
 #. module: web
 #. odoo-python
@@ -5089,14 +5130,14 @@ msgstr "Estado"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
-msgstr "Permanezca aquí"
+msgstr "Permanecer aquí"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr "Permanezca aquí"
+msgstr "Permanecer aquí"
 
 #. module: web
 #. odoo-javascript
@@ -5246,8 +5287,16 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+"El archivo seleccionado (%sB) excede el tamaño máximo de archivo permitido "
+"(%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "El archivo seleccionado excede el tamaño máximo de archivo de %s."
@@ -5379,7 +5428,7 @@ msgstr "Esta etiqueta ya está disponible"
 #, python-format
 msgid "This update will only consider the records of the current page."
 msgstr ""
-"Esta actualización solamente considerará los registros de la página actual."
+"Esta actualización solo considerará los registros de la página actual."
 
 #. module: web
 #. odoo-javascript
@@ -5784,7 +5833,7 @@ msgstr "Usuario"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "User Error"
-msgstr "Error de uso"
+msgstr "Error de usuario"
 
 #. module: web
 #. odoo-javascript
@@ -6044,7 +6093,7 @@ msgstr "No tiene acceso al modelo \"%s\"."
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "You may not believe it,"
-msgstr "Tal vez no lo crea,"
+msgstr "Aunque no lo crea,"
 
 #. module: web
 #. odoo-javascript
@@ -6052,7 +6101,7 @@ msgstr "Tal vez no lo crea,"
 #, python-format
 msgid ""
 "You may not believe it,<br />but the application is actually loading..."
-msgstr "Tal vez no lo crea, <br /> pero la aplicación sí está cargando..."
+msgstr "Aunque no lo crea, <br /> la aplicación sí está cargando..."
 
 #. module: web
 #. odoo-javascript
@@ -6212,7 +6261,6 @@ msgstr "son válidos para esta actualización."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr "como un nuevo"
@@ -6525,8 +6573,8 @@ msgstr "sigue cargando..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6599,6 +6647,13 @@ msgstr "más"
 #, python-format
 msgid "ms"
 msgstr "ms"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr "nueva pestaña "
 
 #. module: web
 #. odoo-javascript
@@ -6764,20 +6819,6 @@ msgstr "establecido"
 #, python-format
 msgid "set (true)"
 msgstr "establecido (verdadero)"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open in new tab"
-msgstr "para abrir en una nueva pestaña"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open,"
-msgstr "para abrir,"
 
 #. module: web
 #. odoo-javascript

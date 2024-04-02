@@ -69,7 +69,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = self._prepare_project_domain()
 
         searchbar_sortings = self._prepare_searchbar_sortings()
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 

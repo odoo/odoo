@@ -17,6 +17,9 @@ export const CTYPES = {
     // Br group
     BR: 16,
 };
+export function ctypeToString(ctype) {
+    return Object.keys(CTYPES).find((key) => CTYPES[key] === ctype);
+}
 export const CTGROUPS = {
     // Short for CONTENT_TYPE_GROUPS
     INLINE: CTYPES.CONTENT | CTYPES.SPACE,
@@ -47,15 +50,17 @@ const tldWhitelist = [
     'ug', 'uk', 'um', 'us', 'uy', 'uz', 'va', 'vc', 've', 'vg', 'vi', 'vn',
     'vu', 'wf', 'ws', 'ye', 'yt', 'yu', 'za', 'zm', 'zr', 'zw', 'co\\.uk'];
 
-const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
+const urlRegexBase = `|(?:www.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})\\b))(?:(?:[/?#])[^\\s]*[^!.,})\\]'"\\s]|(?:[^!(){}.,[\\]'"\\s]+))?`;
 const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
-export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi');
-export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
+export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase})`, 'gi');
+export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, 'gi');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 export const EMAIL_REGEX = /^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
+
+export const PROTECTED_BLOCK_TAG = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
 
 //------------------------------------------------------------------------------
 // Position and sizes
@@ -579,11 +584,11 @@ export function setSelection(
 ) {
     if (
         !anchorNode ||
-        !anchorNode.parentNode ||
-        !anchorNode.parentNode.closest('body') ||
+        !anchorNode.parentElement ||
+        !anchorNode.parentElement.closest('body') ||
         !focusNode ||
-        !focusNode.parentNode ||
-        !focusNode.parentNode.closest('body')
+        !focusNode.parentElement ||
+        !focusNode.parentElement.closest('body')
     ) {
         return null;
     }
@@ -735,6 +740,9 @@ export function getSelectedNodes(editable) {
  */
 export function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
     sel = sel || editable.parentElement && editable.ownerDocument.getSelection();
+    if (sel && sel.isCollapsed && sel.anchorNode && sel.anchorNode.nodeName === "BR") {
+        setCursorStart(sel.anchorNode.parentElement, false);
+    }
     range = range ? range.cloneRange() : sel && sel.rangeCount && sel.getRangeAt(0).cloneRange();
     if (!range) return;
     let start = range.startContainer;
@@ -882,15 +890,40 @@ export function preserveCursor(document) {
         replace = replace || new Map();
         cursorPos[0] = replace.get(cursorPos[0]) || cursorPos[0];
         cursorPos[2] = replace.get(cursorPos[2]) || cursorPos[2];
-        setSelection(...cursorPos);
+        setSelection(...cursorPos, false);
     };
+}
+
+export function getOffsetAndCharSize(nodeValue, offset, direction) {
+    //We get the correct offset which corresponds to this offset
+    // If direction is left it means we are coming from the right and
+    // we want to get the end offset of the first element to the left
+    // Example with LEFT direction:
+    // <p>a \uD83D[offset]\uDE0D b</p> -> <p>a \uD83D\uDE0D[offset] b</p> and
+    // size = 2 so delete backward will delete the whole emoji.
+    // Example with Right direction:
+    // <p>a \uD83D[offset]\uDE0D b</p> -> <p>a [offset]\uD83D\uDE0D b</p> and
+    // size = 2 so delete forward will delete the whole emoji.
+    const splittedNodeValue = [...nodeValue];
+    let charSize = 1;
+    let newOffset = offset;
+    let currentSize = 0;
+    for (const item of splittedNodeValue) {
+        currentSize += item.length;
+        if (currentSize >= offset) {
+            newOffset = direction == DIRECTIONS.LEFT ? currentSize : currentSize - item.length;
+            charSize = item.length;
+            break;
+        }
+    }
+    return [newOffset, charSize];
 }
 
 //------------------------------------------------------------------------------
 // Format utils
 //------------------------------------------------------------------------------
 
-const formatsSpecs = {
+export const formatsSpecs = {
     italic: {
         tagName: 'em',
         isFormatted: isItalic,
@@ -1018,8 +1051,13 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
     }
 
-    const selectedTextNodes = getSelectedNodes(editor.editable)
+    // Get selected nodes within td to handle non-p elements like h1, h2...
+    // Targeting <br> to ensure span stays inside its corresponding block node.
+    const selectedNodesInTds = [...editor.editable.querySelectorAll('.o_selected_td')]
+        .map(node => closestElement(node).querySelector('br'));
+    const selectedNodes = getSelectedNodes(editor.editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && isVisibleTextNode(n));
+    const selectedTextNodes = selectedNodes.length ? selectedNodes : selectedNodesInTds;
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {
@@ -1029,7 +1067,11 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
         // Remove the format on all inline ancestors until a block or an element
         // with a class (in case the formating comes from the class).
-        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+        while (
+            parentNode && !isBlock(parentNode) &&
+            !(parentNode.classList && parentNode.classList.length) &&
+            !isUnbreakable(parentNode) && !isUnbreakable(currentNode)
+        ) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&
                 parentNode.hasAttribute('data-oe-zws-empty-inline') &&
                 parentNode.getAttributeNames().length === 1;
@@ -1049,7 +1091,6 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
 
         const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
-
         if (firstBlockOrClassHasFormat && !applyStyle) {
             formatSpec.addNeutralStyle && formatSpec.addNeutralStyle(getOrCreateSpan(selectedTextNode, inlineAncestors));
         } else if (!firstBlockOrClassHasFormat && applyStyle) {
@@ -1072,6 +1113,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     if (zws) {
         const siblings = [...zws.parentElement.childNodes];
         if (
+            !isBlock(zws.parentElement) &&
             selectedTextNodes.includes(siblings[0]) &&
             selectedTextNodes.includes(siblings[siblings.length - 1])
         ) {
@@ -1182,13 +1224,13 @@ export function isBlock(node) {
         return false;
     }
     // The node might not be in the DOM, in which case it has no CSS values.
-    if (window.document !== node.ownerDocument) {
+    if (!node.isConnected) {
         return blockTagNames.includes(tagName);
     }
     // We won't call `getComputedStyle` more than once per node.
     let style = computedStyles.get(node);
     if (!style) {
-        style = window.getComputedStyle(node);
+        style = node.ownerDocument.defaultView.getComputedStyle(node);
         computedStyles.set(node, style);
     }
     if (style.display) {
@@ -1288,12 +1330,10 @@ export function isFontSize(node, props) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedNodes = getSelectedNodes(editable)
+    const selectedNodes = getTraversedNodes(editable)
         .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
     const isFormatted = formatsSpecs[format].isFormatted;
-    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().anchorNode));
-    selectedNodes.push(closestElement(editable.ownerDocument.getSelection().focusNode));
-    return selectedNodes.every(n => isFormatted(n, editable));
+    return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
 
 export function isUnbreakable(node) {
@@ -1305,7 +1345,7 @@ export function isUnbreakable(node) {
     }
     return (
         isUnremovable(node) || // An unremovable node is always unbreakable.
-        ['THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
+        ['TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TH', 'TD', 'SECTION', 'DIV'].includes(node.tagName) ||
         node.hasAttribute('t') ||
         (node.nodeType === Node.ELEMENT_NODE &&
             (node.nodeName === 'T' ||
@@ -1339,13 +1379,24 @@ export function containsUnbreakable(node) {
     }
     return isUnbreakable(node) || containsUnbreakable(node.firstChild);
 }
+// TODO rename this function in master: it also handles Odoo icons, not only
+// font awesome ones. Also maybe just use the ICON_SELECTOR and `matches`?
+const iconTags = ['I', 'SPAN'];
+const iconClasses = ['fa', 'fab', 'fad', 'far', 'oi'];
 export function isFontAwesome(node) {
+    // See ICON_SELECTOR
     return (
         node &&
-        (node.nodeName === 'I' || node.nodeName === 'SPAN') &&
-        ['fa', 'fab', 'fad', 'far'].some(faClass => node.classList.contains(faClass))
+        iconTags.includes(node.nodeName) &&
+        iconClasses.some(cls => node.classList.contains(cls))
     );
 }
+export const ICON_SELECTOR = iconTags.map(tag => {
+    return iconClasses.map(cls => {
+        return `${tag}.${cls}`;
+    }).join(', ');
+}).join(', ');
+
 export function isZWS(node) {
     return (
         node &&
@@ -1451,6 +1502,7 @@ export const paragraphRelatedElements = [
     'H5',
     'H6',
     'PRE',
+    'BLOCKQUOTE',
 ];
 
 /**
@@ -1605,6 +1657,9 @@ export function isVisibleTextNode(testedNode) {
     // Control variable to know whether the current node has been found
     let foundTestedNode;
     const currentNodeParentBlock = closestBlock(testedNode);
+    if (!currentNodeParentBlock) {
+        return false;
+    }
     const nodeIterator = document.createNodeIterator(currentNodeParentBlock);
     for (let node = nodeIterator.nextNode(); node; node = nodeIterator.nextNode()) {
         if (node.nodeType === Node.TEXT_NODE) {
@@ -1716,7 +1771,7 @@ export function toggleClass(node, className) {
  * @returns {boolean}
  */
 export function isFakeLineBreak(brEl) {
-    return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTGROUPS.INLINE | CTGROUPS.BR));
+    return !(getState(...rightPos(brEl), DIRECTIONS.RIGHT).cType & (CTYPES.CONTENT | CTGROUPS.BR));
 }
 /**
  * Checks whether or not the given block has any visible content, except for
@@ -1879,6 +1934,9 @@ export function splitAroundUntil(elements, limitAncestor) {
 }
 
 export function insertText(sel, content) {
+    if (!content) {
+        return;
+    }
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
         const pos = [sel.anchorNode.parentElement, splitTextNode(sel.anchorNode, sel.anchorOffset)];
         setSelection(...pos, ...pos, false);
@@ -1971,19 +2029,18 @@ export function setTagName(el, newTagName) {
     if (el.tagName === newTagName) {
         return el;
     }
-    var n = document.createElement(newTagName);
-    var attr = el.attributes;
-    for (var i = 0, len = attr.length; i < len; ++i) {
-        n.setAttribute(attr[i].name, attr[i].value);
+    const n = document.createElement(newTagName);
+    if (el.nodeName !== 'LI') {
+        const attributes = el.attributes;
+        for (const attr of attributes) {
+            n.setAttribute(attr.name, attr.value);
+        }
     }
     while (el.firstChild) {
         n.append(el.firstChild);
     }
-    const closestLi = el.closest('li');
-    if (el.tagName === 'LI' && newTagName !== 'p') {
+    if (el.tagName === 'LI') {
         el.append(n);
-    } else if (closestLi && newTagName === 'p') {
-        closestLi.replaceChildren(...n.childNodes);
     } else {
         el.parentNode.replaceChild(n, el);
     }
@@ -2054,6 +2111,7 @@ export function moveNodes(
 // Prepare / Save / Restore state utilities
 //------------------------------------------------------------------------------
 
+const prepareUpdateLockedEditables = new Set();
 /**
  * Any editor command is applied to a selection (collapsed or not). After the
  * command, the content type on the selection boundaries, in both direction,
@@ -2072,9 +2130,51 @@ export function moveNodes(
  * @param {...(HTMLElement|number)} args - argument 1 and 2 can be repeated for
  *     multiple preparations with only one restore callback returned. Note: in
  *     that case, the positions should be given in the document node order.
+ * @param {Object} [options]
+ * @param {boolean} [options.allowReenter = true] - if false, all calls to
+ *     prepareUpdate before this one gets restored will be ignored.
+ * @param {string} [options.label = <random 6 character string>]
+ * @param {boolean} [options.debug = false] - if true, adds nicely formatted
+ *     console logs to help with debugging.
  * @returns {function}
  */
 export function prepareUpdate(...args) {
+    const closestRoot = args.length && ancestors(args[0]).find(ancestor => ancestor.oid === 'root');
+    const isPrepareUpdateLocked = closestRoot && prepareUpdateLockedEditables.has(closestRoot);
+    const hash = (Math.random() + 1).toString(36).substring(7);
+    const options = {
+        allowReenter: true,
+        label: hash,
+        debug: false,
+        ...(args.length && args[args.length - 1] instanceof Object ? args.pop() : {}),
+    };
+    if (options.debug) {
+        console.log(
+            '%cPreparing%c update: ' + options.label +
+            (options.label === hash ? '' : ` (${hash})`) +
+            '%c' + (isPrepareUpdateLocked ? ' LOCKED' : ''),
+            'color: cyan;',
+            'color: white;',
+            'color: red; font-weight: bold;',
+        );
+    }
+    if (isPrepareUpdateLocked) {
+        return () => {
+            if (options.debug) {
+                console.log(
+                    '%cRestoring%c update: ' + options.label +
+                    (options.label === hash ? '' : ` (${hash})`) +
+                    '%c LOCKED',
+                    'color: lightgreen;',
+                    'color: white;',
+                    'color: red; font-weight: bold;',
+                );
+            }
+        };
+    }
+    if (!options.allowReenter && closestRoot) {
+        prepareUpdateLockedEditables.add(closestRoot);
+    }
     const positions = [...args];
 
     // Check the state in each direction starting from each position.
@@ -2086,15 +2186,32 @@ export function prepareUpdate(...args) {
         offset = positions.pop();
         el = positions.pop();
         const left = getState(el, offset, DIRECTIONS.LEFT);
-        restoreData.push(left);
-        restoreData.push(getState(el, offset, DIRECTIONS.RIGHT, left.cType));
+        const right = getState(el, offset, DIRECTIONS.RIGHT, left.cType);
+        if (options.debug) {
+            const editable = el && closestElement(el, '.odoo-editor-editable');
+            const oldEditableHTML = editable && editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') || '';
+            left.oldEditableHTML = oldEditableHTML;
+            right.oldEditableHTML = oldEditableHTML;
+        }
+        restoreData.push(left, right);
     }
 
     // Create the callback that will be able to restore the state in each
     // direction wherever the node in the opposite direction has landed.
     return function restoreStates() {
+        if (options.debug) {
+            console.log(
+                '%cRestoring%c update: ' + options.label +
+                (options.label === hash ? '' : ` (${hash})`),
+                'color: lightgreen;',
+                'color: white;',
+            );
+        }
         for (const data of restoreData) {
-            restoreState(data);
+            restoreState(data, options.debug);
+        }
+        if (!options.allowReenter && closestRoot) {
+            prepareUpdateLockedEditables.delete(closestRoot);
         }
     };
 }
@@ -2153,7 +2270,13 @@ export function getState(el, offset, direction, leftCType) {
             // visible if we have content backwards.
             if (direction === DIRECTIONS.LEFT) {
                 if (isVisibleStr(value)) {
-                    cType = lastSpace || expr.test(value) ? CTYPES.SPACE : CTYPES.CONTENT;
+                    if (lastSpace) {
+                        cType = CTYPES.SPACE;
+                    } else {
+                        const rightLeaf = rightLeafOnlyNotBlockPath(node).next().value;
+                        const hasContentRight = rightLeaf && !rightLeaf.textContent.startsWith(' ');
+                        cType = !hasContentRight && node.textContent.endsWith(' ') ? CTYPES.SPACE : CTYPES.CONTENT;
+                    }
                     break;
                 }
                 if (value.length) {
@@ -2162,11 +2285,13 @@ export function getState(el, offset, direction, leftCType) {
             } else {
                 leftCType = leftCType || getState(el, offset, DIRECTIONS.LEFT).cType;
                 if (expr.test(value)) {
+                    const leftLeaf = leftLeafOnlyNotBlockPath(node).next().value;
+                    const hasContentLeft = leftLeaf && !leftLeaf.textContent.endsWith(' ');
                     const rct = isVisibleStr(value)
                         ? CTYPES.CONTENT
                         : getState(...rightPos(node), DIRECTIONS.RIGHT).cType;
                     cType =
-                        leftCType & CTYPES.CONTENT && rct & (CTYPES.CONTENT | CTYPES.BR)
+                        leftCType & CTYPES.CONTENT && rct & (CTYPES.CONTENT | CTYPES.BR) && !hasContentLeft
                             ? CTYPES.SPACE
                             : rct;
                     break;
@@ -2333,9 +2458,13 @@ const allRestoreStateRules = (function () {
  * direction.
  *
  * @param {Object} prevStateData @see getState
+ * @param {boolean} debug=false - if true, adds nicely formatted
+ *     console logs to help with debugging.
+ * @returns {Object|undefined} the rule that was applied to restore the state,
+ *     if any, for testing purposes.
  */
-export function restoreState(prevStateData) {
-    const { node, direction, cType: cType1 } = prevStateData;
+export function restoreState(prevStateData, debug=false) {
+    const { node, direction, cType: cType1, oldEditableHTML } = prevStateData;
     if (!node || !node.parentNode) {
         // FIXME sometimes we want to restore the state starting from a node
         // which has been removed by another restoreState call... Not sure if
@@ -2351,10 +2480,29 @@ export function restoreState(prevStateData) {
      */
     const ruleHashCode = restoreStateRuleHashCode(direction, cType1, cType2);
     const rule = allRestoreStateRules.get(ruleHashCode);
+    if (debug) {
+        const editable = closestElement(node, '.odoo-editor-editable');
+        console.log(
+            '%c' + node.textContent.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') + '\n' +
+            '%c' + (direction === DIRECTIONS.LEFT ? 'left' : 'right') + '\n' +
+            '%c' + ctypeToString(cType1) + '\n' +
+            '%c' + ctypeToString(cType2) + '\n' +
+            '%c' + 'BEFORE: ' + (oldEditableHTML || '(unavailable)') + '\n' +
+            '%c' + 'AFTER:  ' + (editable ? editable.innerHTML.replaceAll(' ', '_').replaceAll('\u200B', 'ZWS') : '(unavailable)') + '\n',
+            'color: white; display: block; width: 100%;',
+            'color: ' + (direction === DIRECTIONS.LEFT ? 'magenta' : 'lightgreen') + '; display: block; width: 100%;',
+            'color: pink; display: block; width: 100%;',
+            'color: lightblue; display: block; width: 100%;',
+            'color: white; display: block; width: 100%;',
+            'color: white; display: block; width: 100%;',
+            rule,
+        );
+    }
     if (Object.values(rule).filter(x => x !== undefined).length) {
         const inverseDirection = direction === DIRECTIONS.LEFT ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT;
         enforceWhitespace(el, offset, inverseDirection, rule);
     }
+    return rule;
 }
 /**
  * Enforces the whitespace and BR visibility in the given direction starting
@@ -2410,6 +2558,8 @@ export function enforceWhitespace(el, offset, direction, rule) {
             } else if (isVisibleStr(node)) {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -2445,7 +2595,8 @@ export function enforceWhitespace(el, offset, direction, rule) {
         if (
             spaceVisibility &&
             !foundVisibleSpaceTextNode &&
-            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK
+            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK &&
+            getState(...leftPos(spaceNode), DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
         ) {
             spaceVisibility = false;
         }
@@ -2527,10 +2678,25 @@ export function pxToFloat(sizeString) {
     return parseFloat(sizeString.replace('px', ''));
 }
 
+/**
+ * Returns position of a range in form of object (end
+ * position of a range in case of non-collapsed range).
+ *
+ * @param {HTMLElement} el element for which range postion will be calculated
+ * @param {Document} document
+ * @param {Object} [options]
+ * @param {Number} [options.marginRight] right margin to be considered
+ * @param {Number} [options.marginBottom] bottom margin to be considered
+ * @param {Number} [options.marginTop] top margin to be considered
+ * @param {Number} [options.marginLeft] left margin to be considered
+ * @param {Function} [options.getContextFromParentRect] to get context rect from parent
+ * @returns {Object | undefined}
+ */
 export function getRangePosition(el, document, options = {}) {
     const selection = document.getSelection();
     if (!selection.rangeCount) return;
     const range = selection.getRangeAt(0);
+    const isRtl = options.direction === 'rtl';
 
     const marginRight = options.marginRight || 20;
     const marginBottom = options.marginBottom || 20;
@@ -2558,6 +2724,18 @@ export function getRangePosition(el, document, options = {}) {
         clonedRange.detach();
     }
 
+    if (isRtl) {
+        // To handle the RTL case we shift the elelement to the left by its size
+        // and handle it the same as left.
+        offset.right = offset.left - el.offsetWidth;
+        const leftMove = Math.max(0, offset.right + el.offsetWidth + marginLeft - window.innerWidth);
+        if (leftMove && offset.right - leftMove > marginRight) {
+            offset.right -= leftMove;
+        } else if (offset.right - leftMove < marginRight) {
+            offset.right = marginRight;
+        }
+    }
+
     const leftMove = Math.max(0, offset.left + el.offsetWidth + marginRight - window.innerWidth);
     if (leftMove && offset.left - leftMove > marginLeft) {
         offset.left -= leftMove;
@@ -2568,6 +2746,9 @@ export function getRangePosition(el, document, options = {}) {
     if (options.parentContextRect) {
         offset.left += options.parentContextRect.left;
         offset.top += options.parentContextRect.top;
+        if (isRtl) {
+            offset.right += options.parentContextRect.left;
+        }
     }
 
     if (
@@ -2582,6 +2763,13 @@ export function getRangePosition(el, document, options = {}) {
     if (offset) {
         offset.top += window.scrollY;
         offset.left += window.scrollX;
+        if (isRtl) {
+            offset.right += window.scrollX;
+        }
+    }
+    if (isRtl) {
+        // Get the actual right value.
+        offset.right = window.innerWidth - offset.right - el.offsetWidth;
     }
 
     return offset;
@@ -2632,8 +2820,8 @@ export function peek(arr) {
     return arr[arr.length - 1];
 }
 /**
- * Check user OS 
- * @returns {boolean} 
+ * Check user OS
+ * @returns {boolean}
  */
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');

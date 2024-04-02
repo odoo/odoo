@@ -81,6 +81,14 @@ class LoyaltyProgram(models.Model):
     is_nominative = fields.Boolean(compute='_compute_is_nominative')
     is_payment_program = fields.Boolean(compute='_compute_is_payment_program')
 
+    payment_program_discount_product_id = fields.Many2one(
+        'product.product',
+        string='Discount Product',
+        compute='_compute_payment_program_discount_product_id',
+        readonly=True,
+        help="Product used in the sales order to apply the discount."
+    )
+
     # Technical field used for a label
     available_on = fields.Boolean("Available On", store=False,
         help="""
@@ -154,6 +162,14 @@ class LoyaltyProgram(models.Model):
     def _compute_is_payment_program(self):
         for program in self:
             program.is_payment_program = program.program_type in ('gift_card', 'ewallet')
+
+    @api.depends('reward_ids.discount_line_product_id')
+    def _compute_payment_program_discount_product_id(self):
+        for program in self:
+            if program.is_payment_program:
+                program.payment_program_discount_product_id = program.reward_ids[:1].discount_line_product_id
+            else:
+                program.payment_program_discount_product_id = False
 
     @api.model
     def _program_items_name(self):
@@ -351,8 +367,10 @@ class LoyaltyProgram(models.Model):
             domain = rule._get_valid_product_domain()
             if domain:
                 rule_products[rule] = products.filtered_domain(domain)
-            else:
+            elif not domain and rule.program_type != "gift_card":
                 rule_products[rule] = products
+            else:
+                continue
         return rule_products
 
     def action_open_loyalty_cards(self):
@@ -559,3 +577,15 @@ class LoyaltyProgram(models.Model):
                 })]
             },
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        trigger_product_ids will overwrite product ids defined in a loyalty rule in certain instances. Thus, it should
+        be explicitly removed from an incoming vals dict unless, of course, it was actually a visible field.
+        """
+        for vals in vals_list:
+            if 'trigger_product_ids' in vals and vals.get('program_type') not in ['gift_card', 'ewallet']:
+                del vals['trigger_product_ids']
+
+        return super().create(vals_list)

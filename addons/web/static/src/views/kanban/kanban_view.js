@@ -12,6 +12,7 @@ export const kanbanView = {
 
     display_name: "Kanban",
     icon: "oi oi-view-kanban",
+    accessKey: "k",
     isMobileFriendly: true,
     multiRecord: true,
 

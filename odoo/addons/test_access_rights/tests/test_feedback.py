@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import Mock
+
+import odoo
 from odoo import SUPERUSER_ID, Command
 from odoo.exceptions import AccessError
-from odoo.tests import common, TransactionCase
+from odoo.tests import TransactionCase
 
 
 class Feedback(TransactionCase):
@@ -158,10 +161,19 @@ class TestIRRuleFeedback(Feedback):
     """
     def setUp(self):
         super().setUp()
+        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self.model = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         self.record = self.env['test_access_right.some_obj'].create({
             'val': 0,
         }).with_user(self.user)
+
+
+    def debug_mode(self):
+        odoo.http._request_stack.push(Mock(db=self.env.cr.dbname, env=self.env, debug=True))
+        self.addCleanup(odoo.http._request_stack.pop)
+        self.env.flush_all()
+        self.env.invalidate_all()
+
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         res = self.env['ir.rule'].create({
@@ -187,9 +199,7 @@ class TestIRRuleFeedback(Feedback):
 
 Contact your administrator to request access if necessary.""")
 
-        # debug mode
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -215,10 +225,9 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
             p.with_user(self.user).write({'val': 1})
 
     def test_locals(self):
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]')
         self._make_rule('rule 1', '[("val", "=", 78)]')
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -236,10 +245,9 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         )
 
     def test_globals_all(self):
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -260,10 +268,9 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         """ Global rules are AND-eded together, so when an access fails it
         might be just one of the rules, and we want an exact listing
         """
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -280,12 +287,11 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         )
 
     def test_combination(self):
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
         self._make_rule('rule 2', '[(0, "=", 1)]')
         self._make_rule('rule 3', '[("val", "=", 55)]')
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -308,10 +314,9 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         this might be a multi-company issue, but the user doesn't access to this company
         then no information about the company is showed.
         """
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -334,8 +339,6 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         this might be a multi-company issue, but the record doesn't have company_id field
         then no information about the company is showed.
         """
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         ChildModel = self.env['test_access_right.child'].sudo()
         self.env['ir.rule'].create({
             'name': 'rule 0',
@@ -347,6 +350,7 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         child_record = ChildModel.create({'parent_id': self.record.id}).with_user(self.user)
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             _ = child_record.parent_id
         self.assertEqual(
@@ -368,11 +372,10 @@ Contact your administrator to request access if necessary.""" % (child_record.di
         """ because of prefetching, read() goes through a different codepath
         to apply rules
         """
-        self.env.ref('base.group_no_one').write({'users': [Command.link(self.user.id)]})
-        self.env.ref('base.group_user').write({'users': [Command.link(self.user.id)]})
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]", attr='read')
+        self.debug_mode()
         with self.assertRaises(AccessError) as ctx:
             _ = self.record.val
         self.assertEqual(

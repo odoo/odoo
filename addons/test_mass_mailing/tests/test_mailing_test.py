@@ -66,6 +66,7 @@ class TestMailingTest(TestMassMailCommon):
         """
         Check that both test and real emails will format the qweb and inline placeholders correctly in body and subject.
         """
+        self.env['mailing.contact'].search([]).unlink()
         contact_list = self.env['mailing.list'].create({
             'name': 'Testers',
             'contact_ids': [Command.create({

@@ -3,7 +3,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="hr_holidays_attendance.TimeOffCard" t-inherit="hr_holidays.TimeOffCard" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-set='duration']" position="replace">
-            <t t-set="duration" t-value="props.requires_allocation || props.data['overtime_deductible']?props.data['virtual_remaining_leaves']:props.data['virtual_leaves_taken']" />
+            <t t-set="duration" t-value="props.requires_allocation
+                ? data.virtual_remaining_leaves
+                : data.overtime_deductible
+                ? data.usable_remaining_leaves
+                : data.virtual_leaves_taken" />
         </xpath>
         <xpath expr="//t[@t-set='show_popover']" position="replace">
             <t t-set="show_popover" t-value="!props.data['overtime_deductible']"/>
@@ -18,7 +22,11 @@
 
     <t t-name="hr_holidays_attendance.TimeOffCardMobile" t-inherit="hr_holidays.TimeOffCardMobile" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-set='duration']" position="replace">
-            <t t-set="duration" t-value="props.requires_allocation || props.data['overtime_deductible']?props.data['virtual_remaining_leaves']:props.data['virtual_leaves_taken']" />
+            <t t-set="duration" t-value="props.requires_allocation
+                ? data.virtual_remaining_leaves
+                : data.overtime_deductible
+                ? data.usable_remaining_leaves
+                : data.virtual_leaves_taken" />
         </xpath>
         <xpath expr="//t[@name='duration_type']" position="before">
             <t t-if="props.data['overtime_deductible'] == true &amp;&amp; !props.requires_allocation">

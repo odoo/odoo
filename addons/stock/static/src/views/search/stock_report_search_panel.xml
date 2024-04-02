@@ -10,12 +10,12 @@
             </header>
             <ul class="list-group d-block o_search_panel_field">
                 <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer">
-                    <span t-on-click="ev => this.clearWarehouseContext(ev)" t-att-class="{'fw-bold': !selectedWarehouse}">All Warehouses</span>
+                    <span t-on-click="ev => this.clearWarehouseContext(ev)" t-att-class="{'fw-bolder': !selectedWarehouse, 'o_search_panel_label_title':true}">All Warehouses</span>
                 </li>
                 <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
                     t-foreach="warehouses" t-as="warehouse" t-key="warehouse.id">
                     <span t-out="warehouse.name" t-on-click="ev => this.applyWarehouseContext(warehouse.id, ev)"
-                          t-att-class="{'fw-bold': selectedWarehouse === warehouse.id}"/>
+                          t-att-class="{'fw-bolder': selectedWarehouse === warehouse.id, 'o_search_panel_label_title':true}"/>
                 </li>
             </ul>
         </section>

@@ -3,18 +3,18 @@
 # 	* product
 # 
 # Translators:
+# Martin Trigaux, 2022
 # Dung Nguyen Thi <dungnt@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -200,7 +200,7 @@ msgstr "<strong>SL:</strong>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
-msgstr "<strong>Số lượng mục đơn bán hàng (giá cho mỗi đơn vị)</strong>"
+msgstr "<strong>Số lượng dòng đơn bán hàng (giá cho mỗi đơn vị)</strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -252,7 +252,7 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
-"Giá là một tập hợp giá bán hoặc quy tắc để tính giá của chi tiết đơn bán hàng dựa trên sản phẩm, danh mục sản phẩm, ngày và số lượng đặt hàng.\n"
+"Giá là một tập hợp giá bán hoặc quy tắc để tính giá của chi tiết đơn bán hàng dựa trên sản phẩm, danh dòng sản phẩm, ngày và số lượng đặt hàng.\n"
 "            Đây là công cụ hoàn hảo để xử lý các phương thức định giá, giảm giá theo mùa,..."
 
 #. module: product
@@ -447,7 +447,7 @@ msgstr "Thuộc tính"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr "Mục thuộc tính"
+msgstr "Dòng thuộc tính"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -967,7 +967,7 @@ msgstr "Chiết khấu đã được tính vào giá"
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "Chiết khấu theo mục"
+msgstr "Chiết khấu theo dòng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -1036,7 +1036,7 @@ msgstr "Thời hạn"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr "Máy phát điện"
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -1083,7 +1083,7 @@ msgstr "Không bao gồm"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr "Tên quy tắc rõ ràng cho mục bảng giá này."
+msgstr "Tên quy tắc rõ ràng cho dòng bảng giá này."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
@@ -1288,9 +1288,7 @@ msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
@@ -1745,7 +1743,7 @@ msgstr "Số lỗi"
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2172,7 +2170,7 @@ msgstr "Loại trừ thuộc tính mẫu sản phẩm"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Mục thuộc tính mẫu sản phẩm"
+msgstr "Dòng thuộc tính mẫu sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -2406,12 +2404,6 @@ msgstr "Dòng"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Mẹo quy tắc"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Lỗi gửi SMS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2732,7 +2724,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "The rounding method must be strictly positive."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3116,18 +3108,6 @@ msgid ""
 msgstr ""
 "Chúng tôi đặc biệt chú ý đến các tiểu tiết và điều đó lý giải cho chất lượng"
 " vượt trội của những chiếc bàn làm việc mà chúng tôi tạo ra."
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Thông báo trên trang web"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Lịch sử trao đổi qua trang web"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight

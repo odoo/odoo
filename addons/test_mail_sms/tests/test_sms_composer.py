@@ -153,6 +153,7 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
         self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
     def test_composer_default_recipient(self):
+        """ Test default description of SMS composer must be partner name"""
         self.test_record.write({
             'phone_nbr': '0123456789',
         })
@@ -164,8 +165,20 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
                     'number_field_name': 'phone_nbr',
                 })
 
-        self.assertFalse(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+
+    def test_composer_nofield_w_customer(self):
+        """ Test SMS composer without number field, the number on partner must be used instead"""
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                ).create({
+                    'body': self._test_body,
+                })
+
+        self.assertTrue(composer.recipient_single_valid)
+        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
 
     def test_composer_internals(self):
         with self.with_user('employee'):

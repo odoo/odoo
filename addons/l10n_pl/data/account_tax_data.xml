@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="gold_tag" model="account.account.tag">
+            <field name="name">Gold</field>
+            <field name="applicability">taxes</field>
+            <field name="country_id" ref="base.pl"/>
+        </record>
+
+
         <!-- VAT domestic sale-->
         <record id="vs_kraj_23" model="account.tax.template">
             <field name="chart_template_id" ref="pl_chart_template"/>
@@ -263,6 +270,35 @@
           (0,0, {
               'repartition_type': 'base',
               'minus_report_expression_ids': [ref('account_tax_report_line_kraj_zwolnione_tag')],
+          }),
+          (0,0, {
+              'repartition_type': 'tax',
+          }),
+      ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
+        <record id="vs_kraj_zw_gold" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% Exempt Złota</field>
+            <field name="description">0%</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+          (0,0, {
+              'repartition_type': 'base',
+              'plus_report_expression_ids': [ref('account_tax_report_line_kraj_zwolnione_tag')],
+              'tag_ids': [(4, ref('gold_tag'))],
+          }),
+          (0,0, {
+              'repartition_type': 'tax',
+          }),
+                ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+          (0,0, {
+              'repartition_type': 'base',
+              'minus_report_expression_ids': [ref('account_tax_report_line_kraj_zwolnione_tag')],
+              'tag_ids': [(4, ref('gold_tag'))],
           }),
           (0,0, {
               'repartition_type': 'tax',
@@ -831,6 +867,122 @@
               'repartition_type': 'tax',
           }),
       ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
+        <record id="vs_unia_i42" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% EU I_42</field>
+            <field name="description">0% I_42</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag'), ref('account_tax_report_line_intracom_procedure_i_42_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag'), ref('account_tax_report_line_intracom_procedure_i_42_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
+        <record id="vs_unia_triangular" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% EU T 2nd Payer</field>
+            <field name="description">0% EU T 2nd Payer</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_nabycie_towarow_tag'), ref('account_tax_report_line_triangular_2nd_payer_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_nabycie_towarow_tag'), ref('account_tax_report_line_triangular_2nd_payer_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
+        <record id="vs_unia_i63" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% EU I_63</field>
+            <field name="description">0% I_63</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag'), ref('account_tax_report_line_intracom_procedure_i_63_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_dostawa_towarow_tag'), ref('account_tax_report_line_intracom_procedure_i_63_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_vat_0"/>
+        </record>
+        <record id="vz_unia_triangular" model="account.tax.template">
+            <field name="chart_template_id" ref="pl_chart_template"/>
+            <field name="name">0% EU T 2nd Payer</field>
+            <field name="description">0% EU T 2nd Payer</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">consu</field>
+            <field name="active" eval="False"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('account_tax_report_line_poza_kraj_tag'), ref('account_tax_report_line_triangular_buyer_2nd_payer_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('account_tax_report_line_poza_kraj_tag'), ref('account_tax_report_line_triangular_buyer_2nd_payer_tag')],
+                }),
+                (0,0, {
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
             <field name="tax_group_id" ref="tax_group_vat_0"/>
         </record>
         <record id="vz_unia" model="account.tax.template">

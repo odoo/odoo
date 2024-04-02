@@ -5,15 +5,16 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -317,7 +318,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
-msgstr "<i class=\"fa fa-envelope\"/> Dies als Gewinner versenden"
+msgstr "<i class=\"fa fa-envelope\"/> Als Gewinner versenden"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
@@ -691,7 +692,7 @@ msgstr "A/B-Test: %s"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_completed
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_completed
 msgid "A/B Testing Campaign Finished"
-msgstr "A/B-Test-Kampagne beendet"
+msgstr "A/B-Testkampagne beendet"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_description
@@ -701,7 +702,7 @@ msgstr "Beschreibung des A/B-Tests"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_pc
 msgid "A/B Testing percentage"
-msgstr "A/B-Testing-Prozentsatz"
+msgstr "Prozentsatz des A/B-Tests"
 
 #. module: mass_mailing
 #. odoo-python
@@ -803,7 +804,7 @@ msgstr "Fügen Sie einen großen Slogan hinzu."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Add and Send Mailing"
-msgstr "Hinzufügen und Mailing senden"
+msgstr "Mailing hinzufügen und senden"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
@@ -899,7 +900,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__ab_testing_enabled
 msgid "Allow A/B Testing"
-msgstr "A/B-Testing zulassen"
+msgstr "A/B-Tests zulassen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -1572,6 +1573,13 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "Weiterlesen <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr "URL konnte nicht abgerufen werden: %s"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -1692,8 +1700,8 @@ msgstr "Datum, an dem die Sendung verschickt wurde oder wird."
 msgid ""
 "Date that will be used to know when to determine and send the winner mailing"
 msgstr ""
-"Datum, das für die Ermittlung und den Versand der Gewinner-Mailings "
-"verwendet wird"
+"Datum, das für die Ermittlung und den Versand der Gewinnermailings verwendet"
+" wird"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
@@ -1723,7 +1731,7 @@ msgstr "Löschen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
 msgid "Delete Blocks"
-msgstr "Bausteine Löschen"
+msgstr "Blöcke löschen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
@@ -1884,7 +1892,7 @@ msgstr "Entwurf"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Dropdown menu"
-msgstr "Dropdownmenu"
+msgstr "Drop-down-Menü"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2098,6 +2106,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "Feedback von %(email)s: %(feedback)s"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Dateigröße überschreitet konfiguriertes Maximum (%s bytes)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "Filter"
@@ -2173,7 +2189,7 @@ msgstr "Fußzeilen"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind the company. "
-"He lovesto keep his hands full by participating in the development of the "
+"He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr ""
 "Als Gründer und Chefvisionär ist Tony die treibende Kraft hinter dem "
@@ -2229,6 +2245,11 @@ msgstr "Gruppieren nach"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "Gruppieren nach ..."
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2304,7 +2325,7 @@ msgid ""
 "related mail_mail can be deleted separately from its statistics. However the"
 " ID is needed for several action and controllers."
 msgstr ""
-"ID der zugehörigen mail_mail. Dieses Feld ist eine Ganzzahl, weil das "
+"ID der zugehörigen mail_mail. Dieses Feld ist eine Ganzzahl, weil die "
 "zugehörige mail_mail separat von dessen Statistiken gelöscht werden kann. "
 "Diese ID wird allerdings für verschiedene Aktionen und Controller benötigt."
 
@@ -2382,6 +2403,16 @@ msgid "Image Text Image"
 msgstr "Bild Text Bild"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Bildgröße zu groß, importierte Bilder müssen kleiner als 42 Millionen Pixel "
+"sein"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Images"
 msgstr "Bilder"
@@ -2393,7 +2424,7 @@ msgstr "Bilder"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 #, python-format
 msgid "Import"
-msgstr "Import"
+msgstr "Importieren"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -2674,7 +2705,7 @@ msgstr "Mail-ID (tech.)"
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_ab_testing_ir_actions_server
 #: model:ir.cron,cron_name:mass_mailing.ir_cron_mass_mailing_ab_testing
 msgid "Mail Marketing: A/B Testing"
-msgstr "Mail-Marketing: A/B-Test"
+msgstr "Mail-Marketing: A/B-Tests"
 
 #. module: mass_mailing
 #: model:ir.actions.server,name:mass_mailing.ir_cron_mass_mailing_queue_ir_actions_server
@@ -2697,7 +2728,7 @@ msgstr "Mailserver"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mail_server_available
 msgid "Mail Server Available"
-msgstr "Mail-Server verfügbar"
+msgstr "Mailserver verfügbar"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
@@ -2778,7 +2809,7 @@ msgstr "Mailingliste"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
-msgstr "Mailinglisten-Kontakte"
+msgstr "Mailinglistenkontakte"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
@@ -2907,7 +2938,7 @@ msgstr "Massenmailingkampagne verwalten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Manage mass mailing campaigns"
-msgstr "Massenmailingkampagnen verwalten"
+msgstr "Verwalten Sie Massenmailingkampagnen"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__utm_campaign__ab_testing_winner_selection__manual
@@ -3468,9 +3499,9 @@ msgid ""
 "Opt out flag for a specific mailing list. This field should not be used in a"
 " view without a unique and active mailing list context."
 msgstr ""
-"Abmeldungsflagge für bestimmte Mailinglisten. Dieses Feld sollte nicht in "
-"einer Ansicht ohne einen eindeutigen und aktiven Mailinglistenkontext "
-"verwendet werden."
+"Abmeldungskennzeichnung für bestimmte Mailinglisten. Dieses Feld sollte "
+"nicht in einer Ansicht ohne einen eindeutigen und aktiven "
+"Mailinglistenkontext verwendet werden."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
@@ -3596,7 +3627,7 @@ msgstr "Vorschau"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Preview Text"
-msgstr "Text-Vorschau"
+msgstr "Vorschautext"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -4094,7 +4125,7 @@ msgstr "Gesendet am"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Sent Period"
-msgstr "Gesendete Periode"
+msgstr "Versandperiode"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -4165,7 +4196,7 @@ msgstr "Klein"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options_border_line_widgets
 msgid "Solid"
-msgstr "Durchgezogen"
+msgstr "Voll"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__source_id
@@ -4296,7 +4327,7 @@ msgstr "Vorlage"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Test"
-msgstr "Testbetrieb"
+msgstr "Testen"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4375,7 +4406,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_mailing_percentage_valid
 msgid "The A/B Testing Percentage needs to be between 0 and 100%"
-msgstr "Der Prozentsatz der A/B-Tests muss zwischen 0 und 100 % liegen."
+msgstr "Der Prozentsatz des A/B-Tests muss zwischen 0 und 100 % liegen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4557,7 +4588,8 @@ msgstr ""
 msgid ""
 "This will send the email to all recipients. Do you still want to proceed ?"
 msgstr ""
-"Dies sendet die E-Mail an alle Empfänger. Möchten Sie trotzdem fortfahren?"
+"Die E-Mail wird dadurch an alle Empfänger (oder bei A/B-Tests an den "
+"ausgewählten Prozentsatz) gesendet. Möchten Sie trotzdem fortfahren?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -4630,7 +4662,7 @@ msgstr "Gesamt"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "Total <br/>Contacts"
-msgstr "Insgesamt <br/>Kontakte"
+msgstr "Kontakte <br/>insgesamt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_total_pc
@@ -4724,19 +4756,12 @@ msgstr "Abmelden"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "Unsubscribed"
-msgstr "Abmelden"
+msgstr "Abgemeldet"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Abmeldungsdatum"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "Nicht unterstütztes Massenmailing-Modell%s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe

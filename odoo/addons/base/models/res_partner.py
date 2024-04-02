@@ -8,6 +8,7 @@ import hashlib
 import pytz
 import threading
 import re
+import warnings
 
 import requests
 from collections import defaultdict
@@ -172,7 +173,8 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
-    _order = "display_name, id"
+    _order = "display_name ASC, id DESC"
+    _allow_sudo_commands = False
     _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     def _default_category(self):
@@ -197,6 +199,7 @@ class Partner(models.Model):
 
     name = fields.Char(index=True, default_export_compatible=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
+    translated_display_name = fields.Char(compute='_compute_translated_display_name')
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -345,6 +348,13 @@ class Partner(models.Model):
         names = dict(self.with_context({}).name_get())
         for partner in self:
             partner.display_name = names.get(partner.id)
+
+    @api.depends_context('lang')
+    @api.depends('display_name')
+    def _compute_translated_display_name(self):
+        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+        for partner in self:
+            partner.translated_display_name = names.get(partner.id)
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -503,11 +513,36 @@ class Partner(models.Model):
 
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
+        """ Compute formatted email for partner, using formataddr. Be defensive
+        in computation, notably
+
+          * double format: if email already holds a formatted email like
+            'Name' <email@domain.com> we should not use it as it to compute
+            email formatted like "Name <'Name' <email@domain.com>>";
+          * multi emails: sometimes this field is used to hold several addresses
+            like email1@domain.com, email2@domain.com. We currently let this value
+            untouched, but remove any formatting from multi emails;
+          * invalid email: if something is wrong, keep it in email_formatted as
+            this eases management and understanding of failures at mail.mail,
+            mail.notification and mailing.trace level;
+          * void email: email_formatted is False, as we cannot do anything with
+            it;
+        """
+        self.email_formatted = False
         for partner in self:
-            if partner.email:
-                partner.email_formatted = tools.formataddr((partner.name or u"False", partner.email or u"False"))
-            else:
-                partner.email_formatted = ''
+            emails_normalized = tools.email_normalize_all(partner.email)
+            if emails_normalized:
+                # note: multi-email input leads to invalid email like "Name" <email1, email2>
+                # but this is current behavior in Odoo 14+ and some servers allow it
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    ','.join(emails_normalized)
+                ))
+            elif partner.email:
+                partner.email_formatted = tools.formataddr((
+                    partner.name or u"False",
+                    partner.email
+                ))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -524,8 +559,9 @@ class Partner(models.Model):
 
     @api.constrains('barcode')
     def _check_barcode_unicity(self):
-        if self.barcode and self.env['res.partner'].search_count([('barcode', '=', self.barcode)]) > 1:
-            raise ValidationError(_('Another user already has this barcode'))
+        for partner in self:
+            if partner.barcode and self.env['res.partner'].search_count([('barcode', '=', partner.barcode)]) > 1:
+                raise ValidationError(_('Another partner already has this barcode'))
 
     def _update_fields_values(self, fields):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -766,7 +802,7 @@ class Partner(models.Model):
                     if v:
                         to_write[f] = v.id if isinstance(v, models.BaseModel) else v
             if to_write:
-                self.browse(children).write(to_write)
+                self.sudo().browse(children).write(to_write)
 
         # do the second half of _fields_sync the "normal" way
         for partner, vals in zip(partners, vals_list):
@@ -820,7 +856,8 @@ class Partner(models.Model):
 
         if partner.company_name or partner.parent_id:
             if not name and partner.type in ['invoice', 'delivery', 'other']:
-                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+                types = dict(self._fields['type']._description_selection(self.env))
+                name = types[partner.type]
             if not partner.is_company:
                 name = self._get_contact_name(partner, name)
         if self._context.get('show_address_only'):
@@ -854,7 +891,9 @@ class Partner(models.Model):
 
           * Raoul <raoul@grosbedon.fr>
           * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
+          * Raoul raoul@grosbedon.fr (strange fault tolerant support from
+            df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
+            in 'email_split_tuples';
 
         Otherwise: default, everything is set as the name. Starting from 13.3
         returned email will be normalized to have a coherent encoding.
@@ -863,12 +902,6 @@ class Partner(models.Model):
         split_results = tools.email_split_tuples(text)
         if split_results:
             name, email = split_results[0]
-
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
 
         if email:
             email = tools.email_normalize(email)
@@ -952,8 +985,7 @@ class Partner(models.Model):
         return base64.b64encode(res.content)
 
     def _email_send(self, email_from, subject, body, on_error=None):
-        for partner in self.filtered('email'):
-            tools.email_send(email_from, [partner.email], subject, body, on_error)
+        warnings.warn("Partner._email_send has not done anything but raise errors since 15.0", stacklevel=2, category=DeprecationWarning)
         return True
 
     def address_get(self, adr_pref=None):
@@ -1029,7 +1061,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

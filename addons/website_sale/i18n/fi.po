@@ -18,20 +18,22 @@
 # Retropikzel, 2022
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Martin Trigaux, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Simo Suurla <simo@suurla.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Teija Hölttä <teija.holtta@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Konsta Aavaranta, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -197,7 +199,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
 msgid "<i class=\"fa fa-chevron-left\"/> Return to Cart"
-msgstr "<i class=\"fa fa-chevron-left\"/>Palaa Ostoskoriin "
+msgstr "i class=\"fa fa-chevron-left\"/>Palaa ostoskoriin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
@@ -276,9 +278,9 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Täältä löydät kaikki hylätyt ostoskorit, eli ostoskorit jotka on luotu kävijöiden toimesta yli tunti sitten, mutta joita ei ole vielä vahvistettu.\n"
+"                        Täältä löydät kaikki hylätyt ostoskorit. Nämä ovat ostoskorit, jotka käyttäjät ovat luoneet yli tunti sitten, mutta joita ei ole vielä vahvistettu.\n"
 "</p>\n"
-"                        <p>Sinun kannattaisi lähettää asiakkaalle sähköpostia ja kannustaa häntä!</p>"
+"                        <p>Sinun kannattaisi lähettää asiakkaalle sähköpostia ja kannustaa häntä viemään kauppa loppuun saakka!</p> "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -451,7 +453,7 @@ msgid ""
 "<span>Proceed to Checkout</span>\n"
 "                            <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span>Siirry kassalle</span>\n"
+"<span>Jatka kassalle</span>\n"
 "                            <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -462,6 +464,11 @@ msgid ""
 msgstr ""
 "<span>Viimeistele ostokset</span>\n"
 "                                                    <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Määrä</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -494,11 +501,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Esikatseluvideo</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -661,8 +663,8 @@ msgid "Abandoned Cart"
 msgstr "Hylätty ostoskori"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -837,7 +839,7 @@ msgstr "Anna asiakkaiden maksaa henkilökohtaisesti myymälöissäsi"
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
 "Antaa asiakkaalle mahdollisuuden vertailla tuotteita ominaisuuksien "
-"perusteella."
+"perusteella"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1091,10 +1093,8 @@ msgstr "Voi julkaista"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
+msgid "You can't use a video as the product's main image."
 msgstr ""
-"Upotettua kuvaa tai videota ei voi sekvensoida uudelleen ei-yhteensopivan "
-"kuvan kanssa."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1146,7 +1146,7 @@ msgstr "Ostoskorit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Carts are flagged as abandoned after this delay."
-msgstr "Aika jonka jälkeen ostoskori merkataan hylätyksi"
+msgstr "Aika jonka jälkeen ostoskori merkitään hylätyksi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1220,11 +1220,11 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
+"Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Nimen muuttaminen ei ole sallittua sen jälkeen kun sinua on laskutettu. "
-"Tähän liittyen, ota meihin yhteyttä."
+"Nimen muuttaminen ei ole sallittua sen jälkeen, kun tiliäsi varten on luotu "
+"asiakirjat. Ota yhteyttä suoraan meihin tätä toimenpidettä varten."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1314,7 +1314,10 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "Yrityksen nimi"
 
@@ -1568,6 +1571,11 @@ msgid "DHL Express Connector"
 msgstr "DHL Express Liitin"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr "PUDOTA RAKENNUSPALIKAT TÄHÄN KÄYTTÄÄKSESI NIITÄ KAIKILLA TUOTTEILLA"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Oletus"
@@ -1815,11 +1823,6 @@ msgid "Edit"
 msgstr "Muokkaa"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Muokkaa Website Builderissa"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
@@ -1902,7 +1905,7 @@ msgstr "Lisävarianttimedia"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Featured"
-msgstr "Suositellut"
+msgstr "Suosituimmat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2045,6 +2048,19 @@ msgstr ""
 "ostoskorinsa"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Jos teet tilauksen ulkopuoliselle henkilölle, tee tilaus backendin kautta. "
+"Jos haluat muuttaa nimeäsi tai sähköpostiosoitettasi, tee se tilin "
+"asetuksissa tai ota yhteyttä ylläpitäjääsi."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2107,15 +2123,6 @@ msgstr "Välitön kassalle meno, ostoskoriin lisäämisen sijaan"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -2472,8 +2479,8 @@ msgstr "Tuotetta ei ole asetettu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
-msgstr "Tuotetta ei ole määritetty kategoriassa \""
+msgid "No product defined in this category."
+msgstr "Tässä kategoriassa ei ole määritelty tuotetta."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -2760,6 +2767,13 @@ msgid "Phone"
 msgstr "Puhelin"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Puhelinnumero"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
 msgstr "Pillerit"
@@ -2767,7 +2781,7 @@ msgstr "Pillerit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
-msgstr "Ole hyvä ja anna toimiva videon URL"
+msgstr "Ole hyvä ja anna toimiva videon URL."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3174,7 +3188,6 @@ msgstr "Määrä:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3699,7 +3712,7 @@ msgstr "Ei saatavilla"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "Täytä kaikki vaaditut kentät. Kiitos!"
+msgstr "Täytä kaikki vaaditut kentät."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3784,11 +3797,6 @@ msgstr "Ehdottamamme lisätuotteet:"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
 msgstr "Ehdotetut lisävarusteet verkkokaupan ostoskorissa"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "TIN / VAT"
-msgstr "ALV-numero"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4137,6 +4145,11 @@ msgstr ""
 "Käytä Google Places API:ta kävijöiden syöttämien osoitteiden varmistamieen"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "ALV"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Muunnelma"
@@ -4445,6 +4458,20 @@ msgstr ""
 "                                Tämä viesti näytetään, koska et ole antanut sekä suodatinta että mallia käytettäväksi."
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Sähköpostisi"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Nimesi"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -4465,11 +4492,6 @@ msgstr "Edellinen ostotapahtumasi on jo viety loppuun."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "Postinumero"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "border-primary"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

@@ -2403,6 +2403,13 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         this.metadata = {};
     },
 
+    /**
+     * @override
+     * @returns {boolean}
+     */
+    isSet: function () {
+        return !!this.value && this.value.count;
+    },
     destroy: function () {
         this._super();
         $(window).off(this.fileupload_id);
@@ -3188,6 +3195,9 @@ var FieldStatus = AbstractField.extend({
         } catch (_) {
             this.isClickable = !!this.nodeOptions.clickable;
         }
+
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.isClickable = this.isClickable && !isReadonly;
     },
 
     //--------------------------------------------------------------------------

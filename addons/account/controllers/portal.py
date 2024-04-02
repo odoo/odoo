@@ -93,12 +93,16 @@ class PortalAccount(CustomerPortal):
             'date': date_begin,
             # content according to pager and archive selected
             # lambda function to get the invoices recordset when the pager will be defined in the main method of a route
-            'invoices': lambda pager_offset: AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager_offset),
+            'invoices': lambda pager_offset: (
+                AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
+                if AccountInvoice.check_access_rights('read', raise_exception=False) else
+                AccountInvoice
+            ),
             'page_name': 'invoice',
             'pager': {  # vals to define the pager.
                 "url": url,
                 "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-                "total": AccountInvoice.search_count(domain),
+                "total": AccountInvoice.search_count(domain) if AccountInvoice.check_access_rights('read', raise_exception=False) else 0,
                 "page": page,
                 "step": self._items_per_page,
             },

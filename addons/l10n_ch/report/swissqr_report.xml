@@ -12,21 +12,30 @@
             <field name="paperformat_id" ref="l10n_ch.paperformat_euro_no_margin"/>
         </record>
 
-        <template id="l10n_ch_swissqr_template">
-            <t t-set="o" t-value="o.with_context(lang=lang)"/>
-            <t t-set="company" t-value="o.company_id"/>
-            <t t-call="web.external_layout_standard">
-                <!-- add default margin for header (matching A4 European margin) -->
-                <t t-set="report_header_style">padding-top:6.2mm; padding-left:8.2mm; padding-right:8.2mm;</t>
+        <record id="l10n_ch_qr_header" model="ir.actions.report">
+            <field name="name">QR-bill Header</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ch.qr_report_header</field>
+            <field name="report_file">l10n_ch.qr_report_header</field>
+        </record>
 
+        <template id="l10n_ch_header_template">
+            <t t-call="web.external_layout">
+                <!--The following elements are necessary for the header to be displayed correctly.-->
+                <br/>
+                <p>&amp;nbsp;</p>
+            </t>
+        </template>
+
+        <template id="l10n_ch_swissqr_template">
+            <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id">
+                <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                <t t-set="company" t-value="o.company_id"/>
                 <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
 
                 <t t-set="is_qrr" t-value="o.partner_bank_id.l10n_ch_qr_iban"/>
                 <t t-set="is_scor" t-value="o.partner_bank_id._is_iso11649_reference(o.payment_reference)"/>
-
-                <div class="swissqr_page_title">
-                    <h1>QR-bill for invoice <t t-esc="o.name"/></h1>
-                </div>
 
                 <div class="swissqr_content_v2">
 
@@ -49,9 +58,7 @@
                                 <br/>
                                 <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
-                                <t t-if="o.company_id.country_id.code != 'CH'">
-                                    <span t-field="o.company_id.country_id.code"/>
-                                </t>
+                                <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
                                 <span t-field="o.company_id.city"/><br/>
                                 <br/>
@@ -82,9 +89,7 @@
                                 <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
                                 <span t-field="o.partner_id.street"/>
                                 <span t-field="o.partner_id.street2"/><br/>
-                                <t t-if="o.partner_id.country_id.code != 'CH'">
-                                    <span t-field="o.partner_id.country_id.code"/>
-                                </t>
+                                <span t-field="o.partner_id.country_id.code"/>
                                 <span t-field="o.partner_id.zip"/>
                                 <span t-field="o.partner_id.city"/>
                             </div>
@@ -165,9 +170,7 @@
                                 <br/>
                                 <span t-esc="o.partner_bank_id.acc_holder_name or o.company_id.name"/><br/>
                                 <span t-field="o.company_id.street"/><br/>
-                                <t t-if="o.company_id.country_id.code != 'CH'">
-                                    <span t-field="o.company_id.country_id.code"/>
-                                </t>
+                                <span t-field="o.company_id.country_id.code"/>
                                 <span t-field="o.company_id.zip"/>
                                 <span t-field="o.company_id.city"/><br/>
                                 <br/>
@@ -209,19 +212,15 @@
                                 <span t-field="o.partner_id.commercial_partner_id.name"/><br/>
                                 <span t-field="o.partner_id.street"> </span>
                                 <span t-field="o.partner_id.street2"/><br/>
-                                <t t-if="o.partner_id.country_id.code != 'CH'">
-                                    <span t-field="o.partner_id.country_id.code"/>
-                                </t>
+                                <span t-field="o.partner_id.country_id.code"/>
                                 <span t-field="o.partner_id.zip"/>
                                 <span t-field="o.partner_id.city"/><br/>
                                 <br/>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
-            </t>
+            </div>
         </template>
 
         <template id="l10n_ch.qr_report_main">
@@ -232,6 +231,17 @@
                 </t>
             </t>
         </template>
+
+        <template id="l10n_ch.qr_report_header">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="invoice">
+                    <t t-set="o" t-value="invoice"/>
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_ch.l10n_ch_header_template" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
         <template id="minimal_layout_with_report_attribute" inherit_id="web.minimal_layout">
             <body position="attributes">
                 <attribute name="t-att-data-report-id">report_xml_id</attribute>

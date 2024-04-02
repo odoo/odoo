@@ -1,8 +1,9 @@
 import json
+import pytz
 from hashlib import sha256
 from base64 import b64decode, b64encode
 from lxml import etree
-from datetime import date, datetime
+from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
@@ -210,6 +211,9 @@ class AccountEdiFormat(models.Model):
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, x509_cert, invoice.l10n_sa_invoice_signature)
         if invoice._l10n_sa_is_simplified():
+            # Applying with_prefetch() to set the _prefetch_ids = _ids,
+            # preventing premature QR code computation for other invoices.
+            invoice = invoice.with_prefetch()
             return self._l10n_sa_apply_qr_code(invoice, signed_xml)
         return signed_xml
 
@@ -227,18 +231,22 @@ class AccountEdiFormat(models.Model):
         try:
             PCSID_data = invoice.journal_id._l10n_sa_api_get_pcsid()
         except UserError as e:
-            return {'error': _("Could not generate PCSID values: \n") + e.args[0], 'blocking_level': 'error'}
+            return ({
+                'error': _("Could not generate PCSID values: \n") + e.args[0],
+                'blocking_level': 'error',
+                'response': unsigned_xml
+            }, unsigned_xml)
         x509_cert = PCSID_data['binarySecurityToken']
 
         # Apply Signature/QR code on the generated XML document
         try:
             signed_xml = self._l10n_sa_get_signed_xml(invoice, unsigned_xml, x509_cert)
         except UserError as e:
-            return {
+            return ({
                 'error': _("Could not generate signed XML values: \n") + e.args[0],
                 'blocking_level': 'error',
                 'response': unsigned_xml
-            }
+            }, unsigned_xml)
 
         # Once the XML content has been generated and signed, we submit it to ZATCA
         return self._l10n_sa_submit_einvoice(invoice, signed_xml, PCSID_data), signed_xml
@@ -281,7 +289,7 @@ class AccountEdiFormat(models.Model):
         fields_to_check = []
         if any(tax.l10n_sa_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU') for tax in
                invoice.invoice_line_ids.filtered(
-                   lambda line: not line.display_type).tax_ids):
+                   lambda line: line.display_type == 'product').tax_ids):
             fields_to_check += [
                 ('l10n_sa_additional_identification_scheme',
                  _('Additional Identification Scheme is required for the Buyer if tax exemption reason is either '
@@ -319,6 +327,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error',
                 'response': None,
             }}
+
         xml_content = None
         if not invoice.l10n_sa_chain_index:
             # If the Invoice doesn't have a chain index, it means it either has not been submitted before,
@@ -403,7 +412,7 @@ class AccountEdiFormat(models.Model):
         if invoice.commercial_partner_id == invoice.company_id.partner_id.commercial_partner_id:
             errors.append(_("- You cannot post invoices where the Seller is the Buyer"))
 
-        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)):
+        if not all(line.tax_ids for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product')):
             errors.append(_("- Invoice lines should have at least one Tax applied."))
 
         if not journal._l10n_sa_ready_to_submit_einvoices():
@@ -427,7 +436,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
         if customer_missing_info:
             errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
-        if invoice.invoice_date > date.today():
+        if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():
             errors.append(
@@ -455,9 +464,7 @@ class AccountEdiFormat(models.Model):
             Return contents of the submitted UBL file or generate it if the invoice has not been submitted yet
         """
         doc = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca' and d.state == 'sent')
-        if doc is not None and doc.attachment_id.datas:
-            return {invoice: {'xml_file': doc.attachment_id.datas.decode()}}
-        return {invoice: {'xml_file': self._l10n_sa_generate_zatca_template(invoice)}}
+        return doc.attachment_id.raw or self._l10n_sa_generate_zatca_template(invoice).encode()
 
     def _get_move_applicability(self, move):
         # EXTENDS account_edi

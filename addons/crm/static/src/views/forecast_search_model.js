@@ -9,8 +9,8 @@ import { SearchModel } from "@web/search/search_model";
  * explanations of what is done here.
  */
 const DATE_FORMAT = {
-    datetime: "YYYY-MM-DD HH:mm:ss",
-    date: "YYYY-MM-DD",
+  datetime: "YYYY-MM-DD HH:mm:ss",
+  date: "YYYY-MM-DD",
 };
 
 export class ForecastSearchModel extends SearchModel {
@@ -65,7 +65,6 @@ export class ForecastSearchModel extends SearchModel {
      */
     _getForecastStart(forecastField) {
         if (!this.forecastStart) {
-            /** @todo stop using moment */
             const { type } = this.searchViewFields[forecastField];
             let startMoment;
             const groupBy = this.groupBy;
@@ -81,7 +80,7 @@ export class ForecastSearchModel extends SearchModel {
                 startMoment = moment.utc(startMoment);
             }
             const format = DATE_FORMAT[type];
-            this.forecastStart = startMoment.format(format);
+            this.forecastStart = startMoment.locale("en").format(format);
         }
         return this.forecastStart;
     }

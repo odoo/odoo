@@ -64,8 +64,8 @@ class RecurrenceRule(models.Model):
 
     def _write_events(self, values, dtstart=None):
         values.pop('google_id', False)
-        # If only some events are updated, sync those events.
-        values['need_sync'] = bool(dtstart)
+        # Events will be updated by patch requests, do not sync events for avoiding spam.
+        values['need_sync'] = False
         return super()._write_events(values, dtstart=dtstart)
 
     def _cancel(self):

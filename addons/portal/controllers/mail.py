@@ -112,6 +112,21 @@ class PortalChatter(http.Controller):
         """ Tells if we can effectively post on the model based on content. """
         return bool(message) or bool(attachment_ids)
 
+    @http.route('/mail/avatar/mail.message/<int:res_id>/author_avatar/<int:width>x<int:height>', type='http', auth='public')
+    def portal_avatar(self, res_id=None, height=50, width=50, access_token=None, _hash=None, pid=None):
+        """ Get the avatar image in the chatter of the portal """
+        if access_token or (_hash and pid):
+            message = request.env['mail.message'].browse(int(res_id)).exists().filtered(
+                lambda msg: _check_special_access(msg.model, msg.res_id, access_token, _hash, pid and int(pid))
+            ).sudo()
+        else:
+            message = request.env.ref('web.image_placeholder').sudo()
+        # in case there is no message, it creates a stream with the placeholder image
+        stream = request.env['ir.binary']._get_image_stream_from(
+            message, field_name='author_avatar', width=int(width), height=int(height),
+        )
+        return stream.get_response()
+
     @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, attachment_ids=None, attachment_tokens=None, **kw):
         """Create a new `mail.message` with the given `message` and/or `attachment_ids` and return new message values.
@@ -235,7 +250,7 @@ class MailController(mail.MailController):
         if not model or not res_id or model not in request.env:
             return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 
-        if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
+        if isinstance(request.env[model], request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
             try:

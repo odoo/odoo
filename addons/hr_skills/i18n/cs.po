@@ -9,14 +9,16 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Jiří Podhorecký, 2022
+# Jakub Smolka, 2023
+# Katerina Horylova, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
+"Last-Translator: Katerina Horylova, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
@@ -33,7 +35,7 @@ msgid "ADD"
 msgstr "PŘIDAT"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
@@ -50,11 +52,11 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #, python-format
 msgid "Create a new entry"
-msgstr ""
+msgstr "Vytvořit nový záznam"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
@@ -79,7 +81,7 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
 #, python-format
 msgid "Current"
@@ -154,12 +156,12 @@ msgstr "jméno zaměstnance"
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_employee_skill_report_action
 msgid "Employee Skills"
-msgstr ""
+msgstr "Dovednosti zaměstnance"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_report
 msgid "Employee Skills Report"
-msgstr ""
+msgstr "Přehled dovedností zaměstnance"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
@@ -247,7 +249,7 @@ msgstr "Úrovně"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr ""
+msgstr "Sekce životopisu"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -259,13 +261,14 @@ msgid "Name"
 msgstr "Jméno"
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_skill_level.py:0
 #, python-format
 msgid "Only one default level is allowed per skill type."
 msgstr ""
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/views/skills_list_renderer.js:0
 #, python-format
 msgid "Other"
@@ -309,7 +312,7 @@ msgstr "Veřejný zaměstnanec"
 #: model_terms:ir.ui.view,arch_db:hr_skills.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Resume"
-msgstr "Shrnutí"
+msgstr "Životopis"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
@@ -319,7 +322,7 @@ msgstr ""
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "Řádek životopisu zaměstnance"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
@@ -403,7 +406,7 @@ msgstr "Typ dovednosti"
 #: model:ir.ui.menu,name:hr_skills.hr_skill_type_menu
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr "Druhy dovedností"
+msgstr "Typy dovedností"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
@@ -433,15 +436,17 @@ msgstr "Dovednosti"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_employee
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
 msgid "Skills History"
-msgstr ""
+msgstr "Historie dovedností"
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr ""
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
@@ -475,7 +480,7 @@ msgstr "Typ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resume line"
-msgstr ""
+msgstr "Typ řádky životopisu"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users

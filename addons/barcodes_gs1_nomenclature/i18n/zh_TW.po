@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,12 +31,12 @@ msgstr "字母數字名稱"
 msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
-msgstr ""
+msgstr "FNC1的替代性正則表達式分隔符。分隔符不能與任何相關規則模式的開始/結束匹配。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
 msgid "Associated Uom"
-msgstr ""
+msgstr "關聯的計量單位"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
@@ -80,7 +81,7 @@ msgstr "過期日期"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "FNC1分離器"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -101,7 +102,7 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
-msgstr ""
+msgstr "如果為真，使用AI的最後一位數字來確定第一個小數的位置"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -168,7 +169,7 @@ msgstr "數量"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "FNC1 替代分隔符不是有效的 Regex正規表示式:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -179,6 +180,8 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"GS1內容類型定義了規則將把條形碼處理成什麼樣的數據。        * 日期：條形碼將被轉換為Odoo日期時間； * "
+"測量：條形碼的值與特定的計量單位有關； * 數字標識符：遵循特定編碼的固定長度的條形碼； * 英數名稱：可變長度的條形碼。"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python

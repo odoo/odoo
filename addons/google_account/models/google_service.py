@@ -91,7 +91,7 @@ class GoogleService(models.AbstractModel):
             raise self.env['res.config.settings'].get_config_warning(error_msg)
 
     @api.model
-    def _do_request(self, uri, params=None, headers=None, method='POST', preuri="https://www.googleapis.com", timeout=TIMEOUT):
+    def _do_request(self, uri, params=None, headers=None, method='POST', preuri=GOOGLE_API_BASE_URL, timeout=TIMEOUT):
         """ Execute the request to Google API. Return a tuple ('HTTP_CODE', 'HTTP_RESPONSE')
             :param uri : the url to contact
             :param params : dict or already encoded parameters for the request to make
@@ -103,6 +103,10 @@ class GoogleService(models.AbstractModel):
             params = {}
         if headers is None:
             headers = {}
+
+        assert urls.url_parse(preuri + uri).host in [
+            urls.url_parse(url).host for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
+        ]
 
         # Remove client_secret key from logs
         if isinstance(params, str):

@@ -233,15 +233,15 @@
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" />
-                            <span class="o_td_label float-start">
+                            <span class="o_td_label float-start" attrs="{'invisible': [('planned_hours', '=', 0.0)]}">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours', '&lt;', 0)]}"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours', '&gt;=', 0)]}"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
-                                       attrs="{'invisible': ['|', '|', ('planned_hours', '=', 0.0), ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
+                                       attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours', '&gt;=', 0)]}"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
                                    attrs="{'invisible' : [('planned_hours', '=', 0.0)]}" nolabel="1"/>
@@ -316,7 +316,7 @@
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
                     <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
-                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title">
+                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>
                 </xpath>
@@ -336,7 +336,7 @@
                     <field name="encode_uom_in_days" invisible="1"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'border-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
@@ -432,5 +432,8 @@
             <field name="domain">[('is_internal_project', '=', False)]</field>
         </record>
 
+        <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+            <field name="domain">[('is_internal_project', '=', False)]</field>
+        </record>
     </data>
 </odoo>

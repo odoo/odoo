@@ -251,11 +251,10 @@ QUnit.module('Barcode GS1 Parser', {
 
     QUnit.test('Test Alternative GS1 Separator (fnc1)', async function (assert) {
         assert.expect(6);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 2});
+        const nomenclature = this.data['barcode.nomenclature'].records[1];
+        nomenclature.rules = this.data['barcode.rule'].records;
+        let barcodeNomenclature = new BarcodeParser({ nomenclature });
         await barcodeNomenclature.loaded;
-
-        barcodeNomenclature.nomenclature = this.data['barcode.nomenclature'].records[0];
-        barcodeNomenclature.nomenclature.rules = this.data['barcode.rule'].records;
 
         // (21)12345(15)090101(16)100101
         const code128 = "2112345#1509010116100101";
@@ -269,8 +268,11 @@ QUnit.module('Barcode GS1 Parser', {
             );
         }
 
-        barcodeService.gs1SeparatorRegex = '#';
+        // Reload the nomenclature but this time using '#' as separator.
+        nomenclature.gs1_separator_fnc1 = '#';
+        barcodeNomenclature = new BarcodeParser({ nomenclature });
         res = barcodeNomenclature.gs1_decompose_extanded(barcodeService.cleanBarcode(code128));
+        await barcodeNomenclature.loaded;
         assert.equal(res.length, 3);
         assert.equal(res[0].ai, "21");
         assert.equal(res[0].value, "12345");

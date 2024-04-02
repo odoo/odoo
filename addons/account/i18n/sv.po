@@ -12,7 +12,6 @@
 # Egils Verkstad <egils@riseup.net>, 2022
 # Jonathan S <jonathan.c.strom@gmail.com>, 2022
 # Daniel Löfgren, 2022
-# Robin Calvin, 2022
 # lasch a <bmail440@gmail.com>, 2022
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2022
 # 03992e16f8df6e39b9d1cc0ff635887e, 2022
@@ -21,26 +20,28 @@
 # Patrik Lermon <patrik.lermon@gmail.com>, 2022
 # Robert Frykelius <robert.frykelius@linserv.se>, 2022
 # Peter Wickenberg <peter@wickenberg.nu>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # lynnliuying <lynn.liu1971@gmail.com>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Johan Bergquist <johan.bergquist@netip.se>, 2022
 # Simon S, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# Martin Trigaux, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Lasse Larsson, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Levi Siuzdak (sile), 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Lasse L, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Lasse Larsson, 2023\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgstr "# avstämda kundfakturor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "# Förliknade Kontoutdrag Linjer"
+msgstr "# Avstämda kontoutdragsrader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -148,7 +149,7 @@ msgstr "%<span class=\"px-3\"/>("
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
-msgstr "%d rörelser"
+msgstr "%d transaktioner"
 
 #. module: account
 #. odoo-python
@@ -209,6 +210,13 @@ msgstr "%s Exkl. Skatt"
 #, python-format
 msgid "%s Incl. Taxes"
 msgstr "%s Inkl. Skatt"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Kontoutdrag %s"
 
 #. module: account
 #. odoo-python
@@ -643,15 +651,6 @@ msgstr ""
 "title=\"Selection\"/>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                            Gaps in the sequence"
-msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                            Luckor i sekvensen"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-fw fa-comments\"/><b>Send message</b>"
 msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Skicka meddelande</b>"
@@ -692,11 +691,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Utkast</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Utkast</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -1247,11 +1248,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Att betala</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
 msgstr "<strong>Datum för kreditnotan:</strong>"
 
@@ -1779,7 +1775,7 @@ msgstr "Gör konto oavstämt"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "Kontonumrets 2 första siffror"
+msgstr "Kontonumrets två första siffror"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -2036,7 +2032,7 @@ msgstr "Periodiseringskonto"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
-msgstr "Periodiseringsdragningar"
+msgstr "Periodiseringstransaktioner"
 
 #. module: account
 #. odoo-python
@@ -2064,14 +2060,14 @@ msgstr "Ackumulerat konto"
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr "Guide för Ackumulerade Order"
+msgstr "Guide för periodiserade  order"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
-msgstr "Ackumulerad total"
+msgstr "Periodiserad total"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -2700,17 +2696,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
-msgstr "Analytisk"
+msgstr "Objekt"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analyskonto"
+msgstr "Objketkonto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analytisk redovisning"
+msgstr "Objektredovisning"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
@@ -2725,23 +2721,23 @@ msgstr "Objektkostnad"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "Analytisk distributionsmodell"
+msgstr "Objektfördelningsmodell"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Analytiska distributionsmodeller"
+msgstr "Objektfördelningsmodeller"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr "Analytisk distributionsökning"
+msgstr "Sök objektfördelning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
 msgid "Analytic Filter"
-msgstr "Analytiskt filter"
+msgstr "Objektfilter"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -2751,7 +2747,7 @@ msgstr "Objekttransaktioner"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analysrad"
+msgstr "Objektrad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2761,28 +2757,28 @@ msgstr "Objektrader"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analytisk Plans Tillämpbarheter"
+msgstr "Objektplanens tillämpbarhet"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Analytiska planer"
+msgstr "Objektplaner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analytisk Precision"
+msgstr "Objektprecision"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Analysrader"
+msgstr "Objektrader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analyser"
+msgstr "Objekt"
 
 #. module: account
 #. odoo-python
@@ -2891,17 +2887,6 @@ msgid "At Date"
 msgstr "Vid datum"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"Minst en lokaliseringsinställning behöver installeras för att fylla "
-"databasen med bokföringsinformation"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
 msgstr "Vid räkenskapsårets början"
@@ -2967,8 +2952,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
-"Meddelandets författare. Om det saknas, email_from kan komma knytas till en "
-"adress som inte matchar någon kontakt."
+"Meddelandets skapare. Om det saknas, kan email_from komma att knytas till en"
+" adress som inte matchar någon kontakt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -3645,6 +3630,17 @@ msgstr ""
 #, python-format
 msgid "Cannot generate an unused account code."
 msgstr "Kan inte generera en oanvänd kontokod."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot generate an unused journal code. Please change the name for journal "
+"%s."
+msgstr ""
+"Kan inte generera en oanvänd journalkod. Vänligen ändra namnet på journal "
+"%s."
 
 #. module: account
 #. odoo-python
@@ -4925,6 +4921,7 @@ msgstr "Valutor"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
 #: model:ir.model.fields,field_description:account.field_account_journal__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move__currency_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__currency_id
@@ -5175,7 +5172,7 @@ msgstr "Anpassa din layout."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr "Avstämningsdag"
+msgstr "Brytdatum"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -5341,6 +5338,11 @@ msgstr "Debitera journalposter som är matchade med denna journalpost."
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "december"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Decimalprecision"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -5532,6 +5534,26 @@ msgid "Delivery address for current invoice."
 msgstr "Leveransadress för aktuell faktura."
 
 #. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Demo Lönekonto för VD"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Demo kapitalkonto"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo Försäljning av mark Konto"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Demo lagerkonto"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
 msgid "Deprecated"
 msgstr "Avslutad"
@@ -5563,7 +5585,7 @@ msgstr "Destinationskonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__destination_journal_id
 msgid "Destination Journal"
-msgstr "Destination Journal"
+msgstr "Destinationsjournal"
 
 #. module: account
 #. odoo-python
@@ -6535,6 +6557,11 @@ msgid "Financial Tags"
 msgstr "Finansiella taggar"
 
 #. module: account
+#: model:account.account.tag,name:account.account_tag_financing
+msgid "Financing Activities"
+msgstr "Finansieringsverksamhet"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
 msgstr "Hitta text i etikett"
@@ -6981,6 +7008,20 @@ msgid "Gap"
 msgstr "Avstånd"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid ""
+"Gaps due to canceled invoices, deleted entries or manual errors in open "
+"period."
+msgstr ""
+"Luckor på grund av makulerade fakturor, raderade poster eller manuella fel i"
+" öppen period."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Gaps in the sequence"
+msgstr "Luckor i sekvensen"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
 msgid "Generate Entries"
 msgstr "Generera rader"
@@ -7365,7 +7406,7 @@ msgid ""
 "analytic account as the invoice line (if any)"
 msgstr ""
 "Om aktiverat, associeras denna skatt med samma objektkonto som fakturaraden "
-"(om det finns någon)."
+"(om det finns någon)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__display_on_invoice
@@ -7482,7 +7523,7 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
-"Om du vill använda ”Utanför balansräkningen”-konton, måste alla konton i "
+"Om du vill använda \"Utanför balansräkningen\"-konton, måste alla konton i "
 "bokföringsposten vara av denna typ"
 
 #. module: account
@@ -7873,6 +7914,13 @@ msgstr "Felaktigt \"Postnummerintervall\", vänligen konfigurera det korrekt."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Ogiltig domän för uttrycket '%s' på raden '%s': %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -7882,6 +7930,11 @@ msgstr "Sista dagen för ett ogiltigt räkenskapsår"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Invertera taggar"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_investing
+msgid "Investing & Extraordinary Activities"
+msgstr "Investeringar och extraordinära aktiviteter"
 
 #. module: account
 #. odoo-python
@@ -8101,8 +8154,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
-"Faktura_{{ (object.name eller ’’).replace(’/’,’_’) }}{{ object.state == "
-"’draft’ och ’_utkast’ eller ’’ }}"
+"Faktura_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_utkast' or ''}}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8609,7 +8662,7 @@ msgstr "Låsdatum för journalposter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
 msgid "Json Activity Data"
-msgstr "Json Aktivitetsdata"
+msgstr "Json aktivitetsdata"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__7
@@ -9064,7 +9117,7 @@ msgstr "Rader"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
-msgstr "Poster från ”Utanför balansräkningen”-konton kan inte balanseras"
+msgstr "Poster från \"Utanför balansräkningen\"-konton kan inte balanseras"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -9400,6 +9453,11 @@ msgid "Memo:"
 msgstr "Memo:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Guide för att sammanfoga partners"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9684,6 +9742,16 @@ msgstr "Nya värden"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "Nyaste först"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10092,6 +10160,11 @@ msgid "Off-Balance Sheet"
 msgstr "Utanför balansräkningen"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Kontorsmöbler"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10272,7 +10345,7 @@ msgstr "Öppningsverifikat"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_move_posted
 msgid "Opening Move Posted"
-msgstr "Öppningsdrag Postat"
+msgstr "Öppningsdrag bokfört"
 
 #. module: account
 #. odoo-python
@@ -10281,6 +10354,11 @@ msgstr "Öppningsdrag Postat"
 #, python-format
 msgid "Opening balance"
 msgstr "Ingående saldo"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_operating
+msgid "Operating Activities"
+msgstr "Operativ verksamhet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10723,6 +10801,13 @@ msgid "Partners"
 msgstr "Partners"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "Partners som används i hashade poster kan inte slås samman."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Betala era fakturor med ett klick genom att använda Euro SEPA Service"
@@ -11130,6 +11215,15 @@ msgstr "Vänligen definiera en betalningsmetodslinje för din betalning."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -11230,7 +11324,7 @@ msgstr "Bokför poster"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
-msgstr "Publicerad"
+msgstr "Bokförd"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
@@ -12905,7 +12999,7 @@ msgstr "Visa delsummor på rader exklusive moms (B2B)"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
-msgstr "Visa obokförda poster"
+msgstr "Visa ej bokförda poster"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -13032,7 +13126,7 @@ msgstr "Status för panelen för kontofakturor vid inpassering"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
 msgid "State of the onboarding Taxes step"
-msgstr ""
+msgstr "Status för introduktionssteget för skatter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
@@ -13042,58 +13136,58 @@ msgstr "Status för introduktionssteget för bankdata"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
 msgid "State of the onboarding bill step"
-msgstr ""
+msgstr "Status för introduktionssteget för fakturor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
 msgid "State of the onboarding charts of account step"
-msgstr ""
+msgstr "Status för introduktionssteget för kontoplaner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
 msgid "State of the onboarding create invoice step"
-msgstr ""
+msgstr "Status för introduktionssteget för att skapa fakturor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
 msgid "State of the onboarding fiscal year step"
-msgstr ""
+msgstr "Status för steget för introduktionsåret"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr ""
+msgstr "Status för layoutsteget för introduktionsfakturan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
 msgid "State of the onboarding sale tax step"
-msgstr ""
+msgstr "Status för steget för introduktionsskatt"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_id
 msgid "Statement"
-msgstr "Utdrag"
+msgstr "Verifikat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__statement_line_id
 #: model:ir.model.fields,field_description:account.field_account_payment__statement_line_id
 msgid "Statement Line"
-msgstr "Utdragsrad"
+msgstr "Verifikatsrad"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr ""
+msgstr "Rapporter om uttalanden"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "Statement line percentage can't be 0"
-msgstr ""
+msgstr "Procentandelen för verifikatsraden kan inte vara 0"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__line_ids
@@ -13107,12 +13201,12 @@ msgstr "Verifikatrader"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_tree
 msgid "Statements"
-msgstr "Utdrag"
+msgstr "Verifikat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Statements lines matched to this payment"
-msgstr ""
+msgstr "Rader av uttalanden som matchas med denna betalning"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -13122,7 +13216,7 @@ msgstr "Statusar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
 msgid "States Count"
-msgstr ""
+msgstr "Statusar räknas"
 
 #. module: account
 #. odoo-python
@@ -13168,30 +13262,30 @@ msgstr "Steg slutfört!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Storno Accounting"
-msgstr ""
+msgstr "Storno Redovisning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_storno
 msgid "Storno accounting"
-msgstr ""
+msgstr "Starling redovisning"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
 msgid "Strictly on the given dates"
-msgstr ""
+msgstr "Strikt på de angivna datumen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__string_to_hash
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 #: model:ir.model.fields,field_description:account.field_account_payment__string_to_hash
 msgid "String To Hash"
-msgstr ""
+msgstr "Sträng till Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr ""
+msgstr "Subformula"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subject
@@ -13219,13 +13313,13 @@ msgstr "Undertyp"
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Lämplig journal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_rank
 msgid "Supplier Rank"
-msgstr ""
+msgstr "Leverantörsrankning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
@@ -13234,13 +13328,13 @@ msgstr "Observationskonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
-msgid "Switch into refund/credit note"
-msgstr "Byt till återbetalning/kreditnota"
+msgid "Switch into invoice/credit note"
+msgstr "Växla till faktura/kreditnota"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
 msgid "Switch to end of the month after having added months or days"
-msgstr ""
+msgstr "Byt till slutet av månaden efter att ha lagt till månader eller dagar"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
@@ -13268,6 +13362,8 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
 msgstr ""
+"Etiketter tilldelade den här raden av skatten som skapar den, om det finns "
+"några. Det avgör dess inverkan på finansiella rapporter."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__account_tag_ids
@@ -13275,21 +13371,23 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
+"Taggar som ska ställas in på bas- och skattejournalposterna som skapats för "
+"denna produkt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
 msgid "Target Expression"
-msgstr ""
+msgstr "Mål uttryck"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_label
 msgid "Target Expression Label"
-msgstr ""
+msgstr "Etikett för måluttryck"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_line_id
 msgid "Target Line"
-msgstr ""
+msgstr "Målgrupp"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -13307,12 +13405,12 @@ msgstr "Skatt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Tax Advance Account"
-msgstr ""
+msgstr "Konto för skatteförskott"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
 msgid "Tax Audit String"
-msgstr ""
+msgstr "Skatterevisionssträng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
@@ -13324,18 +13422,18 @@ msgstr "Momsavrundningsmetod"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "Skatt Kontantbas Införande av"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr ""
+msgstr "Skatt Kontantbasjournal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr ""
+msgstr "Skattebokslut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -13348,14 +13446,14 @@ msgstr "Skatteberäkning"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_country_id
 msgid "Tax Country"
-msgstr "Skatte-land"
+msgstr "Skatteland"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_country_code
 #: model:ir.model.fields,field_description:account.field_account_move__tax_country_code
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_country_code
 msgid "Tax Country Code"
-msgstr ""
+msgstr "Landskod för skatt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_exigibility
@@ -13371,7 +13469,7 @@ msgstr "Ex moms"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr ""
+msgstr "Skatteplikt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13390,13 +13488,13 @@ msgstr "Momsfält"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_group_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_group_id
 msgid "Tax Group"
-msgstr ""
+msgstr "Skattegrupp"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_group
 #: model:ir.ui.menu,name:account.menu_action_tax_group
 msgid "Tax Groups"
-msgstr ""
+msgstr "Skattegrupper"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13406,7 +13504,7 @@ msgstr "Moms-ID"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "Skatt ingår"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
@@ -13417,14 +13515,14 @@ msgstr "Skatt ingår i priset"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
 msgid "Tax Key"
-msgstr ""
+msgstr "Nyckel för skatt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr ""
+msgstr "Meddelande om datum för skattelås"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
@@ -13436,12 +13534,12 @@ msgstr "Skattemappning"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr ""
+msgstr "Skattekartläggningsmall för finansiell ställning"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Skattekartering av finansiell ställning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -13452,12 +13550,12 @@ msgstr "Momsbenämning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr ""
+msgstr "Konto för betalbar skatt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
 msgid "Tax Receivable Account"
-msgstr ""
+msgstr "Konto för skattefordringar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line
@@ -13467,7 +13565,7 @@ msgstr "Rad för skattefördelning"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_repartition_line_template
 msgid "Tax Repartition Line Template"
-msgstr ""
+msgstr "Mall för skattefördelningslinje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_lock_date
@@ -13479,14 +13577,14 @@ msgstr "Datum för låsning av skattedeklarationen"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_scope
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Scope"
-msgstr ""
+msgstr "Skatteområdet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_tax_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_tax_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_tax_signed
 msgid "Tax Signed"
-msgstr ""
+msgstr "Skatt Undertecknad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -13497,12 +13595,12 @@ msgstr "Källskatt"
 #: model:ir.model.fields,field_description:account.field_product_product__tax_string
 #: model:ir.model.fields,field_description:account.field_product_template__tax_string
 msgid "Tax String"
-msgstr ""
+msgstr "Skattesträng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
-msgstr ""
+msgstr "Skattemärkning"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13529,17 +13627,17 @@ msgstr "Momstyp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Skatteberäkning avrundningsmetod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
 msgid "Tax current account (payable)"
-msgstr ""
+msgstr "Skattekonto (betalbart)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
-msgstr ""
+msgstr "Skattekonto (fordringar)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_payable_account_id
@@ -13547,6 +13645,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
+"Skattekontot används som en motpost till den avslutande skatteposten när det"
+" är till förmån för myndigheterna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_receivable_account_id
@@ -13554,6 +13654,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
+"Skattekontot används som en motpost till den avslutande skatteposten när det"
+" är till företagets fördel."
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
@@ -13574,12 +13676,16 @@ msgid ""
 "not both at the same time. invoice_tax_id and refund_tax_id should not be "
 "set together."
 msgstr ""
+"Mallar för skattefördelningslinjer bör gälla antingen fakturor eller "
+"återbetalningar, inte båda samtidigt. invoice_tax_id och refund_tax_id bör "
+"inte ställas in tillsammans."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
 msgstr ""
+"Skattefördelningslinje som orsakade skapandet av denna flyttlinje, om någon"
 
 #. module: account
 #. odoo-python
@@ -13590,12 +13696,15 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
+"Skattefördelningslinjer bör gälla för antingen fakturor eller "
+"återbetalningar, inte båda samtidigt. invoice_tax_id och refund_tax_id bör "
+"inte ställas in tillsammans."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
 #: model:ir.model.constraint,message:account.constraint_account_tax_template_name_company_uniq
 msgid "Tax names must be unique !"
-msgstr ""
+msgstr "Tax names must be unique !"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -13608,6 +13717,8 @@ msgid ""
 "Tax report expressions whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Skattedeklarationsuttryck vars '+' tagg kommer att tilldelas flyttlinjer av "
+"denna fördelningslinje"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_expression_ids
@@ -13615,11 +13726,13 @@ msgid ""
 "Tax report expressions whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
+"Skattedeklarationsuttryck vars '-' tagg kommer att tilldelas flyttlinjer av "
+"denna fördelningslinje"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__early_pay_discount_computation
 msgid "Tax setting"
-msgstr ""
+msgstr "Fastställande av skatt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
@@ -13629,7 +13742,7 @@ msgstr "Skatt att applicera"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr "TaxCloud"
+msgstr "Skattemoln"
 
 #. module: account
 #. odoo-python
@@ -13654,7 +13767,7 @@ msgstr "Moms"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr ""
+msgstr "Taxes Applied"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -13669,11 +13782,13 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal"
 " item if they share some tag."
 msgstr ""
+"Skatter som krävs på betalning och på faktura kan inte blandas på samma "
+"journalpost om de delar någon etikett."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
 msgid "Taxes set."
-msgstr ""
+msgstr "Taxes set."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13691,6 +13806,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
+"Skatter, skattepositioner, kontoplan & juridiska uttalanden för ditt land"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -13699,13 +13815,16 @@ msgid ""
 "tax-related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
+"Tekniskt fält som innehåller de länder för vilka detta företag använder "
+"skatterelaterade funktioner (därav de för vilka l10n-moduler måste visa "
+"skatterelaterade fält)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_move__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_payment__bank_partner_id
 msgid "Technical field to get the domain on the bank"
-msgstr ""
+msgstr "Tekniskt område för att få domänen på banken"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -13715,6 +13834,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Tekniskt fält som används för att framtvinga komplex sekvenssammansättning som systemet normalt skulle missförstå.\n"
+"Detta är ett regex som kan inkludera alla följande fångstgrupper: prefix1, år, prefix2, månad, prefix3, seq, suffix.\n"
+"Prefixgrupperna* är avgränsare mellan år, månad och det faktiska ökande sekvensnumret (seq).\n"
+"T.ex: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -13734,7 +13857,7 @@ msgstr "Mall för skatteområde"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
 msgid "Templates Found"
-msgstr ""
+msgstr "Templates Found"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -13749,7 +13872,7 @@ msgstr "Momsmallar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__term_key
 msgid "Term Key"
-msgstr ""
+msgstr "Nyckel för termin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__line_ids
@@ -13792,7 +13915,7 @@ msgstr "Villkor"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "Det är datumet för öppningsinlägget."
 
 #. module: account
 #. odoo-python
@@ -13841,13 +13964,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
+"Journalpostens sekvens överensstämmer inte med det aktuella formatet. Endast"
+" revisorn kan ändra den."
 
 #. module: account
 #. odoo-python
@@ -13855,7 +13973,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 #, python-format
 msgid "The Payment Term must have one Balance line."
-msgstr ""
+msgstr "Betalningsvillkoret måste ha en balansrad."
 
 #. module: account
 #. odoo-python
@@ -13865,6 +13983,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"Måttenheten, Unit of Measure (UoM) '%s' du har valt för produkten '%s', är "
+"inkompatibel med dess kategori: %s."
 
 #. module: account
 #. odoo-python
@@ -13915,6 +14035,8 @@ msgid ""
 "The accounting journal where automatic exchange differences will be "
 "registered"
 msgstr ""
+"Bokföringsjournalen där automatiska växlingsdifferenser kommer att "
+"registreras"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
@@ -13934,13 +14056,16 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
+"Beloppet uttryckt i den sekundära valutan måste vara positivt när kontot "
+"debiteras och negativt när kontot krediteras. Om valutan är densamma som den"
+" från företaget måste detta belopp strikt vara lika med saldot."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "Beloppet är inte en siffra"
 
 #. module: account
 #. odoo-python
@@ -13950,6 +14075,8 @@ msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
 msgstr ""
+"Tillämpningen av skatter i en grupp måste antingen vara densamma som gruppen"
+" eller lämnas tom."
 
 #. module: account
 #. odoo-python
@@ -13957,7 +14084,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
-msgstr ""
+msgstr "Bankkontot i en bankjournal måste tillhöra samma företag (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -13972,18 +14099,20 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
+"Kontantbasposterna som skapas från skatterna på denna post, vid avstämning "
+"av dess rader."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr ""
+msgstr "Diagrammallen för företaget (om någon)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "Den valda typen av QR-kod är inte berättigad till denna faktura."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -14005,7 +14134,7 @@ msgstr "Koden för kontot måste vara unik per företag!"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
 msgid "The combination code/payment type already exists!"
-msgstr ""
+msgstr "Kombinationskoden/betalningstypen finns redan!"
 
 #. module: account
 #. odoo-python
@@ -14015,21 +14144,23 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
+"Kombinationen av referensmodell och referenstyp på journalen är inte "
+"implementerad"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
-msgstr ""
+msgstr "Det företag som denna distributionslinje tillhör."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
-msgstr ""
+msgstr "Det land som denna skattegrupp är tillämplig för."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr ""
+msgstr "Det land för vilket denna skatt är tillämplig."
 
 #. module: account
 #. odoo-python
@@ -14039,11 +14170,13 @@ msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
 msgstr ""
+"Det land som anges i den utländska momspositionen måste överensstämma med "
+"det land som anges i rapporten."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__country_id
 msgid "The country this chart of accounts belongs to. None if it's generic."
-msgstr ""
+msgstr "Det land som denna kontoplan tillhör. Inget om det är generiskt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -14081,7 +14214,7 @@ msgstr "Valutan i verifikatet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "Den nuvarande högsta siffran är"
 
 #. module: account
 #. odoo-python
@@ -14091,6 +14224,9 @@ msgid ""
 "The current total is %s but the expected total is %s. In order to post the "
 "invoice/bill, you can adjust its lines or the expected Total (tax inc.)."
 msgstr ""
+"Den aktuella totalsumman är %s men den förväntade totalsumman är %s. För att"
+" bokföra fakturan/räkningen kan du justera dess rader eller den förväntade "
+"totalsumman (inkl. skatt)."
 
 #. module: account
 #. odoo-python
@@ -14100,20 +14236,22 @@ msgid ""
 "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
+"Datumet sätts före %(lock_type)s låsdatum %(lock_date)s. Journalposten "
+"kommer att redovisas på %(invoice_date)s vid bokföring."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "The date selected is protected by a lock date"
-msgstr ""
+msgstr "Det valda datumet är skyddat av ett låst datum"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The discount days of the Payment Terms lines must be positive."
-msgstr ""
+msgstr "Rabattdagarna för raderna med betalningsvillkor måste vara positiva."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -14127,7 +14265,7 @@ msgstr "Det eller de dokument som genererade fakturan."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "Inlägget %s (id %s) är redan bokfört."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -14137,13 +14275,16 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
+"Kostnaden redovisas när en leverantörsfaktura valideras, förutom i "
+"anglosaxisk redovisning med evig lagervärdering, i vilket fall kostnaden "
+"(kontot för sålda varor) redovisas vid valideringen av kundfakturan."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid "The field %s must be filled."
-msgstr ""
+msgstr "Fältet %s måste fyllas i."
 
 #. module: account
 #. odoo-python
@@ -14153,6 +14294,7 @@ msgid ""
 "The field 'Customer' is required, please complete it to validate the "
 "Customer Invoice."
 msgstr ""
+"Fältet 'Kund' är obligatoriskt, fyll i det för att validera kundfakturan."
 
 #. module: account
 #. odoo-python
@@ -14162,6 +14304,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
+"Fältet 'Leverantör' är obligatoriskt, fyll i det för att validera "
+"leverantörsfakturan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -14169,11 +14313,13 @@ msgstr ""
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
 msgstr ""
+"Den skattemässiga ställningen avgör vilka skatter/konton som används för "
+"denna kontakt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr ""
+msgstr "Följande journalanteckningar kommer att genereras"
 
 #. module: account
 #. odoo-python
@@ -14194,6 +14340,8 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
+"Följande faktura (fakturor) kommer inte att skickas via e-post, eftersom "
+"kunderna inte har någon e-postadress."
 
 #. module: account
 #. odoo-python
@@ -14202,13 +14350,14 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"Följande reguljära uttryck är ogiltigt för att skapa en partnermappning: %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid "The foreign currency must be different than the journal one: %s"
-msgstr ""
+msgstr "Den utländska valutan måste vara en annan än journalen: %s"
 
 #. module: account
 #. odoo-python
@@ -14218,11 +14367,14 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"Den utländska valutan som anges på journalen  '%(journal)s' och kontot "
+"'%(account)s' måste vara densamma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
 msgstr ""
+"Den utländska skatteposition för vilken detta externa värde är skapat."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -14230,13 +14382,15 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"Hashkedjan är kompatibel: det är inte möjligt att ändra\n"
+"                                            data utan att bryta hashkedjan för efterföljande delar."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr ""
+msgstr "Innehavare av en journalens bankkonto måste vara företaget (%s)."
 
 #. module: account
 #. odoo-python
@@ -14245,20 +14399,21 @@ msgstr ""
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
 msgstr ""
+"Fakturan innehåller redan rader, den har inte uppdaterats från bilagan."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The invoice having been sent, the button has changed priority."
-msgstr ""
+msgstr "Fakturan har skickats och knappen har bytt prioritet."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "Fakturan är inget utkast, den uppdaterades inte från bilagan."
 
 #. module: account
 #. odoo-python
@@ -14268,6 +14423,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"Journalposten %s nådde ett ogiltigt tillstånd vad gäller dess relaterade uttalanderad.\n"
+"För att vara konsekvent måste journalposten alltid ha exakt en journalpost som involverar bank-/kassakontot."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14275,6 +14432,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
+"Journalposten som innehåller det initiala saldot för alla företagets konton."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
@@ -14284,13 +14442,14 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"Den journalpost från vilken denna journalpost på skattebasen har skapats."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "Journalposten är inte kopplad till rätt finansiellt konto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -14298,6 +14457,7 @@ msgstr ""
 msgid ""
 "The last day of the month will be used if the chosen day doesn't exist."
 msgstr ""
+"Den sista dagen i månaden kommer att användas om den valda dagen inte finns."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -14311,7 +14471,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
 msgid "The length of the starting and the ending code prefix must be the same"
-msgstr ""
+msgstr "Längden på start- och slutkodens prefix måste vara samma"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -14321,13 +14481,26 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"Mappningen använder reguljära uttryck.\n"
+"- För att matcha texten i början av raden (i etikett eller anteckningar), fyll helt enkelt i din text.\n"
+"- För att matcha texten var som helst (i etikett eller anteckningar), placera din text mellan .*\n"
+"T.ex:*N°48748 abc123.*"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The move could not be posted for the following reason: %(error_message)s"
+msgstr ""
+"Flytten kunde inte läggas upp av följande anledning: %(error_message)s"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "The next step is payment registration."
-msgstr ""
+msgstr "Nästa steg är betalningsregistrering."
 
 #. module: account
 #. odoo-python
@@ -14338,6 +14511,10 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
+"Operationen avslås eftersom den skulle påverka en redan utfärdad "
+"skattedeklaration. Ändra journalinmatningsdatumet eller "
+"skattelåsningsdatumet som ställts in i inställningarna (%s) för att "
+"fortsätta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -14361,13 +14538,16 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
+"Ordningen i vilken distributionslinjer visas och matchas. För att "
+"återbetalningarna ska fungera korrekt bör fakturadistributionslinjerna "
+"ordnas i samma ordning som de kreditnotadistributionsrader de motsvarar."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "Partnern kan inte tas bort eftersom den används i Bokföring"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14376,6 +14556,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
+"Partnern har minst en oavstämd debitering och kredit sedan senast "
+"matchningen av fakturor och betalningar utfördes."
 
 #. module: account
 #. odoo-python
@@ -14384,28 +14566,29 @@ msgstr ""
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
 msgstr ""
+"The partners of the journal's company and the related bank account mismatch."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
 msgid "The payment amount cannot be negative."
-msgstr ""
+msgstr "Betalningsbeloppet får inte vara negativt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr ""
+msgstr "Den betalningsreferens som ska anges för journalposter."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "Betalningen som skapade denna post"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 msgid "The payment's currency."
-msgstr ""
+msgstr "Betalningens valuta."
 
 #. module: account
 #. odoo-python
@@ -14415,6 +14598,8 @@ msgid ""
 "The recipient bank account linked to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"Mottagarens bankkonto som är kopplat till denna faktura är arkiverat.\n"
+"Du kan därför inte bekräfta fakturan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14423,6 +14608,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas på de valda "
+"kund-/leverantörskategorierna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -14431,6 +14618,8 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas på de utvalda "
+"kunderna/leverantörerna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -14441,6 +14630,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas på den valda transaktionstypen:\n"
+"        * Erhållet belopp: Tillämpas endast vid mottagande av ett belopp.\n"
+"        * Betalat belopp: Tillämpas endast vid betalning av ett belopp.\n"
+"        * Betalat/mottaget belopp: Tillämpas i båda fallen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -14448,6 +14641,8 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas när en kund/leverantör "
+"anges."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -14456,6 +14651,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas när beloppet är lägre än, "
+"högre än eller mellan angivna belopp."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -14466,6 +14663,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Försoningsmodellen kommer endast att tillämpas när etiketten:\n"
+"        * Innehåller: Förslagets etikett måste innehålla denna sträng (skiftlägeskänslig).\n"
+"        * Innehåller inte: Negation av \"Innehåller\".\n"
+"        * Matcha Regex: Definiera ditt eget reguljära uttryck."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
@@ -14476,6 +14677,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas när noten:\n"
+"        * Innehåller: Förslagsnoten måste innehålla denna sträng (skiftlägeskänslig).\n"
+"        * Innehåller inte: Negation av \"Innehåller\".\n"
+"        * Matcha Regex: Definiera ditt eget reguljära uttryck."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
@@ -14486,6 +14691,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Avstämningsmodellen kommer endast att tillämpas när transaktionstypen:\n"
+"        * Innehåller: Förslagets transaktionstyp måste innehålla denna sträng (skiftlägeskänslig).\n"
+"        * Innehåller inte: Negation av \"Innehåller\".\n"
+"        * Matcha Regex: Definiera ditt eget reguljära uttryck."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -14493,18 +14702,20 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be available from the selected journals."
 msgstr ""
+"Avstämningsmodellen kommer endast att vara tillgänglig från de utvalda "
+"tidskrifterna."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The recurrence will end on"
-msgstr ""
+msgstr "Återfallet kommer att avslutas den"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The regex is not valid"
-msgstr ""
+msgstr "The regex is not valid"
 
 #. module: account
 #. odoo-python
@@ -14514,18 +14725,20 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"Guiden Registrera betalning bör endast användas på konto.flytt eller "
+"konto.flytt.rad poster."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
 msgid "The report this report is a variant of."
-msgstr ""
+msgstr "Den rapport som denna rapport är en variant av."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
-msgstr ""
+msgstr "The requested page is invalid, or doesn't exist anymore."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -14533,12 +14746,15 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
+"The residual amount on a journal item expressed in its currency (possibly "
+"not the company currency)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
 msgstr ""
+"The residual amount on a journal item expressed in the company currency."
 
 #. module: account
 #. odoo-python
@@ -14546,6 +14762,7 @@ msgstr ""
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"Den löpande balansen (%s) överensstämmer inte med den angivna slutbalansen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14553,11 +14770,14 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
+"The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
+"                        the loss of any pre-existing foreign currency amount."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
+"Den valda betalningsmetoden kräver ett bankkonto men inget är inställt på"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -14566,13 +14786,15 @@ msgid ""
 "The sequence field is used to define order in which the tax lines are "
 "applied."
 msgstr ""
+"The sequence field is used to define order in which the tax lines are "
+"applied."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "The sequence format has changed."
 
 #. module: account
 #. odoo-python
@@ -14582,6 +14804,8 @@ msgid ""
 "The sequence regex should at least contain the seq grouping keys. For instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
+"The sequence regex should at least contain the seq grouping keys. For instance:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
 #. odoo-python
@@ -14591,6 +14815,23 @@ msgid ""
 "The sequence will never restart.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"The sequence will never restart.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"Sekvensen börjar om på 1 i början av varje räkenskapsår.\n"
+"Det finansiella startår som detekteras här är \"%(year)s\".\n"
+"Det finansiella slutår som detekteras här är \"%(year_end)s\".\n"
+"Det ökande numret i detta fall är \"%(formatted_seq)s\"."
 
 #. module: account
 #. odoo-python
@@ -14601,6 +14842,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"The sequence will restart at 1 at the start of every month.\n"
+"The year detected here is '%(year)s' and the month is '%(month)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -14611,6 +14855,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"The sequence will restart at 1 at the start of every year.\n"
+"The year detected here is '%(year)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -14620,6 +14867,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
+"The sequences of this journal are different for Invoices and Refunds but you"
+" selected some of both types."
 
 #. module: account
 #. odoo-python
@@ -14629,6 +14878,8 @@ msgid ""
 "The sequences of this journal are different for Payments and non-Payments "
 "but you selected some of both types."
 msgstr ""
+"Sekvenserna i denna journal är olika för Betalningar och Icke-betalningar "
+"men du har valt några av båda typerna."
 
 #. module: account
 #. odoo-python
@@ -14638,11 +14889,13 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"Startbalansen stämmer inte överens med slutbalansen i den tidigare "
+"rapporten, eller så saknas en tidigare rapport."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "The statement line that created this entry"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_type
@@ -14651,6 +14904,8 @@ msgid ""
 "The sum of total residual amount propositions and the statement line amount "
 "allowed gap type."
 msgstr ""
+"The sum of total residual amount propositions and the statement line amount "
+"allowed gap type."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_param
@@ -14660,19 +14915,22 @@ msgid ""
 "The sum of total residual amount propositions matches the statement line "
 "amount under this amount/percentage."
 msgstr ""
+"The sum of total residual amount propositions matches the statement line "
+"amount under this amount/percentage."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
+"The tax ID of your company in the region mapped by this fiscal position."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "The tax group must have the same country_id as the tax using it."
-msgstr ""
+msgstr "The tax group must have the same country_id as the tax using it."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id
@@ -14681,6 +14939,8 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"The tax set to apply this distribution on invoices. Mutually exclusive with "
+"refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -14689,16 +14949,18 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
+"The tax set to apply this distribution on refund invoices. Mutually "
+"exclusive with invoice_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
 msgid "The tie-breaking rule used for float rounding operations"
-msgstr ""
+msgstr "The tie-breaking rule used for float rounding operations"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__document_type
 msgid "The type of documnet on which the repartition line should be applied"
-msgstr ""
+msgstr "Den typ av dokument som fördelningslinjen ska tillämpas på"
 
 #. module: account
 #. odoo-python
@@ -14708,6 +14970,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
+"The type of the journal's default credit/debit account shouldn't be "
+"'receivable' or 'payable'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -14715,6 +14979,8 @@ msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Varningen informerar om att en ändring av avrundningsfaktorn kan vara farlig"
+" i res.currency:s formulärvy."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -14728,7 +14994,7 @@ msgstr ""
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr ""
+msgstr "There are no journal items in the draft state to post."
 
 #. module: account
 #. odoo-python
@@ -14738,6 +15004,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
 
 #. module: account
 #. odoo-python
@@ -14747,6 +15015,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"Det finns fortfarande icke avstämda kontoutdragsrader i den period som du "
+"vill låsa. Du bör antingen stämma av eller ta bort dem."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -14754,6 +15024,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
+"There doesn't appear to be anything to invoice for the selected order. "
+"However, you can use the amount field to force an accrual entry."
 
 #. module: account
 #. odoo-python
@@ -14763,6 +15035,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"There is no tax cash basis journal defined for the '%s' company.\n"
+"Configure it in Accounting/Configuration/Settings"
 
 #. module: account
 #. odoo-python
@@ -14772,11 +15046,13 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr ""
+"There isn't any journal entry flagged for data inalterability yet for this "
+"journal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
-msgstr ""
+msgstr "There was an error processing this page."
 
 #. module: account
 #. odoo-python
@@ -14786,11 +15062,13 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr ""
+msgstr "These taxes are set in any new product created."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__account_type
@@ -14838,6 +15116,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"Detta konto är konfigurerat i %(journal_names)s journal(er) (ids "
+"%(journal_ids)s) som betalningsdebet- eller kreditkonto. Detta innebär att "
+"detta kontos typ bör vara avstämbar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -14862,14 +15143,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
 msgid "This account will be used when validating a customer invoice."
-msgstr ""
+msgstr "This account will be used when validating a customer invoice."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This action isn't available for this document."
-msgstr ""
+msgstr "This action isn't available for this document."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14878,6 +15159,9 @@ msgid ""
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
 msgstr ""
+"This allows accountants to manage analytic and crossovered budgets. Once the"
+" master budgets and the budgets are defined, the project managers can set "
+"the planned amount on each analytic account."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -14885,13 +15169,15 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
+"Detta gör att du kan gruppera betalningar i en enda batch och underlättar avstämningsprocessen.\n"
+"-Detta installerar modulen account_batch_payment."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr ""
+msgstr "This can only be used on journal items"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
@@ -14901,6 +15187,10 @@ msgid ""
 "'filter_domain'.See '_search_name' and '_parse_name_search' for why this is "
 "not possible with 'filter_domain'."
 msgstr ""
+"Med detta dummyfält kan vi använda en annan sökmetod för fältet \"name\", "
+"vilket ger större frihet att söka i \"name\" jämfört med \"filter_domain\". "
+"Se \"_search_name\" och \"_parse_name_search\" för information om varför "
+"detta inte är möjligt med \"filter_domain\"."
 
 #. module: account
 #. odoo-python
@@ -14911,6 +15201,9 @@ msgid ""
 " country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
+"This entry contains one or more taxes that are incompatible with your fiscal"
+" country. Check company fiscal country in the settings and tax country in "
+"taxes configuration."
 
 #. module: account
 #. odoo-python
@@ -14920,13 +15213,15 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
+"This entry contains taxes that are not compatible with your fiscal position."
+" Check the country set in fiscal position and in your tax configuration."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been duplicated from %s%s"
-msgstr ""
+msgstr "Denna post har duplicerats från %s%s"
 
 #. module: account
 #. odoo-python
@@ -14936,6 +15231,8 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
+"This entry transfers the following amounts to "
+"<strong>%(destination)s</strong> <ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -14949,7 +15246,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr ""
+msgstr "This is the accounting dashboard"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
@@ -14957,6 +15254,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"Detta är standardkreditgränsen som kommer att användas för partners som inte"
+" har en specifik gräns för dem."
 
 #. module: account
 #. odoo-python
@@ -14966,19 +15265,22 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its "
 "company."
 msgstr ""
+"This journal already contains items, therefore you cannot modify its "
+"company."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
-msgstr ""
+msgstr "This journal is not in strict mode."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
 msgstr ""
+"Denna rad och dess barn kommer att döljas när alla deras kolumner är 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -14987,34 +15289,36 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"This matching rule is used when the user is not certain of all the "
+"information of the counterpart."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move is configured to be auto-posted on %s"
-msgstr ""
+msgstr "This move is configured to be auto-posted on %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"This move is configured to be posted automatically at the accounting date:"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "This move will be posted at the accounting date: %(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
-msgstr ""
+msgstr "Denna åtgärd kommer att skapa en lucka i sekvensen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -15023,6 +15327,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"This option permanently removes any track of email after it's been sent, "
+"including from the Technical menu in the Settings, in order to preserve "
+"storage space of your Odoo database."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__chart_template_id
@@ -15044,7 +15351,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "This payment has been created from %s"
-msgstr ""
+msgstr "Denna betalning har skapats från %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -15053,6 +15360,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
+"Denna betalningsvillkor kommer att användas istället för standardvillkoret "
+"för inköpsorder och leverantörsfakturor"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -15061,6 +15370,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
+"Denna betalningsvillkor kommer att användas istället för standardvillkoret "
+"för försäljningsorder och kundfakturor"
 
 #. module: account
 #. odoo-python
@@ -15070,6 +15381,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
 
 #. module: account
 #. odoo-python
@@ -15079,20 +15392,22 @@ msgid ""
 "This reconciliation model can't be used in the manual reconciliation widget "
 "because its configuration is not adapted"
 msgstr ""
+"Denna avstämningsmodell kan inte användas i den manuella avstämningswidgeten"
+" eftersom dess konfiguration inte är anpassad"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "Denna avstämningsmodell har hittills inte skapat några poster"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This recurring entry originated from %s"
-msgstr ""
+msgstr "Denna återkommande post härstammar från %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -15100,6 +15415,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__auto_post_until
 msgid "This recurring move will be posted up to and including this date."
 msgstr ""
+"Denna återkommande flyttning kommer att bokföras fram till och med detta "
+"datum."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15107,6 +15424,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
+"This wizard will validate all journal entries selected. Once journal entries"
+" are validated, you can not update them anymore."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -15114,6 +15433,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
+"Dessa kan användas för att snabbt skapa en journalpost vid avstämning av\n"
+"                ett kontoutdrag eller ett konto."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15128,7 +15449,7 @@ msgstr ""
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
-msgstr ""
+msgstr "Tip: No need to print, put in an envelop and post your invoices"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -15168,7 +15489,6 @@ msgstr "Dagens aktiviteter"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #: code:addons/account/static/src/xml/legacy_tax_totals.xml:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
@@ -15186,7 +15506,7 @@ msgstr "Totalt"
 #: model:ir.model.fields,field_description:account.field_account_move__quick_edit_total_amount
 #: model:ir.model.fields,field_description:account.field_account_payment__quick_edit_total_amount
 msgid "Total (Tax inc.)"
-msgstr ""
+msgstr "Totalt (inkl. skatt)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount
@@ -15197,12 +15517,12 @@ msgstr "Totalsumma"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Balance"
-msgstr ""
+msgstr "Totalt saldo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "Totalt grundbelopp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15242,19 +15562,19 @@ msgstr "Totalt kvarvarande"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Residual in Currency"
-msgstr ""
+msgstr "Totalt Återstående i valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
-msgstr ""
+msgstr "Totalt Undertecknad"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "Totalt belopp som påverkats av den automatiska posten."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -15266,19 +15586,20 @@ msgstr "Total summa som den här kunden är skyldig dig."
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Totalt belopp som du måste betala till denna leverantör."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Total in Currency"
-msgstr ""
+msgstr "Totalt i valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_in_currency_signed
 msgid "Total in Currency Signed"
-msgstr ""
+msgstr "Totalt i valuta Undertecknat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15296,14 +15617,14 @@ msgstr "Typ av transaktion"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type_param
 msgid "Transaction Type Parameter"
-msgstr ""
+msgstr "Transaction Type Parameter"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer"
-msgstr "Flytt"
+msgstr "Överföring"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15315,14 +15636,14 @@ msgstr "Överföringsdatum"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr ""
+msgstr "Överföra motpart"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr ""
+msgstr "Överför post till %s"
 
 #. module: account
 #. odoo-python
@@ -15346,13 +15667,15 @@ msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
 msgstr ""
+"Utlösa varningar när du skapar fakturor och försäljningsorder för partners "
+"med ett totalt fordringsbelopp som överstiger en gräns."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "Prova ett exempel på en leverantörsfaktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__account_type
@@ -15393,6 +15716,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"Typ av QR-kod som ska genereras för betalning av denna faktura när den "
+"skrivs ut. Om fältet lämnas tomt kommer den första tillgängliga och "
+"användbara metoden att användas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -15407,7 +15733,7 @@ msgstr "Typ av undantagsaktivitet i posten."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
-msgstr ""
+msgstr "UP"
 
 #. module: account
 #. odoo-python
@@ -15417,13 +15743,15 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"Det går inte att skapa ett kontoutdrag eftersom transaktioner saknas. Du "
+"kanske vill ordna om transaktionerna innan du fortsätter."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Undefined Yet"
-msgstr ""
+msgstr "Undefined Yet"
 
 #. module: account
 #. odoo-python
@@ -15440,7 +15768,7 @@ msgstr "Öppna alla"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
 msgid "Unique identifier for this line."
-msgstr ""
+msgstr "Unik identifiering för denna linje."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -15461,7 +15789,7 @@ msgstr "Måttenhet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
-msgstr ""
+msgstr "Avmarkera som skickad"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -15484,7 +15812,7 @@ msgstr "Ej bokförda"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Ej bokförda poster"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15526,7 +15854,7 @@ msgstr "Ej avstämda transaktioner"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
-msgstr ""
+msgstr "Icke avstämda transaktioner"
 
 #. module: account
 #. odoo-python
@@ -15545,7 +15873,7 @@ msgstr "Summa exkl. moms"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr ""
+msgstr "Obeskattat belopp signerat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
@@ -15572,7 +15900,7 @@ msgstr "Uppdaterade allmänna villkor"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
-msgstr ""
+msgstr "Uppdatera valutakurserna automatiskt"
 
 #. module: account
 #. odoo-javascript
@@ -15585,14 +15913,14 @@ msgstr "Ladda upp"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Upload Invoices"
-msgstr ""
+msgstr "Ladda upp fakturor"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Ladda upp din egen faktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -15602,17 +15930,17 @@ msgstr "Använd anglo-saxisk bokföring"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "Använd kontantbas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
 msgid "Use Company Selector"
-msgstr ""
+msgstr "Använd företagsväljare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
 msgid "Use SEPA Direct Debit"
-msgstr ""
+msgstr "Använd SEPA direktdebitering"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__journal_id
@@ -15623,12 +15951,12 @@ msgstr "Använd specifik journal"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Använda Storno redovisning"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr ""
+msgstr "Använda skatteenheter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
@@ -15643,7 +15971,7 @@ msgstr "Använd anglo-saxisk bokföring"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr ""
+msgstr "Använda batchbetalningar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15665,6 +15993,11 @@ msgid ""
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
+"Använd alternativet “<i>Skicka med post</i>” för att bokföra fakturor "
+"automatiskt. För kostnaden för en lokal frimärke utför vi allt manuellt "
+"arbete: din faktura kommer att skrivas ut i rätt land, läggas i ett kuvert "
+"och skickas med snigelpost. Använd den här funktionen från listvyn för att "
+"lägga upp hundratals fakturor samtidigt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -15674,6 +16007,8 @@ msgid ""
 "Use this field to encode the total amount of the invoice.\n"
 "Odoo will automatically create one invoice line with default values to match it."
 msgstr ""
+"Använd detta fält för att koda fakturans totala belopp.\n"
+"Odoo kommer automatiskt att skapa en fakturarad med standardvärden för att matcha den."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -15688,11 +16023,15 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
+"Används i rapporter för att veta om vi bör överväga journalposter från "
+"tidernas begynnelse istället för endast från räkenskapsåret. Kontotyper som "
+"ska nollställas vid varje nytt räkenskapsår (som utgifter, intäkter...) ska "
+"inte ha detta alternativ inställt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Används för att beställa journaler i instrumentpanelsvyn"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -15700,6 +16039,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Används för att registrera en förlust när ett kassaregisters slutsaldo "
+"skiljer sig från vad systemet beräknar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
@@ -15707,6 +16048,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Används för att registrera en vinst när slutsaldot i ett kassaregister "
+"skiljer sig från vad systemet beräknar"
 
 #. module: account
 #: model:ir.model,name:account.model_res_users
@@ -15720,7 +16063,7 @@ msgstr "Användare"
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Verktygsfält för att uttrycka beloppsvaluta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_storno
@@ -15728,6 +16071,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
+"Utility field för att uttrycka om journalposten är föremål för "
+"stornoräkenskap"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -15746,14 +16091,14 @@ msgstr "Bekräfta flytt av konto"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr ""
+msgstr "Validera utdragsraden automatiskt (avstämning baserat på din regel)."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Validate."
-msgstr ""
+msgstr "Bekräfta."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -15777,6 +16122,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Värde för avskrivningsradens belopp\n"
+"* Procent: Andel av saldot, mellan 0 och 100.\n"
+"* Fast: Det fasta värdet på avskrivningen. Beloppet kommer att räknas som en debet om det är negativt, som en kredit om det är positivt.\n"
+"* Från etikett: Det finns inget behov av regex-avgränsare, bara regex behövs. Till exempel om du vill extrahera mängden från\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Du skriver bara\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -15796,7 +16148,7 @@ msgstr "Leverantör"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Vendor Bank Account"
-msgstr ""
+msgstr "Leverantörs bankkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
@@ -15813,7 +16165,7 @@ msgstr "Leverantörsfaktura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "Leverantörsräkningsräkning"
 
 #. module: account
 #. odoo-python
@@ -15867,7 +16219,7 @@ msgstr "Leverantörsbetalningar"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "Leverantörsåterbetalning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -15878,7 +16230,7 @@ msgstr "Leverantörsmoms"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Vendor:"
-msgstr "Säljare:"
+msgstr "Leverantör:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -15918,7 +16270,7 @@ msgstr "Varning för %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Varning för kontantavrundningsmetod: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -15928,7 +16280,7 @@ msgstr "Varning på fakturan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Warning: this bill might be a duplicate of"
-msgstr ""
+msgstr "Varning: denna proposition kan vara en kopia av"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15938,7 +16290,7 @@ msgstr "Varningar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr ""
+msgstr "Varningar på fakturor"
 
 #. module: account
 #. odoo-python
@@ -15948,6 +16300,8 @@ msgid ""
 "We cannot find a chart of accounts for this company, you should configure it. \n"
 "Please go to Account Configuration and select or install a fiscal localization."
 msgstr ""
+"Vi kan inte hitta en kontoplan för detta företag, du bör konfigurera den.\n"
+"Gå till Inställningar och välj eller installera en skattelokalisering."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -15955,6 +16309,8 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
+"Vi behandlar fakturor automatiskt så att du bara behöver godkänna dem. Välj "
+"hur du vill testa vår Artificiella Intelligensmotor:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__website_message_ids
@@ -15990,6 +16346,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
+"När en intern överföring bokförs skapas en parvis betalning. De "
+"korsrefereras genom detta fält"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -16003,7 +16361,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_column__blank_if_zero
 msgid "When checked, 0 values will not show in this column."
-msgstr ""
+msgstr "Om 0-värden är markerade visas de inte i denna kolumn."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
@@ -16011,6 +16369,8 @@ msgid ""
 "When checked, 0 values will not show when displaying this expression's "
 "value."
 msgstr ""
+"När detta är markerat visas inte 0-värden vid visning av detta uttrycks "
+"värde."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16018,6 +16378,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"När inköpskvittot är bekräftat kan du spela in\n"
+"                leverantörsbetalning relaterad till detta inköpskvitto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -16025,31 +16387,35 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"När försäljningskvittot är bekräftat kan du registrera kundbetalningen "
+"relaterad till detta försäljningskvitto."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "When will the tax be reduced when offering a cash discount"
-msgstr ""
+msgstr "När kommer skatten att reduceras vid erbjudande av kontantrabatt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Om denna journal ska visas på instrumentpanelen eller inte"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
 msgid "Will be used to name the Journal related to this bank account"
 msgstr ""
+"Kommer att användas för att namnge tidskriften relaterad till detta "
+"bankkonto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to record bills manually"
-msgstr ""
+msgstr "Med Odoo behöver du inte registrera räkningar manuellt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "With Partner matching"
-msgstr ""
+msgstr "Med partnermatchning"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -16069,7 +16435,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
-msgstr ""
+msgstr "Skriv här <b> din egna e-postadress</b> för att pröva på flödet."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16103,6 +16469,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Du kan välja olika modeller för varje typ av referens. Standard är Odoo-"
+"referensen."
 
 #. module: account
 #. odoo-python
@@ -16116,6 +16484,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Du kan inte arkivera en journal med utkast till journalanteckningar.\n"
+"\n"
+"Så här fortsätter du:\n"
+"1/ klicka på knappen 'Journal Entries' längst upp till höger från detta journalformulär\n"
+"2/ filtrera sedan på \"Utkast\"-poster\n"
+"3/ välj dem och posta eller ta bort dem via åtgärdsmenyn"
 
 #. module: account
 #. odoo-python
@@ -16125,6 +16499,8 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
+"Du kan inte ta bort betalningsvillkor eftersom andra uppgifter fortfarande "
+"refererar till det. Du kan dock arkivera det."
 
 #. module: account
 #. odoo-python
@@ -16133,6 +16509,7 @@ msgstr ""
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
+"Du kan inte ordna om sekvens efter datum när journalen är låst med en hash."
 
 #. module: account
 #. odoo-python
@@ -16141,21 +16518,14 @@ msgstr ""
 msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
-msgstr ""
+msgstr "Du kan bara ändra period/konto för poster som ännu inte är avstämda."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr ""
+msgstr "Du kan bara ändra period/konto för bokförda verifikat."
 
 #. module: account
 #. odoo-python
@@ -16169,21 +16539,21 @@ msgstr "Du kan endast stämma av bokförda poster."
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
+msgstr "Du kan endast registrera betalning för bokförda verifikat."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "Du kan bara återställa poster från samma verifikat"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Du kan bara återskapa postade verifikat."
 
 #. module: account
 #. odoo-python
@@ -16199,6 +16569,8 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
+"Du kan här ställa in standardkommunikationen för validerade kundfakturor, "
+"för att hjälpa kunden att hänvisa till rätt faktura vid betalningen."
 
 #. module: account
 #. odoo-python
@@ -16208,6 +16580,8 @@ msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
 msgstr ""
+"Du kan inte ändra företaget för ditt konto eftersom det finns några "
+"journalposter kopplade till det."
 
 #. module: account
 #. odoo-python
@@ -16217,6 +16591,8 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
+"Du kan inte byta bolag för din skatt eftersom det finns några journalposter "
+"kopplade till den."
 
 #. module: account
 #. odoo-python
@@ -16226,6 +16602,8 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
+"Du kan inte byta bolag för din skatt eftersom det finns några journalposter "
+"kopplade till den."
 
 #. module: account
 #. odoo-python
@@ -16236,6 +16614,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
+"Du kan inte skapa en ny betalning utan att ett konto för utestående "
+"betalningar/kvitton har angetts antingen på företaget eller  %s "
+"betalningsmetoden i %s journalen."
 
 #. module: account
 #. odoo-python
@@ -16255,14 +16636,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "Du kan inte skapa betalningar för poster som tillhör olika företag."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "You can't delete a report that has variants."
-msgstr ""
+msgstr "Du kan inte radera en rapport som har varianter."
 
 #. module: account
 #. odoo-python
@@ -16272,13 +16653,15 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
 msgstr ""
+"Du kan inte ha två betalningsmetodrader av samma betalningstyp  (%s) och med"
+" samma namn (%s) i en enda journal."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "You can't mix fixed amount with early payment percentage"
-msgstr ""
+msgstr "Du kan inte blanda fast belopp med procentsats för tidig betalning"
 
 #. module: account
 #. odoo-python
@@ -16288,6 +16671,8 @@ msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
 msgstr ""
+"Du kan inte öppna registerbetalningsguiden utan minst en "
+"fordrings-/skuldrad."
 
 #. module: account
 #. odoo-python
@@ -16297,6 +16682,8 @@ msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount"
 " in Currency' field."
 msgstr ""
+"Du kan inte ange en utländsk valuta utan att ange ett belopp i fältet "
+"\"Belopp i valuta\"."
 
 #. module: account
 #. odoo-python
@@ -16306,6 +16693,8 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
+"Du kan inte ange ett belopp i utländsk valuta utan att ange en utländsk "
+"valuta."
 
 #. module: account
 #. odoo-python
@@ -16315,6 +16704,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Du kan inte registrera en betalning eftersom det inte finns något kvar att "
+"betala på de valda journalposterna."
 
 #. module: account
 #. odoo-python
@@ -16324,6 +16715,8 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
+"Du kan inte registrera betalningar för journalposter som antingen är "
+"inkommande eller utgående."
 
 #. module: account
 #. odoo-python
@@ -16331,7 +16724,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
-msgstr ""
+msgstr "Du kan inte lägga till/ändra poster före och inklusive låsdatumet %s."
 
 #. module: account
 #. odoo-python
@@ -16353,6 +16746,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 
 #. module: account
 #. odoo-python
@@ -16373,6 +16768,8 @@ msgid ""
 "You cannot change the type of an account set as Bank Account on a journal to"
 " Receivable or Payable."
 msgstr ""
+"Du kan inte ändra typen av ett konto som är inställt som Bankkonto på en "
+"journal till Fordran eller Skuld."
 
 #. module: account
 #. odoo-python
@@ -16382,6 +16779,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Du kan inte skapa en skatteposition med utländsk moms inom ditt skatteland "
+"utan att tilldela det en stat."
 
 #. module: account
 #. odoo-python
@@ -16391,6 +16790,7 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
 msgstr ""
+"Du kan inte skapa en skatteposition med utländsk moms inom ditt skatteland."
 
 #. module: account
 #. odoo-python
@@ -16400,6 +16800,8 @@ msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
 msgstr ""
+"Du kan inte skapa en skatteposition inom ditt skatteland med samma "
+"momsnummer som det huvudsakliga som är inställt på ditt företag."
 
 #. module: account
 #. odoo-python
@@ -16409,6 +16811,15 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
+"Du kan inte skapa en flytt redan i postat tillstånd. Vänligen skapa ett "
+"utkast, flytta och posta det sedan."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Du kan inte skapa rekursiva grupper."
 
 #. module: account
 #. odoo-python
@@ -16418,6 +16829,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
+"Du kan inte ta bort en rad för leverantör/kundreskontra eftersom det inte "
+"skulle överensstämma med betalningsvillkoren"
 
 #. module: account
 #. odoo-python
@@ -16425,13 +16838,14 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
+"Du kan inte ta bort en skatterad eftersom det skulle påverka skatterapporten"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "Du kan inte ta bort ett objekt som är länkat till ett postat inlägg."
 
 #. module: account
 #. odoo-python
@@ -16440,6 +16854,27 @@ msgstr ""
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+"Du kan inte ta bort denna post, eftersom den redan har förbrukat ett "
+"sekvensnummer och inte är den sista i kedjan. Du borde nog återställa det "
+"istället."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
 msgstr ""
 
 #. module: account
@@ -16450,6 +16885,9 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"Du kan inte inaktivera den här inställningen eftersom vissa av dina skatter "
+"är kontantbaserade. Ändra dina skatter innan du inaktiverar den här "
+"inställningen."
 
 #. module: account
 #. odoo-python
@@ -16459,6 +16897,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"Du kan inte göra denna ändring på en avstämd journalpost. Du kan bara ändra vissa icke-rättsliga fält eller så måste du först avstämma.\n"
+"Journalanteckning (id): %s (%s)"
 
 #. module: account
 #. odoo-python
@@ -16468,6 +16908,8 @@ msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
 msgstr ""
+"Du kan inte redigera följande fält på grund av att begränsningsläget är "
+"aktiverat på journalen: %s."
 
 #. module: account
 #. odoo-python
@@ -16478,6 +16920,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Du kan inte redigera följande fält: %s.\n"
+"Följande poster är redan hashade:\n"
+"%s"
 
 #. module: account
 #. odoo-python
@@ -16487,6 +16932,8 @@ msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
 msgstr ""
+"Du kan inte redigera journalen för en kontoflyttning om den redan har ett "
+"sekvensnummer tilldelat."
 
 #. module: account
 #. odoo-python
@@ -16495,6 +16942,8 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
+"Du kan inte redigera journalen för ett kontoflytt om det har bokförts en "
+"gång."
 
 #. module: account
 #. odoo-python
@@ -16504,6 +16953,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"Du kan inte ha ett fordrings-/skuldkonto som inte är avstämningsbart. "
+"(kontokod: %s)"
 
 #. module: account
 #. odoo-python
@@ -16513,6 +16964,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
+"Du kan inte ha mer än ett konto med \"Intäkt för innevarande år\" som typ. "
+"(konton: %s)"
 
 #. module: account
 #. odoo-python
@@ -16523,6 +16976,16 @@ msgid ""
 "already posted.                         If you are absolutely sure you want "
 "to modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Du kan inte importera \"openning_balance\" om öppningstransaktionen (%s) "
+"redan är bokförd.                         Om du är helt säker på att du vill"
+" ändra den ingående balansen för dina konton, återställ flytten till utkast."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Du kan inte slå samman konton."
 
 #. module: account
 #. odoo-python
@@ -16532,6 +16995,8 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
+"Du kan inte ändra en postad post i den här journalen eftersom den är i "
+"begränsat läge."
 
 #. module: account
 #. odoo-python
@@ -16541,6 +17006,7 @@ msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
+"Du kan inte ändra fältet %s för en journal som redan har bokföringsposter."
 
 #. module: account
 #. odoo-python
@@ -16550,6 +17016,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"Du kan inte ändra skatter relaterade till en bokförd journalpost, du bör "
+"återställa journalposten till utkast för att göra det."
 
 #. module: account
 #. odoo-python
@@ -16559,6 +17027,8 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
+"Du kan inte skriva över värdena för att säkerställa oföränderligheten i "
+"redovisningen."
 
 #. module: account
 #. odoo-python
@@ -16567,13 +17037,15 @@ msgstr ""
 msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
+"Du kan inte utföra den här åtgärden på ett konto som innehåller "
+"journalposter."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
-msgstr ""
+msgstr "Du kan inte lägga upp en post i en arkiverad journal (%(journal)s)"
 
 #. module: account
 #. odoo-python
@@ -16583,6 +17055,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Du kan inte minska antalet decimaler för en valuta som redan har använts för"
+" att göra bokföringsinmatningar."
 
 #. module: account
 #. odoo-python
@@ -16592,6 +17066,8 @@ msgid ""
 "You cannot remove/deactivate the account %s which is set on a customer or "
 "vendor."
 msgstr ""
+"Du kan inte ta bort/avaktivera kontot %s som är satt på en kund eller "
+"leverantör."
 
 #. module: account
 #. odoo-python
@@ -16601,6 +17077,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
+"Du kan inte ta bort/avaktivera kontona \"%s\" som är inställda på en "
+"skattefördelningsrad."
 
 #. module: account
 #. odoo-python
@@ -16610,13 +17088,15 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
+"Du kan inte ta bort/avaktivera kontona \"%s\" som är inställda på "
+"kontomappningen av en finansiell position."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
-msgstr ""
+msgstr "Du kan inte återställa för att upprätta en journalpost på skattebas."
 
 #. module: account
 #. odoo-python
@@ -16624,6 +17104,8 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
+"Du kan inte återställa för att skapa ett utkast till en "
+"växeldifferensjournalpost."
 
 #. module: account
 #. odoo-python
@@ -16633,6 +17115,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Du kan inte ange en valuta på det här kontot eftersom det redan har några "
+"journalposter som har en annan utländsk valuta."
 
 #. module: account
 #. odoo-python
@@ -16642,6 +17126,15 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"Du kan inte byta konto för att förhindra avstämningen om vissa partiella "
+"avstämningar fortfarande väntar."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot switch the type of a posted document."
+msgstr "Du kan inte byta typ av ett postat dokument."
 
 #. module: account
 #. odoo-python
@@ -16655,7 +17148,7 @@ msgstr "Du kan inte använda föråldrade konton."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
-msgstr ""
+msgstr "Du kan inte använda skatter på rader med ett konto utanför saldot"
 
 #. module: account
 #. odoo-python
@@ -17075,7 +17568,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "tag domain"
-msgstr ""
+msgstr "tagga domän"
 
 #. module: account
 #. odoo-python
@@ -17087,7 +17580,7 @@ msgstr "moms"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "the destination journal"
-msgstr ""
+msgstr "måljournalen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -17107,7 +17600,7 @@ msgstr "att kontrollera"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "to create the taxes for this country."
-msgstr ""
+msgstr "att skapa skatter för detta land."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17116,13 +17609,16 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr ""
+"åtar sig att göra sitt bästa för att tillhandahålla presterande tjänster i "
+"rätt tid i enlighet med överenskomna tidsramar. Ingen av dess skyldigheter "
+"kan dock betraktas som en skyldighet för att uppnå resultat."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "user"
-msgstr "använadare"
+msgstr "användare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17130,11 +17626,13 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"kommer att ha behörighet att avbryta alla tillhandahållande av tjänster utan"
+" förvarning i händelse av sen betalning."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "with a pdf of an invoice as attachment."
-msgstr ""
+msgstr "med en pdf av en faktura som bifogad fil."
 
 #. module: account
 #. odoo-python
@@ -17155,7 +17653,7 @@ msgstr "{label}: Justering av inmatning av {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% recognized on {new_date}"
+msgstr "{percent:0.2f}% igenkänd på {new_date}"
 
 #. module: account
 #. odoo-python
@@ -17167,7 +17665,7 @@ msgstr "{percent:0.2f}% att erkänna på {new_date}"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
-msgstr "{{ (object.name eller '').replace('/','-') }}"
+msgstr "{{ (object.name or '').replace('/','-') }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
@@ -17179,7 +17677,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }} Faktura (Ref {{ object.name or ’n/a’ }})"
+msgstr "{{ object.company_id.name }} Faktura (Ref {{ object.name or 'n/a'}})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt

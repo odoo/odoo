@@ -29,6 +29,18 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         cls.enasarco_sale_tax = find_tax_by_ref('enasarcov')
         cls.withholding_purchase_tax_23 = find_tax_by_ref('23awo')
         cls.enasarco_purchase_tax = find_tax_by_ref('enasarcoa')
+        cls.inps_tax = find_tax_by_ref('4vinps')
+
+        cls.zero_tax = cls.env['account.tax'].with_company(cls.company).create({
+            'name': 'ZeroTax',
+            'sequence': 31,
+            'type_tax_use': 'sale',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'l10n_it_has_exoneration': True,
+            'l10n_it_kind_exoneration': 'N2.2',
+            'l10n_it_law_reference': 'Fatture emesse o ricevute da contribuenti forfettari o minimi',
+        })
 
         cls.withholding_sale_line = {
             'name': 'withholding_line',
@@ -57,6 +69,12 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 cls.withholding_sale_tax_23.id,
                 cls.company.account_sale_tax_id.id,
             ])]
+        }
+
+        cls.inps_sale_line = {
+            'name': 'inps_line',
+            'quantity': 1,
+            'tax_ids': [(6, 0, [cls.inps_tax.id, cls.zero_tax.id])]
         }
 
         invoice_data = cls.get_real_client_invoice_data()
@@ -105,13 +123,30 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ]
         })
 
+        cls.inps_tax_invoice = cls.env['account.move'].with_company(cls.company).create({
+            'move_type': 'out_invoice',
+            'company_id': cls.company.id,
+            'partner_id': cls.italian_partner_a.id,
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [
+                (0, 0, {
+                    **cls.inps_sale_line,
+                    'name': name,
+                    'price_unit': price,
+                }) for (name, price) in invoice_data.lines
+            ]
+        })
+
         cls.withholding_tax_invoice._post()
         cls.pension_fund_tax_invoice._post()
         cls.enasarco_tax_invoice._post()
+        cls.inps_tax_invoice._post()
 
         cls.edi_withholding_tax_xml = cls._get_withholding_test_file_content('IT00470550013_withh.xml')
         cls.edi_pension_fund_tax_xml = cls._get_withholding_test_file_content('IT00470550013_pfund.xml')
         cls.edi_enasarco_tax_xml = cls._get_withholding_test_file_content('IT00470550013_enasa.xml')
+        cls.edi_inps_tax_xml = cls._get_withholding_test_file_content('IT00470550013_inps.xml')
 
     @classmethod
     def _get_withholding_test_file_content(cls, filename):
@@ -380,3 +415,23 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             self.assertEqual(self.enasarco_purchase_tax, enasarco_imported_tax)
             self.assertEqual(-8.5, enasarco_imported_tax.amount)
             self.assertEqual(self.withholding_purchase_tax_23, line.tax_ids.filtered(lambda x: x.l10n_it_withholding_reason == 'ZO'))
+
+    def test_inps_tax_export(self):
+        """
+            Invoice
+            -----------------------------------------------------------------
+            Ordinary accounting service for the year                   350.00
+            Balance deposit for the past year                          300.00
+            Ordinary accounting service for the trimester               50.00
+            Electronic invoices management                              50.00
+            -----------------------------------------------------------------
+            Total untaxed:                                             750.00
+            VAT:             0% of Untaxed Amount                        0.00
+            INPS:            4% of Untaxed Amount                       30.00
+            Document total:  Taxed Amount                              780.00
+            Payment amount:  Document total                            780.00
+        """
+        content = self.edi_format._l10n_it_edi_export_invoice_as_xml(self.inps_tax_invoice)
+        expected_etree = etree.fromstring(self.edi_inps_tax_xml)
+        invoice_etree = self._cleanup_etree(content, None)
+        self.assertXmlTreeEqual(invoice_etree, expected_etree)

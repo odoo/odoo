@@ -5,7 +5,7 @@ import json
 from odoo.tests.common import HttpCase, new_test_user
 
 
-class TestController(HttpCase):
+class TestAttachmentController(HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -27,8 +27,12 @@ class TestController(HttpCase):
         }
 
     def test_01_portal_attachment(self):
+        post = self.env['forum.post'].create({
+            "name": "Forum Post Test",
+            "forum_id": self.env.ref("website_forum.forum_help").id,
+        })
         self.authenticate(self.portal_user.login, self.portal_user.login)
-        payload = self._build_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': 1})
+        payload = self._build_payload({'name': 'pixel', 'data': self.pixel, 'is_image': True, 'res_model': 'forum.post', 'res_id': post.id})
         self.portal_user.karma = 30
         response = self.url_open('/web_editor/attachment/add_data', data=json.dumps(payload), headers=self.headers, timeout=60000)
         self.assertEqual(200, response.status_code)
@@ -45,7 +49,7 @@ class TestController(HttpCase):
 
         attachment = self.env['ir.attachment'].create([{'name': 'test_pixel', 'public': True, 'res_id': False,
                                                         'mimetype': 'text/plain', 'res_model': 'forum.post',
-                                                        'raw': self.pixel, 'website_id': 1}])
+                                                        'raw': self.pixel, 'website_id': self.env.ref('website.default_website').id}])
         domain = [('name', '=', 'test_pixel')]
         result = attachment.search_read(domain)
         self.assertTrue(len(result), "No attachment fetched")

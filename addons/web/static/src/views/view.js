@@ -12,7 +12,15 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { useActionLinks } from "@web/views/view_hook";
 
-import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, useSubEnv, reactive } from "@odoo/owl";
+import {
+    Component,
+    markRaw,
+    onWillUpdateProps,
+    onWillStart,
+    toRaw,
+    useSubEnv,
+    reactive,
+} from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -115,6 +123,7 @@ const STANDARD_PROPS = [
     "fields",
     "relatedModels",
     "viewId",
+    "views",
     "actionMenus",
     "loadActionMenus",
 

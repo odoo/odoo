@@ -21,6 +21,7 @@ export const PageControllerMixin = (component) => class extends component {
         this.website = useService('website');
         this.dialog = useService('dialog');
         this.rpc = useService('rpc');
+        this.orm = useService('orm');
 
         this.websiteSelection = odoo.debug ? [{id: 0, name: this.env._t("All Websites")}] : [];
 
@@ -29,9 +30,9 @@ export const PageControllerMixin = (component) => class extends component {
         });
 
         onWillStart(async () => {
-            await this.website.fetchWebsites();
+            // `fetchWebsites()` already done by parent PageSearchModel
             this.websiteSelection.push(...this.website.websites);
-            this.state.activeWebsite = this.website.currentWebsite || this.website.websites[0];
+            this.state.activeWebsite = await this.env.searchModel.getCurrentWebsite();
         });
     }
 
@@ -73,9 +74,11 @@ export const PageControllerMixin = (component) => class extends component {
 
     onSelectWebsite(website) {
         this.state.activeWebsite = website;
+        this.env.searchModel.notifyWebsiteChange(website.id);
     }
 };
 
+// TODO: Remove in master, records are not hidden through `t-if` anymore.
 export const PageRendererMixin = (component) => class extends component {
     /**
      * The goal here is to tweak the renderer to display records following some

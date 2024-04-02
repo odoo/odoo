@@ -41,3 +41,16 @@ class InvalidAction extends Component {
 InvalidAction.template = xml`<div class="o_invalid_action"></div>`;
 
 registry.category("actions").add("invalid_action", InvalidAction);
+
+/**
+ * Client action to restore the current controller
+ * Serves as a trigger to reload the interface without a full browser reload
+ */
+async function softReload(env, action) {
+    const controller = env.services.action.currentController;
+    if (controller) {
+        env.services.action.restore(controller.jsId);
+    }
+}
+
+registry.category("actions").add("soft_reload", softReload);

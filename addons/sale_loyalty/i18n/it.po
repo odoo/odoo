@@ -5,8 +5,8 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,9 @@ msgid ""
 "        Technical field used to link multiple reward lines from the same reward together.\n"
 "    "
 msgstr ""
+"\n"
+"        Campo tecnico utilizzato per collegare tra loro più righe dello stesso premio.\n"
+"    "
 
 #. module: sale_loyalty
 #. odoo-python
@@ -56,8 +59,8 @@ msgstr "Viene già applicato uno sconto globale migliore."
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
-"Per ottenere il riconoscimento devono essere effettuati acquisti per un "
-"minimo di %(amount)s %(currency)s"
+"Per ottenere il premio devono essere effettuati acquisti per un minimo di "
+"%(amount)s %(currency)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -68,7 +71,7 @@ msgstr "Applica"
 #. module: sale_loyalty
 #: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
 msgid "Available Rewards"
-msgstr "Ricompense disponibili"
+msgstr "Premi disponibili"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -100,7 +103,7 @@ msgstr "Codice buono sconto"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
 msgid "Coupon Point"
-msgstr "Punti buono sconto"
+msgstr "Punto buono sconto"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -108,11 +111,12 @@ msgstr "Punti buono sconto"
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
 msgstr ""
+"Buono sconto non trovato cercando di aggiungere il seguente premio: %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Coupons & Loyalty"
-msgstr "Buoni sconto & Fedeltà"
+msgstr "Buoni sconto e fedeltà"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
@@ -137,7 +141,7 @@ msgstr "Abbandona"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr "Sconti e fedeltà"
+msgstr "Sconto e fedeltà"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -168,7 +172,7 @@ msgstr "Data di scadenza:"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Free Product - %(product)s"
-msgstr "Prodotto gratuito-%(product)s"
+msgstr "Prodotto gratuito - %(product)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -188,7 +192,7 @@ msgstr "Carte regalo e portafoglio elettronico"
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
 msgid "How much point this reward cost on the loyalty card."
-msgstr ""
+msgstr "Valore in punti della ricompensa nella carta fedeltà."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
@@ -214,7 +218,7 @@ msgstr "Ordine di vendita non valido."
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
-msgstr "È una riga riconoscimento del programma"
+msgstr "È una riga premio del programma"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard____last_update
@@ -275,25 +279,27 @@ msgid ""
 "No card found for this loyalty program and no points will be given with this"
 " order."
 msgstr ""
+"Non è stata trovata nessuna carta per il seguente programma fedeltà. Non "
+"saranno attribuiti punti all'ordine."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
-msgstr "Nessuna ricompensa selezionata."
+msgstr "Nessun premio selezionato."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "No rewards available for this customer!"
-msgstr "Nessuna ricompensa disponibile!"
+msgstr "Nessun premio disponibile per questo cliente."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
-msgstr ""
+msgstr "Uno o più premi dell'ordine di vendita non sono validi, controllare."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
@@ -320,7 +326,7 @@ msgstr "Punti"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
 msgid "Points Cost"
-msgstr ""
+msgstr "Costo punti"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -336,12 +342,12 @@ msgstr "Premio"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr "Importo riconoscimento"
+msgstr "Importo premio"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
 msgid "Reward Identifier Code"
-msgstr ""
+msgstr "Codice identificativo premio"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
@@ -351,18 +357,20 @@ msgstr "Prodotti premio"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
 msgid "Sale Loyalty - Apply Coupon Wizard"
-msgstr ""
+msgstr "Fedeltà vendita-procedura guidata utilizzo buono sconto"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
 msgid "Sale Loyalty - Reward Selection Wizard"
-msgstr ""
+msgstr "Fedeltà vendita-procedura guidata selezione ricompensa"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
 msgid ""
 "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
 msgstr ""
+"Punti buono sconto ordine di vendita-Tieni traccia dell'impatto di un ordine"
+" di vendita su un buono sconto"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -382,12 +390,12 @@ msgstr "Riga ordine di vendita"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
 msgid "Selected Product"
-msgstr "Prodotto selezionata"
+msgstr "Prodotto selezionato"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
 msgid "Selected Reward"
-msgstr "Ricompensa selezionata"
+msgstr "Premio selezionato"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -409,14 +417,12 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
-msgstr ""
-"Il buono sconto non presenta punti a sufficenza per la ricompensa "
-"selezionata."
+msgstr "Punti non sufficienti nel buono sconto per il premio selezionato."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
 msgid "The coupon points entry already exists."
-msgstr ""
+msgstr "La voce relativa ai punti del buono sconto esiste già."
 
 #. module: sale_loyalty
 #. odoo-python

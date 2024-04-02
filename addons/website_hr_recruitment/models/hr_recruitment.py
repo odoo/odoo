@@ -35,8 +35,8 @@ class Applicant(models.Model):
             values.setdefault('name', name)
         if values.get('job_id'):
             job = self.env['hr.job'].browse(values.get('job_id'))
-            if not job.sudo().website_published:
-                raise UserError(_("You cannot apply for this job."))
+            if not job.sudo().active:
+                raise UserError(_("The job offer has been closed."))
             stage = self.env['hr.recruitment.stage'].sudo().search([
                 ('fold', '=', False),
                 '|', ('job_ids', '=', False), ('job_ids', '=', values['job_id']),

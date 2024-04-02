@@ -19,6 +19,21 @@
         </field>
     </record>
 
+    <!-- /model_item item page -->
+    <template id="model_item" name="Model item">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <section t-cache="record">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" t-field="record.name"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.test.website</field>
         <field name="model">res.config.settings</field>

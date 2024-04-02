@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+import logging
+
+from odoo.tests import HttpCase, tagged, loaded_demo_data
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
@@ -33,4 +37,7 @@ class TestAddToCartSnippet(HttpCase):
     def test_configure_product(self):
         # Reset the company country id, which ensure that no country dependant fields are blocking the address form.
         self.env.company.country_id = self.env.ref('base.us')
+        if not loaded_demo_data(self.env):
+            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
+            return
         self.start_tour("/", 'add_to_cart_snippet_tour', login="admin")

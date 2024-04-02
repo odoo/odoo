@@ -107,7 +107,7 @@ class SaleOrder(models.Model):
         for order in self:
             coupons |= order._get_reward_coupons()
         if coupons:
-            coupons._send_creation_communication()
+            coupons._send_creation_communication(force_send=True)
 
     def _get_applied_global_discount_lines(self):
         """
@@ -138,7 +138,7 @@ class SaleOrder(models.Model):
         claimable_count = float_round(points / reward.required_points, precision_rounding=1, rounding_method='DOWN') if not reward.clear_wallet else 1
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [{
-            'name': _("Free Product - %(product)s", product=product.name),
+            'name': _("Free Product - %(product)s", product=product.with_context(display_default_code=False).display_name),
             'product_id': product.id,
             'discount': 100,
             'product_uom_qty': reward.reward_product_qty * claimable_count,
@@ -165,9 +165,23 @@ class SaleOrder(models.Model):
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
-            line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
-            discountable += line.price_total
-            discountable_per_tax[line.tax_id] += line_discountable
+            tax_data = line.tax_id.compute_all(
+                line.price_unit,
+                quantity=line.product_uom_qty,
+                product=line.product_id,
+                partner=line.order_partner_id,
+            )
+            # To compute the discountable amount we get the subtotal and add
+            # non-fixed tax totals. This way fixed taxes will not be discounted
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable += tax_data['total_excluded'] + sum(
+                tax['amount'] for tax in tax_data['taxes'] if tax['id'] in taxes.ids
+            )
+            line_price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100)
+            discountable_per_tax[taxes] += line_price - sum(
+                tax['amount'] for tax in tax_data['taxes']
+                if tax['price_include'] and tax['id'] not in taxes.ids
+            )
         return discountable, discountable_per_tax
 
     def _cheapest_line(self):
@@ -188,8 +202,11 @@ class SaleOrder(models.Model):
         assert reward.discount_applicability == 'cheapest'
 
         cheapest_line = self._cheapest_line()
-        discountable = cheapest_line.price_unit * (1 - (cheapest_line.discount or 0) / 100)
-        return discountable, {cheapest_line.tax_id: discountable}
+        discountable = cheapest_line.price_total
+        discountable_per_taxes = cheapest_line.price_unit * (1 - (cheapest_line.discount or 0) / 100)
+        taxes = cheapest_line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+
+        return discountable, {taxes: discountable_per_taxes}
 
     def _get_specific_discountable_lines(self, reward):
         """
@@ -221,7 +238,7 @@ class SaleOrder(models.Model):
         order_lines = self.order_line - self._get_no_effect_on_threshold_lines()
         remaining_amount_per_line = defaultdict(int)
         for line in order_lines:
-            if not line.product_uom_qty or not line.price_unit:
+            if not line.product_uom_qty or not line.price_total:
                 continue
             remaining_amount_per_line[line] = line.price_total
             domain = reward._get_discount_product_domain()
@@ -252,21 +269,21 @@ class SaleOrder(models.Model):
             else:
                 non_common_lines = discounted_lines - lines_to_discount
                 # Fixed prices are per tax
-                discounted_amounts = {line.tax_id: abs(line.price_total) for line in lines}
+                discounted_amounts = {line.tax_id.filtered(lambda t: t.amount_type != 'fixed'): abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
                     # For gift card and eWallet programs we have no tax but we can consume the amount completely
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amount = discounted_amounts[lines.tax_id]
+                        discounted_amount = discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
                     else:
-                        discounted_amount = discounted_amounts[line.tax_id]
+                        discounted_amount = discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')]
                     if discounted_amount == 0:
                         continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
                     if lines.reward_id.program_id.is_payment_program:
-                        discounted_amounts[lines.tax_id] -= consumed
+                        discounted_amounts[lines.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     else:
-                        discounted_amounts[line.tax_id] -= consumed
+                        discounted_amounts[line.tax_id.filtered(lambda t: t.amount_type != 'fixed')] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -277,7 +294,8 @@ class SaleOrder(models.Model):
             # line_discountable is the same as in a 'order' discount
             #  but first multiplied by a factor for the taxes to apply
             #  and then multiplied by another factor coming from the discountable
-            discountable_per_tax[line.tax_id] += line_discountable *\
+            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            discountable_per_tax[taxes] += line_discountable *\
                 (remaining_amount_per_line[line] / line.price_total)
         return discountable, discountable_per_tax
 
@@ -317,8 +335,12 @@ class SaleOrder(models.Model):
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
+            points = self._get_real_points_for_coupon(coupon)
+            if not reward.program_id.is_payment_program:
+                # Rewards cannot be partially offered to customers
+                points = points // reward.required_points * reward.required_points
             max_discount = min(max_discount,
-                reward.currency_id._convert(reward.discount * self._get_real_points_for_coupon(coupon),
+                reward.currency_id._convert(reward.discount * points,
                     self.currency_id, self.company_id, fields.Date.today()))
         elif reward.discount_mode == 'per_order':
             max_discount = min(max_discount,
@@ -348,24 +370,34 @@ class SaleOrder(models.Model):
                 'tax_id': [(Command.CLEAR, 0, 0)],
             }]
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
-        mapped_taxes = {tax: self.fiscal_position_id.map_tax(tax) for tax in discountable_per_tax}
-        reward_dict = {tax: {
-            'name': _(
-                'Discount: %(desc)s%(tax_str)s',
-                desc=reward.description,
-                tax_str=len(discountable_per_tax) and any(t.name for t in mapped_taxes[tax]) and _(' - On product with the following taxes: %(taxes)s', taxes=", ".join(mapped_taxes[tax].mapped('name'))) or '',
-            ),
-            'product_id': reward.discount_line_product_id.id,
-            'price_unit': -(price * discount_factor),
-            'product_uom_qty': 1.0,
-            'product_uom': reward.discount_line_product_id.uom_id.id,
-            'reward_id': reward.id,
-            'coupon_id': coupon.id,
-            'points_cost': 0,
-            'reward_identifier_code': reward_code,
-            'sequence': sequence,
-            'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in mapped_taxes[tax]]
-        } for tax, price in discountable_per_tax.items() if price}
+        reward_dict = {}
+        for tax, price in discountable_per_tax.items():
+            if not price:
+                continue
+            mapped_taxes = self.fiscal_position_id.map_tax(tax)
+            tax_desc = ''
+            if any(t.name for t in mapped_taxes):
+                tax_desc = _(
+                    ' - On product with the following taxes: %(taxes)s',
+                    taxes=", ".join(mapped_taxes.mapped('name')),
+                )
+            reward_dict[tax] = {
+                'name': _(
+                    'Discount: %(desc)s%(tax_str)s',
+                    desc=reward.description,
+                    tax_str=tax_desc,
+                ),
+                'product_id': reward.discount_line_product_id.id,
+                'price_unit': -(price * discount_factor),
+                'product_uom_qty': 1.0,
+                'product_uom': reward.discount_line_product_id.uom_id.id,
+                'reward_id': reward.id,
+                'coupon_id': coupon.id,
+                'points_cost': 0,
+                'reward_identifier_code': reward_code,
+                'sequence': sequence,
+                'tax_id': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
+            }
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:
             reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
@@ -524,8 +556,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_line_values(self, reward, coupon, **kwargs):
         self.ensure_one()
-        self = self.with_context(lang=self.partner_id.lang)
-        reward = reward.with_context(lang=self.partner_id.lang)
+        self = self.with_context(lang=self._get_lang())
+        reward = reward.with_context(lang=self._get_lang())
         if reward.reward_type == 'discount':
             return self._get_reward_values_discount(reward, coupon, **kwargs)
         elif reward.reward_type == 'product':
@@ -786,6 +818,9 @@ class SaleOrder(models.Model):
         if point_entries_to_unlink:
             point_entries_to_unlink.sudo().unlink()
 
+    def _get_not_rewarded_order_lines(self):
+        return self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
+
     def _program_check_compute_points(self, programs):
         """
         Checks the program validity from the order lines aswell as computing the number of points to add.
@@ -795,7 +830,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         # Prepare quantities
-        order_lines = self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
+        order_lines = self._get_not_rewarded_order_lines()
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
@@ -833,6 +868,9 @@ class SaleOrder(models.Model):
             rule_points = []
             program_result = result.setdefault(program, dict())
             for rule in program.rule_ids:
+                # prevent bottomless ewallet spending
+                if program.program_type == 'ewallet' and not program.trigger_product_ids:
+                    break
                 if rule.mode == 'with_code' and rule not in self.code_enabled_rule_ids:
                     continue
                 code_matched = True
@@ -840,6 +878,8 @@ class SaleOrder(models.Model):
                 if rule_amount > (rule.minimum_amount_tax_mode == 'incl' and (untaxed_amount + tax_amount) or untaxed_amount):
                     continue
                 minimum_amount_matched = True
+                if not products_per_rule.get(rule):
+                    continue
                 rule_products = products_per_rule[rule]
                 ordered_rule_products_qty = sum(products_qties[product] for product in rule_products)
                 if ordered_rule_products_qty < rule.minimum_qty or not rule_products:

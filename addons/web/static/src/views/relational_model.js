@@ -10,6 +10,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
+import { RPCError } from "@web/core/network/rpc_service";
 import { ORM, x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -547,6 +548,10 @@ export class Record extends DataPoint {
         return !this.resId;
     }
 
+    get isValid() {
+        return !this._invalidFields.size;
+    }
+
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -627,6 +632,14 @@ export class Record extends DataPoint {
                 case "one2many":
                 case "many2many":
                     if (!this.isX2ManyValid(fieldName)) {
+                        this.setInvalidField(fieldName);
+                    }
+                    break;
+                case "json":
+                    if (
+                        this.isRequired(fieldName) &&
+                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                    ) {
                         this.setInvalidField(fieldName);
                     }
                     break;
@@ -936,6 +949,12 @@ export class Record extends DataPoint {
             this._invalidFields.add(fieldName);
             this.model.notify();
         }
+    }
+
+    resetFieldValidity(fieldName) {
+        this.dirty = true;
+        this._invalidFields.delete(fieldName);
+        this.model.notify();
     }
 
     /**
@@ -1664,8 +1683,15 @@ class DynamicList extends DataPoint {
                         await Promise.all(validSelection.map((record) => record.load()));
                         record.switchMode("readonly");
                         this.model.notify();
-                    } catch (_) {
+                    } catch (e) {
                         record.discard();
+                        const errorMessage = e instanceof RPCError ? e.data.message : e.message;
+                        const errorTitle =
+                            e instanceof RPCError ? e.message : this.model.env._t("Error");
+                        this.model.notificationService.add(errorMessage, {
+                            title: errorTitle,
+                            type: "danger",
+                        });
                     }
                     validSelection.forEach((record) => {
                         record.selected = false;
@@ -2098,7 +2124,8 @@ export class DynamicGroupList extends DynamicList {
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         /** @type {Group[]} */
-        this.groups = state.groups || [];
+        this.groups = [];
+        this.previousGroupsStates = state.groups || [];
         this.isGrouped = true;
         this.quickCreateInfo = null; // Lazy loaded;
         this.expand = params.expand;
@@ -2216,6 +2243,9 @@ export class DynamicGroupList extends DynamicList {
             group.count = group.count - resIds.length;
             allResIds.push(...resIds);
         }
+        if (this.isDomainSelected && allResIds.length > 0) {
+            await this.load();
+        }
         // Return the list of all deleted resIds.
         // Will be used by the calling group to update its count.
         return allResIds;
@@ -2224,7 +2254,7 @@ export class DynamicGroupList extends DynamicList {
     exportState() {
         const state = {
             ...super.exportState(),
-            groups: this.groups,
+            groups: this.groups.map((g) => g.exportState()),
         };
         delete state.limit;
         return state;
@@ -2341,11 +2371,18 @@ export class DynamicGroupList extends DynamicList {
         const everyGroupIsClosed = this.groups.every((group) => group.isFolded);
         if (
             everyGroupIsClosed &&
-            !(this.groupBy.includes(fieldName) || this.hasAggregate(fieldName))
+            !(this.groupBy[0].split(":")[0] === fieldName || this.hasAggregate(fieldName))
         ) {
             return;
         }
         super.sortBy(fieldName);
+    }
+
+    selectDomain(value) {
+        for (const group of this.groups) {
+            group.list.selectDomain(value);
+        }
+        super.selectDomain(value);
     }
 
     // ------------------------------------------------------------------------
@@ -2495,16 +2532,20 @@ export class DynamicGroupList extends DynamicList {
                 }
             }
             const groupValue = groupParams.__rawValue;
-            const previousGroup = this.groups.find((g) => {
+            const isPrevGroup = (g) => {
                 if (g.deleted) {
                     return false;
                 }
                 return Array.isArray(g.__rawValue) && Array.isArray(groupValue)
                     ? g.__rawValue[0] === groupValue[0]
                     : g.__rawValue === groupValue;
-            });
-            const state = previousGroup ? previousGroup.exportState() : {};
-            return [groupParams, state];
+            };
+            if (this._isLoaded) {
+                const prevGroup = this.groups.find(isPrevGroup);
+                return [groupParams, prevGroup ? prevGroup.exportState() : {}];
+            }
+            const state = this.previousGroupsStates.find(isPrevGroup);
+            return [groupParams, state || {}];
         });
 
         // Unfold groups that can still be unfolded by default
@@ -2522,6 +2563,7 @@ export class DynamicGroupList extends DynamicList {
             }
         }
 
+        this._isLoaded = true;
         return groupsParams.map(([params, state]) =>
             this.model.createDataPoint("group", params, state)
         );
@@ -2655,8 +2697,14 @@ export class Group extends DataPoint {
 
     exportState() {
         return {
+            __rawValue: this.__rawValue,
+            value: this.value,
+            deleted: this.deleted,
             isFolded: this.isFolded,
+            displayName: this.displayName,
+            groupDomain: this.groupDomain,
             listState: this.list.exportState(),
+            range: this.range,
         };
     }
 
@@ -3103,7 +3151,7 @@ export class StaticList extends DataPoint {
             if (DELETE_ALL === this._commands[0][0] && !allFields) {
                 for (const resId of this._serverIds) {
                     if (!this.currentIds.includes(resId)) {
-                        commands.push(x2ManyCommands.delete(resId));
+                        commands.push(x2ManyCommands.forget(resId));
                     }
                 }
             }
@@ -3490,7 +3538,7 @@ export class RelationalModel extends Model {
         if (
             this.defaultGroupBy &&
             !this.env.inDialog &&
-            !(params.groupBy && params.groupBy.length)
+            !(rootParams.groupBy && rootParams.groupBy.length)
         ) {
             rootParams.groupBy = [this.defaultGroupBy];
         }
@@ -3511,7 +3559,7 @@ export class RelationalModel extends Model {
             },
         };
         const state = this.root
-            ? Object.assign(this.root.exportState(), { offset: 0 })
+            ? Object.assign(this.root.exportState(), { offset: params.offset || 0 })
             : this.initialRootState;
 
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);

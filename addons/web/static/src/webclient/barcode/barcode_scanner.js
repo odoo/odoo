@@ -5,131 +5,22 @@ import { browser } from "@web/core/browser/browser";
 import Dialog from "web.OwlDialog";
 import { delay } from "web.concurrency";
 import { loadJS, templates } from "@web/core/assets";
+import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
+import { CropOverlay } from "./crop_overlay";
+import { Deferred } from "@web/core/utils/concurrency";
 
-import { App, Component, EventBus, onMounted, onWillStart, onWillUnmount, useRef } from "@odoo/owl";
-import { _t } from "web.core";
-const bus = new EventBus();
-const busOk = "BarcodeDialog-Ok";
-const busError = "BarcodeDialog-Error";
+import {
+    App,
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
-/**
- * Check for HTMLVideoElement readiness.
- *
- * See https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/readyState
- */
-const HAVE_NOTHING = 0;
-const HAVE_METADATA = 1;
-function isVideoElementReady(video) {
-    return ![HAVE_NOTHING, HAVE_METADATA].includes(video.readyState);
-}
-
-/**
- * Builder for BarcodeDetector-like polyfill class using ZXing library.
- *
- * @param {ZXing} ZXing Zxing library
- * @returns {class} ZxingBarcodeDetector class
- */
-function buildZXingBarcodeDetector(ZXing) {
-    const ZXingFormats = new Map([
-        ["aztec", ZXing.BarcodeFormat.AZTEC],
-        ["code_39", ZXing.BarcodeFormat.CODE_39],
-        ["code_128", ZXing.BarcodeFormat.CODE_128],
-        ["data_matrix", ZXing.BarcodeFormat.DATA_MATRIX],
-        ["ean_8", ZXing.BarcodeFormat.EAN_8],
-        ["ean_13", ZXing.BarcodeFormat.EAN_13],
-        ["itf", ZXing.BarcodeFormat.ITF],
-        ["pdf417", ZXing.BarcodeFormat.PDF_417],
-        ["qr_code", ZXing.BarcodeFormat.QR_CODE],
-        ["upc_a", ZXing.BarcodeFormat.UPC_A],
-        ["upc_e", ZXing.BarcodeFormat.UPC_E],
-    ]);
-
-    const allSupportedFormats = Array.from(ZXingFormats.keys());
-
-    /**
-     * ZXingBarcodeDetector class
-     *
-     * BarcodeDetector-like polyfill class using ZXing library.
-     * API follows the Shape Detection Web API (specifically Barcode Detection).
-     */
-    class ZXingBarcodeDetector {
-        /**
-         * @param {object} opts
-         * @param {Array} opts.formats list of codes' formats to detect
-         */
-        constructor(opts = {}) {
-            const formats = opts.formats || allSupportedFormats;
-            const hints = new Map([
-                [
-                    ZXing.DecodeHintType.POSSIBLE_FORMATS,
-                    formats.map((format) => ZXingFormats.get(format)),
-                ],
-                // Enable Scanning at 90 degrees rotation
-                // https://github.com/zxing-js/library/issues/291
-                [ZXing.DecodeHintType.TRY_HARDER, true],
-            ]);
-            this.reader = new ZXing.MultiFormatReader();
-            this.reader.setHints(hints);
-        }
-
-        /**
-         * Detect codes in image.
-         *
-         * @param {HTMLVideoElement} video source video element
-         * @returns {Promise<Array>} array of detected codes
-         */
-        async detect(video) {
-            if (!(video instanceof HTMLVideoElement)) {
-                throw new DOMException(
-                    "imageDataFrom() requires an HTMLVideoElement",
-                    "InvalidArgumentError"
-                );
-            }
-            if (!isVideoElementReady(video)) {
-                throw new DOMException("HTMLVideoElement is not ready", "InvalidStateError");
-            }
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
-            const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
-            const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
-            try {
-                const result = this.reader.decode(binaryBitmap);
-                const format = Array.from(ZXingFormats).find(
-                    ([k, val]) => val === result.getBarcodeFormat()
-                );
-                const rawValue = result.getText();
-                return [
-                    {
-                        format,
-                        rawValue,
-                    },
-                ];
-            } catch (err) {
-                if (err.name === "NotFoundException") {
-                    return [];
-                }
-                throw err;
-            }
-        }
-    }
-
-    /**
-     * Supported codes formats
-     *
-     * @static
-     * @returns {Array}
-     */
-    ZXingBarcodeDetector.getSupportedFormats = async () => allSupportedFormats;
-
-    return ZXingBarcodeDetector;
-}
-class BarcodeDialog extends Component {
+export class BarcodeDialog extends Component {
     /**
      * @override
      */
@@ -138,6 +29,11 @@ class BarcodeDialog extends Component {
         this.interval = null;
         this.stream = null;
         this.detector = null;
+        this.overlayInfo = {};
+        this.zoomRatio = 1;
+        this.state = useState({
+            isReady: false,
+        });
 
         onWillStart(async () => {
             let DetectorClass;
@@ -174,6 +70,15 @@ class BarcodeDialog extends Component {
             }
             this.videoPreviewRef.el.srcObject = this.stream;
             await this.isVideoReady();
+            const { height, width } = getComputedStyle(this.videoPreviewRef.el);
+            const divWidth = width.slice(0, -2);
+            const divHeight = height.slice(0, -2);
+            const tracks = this.stream.getVideoTracks();
+            if (tracks.length) {
+                const [track] = tracks;
+                const settings = track.getSettings();
+                this.zoomRatio = Math.min(divWidth / settings.width, divHeight / settings.height);
+            }
             this.interval = setInterval(this.detectCode.bind(this), 100);
         });
 
@@ -187,6 +92,10 @@ class BarcodeDialog extends Component {
         });
     }
 
+    isZXingBarcodeDetector() {
+        return this.detector && this.detector.__proto__.constructor.name === "ZXingBarcodeDetector";
+    }
+
     /**
      * Check for camera preview element readiness
      *
@@ -198,8 +107,18 @@ class BarcodeDialog extends Component {
             while (!isVideoElementReady(this.videoPreviewRef.el)) {
                 await delay(10);
             }
+            this.state.isReady = true;
             resolve();
         });
+    }
+
+    onResize(overlayInfo) {
+        this.overlayInfo = overlayInfo;
+        if (this.isZXingBarcodeDetector()) {
+            // TODO need refactoring when ZXing will support multiple result in one scan
+            // https://github.com/zxing-js/library/issues/346
+            this.detector.setCropArea(this.adaptValuesWithRatio(this.overlayInfo, true));
+        }
     }
 
     /**
@@ -208,8 +127,7 @@ class BarcodeDialog extends Component {
      * @param {string} result found code
      */
     onResult(result) {
-        this.props.onClose();
-        bus.trigger(busOk, result);
+        this.props.onClose({ barcode: result });
     }
 
     /**
@@ -218,8 +136,7 @@ class BarcodeDialog extends Component {
      * @param {Error} error
      */
     onError(error) {
-        this.props.onClose();
-        bus.trigger(busError, { error });
+        this.props.onClose({ error });
     }
 
     /**
@@ -228,19 +145,43 @@ class BarcodeDialog extends Component {
     async detectCode() {
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
-            if (codes.length === 0) {
-                return;
+            for (const code of codes) {
+                if (!this.isZXingBarcodeDetector() && this.overlayInfo.x && this.overlayInfo.y) {
+                    const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
+                    if (
+                        x < this.overlayInfo.x ||
+                        x + width > this.overlayInfo.x + this.overlayInfo.width ||
+                        y < this.overlayInfo.y ||
+                        y + height > this.overlayInfo.y + this.overlayInfo.height
+                    ) {
+                        continue;
+                    }
+                }
+                this.onResult(code.rawValue);
+                break;
             }
-            this.onResult(codes[0].rawValue);
         } catch (err) {
             this.onError(err);
         }
+    }
+
+    adaptValuesWithRatio(object, dividerRatio = false) {
+        const newObject = Object.assign({}, object);
+        for (const key of Object.keys(newObject)) {
+            if (dividerRatio) {
+                newObject[key] /= this.zoomRatio;
+            } else {
+                newObject[key] *= this.zoomRatio;
+            }
+        }
+        return newObject;
     }
 }
 
 Object.assign(BarcodeDialog, {
     components: {
         Dialog,
+        CropOverlay,
     },
     template: "web.BarcodeDialog",
 });
@@ -259,10 +200,7 @@ export function isBarcodeScannerSupported() {
  * @returns {Promise<string>} resolves when a {qr,bar}code has been detected
  */
 export async function scanBarcode(facingMode = "environment") {
-    const promise = new Promise((resolve, reject) => {
-        bus.on(busOk, null, resolve);
-        bus.on(busError, null, reject);
-    });
+    const promise = new Deferred();
     const appForBarcodeDialog = new App(BarcodeDialog, {
         env: owl.Component.env,
         dev: owl.Component.env.isDebug(),
@@ -270,7 +208,14 @@ export async function scanBarcode(facingMode = "environment") {
         translatableAttributes: ["data-tooltip"],
         translateFn: _t,
         props: {
-            onClose: () => appForBarcodeDialog.destroy(),
+            onClose: (result = {}) => {
+                appForBarcodeDialog.destroy();
+                if (result.error) {
+                    promise.reject({ error: result.error });
+                } else {
+                    promise.resolve(result.barcode);
+                }
+            },
             facingMode: facingMode,
         },
     });

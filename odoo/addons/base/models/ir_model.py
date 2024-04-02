@@ -176,6 +176,7 @@ class IrModel(models.Model):
     _description = "Models"
     _order = 'model'
     _rec_names_search = ['name', 'model']
+    _allow_sudo_commands = False
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
@@ -300,7 +301,9 @@ class IrModel(models.Model):
 
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
-        self.field_id._prepare_update()
+        manual_models = self.filtered(lambda model: model.state == 'manual')
+        manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
+        (self - manual_models).field_id._prepare_update()
 
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
@@ -369,7 +372,7 @@ class IrModel(models.Model):
             'model': model._name,
             'name': model._description,
             'order': model._order,
-            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
         }
@@ -471,6 +474,7 @@ class IrModelFields(models.Model):
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
@@ -597,7 +601,7 @@ class IrModelFields(models.Model):
         """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
         names = self.related.split(".")
         last = len(names) - 1
-        model_name = self.model
+        model_name = self.model or self.model_id.model
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
@@ -775,46 +779,64 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
-        failed_dependencies = []
-        for rec in self:
-            model = self.env.get(rec.model)
-            if model is not None:
-                if rec.name in model._fields:
-                    field = model._fields[rec.name]
-                else:
-                    # field hasn't been loaded (yet?)
-                    continue
-                for dep in self.pool.get_dependent_fields(field):
-                    if dep.manual:
-                        failed_dependencies.append((field, dep))
-                for inverse in model.pool.field_inverses[field]:
-                    if inverse.manual and inverse.type == 'one2many':
-                        failed_dependencies.append((field, inverse))
-
         uninstalling = self._context.get(MODULE_UNINSTALL_FLAG)
-        if not uninstalling and failed_dependencies:
-            msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
-            raise UserError(msg % failed_dependencies[0])
-        elif failed_dependencies:
-            dependants = {rel[1] for rel in failed_dependencies}
-            to_unlink = [self._get(field.model_name, field.name) for field in dependants]
-            self.browse().union(*to_unlink).unlink()
+        if not uninstalling and any(record.state != 'manual' for record in self):
+            raise UserError(_("This column contains module data and cannot be removed!"))
 
-        self = self.filtered(lambda record: record.state == 'manual')
-        if not self:
-            return
+        records = self              # all the records to delete
+        fields_ = OrderedSet()      # all the fields corresponding to 'records'
+        failed_dependencies = []    # list of broken (field, dependent_field)
+
+        for record in self:
+            model = self.env.get(record.model)
+            if model is None:
+                continue
+            field = model._fields.get(record.name)
+            if field is None:
+                continue
+            fields_.add(field)
+            for dep in self.pool.get_dependent_fields(field):
+                if dep.manual:
+                    failed_dependencies.append((field, dep))
+                elif dep.inherited:
+                    fields_.add(dep)
+                    records |= self._get(dep.model_name, dep.name)
+
+        for field in fields_:
+            for inverse in model.pool.field_inverses[field]:
+                if inverse.manual and inverse.type == 'one2many':
+                    failed_dependencies.append((field, inverse))
+
+        self = records
+
+        if failed_dependencies:
+            if not uninstalling:
+                field, dep = failed_dependencies[0]
+                raise UserError(_(
+                    "The field '%s' cannot be removed because the field '%s' depends on it.",
+                    field, dep,
+                ))
+            else:
+                self = self.union(*[
+                    self._get(dep.model_name, dep.name)
+                    for field, dep in failed_dependencies
+                ])
+
+        records = self.filtered(lambda record: record.state == 'manual')
+        if not records:
+            return self
 
         # remove pending write of this field
         # DLE P16: if there are pending updates of the field we currently try to unlink, pop them out from the cache
         # test `test_unlink_with_dependant`
-        for record in self:
+        for record in records:
             model = self.env.get(record.model)
             field = model and model._fields.get(record.name)
             if field:
                 self.env.cache.clear_dirty_field(field)
         # remove fields from registry, and check that views are not broken
-        fields = [self.env[record.model]._pop_field(record.name) for record in self]
-        domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
+        fields = [self.env[record.model]._pop_field(record.name) for record in records]
+        domain = expression.OR([('arch_db', 'like', record.name)] for record in records)
         views = self.env['ir.ui.view'].search(domain)
         try:
             for view in views:
@@ -836,18 +858,14 @@ class IrModelFields(models.Model):
                 # the registry has been modified, restore it
                 self.pool.setup_models(self._cr)
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_if_manual(self):
-        # Prevent manual deletion of module columns
-        if any(field.state != 'manual' for field in self):
-            raise UserError(_("This column contains module data and cannot be removed!"))
+        return self
 
     def unlink(self):
         if not self:
             return True
 
         # prevent screwing up fields that depend on these fields
-        self._prepare_update()
+        self = self._prepare_update()
 
         # determine registry fields corresponding to self
         fields = OrderedSet()
@@ -925,7 +943,8 @@ class IrModelFields(models.Model):
 
         # names of the models to patch
         patched_models = set()
-        if vals and self:
+        translate_only = all(self._fields[field_name].translate for field_name in vals)
+        if vals and self and not translate_only:
             for item in self:
                 if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
@@ -984,7 +1003,7 @@ class IrModelFields(models.Model):
                             sql.Identifier(f'{table}_{newname}_index'),
                         ))
 
-        if column_rename or patched_models:
+        if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
             self.pool.setup_models(self._cr)
@@ -994,12 +1013,6 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
-        return res
-
-    def update_field_translations(self, field_name, translations):
-        res = super().update_field_translations(field_name, translations)
-        if res:
-            self.clear_caches()
         return res
 
     def name_get(self):
@@ -1230,6 +1243,7 @@ class IrModelSelection(models.Model):
     _name = 'ir.model.fields.selection'
     _order = 'sequence, id'
     _description = "Fields Selection"
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one("ir.model.fields",
         required=True, ondelete="cascade", index=True,
@@ -1486,7 +1500,7 @@ class IrModelSelection(models.Model):
             # the orphaned 'ir.model.fields' down the stack, and will log a
             # warning prompting the developer to write a migration script.
             field = Model._fields.get(selection.field_id.name)
-            if not field or not field.store or Model._abstract:
+            if not field or not field.store or not Model._auto:
                 continue
 
             ondelete = (field.ondelete or {}).get(selection.value)
@@ -1533,6 +1547,7 @@ class IrModelConstraint(models.Model):
     """
     _name = 'ir.model.constraint'
     _description = 'Model Constraint'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1661,7 +1676,7 @@ class IrModelConstraint(models.Model):
         # map each constraint on the name of the module where it is defined
         constraint_module = {
             constraint[0]: cls._module
-            for cls in reversed(type(model).mro())
+            for cls in reversed(self.env.registry[model._name].mro())
             if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
@@ -1685,6 +1700,7 @@ class IrModelRelation(models.Model):
     """
     _name = 'ir.model.relation'
     _description = 'Relation Model'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1747,6 +1763,7 @@ class IrModelAccess(models.Model):
     _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1954,6 +1971,7 @@ class IrModelData(models.Model):
     _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='External Identifier', required=True,
                        help="External Key/Identifier that can be used for "

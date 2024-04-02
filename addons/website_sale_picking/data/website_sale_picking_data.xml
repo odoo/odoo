@@ -3,6 +3,7 @@
 
     <record id="payment_provider_onsite" model="payment.provider">
         <field name="name">Pay in store when picking the product</field>
+        <field name="module_id" ref="base.module_website_sale_picking"/>
         <field name="code">custom</field>
         <field name="state">enabled</field>
         <field name="custom_mode">onsite</field>

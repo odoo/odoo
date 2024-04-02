@@ -12,9 +12,11 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
     def test_01_multi_domain_assets_generation(self):
         Website = self.env['website']
         Attachment = self.env['ir.attachment']
+        # Create an additional website to ensure it works in multi-website setup
+        Website.create({'name': 'Second Website'})
         # Simulate single website DBs: make sure other website do not interfer
         # (We can't delete those, constraint will most likely be raised)
-        Website.search([]).write({'domain': 'inactive.test'})
+        [w.write({'domain': f'inactive-{w.id}.test'}) for w in Website.search([])]
         # Don't use HOST, hardcode it so it doesn't get changed one day and make
         # the test useless
         domain_1 = "http://127.0.0.1:%s" % config['http_port']

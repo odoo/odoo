@@ -217,13 +217,15 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     }
                     if (Object.keys(this.options.triggeredQuestionsByAnswer).includes($target.val())) {
                         // Display depending question
+                        const selectedAnswerId = parseInt($target.val());
                         this.options.triggeredQuestionsByAnswer[$target.val()].forEach(function (questionId) {
                             if (!treatedQuestionIds.includes(questionId)) {
                                 var dependingQuestion = $('.js_question-wrapper#' + questionId);
                                 dependingQuestion.removeClass('d-none');
-
-                                // Add answer to selected answer
-                                self.selectedAnswers.push(parseInt($target.val()));
+                                if (!self.selectedAnswers.includes(selectedAnswerId)) {
+                                    // Add answer to selected answer
+                                    self.selectedAnswers.push(selectedAnswerId);
+                                }
                             }
                         });
                     }

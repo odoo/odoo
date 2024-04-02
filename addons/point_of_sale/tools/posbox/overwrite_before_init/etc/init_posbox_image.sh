@@ -27,7 +27,7 @@ apt-get update && apt-get -y upgrade
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
-password="$(openssl rand -base64 32)"
+password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 
 PKGS_TO_INSTALL="
@@ -80,8 +80,10 @@ PKGS_TO_INSTALL="
     python3-tz \
     python3-urllib3 \
     python3-werkzeug \
+    python3-venv \
     rsync \
     screen \
+    swig \
     unclutter \
     vim \
     x11-utils \
@@ -114,9 +116,15 @@ PIP_TO_INSTALL="
     v4l2 \
     pysmb==1.2.9.1 \
     cryptocode==0.1 \
+    PyKCS11 \
+    vcgencmd \
+    RPi.GPIO \
     rjsmin==1.1.0"
 
-pip3 install ${PIP_TO_INSTALL}
+mkdir venv
+python3 -m venv venv
+venv/bin/pip3 install ${PIP_TO_INSTALL}
+rsync -avrhp venv/lib/python3.11/site-packages/* /usr/lib/python3/dist-packages/
 
 # Dowload MPD server and library for Six terminals
 wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
@@ -142,7 +150,6 @@ echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 update-rc.d -f hostapd remove
 update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
-update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
 systemctl enable led-status.service
@@ -150,7 +157,7 @@ systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target
 systemctl disable getty@tty1.service
-systemctl disable systemd-timesyncd.service
+systemctl enable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
@@ -177,3 +184,6 @@ create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir -v /root_bypass_ramdisks
+
+echo "password"
+echo ${password}

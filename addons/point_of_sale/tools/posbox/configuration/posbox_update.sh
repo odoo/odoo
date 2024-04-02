@@ -3,6 +3,7 @@
 sudo mount -o remount,rw /
 
 sudo service led-status stop
+sudo service odoo stop
 
 cd /home/pi/odoo
 localbranch=$(git symbolic-ref -q --short HEAD)

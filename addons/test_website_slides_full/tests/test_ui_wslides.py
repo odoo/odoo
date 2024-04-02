@@ -4,13 +4,20 @@
 from dateutil.relativedelta import relativedelta
 from odoo.fields import Datetime
 from odoo import tests
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
 
+
 @tests.common.tagged('post_install', '-at_install')
-class TestUi(TestUICommon):
+class TestUi(AccountTestInvoicingCommon, TestUICommon):
 
     def test_course_certification_employee(self):
         user_demo = self.user_demo
+        self.user_demo.write({
+            'company_id': self.env.company.id,
+            'company_ids': [(6, 0, self.env.company.ids)],
+        })
+        self.user_demo.sudo().partner_id.company_id = self.env.company
         # Avoid Billing/Shipping address page
         user_demo.write({
             'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)],
@@ -25,10 +32,13 @@ class TestUi(TestUICommon):
 
         # Specify Accounting Data
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env['payment.provider'].search([('code', '=', 'demo')]).write({
+        self.env['payment.provider'].sudo().search([('code', '=', 'demo')]).write({
             'journal_id': cash_journal.id,
-            'state': 'test'
+            'state': 'test',
+            'website_id': self.env.ref('website.default_website').id,
+            'company_id': self.env.company.id,
         })
+        self.env.ref('website.default_website').company_id = self.env.company
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',

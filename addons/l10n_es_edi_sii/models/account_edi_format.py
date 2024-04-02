@@ -277,7 +277,7 @@ class AccountEdiFormat(models.Model):
 
             # === Invoice ===
 
-            invoice_node['DescripcionOperacion'] = invoice.invoice_origin or 'manual'
+            invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
             if invoice.is_sale_document():
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': invoice.company_id.vat[2:]}
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.name[:60]
@@ -286,11 +286,8 @@ class AccountEdiFormat(models.Model):
                         **partner_info,
                         'NombreRazon': com_partner.name[:120],
                     }
-
-                if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02' if export_exempts else '01'
             else:
                 info['IDFactura']['IDEmisorFactura'] = partner_info
                 info['IDFactura']['NumSerieFacturaEmisor'] = invoice.ref[:60]
@@ -305,11 +302,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                country_code = com_partner.country_id.code
-                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
+                mod_303_10 = self.env.ref('l10n_es.mod_303_10')
+                mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+                tax_tags = invoice.invoice_line_ids.tax_ids.invoice_repartition_line_ids.tag_ids
+                intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -389,14 +386,17 @@ class AccountEdiFormat(models.Model):
                 if tax_details_info_other_vals['tax_details_info']:
                     invoice_node['DesgloseFactura']['DesgloseIVA'] = tax_details_info_other_vals['tax_details_info']
 
-                invoice_node['ImporteTotal'] = round(sign * (
-                    tax_details_info_isp_vals['tax_details']['base_amount']
-                    + tax_details_info_isp_vals['tax_details']['tax_amount']
-                    - tax_details_info_isp_vals['tax_amount_retention']
-                    + tax_details_info_other_vals['tax_details']['base_amount']
-                    + tax_details_info_other_vals['tax_details']['tax_amount']
-                    - tax_details_info_other_vals['tax_amount_retention']
-                ), 2)
+                if any(t.l10n_es_type == 'ignore' for t in invoice.invoice_line_ids.tax_ids):
+                    invoice_node['ImporteTotal'] = round(sign * (
+                            tax_details_info_isp_vals['tax_details']['base_amount']
+                            + tax_details_info_isp_vals['tax_details']['tax_amount']
+                            + tax_details_info_other_vals['tax_details']['base_amount']
+                            + tax_details_info_other_vals['tax_details']['tax_amount']
+                    ), 2)
+                else: # Intra-community -100 repartition line needs to be taken into account
+                    invoice_node['ImporteTotal'] = round(-invoice.amount_total_signed
+                                                         - sign * tax_details_info_isp_vals['tax_amount_retention']
+                                                         - sign * tax_details_info_other_vals['tax_amount_retention'], 2)
 
                 invoice_node['CuotaDeducible'] = round(sign * (
                     tax_details_info_isp_vals['tax_amount_deductible']
@@ -568,7 +568,7 @@ class AccountEdiFormat(models.Model):
                                         "the response.  Make sure it is not because of a wrong configuration."))
 
             elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
-                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+                return self.with_context(error_1117=True)._l10n_es_edi_sii_post_invoices(invoices)
 
 
             else:

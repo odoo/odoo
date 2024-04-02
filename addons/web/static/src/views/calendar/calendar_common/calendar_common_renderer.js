@@ -84,7 +84,7 @@ export class CalendarCommonRenderer extends Component {
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
-            firstDay: this.props.model.firstDayOfWeek % 7,
+            firstDay: this.props.model.firstDayOfWeek,
             header: false,
             height: "parent",
             locale: luxon.Settings.defaultLocale,
@@ -171,13 +171,6 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (this.env.isSmall && this.props.model.scale === "month") {
-            this.props.model.load({
-                date: luxon.DateTime.fromISO(info.dateStr),
-                scale: "day",
-            });
-            return;
-        }
         this.props.createRecord(this.fcEventToRecord(info));
     }
     onDayRender(info) {

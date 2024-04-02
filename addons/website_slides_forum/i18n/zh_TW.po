@@ -5,6 +5,7 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2022
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:53+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "<b>回答不應該添加或擴展問題。</b>而是應編輯問題或�
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead, either edit the "
 "question or add a comment."
-msgstr ""
+msgstr "<b>答案不應添加或擴展問題 </b>。 相反，可選擇編輯問題或添加評論。"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -142,11 +143,13 @@ msgid ""
 "<i class=\"fa fa-comments\"/><span class=\"ms-1 d-none d-md-inline-"
 "block\">Forum</span>"
 msgstr ""
+"<i class=\"fa fa-comments\"/><span class=\"ms-1 d-none d-md-inline-"
+"block\">討論區</span>"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_header
 msgid "<i class=\"fa fa-home\"/> Course"
-msgstr "<i class=\"fa fa-home\"/> 學習論壇"
+msgstr "<i class=\"fa fa-home\"/> 課程"
 
 #. module: website_slides_forum
 #: model:forum.forum,name:website_slides_forum.forum_forum_demo_channel_0
@@ -161,7 +164,7 @@ msgstr "查看我們的課程"
 #. module: website_slides_forum
 #: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
 msgid "Come back later to monitor and moderate what is posted on your Forums."
-msgstr ""
+msgstr "請稍後回來，監察及管理討論區發佈的內容。"
 
 #. module: website_slides_forum
 #: model:ir.model,name:website_slides_forum.model_slide_channel
@@ -210,6 +213,8 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
+"舉例，如果你提出一個有趣的問題，或提供了有用的答案，你發佈的內容會被正評。相反，若答案有誤導性，它將會被負評。每個正評當作 10 分計算，每個負評會扣 "
+"2 分。在同一天內，一個問題或答案最多可以累積 200 分。有關各類版主審批權限的最低信譽積分要求，請見文末列表。"
 
 #. module: website_slides_forum
 #: model:ir.model,name:website_slides_forum.model_forum_forum
@@ -224,7 +229,7 @@ msgstr "論壇"
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "討論區頁面"
 
 #. module: website_slides_forum
 #: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_channel
@@ -247,7 +252,7 @@ msgstr "論壇"
 #. module: website_slides_forum
 #: model_terms:ir.actions.act_window,help:website_slides_forum.forum_forum_action_channel
 msgid "Forums allow your attendees to ask questions to your community."
-msgstr ""
+msgstr "課程參加者可在討論區向社群提問請教。"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -283,7 +288,7 @@ msgstr ""
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.res_config_settings_view_form
 msgid "Manage Forums"
-msgstr ""
+msgstr "管理討論區"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0
@@ -294,7 +299,7 @@ msgstr "此外："
 #. module: website_slides_forum
 #: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
 msgid "No Forum Post yet!"
-msgstr ""
+msgstr "未有討論區帖文。"
 
 #. module: website_slides_forum
 #: model:ir.model.fields,field_description:website_slides_forum.field_slide_channel__forum_total_posts
@@ -330,7 +335,7 @@ msgstr "查看所有課程"
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.snippet_options
 msgid "Separate Courses"
-msgstr ""
+msgstr "單獨課程"
 
 #. module: website_slides_forum
 #: model_terms:forum.forum,faq:website_slides_forum.forum_forum_demo_channel_0

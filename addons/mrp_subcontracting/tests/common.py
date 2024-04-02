@@ -8,6 +8,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMrpSubcontractingCommon, cls).setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         # 1: Create a subcontracting partner
         main_partner = cls.env['res.partner'].create({'name': 'main_partner'})
         cls.subcontractor_partner1 = cls.env['res.partner'].create({

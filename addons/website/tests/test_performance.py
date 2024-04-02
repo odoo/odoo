@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import copy
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 
 from contextlib import nullcontext
 
@@ -19,8 +20,7 @@ be added:
     cr.close()
 """
 
-
-class UtilPerf(HttpCase):
+class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _get_url_hot_query(self, url, cache=True, table_count=False):
         """ This method returns the number of SQL Queries used inside a request.
         The returned query number will be the same as a "real" (outside of test
@@ -86,6 +86,12 @@ class UtilPerf(HttpCase):
 
 
 class TestStandardPerformance(UtilPerf):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.users'].browse(2).image_1920 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+
     @mute_logger('odoo.http')
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')

@@ -306,6 +306,57 @@ class WithContext(HttpCase):
         canonical_url = root_html.xpath('//link[@rel="canonical"]')[0].attrib['href']
         self.assertIn(canonical_url, [f"{website.domain}/", f"{website.domain}/page_1"])
 
+    def test_website_homepage_url_change(self):
+        website = self.env['website'].browse([1])
+        self.assertFalse(website.homepage_url)
+
+        test_page = self.env['website.page'].create({
+            'name': 'HomepageUrlTest',
+            'type': 'qweb',
+            'arch': '<div>HomepageUrlTest</div>',
+            'key': 'test.homepage_url_test',
+            'url': '/homepage_url_test',
+            'is_published': True,
+        })
+        self.assertEqual(test_page.url, '/homepage_url_test')
+
+        # If one has set the `homepage_url` to a specific page URL..
+        website.write({
+            'name': 'Test Website',
+            'domain': f'http://{HOST}:{config["http_port"]}',
+            'homepage_url': test_page.url,
+        })
+        home_url_full = website.domain + '/'
+        r = self.url_open('/')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(b"HomepageUrlTest", r.content)
+
+        # .. and then change that page URL ..
+        with MockRequest(self.env, website=website):
+            test_page.url = '/url-changed'
+
+        # .. the `homepage_url` should be changed to follow the new page URL
+        self.assertEqual(website.homepage_url, '/url-changed')
+        r = self.url_open('/')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(
+            r.url, home_url_full, """URL should still be '/', note that if this
+            `assert` fail, the loaded URL will probably be the first available
+            menu different from '/', see homepage controller.""")
+        self.assertIn(b"HomepageUrlTest", r.content)
+
+        # Side test: ensure `slugify` and `get_unique_path` changes are
+        # correctly replicated in the synced website homepage_url
+        with MockRequest(self.env, website=website):
+            # `/url-changed_two` will become `/url-changed-two`
+            test_page.url = '/url-changed_two'
+        self.assertEqual(website.homepage_url, '/url-changed-two')
+        r = self.url_open('/')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, home_url_full)
+        self.assertIn(b"HomepageUrlTest", r.content)
+
     def test_06_homepage_url(self):
         # Setup
         website = self.env['website'].browse([1])

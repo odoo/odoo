@@ -42,7 +42,7 @@ options.registry.CoverProperties.include({
     updateUI: async function () {
         const isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
         if (!isBlogCover) {
-            return;
+            return this._super(...arguments);
         }
         var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
         var $coverFull = this.$el.find('[data-select-class*="o_full_screen_height"]');

@@ -24,7 +24,10 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        excluded_fields = super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_id']
+        if self.env['ir.config_parameter'].sudo().get_param('purchase_stock.merge_different_procurement'):
+            excluded_fields += ['procure_method']
+        return excluded_fields
 
     def _should_ignore_pol_price(self):
         self.ensure_one()
@@ -41,9 +44,9 @@ class StockMove(models.Model):
         received_qty = line.qty_received
         if self.state == 'done':
             received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom, rounding_method='HALF-UP')
-        if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
-            move_layer = line.move_ids.stock_valuation_layer_ids
-            invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
+        if line.product_id.purchase_method == 'purchase' and float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
+            move_layer = line.move_ids.sudo().stock_valuation_layer_ids
+            invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             receipt_value = 0
             if move_layer:
@@ -54,7 +57,9 @@ class StockMove(models.Model):
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             invoiced_value = 0
             invoiced_qty = 0
-            for invoice_line in line.invoice_lines:
+            for invoice_line in line.sudo().invoice_lines:
+                if invoice_line.move_id.state != 'posted':
+                    continue
                 if invoice_line.tax_ids:
                     invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
                         invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
@@ -65,7 +70,7 @@ class StockMove(models.Model):
             remaining_value = invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
-            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec) if remaining_value and remaining_qty else line._get_gross_price_unit()
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
@@ -84,29 +89,23 @@ class StockMove(models.Model):
 
         rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
         purchase_currency = self.purchase_line_id.currency_id
-        if not self.purchase_line_id or purchase_currency == self.company_id.currency_id:
+        company_currency = self.company_id.currency_id
+        if not self.purchase_line_id or purchase_currency == company_currency:
             return rslt
         svl = self.env['stock.valuation.layer'].browse(svl_id)
         if not svl.account_move_line_id:
-            if(self.purchase_line_id.product_id.cost_method == 'standard'):
-                purchase_price_unit = self.purchase_line_id.product_id.cost_currency_id._convert(
-                    self.purchase_line_id.product_id.standard_price,
-                    purchase_currency,
-                    self.company_id,
-                    self.date,
-                    round=False,
-                )
-            else:
-                # Do not use price_unit since we want the price tax excluded. And by the way, qty
-                # is in the UOM of the product, not the UOM of the PO line.
-                purchase_price_unit = (
-                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-                    if self.purchase_line_id.product_uom_qty
-                    else self.purchase_line_id.price_unit
-                )
-            currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
-            rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
-            rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
+            rslt['credit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['credit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                self.date
+            )
+            rslt['debit_line_vals']['amount_currency'] = company_currency._convert(
+                rslt['debit_line_vals']['balance'],
+                purchase_currency,
+                self.company_id,
+                self.date
+            )
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
         else:
@@ -197,12 +196,7 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier" or (
-                self.location_dest_id.usage == "internal"
-                and self.location_id.usage != "supplier"
-                and self.warehouse_id
-                and self.location_dest_id not in self.env["stock.location"].search([("id", "child_of", self.warehouse_id.view_location_id.id)])
-        )
+        return self.location_dest_id.usage == "supplier"
 
     def _get_all_related_aml(self):
         # The back and for between account_move and account_move_line is necessary to catch the

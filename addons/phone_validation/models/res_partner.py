@@ -11,14 +11,14 @@ class Partner(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self._phone_format(self.phone)
+            self.phone = self._phone_format(self.phone, force_format='INTERNATIONAL')
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self._phone_format(self.mobile)
+            self.mobile = self._phone_format(self.mobile, force_format='INTERNATIONAL')
 
-    def _phone_format(self, number, country=None, company=None):
+    def _phone_format(self, number, country=None, company=None, force_format='E164'):
         country = country or self.country_id or self.env.company.country_id
         if not country or not number:
             return number
@@ -26,7 +26,7 @@ class Partner(models.Model):
             number,
             country.code if country else None,
             country.phone_code if country else None,
-            force_format='E164',
+            force_format=force_format,
             raise_exception=False
         )
 

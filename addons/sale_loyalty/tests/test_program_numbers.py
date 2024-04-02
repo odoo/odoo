@@ -3,6 +3,7 @@
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools.float_utils import float_compare
 
@@ -1657,3 +1658,149 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 5, '10$ - 5$(discount) = 5$(total) ')
+
+    def test_fixed_tax_not_affected(self):
+        program = self.env['loyalty.program'].create({
+            'name': '50% discount',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 50,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+        # Create taxes
+        self.tax_15pc_excl = self.env['account.tax'].create({
+            'name': "15% Tax excl",
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        self.tax_10_fixed = self.env['account.tax'].create({
+            'name': "10$ Fixed tax",
+            'amount_type': 'fixed',
+            'amount': 10,
+        })
+
+        # Set tax and prices on products as neeed for the test
+        self.product_A.write({'list_price': 100})
+        self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+
+        # Add products in order
+        self.env['sale.order.line'].create({
+            'product_id': self.product_A.id,
+            'name': 'product A',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 67.5, '100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) ')
+        self.assertEqual(order.amount_tax, 17.5, '15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) ')
+
+    def test_fixed_tax_not_affected_2(self):
+        program = self.env['loyalty.program'].create({
+            'name': '50$ discount',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'per_order',
+                'discount': 50,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        order = self.empty_order
+        # Create taxes
+        self.tax_15pc_excl = self.env['account.tax'].create({
+            'name': "15% Tax excl",
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        self.tax_10_fixed = self.env['account.tax'].create({
+            'name': "10$ Fixed tax",
+            'amount_type': 'fixed',
+            'amount': 10,
+        })
+
+        # Set tax and prices on products as neeed for the test
+        self.product_A.write({'list_price': 100})
+        self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+
+        # Add products in order
+        self.env['sale.order.line'].create({
+            'product_id': self.product_A.id,
+            'name': 'product A',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+
+        self._auto_rewards(order, program)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 75, '100$ + 15% tax + 10$ tax - 50$(discount) = 75$(total) ')
+
+    def test_loyalty_card_tax_total(self):
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Test loyalty card',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'money',
+                'reward_point_amount': 0.01,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+                'discount_applicability': 'cheapest',
+                'required_points': 1,
+            })],
+        })
+        order = self.empty_order
+        self.env['loyalty.card'].create([{
+            'program_id': loyalty_program.id,
+            'partner_id': order.partner_id.id,
+            'points': 3.39,
+        }])
+
+        # Create taxes
+        tax_15pc_excl = self.env['account.tax'].create({
+            'name': "15% Tax excl",
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+
+        # Set tax and prices on products as neeed for the test
+        self.product_A.write({
+            'list_price': 140.0,
+            'taxes_id': [Command.set(tax_15pc_excl.ids)]
+        })
+
+        order.order_line = [
+            Command.create({
+                'product_id': self.product_A.id,
+            }),
+        ]
+
+        self._auto_rewards(order, loyalty_program)
+
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.order_line[0].tax_id, tax_15pc_excl)
+        self.assertEqual(order.order_line[1].tax_id, tax_15pc_excl)
+        self.assertEqual(order.amount_total, 156.0, '140$ + 15% - 5$ = 156$')

@@ -182,6 +182,10 @@ class SaleOrderLine(models.Model):
         if product.description_purchase:
             name += '\n' + product.description_purchase
 
+        line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
+        if line_description:
+            name += line_description
+
         return {
             'name': name,
             'product_qty': purchase_qty_uom,
@@ -193,6 +197,12 @@ class SaleOrderLine(models.Model):
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
         }
+
+    def _retrieve_purchase_partner(self):
+        """ In case we want to explicitely name a partner from whom we want to buy or receive products
+        """
+        self.ensure_one()
+        return False
 
     def _purchase_service_create(self, quantity=False):
         """ On Sales Order confirmation, some lines (services ones) can create a purchase order line and maybe a purchase order.
@@ -206,7 +216,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line = line.with_company(line.company_id)
             # determine vendor of the order (take the first matching company and product)
-            suppliers = line.product_id._select_seller(quantity=line.product_uom_qty, uom_id=line.product_uom)
+            suppliers = line.product_id._select_seller(partner_id=line._retrieve_purchase_partner(), quantity=line.product_uom_qty, uom_id=line.product_uom)
             if not suppliers:
                 raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
             supplierinfo = suppliers[0]

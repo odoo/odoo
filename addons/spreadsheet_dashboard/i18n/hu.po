@@ -5,18 +5,18 @@
 # Translators:
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Martin Trigaux, 2022
 # gezza <geza.nagy@oregional.hu>, 2022
 # krnkris, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2023
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,21 +25,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (másolat)"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
 msgstr "VISSZA"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
@@ -110,6 +117,13 @@ msgid "ID"
 msgstr "Azonosító"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "Invalid JSON Data"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard____last_update
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group____last_update
 msgid "Last Modified on"
@@ -128,7 +142,7 @@ msgid "Last Updated on"
 msgstr "Frissítve ekkor"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "Loading..."
@@ -141,14 +155,14 @@ msgid "Name"
 msgstr "Név"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
 msgstr ""
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 #, python-format
 msgid ""
@@ -168,6 +182,7 @@ msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 #, python-format
 msgid "Sheet1"

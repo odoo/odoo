@@ -146,3 +146,4 @@ class SetupBarBankConfigWizard(models.TransientModel):
         extension hook in account_bank_statement_import.
         """
         self.linked_journal_id.mark_bank_setup_as_done_action()
+        return {'type': 'ir.actions.client', 'tag': 'soft_reload'}

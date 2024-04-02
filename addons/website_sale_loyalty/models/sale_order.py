@@ -22,8 +22,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'sale_ok':
                     continue
                 res[idx] = ('ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _get_trigger_domain(self):
         res = super()._get_trigger_domain()
@@ -33,8 +33,8 @@ class SaleOrder(models.Model):
                 if leaf[0] != 'program_id.sale_ok':
                     continue
                 res[idx] = ('program_id.ecommerce_ok', '=', True)
-                break
-        return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+                return expression.AND([res, [('program_id.website_id', 'in', (self.website_id.id, False))]])
+        return res
 
     def _try_pending_coupon(self):
         if not request:
@@ -157,6 +157,14 @@ class SaleOrder(models.Model):
         return code
 
     def _cart_update(self, *args, **kwargs):
+        product_id, set_qty = kwargs['product_id'], kwargs.get('set_qty')
+
+        line = self.order_line.filtered(lambda l: l.product_id.id == product_id)
+        reward_id = line.reward_id
+        if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
+            # Force the deletion of the line even if it's a temporary record created by new()
+            kwargs['line_id'] = line.id
+
         res = super(SaleOrder, self)._cart_update(*args, **kwargs)
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
@@ -195,3 +203,12 @@ class SaleOrder(models.Model):
             'promo_code_success': promo_code_success,
             'promo_code_error': promo_code_error,
         }
+
+    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
+        """ Override to filter out reward lines from the cart lines.
+
+        These are handled by the _update_programs_and_rewards and _auto_apply_rewards methods.
+        """
+        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
+        lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
+        return lines

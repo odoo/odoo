@@ -139,4 +139,54 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     TicketScreen.check.refundedNoteContains('2.00 Refunded');
 
     Tour.register('TicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.do.clickDisplayedProduct('Product Test');
+    ProductScreen.check.totalAmountIs('100.00');
+    ProductScreen.do.changeFiscalPosition('No Tax');
+    ProductScreen.check.totalAmountIs('86.96');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.00');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+    ReceiptScreen.do.clickNextOrder();
+    ProductScreen.do.clickRefund();
+    TicketScreen.do.selectOrder('-0001');
+    TicketScreen.do.clickOrderline('Product Test');
+    TicketScreen.do.pressNumpad('1');
+    TicketScreen.check.toRefundTextContains('To Refund: 1.00');
+    TicketScreen.do.confirmRefund();
+    ProductScreen.check.isShown();
+    ProductScreen.check.totalAmountIs('-86.96');
+
+    Tour.register('FiscalPositionNoTaxRefund', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.do.clickDisplayedProduct('Product A');
+    ProductScreen.do.enterLotNumber('123456789');
+    ProductScreen.check.selectedOrderlineHas('Product A', '1.00');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+    ReceiptScreen.do.clickNextOrder();
+    ProductScreen.do.clickRefund();
+    TicketScreen.do.selectOrder('-0001');
+    TicketScreen.do.clickOrderline('Product A');
+    TicketScreen.do.pressNumpad('1');
+    TicketScreen.check.toRefundTextContains('To Refund: 1.00');
+    TicketScreen.do.confirmRefund();
+    ProductScreen.check.isShown();
+    ProductScreen.do.clickLotIcon();
+    ProductScreen.check.checkFirstLotNumber('123456789');
+
+    Tour.register('LotRefundTour', { test: true, url: '/pos/ui' }, getSteps());
+
 });

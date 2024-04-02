@@ -415,6 +415,39 @@ class TestPacking(TestPackingCommon):
         with self.assertRaises(UserError):
             picking._action_done()
 
+    def test_pack_delivery_three_step_propagate_package_consumable(self):
+        """ Checks all works right in the following case:
+          * For a three-step delivery
+          * Put products in a package then validate the receipt.
+          * The automatically generated internal transfer should have package set by default.
+        """
+        prod = self.env['product.product'].create({'name': 'bad dragon', 'type': 'consu'})
+        ship_move = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': prod.id,
+            'product_uom_qty': 5.0,
+            'product_uom': prod.uom_id.id,
+            'location_id': self.warehouse.wh_output_stock_loc_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'warehouse_id':  self.warehouse.id,
+            'picking_type_id':  self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
+        })
+
+        # create chained pick/pack moves to test with
+        ship_move._assign_picking()
+        ship_move._action_confirm()
+        pack_move = ship_move.move_orig_ids[0]
+        pick_move = pack_move.move_orig_ids[0]
+
+        picking = pick_move.picking_id
+        picking.action_confirm()
+        picking.action_put_in_pack()
+        self.assertTrue(picking.move_line_ids.result_package_id)
+        picking.button_validate()
+        self.assertEqual(pack_move.move_line_ids.result_package_id, picking.move_line_ids.result_package_id)
+
     def test_pack_in_receipt_two_step_single_putway(self):
         """ Checks all works right in the following specific corner case:
 
@@ -1481,3 +1514,72 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
+
+    def test_expected_package_move_lines(self):
+        """ Test direct calling of `_package_move_lines` since it doesn't handle all multi-record cases
+        It's unlikely this situations will occur, but in case it is for customizations/future features,
+        ensure that we don't have unexpected behavior """
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
+
+        internal_picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': internal_picking_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        internal_picking_2 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'immediate_transfer': True
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': internal_picking_2.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        # can't mix immediate transfers + not-immediate transfers
+        with self.assertRaises(UserError):
+            move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+
+        in_picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': in_picking_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        # can't mix operation types
+        with self.assertRaises(UserError):
+            move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+
+        internal_picking_2.immediate_transfer = False
+        move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+        self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")

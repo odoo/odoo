@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.addons.website_slides.tests import common as slides_common
 from odoo.exceptions import UserError
 from odoo.tests.common import users
+from unittest.mock import patch
 
 
 class TestSlidesManagement(slides_common.SlidesCase):
@@ -174,6 +174,38 @@ class TestSlidesManagement(slides_common.SlidesCase):
         self.assertFalse(self.channel.exists(),
             "Should have deleted channel along with the slides even if there are slides with quiz and participant(s)")
 
+    def test_default_completion_time(self):
+        """Verify whether the system calculates the completion time when it is not specified,
+        but if the user does provide a completion time, the default time should not be applied."""
+
+        def _get_completion_time_pdf(*args, **kwargs):
+            return 13.37
+
+        with patch(
+            'odoo.addons.website_slides.models.slide_slide.Slide._get_completion_time_pdf',
+            new=_get_completion_time_pdf
+        ):
+            slides_1 = self.env['slide.slide'].create({
+                'name': 'Test_Content',
+                'slide_category': 'document',
+                'is_published': True,
+                'is_preview': True,
+                'document_binary_content': 'c3Rk',
+                'channel_id': self.channel.id,
+            })
+
+            slides_2 = self.env['slide.slide'].create({
+                'name': 'Test_Content',
+                'slide_category': 'document',
+                'is_published': True,
+                'is_preview': True,
+                'document_binary_content': 'c3Rk',
+                'channel_id': self.channel.id,
+                'completion_time': 123,
+            })
+
+        self.assertEqual(13.37, slides_1.completion_time)
+        self.assertEqual(123.0, slides_2.completion_time)
 
 class TestSequencing(slides_common.SlidesCase):
 

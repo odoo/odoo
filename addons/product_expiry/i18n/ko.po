@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -68,11 +68,6 @@ msgid "Best before Date"
 msgstr "유통기한"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-msgid "Best before:"
-msgstr "유통기한:"
-
-#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
 msgid "Config Settings"
 msgstr "설정 구성"
@@ -88,6 +83,7 @@ msgid "Confirm Expiry"
 msgstr "유효기간 승인"
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 #, python-format
@@ -312,6 +308,7 @@ msgid "The Expiration Date has been reached."
 msgstr "유통기한이 임박했습니다."
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
@@ -368,11 +365,6 @@ msgid "Use Expiration Date"
 msgstr "유통기한 사용"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-msgid "Use by:"
-msgstr "사용자:"
-
-#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
@@ -386,6 +378,7 @@ msgid ""
 msgstr "체크박스가 선택되면, 품목과 관련된 lot/시리얼 번호에 품목이 유효기간을 관리할 특정날짜가 생성됩니다."
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
@@ -396,6 +389,7 @@ msgstr ""
 "정말 승인하시겠습니까?"
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""

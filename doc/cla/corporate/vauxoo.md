@@ -67,3 +67,9 @@ Rolando Duarte rolando@vauxoo.com https://github.com/rolandojduartem
 Andy Quijada andy@vauxoo.com https://github.com/ajqn9094
 Carlos Carral carlos.c@vauxoo.com https://github.com/carralc
 Luis Manuel luis.manuel@vauxoo.com https://github.com/LuisMzz
+Alejandro Mellado alejandromm@vauxoo.com https://github.com/alejandromellado
+Andrea Geraldo myrna.andrea@vauxoo.com https://github.com/AndreaGeraldo
+Andrea Gidalti andreag@vauxoo.com  https://github.com/andreagidaltig
+German Loredo german@vauxoo.com https://github.com/xmglord 
+Antonio Aguilar antonio@vauxoo.com https://github.com/antonag32
+Christihan Laurel laurel@vauxoo.com https://github.com/CLaurelB

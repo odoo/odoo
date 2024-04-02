@@ -745,8 +745,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         order_line.product_uom_qty = 10
         self.assertEqual(allocated_hours, order_line.project_id.allocated_hours, 'Project allocated hours should not be changed.')
 
-    def test_different_uom_sol_to_hours_when_confrim_sale_order(self):
-        """ Test check whether the project allocated hours are set correctly or not when the product is different in the sale order line.
+    def test_different_uom_to_hours_on_sale_order_confirmation(self):
+        """ Verify correctness of a project's allocted hours for multiple UOMs.
 
             The conversion to time should be processed as follows :
                 H : qty = uom_qty [Hours]
@@ -759,29 +759,37 @@ class TestSaleService(TestCommonSaleTimesheet):
             1) Create a 4 SOL on a SO With different UOM
             2) Confirm the SO
             3) Check the project allocated hour is correctly set
+            4) Repeat with different timesheet encoding UOM
         """
 
         self.env['sale.order.line'].create([{
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 2,
-            'product_uom': self.env.ref('uom.product_uom_day').id,
+            'product_uom': self.env.ref('uom.product_uom_day').id, # 16 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 8,
-            'product_uom': self.env.ref('uom.product_uom_hour').id,
+            'product_uom': self.env.ref('uom.product_uom_hour').id, # 8 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 1,
-            'product_uom': self.env.ref('uom.product_uom_dozen').id,
+            'product_uom': self.env.ref('uom.product_uom_dozen').id, # 0 hours
         }, {
             'order_id': self.sale_order.id,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 6,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id, # 6 hours
         }])
         self.sale_order.action_confirm()
-        project_allocated_hours = self.sale_order.order_line[0].project_id.allocated_hours
-        self.assertEqual(30, project_allocated_hours, 'current set the project allocated hours.')
+        allocated_hours = self.sale_order.project_ids.allocated_hours
+        self.assertEqual(16 + 8 + 6, allocated_hours,
+                         "Project's allocated hours should add up correctly.")
+
+        self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        so_copy = self.sale_order.copy()
+        so_copy.action_confirm()
+        self.assertEqual(allocated_hours, so_copy.project_ids.allocated_hours,
+                         "Timesheet encoding shouldn't affect hours allocated.")

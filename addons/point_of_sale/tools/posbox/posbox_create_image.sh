@@ -29,11 +29,11 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=16.0
-VERSION_IOTBOX=23.07
+VERSION_IOTBOX=23.11
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspios*.img ; then
-    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/2023-05-03-raspios-bullseye-armhf-lite.img.xz' -O raspios.img.xz
+    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-10-10/2023-10-10-raspios-bookworm-armhf-lite.img.xz' -O raspios.img.xz
     unxz --verbose raspios.img.xz
 fi
 
@@ -62,11 +62,10 @@ cd "${__dir}"
 USR_BIN="${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr/bin/"
 mkdir -pv "${USR_BIN}"
 cd "/tmp"
-curl 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip' > ngrok.zip
-unzip ngrok.zip
-rm -v ngrok.zip
+curl 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.tgz' > ngrok.tgz
+tar xvzf ngrok.tgz -C "${USR_BIN}"
+rm -v ngrok.tgz
 cd "${__dir}"
-mv -v /tmp/ngrok "${USR_BIN}"
 
 # zero pad the image to be around 4.4 GiB, by default the image is only ~2.2 GiB
 echo "Enlarging the image..."
@@ -129,17 +128,17 @@ cp -v "${QEMU_ARM_STATIC}" "${MOUNT_POINT}/usr/bin/"
 
 # 'overlay' the overwrite directory onto the mounted image filesystem
 cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
-chroot "${MOUNT_POINT}" /bin/bash -c "sudo /etc/init_posbox_image.sh"
+chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_posbox_image.sh"
 
 # copy iotbox version
 mkdir -pv "${MOUNT_POINT}"/var/odoo
 echo "${VERSION_IOTBOX}" | tee "${MOUNT_POINT}"/var/odoo/iotbox_version "${MOUNT_POINT}"/home/pi/iotbox_version
 
 # get rid of the git clone
-rm -rfv "${CLONE_DIR}"
+rm -rf "${CLONE_DIR}"
 # and the ngrok usr/bin
-rm -rfv "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
-cp -av "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
+rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
+cp -a "${OVERWRITE_FILES_AFTER_INIT_DIR}"/* "${MOUNT_POINT}"
 
 find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     DIR=$(dirname "${iotpatch}")
@@ -151,7 +150,7 @@ done
 
 # cleanup
 umount -fv "${MOUNT_POINT}"/boot/
-umount -fv "${MOUNT_POINT}"/
+umount -lv "${MOUNT_POINT}"/
 rm -rfv "${MOUNT_POINT}"
 
 echo "Running zerofree..."

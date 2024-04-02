@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -22,8 +23,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })]
         })
-        # Override the default invoice_policy on products
-        discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy = 'order'
+
         product = self.env['product.product'].create({
             'invoice_policy': 'delivery',
             'name': 'Product invoiced on delivery',
@@ -38,6 +38,9 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 })
             ]
         })
+
+        #Check default invoice_policy on discount product
+        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
 
         order._update_programs_and_rewards()
         self._claim_reward(order, discount_coupon_program)
@@ -78,26 +81,34 @@ class TestSaleInvoicing(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })]
         })
-        # Override the default invoice_policy on products
-        discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy = 'order'
 
         order = self.empty_order
 
+        product_6 = self.env['product.product'].create({
+            'name': 'Large Cabinet',
+        })
         # orderline1
         self.env['sale.order.line'].create({
-            'product_id': self.env.ref('product.product_product_6').id,
+            'product_id': product_6.id,
             'name': 'largeCabinet',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
 
+        #Check default invoice_policy on discount product
+        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
+
         self._auto_rewards(order, discount_coupon_program)
 
         self.assertEqual(len(order.order_line), 2, 'Coupon correctly applied')
 
+        product_11 = self.env['product.product'].create({
+            'name': 'Conference Chair',
+        })
+
         # orderline2
         self.env['sale.order.line'].create({
-            'product_id': self.env.ref('product.product_product_11').id,
+            'product_id': product_11.id,
             'name': 'conferenceChair',
             'product_uom_qty': 1.0,
             'order_id': order.id,

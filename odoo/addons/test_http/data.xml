@@ -16,6 +16,14 @@
             <field name="public">True</field>
         </record>
 
+        <record id="xss_svg" model="ir.attachment">
+            <field name="name">xss.svg</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="test_http/static/src/img/xss.svg"/>
+            <field name="url">/test_http/static/src/img/xss.svg</field>
+            <field name="public">True</field>
+        </record>
+
         <record id="rickroll" model="ir.attachment">
             <field name="name">rickroll</field>
             <field name="type">url</field>

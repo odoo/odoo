@@ -9,14 +9,15 @@
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +63,7 @@ msgstr "# Nombre total de tentatives"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
 msgid "# Total Views"
-msgstr "# Total des vues"
+msgstr "# total des vues"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
@@ -79,7 +80,7 @@ msgstr "# d'intégrations"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
 msgid "# of Public Views"
-msgstr "# d'affichages"
+msgstr "# de vues publiques"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
@@ -1312,7 +1313,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_downloadable
 msgid "Allow Download"
-msgstr "Autoriser à télécharger"
+msgstr "Autoriser le téléchargement"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
@@ -1520,6 +1521,12 @@ msgstr "Évaluation moyenne"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
 msgstr "Avis moyen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+"LES BLOCS DE CONSTRUCTION GLISSES ICI SERONT AFFICHES DANS TOUTES LES LEÇONS"
 
 #. module: website_slides
 #. odoo-javascript
@@ -1869,9 +1876,7 @@ msgstr "Coloré"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "Come back later to check the feedbacks given by your Attendees."
-msgstr ""
-"Revenez plus tard pour vérifier les retours d'expérience de vos "
-"participants."
+msgstr "Revenez plus tard pour vérifier les feedbacks de vos participants."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
@@ -2343,8 +2348,8 @@ msgstr "Créer un groupe de cours"
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a community and let Attendees answer each others' questions."
 msgstr ""
-"Créer une communauté et laisser les participants répondre aux questions des "
-"autres."
+"Créer une communauté et laisser les participants répondre aux questions "
+"d'autres participants."
 
 #. module: website_slides
 #. odoo-javascript
@@ -2531,7 +2536,7 @@ msgstr "Je n'aime pas"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Display"
-msgstr "Afficher"
+msgstr "Affichage"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__display_name
@@ -2792,7 +2797,7 @@ msgstr "Profitez de ce contenu exclusif !"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
-msgstr "Message à l'inscription"
+msgstr "Message d'inscription"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
@@ -2883,8 +2888,8 @@ msgid "File Name"
 msgstr "Nom de fichier"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -4105,7 +4110,7 @@ msgstr "Nouvelle certification"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
 msgid "New Content Notification"
-msgstr "Nouvelle notification de contenu"
+msgstr "Notification de nouveau contenu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.snippet_options
@@ -4587,14 +4592,6 @@ msgid "Preview"
 msgstr "Aperçu"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "Privé"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Private Course"
 msgstr "Cours privé"
@@ -4743,7 +4740,7 @@ msgstr "Texte de l'évaluation moyenne"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Évaluation des derniers retours d'expérience"
+msgstr "Évaluation des derniers feedbacks"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_image
@@ -5737,11 +5734,11 @@ msgstr "La diapositive peut être marquée comme non terminée et la progression
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
-"Le lien vidéo à saisir ici peut être obtenu en utilisant le bouton "
-"\"Partager\" dans l'interface Vimeo."
+"Le lien vidéo à saisir ici peut être obtenu en utilisant le bouton 'Partager"
+" le lien' dans l'interface Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -6012,6 +6009,20 @@ msgstr "Erreur inconnue"
 #, python-format
 msgid "Unknown error, try again."
 msgstr "Erreur inconnue, réessayez."
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr "Non répertorié"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
+msgstr "Non répertorié (compte payant)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -6307,7 +6318,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr "Que fait"
+msgstr "Que signifie"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
@@ -6895,11 +6906,11 @@ msgstr "s'inscrire"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
-"signifie ? Le paramètre de confidentialité \"Privé\" de Vimeo signifie qu'il s'agit d'une vidéo qui ne peut être visionnée que par les utilisateurs disposant du lien vers celle-ci.\n"
-"Votre vidéo n'apparaîtra jamais dans les résultats de recherche ni sur votre chaîne."
+" ? Le paramètre de confidentialité \"Non répertorié\" de Vimeo signifie qu'il s'agit d'une vidéo qui ne peut être visionnée que par les utilisateurs disposant du lien vers celle-ci. \n"
+"Votre vidéo n'apparaîtra jamais dans les résultats de recherche, ni sur votre chaîne."
 
 #. module: website_slides
 #. odoo-javascript
@@ -6910,10 +6921,10 @@ msgid ""
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
-"signifie ? YouTube \"non répertorié\" signifie qu'il s'agit d'une vidéo qui "
-"ne peut être visionnée que par les utilisateurs disposant du lien vers "
-"celle-ci. Votre vidéo n'apparaîtra jamais dans les résultats de recherche ni"
-" sur votre chaîne."
+" ? YouTube \"non répertorié\" signifie qu'il s'agit d'une vidéo qui ne peut "
+"être visionnée que par les utilisateurs disposant du lien vers celle-ci. "
+"Votre vidéo n'apparaîtra jamais dans les résultats de recherche ni sur votre"
+" chaîne."
 
 #. module: website_slides
 #. odoo-javascript

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -122,7 +122,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid ", on the"
-msgstr ", auf "
+msgstr ", am"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -163,7 +163,7 @@ msgstr "<span style=\"font-size: 10px;\">Livechat-Unterhaltung</span><br/>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span>Best regards,</span><br/><br/>"
-msgstr "<span>Mit freundlichen Grüßen,</span><br/><br/>"
+msgstr "<span>Mit freundlichen Grüßen</span><br/><br/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -497,14 +497,6 @@ msgstr "Chatbots"
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "Close"
 msgstr "Schließen"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr "Chatfenster schließen"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -871,8 +863,9 @@ msgstr "Anfangszeit des Tages der Sitzung"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "Wie kann ich helfen?"
@@ -1279,7 +1272,7 @@ msgstr "Odoo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
-msgstr "Online-Chat-Name"
+msgstr "Online-Chatname"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__triggering_answer_ids
@@ -1358,7 +1351,7 @@ msgstr "Optionen"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "Prozentsatz der glücklichen Bewertungen"
+msgstr "Prozentsatz der zufriedenen Bewertungen"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_phone
@@ -1537,7 +1530,7 @@ msgstr "Unterhaltung wieder aufnehmen"
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Restarting conversation..."
-msgstr "Unterhaltung wieder aufnehmen"
+msgstr "Unterhaltung wieder aufnehmen ..."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
@@ -1598,7 +1591,7 @@ msgstr "Bericht suchen"
 #: code:addons/im_livechat/static/src/models/messaging_initializer.js:0
 #, python-format
 msgid "See 15 last visited pages"
-msgstr "Siehe 15 zuletzt besuchte Seiten"
+msgstr "Die 15 zuletzt besuchten Seiten ansehen"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1606,6 +1599,13 @@ msgstr "Siehe 15 zuletzt besuchte Seiten"
 #, python-format
 msgid "Select an option above"
 msgstr "Wählen Sie eine der obigen Antworten."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
+#, python-format
+msgid "Send"
+msgstr "Senden"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__sequence
@@ -1932,7 +1932,7 @@ msgstr "Website"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Livechat-Kanäle für Website"
+msgstr "Livechat-Kanäle der Website"
 
 #. module: im_livechat
 #: model:chatbot.script,title:im_livechat.chatbot_script_welcome_bot
@@ -2019,7 +2019,7 @@ msgstr "z. B. „Wie kann ich Ihnen helfen?“"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "e.g. /contactus"
-msgstr "z. B. /kontaktierenSieuns"
+msgstr "z. B. /contactus"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

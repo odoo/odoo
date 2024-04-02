@@ -78,4 +78,25 @@
         <field name="tax_src_id"  ref="00as"/>
         <field name="tax_dest_id" ref="00rcs"/>
     </record>
+
+    <record id="afpttn_it_split_payment_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="split_payment_fiscal_position"/>
+        <field name="tax_src_id"  ref="22v"/>
+        <field name="tax_dest_id" ref="22vsp_group"/>
+    </record>
+    <record id="afpttn_it_split_payment_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="split_payment_fiscal_position"/>
+        <field name="tax_src_id"  ref="10v"/>
+        <field name="tax_dest_id" ref="10vsp_group"/>
+    </record>
+    <record id="afpttn_it_split_payment_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="split_payment_fiscal_position"/>
+        <field name="tax_src_id"  ref="5v"/>
+        <field name="tax_dest_id" ref="5vsp_group"/>
+    </record>
+    <record id="afpttn_it_split_payment_4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="split_payment_fiscal_position"/>
+        <field name="tax_src_id"  ref="4v"/>
+        <field name="tax_dest_id" ref="4vsp_group"/>
+    </record>
 </odoo>

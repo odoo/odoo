@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
+from odoo.osv.expression import AND, OR
 from odoo.tools import float_round
 
 from collections import defaultdict
@@ -103,16 +103,66 @@ class MrpBom(models.Model):
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
+    @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
+    def _check_bom_cycle(self):
+        subcomponents_dict = dict()
+
+        def _check_cycle(components, finished_products):
+            """
+            Check whether the components are part of the finished products (-> cycle). Then, if
+            these components have a BoM, repeat the operation with the subcomponents (recursion).
+            The method will return the list of product variants that creates the cycle
+            """
+            products_to_find = self.env['product.product']
+
+            for component in components:
+                if component in finished_products:
+                    names = finished_products.mapped('display_name')
+                    raise ValidationError(_("The current configuration is incorrect because it would create a cycle "
+                                            "between these products: %s.") % ', '.join(names))
+                if component not in subcomponents_dict:
+                    products_to_find |= component
+
+            bom_find_result = self._bom_find(products_to_find)
+            for component in components:
+                if component not in subcomponents_dict:
+                    bom = bom_find_result[component]
+                    subcomponents = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(component)).product_id
+                    subcomponents_dict[component] = subcomponents
+                subcomponents = subcomponents_dict[component]
+                if subcomponents:
+                    _check_cycle(subcomponents, finished_products | component)
+
+        boms_to_check = self
+        domain = []
+        for product in self.bom_line_ids.product_id:
+            domain = OR([domain, self._bom_find_domain(product)])
+        if domain:
+            boms_to_check |= self.env['mrp.bom'].search(domain)
+
+        for bom in boms_to_check:
+            if not bom.active:
+                continue
+            finished_products = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            if bom.bom_line_ids.bom_product_template_attribute_value_ids:
+                grouped_by_components = defaultdict(lambda: self.env['product.product'])
+                for finished in finished_products:
+                    components = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(finished)).product_id
+                    grouped_by_components[components] |= finished
+                for components, finished in grouped_by_components.items():
+                    _check_cycle(components, finished)
+            else:
+                _check_cycle(bom.bom_line_ids.product_id, finished_products)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'sequence' in vals and self and self[-1].id == self._prefetch_ids[-1]:
+            self.browse(self._prefetch_ids)._check_bom_cycle()
+        return res
+
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids', 'byproduct_ids', 'operation_ids')
     def _check_bom_lines(self):
         for bom in self:
-            for bom_line in bom.bom_line_ids:
-                if bom.product_id:
-                    same_product = bom.product_id == bom_line.product_id
-                else:
-                    same_product = bom.product_tmpl_id == bom_line.product_id.product_tmpl_id
-                if same_product:
-                    raise ValidationError(_("BoM line product %s should not be the same as BoM product.") % bom.display_name)
             apply_variants = bom.bom_line_ids.bom_product_template_attribute_value_ids | bom.operation_ids.bom_product_template_attribute_value_ids | bom.byproduct_ids.bom_product_template_attribute_value_ids
             if bom.product_id and apply_variants:
                 raise ValidationError(_("You cannot use the 'Apply on Variant' functionality and simultaneously create a BoM for a specific variant."))
@@ -122,7 +172,7 @@ class MrpBom(models.Model):
                         "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
                         attribute=ptav.display_name,
                         product=ptav.product_tmpl_id.display_name,
-                        bom_product=bom_line.parent_product_tmpl_id.display_name
+                        bom_product=bom.product_tmpl_id.display_name
                     ))
             for byproduct in bom.byproduct_ids:
                 if bom.product_id:
@@ -399,7 +449,8 @@ class MrpBomLine(models.Model):
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
     manual_consumption = fields.Boolean(
-        'Manual Consumption', default=False, compute='_compute_manual_consumption', store=True, copy=True,
+        'Manual Consumption', default=False, compute='_compute_manual_consumption',
+        readonly=False, store=True, copy=True,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
     manual_consumption_readonly = fields.Boolean(

@@ -48,7 +48,7 @@ class MassMailController(http.Controller):
                 opt_out_list_ids = set([list.id for list in opt_out_list_ids if list not in opt_in_list_ids])
 
                 unique_list_ids = set([list.list_id.id for list in subscription_list_ids])
-                list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids)
+                list_ids = request.env['mailing.list'].sudo().browse(unique_list_ids).filtered('active')
                 unsubscribed_list = ', '.join(str(list.name) for list in mailing.contact_list_ids if list.is_public)
                 return request.render('mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
@@ -64,7 +64,7 @@ class MassMailController(http.Controller):
                 opt_in_lists = request.env['mailing.contact.subscription'].sudo().search([
                     ('contact_id.email_normalized', '=', email),
                     ('opt_out', '=', False)
-                ]).mapped('list_id')
+                ]).mapped('list_id').filtered('active')
                 blacklist_rec = request.env['mail.blacklist'].sudo()._add(email)
                 self._log_blacklist_action(
                     blacklist_rec, mailing_id,

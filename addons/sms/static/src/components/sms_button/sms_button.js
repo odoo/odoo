@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component } = owl;
+const { Component , status } = owl;
 
 export class SendSMSButton extends Component {
     setup() {
@@ -30,8 +30,10 @@ export class SendSMSButton extends Component {
             }
         }, {
             onClose: () => {
-                this.props.record.load();
-                this.props.record.model.notify();
+                if (status(this) !== "destroyed") {
+                    this.props.record.load();
+                    this.props.record.model.notify();
+                }
             },
         });
     }

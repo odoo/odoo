@@ -180,6 +180,7 @@ var ListController = BasicController.extend({
             });
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+            this.$buttons.on('click', '.o_list_select_domain', this._onSelectDomain.bind(this));
         }
         if ($node) {
             this.$buttons.appendTo($node);

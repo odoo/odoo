@@ -150,6 +150,19 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.pay_term_next_10_of_the_month = cls.env['account.payment.term'].create({
+            'name': 'Next 10th of the month',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'months': 0,
+                    'days': -10,
+                    'end_month': True,
+                    'days_after': 10,
+                }),
+            ],
+        })
+
         cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
 
     def assertPaymentTerm(self, pay_term, invoice_date, dates):
@@ -197,18 +210,11 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-01', ['2022-04-14'])
         self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-15', ['2022-05-15'])
         self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-31', ['2022-05-15'])
-
-    def test_wrong_payment_term(self):
-        with self.assertRaises(ValidationError):
-            self.env['account.payment.term'].create({
-                'name': 'Wrong Payment Term',
-                'line_ids': [
-                    (0, 0, {
-                        'value': 'balance',
-                        'months': -1,
-                    }),
-                ],
-            })
+        self.assertPaymentTerm(self.pay_term_next_10_of_the_month, '2022-01-01', ['2022-01-10'])
+        self.assertPaymentTerm(self.pay_term_next_10_of_the_month, '2022-01-09', ['2022-01-10'])
+        self.assertPaymentTerm(self.pay_term_next_10_of_the_month, '2022-01-10', ['2022-01-10'])
+        self.assertPaymentTerm(self.pay_term_next_10_of_the_month, '2022-01-15', ['2022-02-10'])
+        self.assertPaymentTerm(self.pay_term_next_10_of_the_month, '2022-01-31', ['2022-02-10'])
 
     def test_payment_term_compute_method(self):
         def assert_payment_term_values(expected_values_list):

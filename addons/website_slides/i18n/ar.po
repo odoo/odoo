@@ -7,15 +7,17 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Niyas Raphy, 2023
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1517,6 +1519,11 @@ msgid "Average Review"
 msgstr "متوسط التقييم "
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr "سيتم عرض الكتل الإنشائية التي يتم إفلاتها هنا في كافة الدروس "
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -2863,8 +2870,8 @@ msgid "File Name"
 msgstr "اسم الملف"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -3372,6 +3379,8 @@ msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses "
 "%(course_names)s first"
 msgstr ""
+"لا يمكن إرسال رسائل البريد الإلكتروني. قم أولاً بتحديد \"قالب المشاركة\" "
+"للدورات %(course_names)s "
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -4289,7 +4298,7 @@ msgstr "عدد الأخطاء "
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
@@ -4356,6 +4365,12 @@ msgstr "بمجرد انتهائك، لا تنس <b>نشر</b> دورتك. "
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
 msgstr "مفتوح للكل "
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "يمكن نشر مراجعة واحدة فقط لكل دورة. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -4529,14 +4544,6 @@ msgstr "تم نشر العرض التقديمي "
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "معاينة"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "خاص"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5672,11 +5679,11 @@ msgstr "يمكن تعيين الشريحة كغير مكتملة والتقدم 
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
-"يمكن الحصول على رابط الفيديو لادخاله هنا عن طريق استخدام زر 'مشاركة' في "
-"واجهة Vimeo. "
+"يمكن الحصول على رابط الفيديو لإدخاله هنا عن طريق استخدام زر 'مشاركة الرايط' "
+"في واجهة Vimeo. "
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5942,6 +5949,20 @@ msgstr "خطأ غير معروف"
 #, python-format
 msgid "Unknown error, try again."
 msgstr "خطأ غير معروف، حاول مجدداً. "
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr "غير مدرج "
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
+msgstr "غير مدرج (حساب مدفوع) "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
@@ -6813,10 +6834,10 @@ msgstr "تسجيل الدخول"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
-"؟ يعني إعداد الخصوصية \"خاص\" في Vimeo أنه مقطع فيديو يمكن عرضه فقط من قِبَل المستخدمين الذين يملكون الرابط.\n"
+"؟ يعني إعداد الخصوصية \"غير مدرج\" في Vimeo أنه مقطع فيديو يمكن عرضه فقط من قِبَل المستخدمين الذين يملكون الرابط.\n"
 "                                    لن يظهر مقطع الفيديو ضمن نتائج البحث أو في قناتك. "
 
 #. module: website_slides

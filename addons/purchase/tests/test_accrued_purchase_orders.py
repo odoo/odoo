@@ -13,8 +13,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.alt_exp_account = cls.company_data['default_account_expense'].copy()
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
-        cls.product_a.type = 'service'
-        cls.product_b.type = 'service'
+        cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
+        cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
         #analytic distribution
         cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({

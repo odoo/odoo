@@ -135,7 +135,7 @@ class StockPicking(models.Model):
                     move_vals.append({
                         'journal_id': rec.pos_order_id.sale_journal.id,
                         'date': rec.pos_order_id.date_order,
-                        'ref': rec.pos_order_id.name,
+                        'ref': 'pos_order_'+str(rec.pos_order_id.id),
                         'line_ids': [
                             (0, 0, {
                                 'name': rec.pos_order_id.name,
@@ -151,8 +151,7 @@ class StockPicking(models.Model):
                             }),
                         ],
                     })
-                move = self.env['account.move'].create(move_vals)
-                rec.pos_order_id.write({'account_move': move.id})
+                move = self.env['account.move'].sudo().create(move_vals)
                 move.action_post()
         return res
 
@@ -169,7 +168,7 @@ class StockPickingType(models.Model):
     @api.constrains('active')
     def _check_active(self):
         for picking_type in self:
-            pos_config = self.env['pos.config'].search([('picking_type_id', '=', picking_type.id)], limit=1)
+            pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
                 raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
 

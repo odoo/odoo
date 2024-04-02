@@ -316,6 +316,7 @@ class ProductProduct(models.Model):
     def unlink(self):
         unlink_products = self.env['product.product']
         unlink_templates = self.env['product.template']
+        self.packaging_ids.unlink()
         for product in self:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
@@ -516,7 +517,7 @@ class ProductProduct(models.Model):
                 domain = expression.AND([args, domain])
                 product_ids = list(self._search(domain, limit=limit, access_rights_uid=name_get_uid))
             if not product_ids and operator in positive_operators:
-                ptrn = re.compile('(\[(.*?)\])')
+                ptrn = re.compile(r'(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
                     product_ids = list(self._search([('default_code', '=', res.group(2))] + args, limit=limit, access_rights_uid=name_get_uid))
@@ -578,16 +579,16 @@ class ProductProduct(models.Model):
     def _prepare_sellers(self, params=False):
         return self.seller_ids.filtered(lambda s: s.partner_id.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+    def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        res = self.env['product.supplierinfo']
-        sellers = self._prepare_sellers(params)
-        sellers = sellers.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
-        for seller in sellers:
+        sellers_filtered = self._prepare_sellers(params)
+        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
+        sellers = self.env['product.supplierinfo']
+        for seller in sellers_filtered:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -603,9 +604,16 @@ class ProductProduct(models.Model):
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
+            sellers |= seller
+        return sellers
+
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
+        sellers = self._get_filtered_sellers(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, params=params)
+        res = self.env['product.supplierinfo']
+        for seller in sellers:
             if not res or res.partner_id == seller.partner_id:
                 res |= seller
-        return res.sorted('price')[:1]
+        return res and res.sorted('price')[:1]
 
     def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
@@ -691,6 +699,9 @@ class ProductProduct(models.Model):
                                                           and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
         (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
         return result
+
+    def get_contextual_price(self):
+        return self._get_contextual_price()
 
     def _get_contextual_price(self):
         self.ensure_one()

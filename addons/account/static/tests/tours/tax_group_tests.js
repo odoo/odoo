@@ -29,11 +29,11 @@ tour.register('account_tax_group', {
     {
         content: "Add vendor",
         trigger: 'div.o_field_widget.o_field_res_partner_many2one[name="partner_id"] div input',
-        run: 'text Azure Interior',
+        run: 'text Account Tax Group Partner',
     },
     {
         content: "Valid vendor",
-        trigger: '.ui-menu-item a:contains("Azure Interior")',
+        trigger: '.ui-menu-item a:contains("Account Tax Group Partner")',
     },
     // Add First product
     {
@@ -47,11 +47,11 @@ tour.register('account_tax_group', {
     {
         content: "Type item",
         trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
-        run: "text Corner Desk Right Sit",
+        run: "text Account Tax Group Product",
     },
     {
         content: "Valid item",
-        trigger: '.ui-menu-item-wrapper:contains("Corner Desk Right Sit")',
+        trigger: '.ui-menu-item-wrapper:contains("Account Tax Group Product")',
     },
     // Save account.move
     {

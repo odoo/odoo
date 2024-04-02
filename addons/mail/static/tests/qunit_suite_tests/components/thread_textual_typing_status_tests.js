@@ -6,6 +6,7 @@ import {
     start,
     startServer,
 } from '@mail/../tests/helpers/test_utils';
+import { contains } from "@web/../tests/utils";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -28,15 +29,9 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
         },
     });
     await openDiscuss();
-
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "",
-        "Should display no one is currently typing"
-    );
-
+    await contains(".o_ThreadTextualTypingStatus", { text: "" });
     // simulate receive typing notification from demo
-    await afterNextRender(() => messaging.rpc({
+    messaging.rpc({
         route: '/mail/channel/notify_typing',
         params: {
             'channel_id': mailChannelId1,
@@ -45,12 +40,8 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             },
             'is_typing': true,
         },
-    }));
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "Demo is typing...",
-        "Should display that demo user is typing"
-    );
+    });
+    await contains(".o_ThreadTextualTypingStatus", { text: "Demo is typing..." });
 });
 
 QUnit.test('receive other member typing status "is typing" then "no longer is typing"', async function (assert) {

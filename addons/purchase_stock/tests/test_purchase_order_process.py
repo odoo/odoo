@@ -1,6 +1,9 @@
+from odoo import Command, fields
+from odoo.tests import tagged
 from .common import PurchaseTestCommon
 
 
+@tagged('post_install', '-at_install')
 class TestPurchaseOrderProcess(PurchaseTestCommon):
 
     def test_00_cancel_purchase_order_flow(self):

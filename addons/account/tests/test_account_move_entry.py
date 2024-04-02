@@ -68,10 +68,10 @@ class TestAccountMove(AccountTestInvoicingCommon):
         nb_invoices = self.env['account.move'].search_count(domain=[])
         self.test_move.auto_post = 'at_date'
         self.test_move.date = fields.Date.today()
-        with freeze_time(fields.Date.today() - relativedelta(days=1)):
+        with freeze_time(self.test_move.date - relativedelta(days=1)):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'draft')  # can't be posted before its date
-        with freeze_time(fields.Date.today() + relativedelta(days=1)):
+        with freeze_time(self.test_move.date + relativedelta(days=1)):
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
             self.assertEqual(self.test_move.state, 'posted')  # can be posted after its date
         self.assertEqual(nb_invoices, self.env['account.move'].search_count(domain=[]))
@@ -133,6 +133,28 @@ class TestAccountMove(AccountTestInvoicingCommon):
         custom_account.currency_id = self.company_data['currency']
 
         self.test_move.line_ids[0].account_id = custom_account
+
+    def test_fiscal_position_multicompany(self):
+        """A move is assigned a fiscal position that matches its own company."""
+        company1 = self.company_data["company"]
+        company2 = self.company_data_2["company"]
+        partner = self.env['res.partner'].create({'name': 'Belouga'})
+        fpos1 = self.env["account.fiscal.position"].create(
+            {
+                "name": company1.name,
+                "company_id": company1.id,
+            }
+        )
+        fpos2 = self.env["account.fiscal.position"].create(
+            {
+                "name": company2.name,
+                "company_id": company2.id,
+            }
+        )
+        partner.with_company(company1).property_account_position_id = fpos1
+        partner.with_company(company2).property_account_position_id = fpos2
+        self.test_move.sudo().with_company(company2).partner_id = partner
+        self.assertEqual(self.test_move.fiscal_position_id, fpos1)
 
     def test_misc_fiscalyear_lock_date_1(self):
         self.test_move.action_post()
@@ -1073,3 +1095,79 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move = move_form.save()
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.43)
+
+    def test_account_root_multiple_companies(self):
+        account = self.env['account.account'].create({
+            'name': 'account',
+            'code': 'ZZ',
+            'account_type': 'asset_current',
+            'company_id': self.env.company.id,
+        })
+        other_company = self.env['res.company'].create({'name': 'other company'})
+        self.env['account.account'].create({
+            'name': 'other account',
+            'code': 'ZZ',
+            'account_type': 'asset_current',
+            'company_id': other_company.id,
+        })
+        self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': account.id,
+                    'debit': 500.0,
+                    'credit': 0.0,
+                }),
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                }),
+            ]
+        })
+        balance = self.env["account.move.line"].read_group(
+            [("account_id", "=", account.id)], ["balance:sum"], ["account_root_id"]
+        )[0]["balance"]
+        self.assertEqual(balance, 500)
+
+    def test_line_steal(self):
+        honest_move = self.env['account.move'].create({
+            'line_ids': [
+                Command.create({
+                    'name': 'receivable',
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'balance': 500.0,
+                }),
+                Command.create({
+                    'name': 'tax',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'balance': -500.0,
+                }),
+            ]
+        })
+        honest_move.action_post()
+
+        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+            self.env['account.move'].create({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
+
+        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+            self.env['account.move'].create({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
+
+        stealer_move = self.env['account.move'].create({})
+        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+            stealer_move.write({'line_ids': [Command.set(honest_move.line_ids[0].ids)]})
+
+        with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
+            stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
+
+    def test_validate_move_wizard_with_auto_post_entry(self):
+        """ Test that the wizard to validate a move with auto_post is working fine. """
+        self.test_move.date = fields.Date.today() + relativedelta(months=3)
+        self.test_move.auto_post = 'at_date'
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=self.test_move.ids).create({})
+        wizard.force_post = True
+        wizard.validate_move()
+        self.assertTrue(self.test_move.state == 'posted')

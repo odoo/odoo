@@ -87,7 +87,8 @@ class IrActionsReport(models.Model):
     _description = 'Report Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
-    _order = 'name'
+    _order = 'name, id'
+    _allow_sudo_commands = False
 
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
@@ -332,7 +333,7 @@ class IrActionsReport(models.Model):
             return {}
         base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
-        root = lxml.html.fromstring(html)
+        root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
@@ -629,7 +630,7 @@ class IrActionsReport(models.Model):
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except (PdfReadError, TypeError):
+            except (PdfReadError, TypeError, NotImplementedError, ValueError):
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -745,13 +746,25 @@ class IrActionsReport(models.Model):
                 return collected_streams
 
             # In case of multiple docs, we need to split the pdf according the records.
-            # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
+            # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
+            # pages one by one.
+            html_ids_wo_none = [x for x in html_ids if x]
+            reader = PdfFileReader(pdf_content_stream)
+            if reader.numPages == len(res_ids_wo_stream):
+                for i in range(reader.numPages):
+                    attachment_writer = PdfFileWriter()
+                    attachment_writer.addPage(reader.getPage(i))
+                    stream = io.BytesIO()
+                    attachment_writer.write(stream)
+                    collected_streams[res_ids[i]]['stream'] = stream
+                return collected_streams
+
+            # In cases where the number of res_ids != the number of pages,
+            # we split the pdf based on top outlines computed by wkhtmltopdf.
             # An outline is a <h?> html tag found on the document. To retrieve this table,
             # we look on the pdf structure using pypdf to compute the outlines_pages from
             # the top level heading in /Outlines.
-            html_ids_wo_none = [x for x in html_ids if x]
             if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
-                reader = PdfFileReader(pdf_content_stream)
                 root = reader.trailer['/Root']
                 has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
                 if not has_valid_outlines:
@@ -793,6 +806,44 @@ class IrActionsReport(models.Model):
 
         return collected_streams
 
+    def _prepare_pdf_report_attachment_vals_list(self, report, streams):
+        """Hook to prepare attachment values needed for attachments creation
+        during the pdf report generation.
+
+        :param report: The report (with sudo) from a reference report_ref.
+        :param streams: Dict of streams for each report containing the pdf content and existing attachments.
+        :return: attachment values list needed for attachments creation.
+        """
+        attachment_vals_list = []
+        for res_id, stream_data in streams.items():
+            # An attachment already exists.
+            if stream_data['attachment']:
+                continue
+
+            # if res_id is false
+            # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
+            if not res_id:
+                _logger.warning(
+                    "These documents were not saved as an attachment because the template of %s doesn't "
+                    "have any headers seperating different instances of it. If you want it saved,"
+                    "please print the documents separately", report.report_name)
+                continue
+            record = self.env[report.model].browse(res_id)
+            attachment_name = safe_eval(report.attachment, {'object': record, 'time': time})
+
+            # Unable to compute a name for the attachment.
+            if not attachment_name:
+                continue
+
+            attachment_vals_list.append({
+                'name': attachment_name,
+                'raw': stream_data['stream'].getvalue(),
+                'res_model': report.model,
+                'res_id': record.id,
+                'type': 'binary',
+            })
+        return attachment_vals_list
+
     def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         if not data:
             data = {}
@@ -811,35 +862,7 @@ class IrActionsReport(models.Model):
 
         # Generate the ir.attachment if needed.
         if report_sudo.attachment:
-            attachment_vals_list = []
-            for res_id, stream_data in collected_streams.items():
-                # An attachment already exists.
-                if stream_data['attachment']:
-                    continue
-
-                # if res_id is false
-                # we are unable to fetch the record, it won't be saved as we can't split the documents unambiguously
-                if not res_id:
-                    _logger.warning(
-                        "These documents were not saved as an attachment because the template of %s doesn't "
-                        "have any headers seperating different instances of it. If you want it saved,"
-                        "please print the documents separately", report_sudo.report_name)
-                    continue
-                record = self.env[report_sudo.model].browse(res_id)
-                attachment_name = safe_eval(report_sudo.attachment, {'object': record, 'time': time})
-
-                # Unable to compute a name for the attachment.
-                if not attachment_name:
-                    continue
-
-                attachment_vals_list.append({
-                    'name': attachment_name,
-                    'raw': stream_data['stream'].getvalue(),
-                    'res_model': report_sudo.model,
-                    'res_id': record.id,
-                    'type': 'binary',
-                })
-
+            attachment_vals_list = self._prepare_pdf_report_attachment_vals_list(report_sudo, collected_streams)
             if attachment_vals_list:
                 attachment_names = ', '.join(x['name'] for x in attachment_vals_list)
                 try:

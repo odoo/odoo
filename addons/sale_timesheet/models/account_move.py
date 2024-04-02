@@ -124,7 +124,7 @@ class AccountMoveLine(models.Model):
         timesheet_ids = []
         for timesheet in timesheet_read_group:
             move_id = timesheet['timesheet_invoice_id'][0]
-            if timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
+            if timesheet['so_line'] and timesheet['so_line'][0] in sale_line_ids_per_move[move_id].ids:
                 timesheet_ids += timesheet['ids']
 
         self.sudo().env['account.analytic.line'].browse(timesheet_ids).write({'timesheet_invoice_id': False})

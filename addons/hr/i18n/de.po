@@ -6,14 +6,15 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -640,7 +641,7 @@ msgstr "Anwesenheit/Kassensystem"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
 msgid "Authenticated Employees"
-msgstr "Authentifizierte Mitarbeiter"
+msgstr "Authentifizierten Mitarbeitern"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
@@ -744,7 +745,7 @@ msgstr "Basierend auf der IP-Adresse"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
 msgid "Based on attendances"
-msgstr "Basierend auf anwesenden Mitarbeitern"
+msgstr "Basierend auf Anwesenheiten"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
@@ -975,13 +976,23 @@ msgstr "Mitarbeiter anlegen"
 #: model:ir.actions.server,name:hr.action_hr_employee_create_user
 #, python-format
 msgid "Create User"
-msgstr "Benutze anlegen"
+msgstr "Benutzer erstellen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
 msgstr "Eine neue Abteilung erstellen"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "Einen neuen Mitarbeitertyp erstellen"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "Einen neuen Arbeitsort erstellen"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1132,7 +1143,7 @@ msgstr "Zu Lasten"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
 msgid "Direct subordinates"
-msgstr "Direkte Unterstellte"
+msgstr "Direkte Untergeordnete"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
@@ -1210,7 +1221,7 @@ msgstr ""
 "                        Sie können einen echten Beitrag zum Erfolg des Unternehmens leisten.\n"
 "                        <br>\n"
 "                        Das ganze Jahr über werden oft verschiedene Aktivitäten organisiert, wie zum Beispiel\n"
-"                        portveranstaltungen, Teambuildings, monatliche After-Work-Runden und vieles mehr."
+"                        Sportveranstaltungen, Teambuildings, monatliche After-Work-Runden und vieles mehr."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1238,7 +1249,7 @@ msgstr "E-Mail"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr "E-Mail-Aliases"
+msgstr "E-Mail-Aliasse"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2493,7 +2504,8 @@ msgstr ""
 "Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
-"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+"- Follower: nur Follower des entsprechenden Dokuments\n"
+" oder Mitglieder der verfolgten Kanäle\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2520,7 +2532,7 @@ msgstr "Anwesend"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr "Anwesend aber nicht aktiv"
+msgstr "Anwesend, aber nicht aktiv"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -2861,7 +2873,7 @@ msgstr "Vollständiger Name des Ehepartners"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "State"
-msgstr "Bundesland/Region"
+msgstr "Bundesland"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -3249,8 +3261,8 @@ msgstr "Gültige Arbeitserlaubnis für Belgien"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
-msgstr "Visum-Ablaufdatum"
+msgid "Visa Expiration Date"
+msgstr "Ablaufdatum des Visums"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3410,7 +3422,7 @@ msgstr "Arbeitserlaubnisnr."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
 msgid "Work Permit Scheduled Activity"
-msgstr "Arbeitsgenehmigung Geplante Aktivität"
+msgstr "Arbeitserlaubnis Geplante Aktivität"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -3510,3 +3522,8 @@ msgstr "Plan"
 #, python-format
 msgid "restricted to employees"
 msgstr "beschränkt auf Mitarbeiter"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

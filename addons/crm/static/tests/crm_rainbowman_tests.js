@@ -6,8 +6,15 @@ import {
     click,
     dragAndDrop,
     getFixture,
+    selectDropdownItem,
 } from '@web/../tests/helpers/utils';
 import testUtils from 'web.test_utils';
+import { addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
+import { startServer } from '@bus/../tests/helpers/mock_python_environment';
+import { start } from "@mail/../tests/helpers/test_utils";
+
+addModelNamesToFetch(["crm.stage", "crm.lead"]);
+
 const find = testUtils.dom.find;
 
 let target;
@@ -296,5 +303,43 @@ QUnit.module('Crm Rainbowman Triggers', {
 
         await dragAndDrop(target.querySelector('.o_kanban_group:nth-of-type(1)'), target.querySelector('.o_kanban_group:nth-of-type(2)'));
         assert.verifySteps([]); // Should never pass by the rpc
+    });
+
+    QUnit.test("send a message on a new record after changing the stage", async function (assert) {
+        assert.expect(1);
+
+        const pyEnv = await startServer();
+        pyEnv["crm.stage"].create({ name : "Dummy Stage", is_won: true });
+        const views = {
+            "crm.lead,false,form": `
+                <form js_class="crm_form">
+                    <sheet>
+                        <field name="stage_id"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids"  options="{'open_attachments': True}"/>
+                    </div>
+                </form>`,
+        };
+
+        const messageBody = "some message";
+        const { insertText, openView } = await start({
+            serverData: { views },
+            mockRPC: function (route, args) {
+                if (route === "/mail/message/post") {
+                    assert.deepEqual(args.post_data.body, messageBody);
+                }
+            }
+        });
+
+        await openView({
+            res_model: "crm.lead",
+            views: [[false, "form"]],
+        });
+
+        await selectDropdownItem(target, "stage_id", "Dummy Stage");
+        await click(target, ".o_ChatterTopbar_buttonSendMessage");
+        await insertText(".o_ComposerTextInput_textarea", messageBody);
+        await click(target, ".o_Composer_buttonSend");
     });
 });

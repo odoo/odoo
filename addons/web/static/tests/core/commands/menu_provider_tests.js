@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
+import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
 import { editSearchBar } from "./command_service_tests";
@@ -136,4 +138,29 @@ QUnit.test("opens a menu items", async (assert) => {
         target.querySelector(".test_client_action").textContent,
         " ClientAction_Report"
     );
+});
+
+QUnit.test("open a menu item when a dialog is displayed", async (assert) => {
+    class CustomDialog extends Component {}
+    CustomDialog.components = { Dialog };
+    CustomDialog.template = xml`<Dialog contentClass="'test'">content</Dialog>`;
+
+    const webclient = await createWebClient({ serverData });
+    assert.containsNone(target, ".o_menu_brand");
+    assert.containsNone(target, ".modal .test");
+
+    webclient.env.services.dialog.add(CustomDialog);
+    await nextTick();
+    assert.containsOnce(target, ".modal .test");
+
+    triggerHotkey("control+k");
+    await nextTick();
+    await editSearchBar("/sal");
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsOnce(target, ".modal .test");
+
+    await click(target, "#o_command_2");
+    await nextTick();
+    assert.strictEqual(target.querySelector(".o_menu_brand").textContent, "Sales");
+    assert.containsNone(target, ".modal .test");
 });

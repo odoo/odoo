@@ -300,9 +300,9 @@ class Project(models.Model):
         } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_items = self._get_sale_order_items()
+        sale_items = self.sudo()._get_sale_order_items()
         domain = [
-            ('order_id', 'in', sale_items.order_id.ids),
+            ('order_id', 'in', sale_items.sudo().order_id.ids),
             ('is_downpayment', '=', False),
             ('state', 'in', ['sale', 'done']),
             ('display_type', '=', False),
@@ -317,7 +317,7 @@ class Project(models.Model):
         return domain
 
     def _get_sale_items(self, with_action=True):
-        domain = self.sudo()._get_sale_items_domain()
+        domain = self._get_sale_items_domain()
         return {
             'total': self.env['sale.order.line'].sudo().search_count(domain),
             'data': self.get_sale_items_data(domain, limit=5, with_action=with_action),
@@ -392,7 +392,7 @@ class Project(models.Model):
                 )
                 sols_per_product[product_id] = tuple(reduce(lambda x, y: x + y, pair) for pair in zip(sols_total_amounts, sols_current_amounts))
             product_read_group = self.env['product.product'].sudo()._read_group(
-                [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
+                [('id', 'in', list(sols_per_product))],
                 ['invoice_policy', 'service_type', 'type', 'ids:array_agg(id)'],
                 ['invoice_policy', 'service_type', 'type'],
                 lazy=False,
@@ -447,7 +447,7 @@ class Project(models.Model):
             domain,
             [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0),
+            ('price_subtotal', '!=', 0),
             ('is_downpayment', '=', False)],
         ])
 
@@ -541,7 +541,7 @@ class Project(models.Model):
         revenue_items_from_invoices = self._get_revenues_items_from_invoices(
             excluded_move_line_ids=self.env['sale.order.line'].browse(
                 [sol_id for sol_read in sale_line_read_group for sol_id in sol_read['ids']]
-            ).invoice_lines.ids
+            ).sudo().invoice_lines.ids
         )
         revenues['data'] += revenue_items_from_invoices['data']
         revenues['total']['to_invoice'] += revenue_items_from_invoices['total']['to_invoice']
@@ -614,7 +614,7 @@ class ProjectTask(models.Model):
         compute='_compute_sale_line', store=True, readonly=False,
         domain="""[
             ('company_id', '=', company_id),
-            '|', ('order_partner_id', 'child_of', partner_id if partner_id else []),
+            '|', ('order_partner_id', 'child_of', commercial_partner_id if commercial_partner_id else []),
                  ('order_partner_id', '=?', partner_id),
             ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])
         ]""",

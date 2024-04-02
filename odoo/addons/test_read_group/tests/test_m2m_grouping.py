@@ -3,10 +3,11 @@
 
 from odoo.fields import Command
 from odoo.tests import common
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 @common.tagged('test_m2m_read_group')
-class TestM2MGrouping(common.TransactionCase):
+class TestM2MGrouping(TransactionCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
@@ -171,7 +172,7 @@ class TestM2MGrouping(common.TransactionCase):
         ])
 
         # as demo user, ir.rule should apply
-        tasks = self.tasks.with_user(self.browse_ref('base.user_demo'))
+        tasks = self.tasks.with_user(self.user_demo)
 
         # warming up various caches; this avoids extra queries
         tasks.read_group(domain=[], fields=['name:array_agg'], groupby=['user_ids'])
@@ -215,6 +216,26 @@ class TestM2MGrouping(common.TransactionCase):
                 '__domain': [('user_ids', '=', False)],
             },
         ])
+
+    def test_order_by_many2one_id(self):
+        # ordering by a many2one ordered itself by id does not use useless join
+        expected_query = '''
+            SELECT
+              min("test_read_group_order_line".id) AS id,
+              count("test_read_group_order_line".id) AS "order_id_count",
+              "test_read_group_order_line"."order_id" as "order_id"
+            FROM "test_read_group_order_line"
+            GROUP BY "test_read_group_order_line"."order_id"
+            ORDER BY "order_id"
+        '''
+        with self.assertQueries([expected_query]):
+            self.env["test_read_group.order.line"].read_group(
+                [], ["order_id"], "order_id"
+            )
+        with self.assertQueries([expected_query + ' DESC']):
+            self.env["test_read_group.order.line"].read_group(
+                [], ["order_id"], "order_id", orderby="order_id DESC"
+            )
 
 
 class unordered(list):

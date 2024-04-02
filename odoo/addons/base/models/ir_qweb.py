@@ -359,6 +359,7 @@ structure.
 
 """
 
+import contextlib
 import fnmatch
 import io
 import logging
@@ -584,7 +585,7 @@ class IrQWeb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'edit_translations', 'profile']
+        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
@@ -613,10 +614,16 @@ class IrQWeb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
-            profile_options = {
-                'ref': options.get('ref') and int(options['ref']) or None,
-                'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
-            } if self.env.context.get('profile') else None
+            if self.env.context.get('profile'):
+                ref_value = None
+                with contextlib.suppress(ValueError, TypeError):
+                    ref_value = int(options.get('ref'))
+                profile_options = {
+                    'ref': ref_value,
+                    'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
+                }
+            else:
+                profile_options = None
             code = '\n'.join([
                 "def generate_functions():",
                 "    template_functions = {}",
@@ -627,7 +634,7 @@ class IrQWeb(models.AbstractModel):
 
             try:
                 compiled = compile(code, f"<{ref}>", 'exec')
-                globals_dict = self._prepare_globals()
+                globals_dict = self.__prepare_globals()
                 globals_dict['__builtins__'] = globals_dict # So that unknown/unsafe builtins are never added.
                 unsafe_eval(compiled, globals_dict)
                 return globals_dict['generate_functions'](), def_name
@@ -691,8 +698,10 @@ class IrQWeb(models.AbstractModel):
         # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
         compile_context['_qweb_error_path_xml'] = None
 
-        if not compile_context.get('nsmap'):
-            compile_context['nsmap'] = {}
+        compile_context['nsmap'] = {
+            ns_prefix: str(ns_definition)
+            for ns_prefix, ns_definition in compile_context.get('nsmap', {}).items()
+        }
 
         # The options dictionary includes cache key elements and template
         # references. It will be attached to the generated function. This
@@ -895,7 +904,7 @@ class IrQWeb(models.AbstractModel):
             context['is_t_cache_disabled'] = True
         return self.with_context(**context)
 
-    def _prepare_globals(self):
+    def __prepare_globals(self):
         """ Prepare the global context that will sent to eval the qweb
         generated code.
         """

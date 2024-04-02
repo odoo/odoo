@@ -6,15 +6,15 @@
 # Alexandra Jubert, 2022
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,12 @@ msgid "# of Tasks"
 msgstr "# de Tâches"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr "#{record.commercial_partner_id.value}"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
@@ -83,6 +89,12 @@ msgid ""
 msgstr ""
 "#{record.milestone_count_reached.value} Jalons atteints sur "
 "#{record.milestone_count.value}"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
+msgstr "#{record.partner_id.value}"
 
 #. module: project
 #. odoo-python
@@ -118,13 +130,6 @@ msgstr "Évaluation de %(name)s"
 #, python-format
 msgid "%(name)s's Tasks Analysis"
 msgstr "Analyse des tâches de %(name)s"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
-msgstr "Feuilles de temps de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -450,7 +455,7 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            Nous apprécions votre retour d'expérience. Il nous aide à nous améliorer en permanence.\n"
+"            Nous apprécions votre feedback. Il nous aide à nous améliorer en permanence.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
 "                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Cette enquête de satisfaction vous a été envoyée parce que votre tâche a été déplacée vers l'étape <b t-out=\"object.stage_id.name or ''\">En cours</b></span>\n"
 "            </t>\n"
@@ -661,7 +666,7 @@ msgstr "<span>Analyse</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
-msgstr "<span>Vue</span>"
+msgstr "<span>Voir</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -1222,8 +1227,8 @@ msgid ""
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 "Modifiez automatiquement le statut Kanban lorsque le client fait un commentaire sur cette étape.\n"
-" * Un bon retour de la part du client change le statut Kanban en 'prêt pour l'étape suivante' (boule verte).\n"
-" * Un retour neutre ou un mauvais retour change le statut Kanban en 'bloqué' (boule rouge).\n"
+" * Un bon feedback de la part du client change le statut Kanban en 'prêt pour l'étape suivante' (boule verte).\n"
+" * Un feedback neutre ou un mauvais retour change le statut Kanban en 'bloqué' (boule rouge).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1489,7 +1494,7 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Recueillez un retour de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
+"Recueillez un feedback de vos clients en leur envoyant une demande d'évaluation lorsqu'une tâche atteint une certaine étape. Pour ce faire, définissez un modèle d'email d'évaluation sur les étapes correspondantes.\n"
 "Évaluation lors du changement d'étape : un email sera envoyé automatiquement quand la tâche atteint l'étape pour laquelle le modèle d'email d'évaluation est défini.\n"
 "Évaluation périodique : un email sera envoyé automatiquement à intervalles réguliers tant que la tâche se situe à l'étape pour laquelle le modèle d'email d'évaluation est défini."
 
@@ -1788,7 +1793,7 @@ msgstr "Email client"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr "Retour d'expérience des clients"
+msgstr "Feedback des clients"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -1817,8 +1822,8 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly. Your managers decide which feedback is accepted"
 msgstr ""
-"Les clients proposent des retours d'expérience par email ; Odoo crée automatiquement des tâches et vous pouvez\n"
-" communiquer directement sur la tâche. Vos managers décident quels retours sont acceptés"
+"Les clients proposent des feedbacks par email ; Odoo crée automatiquement des tâches et vous pouvez\n"
+" communiquer directement sur la tâche. Vos managers décident quel feedback est accepté"
 
 #. module: project
 #. odoo-python
@@ -2180,8 +2185,8 @@ msgstr ""
 "d'emails de l'utilisateur"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2483,7 +2488,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr "Obtenez des retours client"
+msgstr "Obtenez un feedback des clients"
 
 #. module: project
 #. odoo-python
@@ -2728,8 +2733,8 @@ msgstr ""
 "supprimé."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3168,8 +3173,22 @@ msgstr "Créons votre premier <b>projet</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Créons votre première <b>étape</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Créons votre première <b>tâche</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Créons votre deuxième <b>étape</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3325,8 +3344,8 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3493,8 +3512,8 @@ msgid "Neutral face"
 msgstr "Visage neutre"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3602,6 +3621,11 @@ msgstr "Date de la prochaine récurrence"
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
 msgstr "Prochaines récurrences"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Aucun client"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -4154,8 +4178,8 @@ msgid "Progress Percentage"
 msgstr "Pourcentage d'avancement"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4446,7 +4470,7 @@ msgstr "Fréquence des évaluations"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Évaluation des derniers retours d'expérience"
+msgstr "Évaluation des derniers feedbacks"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
@@ -4968,8 +4992,9 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
-"Définissez ce modèle sur une étape de projet pour demander un retour de vos "
-"clients. Activez la fonctionnalité \"Évaluation du client\" sur le projet"
+"Définissez ce modèle sur une étape de projet pour demander un feedback de "
+"vos clients. Activez la fonctionnalité \"Évaluation du client\" sur le "
+"projet"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -5085,8 +5110,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint en cours"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -6388,8 +6413,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
-"et quels retours sont\n"
-"      déplacés vers l'étape \"Refusé\"."
+"et quel feedback est\n"
+"      déplacé vers l'étape \"Refusé\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban

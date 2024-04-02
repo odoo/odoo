@@ -68,7 +68,7 @@ class Contract(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
-    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
+    visa_expire = fields.Date('Visa Expiration Date', related="employee_id.visa_expire", readonly=False)
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
@@ -84,7 +84,7 @@ class Contract(models.Model):
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
 
     def _expand_states(self, states, domain, order):
-        return [key for key, val in type(self).state.selection]
+        return [key for key, val in self._fields['state'].selection]
 
     @api.depends('employee_id')
     def _compute_employee_contract(self):
@@ -252,7 +252,7 @@ class Contract(models.Model):
             self._assign_open_contract()
         today = fields.Date.today()
         for contract in self:
-            if contract == contract.employee_id.contract_id \
+            if contract == contract.employee_id.sudo().contract_id \
                 and old_state[contract.id] == 'open' \
                 and new_state[contract.id] != 'open':
                 running_contract = self.env['hr.contract'].search([
@@ -261,7 +261,7 @@ class Contract(models.Model):
                     ('state', '=', 'open'),
                 ]).filtered(lambda c: c.date_start <= today and (not c.date_end or c.date_end >= today))
                 if running_contract:
-                    contract.employee_id.contract_id = running_contract[0]
+                    contract.employee_id.sudo().contract_id = running_contract[0]
         if vals.get('state') == 'close':
             for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)
@@ -272,7 +272,9 @@ class Contract(models.Model):
 
         calendar = vals.get('resource_calendar_id')
         if calendar:
-            self.filtered(lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done')).mapped('employee_id').write({'resource_calendar_id': calendar})
+            self.filtered(
+                lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
+            ).employee_id.resource_calendar_id = calendar
 
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})
@@ -283,7 +285,9 @@ class Contract(models.Model):
     def create(self, vals_list):
         contracts = super().create(vals_list)
         contracts.filtered(lambda c: c.state == 'open')._assign_open_contract()
-        open_contracts = contracts.filtered(lambda c: c.state == 'open' or c.state == 'draft' and c.kanban_state == 'done')
+        open_contracts = contracts.filtered(
+            lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
+        )
         # sync contract calendar -> calendar employee
         for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id

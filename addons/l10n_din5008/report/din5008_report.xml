@@ -34,21 +34,21 @@
         <!-- New report layout for din5008 format -->
         <template id="external_layout_din5008">
             <div>
-                <div t-attf-class="header din_page o_company_#{company.id}_layout">
-                        <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
-                            <tr>
-                                <td><div class="h3 mt0" t-field="company.report_header"/></td>
-                                <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
-                            </tr>
-                        </table>
+                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                    <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
+                        <tr>
+                            <td><h3 class="mt0" t-field="company.report_header"/></td>
+                            <td><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" t-att-style="'max-height: %dmm;' % (din_header_spacing or 27)"/></td>
+                        </tr>
+                    </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}}"
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' else ''}"
                      t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id"
                      t-att-data-oe-lang="o and o.env.context.get('lang')">
-                    <table class="table-borderless">
+                    <table class="table-borderless" t-if="not skip_headers">
                         <tr>
                             <td>
                                 <div class="address">
@@ -76,7 +76,7 @@
                                     </div>
                                     <div t-else="fallback_address">
                                         <t t-esc="fallback_address"
-                                           t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
+                                           t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                                     </div>
                                 </div>
                             </td>
@@ -92,18 +92,20 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr t-if="o and 'l10n_din5008_addresses' in o">
-                            <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
-                                <td>
-                                    <div class="shipping_address">
-                                        <strong><t t-esc="doc_address[0]"/></strong>
-                                        <div t-esc="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
-                                    </div>
-                                </td>
-                            </t>
-                        </tr>
+                        <div>
+                            <tr t-if="o and 'l10n_din5008_addresses' in o">
+                                <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
+                                    <td>
+                                        <div class="shipping_address">
+                                            <strong><t t-esc="doc_address[0]"/></strong>
+                                            <div t-esc="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                        </div>
+                                    </td>
+                                </t>
+                            </tr>
+                        </div>
                     </table>
-                    <h2>
+                    <h2 t-if="not skip_headers">
                         <span t-if="not o and not docs"><t t-esc="company.l10n_din5008_document_title"/></span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />
@@ -114,7 +116,7 @@
                     <t t-out="0"/>
                 </div>
 
-                <div t-attf-class="din_page footer o_company_#{company.id}_layout">
+                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
                     <div class="text-end page_number">
                         <div class="text-muted">
                             Page: <span class="page"/> of <span class="topage"/>
@@ -124,7 +126,7 @@
                         <table class="table-borderless">
                             <tr>
                                 <td>
-                                    <ul class="list-inline">
+                                    <ul class="list-inline text-nowrap">
                                         <li t-if="company.name"><span t-field="company.name"/></li>
                                         <li t-if="company.street"><span t-field="company.street"/></li>
                                         <li t-if="company.street2"><span t-field="company.street2"/></li>
@@ -141,7 +143,10 @@
                                 </td>
                                 <td>
                                     <ul class="list-inline">
-                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                                        <li t-if="company.vat"><t t-esc="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                                            <span t-if="forced_vat" t-esc="forced_vat"/>
+                                            <span t-else="" t-field="company.vat"/>
+                                        </li>
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>

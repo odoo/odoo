@@ -12,7 +12,7 @@
 
     <template id="report_invoice_document_inherit_sale_stock" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@name='reference']" position="after">
-            <div class="col-auto mw-100 mb-2" t-if="o.invoice_incoterm_id" groups="sale_stock.group_display_incoterm" name="invoice_incoterm_id">
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_incoterm_id" groups="sale_stock.group_display_incoterm" name="invoice_incoterm_id">
                 <strong>Incoterm:</strong>
                 <p class="m-0" t-field="o.invoice_incoterm_id.code"/>
             </div>

@@ -50,5 +50,6 @@ class AccountCashRounding(models.Model):
         :param amount: The amount
         :return: round(difference)
         """
+        amount = currency.round(amount)
         difference = self.round(amount) - amount
         return currency.round(difference)

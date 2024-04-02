@@ -14,9 +14,9 @@ class CalendarEvent(models.Model):
             self = self.with_context(
                 default_res_model='hr.applicant', #res_model seems to be lost without this
                 default_res_model_id=self.env.ref('hr_recruitment.model_hr_applicant').id,
-                default_res_id=self.env.context['default_applicant_id'],
-                default_partner_ids=self.env.context['default_partner_ids'],
-                default_name=self.env.context['default_name']
+                default_res_id=self.env.context.get('default_applicant_id'),
+                default_partner_ids=self.env.context.get('default_partner_ids'),
+                default_name=self.env.context.get('default_name')
             )
 
         defaults = super(CalendarEvent, self).default_get(fields)

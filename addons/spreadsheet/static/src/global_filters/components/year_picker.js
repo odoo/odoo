@@ -12,18 +12,25 @@ export class YearPicker extends DatePicker {
         super.initFormat();
         // moment.js format
         this.defaultFormat = "yyyy";
-        this.staticFormat = "yyyy";
     }
 
     /**
      * @override
      */
-    bootstrapDateTimePicker(commandOrParams) {
+    bootstrapDateTimePicker(commandOrParams, ...commandArgs) {
         if (typeof commandOrParams === "object") {
             const widgetParent = window.$(this.rootRef.el);
             commandOrParams = { ...commandOrParams, widgetParent };
         }
-        super.bootstrapDateTimePicker(commandOrParams);
+        super.bootstrapDateTimePicker(commandOrParams, ...commandArgs);
+    }
+
+    /**
+     * @override
+     */
+    setDateAndFormat({ date, locale, format }) {
+        super.setDateAndFormat({ date, locale, format });
+        this.staticFormat = "yyyy";
     }
 }
 

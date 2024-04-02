@@ -312,10 +312,12 @@ class PaletteSelectionScreen extends Component {
                 this.state.changeLogo(data, attachment.id);
                 this.updatePalettes();
             } else {
-                this.notification.notify({
-                    title: file.name,
-                    message: attachment.error,
-                });
+                this.notification.add(
+                    attachment.error,
+                    {
+                        title: file.name,
+                    }
+                );
             }
         }
     }

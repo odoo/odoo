@@ -3,11 +3,13 @@
 
 import json
 
-from odoo.tests import HttpCase, tagged
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+
 @tagged('post_install', '-at_install')
-class DomainTest(HttpCase):
+class DomainTest(HttpCaseWithUserDemo):
 
     def test_domain_validate(self):
         self.authenticate("demo", "demo")

@@ -21,6 +21,7 @@
                 <button name="%(website_event_track.event_track_action_from_visitor)d"
                     type="action"
                     class="oe_stat_button" icon="fa-ticket"
+                    groups="event.group_event_manager"
                     attrs="{'invisible': [('event_track_wishlisted_count', '=', 0)]}">
                     <field name="event_track_wishlisted_count" widget="statinfo" string="Tracks"/>
                 </button>

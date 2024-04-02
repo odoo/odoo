@@ -42,7 +42,7 @@ class HolidaysAllocation(models.Model):
                 if not allocation.overtime_id:
                     allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
                         'employee_id': allocation.employee_id.id,
-                        'date': fields.Date.today(),
+                        'date': allocation.date_from,
                         'adjustment': True,
                         'duration': -1 * duration,
                     })
@@ -72,7 +72,7 @@ class HolidaysAllocation(models.Model):
         for allocation in overtime_allocations:
             overtime = self.env['hr.attendance.overtime'].sudo().create({
                 'employee_id': allocation.employee_id.id,
-                'date': fields.Date.today(),
+                'date': allocation.date_from,
                 'adjustment': True,
                 'duration': -1 * allocation.number_of_hours_display
             })

@@ -46,7 +46,7 @@ class MicrosoftOutlookController(http.Controller):
 
         model = request.env[model_name]
 
-        if not issubclass(type(model), request.env.registry['microsoft.outlook.mixin']):
+        if not isinstance(model, request.env.registry['microsoft.outlook.mixin']):
             # The model must inherits from the "microsoft.outlook.mixin" mixin
             raise Forbidden()
 

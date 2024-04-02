@@ -31,7 +31,7 @@ PromoCodeButton.template = 'PromoCodeButton';
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
-        return this.env.pos.programs.some(p => ['coupons', 'promotion', 'gift_card', 'promo_code'].includes(p.program_type));
+        return this.env.pos.programs.some(p => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type));
     }
 });
 

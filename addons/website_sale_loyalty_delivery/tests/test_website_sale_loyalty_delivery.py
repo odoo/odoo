@@ -8,6 +8,16 @@ class TestWebsiteSaleDelivery(HttpCase):
     def setUp(self):
         super().setUp()
 
+        self.env.ref('base.user_admin').write({
+            'name': 'Mitchell Admin',
+            'street': '215 Vine St',
+            'phone': '+1 555-555-5555',
+            'city': 'Scranton',
+            'zip': '18503',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_39').id,
+        })
+
         self.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'list_price': 2950.0,

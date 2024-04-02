@@ -74,7 +74,7 @@ class Assets(models.AbstractModel):
                 else:
                     font_family_attachments = IrAttachment
                     font_content = requests.get(
-                        f'https://fonts.googleapis.com/css?family={font_name}&display=swap',
+                        f'https://fonts.googleapis.com/css?family={font_name}:300,300i,400,400i,700,700i&display=swap',
                         timeout=5, headers=headers_woff2,
                     ).content.decode()
 

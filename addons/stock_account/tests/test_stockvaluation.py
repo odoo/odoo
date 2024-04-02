@@ -3053,12 +3053,12 @@ class TestStockValuation(TransactionCase):
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
-        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
+        self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
 
         # an accounting entry should be created
         # FIXME sle check it
 
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product1.standard_price, 12.63)
 
     def test_change_cost_method_2(self):
         """ Change the cost method from FIFO to standard.
@@ -3121,13 +3121,13 @@ class TestStockValuation(TransactionCase):
         self.product1.categ_id.property_cost_method = 'standard'
 
         # valuation should stay to ~240
-        self.assertAlmostEqual(self.product1.value_svl, 285, delta=0.03)
+        self.assertAlmostEqual(self.product1.value_svl, 240, delta=0.04)
         self.assertAlmostEqual(self.product1.quantity_svl, 19)
 
         # no accounting entry should be created
         # FIXME sle check it
 
-        self.assertEqual(self.product1.standard_price, 15)
+        self.assertEqual(self.product1.standard_price, 12.63)
 
     def test_fifo_sublocation_valuation_1(self):
         """ Set the main stock as a view location. Receive 2 units of a
@@ -4016,3 +4016,68 @@ class TestStockValuation(TransactionCase):
         self._make_in_move(self.product1, 2, unit_cost=6)
         self.product1.write({'standard_price': 7})
         self.assertEqual(self.product1.value_svl, 49)
+
+    def test_average_manual_revaluation(self):
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 1, unit_cost=20)
+        self._make_in_move(self.product1, 1, unit_cost=30)
+        self.assertEqual(self.product1.standard_price, 25)
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_account_id': self.stock_valuation_account,
+            'default_added_value': -10.0,
+        })).save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.standard_price, 20)
+
+    def test_fifo_manual_revaluation(self):
+        revaluation_vals = {
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_account_id': self.stock_valuation_account,
+        }
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        self._make_in_move(self.product1, 1, unit_cost=15)
+        self._make_in_move(self.product1, 1, unit_cost=30)
+        self.assertEqual(self.product1.standard_price, 15)
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            **revaluation_vals,
+            'default_added_value': -10.0,
+        })).save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.standard_price, 10)
+
+        revaluation = Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            **revaluation_vals,
+            'default_added_value': -25.0,
+        })).save()
+
+        with self.assertRaises(UserError):
+            revaluation.action_validate_revaluation()
+
+    def test_manual_revaluation_statement(self):
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self._make_in_move(self.product1, 1, unit_cost=15)
+
+        revaluation_form = Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+        }))
+        revaluation_form.added_value = 10.0
+        revaluation_form.account_id = self.stock_valuation_account
+        revaluation = revaluation_form.save()
+        revaluation.action_validate_revaluation()
+
+        account_move = self.env['stock.valuation.layer'].search([
+            ('product_id', '=', self.product1.id),
+            ('stock_move_id', '=', False),
+        ]).account_move_id
+
+        self.assertIn('OdooBot changed stock valuation from  15.0 to 25.0 -', account_move.line_ids[0].name)

@@ -225,6 +225,15 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(partner.with_context(lang='nl_NL').env.lang, None, 'Inactive lang context lang should have None env.lang')
         self.assertEqual(partner.with_context(lang='Dummy').env.lang, None, 'Ilegal lang context should have None env.lang')
 
+    def test_56_environment_uid_origin(self):
+        """Check the expected behavior of `env.uid_origin`"""
+        user_demo = self.env.ref('base.user_demo')
+        user_admin = self.env.ref('base.user_admin')
+        self.assertEqual(self.env.uid_origin, None)
+        self.assertEqual(self.env['base'].with_user(user_demo).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_demo).with_user(user_admin).env.uid_origin, user_demo.id)
+        self.assertEqual(self.env['base'].with_user(user_admin).with_user(user_demo).env.uid_origin, user_admin.id)
+
     @mute_logger('odoo.models')
     def test_60_cache(self):
         """ Check the record cache behavior """
@@ -660,6 +669,38 @@ class TestAPI(SavepointCaseWithUserDemo):
         # sort by inverse name, with a field name
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name, reverse=True)]
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+
+        # sorted doesn't filter out new records but don't sort them either (limitation)
+        new_p = self.env['res.partner'].new({
+            'child_ids': [
+                Command.create({'name': 'z'}),
+                Command.create({'name': 'a'}),
+            ],
+        })
+        self.assertEqual(len(new_p.child_ids.sorted()), 2)
+
+        # sorted keeps the _prefetch_ids
+        partners_with_children = self.env['res.partner'].create([
+            {
+                'name': 'required',
+                'child_ids': [
+                    Command.create({'name': 'z'}),
+                    Command.create({'name': 'a'}),
+                ],
+            },
+            {
+                'name': 'required',
+                'child_ids': [
+                    Command.create({'name': 'z'}),
+                    Command.create({'name': 'a'}),
+                ],
+            },
+        ])
+        partners_with_children.invalidate_model(['name'])
+        # Only one query to fetch name of children of each partner
+        with self.assertQueryCount(1):
+            for partner in partners_with_children:
+                partner.child_ids.sorted('id').mapped('name')
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):

@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Braulio D. López Vázquez <bdl@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -845,8 +845,8 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
-"Un rango corresponde a un nivel de recompensa fijo. Cuantas más recompensas tiene, más alto es su rango.\n"
-"                    Esto se utiliza para saber rápidamente qué usuario es nuevo o tiene más antigüedad, o si es muy o poco activo."
+"Un rango corresponde a un nivel de karma fijo. Cuanto más karma tiene, más alto es su rango.\n"
+"                    Esto se utiliza para saber con rapidez qué usuario es nuevo o tiene más antigüedad, o si es muy o poco activo."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
@@ -862,7 +862,7 @@ msgstr "Acción"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -903,8 +903,8 @@ msgid ""
 "                The goals are created for the specified users or member of the group."
 msgstr ""
 "Asigne una lista de metas a los usuarios elegidos para evaluarlos.\n"
-"                El desafío puede usar un periodo (semanal, mensual...) para la creación automática de metas.\n"
-"                Las metas se crean para usuarios específicos o miembros del grupo."
+"                El desafío puede usar un periodo (semanal, mensual...) para crear metas en automático.\n"
+"                Las metas se crean para determinados usuarios o miembros del grupo."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
@@ -1498,7 +1498,7 @@ msgstr "Ludificación: comprobación de metas del desafío"
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
 #: model:ir.cron,cron_name:gamification.ir_cron_consolidate_last_month
 msgid "Gamification: Karma tracking consolidation"
-msgstr "Ludificación: consolidación del seguimiento de recompensas"
+msgstr "Ludificación: consolidación del seguimiento de karma"
 
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
@@ -1786,12 +1786,12 @@ msgstr "Es un seguidor"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 msgid "Karma"
-msgstr "Recompensas"
+msgstr "Karma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr "Cambios de recompensas"
+msgstr "Cambios de karma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
@@ -1974,7 +1974,7 @@ msgstr "No mandar recordartorio si no hay valor o si es 0."
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
 msgid "New Karma Value"
-msgstr "Nuevo valor de recompensas"
+msgstr "Nuevo valor de karma"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -2076,7 +2076,7 @@ msgstr "Número de usuarios"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
 msgid "Old Karma Value"
-msgstr "Antiguo valor de recompensas"
+msgstr "Valor anterior de karma"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -2161,8 +2161,8 @@ msgid ""
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
 "El código Python a ejecutar para cada usuario. \"result\" debe contener el "
-"nuevo valor actual. Se puede acceder al registro del usuario evaluado "
-"mediante object_user_id."
+"nuevo valor actual. Puede acceder al registro del usuario evaluado mediante "
+"object.user_id."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
@@ -2178,7 +2178,7 @@ msgstr "Nombre de rango"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
 msgid "Rank based on karma"
-msgstr "Rango según las recompensas"
+msgstr "Rango según el karma"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
@@ -2190,6 +2190,16 @@ msgstr "Rangos"
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_tree
 msgid "Ranks List"
 msgstr "Lista de rangos"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
+msgid "Reach the next rank and become a Master!"
+msgstr "¡Alcance el siguiente rango y conviértase en Maestro!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
+msgid "Reach the next rank and become a powerful user!"
+msgstr "¡Alcance el siguiente rango para convertirse en un usuario poderoso!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
@@ -2210,6 +2220,16 @@ msgstr "¡Alcance el siguiente rango y gane una taza muy bonita!"
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn !"
 msgstr "¡Alcance el siguiente rango y gane un lindo unicornio!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr "¡Alcance el siguiente rango para mejorar su estado!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
+msgstr "Alcance el siguiente estado para que el mundo le conozca."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2280,7 +2300,7 @@ msgstr "Insignias requeridas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr "Recompensas requeridas"
+msgstr "Karma necesario"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2381,8 +2401,8 @@ msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr ""
-"Reglas de seguridad para definir a quién se permite otorgar insignias "
-"manualmente. No aplican para el administrador."
+"Reglas de seguridad para definir quien puede otorgar insignias manualmente. "
+"No aplican para el administrador."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2680,7 +2700,7 @@ msgstr "El número de veces que el usuario actual ha recibido esta insignia."
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
 msgstr ""
-"El número de veces que el usuario actual ha recibido esta insignia este mes."
+"El número de veces que el usuario actual ha enviado esta insignia este mes."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
@@ -2702,7 +2722,7 @@ msgstr "El número de veces que esta insignia ha sido recibida."
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
 msgid "The required karma has to be above 0."
-msgstr "La recompensa requerida tiene que ser mayor a 0."
+msgstr "El karma requerido tiene que ser mayor a 0."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
@@ -2775,7 +2795,7 @@ msgstr "Total"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Seguimiento de cambios de recompensas"
+msgstr "Seguimiento de cambios de karma"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form

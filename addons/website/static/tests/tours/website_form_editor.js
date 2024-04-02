@@ -33,7 +33,8 @@ odoo.define('website.tour.form_editor', function (require) {
     const getQuotesEncodedName = function (name) {
             return name.replaceAll(/"/g, character => `&quot;`)
                        .replaceAll(/'/g, character => `&apos;`)
-                       .replaceAll(/`/g, character => `&lsquo;`);
+                       .replaceAll(/`/g, character => `&lsquo;`)
+                       .replaceAll("\\", character => `&bsol;`);
     };
 
     const triggerFieldByLabel = (label) => {
@@ -110,6 +111,9 @@ odoo.define('website.tour.form_editor', function (require) {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
             const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
             testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
+            // Because 'testText' will be used as selector to verify the content
+            // of the label, the `\` character needs to be escaped.
+            testText = testText.replaceAll("\\", "\\\\");
         }
         ret.push({
             content: "Check the resulting field",
@@ -180,6 +184,45 @@ odoo.define('website.tour.form_editor', function (require) {
         }, {
             content: 'Change the label position of the phone field',
             trigger: 'we-button[data-select-label-position="right"]',
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 1", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 1'"),
+        ...addCustomField("char", "text", "Conditional Visibility Check 2", false),
+        ...selectFieldByLabel("Conditional Visibility Check 1"),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Check that 'Conditional Visibility Check 2' is not in the list of the visibility selector of Conditional Visibility Check 1",
+            trigger: "we-select[data-name='hidden_condition_opt']:not(:has(we-button[data-set-visibility-dependency='Conditional Visibility Check 2']))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 3", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 4", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        ...selectButtonByData("data-set-visibility-dependency='Conditional Visibility Check 3'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 3",
+        },
+        {
+            content: "Check that the conditional visibility of the renamed field is removed",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select:contains('Visibility'):has(we-toggler:contains('Always Visible'))",
+            run: () => null,
+        },
+        ...addCustomField("char", "text", "Conditional Visibility Check 5", false),
+        ...addCustomField("char", "text", "Conditional Visibility Check 6", false),
+        ...selectButtonByData("data-set-visibility='conditional'"),
+        {
+            content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
+            trigger: 'we-input[data-set-label-text] input',
+            run: "text Conditional Visibility Check 5",
+        },
+        {
+            content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
+            trigger: "we-customizeblock-option.snippet-option-WebsiteFieldEditor we-select[data-name='hidden_condition_opt']:not(:has(we-button:contains('Conditional Visibility Check 5')))",
+            run: () => null,
         },
         ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
 
@@ -496,11 +539,12 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        // The next four calls to "addCustomField" are there to ensure such
+        // characters do not make the form editor crash.
         ...addCustomField("char", "text", "''", false),
         ...addCustomField("char", "text", '""', false),
         ...addCustomField("char", "text", "``", false),
-        ...addCustomField("char", "text", "Same name", false),
-        ...addCustomField("char", "text", "Same name", false),
+        ...addCustomField("char", "text", "\\", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
@@ -511,21 +555,6 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'iframe body:not(.editor_enable)',
             // We have to this that way because the input type = hidden.
             extra_trigger: 'iframe form:has(input[name="email_to"][value="test@test.test"])',
-        },
-        {
-            content: "Check that the 'Same name 1' field is visible",
-            trigger: "iframe .s_website_form_field .s_website_form_label_content:contains('Same name 1')",
-            run: () => null,
-        },
-        {
-            content: "Check that there is only one field 'Same name' visible",
-            trigger: "iframe .s_website_form",
-            run: () => {
-                const sameNameEls = document.querySelector("iframe.o_iframe").contentDocument.querySelectorAll(".s_website_form_field input[name='Same name']");
-                if (sameNameEls.length !== 1) {
-                    console.error("One and only one field with the label 'Same name' should be visible");
-                }
-            },
         },
     ]);
 
@@ -569,6 +598,10 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
             run: 'text_blur **',
+        }, {
+            content: "Check that the recipient email is correct",
+            trigger: 'we-input[data-field-name="email_to"] input:propValue("website_form_contactus_edition_no_email@mail.com")',
+            run: () => null, // it's a check.
         },
     ]));
 
@@ -687,6 +720,18 @@ odoo.define('website.tour.form_editor', function (require) {
             run: () => null,
         }
     ]);
+
+    wTourUtils.registerWebsitePreviewTour('website_form_contactus_change_random_option', {
+        test: true,
+        url: '/contactus',
+        edition: true,
+    }, editContactUs([
+        {
+            content: "Change a random option",
+            trigger: '[data-set-mark] input',
+            run: 'text_blur **',
+        },
+    ]));
 
     return {};
 });

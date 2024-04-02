@@ -339,6 +339,7 @@ class AutomaticEntryWizard(models.TransientModel):
 
     def do_action(self):
         move_vals = json.loads(self.move_data)
+        self = self.with_context(skip_computed_taxes=True)
         if self.action == 'change_period':
             return self._do_action_change_period(move_vals)
         elif self.action == 'change_account':
@@ -439,7 +440,7 @@ class AutomaticEntryWizard(models.TransientModel):
         for move, balances_per_account in acc_transfer_per_move.items():
             for account, balance in balances_per_account.items():
                 if account != self.destination_account_id:  # Otherwise, logging it here is confusing for the user
-                    rslt += self._format_strings(format, move, balance) % {'account_source_name': account.display_name}
+                    rslt += self._format_strings(format % {'account_source_name': account.display_name}, move, balance)
 
         rslt += '</ul>'
         return rslt
@@ -449,7 +450,7 @@ class AutomaticEntryWizard(models.TransientModel):
         content = ''
         for account, balance in balances_per_account.items():
             if account != self.destination_account_id:
-                content += self._format_strings(transfer_format, transfer_move, balance) % account.display_name
+                content += self._format_strings(transfer_format % account.display_name, transfer_move, balance)
         return content and '<ul>' + content + '</ul>' or None
 
     def _format_move_link(self, move):

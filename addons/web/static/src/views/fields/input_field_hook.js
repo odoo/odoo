@@ -49,6 +49,9 @@ export function useInputField(params) {
         if (component.props.setDirty) {
             component.props.setDirty(isDirty);
         }
+        if (component.props.record && !component.props.record.isValid) {
+            component.props.record.resetFieldValidity(component.props.name);
+        }
     }
 
     /**
@@ -159,8 +162,8 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.value || false)) {
-                await component.props.update(val);
                 lastSetValue = inputRef.el.value;
+                await component.props.update(val);
                 if (component.props.setDirty) {
                     component.props.setDirty(isDirty);
                 }

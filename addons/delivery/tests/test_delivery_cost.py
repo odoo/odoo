@@ -8,7 +8,10 @@ from odoo.tools import float_compare
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
-        super(TestDeliveryCost, self).setUp()
+        super().setUp()
+        self.env.company.write({
+            'country_id': self.env.ref('base.us').id,
+        })
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']
@@ -169,6 +172,7 @@ class TestDeliveryCost(common.TransactionCase):
                 'applied_on': '0_product_variant',
                 'product_id': self.normal_delivery.product_id.id,
             })],
+            'discount_policy': 'without_discount',
         })
 
         # Create sales order with Normal Delivery Charges
@@ -240,8 +244,9 @@ class TestDeliveryCost(common.TransactionCase):
         self.assertEqual(line.price_subtotal, 5.0, "Delivery cost does not correspond to 5.0")
 
     def test_01_taxes_on_delivery_cost(self):
-
         # Creating taxes and fiscal position
+
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
 
         tax_price_include = self.env['account.tax'].create({
             'name': '10% inc',
@@ -390,3 +395,41 @@ class TestDeliveryCost(common.TransactionCase):
         })
         shipping_weight = sale_order._get_estimated_weight()
         self.assertEqual(shipping_weight, self.product_4.weight, "Only positive quantity products' weights should be included in estimated weight")
+
+    def test_price_with_weight_volume_variable(self):
+        """ Test that the price is correctly computed when the variable is weight*volume. """
+        qty = 3
+        list_price = 2
+        volume = 2.5
+        weight = 1.5
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': self.env['product.product'].create({
+                        'name': 'wv',
+                        'weight': weight,
+                        'volume': volume,
+                    }).id,
+                    'product_uom_qty': qty,
+                    'product_uom': self.product_uom_unit.id,
+                }),
+            ],
+        })
+        delivery = self.env['delivery.carrier'].create({
+            'name': 'Delivery Charges',
+            'delivery_type': 'base_on_rule',
+            'product_id': self.product_delivery_normal.id,
+            'price_rule_ids': [(0, 0, {
+                'variable': 'price',
+                'operator': '>=',
+                'max_value': 0,
+                'list_price': list_price,
+                'variable_factor': 'wv',
+            })]
+        })
+        self.assertEqual(
+            delivery._get_price_available(sale_order),
+            qty * list_price * weight * volume,
+            "The shipping price is not correctly computed with variable weight*volume.",
+        )

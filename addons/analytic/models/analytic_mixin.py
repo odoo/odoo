@@ -11,7 +11,6 @@ class AnalyticMixin(models.AbstractModel):
     analytic_distribution = fields.Json(
         'Analytic',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
-        precompute=True
     )
     # Json non stored to be able to search on analytic_distribution.
     analytic_distribution_search = fields.Json(
@@ -109,6 +108,6 @@ class AnalyticMixin(models.AbstractModel):
 
     def _apply_analytic_distribution_domain(self, domain):
         return [
-            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' else leaf
+            ('analytic_distribution_search', leaf[1], leaf[2]) if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], str) else leaf
             for leaf in domain
         ]

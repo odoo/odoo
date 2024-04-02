@@ -35,8 +35,10 @@ class HrPlanActivityType(models.Model):
     @api.depends('activity_type_id')
     def _compute_default_summary(self):
         for plan_type in self:
-            if not plan_type.summary and plan_type.activity_type_id and plan_type.activity_type_id.summary:
+            if plan_type.activity_type_id and plan_type.activity_type_id.summary:
                 plan_type.summary = plan_type.activity_type_id.summary
+            else:
+                plan_type.summary = False
 
     def get_responsible_id(self, employee):
         warning = False

@@ -173,3 +173,33 @@ PosLoyalty.do.clickRewardButton();
 PosLoyalty.check.orderTotalIs('130.00');
 
 Tour.register('PosLoyaltySpecificDiscountWithFreeProductTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00', '15.00');
+PosLoyalty.check.orderTotalIs('15.00');
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.check.selectedOrderlineHas('Product B', '1.00', '50.00');
+PosLoyalty.check.orderTotalIs('40.00');
+
+Tour.register('PosLoyaltySpecificDiscountWithRewardProductDomainTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00', '15.00');
+PosLoyalty.check.orderTotalIs('15.00');
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.check.selectedOrderlineHas('Product B', '1.00', '50.00');
+PosLoyalty.check.orderTotalIs('40.00');
+
+Tour.register('PosLoyaltySpecificDiscountCategoryTour', { test: true, url: '/pos/web' }, getSteps());

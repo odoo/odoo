@@ -6,11 +6,11 @@
                 <DettaglioLinee>
                     <NumeroLinea t-esc="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
-                        <CodiceTipo>EAN</CodiceTipo>
+                        <CodiceTipo t-translation="off">EAN</CodiceTipo>
                         <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)[:35]"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
-                        <CodiceTipo>INTERNAL</CodiceTipo>
+                        <CodiceTipo t-translation="off">INTERNAL</CodiceTipo>
                         <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)[:35]"/>
                     </CodiceArticolo>
                     <Descrizione t-esc="format_alphanumeric(line_dict['description'])[:1000]"/>
@@ -26,12 +26,12 @@
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-esc="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_has_exoneration" t-esc="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Currency</TipoDato>
+                        <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
                         <RiferimentoNumero t-esc="'%.06f' % line.price_subtotal"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
-                        <TipoDato>Exch.Rate</TipoDato>
+                        <TipoDato t-translation="off">CAMBIO</TipoDato>
                         <RiferimentoNumero t-esc="conversion_rate"/>
                         <RiferimentoData t-esc="format_date(record.invoice_date)"/>
                     </AltriDatiGestionali>
@@ -143,14 +143,23 @@
                 <Data t-esc="format_date(record.invoice_date)"/>
                 <Numero t-esc="format_alphanumeric(record.name[-20:])"/>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
-                    <BolloVirtuale>SI</BolloVirtuale>
+                    <BolloVirtuale t-translation="off">SI</BolloVirtuale>
                     <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
-            <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
+            <DatiOrdineAcquisto t-if="origin_document_type == 'purchase_order'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiOrdineAcquisto>
+            <DatiOrdineAcquisto t-elif="record.ref and not record.reversed_entry_id">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
             </DatiOrdineAcquisto>
+            <DatiContratto t-if="origin_document_type == 'contract'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiContratto>
+            <DatiConvenzione t-if="origin_document_type == 'agreement'">
+                <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
+            </DatiConvenzione>
             <DatiFattureCollegate t-if="record.reversed_entry_id">
                 <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name[-20:])"/>
                 <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
@@ -186,17 +195,17 @@
                         <ImponibileImporto t-esc="format_monetary(tax_line['base_amount'], currency)"/>
                         <Imposta t-esc="format_monetary(tax_line['tax_amount'], currency)"/>
                     </t>
-                    <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
+                    <EsigibilitaIVA t-esc="tax_line['exigibility_code']"/>
                     <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
             </t>
         </DatiBeniServizi>
         <DatiPagamento t-if="partner_bank and record.move_type != 'out_refund'">
             <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))"/>
-            <CondizioniPagamento><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
+            <CondizioniPagamento t-translation="off"><t t-if="len(payments) == 1">TP02</t><t t-else="">TP01</t></CondizioniPagamento>
             <t t-foreach="payments" t-as="payment">
                 <DettaglioPagamento>
-                    <ModalitaPagamento>MP05</ModalitaPagamento>
+                    <ModalitaPagamento t-translation="off">MP05</ModalitaPagamento>
                     <DataScadenzaPagamento t-esc="format_date(payment.date_maturity)"/>
                     <ImportoPagamento t-esc="format_monetary(abs(payment.amount_currency), currency)"/>
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-esc="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
@@ -208,7 +217,7 @@
         </DatiPagamento>
         <Allegati t-if="pdf">
             <NomeAttachment t-esc="format_alphanumeric(pdf_name[:60])"/>
-            <FormatoAttachment>PDF</FormatoAttachment>
+            <FormatoAttachment t-translation="off">PDF</FormatoAttachment>
             <Attachment t-esc="pdf"/>
         </Allegati>
     </FatturaElettronicaBody>
@@ -223,6 +232,13 @@
                 <Provincia t-if="partner.country_id.code == 'IT' and partner.state_id" t-esc="partner.state_id.code[:2]"/>
                 <Nazione t-esc="partner.country_id.code"/>
             </Sede>
+</template>
+
+<template id="account_invoice_FatturaPA_origin_document">
+                <IdDocumento t-if="origin_document_name" t-esc="format_alphanumeric(origin_document_name[:20])"/>
+                <Data t-if="origin_document_date" t-esc="format_date(origin_document_date)"/>
+                <CodiceCUP t-if="cup" t-esc="format_alphanumeric(cup)[-15:]"/>
+                <CodiceCIG t-if="cig" t-esc="format_alphanumeric(cig)[-15:]"/>
 </template>
 
     </data>

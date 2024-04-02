@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Daye Jeong, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,9 @@ msgid ""
 "                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    예: 1*(기준 단위)=비율*(해당 단위)\n"
+"                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -35,6 +39,9 @@ msgid ""
 "                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
 "                                </span>"
 msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    예: 1*(해당 단위)=비율*(기준 단위)\n"
+"                                </span>"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -80,7 +87,7 @@ msgstr "색상"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
 msgid "Combined Ratio"
-msgstr ""
+msgstr "조합 비율"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
@@ -199,7 +206,7 @@ msgstr "이 분류의 기준 단위"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
 msgid "Reference UoM"
-msgstr ""
+msgstr "기준 측정 단위"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -214,7 +221,7 @@ msgstr "단위 검색"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
 msgid "Search UoM Category"
-msgstr ""
+msgstr "측정 단위 카테고리 검색"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
@@ -233,11 +240,18 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"%s 항목에서 일부 중요 필드가 수정되었습니다.\n"
+"이번 변경으로 기존 데이터가 업데이트되는 것이 아님을 유의하시기 바랍니다.\n"
+"\n"
+"측정 단위는 전체 시스템에 영향을 미치므로 심각한 문제를 초래할 수 있습니다.\n"
+"예를 들어, 반올림을 수정하는 경우 재고 잔액이 손상될 수 있습니다.\n"
+"\n"
+"따라서, 사용 중인 데이터베이스에서는 핵심적인 측정 단위를 변경하지 않는 것이 좋습니다."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
 msgid "Surface"
-msgstr ""
+msgstr "표면"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -258,6 +272,8 @@ msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
+"다음의 측정 단위는 시스템에서 사용되고 있으며 삭제할 수 없습니다: %s\n"
+"대신 보관 처리는 할 수 있습니다."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -278,12 +294,14 @@ msgid ""
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
+"주문 내역에서 지정된 %s 측정 단위는 품목에 지정된 %s 측정 단위와 동일한 카테고리에 속해 있지 않습니다. 주문 내역 혹은 품목에서 "
+"지정된 측정 단위를 동일한 카테고리에 속하도록 수정하시기 바랍니다."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
-msgstr ""
+msgstr "비율 값은 0이 될 수 없습니다."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -352,13 +370,13 @@ msgstr ""
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr ""
+msgstr "%s 측정 단위 카테고리에는 기준 측정 단위가 적어도 하나는 있어야 합니다."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
-msgstr ""
+msgstr "%s 측정 단위 카테고리에는 기준 측정 단위가 있어야 합니다."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -369,7 +387,7 @@ msgstr "UoM 범주 %s는 기준 측정 단위가 하나만 있어야 합니다."
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "측정 단위"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
@@ -409,27 +427,27 @@ msgstr "cm"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr ""
+msgstr "fl oz (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr ""
+msgstr "ft"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "ft²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
 msgid "ft³"
-msgstr ""
+msgstr "ft³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr ""
+msgstr "gal (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -439,7 +457,7 @@ msgstr "분류"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr ""
+msgstr "in³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -454,7 +472,7 @@ msgstr "km"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr ""
+msgstr "lb"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -464,29 +482,29 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "mm"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "m²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
 msgid "m³"
-msgstr ""
+msgstr "m³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr ""
+msgstr "oz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr ""
+msgstr "qt (US)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"

@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,9 +59,9 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế :\n"
-"  - Thủ công: số lượng được đặt thủ công trên mục\n"
+"  - Thủ công: số lượng được đặt thủ công trên dòng\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
-"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với mục bán hàng\n"
+"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
 "  - Dịch chuyển tồn kho: số lượng đến từ các phiếu giao hàng đã xác nhận\n"
 
 #. module: sale_project
@@ -175,8 +176,8 @@ msgid ""
 "spent."
 msgstr ""
 "Lập hóa đơn số lượng đã đặt ngay khi dịch vụ này được bán. Tạo một dự án cho"
-" đơn hàng với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý."
-" "
+" đơn hàng với nhiệm vụ cho mỗi dòng đơn bán hàng để theo dõi thời gian xử "
+"lý. "
 
 #. module: sale_project
 #. odoo-python
@@ -222,7 +223,7 @@ msgid ""
 msgstr ""
 "Lập hóa đơn cho dịch vụ này khi nó được bàn giao (thiết lập số lượng trong "
 "chi tiết đơn bán hàng của bạn một cách thủ công). Tạo một dự án cho đơn hàng"
-" với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý."
+" với nhiệm vụ cho mỗi dòng đơn bán hàng để theo dõi thời gian xử lý."
 
 #. module: sale_project
 #. odoo-python
@@ -266,7 +267,7 @@ msgid ""
 "order with a task for each sales order line to track the time spent."
 msgstr ""
 "Lập hoá đơn cho mốc thời gian khi bạn đạt được. Tạo một dự án cho đơn hàng "
-"với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý. "
+"với nhiệm vụ cho mỗi dòng đơn bán hàng để theo dõi thời gian xử lý. "
 
 #. module: sale_project
 #. odoo-python
@@ -420,6 +421,13 @@ msgstr ""
 
 #. module: sale_project
 #. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Hành động không được hỗ trợ"
+
+#. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
@@ -513,6 +521,11 @@ msgid "Quantity"
 msgstr "Số lượng"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Dòng mẫu báo giá"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr "Mốc thời gian đã đạt"
@@ -602,7 +615,7 @@ msgstr "Hạng mục đơn bán hàng"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Mục đơn bán hàng"
+msgstr "Dòng đơn bán hàng"
 
 #. module: sale_project
 #. odoo-python
@@ -644,13 +657,6 @@ msgstr "Tìm kiếm trong hóa đơn"
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Tìm kiếm trong đơn bán hàng"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr "Tìm kiếm trong hạng mục đơn bán hàng"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id

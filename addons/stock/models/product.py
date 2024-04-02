@@ -121,7 +121,7 @@ class Product(models.Model):
         'location', 'warehouse',
     )
     def _compute_quantities(self):
-        products = self.filtered(lambda p: p.type != 'service')
+        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
             product.update(res[product.id])
@@ -253,6 +253,7 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, compute_child
         '''
+        Location = self.env['stock.location']
         Warehouse = self.env['stock.warehouse']
 
         def _search_ids(model, values):
@@ -281,7 +282,14 @@ class Product(models.Model):
             w_ids = set(Warehouse.browse(_search_ids('stock.warehouse', warehouse)).mapped('view_location_id').ids)
             if location:
                 l_ids = _search_ids('stock.location', location)
-                location_ids = w_ids & l_ids
+                parents = Location.browse(w_ids).mapped("parent_path")
+                location_ids = {
+                    loc.id
+                    for loc in Location.browse(l_ids)
+                    if any(loc.parent_path.startswith(parent) for parent in parents)
+                }
+                if not location_ids:
+                    return [[expression.FALSE_LEAF]] * 3
             else:
                 location_ids = w_ids
         else:
@@ -347,7 +355,7 @@ class Product(models.Model):
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
             raise UserError(_('Invalid domain operator %s', operator))
         if not isinstance(value, (float, int)):
-            raise UserError(_('Invalid domain right operand %s', value))
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
@@ -360,6 +368,11 @@ class Product(models.Model):
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
+        if operator not in ('<', '>', '=', '!=', '<=', '>='):
+            raise UserError(_('Invalid domain operator %s', operator))
+        if not isinstance(value, (float, int)):
+            raise UserError(_("Invalid domain right operand '%s'. It must be of type Integer/Float", value))
+
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -587,8 +600,8 @@ class Product(models.Model):
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
-    def _get_date_with_security_lead_days(self, date, location):
-        rules = self._get_rules_from_location(location)
+    def _get_date_with_security_lead_days(self, date, location, route_ids=False):
+        rules = self._get_rules_from_location(location, route_ids=route_ids)
         for action, days in location.company_id._get_security_by_rule_action().items():
             if action in rules.mapped('action'):
                 date -= relativedelta(days=days)
@@ -826,7 +839,7 @@ class ProductTemplate(models.Model):
     @api.depends('type')
     def _compute_tracking(self):
         self.filtered(
-            lambda t: not t.tracking or t.type == 'consu' and t.tracking != 'none'
+            lambda t: not t.tracking or t.type in ('consu', 'service')  and t.tracking != 'none'
         ).tracking = 'none'
 
     @api.onchange('type')
@@ -870,7 +883,7 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].sudo().search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You cannot change the unit of measure as there are already stock moves for this product. If you want to change the unit of measure, you should rather archive this product and create a new one."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:

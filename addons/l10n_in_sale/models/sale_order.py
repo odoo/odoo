@@ -37,6 +37,8 @@ class SaleOrder(models.Model):
     @api.depends('company_id')
     def _compute_l10n_in_journal_id(self):
         for order in self:
+            if order._origin and order._origin.company_id == order.company_id and order.l10n_in_journal_id.company_id == order.company_id:
+                continue
             # set default value as False so CacheMiss error never occurs for this field.
             order.l10n_in_journal_id = False
             if order.country_code == 'IN':

@@ -5,21 +5,22 @@
 # Translators:
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Marcos Rodrigues, 2022
-# grazziano <gra.negocia@gmail.com>, 2022
+# grazziano <grazziano.do+transifex@gmail.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
 # Kevilyn Rosa, 2023
-# Layna Nascimento, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: adrianojprado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,18 +59,18 @@ msgstr "- Tarefas por prazo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr "# Colaboradores"
+msgstr "Nº de colaboradores"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr "# Classificações"
+msgstr "Nº de avaliações"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 #: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
-msgstr "# Tarefas"
+msgstr "Nº de tarefas"
 
 #. module: project
 #. odoo-javascript
@@ -78,7 +79,13 @@ msgstr "# Tarefas"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 #, python-format
 msgid "# of Tasks"
-msgstr "# de Tarefas"
+msgstr "Nº de tarefas"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -88,6 +95,12 @@ msgid ""
 msgstr ""
 "#{record.milestone_count_reached.value} etapas concluídas de "
 "#{record.milestone_count.value}"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -108,14 +121,14 @@ msgstr "Gráfico de Burndown %(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr " Etapas%(name)s"
+msgstr " Etapas de %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr "Classificação %(name)s"
+msgstr "Avaliação de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -128,15 +141,8 @@ msgstr "Análise das tarefas%(name)s"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "%(name)s's Timesheets"
-msgstr "Planilha de horas %(name)s"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid "%(name)s's Updates"
-msgstr "Atualizações %(name)s"
+msgstr "Atualizações de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -323,7 +329,7 @@ msgstr "31"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr "<b>Arraste & Solte</b> o cartão para mudar sua tarefa de estágio."
+msgstr "<b>Arraste e solte</b> o cartão para mudar sua tarefa de estágio."
 
 #. module: project
 #. odoo-javascript
@@ -483,13 +489,13 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Olá <t t-out=\"object.partner_id.name or 'customer'\">Maria da Silva</t>,<br>\n"
-"   Tenho o prazer de informar que concluímos o projeto \"<strong t-out=\"object.name or ''\">Renovações</strong> com sucesso \".\n"
+"   Tenho o prazer de informar que concluímos o projeto “<strong t-out=\"object.name or ''\">Renovações</strong>” com sucesso.\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Você está recebendo este e-mail porque seu projeto foi movido para a etapa<b t-out=\"object.stage_id.name or ''\">Feito</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Você está recebendo este e-mail porque seu projeto foi movido para a etapa<b t-out=\"object.stage_id.name or ''\">Concluído</b></span>\n"
 "            "
 
 #. module: project
@@ -516,7 +522,7 @@ msgstr ""
 "    Obrigado,\n"
 "    <t t-if=\"user.signature\">\n"
 "        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -639,7 +645,7 @@ msgstr "<span class=\"o_stat_text\">Bloqueio</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr "<span class=\"o_stat_text\">Última classificação</span>"
+msgstr "<span class=\"o_stat_text\">Última avaliação</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -728,8 +734,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Um dicionário python que será avaliado para gerar valores padrão quando "
-"forem criados novos registros para este apelido."
+"Um dicionário python que será avaliado para fornecer valores padrões ao "
+"criar novos registros para este alias."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -761,7 +767,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr "Já existe uma tag com o mesmo nome."
+msgstr "Já existe um marcador com o mesmo nome."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -919,7 +925,7 @@ msgstr "Nome do Apelido"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias domain"
-msgstr "Apelido do domínio"
+msgstr "Domínio do alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_value
@@ -929,7 +935,7 @@ msgstr "Codinome de e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo Apelidado"
+msgstr "Modelo de alias"
 
 #. module: project
 #. odoo-python
@@ -1037,7 +1043,7 @@ msgstr "Abril"
 #: code:addons/project/static/src/views/project_task_list/project_task_list_controller.js:0
 #, python-format
 msgid "Archive"
-msgstr "Arquivo"
+msgstr "Arquivar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -1240,30 +1246,30 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr "Classificação média"
+msgstr "Avaliação média"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr "Classificação média (%)"
+msgstr "Avaliação média (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr "Classificação média: Insatisfeito"
+msgstr "Avaliação média: insatisfeito"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr "Classificação média: Bom"
+msgstr "Avaliação média: bom"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr "Classificação média: Satisfeito"
+msgstr "Avaliação média: satisfeito"
 
 #. module: project
 #. odoo-javascript
@@ -1491,9 +1497,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
-"Colete feedback de seus clientes enviando a eles uma solicitação de classificação quando uma tarefa entrar em um determinado estágio. Para fazer isso, defina um modelo de e-mail de classificação nos estágios correspondentes.\n"
-"Classificação ao mudar de estágio: um e-mail será enviado automaticamente quando a tarefa atingir o estágio no qual o modelo de e-mail de classificação está definido.\n"
-"Classificação periódica: um e-mail será enviado automaticamente em intervalos regulares, desde que a tarefa permaneça no estágio em que o modelo de e-mail de classificação está definido."
+"Colete feedback de seus clientes enviando a eles uma solicitação de avaliação quando uma tarefa entrar em um determinado estágio. Para fazer isso, defina um modelo de e-mail de avaliação nos estágios correspondentes.\n"
+"Avaliação ao mudar de estágio: um e-mail será enviado automaticamente quando a tarefa atingir o estágio no qual o modelo de e-mail de avaliação está definido.\n"
+"Avaliação periódica: um e-mail será enviado automaticamente em intervalos regulares, desde que a tarefa permaneça no estágio em que o modelo de e-mail de avaliação está definido."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1756,7 +1762,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Mensagem devolvida personalizada"
+msgstr "Mensagem de devolução personalizada"
 
 #. module: project
 #. odoo-python
@@ -2177,8 +2183,8 @@ msgstr ""
 "Se não tem acesso, pule esses dados para o e-mail com o resumo do usuário"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2198,7 +2204,7 @@ msgstr "Concluído"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr "Provisório"
+msgstr "Rascunho"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -2679,9 +2685,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
-"Se definido, uma solicitação de classificação será automaticamente enviada por e-mail ao cliente quando a tarefa atingir esse estágio. \n"
+"Se definido, uma solicitação de avaliação será automaticamente enviada por e-mail ao cliente quando a tarefa atingir esse estágio. \n"
 "Como alternativa, ela será enviada em um intervalo regular enquanto a tarefa permanecer nesse estágio, dependendo da configuração do seu projeto. \n"
-"Para usar esse recurso, certifique-se de que a opção \"Avaliações do cliente\" esteja ativada em seu projeto."
+"Para usar esse recurso, certifique-se de que a opção “Avaliações do cliente” esteja ativada em seu projeto."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2720,8 +2726,8 @@ msgstr ""
 "sem removê-lo."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3117,7 +3123,7 @@ msgstr "Últimas Atividades"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Milestones"
-msgstr "Etapa atrasada"
+msgstr "Marcos atrasados"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -3154,8 +3160,22 @@ msgstr "Vamos criar o seu primeiro <b>projeto</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Vamos criar seu primeiro <b>estágio</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Vamos criar a sua primeira <b>tarefa</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Vamos criar seu segundo <b>estágio</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3311,8 +3331,8 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3353,7 +3373,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Milestones"
-msgstr "Etapas"
+msgstr "Marcos"
 
 #. module: project
 #. odoo-javascript
@@ -3479,8 +3499,8 @@ msgid "Neutral face"
 msgstr "Carinha Neutra"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3588,6 +3608,11 @@ msgstr "Próxima Data da Recorrência"
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
 msgstr "Próximas Recorrências"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Nenhum cliente"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3851,9 +3876,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id opcional de um tópico (registro) ao qual todas as mensagens recebidas "
-"serão anexadas, a não ser que elas não sejam respostas a este. Se definido, "
-"ele desabilitará a criação de novos registros completamente."
+"ID opcional de uma thread (registro) à qual todas as mensagens recebidas "
+"serão anexadas, até mesmo quando não sejam respostas à thread. Se definido, "
+"isso desabilitará totalmente a criação de novos registros."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3903,7 +3928,7 @@ msgstr "Modelo Principal"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID de Registro Pai da Linha"
+msgstr "ID da thread do registro primário"
 
 #. module: project
 #. odoo-python
@@ -3923,9 +3948,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo de pai segurando o alias. O modelo segurando a referência de alias\n"
-"não é necessariamente o modelo dado por alias_model_id\n"
-"(example: project (parent_model) and task (model))"
+"Modelo primário que contém o alias. O modelo que contém a referência de "
+"alias não é necessariamente o modelo dado por alias_model_id (exemplo: "
+"projeto (parent_model) e tarefa (model))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -4139,8 +4164,8 @@ msgid "Progress Percentage"
 msgstr "Percentagem de Progresso"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4411,7 +4436,7 @@ msgstr "Avaliação"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr "Classificação (/5)"
+msgstr "Avaliação (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -4493,7 +4518,7 @@ msgstr "Avaliações"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
 msgid "Reached"
-msgstr "Atingido"
+msgstr "Alcançado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
@@ -4983,7 +5008,7 @@ msgstr "Compartilhar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Share Editable"
-msgstr "Configurar editável"
+msgstr "Compartilhar Editável"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
@@ -5070,8 +5095,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint em Progresso"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5324,7 +5349,7 @@ msgstr "Propriedades das tarefas"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr "Tarefa de avaliação"
+msgstr "Avaliação da tarefa"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -5343,7 +5368,7 @@ msgstr "Recorrência de Tarefa"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Estágios de Tarefas"
+msgstr "Estágio da tarefa"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -5541,9 +5566,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"O modelo (Odoo Documento Tipo), ao qual este apelido corresponde. Qualquer "
-"e-mails recebidos que não responde a um registro existente fará com que a "
-"criação de um novo registro desse modelo (e.g. a Project Task)"
+"O modelo (tipo de documento do Odoo) ao qual esse alias corresponde. "
+"Qualquer e-mail recebido que não responda a um registro existente causará a "
+"criação de um novo registro desse modelo (ex.: uma tarefa de projeto)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5551,8 +5576,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"O nome do alias de e-mail, por exemplo, 'empregos' se você quer pegar "
-"e-mails para <empregos@suaempresa.com.br>"
+"O nome do alias de e-mail, por exemplo, 'empregos', se desejar receber "
+"e-mails enviados a <empregos@suaempresa.com.br>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -5562,11 +5587,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"O proprietário dos registros criados após o recebimento de e-mails neste "
-"apelido. Se este campo não estiver definido, o sistema tentará encontrar o "
-"proprietário correto baseado no endereço do remetente (De), ou utilizará a "
-"conta do Administrador se não for encontrado um usuário do sistema para este"
-" endereço."
+"O proprietário dos registros criados ao receber e-mails com este alias. Se "
+"este campo não estiver definido, o sistema tentará encontrar o proprietário "
+"correto baseado no endereço do remetente (De), ou utilizará a conta do "
+"Administrador se não for encontrado um usuário do sistema para este "
+"endereço."
 
 #. module: project
 #. odoo-python
@@ -5763,7 +5788,7 @@ msgstr "A faturar "
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
 msgid "To Do"
-msgstr "Lista de Tarefas"
+msgstr "A fazer"
 
 #. module: project
 #. odoo-javascript
@@ -5979,7 +6004,7 @@ msgstr "Usar codinome de e-mail"
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr "Usar etapas"
+msgstr "Usar marcos"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -6036,7 +6061,7 @@ msgstr "Usar etiquetas para categorizar suas tarefas."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr "Usar o"
+msgstr "Use"
 
 #. module: project
 #. odoo-javascript

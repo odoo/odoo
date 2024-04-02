@@ -105,6 +105,36 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
+MAIL_TEMPLATE_HTML = """Return-Path: {return_path}
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>=20
+  <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
+ </head>=20
+ <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
+
+  <p>Please call me as soon as possible this afternoon!</p>
+
+  <p>--<br/>
+     Sylvie
+  <p>
+ </body>
+</html>
+"""
+
 MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
 X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
@@ -166,7 +196,7 @@ X-Attachment-Id: f_hkpb27k00
 dGVzdAo=
 --089e01536c4ed4d17204e49b8e96--"""
 
-MAIL_MULTIPART_MIXED_TWO = """X-Original-To: raoul@grosbedon.fr
+MAIL_MULTIPART_MIXED_TWO = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -371,7 +401,7 @@ PEludm9pY2U+Q2hhdXNzw6llIGRlIEJydXhlbGxlczwvSW52b2ljZT4=
 """
 
 
-MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+MAIL_SINGLE_BINARY = r"""X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
     id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
@@ -1262,3 +1292,23 @@ To: lucie@petitebedaine.fr
 From: "Bruce Wayne" <bruce@wayneenterprises.com>
 
 SSBhbSB0aGUgQmF0TWFuCg=="""
+
+MAIL_PDF_MIME_TEMPLATE = """\
+To: {to}
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+
+------=_Part_4200734_24778174.1344608186754
+Content-Type: {pdf_mime}; name="scan_soraya.lernout_1691652648.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==
+
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+PDF_PARSED = b'''%PDF-1.1\n%\xc2\xa5\xc2\xb1\xc3\xab\n\n1 0 obj\n  << /Type /Catalog\n     /Pages 2 0 R\n  >>\nendobj\n\n2 0 obj\n  << /Type /Pages\n     /Kids [3 0 R]\n     /Count 1\n     /MediaBox [0 0 300 144]\n  >>\nendobj\n\n3 0 obj\n  <<  /Type /Page\n      /Parent 2 0 R\n      /Resources\n       << /Font\n           << /F1\n               << /Type /Font\n                  /Subtype /Type1\n                  /BaseFont /Times-Roman\n               >>\n           >>\n       >>\n      /Contents 4 0 R\n  >>\nendobj\n\n4 0 obj\n  << /Length 55 >>\nstream\n  BT\n    /F1 18 Tf\n    0 0 Td\n    (Hello World) Tj\n  ET\nendstream\nendobj\n\nxref\n0 5\n0000000000 65535 f \n0000000018 00000 n \n0000000077 00000 n \n0000000178 00000 n \n0000000457 00000 n \ntrailer\n  <<  /Root 1 0 R\n      /Size 5\n  >>\nstartxref\n565\n%%EOF\n'''

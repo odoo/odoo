@@ -15,10 +15,17 @@ const convertToLink = createLink;
 const unlink = async function (editor) {
     editor.execCommand('unlink');
 };
-const testUrlRegex = (url) => {
-    it(`should be a link: ${url}`, () => {
-        window.chai.assert.exists(url.match(URL_REGEX));
-        window.chai.assert.exists(url.match(URL_REGEX_WITH_INFOS));
+const testUrlRegex = (content, {expectedUrl} = {}) => {
+    const message = expectedUrl ?
+        `should have the text be "${content}" with one link ${expectedUrl}` :
+        `should be a link: ${content}`;
+    it(message, () => {
+        const match = content.match(URL_REGEX);
+        if (expectedUrl) {
+            window.chai.assert.equal(expectedUrl, match && match[0]);
+        }
+        window.chai.assert.exists(content.match(URL_REGEX));
+        window.chai.assert.exists(content.match(URL_REGEX_WITH_INFOS));
     });
 }
 const testNotUrlRegex = (url) => {
@@ -31,33 +38,123 @@ const testNotUrlRegex = (url) => {
 describe('Link', () => {
     describe('regex', () => {
         testUrlRegex('google.com');
+        testUrlRegex('a google.com b', {expectedUrl: 'google.com'});
+
+        // Url separator
+        testUrlRegex('google.com/', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com?', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com#', {expectedUrl: 'google.com#'});
+
+        testUrlRegex('google.com!', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com)', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com(', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com/ a', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com. a', {expectedUrl: 'google.com'});
+        testUrlRegex('google.com, a', {expectedUrl: 'google.com'});
+
+        // Some special characters should not be included if at the end.
+        testUrlRegex('google.com/.', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/,', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/)', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/]', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/}', {expectedUrl: 'google.com/'});
+        testUrlRegex("google.com/'", {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com/"', {expectedUrl: 'google.com/'});
+        testUrlRegex('google.com#.', {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com#,', {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com#)', {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com#]', {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com#}', {expectedUrl: 'google.com#'});
+        testUrlRegex("google.com#'", {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com#"', {expectedUrl: 'google.com#'});
+        testUrlRegex('google.com?,', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com?.', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com?)', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com?]', {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com?}', {expectedUrl: 'google.com?'});
+        testUrlRegex("google.com?'", {expectedUrl: 'google.com?'});
+        testUrlRegex('google.com?"', {expectedUrl: 'google.com?'});
+
+        // The previous special character should be included when they are nt at the end.
+        testUrlRegex('google.com/.a', {expectedUrl: 'google.com/.a'});
+        testUrlRegex('google.com/,a', {expectedUrl: 'google.com/,a'});
+        testUrlRegex('google.com/)a', {expectedUrl: 'google.com/)a'});
+        testUrlRegex('google.com/]a', {expectedUrl: 'google.com/]a'});
+        testUrlRegex('google.com/}a', {expectedUrl: 'google.com/}a'});
+        testUrlRegex("google.com/'a", {expectedUrl: "google.com/'a"});
+        testUrlRegex('google.com/"a', {expectedUrl: 'google.com/"a'});
+
+        // Other special character can be included at the end.
+        testUrlRegex('google.com/(', {expectedUrl: 'google.com/('});
+        testUrlRegex('google.com/[', {expectedUrl: 'google.com/['});
+        testUrlRegex('google.com/{', {expectedUrl: 'google.com/{'});
+        testUrlRegex('google.com?(', {expectedUrl: 'google.com?('});
+        testUrlRegex('google.com?[', {expectedUrl: 'google.com?['});
+        testUrlRegex('google.com?{', {expectedUrl: 'google.com?{'});
+        testUrlRegex('google.com#(', {expectedUrl: 'google.com#('});
+        testUrlRegex('google.com#[', {expectedUrl: 'google.com#['});
+        testUrlRegex('google.com#{', {expectedUrl: 'google.com#{'});
+
         testUrlRegex('google.co.uk');
+        testUrlRegex('google123.com');
         testUrlRegex('http://google.com');
+        testUrlRegex('http://google123.com');
         testUrlRegex('https://google.com');
+        testUrlRegex('https://google123.com');
         testUrlRegex('https://www.google.com');
+        testUrlRegex('https://google.shop');
         testNotUrlRegex('google.shop');
         testUrlRegex('google.com/');
+        testUrlRegex('google.com/path/123/abc/4');
         testUrlRegex('http://google.com/');
+        testUrlRegex('http://google.com/home');
+        testUrlRegex('http://google.com/home/');
         testUrlRegex('https://google.com/');
         testUrlRegex('https://google.co.uk/');
         testUrlRegex('https://www.google.com/');
         testNotUrlRegex('google.shop/');
         testUrlRegex('http://google.com/foo#test');
-        testUrlRegex('a.bcd.ef');
+        testUrlRegex('http://google.com/#test');
+        testNotUrlRegex('a.bcd.ef');
         testUrlRegex('a.bc.de');
         testNotUrlRegex('a.bc.d');
         testNotUrlRegex('a.b.bc');
         testNotUrlRegex('20.08.2022');
         testNotUrlRegex('31.12');
+
+        // Url data and anchors count as part of the url.
+        testUrlRegex('google.com?data=hello', { expectedUrl: 'google.com?data=hello' });
+        testUrlRegex('google.com/?data=hello', { expectedUrl: 'google.com/?data=hello' });
+        testUrlRegex('google.com/foo/?data=hello', { expectedUrl: 'google.com/foo/?data=hello' });
+        testUrlRegex('google.com/foo/?data1=hello1&data2=hello2', { expectedUrl: 'google.com/foo/?data1=hello1&data2=hello2' });
+        testUrlRegex('google.com/.?data=hello', { expectedUrl: 'google.com/.?data=hello' });
+        testUrlRegex('google.com?data=hello#anchor', { expectedUrl: 'google.com?data=hello#anchor' });
+        testUrlRegex('google.com/?data=hello#anchor', { expectedUrl: 'google.com/?data=hello#anchor' });
+        testUrlRegex('google.com/.?data=hello#anchor', { expectedUrl: 'google.com/.?data=hello#anchor' });
+        testUrlRegex('google.com/foo/?data=hello&data2=foo#anchor', { expectedUrl: 'google.com/foo/?data=hello&data2=foo#anchor' });
+
+        // Url containing some special characters
+        testUrlRegex('www.google.com/path/1-2-3', { expectedUrl: 'www.google.com/path/1-2-3' });
+        testUrlRegex('https://google.com/abc..def', { expectedUrl: 'https://google.com/abc..def' });
+        testUrlRegex('https://google.com/a/b+c@d', { expectedUrl: 'https://google.com/a/b+c@d' });
+        testUrlRegex('sub.example-website.com', { expectedUrl: 'sub.example-website.com' });
+        testUrlRegex('http://sub.example-website.com', { expectedUrl: 'http://sub.example-website.com' });
+        testUrlRegex('http://user:password@example.com', { expectedUrl: 'http://user:password@example.com' });
+        testUrlRegex('http://google.com/a_b', { expectedUrl: 'http://google.com/a_b' });
+        testUrlRegex('https://google.com?query=ab.cd', { expectedUrl: 'https://google.com?query=ab.cd' });
+        testUrlRegex(`google.com/'ab'/cd`, { expectedUrl: "google.com/'ab'/cd" });
+        testUrlRegex(`www.google.com/a!b/c?d,e,f#g!i`, { expectedUrl: 'www.google.com/a!b/c?d,e,f#g!i' });
+        testUrlRegex(`www.google.com/a%b%c`, { expectedUrl: 'www.google.com/a%b%c' });
+        testUrlRegex(`http://google.com?a.b.c&d!e#e'f`, { expectedUrl: "http://google.com?a.b.c&d!e#e'f" });
     });
     describe('insert Link', () => {
-        // This fails, but why would the cursor stay inside the link
-        // if the next text insert should be outside of the link (see next test)
         describe('range collapsed', () => {
             it('should insert a link and preserve spacing', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>a [] c</p>',
                     stepFunction: createLink,
+                    // Two consecutive spaces like one so `a [] c` is
+                    // effectively the same as `a []c`.
                     contentAfter: '<p>a <a href="#">link</a>[]c</p>',
                 });
             });
@@ -218,6 +315,45 @@ describe('Link', () => {
                         await insertText(editor, 'o');
                     },
                     contentAfter: '<p>a<a href="http://google.com">http://goo[]gle.com</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="mailto:hello@moto.com">hello@moto[].com</a></p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'r');
+                    },
+                    contentAfter: '<p>a<a href="mailto:hello@motor.com">hello@motor[].com</a></p>',
+                });
+            });
+            it('should change the url when the label change, without changing the protocol', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                    },
+                    contentAfter: '<p>a<a href="http://google.com">google.com[]</a>b</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="https://google.co">google.co[]</a>b</p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, 'm');
+                    },
+                    contentAfter: '<p>a<a href="https://google.com">google.com[]</a>b</p>',
+                });
+            });
+            it('should change the url when the label change, changing to the suitable protocol', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="http://hellomoto.com">hello[]moto.com</a></p>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '@');
+                    },
+                    contentAfter: '<p>a<a href="mailto:hello@moto.com">hello@[]moto.com</a></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a<a href="mailto:hello@moto.com">hello@[]moto.com</a></p>',
+                    stepFunction: async editor => {
+                        await deleteBackward(editor);
+                    },
+                    contentAfter: '<p>a<a href="https://hellomoto.com">hello[]moto.com</a></p>',
                 });
             });
             it('should change the url in one step', async () => {
@@ -437,7 +573,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">bc[</a>d]e</p>',
+                    contentAfter: '<p>a<a href="exist">bc</a>[d]e</p>',
                 });
                 // BACKWARD
                 await testEditor(BasicEditor, {
@@ -445,7 +581,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">bc]</a>d[e</p>',
+                    contentAfter: '<p>a<a href="exist">bc</a>]d[e</p>',
                 });
             });
             it('should remove the link in the selected range in the middle of a link', async () => {
@@ -455,7 +591,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">b[</a>c]<a href="exist">d</a>e</p>',
+                    contentAfter: '<p>a<a href="exist">b</a>[c]<a href="exist">d</a>e</p>',
                 });
                 // BACKWARD
                 await testEditor(BasicEditor, {
@@ -463,7 +599,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">b]</a>c[<a href="exist">d</a>e</p>',
+                    contentAfter: '<p>a<a href="exist">b</a>]c[<a href="exist">d</a>e</p>',
                 });
             });
             it('should remove the link in the selected range at the start of a link', async () => {
@@ -491,7 +627,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">bc[</a>de]f</p>',
+                    contentAfter: '<p>a<a href="exist">bc</a>[de]f</p>',
                 });
                 // BACKWARD
                 await testEditor(BasicEditor, {
@@ -499,7 +635,7 @@ describe('Link', () => {
                     stepFunction: async editor => {
                         await unlink(editor);
                     },
-                    contentAfter: '<p>a<a href="exist">bc]</a>de[f</p>',
+                    contentAfter: '<p>a<a href="exist">bc</a>]de[f</p>',
                 });
             });
             it('should remove the link in the selected range overlapping the start of a link', async () => {
@@ -539,23 +675,23 @@ describe('Link', () => {
         };
         it('should restrict editing to link when clicked', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
                 stepFunction: async editor => {
                     const a = await clickOnLink(editor);
                     window.chai.expect(a.isContentEditable).to.be.equal(true);
                 },
-                contentAfter: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentAfter: '<p>a<a href="#/"><span class="a">b</span></a></p>',
             });
             // The following is a regression test, checking that the link
             // remains non-editable whenever the editable zone is contained by
             // the link.
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="#/"><span>b</span></a></p>',
+                contentBefore: '<p>a<a href="#/"><span class="a">b</span></a></p>',
                 stepFunction: async editor => {
                     const a = await clickOnLink(editor);
                     window.chai.expect(a.isContentEditable).to.be.equal(false);
                 },
-                contentAfter: '<p>a<a href="#/"><span contenteditable="true">b</span></a></p>',
+                contentAfter: '<p>a<a href="#/"><span class="a" contenteditable="true">b</span></a></p>',
             }, {
                 isRootEditable: false,
                 getContentEditableAreas: function (editor) {
@@ -567,13 +703,16 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
-                    console.log(a.closest('.odoo-editor-editable').outerHTML);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
-                contentAfterEdit: '<p>a<a href="#/" contenteditable="true" data-oe-zws-empty-inline="">[]\u200B</a>c</p>',
+                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="" class="o_link_in_selection">' +
+                        '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+                        '[]\u200B' + // content: empty inline zws
+                        '<span data-o-link-zws="end">\u200B</span>' + // end zws
+                    '</a>' +
+                    '<span data-o-link-zws="after" contenteditable="false">\u200B</span>' + // after zws
+                    'c</p>',
                 contentAfter: '<p>a[]c</p>',
             });
         });
@@ -581,16 +720,11 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '1');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '2');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await insertText(editor, '3');
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                 },
                 contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
             });
@@ -599,14 +733,10 @@ describe('Link', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p><a href="#/">abc[]abc</a></p>',
                 stepFunction: async editor => {
-                    const a = await clickOnLink(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await clickOnLink(editor);
                     await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await deleteBackward(editor);
-                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
                     await deleteBackward(editor);
                 },
                 contentAfter: '<p><a href="#/">[]abc</a></p>',
@@ -616,58 +746,58 @@ describe('Link', () => {
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span></a>c</p>',
-                contentAfter: '<p>a<a href="exist"><span>b[]</span></a>c</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b[]</span></a>c</p>',
             });
         });
         it('should parse correctly an empty span inside a Link', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist">b[]<span></span></a>c</p>',
-                contentAfter: '<p>a<a href="exist">b[]<span></span></a>c</p>',
+                contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
+                contentAfter: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
             });
         });
         it('should parse correctly a span inside a Link 2', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span>c</a>d</p>',
-                contentAfter: '<p>a<a href="exist"><span>b[]</span>c</a>d</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b[]</span>c</a>d</p>',
             });
         });
         it('should parse correctly an empty span inside a Link then add a char', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist">b[]<span></span></a>c</p>',
+                contentBefore: '<p>a<a href="exist">b[]<span class="a"></span></a>c</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
-                contentAfter: '<p>a<a href="exist">bc[]<span></span></a>c</p>',
+                contentAfter: '<p>a<a href="exist">bc[]<span class="a"></span></a>c</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span></a>d</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span></a>d</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
                 // JW cAfter: '<p>a<span><a href="exist">b</a>c[]</span>d</p>',
-                contentAfter: '<p>a<a href="exist"><span>bc[]</span></a>d</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span></a>d</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char 2', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b[]</span>d</a>e</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b[]</span>d</a>e</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'c');
                 },
-                contentAfter: '<p>a<a href="exist"><span>bc[]</span>d</a>e</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">bc[]</span>d</a>e</p>',
             });
         });
         it('should parse correctly a span inside a Link then add a char 3', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: '<p>a<a href="exist"><span>b</span>c[]</a>e</p>',
+                contentBefore: '<p>a<a href="exist"><span class="a">b</span>c[]</a>e</p>',
                 stepFunction: async editor => {
                     await insertText(editor, 'd');
                 },
-                // JW cAfter: '<p>a<a href="exist"><span>b</span>c</a>d[]e</p>',
-                contentAfter: '<p>a<a href="exist"><span>b</span>cd[]</a>e</p>',
+                // JW cAfter: '<p>a<a href="exist"><span class="a">b</span>c</a>d[]e</p>',
+                contentAfter: '<p>a<a href="exist"><span class="a">b</span>cd[]</a>e</p>',
             });
         });
         it('should add a character after the link', async () => {

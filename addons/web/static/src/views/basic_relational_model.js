@@ -41,7 +41,28 @@ class DataPoint {
         } else if (params.handle) {
             this.__bm_handle__ = params.handle;
             info = this.model.__bm__.get(this.__bm_handle__);
-            this.context = this.model.__bm__.localData[this.__bm_handle__].getContext();
+            // Create a lazy property that sets itself on first read, because creating the context
+            // is very expensive, and in some cases we are creating a lot of DataPoints whose
+            // context will never be read.
+            Object.defineProperty(this, "context", {
+                get() {
+                    const context = this.model.__bm__.localData[this.__bm_handle__].getContext();
+                    Object.defineProperty(this, "context", {
+                        value: context,
+                        configurable: true,
+                        writable: true,
+                    });
+                    return context;
+                },
+                set(value) {
+                    Object.defineProperty(this, "context", {
+                        value,
+                        configurable: true,
+                        writable: true,
+                    });
+                },
+                configurable: true,
+            });
         } else {
             throw new Error("Datapoint needs load params or handle");
         }
@@ -243,6 +264,11 @@ export class Record extends DataPoint {
                 case "integer":
                 case "monetary":
                     continue;
+                case "html":
+                    if (this.isRequired(fieldName) && this.data[fieldName].length === 0) {
+                        this._setInvalidField(fieldName);
+                    }
+                    break;
                 case "properties":
                     if (!this.checkPropertiesValidity(fieldName)) {
                         this._setInvalidField(fieldName);
@@ -252,6 +278,14 @@ export class Record extends DataPoint {
                 case "many2many":
                     if (!(await this.checkX2ManyValidity(fieldName, urgent))) {
                         this._setInvalidField(fieldName);
+                    }
+                    break;
+                case "json":
+                    if (
+                        this.isRequired(fieldName) &&
+                        (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
+                    ) {
+                        this.setInvalidField(fieldName);
                     }
                     break;
                 default:
@@ -354,8 +388,10 @@ export class Record extends DataPoint {
         }
         return value.every(
             (propertyDefinition) =>
-                !propertyDefinition.id ||
-                (propertyDefinition.string && propertyDefinition.string.length)
+                propertyDefinition.name &&
+                propertyDefinition.name.length &&
+                propertyDefinition.string &&
+                propertyDefinition.string.length
         );
     }
 
@@ -368,6 +404,13 @@ export class Record extends DataPoint {
         const bm = this.model.__bm__;
         bm.setDirty(this.__bm_handle__);
         this._setInvalidField(fieldName);
+    }
+
+    resetFieldValidity(fieldName) {
+        const bm = this.model.__bm__;
+        bm.setDirty(this.__bm_handle__);
+        this._invalidFields.delete(fieldName);
+        this.model.notify();
     }
 
     isInvalid(fieldName) {
@@ -432,9 +475,10 @@ export class Record extends DataPoint {
                             handle: data[fieldName].id,
                             handleField,
                             viewType: viewMode,
-                            __syncParent: async (value) => {
+                            __syncParent: async (value, viewType) => {
                                 await this.model.__bm__.save(this.__bm_handle__, {
                                     savePoint: true,
+                                    viewType,
                                 });
                                 await this.update({ [fieldName]: value });
                             },
@@ -576,7 +620,11 @@ export class Record extends DataPoint {
             const prom = this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
                 viewType: this.__viewType,
             });
-            prom.catch(resolveUpdatePromise); // onchange rpc may return an error
+            prom.catch(() => {
+                this.model.notify();
+                // onchange rpc may return an error
+                resolveUpdatePromise();
+            });
             const fieldNames = await prom;
             this._removeInvalidFields(fieldNames);
             for (const fieldName of fieldNames) {
@@ -613,6 +661,9 @@ export class Record extends DataPoint {
             useSaveErrorDialog: false,
         }
     ) {
+        if (this._closeUrgentSaveNotification) {
+            this._closeUrgentSaveNotification();
+        }
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
@@ -627,6 +678,7 @@ export class Record extends DataPoint {
         const saveOptions = {
             reload: !options.noReload,
             savePoint: options.savePoint,
+            viewType: this.__viewType,
         };
         try {
             await this.model.__bm__.save(this.__bm_handle__, saveOptions);
@@ -689,15 +741,36 @@ export class Record extends DataPoint {
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
-        let isValid = true;
+        let succeeded = true;
         if (this.isDirty) {
-            isValid = await this.checkValidity(true);
-            if (isValid) {
-                this.model.__bm__.save(this.__bm_handle__, { reload: false });
+            succeeded = await this.checkValidity(true);
+            if (succeeded) {
+                this.model.__bm__.useSendBeacon = true;
+                try {
+                    await this.model.__bm__.save(this.__bm_handle__, { reload: false });
+                } catch (e) {
+                    if (e === "send beacon failed") {
+                        if (this._closeUrgentSaveNotification) {
+                            this._closeUrgentSaveNotification();
+                        }
+                        this._closeUrgentSaveNotification = this.model.notificationService.add(
+                            markup(
+                                this.model.env._t(
+                                    `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
+                                )
+                            ),
+                            { sticky: true }
+                        );
+                        succeeded = false;
+                    } else {
+                        throw e;
+                    }
+                }
+                delete this.model.__bm__.useSendBeacon;
             }
         }
         this.model.__bm__.bypassMutex = false;
-        return isValid;
+        return succeeded;
     }
 
     async archive() {
@@ -740,6 +813,9 @@ export class Record extends DataPoint {
     }
 
     async discard() {
+        if (this._closeUrgentSaveNotification) {
+            this._closeUrgentSaveNotification();
+        }
         await this._savePromise;
         this._closeInvalidFieldsNotification();
         this.model.__bm__.discardChanges(this.__bm_handle__);
@@ -865,7 +941,9 @@ export class StaticList extends DataPoint {
 
     async delete(recordId, operation = "DELETE") {
         const record = this.records.find((r) => r.id === recordId);
-        await this.__syncParent({ operation, ids: [record.__bm_handle__] });
+        if (record) {
+            await this.__syncParent({ operation, ids: [record.__bm_handle__] });
+        }
     }
 
     async add(object, params = { isM2M: false }) {
@@ -891,7 +969,12 @@ export class StaticList extends DataPoint {
     /** Creates a Draft record from nothing and edits it. Relevant in editable x2m's */
     async addNew(params) {
         const position = params.position;
-        const operation = { context: [params.context], operation: "CREATE", position };
+        const operation = {
+            context: [params.context],
+            operation: "CREATE",
+            position,
+            allowWarning: params.allowWarning,
+        };
         await this.model.__bm__.save(this.__bm_handle__, { savePoint: true });
         this.model.__bm__.freezeOrder(this.__bm_handle__);
         await this.__syncParent(operation);
@@ -1302,7 +1385,7 @@ export class RelationalModel extends Model {
             await record.save({ noReload: true });
             operation = { operation: "TRIGGER_ONCHANGE" };
         }
-        await list.__syncParent(operation);
+        await list.__syncParent(operation, record.__viewType);
         if (isM2M) {
             await record.load();
         }

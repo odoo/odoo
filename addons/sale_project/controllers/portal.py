@@ -23,16 +23,13 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
     def _task_get_searchbar_inputs(self, milestones_allowed):
         values = super()._task_get_searchbar_inputs(milestones_allowed)
         values['sale_order'] = {'input': 'sale_order', 'label': _lt('Search in Sales Order'), 'order': 8}
-        values['sale_line'] = {'input': 'sale_line', 'label': _lt('Search in Sales Order Item'), 'order': 9}
         values['invoice'] = {'input': 'invoice', 'label': _lt('Search in Invoice'), 'order': 10}
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 
     def _task_get_search_domain(self, search_in, search):
         search_domain = [super()._task_get_search_domain(search_in, search)]
         if search_in in ('sale_order', 'all'):
-            search_domain.append([('sale_order_id.name', 'ilike', search)])
-        if search_in in ('sale_line', 'all'):
-            search_domain.append([('sale_line_id.name', 'ilike', search)])
+            search_domain.append(['|', ('sale_order_id.name', 'ilike', search), ('sale_line_id.name', 'ilike', search)])
         if search_in in ('invoice', 'all'):
             search_domain.append([('sale_order_id.invoice_ids.name', 'ilike', search)])
         return OR(search_domain)

@@ -8,6 +8,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
 import { url } from '@web/core/utils/urls';
+import session from "web.session";
 
 registerModel({
     name: 'ComposerView',
@@ -571,6 +572,7 @@ registerModel({
                 if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
+                params.context = Object.assign(params.context || {}, session.user_context);
                 const { threadView = {} } = this;
                 const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
@@ -678,7 +680,7 @@ registerModel({
                 const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
                     await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
-                    if (this.composer.exists()) {
+                    if (this.exists() && this.composer) {
                         this.composer._reset();
                     }
                     return;
