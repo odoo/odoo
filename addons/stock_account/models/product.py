@@ -115,25 +115,64 @@ class ProductProduct(models.Model):
             self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
         return super(ProductProduct, self).write(vals)
 
-    @api.depends('stock_valuation_layer_ids')
-    @api.depends_context('to_date', 'company')
-    def _compute_value_svl(self):
-        """Compute totals of multiple svl related values"""
-        company_id = self.env.company
-        self.company_currency_id = company_id.currency_id
+    def _get_valuation_layer_group_domain(self):
+        company_id = self.env.company.id
         domain = [
             *self.env['stock.valuation.layer']._check_company_domain(company_id),
             ('product_id', 'in', self.ids),
+<<<<<<< 5bddf9bfb634d09d3264e4fe4734d75f1083775a
+||||||| 8579803409e7dedf3bd9481969844bfb641d1223
+            ('company_id', '=', company_id.id),
+=======
+            ('company_id', '=', company_id),
+>>>>>>> d7dc7bb110a8454ff6ab7d49d6870a5368b05d0d
         ]
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
+<<<<<<< 5bddf9bfb634d09d3264e4fe4734d75f1083775a
         groups = self.env['stock.valuation.layer']._read_group(
             domain,
             groupby=['product_id'],
             aggregates=['value:sum', 'quantity:sum'],
         )
+||||||| 8579803409e7dedf3bd9481969844bfb641d1223
+        groups = self.env['stock.valuation.layer']._read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        products = self.browse()
+=======
+        return domain
+
+    def _get_valuation_layer_group_fields(self):
+        return ['value:sum', 'quantity:sum']
+
+    def _get_valuation_layer_groups(self):
+        domain = self._get_valuation_layer_group_domain()
+        group_fields = self._get_valuation_layer_group_fields()
+        return self.env['stock.valuation.layer']._read_group(domain, group_fields, ['product_id'])
+
+    def _prepare_valuation_layer_field_values(self, valuation_layer_group):
+        self.ensure_one()
+        value_svl = self.env.company.currency_id.round(valuation_layer_group['value'])
+        avg_cost = 0
+        if not float_is_zero(valuation_layer_group['quantity'], precision_rounding=self.uom_id.rounding):
+            avg_cost = value_svl / valuation_layer_group['quantity']
+        return {
+            "value_svl": value_svl,
+            "quantity_svl": valuation_layer_group['quantity'],
+            "avg_cost": avg_cost,
+            "total_value": avg_cost * self.sudo(False).qty_available
+        }
+
+    @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date', 'company')
+    def _compute_value_svl(self):
+        """Compute totals of multiple svl related values"""
+        self.company_currency_id = self.env.company.currency_id
+        valuation_layer_groups = self._get_valuation_layer_groups()
+        products = self.browse()
+>>>>>>> d7dc7bb110a8454ff6ab7d49d6870a5368b05d0d
         # Browse all products and compute products' quantities_dict in batch.
+<<<<<<< 5bddf9bfb634d09d3264e4fe4734d75f1083775a
         group_mapping = {product: aggregates for product, *aggregates in groups}
         for product in self:
             value_sum, quantity_sum = group_mapping.get(product._origin, (0, 0))
@@ -145,6 +184,36 @@ class ProductProduct(models.Model):
             product.quantity_svl = quantity_sum
             product.avg_cost = avg_cost
             product.total_value = avg_cost * product.sudo(False).qty_available
+||||||| 8579803409e7dedf3bd9481969844bfb641d1223
+        self.env['product.product'].browse([group['product_id'][0] for group in groups]).sudo(False).mapped('qty_available')
+        for group in groups:
+            product = self.browse(group['product_id'][0])
+            value_svl = company_id.currency_id.round(group['value'])
+            avg_cost = 0
+            if not float_is_zero(group['quantity'], precision_rounding=product.uom_id.rounding):
+                avg_cost = value_svl / group['quantity']
+            product.value_svl = value_svl
+            product.quantity_svl = group['quantity']
+            product.avg_cost = avg_cost
+            product.total_value = avg_cost * product.sudo(False).qty_available
+            products |= product
+        remaining = (self - products)
+        remaining.value_svl = 0
+        remaining.quantity_svl = 0
+        remaining.avg_cost = 0
+        remaining.total_value = 0
+=======
+        self.env['product.product'].browse([group['product_id'][0] for group in valuation_layer_groups]).sudo(False).mapped('qty_available')
+        for valuation_layer_group in valuation_layer_groups:
+            product = self.browse(valuation_layer_group['product_id'][0])
+            product.update(product._prepare_valuation_layer_field_values(valuation_layer_group))
+            products |= product
+        remaining = (self - products)
+        remaining.value_svl = 0
+        remaining.quantity_svl = 0
+        remaining.avg_cost = 0
+        remaining.total_value = 0
+>>>>>>> d7dc7bb110a8454ff6ab7d49d6870a5368b05d0d
 
     # -------------------------------------------------------------------------
     # Actions
