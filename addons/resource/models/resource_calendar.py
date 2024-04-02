@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import itertools
 
 from collections import defaultdict
@@ -19,7 +16,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
-from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime, ROUNDING_FACTOR
+from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 
 
 class ResourceCalendar(models.Model):
@@ -360,13 +357,6 @@ class ResourceCalendar(models.Model):
                     result_per_resource_id[resource.id] = res_intervals
         return result_per_resource_id
 
-    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
-        if resource is None:
-            resource = self.env['resource.resource']
-        return self._leave_intervals_batch(
-            start_dt, end_dt, resources=resource, domain=domain, tz=tz
-        )[resource.id]
-
     def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, any_calendar=False):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
@@ -439,13 +429,6 @@ class ResourceCalendar(models.Model):
                 r.id: attendance_intervals[r.id] for r in resources_list
             }
 
-    def _unavailable_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
-        if resource is None:
-            resource = self.env['resource.resource']
-        return self._unavailable_intervals_batch(
-            start_dt, end_dt, resources=resource, domain=domain, tz=tz
-        )[resource.id]
-
     def _unavailable_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the unavailable intervals between the given datetimes. """
         if not resources:
@@ -481,62 +464,20 @@ class ResourceCalendar(models.Model):
         with them so this method merely calculates the proportion that is
         covered by the intervals.
         """
-        day_hours = defaultdict(float)
-        day_days = defaultdict(float)
+        result = {
+            'days': 0.0,
+            'hours': 0.0,
+        }
         for start, stop, meta in attendance_intervals:
             # If the interval covers only a part of the original attendance, we
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
-            day_hours[start.date()] += interval_hours
-            day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
-
-        return {
-            # Round the number of days to the closest 16th of a day.
-            'days': sum(float_utils.round(ROUNDING_FACTOR * day_days[day]) / ROUNDING_FACTOR for day in day_days),
-            'hours': sum(day_hours.values()),
-        }
-
-    def _get_days_data(self, intervals, day_total):
-        """
-        helper function to compute duration of `intervals`
-        expressed in days and hours.
-        `day_total` is a dict {date: n_hours} with the number of hours for each day.
-        """
-        day_hours = defaultdict(float)
-        for start, stop, meta in intervals:
-            day_hours[start.date()] += (stop - start).total_seconds() / 3600
-
-        # compute number of days as quarters
-        days = sum(
-            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR if day_total[day] else 0
-            for day in day_hours
-        )
-        return {
-            'days': days,
-            'hours': sum(day_hours.values()),
-        }
-
-    def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
-        """
-        @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
-        """
-        self.ensure_one()
-        if not resources:
-            resources = self.env['resource.resource']
-            resources_list = [resources]
-        else:
-            resources_list = list(resources) + [self.env['resource.resource']]
-        # total hours per day:  retrieve attendances with one extra day margin,
-        # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
-
-        result = defaultdict(lambda: defaultdict(float))
-        for resource in resources_list:
-            day_total = result[resource.id]
-            for start, stop, meta in intervals[resource.id]:
-                day_total[start.date()] += (stop - start).total_seconds() / 3600
+            attendance_hours = sum(meta.mapped('duration_hours'))
+            result['hours'] += interval_hours
+            if not attendance_hours:
+                continue
+            result['days'] += sum(meta.mapped('duration_days')) * interval_hours / attendance_hours
+        result['days'] = round(result['days'], 2)
         return result
 
     def _get_closest_work_time(self, dt, match_end=False, resource=None, search_range=None, compute_leaves=True):

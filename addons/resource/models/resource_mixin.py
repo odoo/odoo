@@ -92,7 +92,6 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
         mapped_employees = {e.resource_id.id: e.id for e in self}
         result = {}
 
@@ -124,7 +123,7 @@ class ResourceMixin(models.AbstractModel):
                 result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(intervals[calendar_resource.id])
 
         # convert "resource: result" into "employee: result"
-        return {mapped_employees[r.id]: result[r.id] for r in resources}
+        return {mapped_employees[r.id]: result[r.id] for r in self.resource_id}
 
     def _get_leave_days_data_batch(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
@@ -137,7 +136,6 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
         """
-        resources = self.mapped('resource_id')
         mapped_employees = {e.resource_id.id: e.id for e in self}
         result = {}
 
@@ -160,15 +158,7 @@ class ResourceMixin(models.AbstractModel):
                 )
 
         # convert "resource: result" into "employee: result"
-        return {mapped_employees[r.id]: result[r.id] for r in resources}
-
-    def _adjust_to_calendar(self, start, end):
-        resource_results = self.resource_id._adjust_to_calendar(start, end)
-        # change dict keys from resources to associated records.
-        return {
-            record: resource_results[record.resource_id]
-            for record in self
-        }
+        return {mapped_employees[r.id]: result[r.id] for r in self.resource_id}
 
     def _list_work_time_per_day(self, from_datetime, to_datetime, calendar=None, domain=None):
         """

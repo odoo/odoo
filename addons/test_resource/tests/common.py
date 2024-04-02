@@ -53,7 +53,7 @@ class TestResourceCommon(TransactionCase):
         # UTC+6
         cls.calendar_patel = cls._define_calendar('38 Hours', sum([((9, 12, i, 3/7), (13, 17, i, 4/7)) for i in range(5)], ()), 'Etc/GMT-6')
         # UTC-8 winter, UTC-7 summer
-        cls.calendar_john = cls._define_calendar('8+12 Hours', [(8, 16, 1, 1), (8, 13, 4, 5/12), (16, 23, 4, 7/12)], 'America/Los_Angeles')
+        cls.calendar_john = cls._define_calendar('8+12 Hours', [(8, 16, 1, 0.8), (8, 13, 4, 0.5), (16, 23, 4, 0.7)], 'America/Los_Angeles')
         # UTC+1 winter, UTC+2 summer
         cls.calendar_jules = cls._define_calendar_2_weeks('Week 1: 30 Hours - Week 2: 16 Hours', [
             (0, 0, 0, '0', 'line_section', 0), (8, 16, 0, '0', False, 1), (9, 17, 1, '0', False, 2),
