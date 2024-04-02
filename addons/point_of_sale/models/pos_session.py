@@ -285,11 +285,12 @@ class PosSession(models.Model):
 
     def load_data(self, models_to_load, only_data=False):
         params = self._load_data_params(self.config_id)
-        response = {}
-        response['data'] = {}
-        response['relations'] = {}
-        response['custom'] = {}
-        response['errors'] = {}
+        response = {
+            'data': {},
+            'relations': {},
+            'custom': {},
+            'errors': {}
+        }
 
         if not only_data:
             response['custom'] = {
@@ -314,44 +315,35 @@ class PosSession(models.Model):
                     continue
 
                 try:
-                    if isinstance(value['domain'], list):
-                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                            value['domain'],
-                            value['fields'],
-                            order=value.get('order', []),
-                            limit=value.get('limit', None),
-                            load=False)
-                    else:
-                        response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
-                            value['domain'](response['data']),
-                            value['fields'],
-                            order=value.get('order', []),
-                            limit=value.get('limit', None),
-                            load=False)
+                    domain = value['domain']
+                    domain = domain if isinstance(domain, list) else domain(response['data'])
+                    response['data'][key] = self.env[key].with_context(value.get('context', [])).search_read(
+                        domain,
+                        value['fields'],
+                        order=value.get('order', []),
+                        limit=value.get('limit', None),
+                        load=False
+                    )
                 except AccessError as e:
                     response['errors'][key] = e.args[0]
                     response['data'][key] = []
 
                 if not only_data:
-                    model_fields = self.env[key].fields_get(allfields=value['fields'] or None)
-                    for name, params in model_fields.items():
-                        if not response['relations'].get(key):
-                            response['relations'][key] = {}
-
-                        if params.get("relation"):
-
+                    response['relations'][key] = {}
+                    for name, params in self.env[key]._fields.items():
+                        if params.comodel_name:
                             response['relations'][key][name] = {
                                 'name': name,
                                 'model': key,
-                                'relation': params['relation'],
-                                'type': params['type'],
+                                'relation': params.comodel_name,
+                                'type': params.type,
                             }
-                            if params['type'] == 'one2many' and params.get('relation_field'):
-                                response['relations'][key][name]['inverse_name'] = params['relation_field']
+                            if params.type == 'one2many' and params.inverse_name:
+                                response['relations'][key][name]['inverse_name'] = params.inverse_name
                         else:
                             response['relations'][key][name] = {
                                 'name': name,
-                                'type': params['type'],
+                                'type': params.type,
                             }
 
         # pos_config adaptation
@@ -413,22 +405,25 @@ class PosSession(models.Model):
 
         return response
 
-    def _process_pos_ui_account_tax(self, account_tax, account_fields, account_relations):
-        tax_ids = self.env['account.tax'].browse([tax['id'] for tax in account_tax])
+    def _process_pos_ui_account_tax(self, account_tax_dict, account_fields, account_relations):
+        tax_ids = [tax['id'] for tax in account_tax_dict]
+        tax_records = self.env['account.tax'].browse(tax_ids)
+        tax_dict = {record.id: record._prepare_dict_for_taxes_computation() for record in tax_records}
 
-        for tax in account_tax:
-            record = tax_ids.filtered(lambda t: t.id == tax['id'])
-            tax_dict = record._prepare_dict_for_taxes_computation()
-
-            for key, value in tax_dict.items():
-                if key not in account_fields:
-                    account_fields.append(key)
-                    account_relations[key] = {
-                        'name': key,
-                        'type': 'string',
-                    }
-                if key not in tax:
-                    tax[key] = value
+        for tax in account_tax_dict:
+            tax_id = tax['id']
+            tax_record = tax_dict.get(tax_id)
+            if tax_record:
+                for key, value in tax_record.items():
+                    if key not in account_fields:
+                        account_fields.append(key)
+                        account_relations[key] = {
+                            'name': key,
+                            'type': 'string',
+                        }
+                    if key not in tax:
+                        tax[key] = value
+                        tax[key] = value
 
     def _process_pos_ui_account_fiscal_position(self, account_fiscal_position, account_fields, account_relations):
         fiscal_position_ids = self.env['account.fiscal.position'].browse([f['id'] for f in account_fiscal_position])
