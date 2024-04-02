@@ -4,16 +4,19 @@
 from datetime import timedelta
 
 from odoo import fields
-from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.addons.sale.tests.common import TestSaleCommonBase
 
 from odoo.tests import Form
 
 
-class TestSaleMrpLeadTime(TestStockCommon):
+class TestSaleMrpLeadTime(TestMrpCommon, TestSaleCommonBase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls._enable_sale_salesman()
+
         cls.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
         with Form(cls.product_1) as p1:
@@ -60,11 +63,12 @@ class TestSaleMrpLeadTime(TestStockCommon):
             and Customer Lead Time and also set company's Manufacturing Lead Time
             and Sales Safety Days."""
 
-        company = self.env.ref('base.main_company')
-
         # Update company with Manufacturing Lead Time and Sales Safety Days
-        company.write({'manufacturing_lead': 3.0,
-                       'security_lead': 3.0})
+        with self.with_user('admin'):
+            self.company.write({
+                'manufacturing_lead': 3.0,
+                'security_lead': 3.0
+            })
 
         # Create sale order of product_1
         order_form = Form(self.env['sale.order'])
@@ -82,7 +86,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of picking
         deadline_picking = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay)
-        out_date = deadline_picking - timedelta(days=company.security_lead)
+        out_date = deadline_picking - timedelta(days=self.company.security_lead)
         self.assertAlmostEqual(
             order.picking_ids[0].scheduled_date, out_date,
             delta=timedelta(seconds=1),
@@ -95,7 +99,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline of manufacturing order
-        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=company.manufacturing_lead)
+        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=self.company.manufacturing_lead)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_start), mo_date_start,
             delta=timedelta(seconds=1),
@@ -168,7 +172,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
         )
 
         # Check schedule date and deadline date of manufacturing order
-        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=warehouse.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.env.ref('base.main_company').manufacturing_lead)
+        mo_date_start = out_date - timedelta(days=manufacturing_order.bom_id.produce_delay) - timedelta(days=warehouse.delivery_route_id.rule_ids[0].delay) - timedelta(days=self.company.manufacturing_lead)
         self.assertAlmostEqual(
             fields.Datetime.from_string(manufacturing_order.date_start), mo_date_start,
             delta=timedelta(seconds=1),

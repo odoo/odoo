@@ -10,10 +10,9 @@ from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 class TestPurchaseOldRules(PurchaseTestCommon):
 
     def create_picking_out(self, warehouse):
-        customer_location = self.env.ref('stock.stock_location_customers')
         picking_out = self.env['stock.picking'].create({
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'partner_id': self.customer.id,
             'group_id': self.group.id,
             'picking_type_id': warehouse.out_type_id.id,
@@ -26,7 +25,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'picking_id': picking_out.id,
             'group_id': self.group.id,
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
         })
         return picking_out
@@ -237,8 +236,8 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         """ In order to check dates, set product's Delivery Lead Time
             and warehouse route's delay."""
 
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 1.00})
+        with self.with_user('admin'):
+            self.company.write({'po_lead': 1.00})
 
         warehouse = self.warehouse_3_steps
         # Set delay on push rule

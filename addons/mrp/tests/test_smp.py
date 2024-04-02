@@ -339,7 +339,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.env['res.config.settings'].write({
             'group_stock_adv_location': True,
         })
-        self.env.ref('stock.warehouse0').manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         mo = self.generate_mo(tracking_final='lot', tracking_base_1='lot')[0]
         # Make some stock and reserve
         for product in mo.move_raw_ids.product_id:
