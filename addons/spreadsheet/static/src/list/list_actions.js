@@ -55,6 +55,7 @@ export const SEE_RECORD_LIST_VISIBLE = (position, env) => {
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
+        evaluatedCell.value !== "" &&
         cell &&
         cell.isFormula &&
         getNumberOfListFormulas(cell.compiledFormula.tokens) === 1 &&
