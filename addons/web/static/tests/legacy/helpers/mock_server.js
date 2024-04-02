@@ -1997,10 +1997,6 @@ export class MockServer {
             length,
             records: this.mockRead(modelName, [records.map((r) => r.id), fieldNames]),
         };
-        const countLimit = kwargs.count_limit || args[5];
-        if (countLimit) {
-            result.length = Math.min(result.length, countLimit);
-        }
         this._unityReadRecords(modelName, kwargs.specification, result.records);
         return result;
     }

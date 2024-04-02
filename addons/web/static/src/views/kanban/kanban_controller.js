@@ -160,7 +160,7 @@ export class KanbanController extends Component {
         });
         usePager(() => {
             const root = this.model.root;
-            const { count, hasLimitedCount, isGrouped, limit, offset } = root;
+            const { count, hasEstimatedCount, isGrouped, limit, offset } = root;
             if (!isGrouped) {
                 return {
                     offset: offset,
@@ -170,7 +170,7 @@ export class KanbanController extends Component {
                         await this.model.root.load({ offset, limit });
                         await this.onUpdatedPager();
                     },
-                    updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
+                    updateTotal: hasEstimatedCount ? () => root.fetchCount() : undefined,
                 };
             }
         });
@@ -202,7 +202,6 @@ export class KanbanController extends Component {
             state: this.props.state?.modelState,
             limit: archInfo.limit || limit || 40,
             groupsLimit: Number.MAX_SAFE_INTEGER, // no limit
-            countLimit: archInfo.countLimit,
             defaultGroupBy,
             defaultOrderBy: archInfo.defaultOrder,
             maxGroupByDepth: 1,

@@ -62,7 +62,7 @@ export class DynamicRecordList extends DynamicList {
      **/
     async fetchCount() {
         this.count = await this.model._updateCount(this.config);
-        this.hasLimitedCount = false;
+        this.hasEstimatedCount = false;
         return this.count;
     }
 
@@ -167,13 +167,7 @@ export class DynamicRecordList extends DynamicList {
     }
 
     _updateCount(data) {
-        const length = data.length;
-        if (length >= this.config.countLimit + 1) {
-            this.hasLimitedCount = true;
-            this.count = this.config.countLimit;
-        } else {
-            this.hasLimitedCount = false;
-            this.count = length;
-        }
+        this.count = data.length;
+        this.hasEstimatedCount = data.estimate_count;
     }
 }

@@ -193,9 +193,6 @@ export class ListArchParser {
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
 
-                const countLimitAttr = node.getAttribute("count_limit");
-                treeAttr.countLimit = countLimitAttr && parseInt(countLimitAttr, 10);
-
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 

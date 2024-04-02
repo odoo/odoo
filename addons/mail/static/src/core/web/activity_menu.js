@@ -37,11 +37,6 @@ export class ActivityMenu extends Component {
 
     openActivityGroup(group) {
         this.dropdown.close();
-        const context = {
-            // Necessary because activity_ids of mail.activity.mixin has auto_join
-            // So, duplicates are faking the count and "Load more" doesn't show up
-            force_search_count: 1,
-        };
         if (group.model === "mail.activity") {
             this.action.doAction("mail.mail_activity_without_access_action", {
                 additionalContext: {
@@ -59,7 +54,6 @@ export class ActivityMenu extends Component {
 
         this.action.doAction(
             {
-                context,
                 domain,
                 name: group.name,
                 res_model: group.model,

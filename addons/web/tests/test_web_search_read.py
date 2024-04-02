@@ -11,27 +11,18 @@ class TestWebSearchRead(common.TransactionCase):
         super().setUpClass()
         cls.ResCurrency = cls.env['res.currency'].with_context(active_test=False)
         cls.max = cls.ResCurrency.search_count([])
+        cls.env.cr.execute("ANALYZE res_currency")
 
     def assert_web_search_read(self, expected_length, expected_records_length, expected_search_count_called=True,
                                **kwargs):
-        original_search_count = self.ResCurrency.search_count
-        search_count_called = [False]
-
-        def search_count(obj, *method_args, **method_kwargs):
-            search_count_called[0] = True
-            return original_search_count(*method_args, **method_kwargs)
-
-        with patch('odoo.addons.base.models.res_currency.Currency.search_count', new=search_count):
+        with patch.object(type(self.ResCurrency), '_estimate_count', wraps=self.ResCurrency._estimate_count) as patched_count:
             results = self.ResCurrency.web_search_read(domain=[], specification={'id':{}}, **kwargs)
 
         self.assertEqual(results['length'], expected_length)
         self.assertEqual(len(results['records']), expected_records_length)
-        self.assertEqual(search_count_called[0], expected_search_count_called)
+        self.assertEqual(patched_count.called, expected_search_count_called)
 
     def test_unity_web_search_read(self):
         self.assert_web_search_read(self.max, self.max, expected_search_count_called=False)
         self.assert_web_search_read(self.max, 2, limit=2)
         self.assert_web_search_read(self.max, 2, limit=2, offset=10)
-        self.assert_web_search_read(2, 2, limit=2, count_limit=2, expected_search_count_called=False)
-        self.assert_web_search_read(20, 2, limit=2, offset=10, count_limit=20)
-        self.assert_web_search_read(12, 2, limit=2, offset=10, count_limit=12, expected_search_count_called=False)

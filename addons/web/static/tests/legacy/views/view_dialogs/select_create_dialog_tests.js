@@ -154,7 +154,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 limit: 80,
                                 offset: 0,
                                 order: "",
-                                count_limit: 10001,
                             },
                             "should search with the complete domain (domain + search)"
                         );
@@ -173,7 +172,6 @@ QUnit.module("ViewDialogs", (hooks) => {
                                 limit: 80,
                                 offset: 0,
                                 order: "",
-                                count_limit: 10001,
                             },
                             "should search with the domain"
                         );
