@@ -39,8 +39,8 @@
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
-            'lang': lang and lang.replace('_', '-'),
-            'data-website-id': website.id if website else None,
+            'lang': lang.replace('_', '-'),
+            'data-website-id': website.id,
             'data-edit_translations': '1' if edit_translations else None,
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
@@ -82,7 +82,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
+            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="website.name"/> </t>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -132,13 +132,13 @@
         </t>
         <t t-set="canonical_domain" t-value="website.get_base_url()"/>
         <!-- no hreflang on non-canonical pages or if no alternate language -->
-        <t t-if="request and request.is_frontend_multilang and website and website._is_canonical_url() and len(frontend_languages) &gt; 1">
+        <t t-if="request.is_frontend_multilang and website._is_canonical_url() and len(frontend_languages) &gt; 1">
             <t t-foreach="frontend_languages.values()" t-as="lg">
         <link rel="alternate" t-att-hreflang="lg.hreflang" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, canonical_domain=canonical_domain)"/>
             </t>
         <link rel="alternate" hreflang="x-default" t-att-href="url_localized(lang_code=website.env['res.lang']._get_data(id=website._get_cached('default_lang_id')).code, canonical_domain=canonical_domain)"/>
         </t>
-        <link t-if="request and website" rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
+        <link rel="canonical" t-att-href="url_localized(lang_code=lang,canonical_domain=canonical_domain)"/>
         <!-- TODO: Once we have style in DB, add this preconnect only if a
         google font is actually used. Note that if no font is used, the
         preconnect is actually not connecting to the google servers. -->
@@ -183,7 +183,7 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
+        <t t-if="website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
             <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
             <script>
                 window.dataLayer = window.dataLayer || [];
@@ -192,7 +192,7 @@
                 gtag('config', '<t t-esc="website.google_analytics_key"/>');
             </script>
         </t>
-        <t t-if="website and website.plausible_shared_key and not editable">
+        <t t-if="website.plausible_shared_key and not editable">
             <script id="plausible_script" name="plausible" defer="defer" t-att-data-domain="website.plausible_site" t-att-src="website._get_plausible_script_url()"></script>
         </t>
     </xpath>
