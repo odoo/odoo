@@ -199,10 +199,14 @@ class AccountJournal(models.Model):
         compute='_compute_selected_payment_method_codes',
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
+    display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    def _compute_display_alias_fields(self):
+        self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
 
     @api.depends('type', 'company_id')
     def _compute_code(self):
@@ -654,7 +658,10 @@ class AccountJournal(models.Model):
             values['alias_name'] = self._alias_prepare_alias_name(self.alias_name, self.name, self.code, self.type, self.company_id)
             values['alias_defaults'] = defaults = literal_eval(self.alias_defaults or "{}")
             defaults['company_id'] = self.company_id.id
-            defaults['move_type'] = 'in_invoice' if self.type == 'purchase' else 'out_invoice'
+            defaults['move_type'] = {
+                'purchase': 'in_invoice',
+                'sale': 'out_invoice',
+            }.get(self.type, 'entry')
             defaults['journal_id'] = self.id
         return values
 
