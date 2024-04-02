@@ -846,7 +846,7 @@ export class StaticList extends DataPoint {
                         uCommand[2],
                         this.fields,
                         this.activeFields,
-                        { withReadonly }
+                        { withReadonly, context: this.context }
                     );
                     commands.push([uCommand[0], uCommand[1], values]);
                 }
