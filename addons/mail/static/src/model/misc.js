@@ -22,6 +22,7 @@ const AND_SYM = Symbol("and");
 export const IS_RECORD_SYM = Symbol("isRecord");
 export const IS_RECORD_LIST_SYM = Symbol("isRecordList");
 export const IS_FIELD_SYM = Symbol("isField");
+export const IS_DELETING_SYM = Symbol("isDeleting");
 export const IS_DELETED_SYM = Symbol("isDeleted");
 export const STORE_SYM = Symbol("store");
 
