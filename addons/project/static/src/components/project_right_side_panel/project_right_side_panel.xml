@@ -9,7 +9,7 @@
                 show="!!state.data.buttons"
             >
                 <div class="o_form_view">
-                    <div class="oe_button_box o-form-buttonbox d-flex flex-wrap">
+                    <div class="oe_button_box o-form-buttonbox d-print-none d-flex flex-wrap">
                         <t t-foreach="state.data.buttons" t-as="button" t-key="button.sequence">
                             <ViewButton
                                 t-if="button.show"
