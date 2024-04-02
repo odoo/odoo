@@ -168,7 +168,7 @@ class BlogPost(models.Model):
         '''
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
-    author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
+    author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id, index='btree_not_null')
     author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
     author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
