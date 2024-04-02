@@ -5258,4 +5258,34 @@ QUnit.module("Views", ({ beforeEach }) => {
             assert.containsOnce(target, ".o_view_sample_data", "should have sample data");
         }
     );
+
+    QUnit.test("Scale: scale default is fetched from localStorage", async (assert) => {
+        assert.expect(4);
+
+        let view;
+        patchWithCleanup(browser.localStorage, {
+            getItem(key) {
+                if (key.startsWith("scaleOf-viewId")) {
+                    return "week";
+                }
+            },
+            setItem(key, value) {
+                if (key === `scaleOf-viewId-${view?.env?.config?.viewId}`) {
+                    assert.step(`scale_${value}`);
+                }
+            },
+        });
+
+        view = await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `<calendar date_start="start" mode="month"/>`,
+        });
+
+        assert.equal(target.querySelector(".scale_button_selection").textContent, "Week");
+        await changeScale(target, "year");
+        assert.equal(target.querySelector(".scale_button_selection").textContent, "Year");
+        assert.verifySteps(["scale_year"]);
+    });
 });
