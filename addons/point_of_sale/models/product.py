@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
+from odoo.osv.expression import AND
 
 
 class ProductTemplate(models.Model):
@@ -70,7 +71,44 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _name = 'product.product'
+    _inherit = ['product.product', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return config_id._get_available_product_domain()
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'id', 'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
+            'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
+            'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids',
+        ]
+
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        products = self.with_context({**self.env.context, 'display_default_code': False}).search_read(
+            domain,
+            fields,
+            limit=config_id.get_limited_product_count(),
+            order='sequence,default_code,name',
+            load=False)
+
+        self._process_pos_ui_product_product(products, config_id)
+        return {
+            'data': products,
+            'fields': fields,
+        }
+
+    def _process_pos_ui_product_product(self, products, config_id):
+        for product in products:
+            product['image_128'] = bool(product['image_128'])
+            if config_id.currency_id != self.env.company.currency_id:
+                product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config_id.currency_id, self.env.company, fields.Date.today())
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
@@ -145,19 +183,139 @@ class ProductProduct(models.Model):
             'variants': variant_list
         }
 
+
+class ProductAttribute(models.Model):
+    _name = 'product.attribute'
+    _inherit = ['product.attribute', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('create_variant', '=', 'no_variant')]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['name', 'display_type', 'template_value_ids', 'attribute_line_ids']
+
+
 class ProductAttributeCustomValue(models.Model):
-    _inherit = "product.attribute.custom.value"
+    _name = 'product.attribute.custom.value'
+    _inherit = ["product.attribute.custom.value", "pos.load.mixin"]
 
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
 
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id']
+
+
+class ProductTemplateAttributeLine(models.Model):
+    _name = 'product.template.attribute.line'
+    _inherit = ['product.template.attribute.line', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['display_name', 'attribute_id', 'product_template_value_ids']
+
+
+class ProductTemplateAttributeValue(models.Model):
+    _name = 'product.template.attribute.value'
+    _inherit = ['product.template.attribute.value', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('attribute_id', 'in', [attr['id'] for attr in data['product.attribute']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['attribute_id', 'attribute_line_id', 'product_attribute_value_id', 'price_extra', 'name', 'is_custom', 'html_color', 'image']
+
+
+class ProductPackaging(models.Model):
+    _name = 'product.packaging'
+    _inherit = ['product.packaging', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return AND([[('barcode', 'not in', ['', False])], [('product_id', 'in', [x['id'] for x in data['product.product']['data']])] if data else []])
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'barcode', 'product_id', 'qty']
+
+
 class UomCateg(models.Model):
-    _inherit = 'uom.category'
+    _name = 'uom.category'
+    _inherit = ['uom.category', 'pos.load.mixin']
 
     is_pos_groupable = fields.Boolean(string='Group Products in POS',
         help="Check if you want to group products of this category in point of sale orders")
 
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('uom_ids', 'in', [uom['category_id'] for uom in data['uom.uom']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'uom_ids']
+
 
 class Uom(models.Model):
-    _inherit = 'uom.uom'
+    _name = 'uom.uom'
+    _inherit = ['uom.uom', 'pos.load.mixin']
 
     is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable', readonly=False)
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'category_id', 'factor_inv', 'factor', 'is_pos_groupable', 'uom_type', 'rounding']
+
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(data['pos.config']['data'][0]['id'])
+        return {
+            'data': self.with_context({**self.env.context}).search_read(domain, fields, load=False),
+            'fields': fields,
+        }
+
+
+class ProductPricelist(models.Model):
+    _name = 'product.pricelist'
+    _inherit = ['product.pricelist', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return [('id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('id', '=', config_id.pricelist_id.id)]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'display_name', 'discount_policy', 'item_ids']
+
+
+class ProductPricelistItem(models.Model):
+    _name = 'product.pricelist.item'
+    _inherit = ['product.pricelist.item', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return [('pricelist_id', 'in', config_id.available_pricelist_ids.ids)] if config_id.use_pricelist else [('pricelist_id', '=', config_id.pricelist_id.id)]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['product_tmpl_id', 'product_id', 'pricelist_id', 'price_surcharge', 'price_discount', 'price_round',
+                'price_min_margin', 'price_max_margin', 'company_id', 'currency_id', 'date_start', 'date_end', 'compute_price',
+                'fixed_price', 'percent_price', 'base_pricelist_id', 'base', 'categ_id', 'min_quantity']
+
+
+class ProductCategory(models.Model):
+    _name = 'product.category'
+    _inherit = ['product.category', 'pos.load.mixin']
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'parent_id']

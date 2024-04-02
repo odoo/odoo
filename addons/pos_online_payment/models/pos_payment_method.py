@@ -13,6 +13,12 @@ class PosPaymentMethod(models.Model):
     has_an_online_payment_provider = fields.Boolean(compute='_compute_has_an_online_payment_provider', readonly=True)
     type = fields.Selection(selection_add=[('online', 'Online')])
 
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params += ['is_online_payment']
+        return params
+
     @api.depends('is_online_payment')
     def _compute_type(self):
         opm = self.filtered('is_online_payment')

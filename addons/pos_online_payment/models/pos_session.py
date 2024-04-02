@@ -9,11 +9,6 @@ from odoo.exceptions import UserError
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    def _load_data_params(self, config_id):
-        params = super()._load_data_params(config_id)
-        params['pos.payment.method']['fields'].append('is_online_payment')
-        return params
-
     def _accumulate_amounts(self, data):
         data = super()._accumulate_amounts(data)
         amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}

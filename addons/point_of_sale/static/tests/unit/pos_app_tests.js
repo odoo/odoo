@@ -75,40 +75,46 @@ export class MockPosData {
     get data() {
         return {
             models: {
-                "product.product": { fields: {}, records: [] },
-                "product.pricelist": { fields: {}, records: [] },
+                "product.product": { relations: {}, fields: {}, data: [] },
+                "product.pricelist": { relations: {}, fields: {}, data: [] },
                 "pos.session": {
+                    relations: {},
                     fields: {},
-                    records: [
+                    data: [
                         {
                             name: "PoS Session",
                         },
                     ],
                 },
                 "res.company": {
+                    relations: {},
                     fields: {
                         tax_calculation_rounding_method: {
                             string: "Tax rounding method",
                             type: "string",
                         },
                     },
-                    records: [
+                    data: [
                         {
                             tax_calculation_rounding_method: "round_globally",
                         },
                     ],
                 },
-                "res.partner": { fields: {}, records: [] },
-                "stock.picking.type": { fields: {}, records: [] },
+                "res.partner": { relations: {}, fields: {}, data: [] },
+                "stock.picking.type": { relations: {}, fields: {}, data: [] },
                 "pos.config": {
+                    relations: {},
                     fields: {
-                        iface_printer: { string: "Iface printer", type: "boolean" },
+                        iface_printer: {
+                            string: "Iface printer",
+                            type: "boolean",
+                        },
                         trusted_config_ids: {
                             string: "Trusted config ids",
                             type: "many2many",
                         },
                     },
-                    records: [
+                    data: [
                         {
                             id: 1,
                             name: "PoS Config",
@@ -123,32 +129,39 @@ export class MockPosData {
                         },
                     ],
                 },
-                "pos.printer": { fields: {}, records: [] },
-                "pos.payment.method": { fields: {}, records: [] },
+                "pos.printer": { relations: {}, fields: {}, data: [] },
+                "pos.payment.method": { relations: {}, fields: {}, data: [] },
                 "res.currency": {
-                    fields: { rounding: { string: "Rounding", type: "float" } },
-                    records: [
+                    relations: {},
+                    fields: {
+                        rounding: {
+                            string: "Rounding",
+                            type: "float",
+                        },
+                    },
+                    data: [
                         {
                             rounding: 0.01,
                         },
                     ],
                 },
                 "res.users": {
+                    relations: {},
                     fields: {},
-                    records: [
+                    data: [
                         {
                             id: 1,
                             name: "Administrator",
                         },
                     ],
                 },
-                "account.fiscal.position": { fields: {}, records: [] },
-                "pos.category": { fields: {}, records: [] },
-                "pos.order": { fields: {}, records: [] },
-                "pos.order.line": { fields: {}, records: [] },
-                "pos.payment": { fields: {}, records: [] },
-                "pos.pack.operation.lot": { fields: {}, records: [] },
-                "product.pricelist.item": { fields: {}, records: [] },
+                "account.fiscal.position": { relations: {}, fields: {}, data: [] },
+                "pos.category": { relations: {}, fields: {}, data: [] },
+                "pos.order": { relations: {}, fields: {}, data: [] },
+                "pos.order.line": { relations: {}, fields: {}, data: [] },
+                "pos.payment": { relations: {}, fields: {}, data: [] },
+                "pos.pack.operation.lot": { relations: {}, fields: {}, data: [] },
+                "product.pricelist.item": { relations: {}, fields: {}, data: [] },
             },
         };
     }

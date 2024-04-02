@@ -306,7 +306,7 @@ class PosConfig(models.Model):
 
     def _get_self_ordering_payment_methods_data(self, payment_methods):
         excluded_fields = ['image']
-        payment_search_fields = self.current_session_id._load_data_params(self)['pos.payment.method']['fields']
+        payment_search_fields = self.env['pos.payment']._load_pos_data_fields(self.id)
         filtered_fields = [field for field in payment_search_fields if field not in excluded_fields]
         return payment_methods.read(filtered_fields)
 

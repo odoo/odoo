@@ -19,6 +19,12 @@ class PosPaymentMethod(models.Model):
     # Stripe
     stripe_serial_number = fields.Char(help='[Serial number of the stripe terminal], for example: WSC513105011295', copy=False)
 
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params += ['stripe_serial_number']
+        return params
+
     @api.constrains('stripe_serial_number')
     def _check_stripe_serial_number(self):
         for payment_method in self:

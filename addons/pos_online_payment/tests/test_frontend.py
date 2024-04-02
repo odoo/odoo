@@ -169,22 +169,8 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         self.assertTrue(self.pos_config)
         self.assertTrue(self.pos_user)
 
-    def _open_session_ui(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-
-        # Checks that the products used in the tours are available in this pos_config.
-        # This code is executed here because _loader_params_product_product is defined in pos.session
-        # and not in pos.config.
-        params = self.pos_config.current_session_id._load_data_params(self.pos_config)
-        self.assertTrue(params)
-        pos_config_products_domain = params['product.product']['domain']
-        self.assertTrue(pos_config_products_domain)
-        tests_products_domain = AND([pos_config_products_domain, ['&', '&', ('name', '=', 'Letter Tray'), ('list_price', '=', 4.8), ('available_in_pos', '=', True)]])
-        # active_test=False to follow pos.config:get_pos_ui_product_product_by_params
-        self.assertEqual(self.env['product.product'].with_context(active_test=False).search_count(tests_products_domain, limit=1), 1)
-
     def _open_session_fake_cashier_unpaid_order(self):
-        self._open_session_ui()
+        self.pos_config.with_user(self.pos_user).open_ui()
 
         current_session = self.pos_config.current_session_id
         current_session.set_cashbox_pos(0, None)
@@ -293,7 +279,7 @@ class TestUi(AccountTestInvoicingCommon, OnlinePaymentCommon):
         self.assertEqual(order.state, 'draft')
 
     def test_errors_tour(self):
-        self._open_session_ui()
+        self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
 
     @classmethod

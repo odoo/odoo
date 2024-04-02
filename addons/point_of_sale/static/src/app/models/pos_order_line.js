@@ -90,6 +90,10 @@ export class PosOrderline extends Base {
         return this.models["pos.config"].getFirst();
     }
 
+    get session() {
+        return this.models["pos.session"].getFirst();
+    }
+
     get currency() {
         return this.models["res.currency"].getFirst();
     }
@@ -405,7 +409,7 @@ export class PosOrderline extends Base {
             priceUnit,
             1,
             product,
-            this.company._product_default_values,
+            this.session._product_default_values,
             this.company,
             this.currency
         );
@@ -481,7 +485,7 @@ export class PosOrderline extends Base {
             priceUnitAfterDiscount,
             qty,
             product,
-            this.company._product_default_values,
+            this.session._product_default_values,
             this.company,
             this.currency
         );
@@ -490,7 +494,7 @@ export class PosOrderline extends Base {
             priceUnit,
             qty,
             product,
-            this.company._product_default_values,
+            this.session._product_default_values,
             this.company,
             this.currency
         );
@@ -526,7 +530,7 @@ export class PosOrderline extends Base {
                 taxes,
                 price,
                 product,
-                this.company._product_default_values,
+                this.session._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );

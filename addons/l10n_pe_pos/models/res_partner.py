@@ -16,3 +16,10 @@ class ResPartner(models.Model):
                     consumidor_final_anonimo.display_name,
                 )
             )
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        if self.env.company.country_id.code == "PE":
+            params['fields'] += ["city_id", "l10n_latam_identification_type_id", "l10n_pe_district"]
+        return params

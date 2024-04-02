@@ -29,27 +29,19 @@ class PosSession(models.Model):
 
         return sessions
 
-    def _load_data_params(self, config_id):
-        params = super()._load_data_params(config_id)
-        params['product.product']['fields'].append('self_order_available')
-        return params
-
-    def load_data(self, models_to_load, only_data=False):
-        response = super().load_data(models_to_load, only_data)
-
-        if not only_data:
-            response['custom']['self_ordering'] = (
-                self.env["pos.config"]
-                .sudo()
-                .search_count(
-                    [
-                        *self.env["pos.config"]._check_company_domain(self.env.company),
-                        '|', ("self_ordering_mode", "=", "kiosk"),
-                        ("self_ordering_mode", "=", "mobile"),
-                    ],
-                    limit=1,
-                )
-                > 0
+    def _load_pos_data(self, data):
+        sessions = super()._load_pos_data(data)
+        sessions['data'][0]['_self_ordering'] = (
+            self.env["pos.config"]
+            .sudo()
+            .search_count(
+                [
+                    *self.env["pos.config"]._check_company_domain(self.env.company),
+                    '|', ("self_ordering_mode", "=", "kiosk"),
+                    ("self_ordering_mode", "=", "mobile"),
+                ],
+                limit=1,
             )
-
-        return response
+            > 0
+        )
+        return sessions

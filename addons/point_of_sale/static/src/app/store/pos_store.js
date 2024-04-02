@@ -189,15 +189,6 @@ export class PosStore extends Reactive {
         this.user = this.data.models["res.users"].getFirst();
         this.currency = this.data.models["res.currency"].getFirst();
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
-
-        // Custom data
-        this.partner_commercial_fields = this.data.custom.partner_commercial_fields;
-        this.server_version = this.data.custom.server_version;
-        this.base_url = this.data.custom.base_url;
-        this.has_cash_move_perm = this.data.custom.has_cash_move_perm;
-        this.has_available_products = this.data.custom.has_available_products;
-        this.pos_special_products_ids = this.data.custom.pos_special_products_ids;
-        this.open_orders_json = this.data.custom.open_orders;
         this.models = this.data.models;
 
         // Add Payment Interface to Payment Method
@@ -292,10 +283,6 @@ export class PosStore extends Reactive {
                 : this.add_new_order().uuid;
         }
 
-        if (this.open_orders_json) {
-            // This method is to load the demo datas.
-            this.loadOpenOrders(this.open_orders_json);
-        }
         this.markReady();
     }
 
@@ -696,7 +683,7 @@ export class PosStore extends Reactive {
     }
 
     posHasValidProduct() {
-        return this.has_available_products;
+        return this.session._has_available_products;
     }
 
     setSelectedCategory(categoryId) {
@@ -742,7 +729,7 @@ export class PosStore extends Reactive {
         return new Set();
     }
     cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.get_cashier().role == "manager";
+        return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
     generate_unique_id() {
         // Generates a public identification number for the order.
@@ -1173,7 +1160,7 @@ export class PosStore extends Reactive {
                 taxes,
                 price,
                 product,
-                this.company._product_default_values,
+                this.session._product_default_values,
                 order.fiscal_position_id,
                 this.models
             );
@@ -1186,7 +1173,7 @@ export class PosStore extends Reactive {
             price,
             1,
             product,
-            this.company._product_default_values,
+            this.session._product_default_values,
             this.company,
             this.currency
         );
@@ -1278,7 +1265,7 @@ export class PosStore extends Reactive {
     }
     orderExportForPrinting(order) {
         const headerData = this.getReceiptHeaderData(order);
-        const baseUrl = this.base_url;
+        const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
     async printReceipt() {

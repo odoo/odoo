@@ -16,3 +16,10 @@ class PosOrderLine(models.Model):
         for line in indian_lines:
             if line.product_id:
                 line.l10n_in_hsn_code = line.product_id.l10n_in_hsn_code
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        if self.env.company.country_id.code == 'IN':
+            params += ['l10n_in_hsn_code']
+        return params
