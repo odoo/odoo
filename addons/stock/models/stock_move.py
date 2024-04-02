@@ -663,6 +663,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id and picking_id.immediate_transfer and not vals.get('quantity_done') and vals.get('state') == 'draft':
                 vals['state'] = 'assigned'
+            if picking_id.group_id and 'group_id' not in vals:
+                vals['group_id'] = picking_id.group_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -697,6 +699,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             self._propagate_product_packaging(vals['product_packaging_id'])
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
+        if 'picking_id' in vals and 'group_id' not in vals:
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if picking.group_id:
+                vals['group_id'] = picking.group_id.id
         res = super(StockMove, self).write(vals)
         if move_to_recompute_state:
             move_to_recompute_state._recompute_state()
