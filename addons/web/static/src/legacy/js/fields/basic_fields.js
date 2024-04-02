@@ -847,8 +847,16 @@ var FieldDateRange = InputField.extend({
         };
         window.addEventListener('scroll', this._onScroll, true);
         const [startDate, endDate] = this._getDateRangeFromInputField();
-        daterangepicker.setStartDate(startDate? startDate.utcOffset(session.getTZOffset(startDate)): moment());
-        daterangepicker.setEndDate(endDate? endDate.utcOffset(session.getTZOffset(endDate)): moment());
+        if (this.formatType == 'datetime') {
+            if (startDate) {
+                startDate.utcOffset(session.getTZOffset(startDate));
+            }
+            if (endDate) {
+                endDate.utcOffset(session.getTZOffset(endDate));
+            }
+        }
+        daterangepicker.setStartDate(startDate || moment());
+        daterangepicker.setEndDate(endDate || moment());
         daterangepicker.updateView();
     },
     /**
