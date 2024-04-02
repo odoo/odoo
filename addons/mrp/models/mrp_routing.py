@@ -102,7 +102,7 @@ class MrpRoutingWorkcenter(models.Model):
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
-        if not self._check_m2m_recursion('blocked_by_operation_ids'):
+        if self._has_cycle('blocked_by_operation_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
 
     @api.model_create_multi
