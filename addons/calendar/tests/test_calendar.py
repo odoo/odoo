@@ -218,14 +218,14 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.assertEqual(d.minute, 30)
 
     def test_recurring_ny(self):
-        self.user_demo.tz = 'US/Eastern'
+        self.user_demo.tz = 'America/New_York'
         event = self.CalendarEvent.create({'user_id': self.user_demo.id, 'name': 'test', 'partner_ids': [Command.link(self.user_demo.partner_id.id)]})
-        f = Form(event.with_context(tz='US/Eastern').with_user(self.user_demo))
+        f = Form(event.with_context(tz='America/New_York').with_user(self.user_demo))
         f.name = 'test'
         f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
         f.recurrency = True
         self.assertEqual(f.weekday, 'WED')
-        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.event_tz, 'America/New_York', "The value should correspond to the user tz")
         self.assertEqual(f.count, 1, "The default value should be displayed")
         self.assertEqual(f.interval, 1, "The default value should be displayed")
         self.assertEqual(f.month_by, "date", "The default value should be displayed")
