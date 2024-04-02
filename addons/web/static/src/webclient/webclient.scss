@@ -260,3 +260,14 @@ select {
   border-radius: 0;
   font-size: 1em; // Override 75% of .label
 }
+
+//------------------------------------------------------------------------------
+// Print Style
+//------------------------------------------------------------------------------
+
+@include media-only(print) {
+  html, body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
