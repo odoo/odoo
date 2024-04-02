@@ -82,7 +82,8 @@ class StockMove(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         help="Optional address where goods are to be delivered, specifically used for allotment",
-        compute='_compute_partner_id', store=True, readonly=False)
+        compute='_compute_partner_id', store=True, readonly=False,
+        index='btree_not_null')
     move_dest_ids = fields.Many2many(
         'stock.move', 'stock_move_move_rel', 'move_orig_id', 'move_dest_id', 'Destination Moves',
         copy=False,
@@ -147,7 +148,8 @@ class StockMove(models.Model):
         readonly=True, help='Quantity in stock that can still be reserved for this move')
     # used to depict a restriction on the ownership of quants to consider when marking this move as 'done'
     restrict_partner_id = fields.Many2one(
-        'res.partner', 'Owner ', check_company=True)
+        'res.partner', 'Owner ', check_company=True,
+        index='btree_not_null')
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")

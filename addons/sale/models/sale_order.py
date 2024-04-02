@@ -139,13 +139,15 @@ class SaleOrder(models.Model):
         string="Invoice Address",
         compute='_compute_partner_invoice_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        index='btree_not_null')
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string="Delivery Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        index='btree_not_null')
 
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
