@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from ast import literal_eval
 
 from pytz import timezone, UTC, utc
-from datetime import timedelta
+from datetime import timedelta, date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -74,7 +73,18 @@ class HrEmployeeBase(models.AbstractModel):
         new_hire_field = self._get_new_hire_field()
         new_hire_date = fields.Datetime.now() - timedelta(days=90)
         for employee in self:
-            employee.newly_hired = employee[new_hire_field] > new_hire_date
+            # `new_hire_field` can be a bool or None if employee is not linked to a contract,
+            # a date if hr_payroll is not installed
+            # and a datetime if employee is linked to a contract
+            hire_date = employee[new_hire_field]
+            try:
+                #  Only if the field is a date or a datetime
+                if isinstance(hire_date, date):
+                    hire_date = fields.Datetime.to_datetime(hire_date)
+                employee.newly_hired = hire_date > new_hire_date
+            except TypeError:
+                # If hire_date cannot be compared against a datetime
+                employee.newly_hired = False
 
     def _search_newly_hired(self, operator, value):
         new_hire_field = self._get_new_hire_field()
