@@ -50,6 +50,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         }, {
             'name': 'Molly',
             'city': 'Namur',
+            'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '2718281828',
@@ -268,6 +269,19 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             }],
         )
         self.assertTrue(bool(move.ubl_cii_xml_id))
+
+    def test_send_peppol_and_email_default_values(self):
+        # If both "Send by Email" and "Send by Peppol" are set, we deactivate the "Send by Email" option
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+
+        wizard = self.create_send_and_print(
+            move,
+            checkbox_send_peppol=True,
+        )
+
+        self.assertTrue(wizard.checkbox_send_peppol)
+        self.assertFalse(wizard.checkbox_send_mail)
 
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
