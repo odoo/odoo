@@ -157,7 +157,8 @@ class StockPicking(models.Model):
         return res
 
 class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
+    _name = 'stock.picking.type'
+    _inherit = ['stock.picking.type', 'pos.load.mixin']
 
     @api.depends('warehouse_id')
     def _compute_hide_reservation_method(self):
@@ -172,6 +173,14 @@ class StockPickingType(models.Model):
             pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
                 raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config']['data'][0]['picking_type_id'])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'use_create_lots', 'use_existing_lots']
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

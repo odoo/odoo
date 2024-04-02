@@ -5,11 +5,21 @@ from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _name = 'sale.order'
+    _inherit = ['sale.order', 'pos.load.mixin']
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
     amount_unpaid = fields.Monetary(string='Unpaid Amount', compute='_compute_amount_unpaid', store=True, help="The amount due from the sale order.")
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [['pos_order_line_ids.order_id.state', '=', 'draft']]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['name', 'state', 'user_id', 'order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed', 'amount_unpaid',
+            'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order']
 
     def _count_pos_order(self):
         for order in self:
@@ -35,9 +45,19 @@ class SaleOrder(models.Model):
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
 
 class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = ['sale.order.line', 'pos.load.mixin']
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('order_id', 'in', [order['id'] for order in data['sale.order']['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
+            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_id']
 
     @api.depends('pos_order_line_ids.qty')
     def _compute_qty_delivered(self):

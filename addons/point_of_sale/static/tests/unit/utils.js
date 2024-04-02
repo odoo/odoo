@@ -3,31 +3,26 @@
 import { registry } from "@web/core/registry";
 
 registry.category("mock_server").add("pos.session/load_data", async function (route, args) {
-    return {
-        errors: [],
-        custom: {
-            server_version: "0.0.0",
-            base_url: "http://localhost:8069",
-            has_cash_move_perm: true,
-            has_available_products: true,
-            pos_special_products_ids: [],
-        },
-        data: Object.entries(this.models).reduce((acc, [model, data]) => {
-            acc[model] = data.records;
+    const mockData = {};
+    const relations = Object.entries(this.models).reduce((acc, [model, data]) => {
+        acc[model] = Object.entries(data.fields).reduce((acc, [field, value]) => {
+            acc[field] = value;
             return acc;
-        }, {}),
-        relations: Object.entries(this.models).reduce((acc, [model, data]) => {
-            acc[model] = Object.entries(data.fields).reduce((acc, [field, value]) => {
-                acc[field] = value;
-                return acc;
-            }, {});
-            return acc;
-        }, {}),
-        fields: Object.entries(this.models).reduce((acc, [model, data]) => {
-            acc[model] = Object.keys(data.fields);
-            return acc;
-        }, {}),
-    };
+        }, {});
+        return acc;
+    }, {});
+    const fields = Object.entries(this.models).reduce((acc, [model, data]) => {
+        acc[model] = Object.keys(data.fields);
+        return acc;
+    }, {});
+    for (const [model, data] of Object.entries(this.models)) {
+        mockData[model] = {
+            data: data.data,
+            fields: fields[model],
+            relations: relations[model],
+        };
+    }
+    return mockData;
 });
 
 registry

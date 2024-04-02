@@ -30,12 +30,12 @@ class PosOrder(models.Model):
             ])
 
             if len(table_orders) > 0:
-                params = self.env["pos.session"]._load_data_params(table_orders[0].config_id)
-                result['pos.order'].extend(table_orders.read(params["pos.order"]["fields"], load=False))
-                result['pos.payment'].extend(table_orders.payment_ids.read(params["pos.payment"]["fields"], load=False))
-                result['pos.order.line'].extend(table_orders.lines.read(params["pos.order.line"]["fields"], load=False))
-                result['pos.pack.operation.lot'].extend(table_orders.lines.pack_lot_ids.read(params["pos.pack.operation.lot"]["fields"], load=False))
-                result["product.attribute.custom.value"].extend(table_orders.lines.custom_attribute_value_ids.read(params["product.attribute.custom.value"]["fields"], load=False))
+                config_id = table_orders[0].config_id.id
+                result['pos.order'].extend(table_orders.read(table_orders._load_pos_data_fields(config_id), load=False))
+                result['pos.payment'].extend(table_orders.payment_ids.read(table_orders.payment_ids._load_pos_data_fields(config_id), load=False))
+                result['pos.order.line'].extend(table_orders.lines.read(table_orders.lines._load_pos_data_fields(config_id), load=False))
+                result['pos.pack.operation.lot'].extend(table_orders.lines.pack_lot_ids.read(table_orders.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False))
+                result["product.attribute.custom.value"].extend(table_orders.lines.custom_attribute_value_ids.read(table_orders.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False))
 
         return result
 

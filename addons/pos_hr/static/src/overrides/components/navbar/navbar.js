@@ -10,8 +10,7 @@ patch(Navbar.prototype, {
         }
 
         const { cashier } = this.pos;
-        const security = this.pos.employee_security[cashier.id];
-        return super.showCashMoveButton && (!cashier || security.role == "manager");
+        return super.showCashMoveButton && (!cashier || cashier._role == "manager");
     },
     employeeIsAdmin() {
         if (!this.pos.config.module_pos_hr) {
@@ -19,8 +18,7 @@ patch(Navbar.prototype, {
         }
 
         const cashier = this.pos.get_cashier();
-        const security = this.pos.employee_security[cashier.id];
-        return security.role === "manager" || cashier.user_id?.id === this.pos.user.id;
+        return cashier._role === "manager" || cashier.user_id?.id === this.pos.user.id;
     },
     async showLoginScreen() {
         this.pos.reset_cashier();

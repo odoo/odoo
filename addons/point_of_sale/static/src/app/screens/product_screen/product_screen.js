@@ -159,7 +159,7 @@ export class ProductScreen extends Component {
             const records = await this.pos.data.callRelated(
                 "pos.session",
                 "find_product_by_barcode",
-                [odoo.pos_session_id, code.base_code]
+                [odoo.pos_session_id, code.base_code, this.pos.config.id]
             );
 
             if (records && records["product.product"].length > 0) {
@@ -311,9 +311,10 @@ export class ProductScreen extends Component {
     }
 
     getProductListToNotDisplay() {
-        return [this.pos.config.tip_product_id?.id, ...this.pos.pos_special_products_ids].filter(
-            (id) => !this.pos.models["product.product"].get(id)?.available_in_pos
-        );
+        return [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.session._pos_special_products_ids,
+        ].filter((id) => !this.pos.models["product.product"].get(id)?.available_in_pos);
     }
 
     async loadDemoDataProducts() {
@@ -345,7 +346,7 @@ export class ProductScreen extends Component {
             }
 
             if (this.pos.models["product.product"].length > 5) {
-                this.pos.has_available_products = true;
+                this.pos.session._has_available_products = true;
             }
 
             this.pos.loadOpenOrders(posOrder);

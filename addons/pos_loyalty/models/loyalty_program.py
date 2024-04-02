@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.tools import unique
 from odoo.exceptions import UserError
 
 class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+    _name = 'loyalty.program'
+    _inherit = ['loyalty.program', 'pos.load.mixin']
 
     # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
     # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config
@@ -15,6 +14,19 @@ class LoyaltyProgram(models.Model):
     pos_ok = fields.Boolean("Point of Sale", default=True)
     pos_report_print_id = fields.Many2one('ir.actions.report', string="Print Report", domain=[('model', '=', 'loyalty.card')], compute='_compute_pos_report_print_id', inverse='_inverse_pos_report_print_id', readonly=False,
         help="This is used to print the generated gift cards from PoS.")
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return [('id', 'in', config_id._get_program_ids().ids)]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'name', 'trigger', 'applies_on', 'program_type', 'pricelist_ids', 'date_from',
+            'date_to', 'limit_usage', 'max_usage', 'is_nominative', 'portal_visible',
+            'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
+        ]
 
     @api.depends("communication_plan_ids.pos_report_print_id")
     def _compute_pos_report_print_id(self):

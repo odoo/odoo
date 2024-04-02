@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
-    _inherit = 'res.partner'
+    _name = 'res.partner'
+    _inherit = ['res.partner', 'pos.load.mixin']
 
     pos_order_count = fields.Integer(
         compute='_compute_pos_order',
@@ -13,6 +12,18 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return [('id', 'in', config_id.get_limited_partners_loading() + [self.env.user.partner_id.id])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name'
+        ]
 
     def _compute_pos_order(self):
         # retrieve all children partners and prefetch 'parent_id' on them

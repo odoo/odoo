@@ -4,7 +4,8 @@ from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 
 class ResCompany(models.Model):
-    _inherit = 'res.company'
+    _name = 'res.company'
+    _inherit = ['res.company', 'pos.load.mixin']
 
     point_of_sale_update_stock_quantities = fields.Selection([
             ('closing', 'At the session closing (faster)'),
@@ -17,6 +18,18 @@ class ResCompany(models.Model):
     point_of_sale_ticket_unique_code = fields.Boolean(
         string='Generate a code on ticket',
         help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config']['data'][0]['company_id'])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return [
+            'id', 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
+            'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
+            'point_of_sale_ticket_unique_code', 'street', 'city', 'zip',
+        ]
 
     @api.constrains('period_lock_date', 'fiscalyear_lock_date')
     def validate_period_lock_date(self):

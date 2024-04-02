@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(MockPosData.prototype, {
     get data() {
         const data = super.data;
-        data.models["restaurant.floor"] = { fields: {}, records: [] };
+        data["restaurant.floor"] = { relations: {}, fields: {}, data: [] };
         return data;
     },
 });

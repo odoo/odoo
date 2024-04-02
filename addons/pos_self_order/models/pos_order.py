@@ -9,8 +9,6 @@ from odoo import models, fields, api
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
-    combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent')
-    combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines')
     combo_id = fields.Many2one('pos.combo', string='Combo line reference')
 
     @api.model_create_multi

@@ -3,4 +3,4 @@
 
 from . import pos_mercury
 from . import pos_mercury_transaction
-from . import pos_session
+from . import pos_payment_method

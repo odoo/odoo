@@ -12,7 +12,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 
 class PosConfig(models.Model):
     _name = 'pos.config'
-    _inherit = ['pos.bus.mixin']
+    _inherit = ['pos.bus.mixin', 'pos.load.mixin']
     _description = 'Point of Sale Configuration'
     _check_company_auto = True
 
@@ -188,6 +188,23 @@ class PosConfig(models.Model):
     show_product_images = fields.Boolean(string="Show Product Images", help="Show product images in the Point of Sale interface.", default=True)
     show_category_images = fields.Boolean(string="Show Category Images", help="Show category images in the Point of Sale interface.", default=True)
     note_ids = fields.Many2many('pos.note', string='Note Models', help='The predefined notes of this point of sale.')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.session']['data'][0]['config_id'])]
+
+    def _load_pos_data(self, data):
+        domain = self._load_pos_data_domain(data)
+        fields = self._load_pos_data_fields(self.id)
+        data = self.search_read(domain, fields, load=False)
+
+        if not data[0]['use_pricelist']:
+            data[0]['pricelist_id'] = False
+
+        return {
+            'data': data,
+            'fields': fields,
+        }
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

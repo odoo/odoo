@@ -27,6 +27,12 @@ class PosPaymentMethod(models.Model):
 
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
 
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        params = super()._load_pos_data_fields(config_id)
+        params += ['adyen_terminal_identifier']
+        return params
+
     @api.constrains('adyen_terminal_identifier')
     def _check_adyen_terminal_identifier(self):
         for payment_method in self:

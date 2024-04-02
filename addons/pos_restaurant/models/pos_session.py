@@ -3,34 +3,10 @@
 
 from odoo import models, Command, api
 from odoo.tools import convert
-from odoo.osv.expression import OR
 import json
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-
-    def _load_data_params(self, config_id):
-        params = super()._load_data_params(config_id)
-
-        if self.config_id.module_pos_restaurant:
-            params.update({
-                'restaurant.floor': {
-                    'domain': [('pos_config_ids', '=', self.config_id.id)],
-                    'fields': ['name', 'background_color', 'table_ids', 'sequence', 'floor_background_image'],
-                },
-                'restaurant.table': {
-                    'domain': lambda data: [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])],
-                    'fields': [
-                        'name', 'width', 'height', 'position_h', 'position_v', 'parent_id',
-                        'shape', 'floor_id', 'color', 'seats', 'active'
-                    ],
-                }
-            })
-            params['account.fiscal.position']['domain'] = OR([params['account.fiscal.position']['domain'], [('id', '=', self.config_id.takeaway_fp_id.id)]])
-
-        params['pos.order.line']['fields'] += ['note']
-
-        return params
 
     def get_onboarding_data(self):
         results = super().get_onboarding_data()
@@ -40,6 +16,13 @@ class PosSession(models.Model):
             results.update(response['data'])
 
         return results
+
+    @api.model
+    def _load_pos_data_models(self, config_id):
+        data = super()._load_pos_data_models(config_id)
+        if self.config_id.module_pos_restaurant:
+            data += ['restaurant.floor', 'restaurant.table']
+        return data
 
     @api.model
     def _load_onboarding_data(self):

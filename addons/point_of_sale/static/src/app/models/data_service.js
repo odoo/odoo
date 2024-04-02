@@ -141,7 +141,7 @@ export class PosData extends Reactive {
             }
         }
 
-        const { results } = this.models.loadData(data, [], true);
+        const results = this.models.loadData(data, [], true);
         for (const [model, data] of Object.entries(results)) {
             for (const record of data) {
                 if (record.JSONuiState) {
@@ -179,13 +179,18 @@ export class PosData extends Reactive {
 
     async initData() {
         const modelClasses = {};
+        const relations = {};
+        const fields = {};
+        const data = {};
         const response = await this.orm.call("pos.session", "load_data", [
             odoo.pos_session_id,
             PosData.modelToLoad,
         ]);
 
-        for (const [model, error] of Object.entries(response.errors)) {
-            console.info(`The ${model} model encounters an error while loading "${error}"`);
+        for (const [model, values] of Object.entries(response)) {
+            relations[model] = values.relations;
+            fields[model] = values.fields;
+            data[model] = values.data;
         }
 
         for (const posModel of registry.category("pos_available_models").getAll()) {
@@ -193,33 +198,31 @@ export class PosData extends Reactive {
             const extraFields = posModel.extraFields || {};
 
             modelClasses[pythonModel] = posModel;
-            response.relations[pythonModel] = {
-                ...response.relations[pythonModel],
+            relations[pythonModel] = {
+                ...relations[pythonModel],
                 ...extraFields,
             };
         }
 
-        response.relations["pos.store"] = {};
         const { models, records, indexedRecords } = createRelatedModels(
-            response.relations,
+            relations,
             modelClasses,
             this.opts.databaseIndex
         );
 
         this.records = records;
         this.indexedRecords = indexedRecords;
-        this.fields = response.fields;
-        this.relations = response.relations;
-        this.custom = response.custom;
+        this.fields = fields;
+        this.relations = relations;
         this.models = models;
 
-        const order = response.data["pos.order"] || [];
-        const orderlines = response.data["pos.order.line"] || [];
+        const order = data["pos.order"] || [];
+        const orderlines = data["pos.order.line"] || [];
 
-        delete response.data["pos.order"];
-        delete response.data["pos.order.line"];
+        delete data["pos.order"];
+        delete data["pos.order.line"];
 
-        this.models.loadData(response.data, this.modelToLoad);
+        this.models.loadData(data, this.modelToLoad);
         this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
         await this.loadIndexedDBData();
 
@@ -281,7 +284,7 @@ export class PosData extends Reactive {
 
             if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
                 const data = await this.missingRecursive({ [model]: result });
-                const { results } = this.models.loadData(data);
+                const results = this.models.loadData(data);
                 result = results[model];
             }
 
@@ -450,7 +453,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        const { results } = this.models.loadData(data, [], true);
+        const results = this.models.loadData(data, [], true);
         return results;
     }
 

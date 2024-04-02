@@ -150,7 +150,14 @@ export class Base {
      * Check @create inside `createRelatedModels` below.
      * @param {*} _vals
      */
-    setup(_vals) {}
+    setup(_vals) {
+        // Allow custom fields
+        for (const [key, val] of Object.entries(_vals)) {
+            if (key.startsWith("_") && !key.startsWith("__")) {
+                this[key] = val;
+            }
+        }
+    }
     update(vals) {
         this.model.update(this, vals);
     }
@@ -748,7 +755,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
      */
     function loadData(rawData, load = [], fromSerialized = false) {
         const results = {};
-        const missingRecords = {};
 
         for (const model in rawData) {
             if (!load.includes(model) && load.length !== 0) {
@@ -844,7 +850,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         }
 
         makeRecordsAvailable(results, rawData);
-        return { results, missingRecords };
+        return results;
     }
 
     function makeRecordsAvailable(results, rawData) {

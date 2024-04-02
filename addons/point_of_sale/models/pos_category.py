@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError, UserError
 class PosCategory(models.Model):
     _name = "pos.category"
     _description = "Point of Sale Category"
+    _inherit = ['pos.load.mixin']
     _order = "sequence, name"
 
     @api.constrains('parent_id')
@@ -31,6 +32,16 @@ class PosCategory(models.Model):
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        domain = [('id', 'in', config_id._get_available_categories().ids)] if config_id.limit_categories and config_id.iface_available_categ_ids else []
+        return domain
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence']
 
     def _get_hierarchy(self) -> List[str]:
         """ Returns a list representing the hierarchy of the categories. """

@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 class LoyaltyCard(models.Model):
-    _inherit = 'loyalty.card'
+    _name = 'loyalty.card'
+    _inherit = ['loyalty.card', 'pos.load.mixin']
 
     source_pos_order_id = fields.Many2one('pos.order', "PoS Order Reference",
         help="PoS order where this coupon was generated.")
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('program_id', 'in', [program["id"] for program in data["loyalty.program"]['data']])]
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['partner_id', 'code', 'points', 'program_id', 'expiration_date']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)

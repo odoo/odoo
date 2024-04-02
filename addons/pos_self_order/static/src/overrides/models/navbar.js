@@ -5,6 +5,6 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Navbar.prototype, {
     _shouldLoadOrders() {
-        return super._shouldLoadOrders() || this.pos.self_ordering;
+        return super._shouldLoadOrders() || this.pos.session._self_ordering;
     },
 });
