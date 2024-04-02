@@ -286,7 +286,7 @@ export class PosOrderline extends Base {
         const productPriceUnit = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         ).digits;
-        const price = parseFloat(
+        const price = window.parseFloat(
             roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
         let order_line_price = orderline
@@ -353,7 +353,7 @@ export class PosOrderline extends Base {
             (dp) => dp.name === "Product Price"
         ).digits;
         // round and truncate to mimic _symbol_set behavior
-        return parseFloat(roundDecimals(this.price_unit || 0, digits).toFixed(digits));
+        return window.parseFloat(roundDecimals(this.price_unit || 0, digits).toFixed(digits));
     }
 
     get_unit_display_price() {

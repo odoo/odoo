@@ -219,3 +219,16 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickNumpad("5"),
+            ProductScreen.selectedOrderlineHas("Test Product", "5,00", "7.267,65"),
+            Chrome.endTour(),
+        ].flat(),
+});
