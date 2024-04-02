@@ -123,7 +123,7 @@ QUnit.test("Click a link containing an action xml id", async (assert) => {
             assert.deepEqual(action.domain, [(1, "=", 1)]);
         },
     };
-            
+
     const view = {
         name: "My Action Name",
         viewType: "list",
@@ -144,3 +144,43 @@ QUnit.test("Click a link containing an action xml id", async (assert) => {
     assert.verifySteps(["do-action"]);
 });
 
+QUnit.test("Can open link when some views are absent from the referred action", async (assert) => {
+    const env = await makeTestEnv({ serverData: getMenuServerData() });
+    env.services.action = {
+        ...env.services.action,
+        doAction(action) {
+            assert.step("do-action");
+            assert.equal(action.name, "My Action Name");
+            assert.equal(action.res_model, "ir.ui.menu");
+            assert.equal(action.target, "current");
+            assert.equal(action.type, "ir.actions.act_window");
+            assert.deepEqual(action.views, [
+                [false, "list"],
+                [false, "form"],
+            ]);
+            assert.deepEqual(action.domain, [(1, "=", 1)]);
+        },
+    };
+
+    const view = {
+        name: "My Action Name",
+        viewType: "list",
+        action: {
+            modelName: "ir.ui.menu",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            domain: [(1, "=", 1)],
+            xmlId: "spreadsheet.action2",
+        },
+    };
+
+    const model = new Model({}, { custom: { env } });
+    setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
+    const cell = getEvaluatedCell(model, "A1");
+    assert.strictEqual(urlRepresentation(cell.link, model.getters), "My Action Name");
+    await openLink(cell.link, env);
+    await nextTick();
+    assert.verifySteps(["do-action"]);
+});

@@ -30,7 +30,21 @@ export function getMenuServerData() {
             name: "action1",
             res_model: "ir.ui.menu",
             type: "ir.actions.act_window",
-            views: [[1, "list"], [2, "form"]],
+            views: [
+                [1, "list"],
+                [2, "form"],
+            ],
+        },
+        action2: {
+            id: 199,
+            xml_id: "spreadsheet.action2",
+            name: "action1",
+            res_model: "ir.ui.menu",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "graph"],
+                [false, "pivot"],
+            ],
         },
     };
     serverData.views = {};
