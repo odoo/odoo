@@ -108,3 +108,6 @@ class TestSnippets(HttpCase):
     def test_snippet_image(self):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_image', login='admin')
+
+    def test_rating_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_rating", login="admin")
