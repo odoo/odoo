@@ -15,10 +15,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         """ To check dates, set product's Delivery Lead Time
             and company's Purchase Lead Time."""
 
-        company = self.env.ref('base.main_company')
-
         # Update company with Purchase Lead Time
-        company.write({'po_lead': 3.00})
+        with self.with_user('admin'):
+            self.company.write({'po_lead': 3.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned = fields.Datetime.now() + timedelta(days=10)
@@ -48,8 +47,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             we create two procurements for the two different product with same vendor
             and different Delivery Lead Time."""
 
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 0.00})
+        with self.with_user('admin'):
+            self.company.write({'po_lead': 0.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
         date_planned1 = fields.Datetime.now() + timedelta(days=10)
@@ -110,8 +109,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'move_1',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
             'product_uom_qty': 10,
             'procure_method': 'make_to_order'
         })
@@ -127,8 +126,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'move_2',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
             'product_uom_qty': 5,
             'procure_method': 'make_to_order'
         })
@@ -142,8 +141,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
     def test_merge_po_line_3(self):
         """Change merging po line if same procurement is done depending on custom values."""
-        company = self.env.ref('base.main_company')
-        company.write({'po_lead': 0.00})
+        with self.with_user('admin'):
+            self.company.write({'po_lead': 0.00})
 
         # The seller has a specific product name and code which must be kept in the PO line
         self.t_shirt.seller_ids.write({
@@ -170,7 +169,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_1_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 5, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_1_values)
+            self.t_shirt.name, '/', self.company, order_1_values)
         ])
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
         order_line_description = purchase_order.order_line.product_id.description_pickingin or ''
@@ -181,7 +180,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_2_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_2_values)
+            self.t_shirt.name, '/', self.company, order_2_values)
         ])
         self.env['procurement.group'].run_scheduler()
         self.assertEqual(len(purchase_order.order_line), 1, 'line with same custom value should be merged')
@@ -192,7 +191,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         order_3_values = procurement_values
         ProcurementGroup.run([self.env['procurement.group'].Procurement(
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
-            self.t_shirt.name, '/', self.env.company, order_3_values)
+            self.t_shirt.name, '/', self.company, order_3_values)
         ])
         self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
         self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
@@ -203,14 +202,14 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids_without_package.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + order_line_description + "Color (Green)", 'wrong description in picking')
 
     def test_reordering_days_to_purchase(self):
-        company = self.env.ref('base.main_company')
-        company2 = self.env['res.company'].create({
-            'name': 'Second Company',
-        })
-        company.write({'po_lead': 0.00})
+        with self.with_user('admin'):
+            self.company.write({'po_lead': 0.00})
+            company2 = self.env['res.company'].create({
+                'name': 'Second Company',
+            })
+            self.user.company_ids |= company2
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
         self.mock_date = self.startPatcher(self.patcher)
-
         vendor = self.env['res.partner'].create({
             'name': 'Colruyt'
         })
@@ -218,26 +217,26 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Delhaize'
         })
 
-        self.env.company.days_to_purchase = 2.0
+        with self.with_user('admin'):
+            self.company.days_to_purchase = 2.0
 
         # Test if the orderpoint is created when opening the replenishment view
         prod = self.env['product.product'].create({
             'name': 'Carrot',
             'is_storable': True,
             'seller_ids': [
-                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': self.company.id})
             ]
         })
 
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
         self.env['stock.move'].create({
             'name': 'Delivery',
             'date': datetime.today() + timedelta(days=3),
             'product_id': prod.id,
             'product_uom': prod.uom_id.id,
             'product_uom_qty': 5.0,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
         })._action_confirm()
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
         replenishment = self.env['stock.warehouse.orderpoint'].search([
@@ -251,7 +250,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'is_storable': True,
             'seller_ids': [
                 (0, 0, {'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
-                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': self.company.id})
             ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
@@ -273,8 +272,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 5.0,
-                'location_id': warehouse.lot_stock_id.id,
-                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
             })
         delivery_moves._action_confirm()
         self.env['procurement.group'].run_scheduler()
