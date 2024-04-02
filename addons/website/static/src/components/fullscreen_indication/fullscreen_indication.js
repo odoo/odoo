@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-const { Component, xml, useState } = owl;
+import { Component, useState, markup } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
+import { _t } from "@web/core/l10n/translation";
 
 export class FullscreenIndication extends Component {
     setup() {
@@ -20,8 +22,9 @@ export class FullscreenIndication extends Component {
             clearTimeout(this.autofade);
         }
     }
+
+    get fullScreenIndicationText() {
+        return markup(sprintf(escape(_t("Press %(key)s to exit full string")), "<span>esc</span>"));
+    }
 }
-FullscreenIndication.template = xml`
-<div class="o_fullscreen_indication" t-att-class="{ o_visible: state.isVisible }">
-    <p>Press <span>esc</span> to exit full screen</p>
-</div>`;
+FullscreenIndication.template = "website.FullscreenIndication";
