@@ -557,10 +557,24 @@ class AccountChartTemplate(models.AbstractModel):
                 journal.loss_account_id = journal.loss_account_id or company.default_cash_difference_expense_account_id
 
         # Set newly created journals as defaults for the company
-        if not company.tax_cash_basis_journal_id:
-            company.tax_cash_basis_journal_id = self.ref('caba')
+        if not company.tax_cash_basis_journal_id and company.tax_exigibility:
+            caba_journal = self.ref("caba", raise_if_not_found=False)
+            if not caba_journal:
+                raise UserError(_(
+                    "The tax cash basis journal is missing. "
+                    "Please configure it in the '%s' company settings to proceed with the operation.",
+                    company.display_name,
+                ))
+            company.tax_cash_basis_journal_id = caba_journal
         if not company.currency_exchange_journal_id:
-            company.currency_exchange_journal_id = self.ref('exch')
+            exchange_journal = self.ref("exch", raise_if_not_found=False)
+            if not exchange_journal:
+                raise UserError(_(
+                    "The currency exchange difference journal is missing. "
+                    "Please configure it in the '%s' company settings to proceed with the operation.",
+                    company.display_name,
+                ))
+            company.currency_exchange_journal_id = exchange_journal
 
         # Setup default Income/Expense Accounts on Sale/Purchase journals
         sale_journal = self.ref("sale", raise_if_not_found=False)
