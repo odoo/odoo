@@ -15,7 +15,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         "click .o_address_select": "_onClickLocation",
         "click .o_remove_order_location": "_onClickRemoveLocation",
         "click .o_show_pickup_locations": "_onClickShowLocations",
-        "click .o_payment_option_card": "_onClickPaymentMethod"
+        "click .o_payment_option_card": "_onClickPaymentMethod",
+        "click .o_search_locations_by_zip": "_onClickShowLocations"
     },
 
     /**
@@ -318,18 +319,25 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             return;
         }
 
-        while (modal.firstChild) {
-            modal.lastChild.remove();
-        }
         const deliveryTypeInput = ev.currentTarget.closest(".o_delivery_carrier_select").querySelector('input[name="delivery_type"]');
         const deliveryType = deliveryTypeInput.getAttribute("delivery_type");
         const deliveryTypeId = deliveryTypeInput.value;
+
+        if (ev.currentTarget.id === deliveryType + "_zip_search") {
+            var zipCode = ev.currentTarget.previousElementSibling.value;
+            ev.currentTarget = ev.currentTarget.closest(".o_list_pickup_locations").previousElementSibling;
+        }
+
+        while (modal.firstChild) {
+            modal.lastChild.remove();
+        }
         await this._checkCarrier(ev,deliveryTypeId)
         $(renderToElement(deliveryType + "_pickup_location_loading")).appendTo($(modal));
-        const data = await rpc("/shop/access_point/close_locations");
+        const data = await rpc("/shop/access_point/close_locations", {zip_code: zipCode});
         if (modal.firstChild){
             modal.firstChild.remove();
         }
+        $(renderToElement(deliveryType + "_zip_search")).appendTo($(modal));
         if (data.error || (data.close_locations.length === 0)) {
             const errorMessage = document.createElement("em");
             errorMessage.classList.add("text-error");
@@ -339,9 +347,22 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
 
         var listToRender = deliveryType + "_pickup_location_list";
-        var dataToRender = {partner_address: data.partner_address};
+        var partnerAddress = JSON.parse(data.partner_address);
+        var inlinePartnerAddress = [
+            partnerAddress.street,
+            partnerAddress.street2,
+            partnerAddress.zip,
+            partnerAddress.country
+        ].map(part => part || "").join(", ");
+
+        var dataToRender = {partner_address: inlinePartnerAddress};
         dataToRender[deliveryType + "_pickup_locations"] = data.close_locations;
         $(renderToElement(listToRender, dataToRender)).appendTo($(modal));
+
+        var zipInput = document.querySelector(`#${deliveryType}_zip_input`);
+        if (zipInput) {
+            zipInput.value = zipCode || partnerAddress.zip;
+        }
 
         const showLocations = document.querySelectorAll(".o_show_pickup_locations");
         if (!ev.currentTarget.closest(".o_delivery_carrier_select")) {

@@ -135,20 +135,25 @@ class WebsiteSaleDelivery(WebsiteSale):
         return {order.carrier_id.delivery_type + '_access_point': address, 'name': name, 'delivery_name': order.carrier_id.display_name}
 
     @route('/shop/access_point/close_locations', type='json', auth='public', website=True, sitemap=False)
-    def get_close_locations(self):
+    def get_close_locations(self, zip_code=False):
         order = request.website.sale_get_order()
         try:
             error = {'error': _('No pick-up point available for that shipping address')}
             if not hasattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations'):
                 return error
-            close_locations = getattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations')(order.partner_shipping_id)
+            close_locations = getattr(order.carrier_id, '_' + order.carrier_id.delivery_type + '_get_close_locations')(order.partner_shipping_id, zip_code=zip_code)
             partner_address = order.partner_shipping_id
-            inline_partner_address = ' '.join((part or '') for part in [partner_address.street, partner_address.street2, partner_address.zip, partner_address.country_id.code])
+            short_partner_address = {
+                'street': partner_address.street,
+                'street2': partner_address.street2,
+                'zip': partner_address.zip,
+                'country': partner_address.country_id.code,
+            }
             if len(close_locations) < 0:
                 return error
             for location in close_locations:
                 location['address_stringified'] = json.dumps(location)
-            return {'close_locations': close_locations, 'partner_address': inline_partner_address}
+            return {'close_locations': close_locations, 'partner_address': json.dumps(short_partner_address), 'partner_zip': partner_address.zip}
         except UserError as e:
             return {'error': str(e)}
 
