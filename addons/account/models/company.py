@@ -442,6 +442,7 @@ class ResCompany(models.Model):
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar or from the Financial configuration menu."""
         view_id = self.env.ref('account.setup_bank_account_wizard').id
+        context = {'dialog_size': 'medium', **self.env.context}
         return {
             'type': 'ir.actions.act_window',
             'name': _('Create a Bank Account'),
@@ -449,6 +450,7 @@ class ResCompany(models.Model):
             'target': 'new',
             'view_mode': 'form',
             'views': [[view_id, 'form']],
+            'context': context,
         }
 
     @api.model

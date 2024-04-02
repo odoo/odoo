@@ -51,7 +51,8 @@
                                    invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
                                    readonly="payment_type == 'inbound'"
                                    required="require_partner_bank_account and can_edit_wizard and (not can_group_payments or not group_payment)"
-                                    context="{'display_account_trust': True}"/>
+                                   placeholder="Account Number"
+                                   context="{'display_account_trust': True, 'default_partner_id': partner_id}"/>
                             <field name="group_payment"
                                    invisible="not can_group_payments"/>
                         </group>
