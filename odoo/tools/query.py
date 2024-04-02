@@ -248,6 +248,17 @@ class Query:
             self.add_where(SQL("%s IN %s", SQL.identifier(self.table, 'id'), ids))
         self._ids = ids
 
+    def exists(self):
+        """ Returns True if there are records satisfying the query, else False """
+        assert not self.offset, "Method exists() can only be called on a Query with no offset"
+        if self._ids is None:
+            if self.limit is None or self.limit:
+                return self._env.execute_query(SQL("SELECT EXISTS(%s)", self.select("")))[0][0]
+            else:
+                # optimization: limit == 0 -> no results, don't execute the query at all
+                return False
+        return bool(self)
+
     def __str__(self):
         sql = self.select()
         return f"<Query: {sql.code!r} with params: {sql.params!r}>"

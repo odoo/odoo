@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
 from odoo import Command
+from odoo.osv.expression import TRUE_DOMAIN, FALSE_DOMAIN
+from odoo.tests.common import TransactionCase
 
 
 class test_search(TransactionCase):
@@ -303,3 +304,21 @@ class test_search(TransactionCase):
         N = 9500
         domain = ['|'] * (N - 1) + [('login', '=', 'admin')] * N
         self.env['res.users'].search(domain)
+
+    def test_24_search_exists(self):
+        self.addCleanup(self.registry.reset_changes)  # reset the registry to avoid polluting other tests
+
+        Model = self.env['res.bank'].sudo().with_context(active_test=False)  # remove ir.rules and active out of the equation
+        Model.search([]).unlink()  # remove all records on model
+
+        self.assertEqual(Model.search_count([]), 0, "No users should be present in the model.")
+        self.assertFalse(Model.search_exists([]), "The model has no records, it's impossible for something to exists.")
+
+        Model.create({'name': 'toto'})
+
+        self.assertEqual(Model.search_count([]), 1, "There should be 1 record in the table.")
+        self.assertTrue(Model.search_exists([]), "The model contains a record -> therefor at least 1 exists")
+
+        self.assertTrue(Model.search_exists(TRUE_DOMAIN), "The model contains a record and the domain is evaluated to WHERE TRUE -> at least 1 record exists")
+        with self.assertQueryCount(0):
+            self.assertFalse(Model.search_exists(FALSE_DOMAIN), "The model contains a record, but the domain is always falsy -> no records can match")

@@ -1580,6 +1580,28 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
+    def search_exists(self, domain):
+        """ search_exists(domain) -> bool
+
+        Returns `True` if there is a record in the current model matching :ref:`the
+        provided domain <reference/orm/domains>` else False.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
+                     list to match all records.
+
+        This is a high-level method, which should not be overridden. Its actual
+        implementation is done by method :meth:`_search`.
+        """
+        query = self._search(domain, limit=1)
+
+        if query.is_empty():
+            # optimization: don't execute the query at all
+            return False
+
+        return query.exists()
+
+    @api.model
+    @api.readonly
     @api.returns('self')
     def search(self, domain, offset=0, limit=None, order=None):
         """ search(domain[, offset=0][, limit=None][, order=None])
