@@ -4215,6 +4215,50 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Date field should be timezone agnostic', async function (assert) {
+        assert.expect(5);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.fields.date_end = { string: 'Date End', type: 'date' };
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset: function () {
+                    return -420;
+                },
+            },
+        });
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/03/2017',
+            "the start date should be correctly displayed in readonly");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '02/08/2017',
+            "the end date should be correctly displayed in readonly");
+
+        // Open daterangepicker
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        const activeDates = $('td.active');
+        assert.strictEqual(activeDates.length, 2,
+            "daterangepicker should open with two active dates");
+        assert.strictEqual(activeDates[0].textContent, '3',
+            "first active date should be on the correct day of the month");
+        assert.strictEqual(activeDates[1].textContent, '8',
+            "second active date should be on the correct day of the month");
+
+        form.destroy();
+        unpatchDate();
+    });
+
     QUnit.test('Daterange field manually input wrong value should show toaster', async function (assert) {
         assert.expect(5);
 
