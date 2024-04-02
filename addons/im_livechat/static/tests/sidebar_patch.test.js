@@ -237,13 +237,17 @@ test("Close manually by clicking the title", async () => {
 });
 
 test("Open manually by clicking the title", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-01 10:00:00",
+            }),
+            Command.create({ guest_id: guestId, last_interest_dt: "2021-01-01 10:00:00" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -283,13 +287,17 @@ test("Category item should be invisible if the category is closed", async () => 
 });
 
 test("Active category item should be visible even if the category is closed", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-01 10:00:00",
+            }),
+            Command.create({ guest_id: guestId, last_interest_dt: "2021-01-01 10:00:00" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
@@ -353,10 +361,13 @@ test("Message unread counter", async () => {
 });
 
 test("unknown livechat can be displayed and interacted with", async () => {
+    mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
     const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId, last_interest_dt: "2021-01-01 10:00:00" }),
+        ],
         channel_type: "livechat",
         livechat_operator_id: partnerId,
     });
