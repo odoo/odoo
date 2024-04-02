@@ -27,7 +27,7 @@
                     <field name="lock_trust_fields" invisible="1"/>
                     <label for="allow_out_payment"/>
                     <div class="d-flex gap-2">
-                        <field name="allow_out_payment" widget="boolean_toggle" options="{'autosave': False}" readonly="not user_has_group_validate_bank_account"/>
+                        <field name="allow_out_payment" widget="boolean_toggle" options="{'autosave': False}" readonly="not user_has_group_validate_bank_account" class="w-25"/>
                         <span class="d-flex gap-2 w-100">
                             <span invisible="allow_out_payment" class="text-muted">Untrusted</span>
                             <span invisible="not allow_out_payment" class="text-success">Trusted</span>

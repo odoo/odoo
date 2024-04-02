@@ -34,7 +34,7 @@ class AccountTourUploadBill(models.TransientModel):
             ' '.join([x for x in [self.env.company.state_id.name, self.env.company.zip] if x]),
             self.env.company.country_id.name,
         ] if x]
-        ref = 'INV/%s/0001' % invoice_date.strftime('%Y/%m')
+        ref = 'DE%s' % invoice_date.strftime('%Y%m')
         html = self.env['ir.qweb']._render('account.bill_preview', {
             'company_name': self.env.company.name,
             'company_street_address': addr,
@@ -67,7 +67,7 @@ class AccountTourUploadBill(models.TransientModel):
         context = dict(self._context)
         context['default_move_type'] = 'in_invoice'
         return {
-            'name': _('Generated Documents'),
+            'name': _('Bills'),
             'domain': [('id', 'in', bill_ids)],
             'view_mode': 'tree,form',
             'res_model': 'account.move',
@@ -92,21 +92,24 @@ class AccountTourUploadBill(models.TransientModel):
                     'name': 'Deco Addict',
                     'is_company': True,
                 })
-            bill = self.env['account.move'].create({
+            default_expense_account = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
+            bill = self.env['account.move'].with_context(default_extract_state='done').create({
                 'move_type': 'in_invoice',
                 'partner_id': partner.id,
-                'ref': 'INV/%s/0001' % invoice_date.strftime('%Y/%m'),
+                'ref': 'DE%s' % invoice_date.strftime('%Y%m'),
                 'invoice_date': invoice_date,
                 'invoice_date_due': invoice_date + timedelta(days=30),
                 'journal_id': purchase_journal.id,
                 'invoice_line_ids': [
                     Command.create({
                         'name': "[FURN_8999] Three-Seat Sofa",
+                        'account_id': purchase_journal.default_account_id.id or default_expense_account.id,
                         'quantity': 5,
                         'price_unit': 1500,
                     }),
                     Command.create({
                         'name': "[FURN_8220] Four Person Desk",
+                        'account_id': purchase_journal.default_account_id.id or default_expense_account.id,
                         'quantity': 5,
                         'price_unit': 2350,
                     })
