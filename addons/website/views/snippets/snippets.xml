@@ -1668,6 +1668,14 @@
                 <we-button data-select-value="false">Visible for Logged Out</we-button>
                 <we-button data-select-value="">Visible for Everyone</we-button>
             </we-select>
+            <t t-if="debug" t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">User Group</t>
+                <t t-set="attribute_rule" t-valuef="visibilityValueUserGroupRule"/>
+                <t t-set="save_attribute" t-valuef="visibilityValueUserGroup"/>
+                <t t-set="attribute_name" t-valuef="data-groups"/>
+                <t t-set="model" t-valuef="res.groups"/>
+                <t t-set="call_with" t-valuef="display_name"/>
+            </t>
         </we-collapse>
     </div>
 

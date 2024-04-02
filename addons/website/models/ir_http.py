@@ -429,11 +429,13 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         geoip_country_code = request.geoip.country_code
         geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
+        user_groups = request.env.user.groups_id.mapped("display_name")
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
             'lang_url_code': request.lang.url_code,
+            'user_groups': user_groups,
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({
