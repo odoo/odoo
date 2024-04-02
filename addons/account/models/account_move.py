@@ -5047,7 +5047,7 @@ class AccountMove(models.Model):
     def message_new(self, msg_dict, custom_values=None):
         # EXTENDS mail mail.thread
         # Add custom behavior when receiving a new invoice through the mail's gateway.
-        if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice'):
+        if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice', 'entry'):
             return super().message_new(msg_dict, custom_values=custom_values)
 
         company = self.env['res.company'].browse(custom_values['company_id']) if custom_values.get('company_id') else self.env.company
@@ -5107,7 +5107,7 @@ class AccountMove(models.Model):
         res = super()._message_post_after_hook(new_message, message_values)
 
         attachments = new_message.attachment_ids
-        if not attachments or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
+        if not attachments or self.env.context.get('no_new_invoice'):
             return res
 
         odoobot = self.env.ref('base.partner_root')
