@@ -923,7 +923,8 @@ class AccountPaymentRegister(models.TransientModel):
             ('reconciled', '=', False),
         ]
         for vals in to_process:
-            payment_lines = vals['payment'].line_ids.filtered_domain(domain)
+            payment = vals['payment']
+            payment_lines = payment.line_ids.filtered_domain(domain)
             lines = vals['to_reconcile']
             extra_context = {'forced_rate_from_register_payment': vals['rate']} if 'rate' in vals else {}
 

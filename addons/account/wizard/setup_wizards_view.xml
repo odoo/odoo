@@ -7,18 +7,19 @@
             <field name="model">account.financial.year.op</field>
             <field name="arch" type="xml">
                 <form>
+                    <div>
+                        <span class="figure-caption">Never miss a deadline, with automated statements and alerts.</span>
+                    </div>
                     <sheet>
                         <group>
-                            <group string="Fiscal Years">
-                                <field name="opening_move_posted" invisible="1"/>
-                                <field name="opening_date" readonly="opening_move_posted"/>
+                            <field name="opening_move_posted" invisible="1"/>
+                            <field name="opening_date" readonly="opening_move_posted"/>
 
-                                <label for="fiscalyear_last_month" string="Fiscal Year End"/>
-                                <div>
-                                    <field name="fiscalyear_last_day" class="text-center me-2" style="width: 20% !important;"/>
-                                    <field name="fiscalyear_last_month" class="w-75"/>
-                                </div>
-                            </group>
+                            <label for="fiscalyear_last_month" string="Fiscal Year End"/>
+                            <div>
+                                <field name="fiscalyear_last_day" class="text-center me-2" style="width: 20% !important;"/>
+                                <field name="fiscalyear_last_month" class="w-75"/>
+                            </div>
                         </group>
                     </sheet>
                     <footer>
@@ -41,21 +42,10 @@
                     <field name="linked_journal_id" invisible="1"/>
                     <sheet>
                         <group>
-                            <group>
-                                <field name="acc_number" placeholder="e.g BE15001559627230"/>
-                                <field name="bank_id" placeholder="e.g Bank of America"/>
-                                <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
-                            </group>
-                        </group>
-                        <group invisible="num_journals_without_account == 0">
-                            <group>
-                                <field name="linked_journal_id" options="{'no_create': True}"/>
-                            </group>
-                            <group>
-                                <span class="text-muted" colspan="2">
-                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.
-                                </span>
-                            </group>
+                            <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                            <field name="bank_id" placeholder="e.g Bank of America"/>
+                            <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
+                            <field name="linked_journal_id" options="{'no_create': True}" placeholder="Leave empty to create new" invisible="num_journals_without_account == 0"/>
                         </group>
                     </sheet>
                     <footer>

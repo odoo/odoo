@@ -69,6 +69,9 @@ class OnboardingStep(models.Model):
             'target': 'new',
             'res_id': new_wizard.id,
             'views': [[view_id, 'form']],
+            'context': {
+                'dialog_size': 'medium',
+            }
         }
 
     @api.model
