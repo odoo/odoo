@@ -9,7 +9,8 @@ class Rating(models.Model):
     # Adding information for comment a rating message
     publisher_comment = fields.Text("Publisher comment")
     publisher_id = fields.Many2one('res.partner', 'Commented by',
-                                   ondelete='set null', readonly=True)
+                                   ondelete='set null', readonly=True,
+                                   index='btree_not_null')
     publisher_datetime = fields.Datetime("Commented on", readonly=True)
 
     @api.model_create_multi
