@@ -1203,7 +1203,7 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id or self.invoice_lines or not self.company_id:
             return
         params = {'order_id': self.order_id}
-        seller = self.product_id._select_seller(
+        seller = self.product_id.with_company(self.company_id)._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order.date(),

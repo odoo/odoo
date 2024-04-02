@@ -298,6 +298,28 @@ class TestPurchase(AccountTestInvoicingCommon):
         pol.product_qty += 1
         self.assertEqual(pol.name, "New custom description")
 
+    def test_on_change_quantity_subtotal(self):
+        """
+        When a user changes the quantity of a product in a purchase order it
+        should correctly change the subtotal price even in a multi-enterprise environment
+        """
+        seller_ids = self.env['product.supplierinfo'].create({
+            'name': self.partner_a.id,
+            'price': 20,
+            'company_id': self.company_data_2['company'].id
+        })
+
+        self.product_a.write({'seller_ids': seller_ids})
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.partner_a
+        po.company_id = self.company_data_2['company']
+        with po.order_line.new() as pol:
+            pol.product_id = self.product_a
+            pol.product_qty = 4
+
+        pol.product_qty += 1
+        self.assertEqual(pol.price_subtotal, 100)
+
     def test_tax_totals(self):
         """ This test ensures the tax amount is correctly computed"""
 
