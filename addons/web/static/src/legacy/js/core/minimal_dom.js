@@ -91,7 +91,7 @@ export function makeButtonHandler(fct) {
         const result = fct.apply(this, arguments);
 
         const buttonEl = ev.target && ev.target.closest && ev.target.closest(BUTTON_HANDLER_SELECTOR);
-        if (!buttonEl) {
+        if (!(buttonEl instanceof HTMLElement)) {
             return result;
         }
 
@@ -99,14 +99,10 @@ export function makeButtonHandler(fct) {
         // or at least for the duration of the click debounce. This makes
         // a 'real' debounce creation useless. Also, during the debouncing
         // part, the button is disabled without any visual effect.
-        if (buttonEl.classList) {
-            buttonEl.classList.add('pe-none');
-        }
+        buttonEl.classList.add('pe-none');
         Promise.resolve(DEBOUNCE && new Promise(r => setTimeout(r, DEBOUNCE)))
             .then(function () {
-                if (buttonEl.classList) {
-                    buttonEl.classList.remove('pe-none');
-                }
+                buttonEl.classList.remove('pe-none');
                 const restore = addButtonLoadingEffect(buttonEl);
                 return Promise.resolve(result).then(restore).catch(restore);
             });
@@ -125,19 +121,18 @@ export function makeButtonHandler(fct) {
  *         initial state
  */
 export function addButtonLoadingEffect(btnEl) {
+    if (!(btnEl instanceof HTMLElement)) {
+        return () => {};
+    }
     // Note that pe-none is used alongside "disabled" so that the behavior is
     // the same on links not using the "btn" class -> pointer-events disabled.
-    if (btnEl.classList) {
-        btnEl.classList.add('o_website_btn_loading', 'disabled', 'pe-none');
-    }
+    btnEl.classList.add('o_website_btn_loading', 'disabled', 'pe-none');
     btnEl.disabled = true;
     const loaderEl = document.createElement('span');
     loaderEl.classList.add('fa', 'fa-refresh', 'fa-spin', 'me-2');
     btnEl.prepend(loaderEl);
     return () => {
-        if (btnEl.classList) {
-            btnEl.classList.remove('o_website_btn_loading', 'disabled', 'pe-none');
-        }
+        btnEl.classList.remove('o_website_btn_loading', 'disabled', 'pe-none');
         btnEl.disabled = false;
         loaderEl.remove();
     };
