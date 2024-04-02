@@ -2,7 +2,7 @@
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 import { onChange } from "@mail/utils/common/misc";
-import { IS_DELETED_SYM, IS_RECORD_SYM, isRelation } from "./misc";
+import { IS_DELETED_SYM, IS_DELETING_SYM, IS_RECORD_SYM, isRelation } from "./misc";
 import { RecordList } from "./record_list";
 import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
@@ -150,6 +150,9 @@ export class RecordInternal {
     }
 
     requestCompute(record, fieldName, { force = false } = {}) {
+        if (record._[IS_DELETING_SYM]) {
+            return;
+        }
         const Model = record.Model;
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
@@ -166,6 +169,9 @@ export class RecordInternal {
         }
     }
     requestSort(record, fieldName, { force } = {}) {
+        if (record._[IS_DELETING_SYM]) {
+            return;
+        }
         const Model = record.Model;
         if (!Model._.fieldsSort.get(fieldName)) {
             return;

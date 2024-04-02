@@ -39,6 +39,54 @@ export class Message extends Record {
     date = Record.attr(undefined, { type: "datetime" });
     /** @type {string} */
     default_subject;
+    hasEveryoneSeen = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            if (!this.thread) {
+                return false;
+            }
+            const otherDidNotSee = this.thread.channelMembers.filter((member) => {
+                return (
+                    member.persona.notEq(this.author) &&
+                    (!member.seen_message_id || member.seen_message_id.id < this.id)
+                );
+            });
+            return otherDidNotSee.length === 0;
+        },
+    });
+    isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            if (!this.thread?.lastSelfMessageSeenByEveryone) {
+                return false;
+            }
+            return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
+        },
+    });
+    hasSomeoneSeen = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            if (!this.thread) {
+                return false;
+            }
+            const otherSeen = this.thread.channelMembers.filter(
+                (m) => m.persona.notEq(this.author) && m.seen_message_id?.id >= this.id
+            );
+            return otherSeen.length > 0;
+        },
+    });
+    hasSomeoneFetched = Record.attr(false, {
+        /** @this {import("models").Message} */
+        compute() {
+            if (!this.thread) {
+                return false;
+            }
+            const otherFetched = this.thread.channelMembers.filter(
+                (m) => m.persona.notEq(this.author) && m.fetched_message_id?.id >= this.id
+            );
+            return otherFetched.length > 0;
+        },
+    });
     hasLink = Record.attr(false, {
         compute() {
             if (this.isBodyEmpty) {
