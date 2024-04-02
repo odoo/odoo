@@ -7,7 +7,7 @@ from odoo import models
 class HrEmployeePublic(models.Model):
     _inherit = "hr.employee.public"
 
-    def read(self, fields):
+    def read(self, fields=None, load='_classic_read'):
         # as `pos_blackbox_be` is a certified module, it's hard to make fixes in it
         # so this is a workaround to remove `insz_or_bis_number` field from the fields list
         # as the parent hr.employee model will attempt to read it from hr.employee.public
@@ -18,4 +18,4 @@ class HrEmployeePublic(models.Model):
             if pos_blackbox_be_installed and not has_hr_user_group:
                 fields.remove('insz_or_bis_number')
 
-        return super().read(fields)
+        return super(HrEmployeePublic, self).read(fields=fields, load=load)
