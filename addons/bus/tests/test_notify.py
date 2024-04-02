@@ -2,7 +2,7 @@
 
 from odoo.tests import BaseCase
 
-from ..models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH
+from odoo.addons.bus.models.bus import json_dump, get_notify_payloads, NOTIFY_PAYLOAD_MAX_LENGTH
 
 
 class NotifyTests(BaseCase):
