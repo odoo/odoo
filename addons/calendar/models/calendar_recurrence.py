@@ -495,14 +495,14 @@ class RecurrenceRule(models.Model):
         # Given the following recurrence:
         #   - monthly
         #   - 1st of each month
-        #   - timezone US/Eastern (UTC−05:00)
-        #   - at 6am US/Eastern = 11am UTC
+        #   - timezone America/New_York (UTC−05:00)
+        #   - at 6am America/New_York = 11am UTC
         #   - from 2019/02/01 to 2019/05/01.
         # The naive way would be to store:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 11:00 - 2019/05/01 11:00 (UTC)
         #
-        # But a DST change occurs on 2019/03/10 in US/Eastern timezone. US/Eastern is now UTC−04:00.
-        # From this point in time, 11am (UTC) is actually converted to 7am (US/Eastern) instead of the expected 6am!
+        # But a DST change occurs on 2019/03/10 in America/New_York timezone. America/New_York is now UTC−04:00.
+        # From this point in time, 11am (UTC) is actually converted to 7am (America/New_York) instead of the expected 6am!
         # What should be stored is:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
         #                                                  *****              *****
