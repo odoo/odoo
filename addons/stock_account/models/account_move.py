@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 from odoo.tools import float_is_zero
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -255,6 +256,8 @@ class AccountMoveLine(models.Model):
         return self.product_id.type == 'product' and self.product_id.valuation == 'real_time'
 
     def _get_gross_unit_price(self):
+        if not self.quantity:
+            raise UserError(_("You are not allowed to confirm the entry with 0 quantity, you can set unit price as 0.0 and proceed"))
         price_unit = self.price_subtotal / self.quantity
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
