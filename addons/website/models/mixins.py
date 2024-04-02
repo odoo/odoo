@@ -183,12 +183,22 @@ class WebsitePublishedMixin(models.AbstractModel):
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
-    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full relative URL to access the document through the website.')
+    # The compute dependency (for get_base_url) must be added and get_base_url must be overridden if needed
+    website_absolute_url = fields.Char('Website Absolute URL', compute='_compute_website_absolute_url',
+                                       help='The full absolute URL to access the document through the website.')
 
     @api.depends_context('lang')
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
+
+    @api.depends('website_url')
+    def _compute_website_absolute_url(self):
+        self.website_absolute_url = '#'
+        for record in self:
+            if record.website_url != '#':
+                record.website_absolute_url = url_join(record.get_base_url(), record.website_url)
 
     def _default_is_published(self):
         return False
