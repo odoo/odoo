@@ -18,7 +18,7 @@
                 <ProductPage product="selfOrder.productByIds[url.id]" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.pos_config_id}/combo-selection/{int:id}`" t-slot-scope="url">
-                <ComboPage product="selfOrder.productByIds[url.id]" />
+                <ComboPage product="selfOrder.models['product.product'].get(url.id)" />
             </t>
             <t t-set-slot="cart" route="`/pos-self/${selfOrder.pos_config_id}/cart`">
                 <CartPage />

@@ -92,9 +92,9 @@ export class ProductCard extends Component {
             return;
         }
 
-        if (product.isCombo) {
+        if (product.isCombo()) {
             this.router.navigate("combo_selection", { id: product.id });
-        } else if (product.attributes.length > 0) {
+        } else if (product.attribute_line_ids.length > 0) {
             this.router.navigate("product", { id: product.id });
         } else {
             this.flyToCart();
@@ -106,15 +106,13 @@ export class ProductCard extends Component {
             if (isProductInCart) {
                 isProductInCart.qty += qty;
             } else {
-                const lines = this.selfOrder.currentOrder.lines;
-                const line = new Line({
-                    id: null,
-                    uuid: null,
+                const line = this.selfOrder.models["pos.order.line"].create({
+                    order_id: this.selfOrder.currentOrder,
+                    product_id: product,
                     qty: qty,
-                    product_id: product.id,
+                    price_unit: product.get_price(),
                 });
                 line.full_product_name = constructFullProductName(line);
-                lines.push(line);
             }
             await this.selfOrder.getPricesFromServer();
         }

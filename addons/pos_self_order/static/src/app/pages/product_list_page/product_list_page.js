@@ -26,11 +26,9 @@ export class ProductListPage extends Component {
             search: false,
             searchInput: "",
         });
-        this.categoryButton = Object.fromEntries(
-            Array.from(this.selfOrder.categoryList).map((category) => {
-                return [category.id, useRef(`category_${category.id}`)];
-            })
-        );
+        this.categoryButton = this.selfOrder.models["pos.category"].map((c) => {
+            return [c.id, useRef(`category_${c.id}`)];
+        });
 
         useEffect(
             () => {
@@ -107,7 +105,7 @@ export class ProductListPage extends Component {
         return fuzzyLookup(
             this.state.searchInput,
             products,
-            (product) => product.name + product.description_sale
+            (product) => product.display_name + product.description_sale
         );
     }
 

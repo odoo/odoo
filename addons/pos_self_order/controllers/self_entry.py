@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import werkzeug
-
+import json
 from odoo import http
 from odoo.http import request
 
@@ -47,7 +47,6 @@ class PosSelfKiosk(http.Controller):
                 config_access_token = pos_config.access_token
 
         table = table_sudo.sudo(False).with_company(company).with_user(user) if table_sudo else False
-
         return request.render(
                 'pos_self_order.index',
                 {
@@ -57,7 +56,7 @@ class PosSelfKiosk(http.Controller):
                         'pos_self_order_data': {
                             'table': table._get_self_order_data() if table else False,
                             'access_token': config_access_token,
-                            **pos_config._get_self_ordering_data(),
+                            'pos_config_id': pos_config.id,
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
                     }

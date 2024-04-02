@@ -67,7 +67,7 @@ export class OrderWidget extends Component {
         return lineNotSend.reduce(
             (acc, line) => {
                 const currentQty = line.qty;
-                const lastChange = order.lastChangesSent[line.uuid];
+                const lastChange = order.uiState.lastChangesSent[line.uuid];
                 const qty = !lastChange ? currentQty : currentQty - lastChange.qty;
 
                 acc.count += qty;

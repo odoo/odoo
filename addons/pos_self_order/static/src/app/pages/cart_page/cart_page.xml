@@ -9,15 +9,15 @@
                 <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">
                     <div t-if="!line.combo_parent_uuid" class="product-card-item py-2 py-lg-4 px-3 bg-view border-bottom">
                         <t t-set="childLines" t-value="getChildLines(line)"/>
-                        <t t-set="product" t-value="this.selfOrder.productByIds[line.product_id]"/>
+                        <t t-set="product" t-value="line.product_id.display_name"/>
 
                         <div class="product-wrapper d-flex align-items-start gap-2 gap-lg-3">
                             <div class="product-info d-flex flex-column gap-2 flex-grow-1">
                                 <div>
                                     <span t-if="selfOrder.currentOrder.isSavedOnServer"><t t-esc="line.qty" />x </span>
-                                    <strong t-esc="selfOrder.productByIds[line.product_id].name"/>
+                                    <strong t-esc="line.product_id.display_name"/>
                                 </div>
-                                <div t-if="this.selfOrder.productByIds[line.product_id]?.attributes.length > 0 || childLines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
+                                <div t-if="line.product_id?.attribute_line_ids.length > 0 || childLines.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
                                     <button
                                         t-if="!selfOrder.currentOrder.isSavedOnServer"
                                         type="button"

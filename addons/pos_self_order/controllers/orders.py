@@ -104,6 +104,11 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
         }
 
+    @http.route("/pos-self-order/load_data", type="json", auth="public", website=True)
+    def load_data(self, config_id, access_token):
+        pos_config = self._verify_pos_config(access_token)
+        return pos_config._get_self_ordering_data()
+
     @http.route('/pos-self-order/update-existing-order', auth="public", type="json", website=True)
     def update_existing_order(self, order, access_token, table_identifier):
         order_id = order.get('id')
@@ -201,6 +206,7 @@ class PosSelfOrderController(http.Controller):
     def _process_lines(self, lines, pos_config, pos_order_id, takeaway=False):
         appended_uuid = []
         newLines = []
+        lines = [line[2] for line in lines]
         pricelist = pos_config.pricelist_id
         sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
 

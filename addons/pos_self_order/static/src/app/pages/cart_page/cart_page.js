@@ -39,7 +39,7 @@ export class CartPage extends Component {
 
     getLineChangeQty(line) {
         const currentQty = line.qty;
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lastChangesSent[line.uuid];
         return !lastChange ? currentQty : currentQty - lastChange.qty;
     }
 
@@ -79,7 +79,7 @@ export class CartPage extends Component {
     getPrice(line) {
         const childLines = this.getChildLines(line);
         if (childLines.length == 0) {
-            return line.price_subtotal_incl;
+            return line.get_display_price();
         } else {
             let price = 0;
             for (const child of childLines) {
@@ -91,7 +91,7 @@ export class CartPage extends Component {
 
     canChangeQuantity(line) {
         const order = this.selfOrder.currentOrder;
-        const lastChange = order.lastChangesSent[line.uuid];
+        const lastChange = order.uiState.lastChangesSent[line.uuid];
 
         if (!lastChange) {
             return true;
@@ -101,12 +101,12 @@ export class CartPage extends Component {
     }
 
     canDeleteLine(line) {
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lastChangesSent[line.uuid];
         return !lastChange ? true : lastChange.qty !== line.qty;
     }
 
     async removeLine(line) {
-        const lastChange = this.selfOrder.currentOrder.lastChangesSent[line.uuid];
+        const lastChange = this.selfOrder.currentOrder.uiState.lastChangesSent[line.uuid];
 
         if (!this.canDeleteLine(line)) {
             return;
@@ -115,7 +115,8 @@ export class CartPage extends Component {
         if (lastChange) {
             line.qty = lastChange.qty;
         } else {
-            this.selfOrder.currentOrder.removeLine(line.uuid);
+            line.delete();
+            this.selfOrder.currentOrder.removeOrderline(line);
         }
 
         await this.selfOrder.getPricesFromServer();
@@ -127,7 +128,7 @@ export class CartPage extends Component {
         }
 
         if (!increase && line.qty === 1) {
-            this.removeLine(line.uuid);
+            this.removeLine(line);
             return;
         }
         increase ? line.qty++ : line.qty--;
@@ -147,7 +148,7 @@ export class CartPage extends Component {
         const order = this.selfOrder.currentOrder;
         this.selfOrder.editedLine = line;
 
-        if (order.state === "draft" && !order.lastChangesSent[line.uuid]) {
+        if (order.state === "draft" && !order.uiState.lastChangesSent[line.uuid]) {
             this.selfOrder.editedOrder = order;
 
             if (line.child_lines.length > 0) {

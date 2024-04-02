@@ -8,6 +8,8 @@ class PosConfig(models.Model):
 
 
     def _get_self_ordering_data(self):
+        # FIXME use related models
+        return super()._get_self_ordering_data()
         data = super()._get_self_ordering_data()
         data["config"]["epson_printer_ip"] = self.epson_printer_ip
         data["config"]["other_devices"] = self.other_devices

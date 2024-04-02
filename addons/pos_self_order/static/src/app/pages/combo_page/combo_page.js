@@ -51,7 +51,7 @@ export class ComboPage extends Component {
         return !(
             this.selfOrder.editedLine &&
             this.selfOrder.editedLine.uuid &&
-            order.lastChangesSent[this.selfOrder.editedLine.uuid]
+            order.uiState.lastChangesSent[this.selfOrder.editedLine.uuid]
         );
     }
 
@@ -129,7 +129,7 @@ export class ComboPage extends Component {
 
     async addToCart() {
         if (this.selfOrder.editedLine) {
-            this.selfOrder.currentOrder.removeLine(this.selfOrder.editedLine.uuid);
+            this.selfOrder.currentOrder.removeOrderline(this.selfOrder.editedLine);
         }
 
         const lines = this.selfOrder.currentOrder.lines;

@@ -31,7 +31,8 @@ class PosSession(models.Model):
 
     def _load_data_params(self, config_id):
         params = super()._load_data_params(config_id)
-        params['product.product']['fields'].append('self_order_available')
+        params['product.product']['fields'] += ['self_order_available', 'description_self_order']
+        params['pos.category']['fields'] += ['hour_until', 'hour_after']
         return params
 
     def load_data(self, models_to_load, only_data=False):

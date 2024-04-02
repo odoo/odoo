@@ -10,10 +10,13 @@
                 <meta name="apple-mobile-web-app-capable" content="yes"/>
                 <meta name="mobile-web-app-capable" content="yes"/>
                 <script type="text/javascript">
+                    var selfData = <t t-esc="json.dumps(session_info)"/>;
                     var odoo = {
                         csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
                         debug: "<t t-esc="debug"/>",
-                        __session_info__: <t t-esc="json.dumps(session_info)"/>,
+                        pos_config_id: selfData.pos_self_order_data.pos_config_id,
+                        access_token: selfData.pos_self_order_data.access_token,
+                        __session_info__: selfData,
                     };
                 </script>
                 <t t-call-assets="pos_self_order.assets" />

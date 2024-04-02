@@ -309,11 +309,21 @@ class PosConfig(models.Model):
         filtered_fields = [field for field in payment_search_fields if field not in excluded_fields]
         return payment_methods.read(filtered_fields)
 
+    def _self_order_model_to_load(self):
+        return ['pos.order', 'pos.config', 'pos.order.line', 'pos.session', 'pos.payment.method', 'product.product', 'decimal.precision',
+                'res.currency', 'restaurant.floor', 'restaurant.table', 'res.company', 'pos.printer', 'pos.category', 'account.tax']
+
+    def get_self_order_data(self):
+        self.ensure_one()
+        data = self.current_session_id.load_data(self._self_order_model_to_load())
+        data['custom']['links'] = self._get_self_order_custom_links()
+        return data
+
     def _get_self_ordering_data(self):
         self.ensure_one()
         payment_methods = self._get_self_ordering_payment_methods_data(self._get_allowed_payment_methods())
         default_language = self.self_ordering_default_language_id.read(["code", "name", "iso_code", "flag_image_url"])
-
+        return self.get_self_order_data()
         return {
             "pos_config_id": self.id,
             "pos_session": self.current_session_id.read(["id", "access_token"])[0] if self.current_session_id and self.current_session_id.state == 'opened' else False,

@@ -51,6 +51,7 @@
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/scss/web_editor.common.scss',
             "point_of_sale/static/src/app/generic_components/**/*",
+            "point_of_sale/static/src/app/models/**/*",
             "point_of_sale/static/src/css/pos_receipts.css",
             "point_of_sale/static/src/app/screens/receipt_screen/receipt/**/*",
             "pos_self_order/static/src/overrides/components/receipt_header/*",
@@ -62,6 +63,8 @@
             "point_of_sale/static/src/app/printer/hw_printer.js",
             "web/static/src/core/utils/render.js",
             "pos_self_order/static/src/app/store/order_change_receipt_template.xml",
+            'web/static/src/views/fields/parsers.js',
+            'account/static/src/helpers/*.js',
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

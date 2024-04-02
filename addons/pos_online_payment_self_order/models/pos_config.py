@@ -17,6 +17,8 @@ class PosConfig(models.Model):
                 raise ValidationError(_("The online payment method used for self-order in a POS config must have at least one published payment provider supporting the currency of that POS config."))
 
     def _get_self_ordering_data(self):
+        # FIXME fix with related modes
+        return super()._get_self_ordering_data()
         res = super()._get_self_ordering_data()
         payment_methods = self._get_self_ordering_payment_methods_data(self.self_order_online_payment_method_id)
         res['pos_payment_methods'] += payment_methods

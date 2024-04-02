@@ -71,15 +71,6 @@ export class Order extends Reactive {
         this.lines = this.lines.map((line) => new Line(line));
     }
 
-    removeLine(lineUuid) {
-        this.lines = this.lines.filter((line) => line.uuid !== lineUuid);
-        for (const line of this.lines) {
-            if (line.combo_parent_uuid === lineUuid) {
-                this.removeLine(line.uuid);
-            }
-        }
-    }
-
     updateLastChanges() {
         for (const changeIdx in this.lastChangesSent) {
             const changeFound = this.lines.find((line) => line.uuid === changeIdx);
@@ -123,7 +114,7 @@ export class Order extends Reactive {
             if (lineFound) {
                 line.updateDataFromServer(lineFound);
             } else if (line.id) {
-                this.removeLine(line.uuid);
+                this.removeLine(line);
             }
         }
 

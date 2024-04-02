@@ -178,12 +178,17 @@ export class PosData extends Reactive {
         this.setOnline();
     }
 
-    async initData() {
-        const modelClasses = {};
+    async fetchData() {
         const response = await this.orm.call("pos.session", "load_data", [
             odoo.pos_session_id,
             PosData.modelToLoad,
         ]);
+        return response;
+    }
+
+    async initData() {
+        const modelClasses = {};
+        const response = await this.fetchData();
 
         for (const [model, error] of Object.entries(response.errors)) {
             console.info(`The ${model} model encounters an error while loading "${error}"`);

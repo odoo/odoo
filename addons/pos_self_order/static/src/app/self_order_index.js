@@ -39,7 +39,7 @@ export class selfOrderIndex extends Component {
         this.selfOrder = useSelfOrder();
     }
     get selfIsReady() {
-        return Object.values(this.selfOrder.productByIds).length > 0;
+        return this.selfOrder.models["product.product"].length > 0;
     }
 }
 whenReady(() => mountComponent(selfOrderIndex, document.body));

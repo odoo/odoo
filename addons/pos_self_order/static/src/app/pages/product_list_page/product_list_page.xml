@@ -52,15 +52,16 @@
                 data-bs-offset="10"
                 tabindex="0">
                 <t t-set="nbrItem" t-value="0" />
+                <t t-set="productByCateg" t-value="selfOrder.models['product.product'].getAllBy('pos_categ_ids')" />
                 <section
-                    t-foreach="Array.from(selfOrder.categoryList)"
+                    t-foreach="selfOrder.models['pos.category'].getAll()"
                     t-as="category"
                     t-key="category.id"
                     t-attf-id="scrollspy_{{category.id}}"
                     t-attf-categId="{{category.id}}"
                     t-ref="productsWithCategory_{{category.id}}"
                     class="product-list-category d-empty-none bg-view px-3 pb-4">
-                    <t t-set="products" t-value="selfOrder.productsGroupedByCategory[category.id]" />
+                    <t t-set="products" t-value="productByCateg[category.id]" />
                     <t t-set="availableProducts" t-value="!state.searchInput ? products : getFilteredProducts(products)" />
                     <t t-set="nbrItem" t-value="availableProducts.length + nbrItem" />
                     <t t-if="availableProducts.length > 0">
@@ -68,7 +69,6 @@
                             <h2 t-esc="category.name"/>
                             <span t-if="!selfOrder.isCategoryAvailable(category.id)" class="unavailable-text">Unavailable at this time of the day</span>
                         </div>
-                        
                         <div class="o-so-products-row">
                             <t t-foreach="availableProducts" t-as="product" t-key="product.id">
                                 <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" isAvailable="selfOrder.isCategoryAvailable(category.id)"/>
