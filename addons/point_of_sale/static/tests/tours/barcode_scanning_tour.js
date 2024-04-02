@@ -83,3 +83,16 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            // scan the customer barcode
+            ProductScreen.scan_barcode("0421234567890"),
+            ProductScreen.customerIsSelected("John Doe"),
+            Chrome.endTour(),
+        ].flat(),
+});
