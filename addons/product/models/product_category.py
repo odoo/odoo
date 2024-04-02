@@ -45,7 +45,7 @@ class ProductCategory(models.Model):
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_('You cannot create recursive categories.'))
 
     @api.model

@@ -123,7 +123,7 @@ class PartnerCategory(models.Model):
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_('You can not create recursive tags.'))
 
     @api.depends('parent_id')
@@ -439,7 +439,7 @@ class Partner(models.Model):
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
 
     def copy_data(self, default=None):

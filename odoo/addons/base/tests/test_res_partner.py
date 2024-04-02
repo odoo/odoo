@@ -708,8 +708,11 @@ class TestPartnerRecursion(TransactionCase):
         self.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': self.p2.id})
 
     def test_100_res_partner_recursion(self):
-        self.assertTrue(self.p3._check_recursion())
-        self.assertTrue((self.p1 + self.p2 + self.p3)._check_recursion())
+        self.assertFalse(self.p3._has_cycle())
+        self.assertFalse((self.p1 + self.p2 + self.p3)._has_cycle())
+
+        # special case: empty recordsets don't lead to cycles
+        self.assertFalse(self.env['res.partner']._has_cycle())
 
     # split 101, 102, 103 tests to force SQL rollback between them
 
@@ -731,6 +734,11 @@ class TestPartnerRecursion(TransactionCase):
         with self.assertRaises(ValidationError):
             self.p2.write({'child_ids': [Command.update(self.p3.id, {'parent_id': p3b.id}),
                                          Command.update(p3b.id, {'parent_id': self.p3.id})]})
+
+    def test_105_res_partner_recursion(self):
+        with self.assertRaises(ValidationError):
+            # p3 -> p2 -> p1 -> p2
+            (self.p3 + self.p1).parent_id = self.p2
 
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """

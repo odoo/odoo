@@ -5633,79 +5633,76 @@ class BaseModel(metaclass=MetaModel):
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
-    def _check_recursion(self, parent=None):
+    def _has_cycle(self, field_name=None) -> bool:
         """
-        Verifies that there is no loop in a hierarchical structure of records,
-        by following the parent relationship using the **parent** field until a
-        loop is detected or until a top-level record is found.
+        Return whether the records in ``self`` are in a loop by following the
+        given relationship of the field.
+        By default the **parent** field is used as the relationship.
 
-        :param parent: optional parent field name (default: ``self._parent_name``)
-        :return: **True** if no loop was found, **False** otherwise.
+        Note that since the method does not use EXCLUSIVE LOCK for the sake of
+        performance, loops may still be created by concurrent transactions.
+
+        :param field_name: optional field name (default: ``self._parent_name``)
+        :return: **True** if a loop was found, **False** otherwise.
         """
-        if not parent:
-            parent = self._parent_name
+        if not field_name:
+            field_name = self._parent_name
 
-        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        field = self._fields.get(field_name)
+        if not field:
+            raise ValueError(f'Invalid field_name: {field_name!r}')
+
+        if not (
+            field.type in ('many2many', 'many2one')
+            and field.comodel_name == self._name
+            and field.store
+        ):
+            raise ValueError(f'Field must be a many2one or many2many relation on itself: {field_name!r}')
+
+        if not self.ids:
+            return False
+
+        # must ignore 'active' flag, ir.rules, etc.
+        # direct recursive SQL query with cycle detection for performance
+        self.flush_model([field_name])
+        if field.type == 'many2many':
+            relation = field.relation
+            column1 = field.column1
+            column2 = field.column2
+        else:
+            relation = self._table
+            column1 = 'id'
+            column2 = field_name
         cr = self._cr
-        self.flush_model([parent])
-        for id in self.ids:
-            current_id = id
-            seen_ids = {current_id}
-            while current_id:
-                cr.execute(SQL(
-                    "SELECT %s FROM %s WHERE id = %s",
-                    SQL.identifier(parent), SQL.identifier(self._table), current_id,
-                ))
-                result = cr.fetchone()
-                current_id = result[0] if result else None
-                if current_id in seen_ids:
-                    return False
-                seen_ids.add(current_id)
-        return True
+        cr.execute(SQL(
+            """
+            WITH RECURSIVE __reachability AS (
+                SELECT %(col1)s AS source, %(col2)s AS destination
+                FROM %(rel)s
+                WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL
+            UNION
+                SELECT r.source, t.%(col2)s
+                FROM __reachability r
+                JOIN %(rel)s t ON r.destination = t.%(col1)s AND t.%(col2)s IS NOT NULL
+            )
+            SELECT 1 FROM __reachability
+            WHERE source = destination
+            LIMIT 1
+            """,
+            ids=tuple(self.ids),
+            rel=SQL.identifier(relation),
+            col1=SQL.identifier(column1),
+            col2=SQL.identifier(column2),
+        ))
+        return bool(cr.fetchone())
+
+    def _check_recursion(self, parent=None):
+        warnings.warn("Since 18.0, one must use not _has_cycle() instead", DeprecationWarning, 2)
+        return not self._has_cycle(parent)
 
     def _check_m2m_recursion(self, field_name):
-        """
-        Verifies that there is no loop in a directed graph of records, by
-        following a many2many relationship with the given field name.
-
-        :param field_name: field to check
-        :return: **True** if no loop was found, **False** otherwise.
-        """
-        field = self._fields.get(field_name)
-        if not (field and field.type == 'many2many' and
-                field.comodel_name == self._name and field.store):
-            # field must be a many2many on itself
-            raise ValueError('invalid field_name: %r' % (field_name,))
-
-        self.flush_model([field_name])
-
-        cr = self._cr
-        succs = defaultdict(set)        # transitive closure of successors
-        preds = defaultdict(set)        # transitive closure of predecessors
-        todo, done = set(self.ids), set()
-        while todo:
-            # retrieve the respective successors of the nodes in 'todo'
-            cr.execute(SQL(
-                """ SELECT %(col1)s, %(col2)s FROM %(rel)s
-                    WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL """,
-                rel=SQL.identifier(field.relation),
-                col1=SQL.identifier(field.column1),
-                col2=SQL.identifier(field.column2),
-                ids=tuple(todo),
-            ))
-            done.update(todo)
-            todo.clear()
-            for id1, id2 in cr.fetchall():
-                # connect id1 and its predecessors to id2 and its successors
-                for x, y in itertools.product([id1] + list(preds[id1]),
-                                              [id2] + list(succs[id2])):
-                    if x == y:
-                        return False    # we found a cycle here!
-                    succs[x].add(y)
-                    preds[y].add(x)
-                if id2 not in done:
-                    todo.add(id2)
-        return True
+        warnings.warn("Since 18.0, one must use not _has_cycle() instead", DeprecationWarning, 2)
+        return not self._has_cycle(field_name)
 
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
