@@ -58,19 +58,6 @@ class LivechatController(http.Controller):
         stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
 
-    @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
-    def load_templates(self, **kwargs):
-        templates = self._livechat_templates_get()
-        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
-
-    def _livechat_templates_get(self):
-        return [
-            'im_livechat/static/src/legacy/widgets/feedback/feedback.xml',
-            'im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml',
-            'im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml',
-            'im_livechat/static/src/legacy/public_livechat_chatbot.xml',
-        ]
-
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
