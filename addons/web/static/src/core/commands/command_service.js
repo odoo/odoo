@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { CommandPalette } from "./command_palette";
 
-import { Component, xml, EventBus } from "@odoo/owl";
+import { Component, EventBus } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -38,18 +38,7 @@ const commandProviderRegistry = registry.category("command_provider");
 const commandSetupRegistry = registry.category("command_setup");
 
 class DefaultFooter extends Component {
-    static template = xml`
-        <span>
-            <span class="fw-bolder text-primary">TIP</span> — search for
-            <t t-foreach="elements" t-as="element" t-key="element.namespace">
-                <t t-if="!(element_first || element_last)">, </t>
-                <t t-if="element_last and !element_first"> and </t>
-                <span class="o_namespace btn-link text-primary cursor-pointer" t-on-click="() => this.onClick(element.namespace)">
-                    <span t-out="element.namespace" class="fw-bolder text-primary"/><t t-out="element.name"/>
-                </span>
-            </t>
-        </span>
-        `;
+    static template = "web.DefaultFooter";
     static props = {
         switchNamespace: { type: Function },
     };
