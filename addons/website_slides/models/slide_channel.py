@@ -649,13 +649,16 @@ class SlideChannel(models.Model):
         for channel in self:
             channel.website_default_background_image_url = f'website_slides/static/src/img/channel-{channel.channel_type}-default.jpg'
 
-    @api.depends('name', 'website_id.domain')
+    @api.depends('name')
     def _compute_website_url(self):
         super()._compute_website_url()
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = channel.get_base_url()
-                channel.website_url = '%s/slides/%s' % (base_url, self.env['ir.http']._slug(channel))
+                channel.website_url = f"/slides/{self.env['ir.http']._slug(channel)}"
+
+    @api.depends('website_id.domain')
+    def _compute_website_absolute_url(self):
+        super()._compute_website_absolute_url()
 
     @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
     @api.depends_context('uid')
