@@ -11,6 +11,8 @@ from odoo.addons.web_editor import tools
 class TestVideoUtils(common.BaseCase):
     urls = {
         'youtube': 'https://www.youtube.com/watch?v=xCvFZrrQq7k',
+        'youtube_shorts_video': 'https://www.youtube.com/shorts/qAgW3oG7Zmc',
+        'youtube_live_stream': 'https://www.youtube.com/live/fmVNEoxr7iU?feature=shared',
         'vimeo': 'https://vimeo.com/395399735',
         'vimeo_unlisted_video': 'https://vimeo.com/795669787/0763fdb816',
         'vimeo_player': 'https://player.vimeo.com/video/395399735',
@@ -30,6 +32,8 @@ class TestVideoUtils(common.BaseCase):
     def test_player_regexes(self):
         #youtube
         self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube']))
+        self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube_shorts_video']))
+        self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube_live_stream']))
         #vimeo
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo']))
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo_unlisted_video']))
@@ -47,6 +51,10 @@ class TestVideoUtils(common.BaseCase):
         #youtube
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[0])
         self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[1])
+        self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_shorts_video'])[0])
+        self.assertEqual('qAgW3oG7Zmc', tools.get_video_source_data(TestVideoUtils.urls['youtube_shorts_video'])[1])
+        self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_live_stream'])[0])
+        self.assertEqual('fmVNEoxr7iU', tools.get_video_source_data(TestVideoUtils.urls['youtube_live_stream'])[1])
         #vimeo
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[0])
         self.assertEqual('395399735', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[1])
@@ -82,7 +90,8 @@ class TestVideoUtils(common.BaseCase):
     def test_get_video_url_data(self):
         self.assertEqual(4, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
         #youtube
-        self.assertEqual('youtube', tools.get_video_url_data(TestVideoUtils.urls['youtube'])['platform'])
+        for key in ['youtube', 'youtube_shorts_video', 'youtube_live_stream']:
+            self.assertEqual('youtube', tools.get_video_url_data(TestVideoUtils.urls[key])['platform'])
         #vimeo
         for key in ['vimeo', 'vimeo_player']:
             self.assertEqual(tools.get_video_url_data(TestVideoUtils.urls[key]), {
@@ -120,7 +129,8 @@ class TestVideoUtils(common.BaseCase):
 class TestVideoUtilsExternal(common.BaseCase):
     def test_get_video_thumbnail(self):
         #youtube
-        self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youtube']), bytes)
+        for key in ['youtube', 'youtube_shorts_video', 'youtube_live_stream']:
+            self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls[key]), bytes)
         #vimeo
         for key in ['vimeo', 'vimeo_unlisted_video', 'vimeo_player', 'vimeo_player_unlisted_video']:
             self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls[key]), bytes)
