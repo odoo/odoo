@@ -1,7 +1,10 @@
 // @ts-check
 
 import { navigateTo } from "../actions/helpers";
-import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
+import {
+  getFirstPivotFunction,
+  getNumberOfPivotFormulas,
+} from "./pivot_helpers";
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
@@ -47,6 +50,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
     return (
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
+        evaluatedCell.value !== "" &&
         argsDomain !== undefined &&
         cell &&
         cell.isFormula &&

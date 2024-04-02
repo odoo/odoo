@@ -8,7 +8,7 @@ import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { setCellContent } from "../utils/commands";
-import { getCell } from "../utils/getters";
+import { getCell, getCellFormula, getCellValue } from "../utils/getters";
 
 const { cellMenuRegistry } = spreadsheet.registries;
 
@@ -184,4 +184,16 @@ QUnit.test("Can see records on PIVOT cells", async function (assert) {
     // set the function in A3 such as the data cells matches the ones in the first sheet
     setCellContent(model, "A3", `=PIVOT("1",,,FALSE)`, "42");
     await checkCells(data_cells);
+});
+
+QUnit.test("Cannot see records of pivot formula without value", async function (assert) {
+    const { env, model } = await createSpreadsheetWithPivot();
+    assert.strictEqual(
+        getCellFormula(model, "B3"),
+        `=PIVOT.VALUE(1,"probability","bar","false","foo",1)`
+    );
+    assert.strictEqual(getCellValue(model, "B3"), "", "B3 is empty");
+    selectCell(model, "B3");
+    const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    assert.notOk(action.isVisible(env));
 });
