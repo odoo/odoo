@@ -105,10 +105,7 @@ class ProductProduct(models.Model):
             self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
         return super(ProductProduct, self).write(vals)
 
-    @api.depends('stock_valuation_layer_ids')
-    @api.depends_context('to_date', 'company')
-    def _compute_value_svl(self):
-        """Compute `value_svl` and `quantity_svl`."""
+    def _get_valuation_layer_group_domain(self):
         company_id = self.env.company.id
         domain = [
             ('product_id', 'in', self.ids),
@@ -117,12 +114,31 @@ class ProductProduct(models.Model):
         if self.env.context.get('to_date'):
             to_date = fields.Datetime.to_datetime(self.env.context['to_date'])
             domain.append(('create_date', '<=', to_date))
-        groups = self.env['stock.valuation.layer'].read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
+        return domain
+
+    def _get_valuation_layer_group_fields(self):
+        return ['value:sum', 'quantity:sum']
+
+    def _get_valuation_layer_groups(self):
+        domain = self._get_valuation_layer_group_domain()
+        group_fields = self._get_valuation_layer_group_fields()
+        return self.env['stock.valuation.layer'].read_group(domain, group_fields, ['product_id'])
+    
+    def _prepare_valuation_layer_field_values(self, group):
+        return {
+            "value_svl": self.env.company.currency_id.round(group['value']),
+            "quantity_svl": group['quantity'],
+        }
+
+    @api.depends('stock_valuation_layer_ids')
+    @api.depends_context('to_date', 'company')
+    def _compute_value_svl(self):
+        """Compute `value_svl` and `quantity_svl`."""
+        groups = self._get_valuation_layer_groups()
         products = self.browse()
         for group in groups:
             product = self.browse(group['product_id'][0])
-            product.value_svl = self.env.company.currency_id.round(group['value'])
-            product.quantity_svl = group['quantity']
+            product.update(product._prepare_valuation_layer_field_values(group))
             products |= product
         remaining = (self - products)
         remaining.value_svl = 0
