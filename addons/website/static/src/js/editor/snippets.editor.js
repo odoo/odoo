@@ -753,6 +753,7 @@ weSnippetEditor.SnippetEditor.include({
         const wrapwrapEl = this.$body[0].ownerDocument.defaultView.document.body.querySelector('#wrapwrap');
         const hasFooterScrollEffect = wrapwrapEl && wrapwrapEl.classList.contains('o_footer_effect_enable');
         if (hasFooterScrollEffect) {
+            // FIXME
             wrapwrapEl.classList.remove('o_footer_effect_enable');
             return () => {
                 wrapwrapEl.classList.add('o_footer_effect_enable');

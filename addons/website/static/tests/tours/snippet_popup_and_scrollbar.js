@@ -20,6 +20,7 @@ const checkScrollbar = function (hasScrollbar) {
         run: function () {
             const wrapwrapEl = this.anchor.querySelector("#wrapwrap");
             const wrapwrapStyle = window.getComputedStyle(wrapwrapEl);
+            // FIXME
             if (!hasScrollbar && (wrapwrapStyle.overflow !== "hidden" || parseFloat(wrapwrapStyle.paddingRight) < 1)) {
                 console.error("error The #wrapwrap vertical scrollbar should be hidden");
             } else if (hasScrollbar && (wrapwrapStyle.overflow === "hidden" || parseFloat(wrapwrapStyle.paddingRight) > 0)) {

@@ -178,11 +178,11 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
 
             const jsonResponse = response && JSON.parse(response);
             if (jsonResponse.success) {
-                const offsetTop = ($("#wrapwrap").scrollTop() || 0) + this.$el.offset().top;
+                const offsetTop = ($("body").scrollTop() || 0) + this.$el.offset().top;
                 const floatingMenuHeight = ($('.o_header_standard').height() || 0) +
                     ($('#oe_main_menu_navbar').height() || 0);
                 this.$el.replaceWith($(renderToElement('event_track_proposal_success')));
-                $('#wrapwrap').scrollTop(offsetTop - floatingMenuHeight);
+                $('body').scrollTop(offsetTop - floatingMenuHeight);
             } else if (jsonResponse.error) {
                 this._updateErrorDisplay([jsonResponse.error]);
             }

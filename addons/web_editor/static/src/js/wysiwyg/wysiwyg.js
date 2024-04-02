@@ -510,10 +510,17 @@ export class Wysiwyg extends Component {
         }
 
         this._initialValue = this.getValue();
-        const $wrapwrap = $('#wrapwrap');
-        if ($wrapwrap.length) {
-            $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
-            this.$root = this.$root || $wrapwrap;
+
+        // TODO this code should be reviewed. Previously, it searched for the
+        // wrapwrap and added some scroll handler if found... we are now
+        // continuing to search for it, but it is not clear why. As the wrapwrap
+        // will be removed, this code will not stay for too long anyway.
+        if ($('wrapwrap').length) {
+            const $scrollingElement = $().getScrollingElement(this.odooEditor.document);
+            this.multiSelectionTarget = $scrollingElement.is(this.odooEditor.document.documentElement)
+                ? this.odooEditor.document.defaultView
+                : $scrollingElement[0];
+            this.multiSelectionTarget.addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
 
         this.$editable.on('click', '[data-oe-field][data-oe-sanitize-prevent-edition]', () => {
@@ -638,7 +645,7 @@ export class Wysiwyg extends Component {
         // Ensure the Toolbar always have the correct layout in note.
         this._updateEditorUI();
 
-        this.$root.on('click', (ev) => {
+        this.$editable.on('click.Wysiwyg', (ev) => {
             const $target = $(ev.target).closest('a');
 
             // Keep popover open if clicked inside it, but not on a button
@@ -883,11 +890,8 @@ export class Wysiwyg extends Component {
         const $body = $(document.body);
         $body.off('mousemove', this.resizerMousemove);
         $body.off('mouseup', this.resizerMouseup);
-        const $wrapwrap = $('#wrapwrap');
-        if ($wrapwrap.length && this.odooEditor) {
-            $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
-        }
-        $(this.$root).off('click');
+        this.multiSelectionTarget?.removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
+        this.$editable?.off('.Wysiwyg');
         this.toolbarEl?.remove();
         this.imageCropEL?.remove();
         if (this.linkPopover) {
@@ -917,7 +921,6 @@ export class Wysiwyg extends Component {
             this.$editable.attr('contenteditable', true);
         }
 
-        this.$root = this.$editable;
         if (this.options.height) {
             this.$editable.height(this.options.height);
         }
@@ -929,7 +932,6 @@ export class Wysiwyg extends Component {
         }
         if (this.options.resizable && !isMobileOS()) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
-            this.$root = $wrapper;
             $wrapper.append(this.$editable);
             this.$resizer = $(`<div class="o_wysiwyg_resizer">
                 <div class="o_wysiwyg_resizer_hook"></div>
