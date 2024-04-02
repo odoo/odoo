@@ -52,6 +52,12 @@ class WebsiteSaleMondialrelay(WebsiteSale):
             raise UserError(_('You cannot edit the address of a Point Relais®.'))
         return res
 
+    def _check_shipping_partner_mandatory_fields(self, partner_id):
+        # skip check for mondialrelay partners as the user can not edit them
+        if partner_id.is_mondialrelay:
+            return True
+        return super()._check_shipping_partner_mandatory_fields(partner_id)
+
 
 class WebsiteSaleDeliveryMondialrelay(WebsiteSaleDelivery):
 
