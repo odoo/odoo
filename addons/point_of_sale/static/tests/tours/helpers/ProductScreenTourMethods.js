@@ -116,6 +116,16 @@ export function clickPartnerButton() {
 export function clickCustomer(name) {
     return [PartnerList.clickPartner(name), goBackToMainScreen()];
 }
+export function customerIsSelected(name) {
+    return [
+        clickReview(),
+        {
+            content: `customer '${name}' is selected`,
+            trigger: `.product-screen .set-partner:contains("${name}")`,
+            isCheck: true,
+        },
+    ];
+}
 export function clickRefund() {
     return [
         clickReview(),

@@ -1182,6 +1182,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(refund_order.amount_paid, -130.0, "The amount should be 130.0")
         self.assertEqual(refund_order.state, 'paid', "The order should be paid")
 
+    def test_res_partner_scan_barcode(self):
+        # default Customer Barcodes pattern is '042'
+        self.env['res.partner'].create({
+            'name': 'John Doe',
+            'barcode': '0421234567890',
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'BarcodeScanPartnerTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
