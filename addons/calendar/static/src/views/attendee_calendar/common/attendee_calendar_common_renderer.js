@@ -18,10 +18,7 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     convertRecordToEvent(record) {
         let editable = false;
         if (record && record.rawRecord) {
-            editable = record.rawRecord.user_can_edit
-            if (editable === undefined) {
-                editable = record.rawRecord.partner_ids.includes(this.user.partnerId);
-            }
+            editable = record.rawRecord.partner_ids.includes(this.user.partnerId)
         }
         return {
             ...super.convertRecordToEvent(record),
