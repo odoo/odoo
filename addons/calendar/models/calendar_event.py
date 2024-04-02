@@ -246,7 +246,7 @@ class Meeting(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id or self.env.user.has_group('base.group_partner_manager')
+            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):

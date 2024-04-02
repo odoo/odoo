@@ -18,6 +18,7 @@ class TestAccessRights(TransactionCase):
         cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
         cls.george = new_test_user(cls.env, login='george', groups='base.group_user')
         cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
+        cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_partner_manager')
 
     def create_event(self, user, **values):
         return self.env['calendar.event'].with_user(user).create({
@@ -158,3 +159,40 @@ class TestAccessRights(TransactionCase):
             'start': datetime.now() + timedelta(days=2),
             'stop': datetime.now() + timedelta(days=2, hours=2),
         })
+
+    def test_admin_cant_fetch_uninvited_private_events(self):
+        """
+        Administrators must not be able to fetch information from private events which
+        they are not attending (i.e. events which it is not an event partner). The privacy
+        of the event information must always be kept. Public events can be read normally.
+        """
+        john_private_evt = self.create_event(self.john, name='priv', privacy='private', location='loc_1', description='priv')
+        john_public_evt = self.create_event(self.john, name='pub', privacy='public', location='loc_2', description='pub')
+        self.env.invalidate_all()
+
+        # For the private event, ensure that no private field can be read, such as: 'name', 'location' and 'description'.
+        for (field, value) in [('name', 'Busy'), ('location', False), ('description', False)]:
+            hidden_information = self.read_event(self.admin_user, john_private_evt, field)
+            self.assertEqual(hidden_information, value, "The field '%s' information must be hidden, even for uninvited admins." % field)
+
+        # For the public event, ensure that the same fields can be read by the admin.
+        for (field, value) in [('name', 'pub'), ('location', 'loc_2'), ('description', "<p>pub</p>")]:
+            field_information = self.read_event(self.admin_user, john_public_evt, field)
+            self.assertEqual(str(field_information), value, "The field '%s' information must be readable by the admin." % field)
+
+    def test_admin_cant_edit_uninvited_events(self):
+        """
+        Administrators must not be able to edit events that they are not attending.
+        The event is property of the organizer and its attendees only, private or not.
+        """
+        john_public_evt = self.create_event(self.john, name='pub', privacy='public', location='loc_2', description='pub')
+        john_private_evt = self.create_event(self.john, name='priv', privacy='private', location='loc_1', description='priv')
+
+        for event in [john_public_evt, john_private_evt]:
+            # Ensure that uninvited admin can not edit the event since it is not an event partner (attendee).
+            with self.assertRaises(AccessError):
+                event.with_user(self.admin_user)._compute_user_can_edit()
+
+            # Ensure that AccessError is raised when trying to update the uninvited event.
+            with self.assertRaises(AccessError):
+                event.with_user(self.admin_user).write({'name': 'forbidden-update'})
