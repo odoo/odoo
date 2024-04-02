@@ -1,24 +1,18 @@
-/** @odoo-module */
+import { Component } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
-import { Component, xml } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 const actionRegistry = registry.category("actions");
 
 class QRModalComponent extends Component {
-    static template = xml`
-    <div style="text-align:center;" class="o_expense_modal">
-        <t t-if="url">
-            <h3>Scan this QR code to get the Odoo app:</h3><br/><br/>
-            <img class="border border-dark rounded" t-att-src="url"/>
-        </t>
-    </div>`;
     static props = {
         action: Object,
         actionId: { type: Number, optional: true },
         className: { type: String, optional: true },
     };
+    static template = "hr_expense.QRModalComponent";
+
     setup() {
         this.url = sprintf(
             "/report/barcode/?barcode_type=QR&value=%s&width=256&height=256&humanreadable=1",
