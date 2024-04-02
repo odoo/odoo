@@ -63,6 +63,10 @@ class StockValuationLayer(models.Model):
         for svl in self:
             svl.stock_move_id._account_analytic_entry_move()
 
+    def _validate_entries(self):
+        self._validate_accounting_entries()
+        self._validate_analytic_accounting_entries()
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'unit_cost' in fields:

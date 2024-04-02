@@ -273,8 +273,7 @@ class StockMove(models.Model):
                 todo_valued_moves._sanity_check_for_valuation()
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
 
-        stock_valuation_layers._validate_accounting_entries()
-        stock_valuation_layers._validate_analytic_accounting_entries()
+        stock_valuation_layers._validate_entries()
 
         stock_valuation_layers._check_company()
 
