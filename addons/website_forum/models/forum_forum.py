@@ -64,7 +64,6 @@ class Forum(models.Model):
         help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default='public')
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
-    menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
     faq = fields.Html(
         'Guidelines', translate=html_translate,
@@ -266,13 +265,7 @@ class Forum(models.Model):
 
     def write(self, vals):
         if 'privacy' in vals:
-            if not vals['privacy']:
-                # The forum is neither public, neither private, remove menu to avoid conflict
-                self.menu_id.unlink()
-            elif vals['privacy'] == 'public':
-                # The forum is public, the menu must be also public
-                vals['authorized_group_id'] = False
-            elif vals['privacy'] == 'connected':
+            if vals['privacy'] in ('public', 'connected'):
                 vals['authorized_group_id'] = False
 
         res = super().write(vals)
