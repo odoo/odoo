@@ -14,6 +14,7 @@ const INDEXED_DB_NAME = {
     "product.packaging": ["barcode"],
     "loyalty.program": ["trigger_product_ids"],
     "calendar.event": ["appointment_resource_ids"],
+    "res.partner": ["barcode"],
 };
 const LOADED_ORM_METHODS = ["read", "search_read", "create"];
 
