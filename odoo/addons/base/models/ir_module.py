@@ -101,7 +101,7 @@ class ModuleCategory(models.Model):
 
     @api.constrains('parent_id')
     def _check_parent_not_circular(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_("Error ! You cannot create recursive categories."))
 
 

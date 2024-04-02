@@ -430,7 +430,7 @@ actual arch.
     def _check_000_inheritance(self):
         # NOTE: constraints methods are check alphabetically. Always ensure this method will be
         #       called before other constraint methods to avoid infinite loop in `_get_combined_arch`.
-        if not self._check_recursion(parent='inherit_id'):
+        if self._has_cycle('inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
     _sql_constraints = [

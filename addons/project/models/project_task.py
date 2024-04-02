@@ -433,7 +433,7 @@ class Task(models.Model):
 
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
-        if not self._check_m2m_recursion('depend_on_ids'):
+        if self._has_cycle('depend_on_ids'):
             raise ValidationError(_("Two tasks cannot depend on each other."))
 
     @api.model
@@ -505,7 +505,7 @@ class Task(models.Model):
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
-        if not self._check_recursion():
+        if self._has_cycle():
             raise ValidationError(_('Error! You cannot create a recursive hierarchy of tasks.'))
 
     def _get_attachments_search_domain(self):
