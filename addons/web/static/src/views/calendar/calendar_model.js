@@ -11,6 +11,7 @@ import { user } from "@web/core/user";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { browser } from "@web/core/browser/browser";
 
 export class CalendarModel extends Model {
     setup(params, services) {
@@ -28,7 +29,7 @@ export class CalendarModel extends Model {
             firstDayOfWeek: (localization.weekStart || 0) % 7,
             formViewId: params.formViewId || formViewIdFromConfig,
         };
-
+        this.meta.scale = this.getLocalStorageScale();
         this.data = {
             filters: {},
             filterSections: {},
@@ -50,6 +51,7 @@ export class CalendarModel extends Model {
         if (!this.meta.scales.includes(this.meta.scale)) {
             this.meta.scale = this.meta.scales[0];
         }
+        browser.localStorage.setItem(this.storageKey, this.meta.scale);
         const data = { ...this.data };
         await this.keepLast.add(this.updateData(data));
         this.data = data;
@@ -134,6 +136,9 @@ export class CalendarModel extends Model {
     }
     get scales() {
         return this.meta.scales;
+    }
+    get storageKey() {
+        return `scaleOf-viewId-${this.env.config.viewId}`;
     }
     get unusualDays() {
         return this.data.unusualDays;
@@ -567,6 +572,12 @@ export class CalendarModel extends Model {
     fetchFilters(resModel, fieldNames) {
         return this.orm.searchRead(resModel, [["user_id", "=", user.userId]], fieldNames);
     }
+
+    getLocalStorageScale() {
+        const localScaleId = browser.localStorage.getItem(this.storageKey);
+        return this.meta.scales.includes(localScaleId) ? localScaleId : this.meta.scale;
+    }
+
     /**
      * @protected
      */
