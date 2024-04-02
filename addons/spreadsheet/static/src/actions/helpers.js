@@ -16,9 +16,14 @@ export async function navigateTo(env, actionXmlId, actionDescription, options) {
     const { views, view_mode, domain, context, name, res_model, res_id } = actionDescription;
     try {
         navigateActionDescription = await actionService.loadAction(actionXmlId);
-        const filteredViews = views.map(([, viewType]) =>
-            navigateActionDescription.views.find(([, type]) => viewType === type)
+        const filteredViews = views.map(
+            ([v, viewType]) =>
+                navigateActionDescription.views.find(([, type]) => viewType === type) || [
+                    v,
+                    viewType,
+                ]
         );
+
         navigateActionDescription = {
             ...navigateActionDescription,
             context,
