@@ -77,6 +77,7 @@ class PurchaseOrderLine(models.Model):
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+    partner_reference = fields.Char(compute='_compute_partner_reference')
 
     _sql_constraints = [
         ('accountable_required_fields',
@@ -86,6 +87,20 @@ class PurchaseOrderLine(models.Model):
             "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND date_planned is NULL))",
             "Forbidden values on non-accountable purchase order line"),
     ]
+
+    @api.depends_context('partner_id')
+    def _compute_partner_reference(self):
+        for line in self:
+            product = line.product_id
+            product_name = ""
+            product_code = ""
+            for supplier in product.seller_ids:
+                if supplier.partner_id == line.order_id.partner_id:
+                    if supplier.product_name:
+                        product_name = supplier.product_name
+                    if supplier.product_code:
+                        product_code = supplier.product_code
+            line.partner_reference = '%s%s' % (product_code and '[%s] ' % product_code or '', product_name)
 
     @api.depends('product_qty', 'price_unit', 'taxes_id', 'discount')
     def _compute_amount(self):
