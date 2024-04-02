@@ -56,7 +56,7 @@ class StockMoveLine(models.Model):
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
-        check_company=True,
+        check_company=True, index='btree_not_null',
         help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one(
         'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
