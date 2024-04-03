@@ -20,7 +20,6 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        self.move_ids.move_dest_ids._action_assign()
 
         # If needed, create a compensation layer, so we add the MO cost to the dropship one
         svls = self.env['stock.valuation.layer']
