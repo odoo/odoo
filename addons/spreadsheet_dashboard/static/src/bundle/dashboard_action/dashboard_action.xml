@@ -67,9 +67,10 @@
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
         <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative">
-            <button t-if="!env.isSmall and state.activeDashboard" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-index-1" t-on-click="toggleSidebar">
+            <button t-if="!env.isSmall and state.activeDashboard" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-index-1" t-on-click="toggleSidebar">
                 <i class="fa fa-fw fa-angle-double-left"/>
             </button>
+            <div class="mt-2"/>
             <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
                 <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
                     <b t-esc="group.name"/>
