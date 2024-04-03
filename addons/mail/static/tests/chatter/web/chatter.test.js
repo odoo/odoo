@@ -689,6 +689,24 @@ test("Mentions in composer should still work when using pager", async () => {
     await contains(".o-mail-Composer-suggestion", { count: 3 });
 });
 
+test("Picker popover UI size responsiveness", async () => {
+    //Test for small screens
+    patchUiSize({ height: 640, width: 360 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button", { text: "Log note" });
+    await click("button[aria-label='Emojis']");
+    await contains(".o-mail-small-emoji-picker", { count: 1 });
+    //Test for larger screens
+    patchUiSize({ height: 768, width: 640 });
+    await click("button", { text: "Log note" });
+    await click("button[aria-label='Emojis']");
+    await contains(".popover .o-EmojiPicker", { count: 1 });
+    await contains(".o-mail-small-emoji-picker", { count: 0 });
+});
+
 test("form views in dialogs do not have chatter", async () => {
     defineActions([
         {

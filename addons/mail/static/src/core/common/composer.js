@@ -191,6 +191,7 @@ export class Composer extends Component {
                     this.props.composer.autofocus++;
                 }
             },
+            inChatter: this.props.mode === "extended",
             pickers: { emoji: (emoji) => this.addEmoji(emoji) },
             position: this.props.mode === "extended" ? "bottom-start" : "top-end",
         };
