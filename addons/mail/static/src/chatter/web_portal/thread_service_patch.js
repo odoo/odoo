@@ -1,14 +1,8 @@
 import { ThreadService } from "@mail/core/common/thread_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, {
-    setup(env, services) {
-        rpc = rpcWithEnv(env);
-        super.setup(env, services);
-    },
     /**
      * @param {import("models").Thread} thread
      * @param {string[]} requestList

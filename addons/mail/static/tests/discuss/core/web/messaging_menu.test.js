@@ -1,7 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     click,
     contains,
@@ -16,7 +14,7 @@ import {
 } from "../../../mail_test_helpers";
 import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -149,8 +147,7 @@ test("channel preview ignores messages from the past", async () => {
         parent_id: messageId,
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Message-content", { text: "last message" });
@@ -222,8 +219,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     expect(

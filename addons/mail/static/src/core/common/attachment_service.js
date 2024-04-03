@@ -1,7 +1,6 @@
-import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 
 export class AttachmentService {
@@ -14,7 +13,6 @@ export class AttachmentService {
     }
 
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
     }

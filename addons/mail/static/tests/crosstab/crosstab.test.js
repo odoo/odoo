@@ -1,7 +1,5 @@
 import { describe, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -15,8 +13,8 @@ import {
     triggerHotkey,
 } from "../mail_test_helpers";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { mockDate } from "@odoo/hoot-mock";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -48,7 +46,6 @@ test("Delete starred message updates counter", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains("button", { target: env2, text: "Starred1" });
-    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         message_id: messageId,
         body: "",
@@ -142,7 +139,6 @@ test("Adding attachments", async () => {
         name: "test.txt",
         mimetype: "text/plain",
     });
-    rpc = rpcWithEnv(env1);
     rpc("/mail/message/update_content", {
         body: "Hello world!",
         attachment_ids: [attachmentId],

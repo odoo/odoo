@@ -1,10 +1,8 @@
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { escape } from "@web/core/utils/strings";
@@ -26,7 +24,6 @@ export class ThreadService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;

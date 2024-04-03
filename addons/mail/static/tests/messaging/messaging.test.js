@@ -1,7 +1,5 @@
 import { describe, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -17,7 +15,7 @@ import {
 } from "../mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -38,8 +36,7 @@ test("Receiving a new message out of discuss app should open a chat window", asy
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
@@ -76,8 +73,7 @@ test("Receiving a new message in discuss app should open a chat window after lea
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},

@@ -1,12 +1,9 @@
 import { describe, test } from "@odoo/hoot";
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -23,8 +20,7 @@ test("Public website visitor is typing", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-ThreadIcon .fa.fa-comments");
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];

@@ -1,8 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import { browser } from "@web/core/browser/browser";
 import { getOrigin } from "@web/core/utils/urls";
 import {
@@ -34,7 +31,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { actionService } from "@web/webclient/actions/action_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -639,8 +636,7 @@ test("Counter is updated when receiving new message", async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1014,8 +1010,7 @@ test("preview for channel should show latest non-deleted message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o_menu_systray i[aria-label='Messages']");
