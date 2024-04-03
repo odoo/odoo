@@ -4278,7 +4278,11 @@ class AccountMove(models.Model):
         if moves_with_payments:
             moves_with_payments.payment_id.action_post()
         other_moves = self - moves_with_payments
-        if other_moves.filtered(lambda m: m.abnormal_amount_warning or m.abnormal_date_warning):
+        # Disabled by default to avoid breaking automated action flow
+        if (
+            not self.env.context.get('disable_abnormal_invoice_detection', True)
+            and other_moves.filtered(lambda m: m.abnormal_amount_warning or m.abnormal_date_warning)
+        ):
             return {
                 'name': _("Confirm Entries"),
                 'type': 'ir.actions.act_window',
