@@ -1819,7 +1819,7 @@ class Request:
 
             ro = rule.endpoint.routing['readonly']
             if callable(ro):
-                ro = ro(registry, request)
+                ro = ro(self.registry, request)
 
             def _serve_ir_http():
                 return self._serve_ir_http(rule, args)
