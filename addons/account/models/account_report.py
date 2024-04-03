@@ -305,7 +305,11 @@ class AccountReportLine(models.Model):
     parent_id = fields.Many2one(string="Parent Line", comodel_name='account.report.line', ondelete='set null')
     children_ids = fields.One2many(string="Child Lines", comodel_name='account.report.line', inverse_name='parent_id')
     groupby = fields.Char(string="Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
-    user_groupby = fields.Char(string="User Group By", help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.")
+    user_groupby = fields.Char(
+        string="User Group By",
+        compute='_compute_user_groupby', store=True, readonly=False, precompute=True,
+        help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
+    )
     sequence = fields.Integer(string="Sequence")
     code = fields.Char(string="Code", help="Unique identifier for this line.")
     foldable = fields.Boolean(string="Foldable", help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.")
@@ -336,32 +340,30 @@ class AccountReportLine(models.Model):
             if report_line.parent_id:
                 report_line.report_id = report_line.parent_id.report_id
 
+    @api.depends('groupby')
+    def _compute_user_groupby(self):
+        for report_line in self:
+            if not report_line.id and not report_line.user_groupby:
+                report_line.user_groupby = report_line.groupby
+            try:
+                report_line._validate_groupby()
+            except UserError:
+                report_line.user_groupby = report_line.groupby
+
     @api.constrains('parent_id')
     def _validate_groupby_no_child(self):
         for report_line in self:
             if report_line.parent_id.groupby or report_line.parent_id.user_groupby:
                 raise ValidationError(_("A line cannot have both children and a groupby value (line '%s').", report_line.parent_id.name))
 
-    @api.constrains('expression_ids', 'groupby', 'user_groupby')
-    def _validate_formula(self):
-        for expression in self.expression_ids:
-            if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
-                raise ValidationError(_(
-                    "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
-                    expression.report_line_id.display_name,
-                ))
+    @api.constrains('groupby', 'user_groupby')
+    def _validate_groupby(self):
+        self.expression_ids._validate_engine()
 
     @api.constrains('parent_id')
     def _check_parent_line(self):
         for line in self.filtered(lambda x: x.parent_id == x):
             raise ValidationError(_('Line "%s" defines itself as its parent.', line.name))
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'groupby' in vals:
-                vals['user_groupby'] = vals['groupby']
-        return super().create(vals_list)
 
     def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
         ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
@@ -565,6 +567,15 @@ class AccountReportExpression(models.Model):
         auditable_engines = self._get_auditable_engines()
         for expression in self:
             expression.auditable = expression.engine in auditable_engines
+
+    @api.constrains('engine', 'report_line_id')
+    def _validate_engine(self):
+        for expression in self:
+            if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+                raise ValidationError(_(
+                    "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
+                    expression.report_line_id.display_name,
+                ))
 
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
