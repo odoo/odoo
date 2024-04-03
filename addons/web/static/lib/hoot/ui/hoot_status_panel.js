@@ -108,9 +108,7 @@ export class HootStatusPanel extends Component {
                         class="animate-spin w-4 h-4 border-2 border-pass border-t-transparent rounded-full"
                         role="status"
                         title="Running"
-                    >
-                        <span class="visually-hidden">Running</span>
-                    </div>
+                    />
                 </t>
                 <t t-else="">
                     <span class="hidden md:block">
@@ -185,7 +183,7 @@ export class HootStatusPanel extends Component {
                     <i t-attf-class="fa fa-sort-numeric-{{ uiState.sortResults or 'desc' }} transition" />
                 </button>
                 <t t-if="uiState.totalResults gt uiState.resultsPerPage">
-                    <t t-set="lastPage" t-value="Math.floor(uiState.totalResults / uiState.resultsPerPage)" />
+                    <t t-set="lastPage" t-value="getLastPage()" />
                     <div class="flex gap-1 animate-slide-left">
                         <button
                             class="px-1 transition-color"
@@ -298,11 +296,13 @@ export class HootStatusPanel extends Component {
         }
     }
 
+    getLastPage() {
+        const { resultsPerPage, totalResults } = this.uiState;
+        return $max($floor((totalResults - 1) / resultsPerPage), 0);
+    }
+
     nextPage() {
-        this.uiState.resultsPage = $min(
-            this.uiState.resultsPage + 1,
-            $floor(this.uiState.totalResults / this.uiState.resultsPerPage)
-        );
+        this.uiState.resultsPage = $min(this.uiState.resultsPage + 1, this.getLastPage());
     }
 
     previousPage() {
