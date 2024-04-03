@@ -95,13 +95,16 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Open templates",
             trigger: '.o_field_widget[name="template_id"] input',
-            run: "edit test",
+            run(helpers) {
+                this.anchor.value = "test";
+                this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
+            }
         },
         {
             content: "Check a template is listed",
             in_modal: false,
             trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
-            run: "press Enter",
+            run() {},
         },
         {
             content: "Send message",
