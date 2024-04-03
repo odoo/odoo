@@ -32,8 +32,8 @@ class TestCalendarRecurrence(TestCalendarCommon):
     def test_calendar_weekly_recurrence(self):
         recurring_vals = {
             'freq': 'weekly',
-            'mo': True,
-            'tu': True,
+            'mon': True,
+            'tue': True,
             'count': 4,
             'start': datetime(2024, 1, 1, 10, 0),
             'stop': datetime(2024, 1, 1, 10, 30),
@@ -65,7 +65,7 @@ class TestCalendarRecurrence(TestCalendarCommon):
         recurring_vals = {
             'freq': 'monthly',
             'monthweekday_n': 1,
-            'monthweekday_day': 'mo',
+            'monthweekday_day': 'mon',
             'count': 3,
             'start': datetime(2024, 1, 1, 10, 0),
             'stop': datetime(2024, 1, 1, 10, 30),
@@ -270,7 +270,7 @@ class TestCalendarRecurrence(TestCalendarCommon):
     def test_edit_weekly_recurrence_day(self):
         event_ts = self.create_event({
             'freq': 'weekly',
-            'mo': True,
+            'mon': True,
             'count': 3,
             'start': datetime(2024, 1, 1, 10, 0),
             'stop': datetime(2024, 1, 1, 10, 30),
@@ -281,11 +281,11 @@ class TestCalendarRecurrence(TestCalendarCommon):
                          [datetime(2024, 1, 1, 10, 0), datetime(2024, 1, 8, 10, 0), datetime(2024, 1, 15, 10, 0)], "")
         self.assertEqual(timeslots.mapped('stop'),
                          [datetime(2024, 1, 1, 10, 30), datetime(2024, 1, 8, 10, 30), datetime(2024, 1, 15, 10, 30)], "")
-        self.assertEqual((event.mo, event.tu), (True, False), "")
+        self.assertEqual((event.mon, event.tue), (True, False), "")
         event_ts.write({'start': datetime(2024, 1, 2, 10, 0), 'stop':datetime(2024, 1, 2, 10, 30), 'edit': 'all'})
         timeslots = event.timeslot_ids.sorted('start')
         self.assertEqual(timeslots.mapped('start'),
                          [datetime(2024, 1, 2, 10, 0), datetime(2024, 1, 9, 10, 0), datetime(2024, 1, 16, 10, 0)], "")
         self.assertEqual(timeslots.mapped('stop'),
                          [datetime(2024, 1, 2, 10, 30), datetime(2024, 1, 9, 10, 30), datetime(2024, 1, 16, 10, 30)], "")
-        self.assertEqual((event.mo, event.tu), (False, True), "")
+        self.assertEqual((event.mon, event.tue), (False, True), "")

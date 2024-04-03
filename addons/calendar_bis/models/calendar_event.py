@@ -3,7 +3,7 @@ from dateutil.relativedelta import relativedelta
 
 from ..util import RRULE
 
-recurring_fields = ['is_recurring', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'freq', 'until', 'count', 'interval',
+recurring_fields = ['is_recurring', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'freq', 'until', 'count', 'interval',
                     'monthday', 'monthweekday_n', 'monthweekday_day']
 
 
@@ -29,13 +29,13 @@ class CalendarEventPrivate(models.Model):
 
     # Recurrence
     is_recurring = fields.Boolean(default=False, public=True)
-    mo = fields.Boolean('Monday')
-    tu = fields.Boolean('Tuesday')
-    we = fields.Boolean('Wednesday')
-    th = fields.Boolean('Thursday')
-    fr = fields.Boolean('Friday')
-    sa = fields.Boolean('Saturday')
-    su = fields.Boolean('Sunday')
+    mon = fields.Boolean('Monday')
+    tue = fields.Boolean('Tuesday')
+    wed = fields.Boolean('Wednesday')
+    thu = fields.Boolean('Thursday')
+    fri = fields.Boolean('Friday')
+    sat = fields.Boolean('Saturday')
+    sun = fields.Boolean('Sunday')
     freq = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')],
         string='Frequency', default='weekly')
     until = fields.Datetime('End Date')
@@ -44,8 +44,8 @@ class CalendarEventPrivate(models.Model):
     monthday = fields.Integer('Nth of the month')               # 3rd of the month
     monthweekday_n = fields.Integer('Weekday of the month')     # 1st Monday of the month
     monthweekday_day = fields.Selection([
-        ('mo', 'Monday'), ('tu', 'Tuesday'), ('we', 'Wednesday'),
-        ('th', 'Thursday'), ('fr', 'Friday'), ('sa', 'Saturday'), ('su', 'Sunday')],
+        ('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),
+        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')],
     )
     exdated = fields.Char('Excluded Dates', help="List of dates to exclude from the recurrence rule", default='')
 
@@ -55,13 +55,13 @@ class CalendarEventPrivate(models.Model):
         if not self.is_recurring or not self.freq:
             return False
         return RRULE.RRULE({
-            'mo': self.mo,
-            'tu': self.tu,
-            'we': self.we,
-            'th': self.th,
-            'fr': self.fr,
-            'sa': self.sa,
-            'su': self.su,
+            'mon': self.mon,
+            'tue': self.tue,
+            'wed': self.wed,
+            'thu': self.thu,
+            'fri': self.fri,
+            'sat': self.sat,
+            'sun': self.sun,
             'freq': self.freq,
             'until': self.until,
             'dtstart': min(self.timeslot_ids, key=lambda x: x.start).start,

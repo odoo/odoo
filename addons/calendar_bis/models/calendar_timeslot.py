@@ -4,7 +4,7 @@ from odoo.exceptions import AccessError
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
-days = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
 class CalendarTimeslot(models.Model):
     _name = "calendar.timeslot"
@@ -45,13 +45,13 @@ class CalendarTimeslot(models.Model):
     # /!\ These fields must be computed and inverse in the same method,
     # DO NOT separate them, DO NOT add fields to their compute or inverse method
     is_recurring = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    mo = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    tu = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    we = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    th = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    fr = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    sa = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
-    su = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    mon = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    tue = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    wed = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    thu = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    fri = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    sat = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    sun = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
     freq = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')],
                             string='Frequency', default='weekly', compute="_compute_recurring", inverse="_inverse_recurring")
     until = fields.Datetime(compute="_compute_recurring", inverse="_inverse_recurring") # TODO Move to Date instead of datetime ?
@@ -59,8 +59,8 @@ class CalendarTimeslot(models.Model):
     interval = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")
     monthday = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")               # 3rd of the month
     monthweekday_n = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")         # "1ST" Monday of the month
-    monthweekday_day = fields.Selection([('mo', 'Monday'), ('tu', 'Tuesday'), ('we', 'Wednesday'),      # 1st "MONDAY" of the month
-        ('th', 'Thursday'), ('fr', 'Friday'), ('sa', 'Saturday'), ('su', 'Sunday')], compute="_compute_recurring", inverse="_inverse_recurring")
+    monthweekday_day = fields.Selection([('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),      # 1st "MONDAY" of the month
+        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')], compute="_compute_recurring", inverse="_inverse_recurring")
 
     def write(self, values):
         # If event_id is in values:
@@ -156,13 +156,13 @@ class CalendarTimeslot(models.Model):
         for timeslot in self:
             timeslot.update({
                 'is_recurring': timeslot.event_id.is_recurring,
-                'mo': timeslot.event_id.mo,
-                'tu': timeslot.event_id.tu,
-                'we': timeslot.event_id.we,
-                'th': timeslot.event_id.th,
-                'fr': timeslot.event_id.fr,
-                'sa': timeslot.event_id.sa,
-                'su': timeslot.event_id.su,
+                'mon': timeslot.event_id.mon,
+                'tue': timeslot.event_id.tue,
+                'wed': timeslot.event_id.wed,
+                'thu': timeslot.event_id.thu,
+                'fri': timeslot.event_id.fri,
+                'sat': timeslot.event_id.sat,
+                'sun': timeslot.event_id.sun,
                 'freq': timeslot.event_id.freq,
                 'until': timeslot.event_id.until,
                 'count': timeslot.event_id.count,
@@ -176,13 +176,13 @@ class CalendarTimeslot(models.Model):
         for timeslot in self:
             timeslot.event_id.write({
                 'is_recurring': timeslot.is_recurring,
-                'mo': timeslot.mo,
-                'tu': timeslot.tu,
-                'we': timeslot.we,
-                'th': timeslot.th,
-                'fr': timeslot.fr,
-                'sa': timeslot.sa,
-                'su': timeslot.su,
+                'mon': timeslot.mon,
+                'tue': timeslot.tue,
+                'wed': timeslot.wed,
+                'thu': timeslot.thu,
+                'fri': timeslot.fri,
+                'sat': timeslot.sat,
+                'sun': timeslot.sun,
                 'freq': timeslot.freq,
                 'until': timeslot.until,
                 'count': timeslot.count,

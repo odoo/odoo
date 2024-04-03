@@ -15,13 +15,13 @@ str2freq = {x[0]: x[1] for x in RRULE_FREQ}
 freq2str = {x[1]: x[0] for x in RRULE_FREQ}
 
 RRULE_WEEKDAYS = [
-    ('mo', rrule.MO),
-    ('tu', rrule.TU),
-    ('we', rrule.WE),
-    ('th', rrule.TH),
-    ('fr', rrule.FR),
-    ('sa', rrule.SA),
-    ('su', rrule.SU),
+    ('mon', rrule.MO),
+    ('tue', rrule.TU),
+    ('wed', rrule.WE),
+    ('thu', rrule.TH),
+    ('fri', rrule.FR),
+    ('sat', rrule.SA),
+    ('sun', rrule.SU),
 ]
 wd2str = {x[1].weekday:x[0] for x in RRULE_WEEKDAYS}
 str2day = {x[0]:x[1] for x in RRULE_WEEKDAYS}

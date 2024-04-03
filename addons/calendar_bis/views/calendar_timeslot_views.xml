@@ -59,13 +59,7 @@
                                     <field name="interval" readonly="not can_write"/>
                                 </group>
                                 <group string="Weekly" invisible="freq != 'weekly'">
-                                    <field name="mo" readonly="not can_write"/>
-                                    <field name="tu" readonly="not can_write"/>
-                                    <field name="we" readonly="not can_write"/>
-                                    <field name="th" readonly="not can_write"/>
-                                    <field name="fr" readonly="not can_write"/>
-                                    <field name="sa" readonly="not can_write"/>
-                                    <field name="su" readonly="not can_write"/>
+                                    <widget name="calendar_week_days"/>
                                 </group>
                                 <group string="Monthly" invisible="freq != 'monthly'">
                                     <field name="monthday" readonly="not can_write"/>
