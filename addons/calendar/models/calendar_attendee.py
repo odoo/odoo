@@ -125,6 +125,8 @@ class Attendee(models.Model):
                         'description': 'invitation.ics',
                         'mimetype': 'text/calendar',
                         'name': 'invitation.ics',
+                        'res_id': event_id,
+                        'res_model': 'calendar.event',
                     }).ids
 
                 body = mail_template._render_field(
