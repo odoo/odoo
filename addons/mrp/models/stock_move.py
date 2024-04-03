@@ -565,7 +565,8 @@ class StockMove(models.Model):
                     continue
                 incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
                 outgoing_moves = bom_line_moves.filtered(filters['outgoing_moves'])
-                qty_processed = sum(incoming_moves.mapped('product_qty')) - sum(outgoing_moves.mapped('product_qty'))
+                qty_processed = sum(incoming_moves.mapped(lambda m: m.quantity if m.picked else m.product_qty))
+                qty_processed -= sum(outgoing_moves.mapped(lambda m: m.quantity if m.picked else m.product_qty))
                 # We compute a ratio to know how many kits we can produce with this quantity of that specific component
                 qty_ratios.append(float_round(qty_processed / qty_per_kit, precision_rounding=bom_line.product_id.uom_id.rounding))
             else:
@@ -574,7 +575,7 @@ class StockMove(models.Model):
             # Now that we have every ratio by components, we keep the lowest one to know how many kits we can produce
             # with the quantities delivered of each component. We use the floor division here because a 'partial kit'
             # doesn't make sense.
-            return min(qty_ratios) // 1
+            return kit_bom.product_qty * min(qty_ratios) // 1
         else:
             return 0.0
 
