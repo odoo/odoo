@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.http import request
 
 from odoo.addons.portal.controllers import mail
 
@@ -15,7 +13,7 @@ class PortalChatter(mail.PortalChatter):
         return fields
 
     @http.route()
-    def portal_chatter_post(self, res_model, res_id, message, attachment_ids='', attachment_tokens='', **kwargs):
-        if kwargs.get('rating_value'):
-            kwargs['rating_feedback'] = kwargs.pop('rating_feedback', message)
-        return super(PortalChatter, self).portal_chatter_post(res_model, res_id, message, attachment_ids=attachment_ids, attachment_tokens=attachment_tokens, **kwargs)
+    def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
+        if post_data.get('rating_value'):
+            post_data['rating_feedback'] = post_data.pop('rating_feedback', post_data.get('body'))
+        return super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)

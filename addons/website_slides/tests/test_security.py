@@ -538,15 +538,19 @@ class TestReview(common.SlidesCase, HttpCase):
         self.authenticate("admin", "admin")
 
         res1 = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url(),
+            url="%s/mail/chatter_post" % self.base_url(),
             json={
-                'params': {
-                    'res_id': self.channel.id,
-                    'res_model': 'slide.channel',
-                    'message': 'My first review :)',
-                    'rating_value': '2',
-                    'pid': self.env.user.partner_id.id,
-                    'csrf_token': http.Request.csrf_token(self),
+                "params": {
+                    "thread_model": "slide.channel",
+                    "thread_id": self.channel.id,
+                    "post_data": {
+                        "body": "My first review :)",
+                        "subtype_xmlid": "mail.mt_comment",
+                        "rating_value": "2",
+                        "portal_security": {
+                            "pid": self.env.user.partner_id.id,
+                        },
+                    },
                 },
             },
         )
@@ -554,15 +558,19 @@ class TestReview(common.SlidesCase, HttpCase):
 
 
         res2 = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url(),
+            url="%s/mail/chatter_post" % self.base_url(),
             json={
-                'params': {
-                    'res_id': self.channel.id,
-                    'res_model': 'slide.channel',
-                    'message': 'My second review :)',
-                    'rating_value': '2',
-                    'pid': self.env.user.partner_id.id,
-                    'csrf_token': http.Request.csrf_token(self),
+                "params": {
+                    "thread_model": "slide.channel",
+                    "thread_id": self.channel.id,
+                    "post_data": {
+                        "body": "My second review :)",
+                        "subtype_xmlid": "mail.mt_comment",
+                        "rating_value": "2",
+                        "portal_security": {
+                            "pid": self.env.user.partner_id.id,
+                        },
+                    },
                 },
             },
         )

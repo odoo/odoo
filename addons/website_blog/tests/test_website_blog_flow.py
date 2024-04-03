@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
@@ -81,9 +80,8 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             PortalChatter().portal_chatter_post(
                 'blog.post',
                 self.test_blog_post.id,
-                'Test message blog post',
-                attachment_ids=[attachment.id],
-                attachment_tokens=[attachment.access_token]
+                {'body': 'Test message blog post', 'message_type': 'comment', 'attachment_ids': [attachment.id],
+                 'attachment_tokens': [attachment.access_token], 'subtype_xmlid': 'mail.mt_comment'},
             )
 
         self.assertTrue(self.env['mail.message'].sudo().search(
@@ -101,9 +99,13 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             PortalChatter().portal_chatter_post(
                 'blog.post',
                 self.test_blog_post.id,
-                'Test message blog post',
-                attachment_ids=[second_attachment.id],
-                attachment_tokens=['wrong_token']
+                {
+                    "body": "Test message blog post",
+                    "message_type": "comment",
+                    "attachment_ids": [attachment.id],
+                    "attachment_tokens": [attachment.access_token],
+                    "subtype_xmlid": "mail.mt_comment",
+                },
             )
 
         self.assertFalse(self.env['mail.message'].sudo().search(

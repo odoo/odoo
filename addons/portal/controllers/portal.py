@@ -296,7 +296,7 @@ class CustomerPortal(Controller):
         })
 
     @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
-    def attachment_add(self, name, file, res_model, res_id, access_token=None, **kwargs):
+    def attachment_add(self, name, file, thread_model, thread_id, access_token=None):
         """Process a file uploaded from the portal chatter and create the
         corresponding `ir.attachment`.
 
@@ -325,7 +325,7 @@ class CustomerPortal(Controller):
         :rtype: dict
         """
         try:
-            self._document_check_access(res_model, int(res_id), access_token=access_token)
+            self._document_check_access(thread_model, int(thread_id), access_token=access_token)
         except (AccessError, MissingError) as e:
             raise UserError(_("The document does not exist or you do not have the rights to access it."))
 

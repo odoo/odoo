@@ -100,8 +100,8 @@ var PortalComposer = publicWidget.Widget.extend({
         return {
             'name': file.name,
             'file': file,
-            'res_id': this.options.res_id,
-            'res_model': this.options.res_model,
+            'thread_id': this.options.res_id,
+            'thread_model': this.options.res_model,
             'access_token': this.options.token,
         };
     },
@@ -148,9 +148,18 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _prepareMessageData: function () {
         return Object.assign(this.options || {}, {
-            'message': this.$('textarea[name="message"]').val(),
-            attachment_ids: this.attachments.map((a) => a.id),
-            attachment_tokens: this.attachments.map((a) => a.access_token),
+            thread_model: this.options.res_model,
+            thread_id: this.options.res_id,
+            post_data: {
+                body: this.$('textarea[name="message"]').val(),
+                attachment_ids: this.attachments.map((a) => a.id),
+                attachment_tokens: this.attachments.map((a) => a.access_token),
+                portal_security: {
+                    token: this.options.token,
+                    hash: this.options.hash,
+                    pid: this.options.pid,
+                },
+            },
         });
     },
     /**
