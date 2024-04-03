@@ -446,24 +446,6 @@ class StockQuant(models.Model):
         self._apply_inventory()
         self.inventory_quantity_set = False
 
-    def action_inventory_at_date(self):
-        #  Handler called when the user clicked on the 'Inventory at Date' button.
-        #  Opens wizard to display, at choice, the products inventory or a computed
-        #  inventory at a given date.
-        context = {}
-        if ("default_product_id" in self.env.context):
-            context['product_id'] = self.env.context["default_product_id"]
-        elif ("default_product_tmpl_id" in self.env.context):
-            context['product_tmpl_id'] = self.env.context["default_product_tmpl_id"]
-
-        return {
-            "res_model": "stock.quantity.history",
-            "views": [[False, "form"]],
-            "target": "new",
-            "type": "ir.actions.act_window",
-            "context": context,
-        }
-
     def action_stock_quant_relocate(self):
         if len(self.company_id) > 1 or any(not q.company_id.id for q in self) or any(q <= 0 for q in self.mapped('quantity')):
             raise UserError(_('You can only move positive quantities stored in locations used by a single company per relocation.'))
