@@ -886,58 +886,101 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames, format_reply=True):
-        """Reads values from messages and formats them for the web client."""
-        vals_list = self._read_format(fnames)
+    def _get_message_author(self, message):
+        if message.author_guest_id:
+            return message.author_guest_id._guest_format(fields={"id": True, "name": True}).get(message.author_guest_id)
+        if message.author_id:
+            return message.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}, "write_date": True}).get(message.author_id)
+
+    def _get_message_subject(self, record):
+        if hasattr(record, '_message_compute_subject'):
+            return record._message_compute_subject()
+        return record.display_name
+
+    def _get_message_tracking_values(self, message, record):
+        allowed_tracking_ids = message.tracking_value_ids._filter_tracked_field_access(self.env)
+        displayed_tracking_ids = allowed_tracking_ids
+        if record and hasattr(record, '_track_filter_for_display'):
+            displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)
+        return displayed_tracking_ids
+
+    def _get_message_reactions(self, message):
+        reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
+        for reaction in message.reaction_ids:
+            reactions_per_content[reaction.content] |= reaction
+        return [{
+            'content': content,
+            'count': len(reactions),
+            'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
+            'message': {'id': message.id},
+        } for content, reactions in reactions_per_content.items()]
+
+    def message_format(self, format_reply=True, msg_vals=None):
+        self.check_access_rule('read')
+        messages = self._read_format(self._get_message_format_fields())
         thread_ids_by_model_name = defaultdict(set)
         for message in self:
             if message.model and message.res_id:
                 thread_ids_by_model_name[message.model].add(message.res_id)
-        for vals in vals_list:
-            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            author = False
-            if message_sudo.author_guest_id:
-                author = message_sudo.author_guest_id._guest_format(fields={"id": True, "name": True}).get(message_sudo.author_guest_id)
-            elif message_sudo.author_id:
-                author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}, "write_date": True}).get(message_sudo.author_id)
+        message_formated = []
+        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        # fetch scheduled notifications once, only if msg_vals is not given to
+        # avoid useless queries when notifying Inbox right after a message_post
+        scheduled_dt_by_msg_id = {}
+        if msg_vals:
+            scheduled_dt_by_msg_id = {msg.id: msg_vals.get('scheduled_date') for msg in self}
+        elif self:
+            schedulers = self.env['mail.message.schedule'].sudo().search([
+                ('mail_message_id', 'in', self.ids)
+            ])
+            for scheduler in schedulers:
+                scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
+        for message in messages:
+            message_sudo = self.browse(message['id']).sudo().with_prefetch(self.ids)
             record_sudo = False
             if message_sudo.model and message_sudo.res_id:
-                record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
-                record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
-                default_subject = record_name
-                if hasattr(record_sudo, '_message_compute_subject'):
-                    default_subject = record_sudo._message_compute_subject()
-            else:
-                record_name = False
-                default_subject = False
-            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
-            for reaction in message_sudo.reaction_ids:
-                reactions_per_content[reaction.content] |= reaction
-            reaction_groups = [{
-                'content': content,
-                'count': len(reactions),
-                'personas': [{'id': guest.id, 'name': guest.name, 'type': "guest"} for guest in reactions.guest_id] + [{'id': partner.id, 'name': partner.name, 'type': "partner"} for partner in reactions.partner_id],
-                'message': {'id': message_sudo.id},
-            } for content, reactions in reactions_per_content.items()]
-            allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
-            displayed_tracking_ids = allowed_tracking_ids
-            if record_sudo and hasattr(record_sudo, '_track_filter_for_display'):
-                displayed_tracking_ids = record_sudo._track_filter_for_display(displayed_tracking_ids)
-            vals.update(message_sudo._message_format_extras(format_reply))
-            vals.update({
-                'author': author,
-                'default_subject': default_subject,
+                record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo().with_prefetch(thread_ids_by_model_name[message_sudo.model])
+            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
+            message_formated.append({
+                'id': message_sudo.id,
+                'date': message_sudo.date,
+                'email_from': message_sudo.email_from,
+                'subtype_id': message_sudo.subtype_id,
+                'subject': message_sudo.subject,
+                'model': message_sudo.model,
+                'res_id': message_sudo.res_id,
+                'message_type': message_sudo.message_type,
+                'body': message_sudo.body,
+                'author': self._get_message_author(message_sudo),
+                'default_subject': self._get_message_subject(record_sudo) if record_sudo else False,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
-                'trackingValues': displayed_tracking_ids._tracking_value_format(),
+                'trackingValues': self._get_message_tracking_values(message_sudo, record_sudo)._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids.filtered(lambda preview: not preview.is_hidden)._link_preview_format(),
-                'reactions': reaction_groups,
+                'reactions': self._get_message_reactions(message_sudo),
                 'pinned_at': message_sudo.pinned_at,
-                'record_name': record_name,
+                'record_name': record_sudo.display_name if record_sudo else False,
                 'create_date': message_sudo.create_date,
                 'write_date': message_sudo.write_date,
+                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
+                'starredPersonas': [{'id': partner_id, 'type': "partner"} for partner_id in message_sudo.starred_partner_ids.ids],
+                'starred': message_sudo.starred,
+                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
+                'is_note': message_sudo.subtype_id.id == note_id,
+                'is_discussion': message_sudo.subtype_id.id == com_id,
+                'subtype_description': message_sudo.subtype_id.description,
+                'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
+                'scheduledDatetime': scheduled_dt_by_msg_id.get(message_sudo['id'], False),
+                'thread': {
+                    'model': record_sudo._name,
+                    'id': record_sudo.id,
+                    'name': record_sudo.display_name,
+                    'module_icon': modules.module.get_module_icon(self.env[record_sudo._name]._original_module)
+                } if record_sudo else False,
+                **message_sudo._message_format_extras(format_reply)
             })
-        return vals_list
+        return message_formated
 
     def _message_format_extras(self, format_reply):
         self.ensure_one()
@@ -970,102 +1013,6 @@ class Message(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
-
-    def message_format(self, format_reply=True, msg_vals=None):
-        """ Get the message values in the format for web client. Since message
-        values can be broadcasted, computed fields MUST NOT BE READ and
-        broadcasted.
-
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message`` without
-          accessing it directly. It lessens query count in some optimized use
-          cases by avoiding access message content in db;
-
-        :returns list(dict).
-             Example :
-                {
-                    'body': HTML content of the message
-                    'model': u'res.partner',
-                    'record_name': u'Agrolait',
-                    'attachments': [
-                        {
-                            'file_type_icon': u'webimage',
-                            'id': 45,
-                            'name': u'sample.png',
-                            'filename': u'sample.png'
-                        }
-                    ],
-                    'needaction_partner_ids': [], # list of partner ids
-                    'res_id': 7,
-                    'trackingValues': [
-                        {
-                            'changedField': "Customer",
-                            'id': 2965,
-                            'fieldName': 'partner_id',
-                            'fieldType': 'char',
-                            'newValue': {
-                                'currencyId': "",
-                                'value': "Axelor",
-                            ],
-                            'oldValue': {
-                                'currencyId': "",
-                                'value': "",
-                            ],
-                        }
-                    ],
-                    'author_id': (3, u'Administrator'),
-                    'email_from': 'sacha@pokemon.com' # email address or False
-                    'subtype_id': (1, u'Discussions'),
-                    'date': '2015-06-30 08:22:33',
-                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner convert_to_read
-                    'message_type': u'comment',
-                    'id': 59,
-                    'subject': False
-                    'is_note': True # only if the message is a note (subtype == note)
-                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
-                    'parentMessage': {...}, # formatted message that this message is a reply to. Only present if format_reply is True
-                }
-        """
-        self.check_access_rule('read')
-        vals_list = self._message_format(self._get_message_format_fields(), format_reply=format_reply)
-
-        com_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-
-        # fetch scheduled notifications once, only if msg_vals is not given to
-        # avoid useless queries when notifying Inbox right after a message_post
-        scheduled_dt_by_msg_id = {}
-        if msg_vals:
-            scheduled_dt_by_msg_id = {msg.id: msg_vals.get('scheduled_date') for msg in self}
-        elif self:
-            schedulers = self.env['mail.message.schedule'].sudo().search([
-                ('mail_message_id', 'in', self.ids)
-            ])
-            for scheduler in schedulers:
-                scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
-
-        for vals in vals_list:
-            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            notifs = message_sudo.notification_ids.filtered(lambda n: n.res_partner_id)
-            vals.pop("starred_partner_ids", None)
-            vals.update({
-                'needaction_partner_ids': notifs.filtered(lambda n: not n.is_read).res_partner_id.ids,
-                'starredPersonas': [{'id': id, 'type': "partner"} for id in message_sudo.starred_partner_ids.ids],
-                'history_partner_ids': notifs.filtered(lambda n: n.is_read).res_partner_id.ids,
-                'is_note': message_sudo.subtype_id.id == note_id,
-                'is_discussion': message_sudo.subtype_id.id == com_id,
-                'subtype_description': message_sudo.subtype_id.description,
-                'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message_sudo.partner_ids],
-                'scheduledDatetime': scheduled_dt_by_msg_id.get(vals['id'], False),
-            })
-            if vals['model'] and vals['res_id']:
-                thread = {'model': vals['model'], 'id': vals['res_id']}
-                if vals['model'] != 'discuss.channel':
-                    thread['name'] = vals['record_name']
-                if self.env[vals['model']]._original_module:
-                    thread['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
-                vals['thread'] = thread
-        return vals_list
 
     @api.model
     def _message_format_personalized_prepare(self, messages_formatted, partner_ids=None):
