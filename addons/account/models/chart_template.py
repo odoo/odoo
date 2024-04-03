@@ -311,6 +311,19 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                        account_tax = self.ref(xmlid, raise_if_not_found=False)
+                        if not account_tax:
+                            existing_account_tax = self.env['account.tax'].search([
+                                *self.env['account.tax']._check_company_domain(company),
+                                ('name', '=', values.get('name')),
+                                ('type_tax_use', '=', values.get('type_tax_use'))
+                            ])
+                            if existing_account_tax:
+                                self.env['ir.model.data']._update_xmlids([{
+                                    'xml_id': f"account.{company.id}_{xmlid}",
+                                    'record': existing_account_tax,
+                                    'noupdate': True,
+                                }])
                         if self._context.get('force_new_tax_active'):
                             values['active'] = True
                         if xmlid in xmlid2tax:
