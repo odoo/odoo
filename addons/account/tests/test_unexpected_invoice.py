@@ -32,13 +32,37 @@ class TestUnexpectedAmount(AccountTestInvoicingCommon):
     def test_higher_amount(self):
         base = self.env['account.move'].create([self._invoice_vals(price_unit=100) for i in range(10)])
         base.action_post()
+        bills = self.env['account.move'].create([
+            self._invoice_vals(price_unit=100),
+            self._invoice_vals(price_unit=200),
+            self._invoice_vals(price_unit=50),
+            self._invoice_vals(price_unit=10),
+        ])
+        self.assertFalse(bills[0].abnormal_amount_warning, "The price of 100 is not deviant and thus shouldn't trigger a warning")
+        self.assertTrue(bills[1].abnormal_amount_warning, "The price of 200 is deviant and thus should trigger a warning")
+        self.assertTrue(bills[2].abnormal_amount_warning, "The price of 50 is deviant and thus should trigger a warning")
+        self.assertTrue(bills[3].abnormal_amount_warning, "The price of 10 is deviant and thus should trigger a warning")
 
-        move = self.env['account.move'].create(self._invoice_vals(price_unit=100))
-        self.assertFalse(move.abnormal_amount_warning)
-        move = self.env['account.move'].create(self._invoice_vals(price_unit=200))
-        self.assertTrue(move.abnormal_amount_warning)
-        move = self.env['account.move'].create(self._invoice_vals(price_unit=50))
-        self.assertTrue(move.abnormal_amount_warning)
+        # cleaning the bills context to have an unbiased env test for the wizard trigerring
+        bills = bills.with_context({
+            k: v for k, v in self.env.context.items() if k != 'disable_abnormal_invoice_detection'
+        })
+
+        wizard_thrown = bills[0].action_post()
+        self.assertFalse(wizard_thrown,
+                         "Invoice is not deviant, no wizard should be thrown")
+
+        wizard_thrown = bills[1].action_post()
+        self.assertFalse(wizard_thrown,
+                         "The amount is deviant but the context key isn't set, the wizard shouldn't be thrown")
+
+        wizard_thrown = bills[2].with_context(disable_abnormal_invoice_detection=True).action_post()
+        self.assertFalse(wizard_thrown,
+                         "The amount is deviant and the context key is set to True, the wizard shouldn't be thrown")
+
+        wizard_thrown = bills[3].with_context(disable_abnormal_invoice_detection=False).action_post()
+        self.assertTrue(wizard_thrown,
+                        "The amount is deviant and the context key is set to False, the wizard shouldn't be thrown")
 
     def test_date_too_soon_year(self):
         base = self.env['account.move'].create([
