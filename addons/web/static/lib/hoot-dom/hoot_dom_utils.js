@@ -36,6 +36,7 @@ const {
     Boolean,
     navigator: { userAgent: $userAgent },
     RegExp,
+    SyntaxError,
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -84,12 +85,23 @@ export function isRegExpFilter(filter) {
 
 /**
  * @param {string} value
+ * @param {{ safe?: boolean }} [options]
  * @returns {string | RegExp}
  */
-export function parseRegExp(value) {
+export function parseRegExp(value, options) {
     const regexParams = value.match(R_REGEX_PATTERN);
     if (regexParams) {
-        return new RegExp(regexParams[1].replace(/\s+/g, "\\s+"), regexParams[2] || "i");
+        const unified = regexParams[1].replace(/\s+/g, "\\s+");
+        const flag = regexParams[2] || "i";
+        try {
+            return new RegExp(unified, flag);
+        } catch (error) {
+            if (error instanceof SyntaxError && options?.safe) {
+                return value;
+            } else {
+                throw error;
+            }
+        }
     }
     return value;
 }

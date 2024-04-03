@@ -48,7 +48,7 @@ const formatIncludes = (values) =>
  */
 const getPattern = (query) => {
     query = query.match(R_QUERY_CONTENT)[1];
-    return parseRegExp(normalize(query));
+    return parseRegExp(normalize(query), { safe: true });
 };
 
 /**
