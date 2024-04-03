@@ -314,7 +314,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-5d8bcf85-7fff-ebec-8604-eedd96f2d601"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></p></li><li dir="ltr" style="list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;" role="presentation"><span style="font-size:11pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></p></li></ul></b>');
                     },
-                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2</li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li>Google</li><li>Test</li><li>test2[]</li></ul>',
                 });
             });
             it('should remove unwanted styles and keep tags when pasting list from gdoc', async () => {
@@ -323,7 +323,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<meta charset="utf-8"><b style="font-weight:normal;" id="docs-internal-guid-477946a8-7fff-f959-18a4-05014997e161"><ul style="margin-top:0;margin-bottom:0;padding-inline-start:48px;"><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Google</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:6pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">Test</span></h1></li><li dir="ltr" style="list-style-type:disc;font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;" aria-level="1"><h1 dir="ltr" style="line-height:1.38;margin-top:20pt;margin-bottom:0pt;" role="presentation"><span style="font-size:20pt;font-family:Arial,sans-serif;color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">test2</span></h1></li></ul></b>');
                     },
-                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2</h1></li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li><h1>Google</h1></li><li><h1>Test</h1></li><li><h1>test2[]</h1></li></ul>',
                 });
             });
         });
@@ -769,7 +769,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h1>abc<br>def<br>ghi<br>jkl</h1>');
                     },
-                    contentAfter: '<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]</p>',
+                    contentAfter: '<h1>abc</h1><h1>def</h1><h1>ghi</h1><h1>jkl[]</h1>',
                 });
             });
             it('should split h2 with <br> into seperate h2 elements', async () => {
@@ -778,7 +778,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h2>abc<br>def<br>ghi<br>jkl</h2>');
                     },
-                    contentAfter: '<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]</p>',
+                    contentAfter: '<h2>abc</h2><h2>def</h2><h2>ghi</h2><h2>jkl[]</h2>',
                 });
             });
             it('should split h3 with <br> into seperate h3 elements', async () => {
@@ -787,7 +787,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h3>abc<br>def<br>ghi<br>jkl</h3>');
                     },
-                    contentAfter: '<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]</p>',
+                    contentAfter: '<h3>abc</h3><h3>def</h3><h3>ghi</h3><h3>jkl[]</h3>',
                 });
             });
             it('should split h4 with <br> into seperate h4 elements', async () => {
@@ -796,7 +796,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h4>abc<br>def<br>ghi<br>jkl</h4>');
                     },
-                    contentAfter: '<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]</p>',
+                    contentAfter: '<h4>abc</h4><h4>def</h4><h4>ghi</h4><h4>jkl[]</h4>',
                 });
             });
             it('should split h5 with <br> into seperate h5 elements', async () => {
@@ -805,7 +805,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h5>abc<br>def<br>ghi<br>jkl</h5>');
                     },
-                    contentAfter: '<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]</p>',
+                    contentAfter: '<h5>abc</h5><h5>def</h5><h5>ghi</h5><h5>jkl[]</h5>',
                 });
             });
             it('should split h6 with <br> into seperate h6 elements', async () => {
@@ -814,7 +814,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<h6>abc<br>def<br>ghi<br>jkl</h6>');
                     },
-                    contentAfter: '<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]</p>',
+                    contentAfter: '<h6>abc</h6><h6>def</h6><h6>ghi</h6><h6>jkl[]</h6>',
                 });
             });
             it('should split p with <br> into seperate p elements', async () => {
@@ -853,7 +853,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<p>abc<br>def</p><h1>ghi<br>jkl</h1><h2><br></h2><h3>mno<br>pqr</h3>');
                     },
-                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]</p>',
+                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><h3>pqr[]</h3>',
                 });
             });
             it('should split div with <br>', async () => {
@@ -873,7 +873,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<ul><li>abc<br>def</li></ul>');
                     },
-                    contentAfter: '<ul><li>abc<br>def</li></ul><p>[]<br></p>',
+                    contentAfter: '<ul><li>abc<br>def[]</li></ul>',
                 });
             });
             it('should not split blockquote with <br>', async () => {
@@ -882,7 +882,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<blockquote>abc<br>def</blockquote>');
                     },
-                    contentAfter: '<blockquote>abc<br>def</blockquote><p>[]<br></p>',
+                    contentAfter: '<blockquote>abc<br>def[]</blockquote>',
                 });
             });
             it('should not split pre with <br>', async () => {
@@ -891,11 +891,264 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<pre>abc<br>def</pre>');
                     },
-                    contentAfter: '<pre>abc<br>def</pre><p>[]<br></p>',
+                    contentAfter: '<pre>abc<br>def[]</pre>',
                 });
             });
         });
     });
+    describe('Unwrapping html element', () => {
+        describe('range collapsed', async () => {
+            it('should not unwrap a node when pasting on empty node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<h1>abc[]</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h2>abc</h2>');
+                    },
+                    contentAfter: '<h2>abc[]</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h3>abc</h3>');
+                    },
+                    contentAfter: '<h3>abc[]</h3>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<h1>abc</h1><h2>def[]</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p><p><br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h3>abc</h3>');
+                    },
+                    contentAfter: '<h3>abc[]</h3><p><br></p>',
+                });
+            });
+            it('should not unwrap a node when pasting in between different node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]op</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc[]</h1><p>op</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]op</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc</h1><h2>def[]</h2><p>op</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]op</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc</h1><h2>def</h2><h3>ghi[]</h3><p>op</p>',
+                });
+            });
+            it('should unwrap a node when pasting in between same node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>mn[]op</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<h1>mnabc[]op</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>mn[]op</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<h1>mnabc</h1><h2>def[]</h2><h1>op</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h2>mn[]op</h2>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<h2>mn</h2><h1>abc</h1><h2>def[]op</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>mn[]op</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h1>def</h1><h1>ghi</h1>');
+                    },
+                    contentAfter: '<h1>mnabc</h1><h1>def</h1><h1>ghi[]op</h1>',
+                });
+            });
+            it('should not unwrap a node when pasting at start of different node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]mn</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<h1>abc[]</h1><p>mn</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]mn</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<h1>abc</h1><h2>def[]</h2><p>mn</p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]mn</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<h1>abc</h1><h2>def</h2><h3>ghi[]</h3><p>mn</p>',
+                });
+            });
+            it('should unwrap a node when pasting at start of same node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[]mn</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<h1>abc[]mn</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>[]mn</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h2>abc</h2><h1>def</h1>');
+                    },
+                    contentAfter: '<h2>abc</h2><h1>def[]mn</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">[]mn</font></h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h1>def</h1><h1>ghi</h1>');
+                    },
+                    contentAfter: '<h1>abc</h1><h1>def</h1><h1><font style="background-color: rgb(255, 0, 0);">ghi[]mn</font></h1>',
+                });
+            });
+            it('should not unwrap a node when pasting at end of different node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc[]</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc</h1><h2>def[]</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>mn[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<p>mn</p><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>',
+                });
+            });
+            it('should unwrap a node when pasting at end of same node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>mn[]</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1>');
+                    },
+                    contentAfter: '<h1>mnabc[]</h1>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1>mn[]</h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2>');
+                    },
+                    contentAfter: '<h1>mnabc</h1><h2>def[]</h2>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<h1><font style="background-color: rgb(255, 0, 0);">mn[]</font></h1>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h1>def</h1><h1>ghi</h1>');
+                    },
+                    contentAfter: '<h1><font style="background-color: rgb(255, 0, 0);">mnabc</font></h1><h1>def</h1><h1>ghi[]</h1>',
+                });
+            });
+            it('should paste all nodes as blockquote when pasting in blockquote', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<blockquote>[]<br></blockquote>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<blockquote>abc</blockquote><blockquote>def</blockquote><blockquote>ghi[]</blockquote>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<blockquote>x[]</blockquote>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<blockquote>xabc</blockquote><blockquote>def</blockquote><blockquote>ghi[]</blockquote>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<blockquote>[]x</blockquote>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<blockquote>abc</blockquote><blockquote>def</blockquote><blockquote>ghi[]x</blockquote>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<blockquote>x[]y</blockquote>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<blockquote>xabc</blockquote><blockquote>def</blockquote><blockquote>ghi[]y</blockquote>',
+                });
+            });
+            it('should paste all nodes as pre when pasting in pre', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]<br></pre>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<pre>abc</pre><pre>def</pre><pre>ghi[]</pre>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>x[]</pre>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<pre>xabc</pre><pre>def</pre><pre>ghi[]</pre>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>[]x</pre>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<pre>abc</pre><pre>def</pre><pre>ghi[]x</pre>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<pre>x[]y</pre>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
+                    },
+                    contentAfter: '<pre>xabc</pre><pre>def</pre><pre>ghi[]y</pre>',
+                });
+            });
+        });
+    })
     describe('Complex html span', () => {
         const complexHtmlData = '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
         describe('range collapsed', async () => {
