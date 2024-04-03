@@ -169,6 +169,7 @@
                        placeholder="Suggested accessories in the eCommerce cart"/>
                 <field name="alternative_product_ids" widget="many2many_tags"
                        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                       context="{'search_product_product': True}"
                        invisible="not sale_ok"
                        placeholder="Displayed in bottom of product pages"/>
             </group>
