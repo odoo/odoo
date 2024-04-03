@@ -111,25 +111,24 @@ class CalendarTimeslot(models.Model):
         return super().create(values)
 
     # ACCESS FUNCTIONS
-    def _has_access(self, access):
-        self.ensure_one()
-        if isinstance(self.id, models.NewId):
-            return True
-        if not self.event_id:
-            return False
-        try:
-            self.event_id.check_access_rights(access)
-            self.event_id.check_access_rule(access)
-            return True
-        except AccessError:
-            return False
+    def _filter_has_access(self, access):
+        res = check_acl = self.env['calendar.timeslot']
+        for slot in self:
+            if isinstance(slot.id, models.NewId):
+                res += slot
+                continue
+            if not slot.event_id:
+                continue
+            check_acl += slot
+        return res + check_acl.event_id._filter_access_rules(access).timeslot_ids
 
     @api.depends_context('uid')
     @api.depends('event_id')
     def _compute_access(self):
-        for slot in self:
-            slot.can_read_private = slot.is_public or slot._has_access('read')
-            slot.can_write = slot._has_access('write')
+        self.can_read_private = False
+        self.can_write = False
+        self._filter_has_access('read').can_read_private = True
+        self._filter_has_access('write').can_write = True
 
     # DRAG AND DROP
     def update_recurrence_start(self, dt, delta=None):  # TODO rename
@@ -207,8 +206,10 @@ class CalendarTimeslot(models.Model):
     @api.depends('event_id.name')
     @api.depends_context('uid')
     def _compute_name(self):
-        for slot in self:
-            slot.name = slot.event_id.name if slot.can_read_private else _('Busy')
+        has_access = self.filtered('can_read_private')
+        (self - has_access).name = _('Busy')
+        for slot in has_access:
+            slot.name = slot.event_id.name
 
     def _inverse_name(self):
         for slot in self:
@@ -217,8 +218,8 @@ class CalendarTimeslot(models.Model):
     @api.depends('event_id.note')
     @api.depends_context('uid')
     def _compute_note(self):
-        for slot in self:
-            slot.note = slot.can_read_private and slot.event_id.note
+        for slot in self.filtered('can_read_private'):
+            slot.note = slot.event_id.note
 
     def _inverse_note(self):
         for slot in self:
@@ -230,14 +231,14 @@ class CalendarTimeslot(models.Model):
             need_to_add = slot.partner_id + slot.partner_ids._origin - slot.attendee_ids.partner_id
             if need_to_add:
                 slot.attendee_ids = [Command.create(
-                    {'partner_id': partner.id, 'state': 'yes' if partner == slot.partner_id else 'maybe'}
+                    {'partner_id': partner.id, 'state': 'yes' if partner.id == slot.partner_id.id else 'maybe'}
                 ) for partner in need_to_add]
 
     @api.depends('event_id.tag_ids')
     @api.depends_context('uid')
     def _compute_tag_ids(self):
-        for slot in self:
-            slot.tag_ids = slot.can_read_private and slot.event_id.tag_ids
+        for slot in self.filtered('can_read_private'):
+            slot.tag_ids = slot.event_id.tag_ids
 
     def _inverse_tag_ids(self):
         for slot in self:

@@ -34,42 +34,42 @@
                     <h1><field name="name" string="Subject" decoration-bf="1" readonly="not can_write" placeholder="Subject"/></h1>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <group>
-                        <group string="Public" readonly="not can_write">
-                            <field name="partner_id" required="1" domain="[('user_id', '=', uid)]"/>
-                            <field name="start" string="Start Date" required="1"/>
-                            <field name="stop" string="End Date" required="1"/>
-                            <field name="duration" string="Duration (H)" widget="float_time"/>
-                            <field name="allday"/>
-                            <field name="is_public"/>
-                            <field name="is_recurring"/>
+                        <group string="Public">
+                            <field name="partner_id" required="1" domain="[('user_id', '=', uid)]" readonly="not can_write"/>
+                            <field name="start" string="Start Date" required="1" readonly="not can_write"/>
+                            <field name="stop" string="End Date" required="1" readonly="not can_write"/>
+                            <field name="duration" string="Duration (H)" widget="float_time" readonly="not can_write"/>
+                            <field name="allday" readonly="not can_write"/>
+                            <field name="is_public" readonly="not can_write"/>
+                            <field name="is_recurring" readonly="not can_write"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
-                            <field name="partner_ids" widget="many2many_tags"/>
-                            <field name="note"/>
+                            <field name="partner_ids" widget="many2many_tags" readonly="not can_write"/>
+                            <field name="note" readonly="not can_write"/>
                         </group>
                     </group>
                     <notebook invisible="not can_read_private">
                         <page string="Recurrence" invisible="not is_recurring">
                             <group>
                                 <group string="Settings">
-                                    <field name="freq"/>
-                                    <field name="until"/>
-                                    <field name="count"/>
-                                    <field name="interval"/>
+                                    <field name="freq" readonly="not can_write"/>
+                                    <field name="until" readonly="not can_write"/>
+                                    <field name="count" readonly="not can_write"/>
+                                    <field name="interval" readonly="not can_write"/>
                                 </group>
                                 <group string="Weekly" invisible="freq != 'weekly'">
-                                    <field name="mo"/>
-                                    <field name="tu"/>
-                                    <field name="we"/>
-                                    <field name="th"/>
-                                    <field name="fr"/>
-                                    <field name="sa"/>
-                                    <field name="su"/>
+                                    <field name="mo" readonly="not can_write"/>
+                                    <field name="tu" readonly="not can_write"/>
+                                    <field name="we" readonly="not can_write"/>
+                                    <field name="th" readonly="not can_write"/>
+                                    <field name="fr" readonly="not can_write"/>
+                                    <field name="sa" readonly="not can_write"/>
+                                    <field name="su" readonly="not can_write"/>
                                 </group>
                                 <group string="Monthly" invisible="freq != 'monthly'">
-                                    <field name="monthday"/>
-                                    <field name="monthweekday_n"/>
-                                    <field name="monthweekday_day"/>
+                                    <field name="monthday" readonly="not can_write"/>
+                                    <field name="monthweekday_n" readonly="not can_write"/>
+                                    <field name="monthweekday_day" readonly="not can_write"/>
                                 </group>
                             </group>
                         </page>
