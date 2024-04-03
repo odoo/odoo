@@ -12,10 +12,13 @@
                 <separator/>
             </filter>
             <filter name="groupby_date" position="after">
-                <!-- <filter string="On hand" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/> -->
                 <filter string="Check Cash-In Date"
                     name="groupby_l10n_latam_check_payment_date"
                     context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+                <separator/>
+                <filter string="On hand" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
+                <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
+                <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
             </filter>
         </field>
     </record>
@@ -185,7 +188,7 @@
 
             <tree position="inside">
                 <header>
-                    <!-- <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer" groups="account.group_account_user"/> -->
+                    <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer" groups="account.group_account_user"/>
                 </header>
             </tree>
         </field>

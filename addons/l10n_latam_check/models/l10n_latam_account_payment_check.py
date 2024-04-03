@@ -53,7 +53,33 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     amount = fields.Monetary()
     split_move_line_id = fields.Many2one('account.move.line')
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
-                                   compute="_compute_issue_state")
+                                   compute='_compute_issue_state', search='_search_issue_state')
+
+    def _search_issue_state(self, operator, value):
+        if operator not in ('=', '!='):
+            raise UserError(_('Operation not supported'))
+
+        sql_operator = 'is' if operator == '=' else  'is not'
+        sql_value = "NULL"
+
+        if value == 'voided':
+            sql_operator = 'in' if operator == '=' else  'not in'
+            sql_value = "('liability_payable', 'assets_receivable')"
+        elif value == 'debited':
+            sql_operator = 'in' if operator == '=' else  'not in'
+            sql_value = "('asset_cash')"
+
+        self.env.cr.execute("""
+            SELECT line_check.id
+              FROM l10n_latam_account_payment_check line_check
+              JOIN account_move_line split_line ON split_line.id = line_check.split_move_line_id
+              LEFT JOIN account_move_line reconcile_line ON reconcile_line.full_reconcile_id = split_line.full_reconcile_id and reconcile_line.id != split_line.id
+              LEFT JOIN account_move_line state_line ON state_line.move_id = reconcile_line.move_id and state_line.id != reconcile_line.id
+              LEFT JOIN account_account account on account.id= state_line.account_id
+            WHERE  split_move_line_id != 0 and account.account_type %s %s
+        """ % (sql_operator, sql_value))
+        ids = [x['id'] for x in self.env.cr.dictfetchall()]
+        return [('id', 'in', ids)]
 
     def prepare_void_move_vals(self):
         return {
@@ -128,9 +154,7 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'views': [
-                # (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
                 (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
-
                 (False, 'form')],
             'context': {'create': False},
             'domain': [('id', 'in', operations.ids)],
