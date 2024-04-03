@@ -1895,6 +1895,12 @@ class Lead(models.Model):
     def _creation_subtype(self):
         return self.env.ref('crm.mt_lead_create')
 
+    def _creation_message(self):
+        self.ensure_one()
+        if self.team_id:
+            return _('A new lead has been created for the team "%(team_name)s".', team_name=self.team_id.display_name)
+        return _('A new lead has been created and is not assigned to any team.')
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.probability == 100 and self.stage_id:

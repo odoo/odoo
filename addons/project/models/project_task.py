@@ -1490,6 +1490,13 @@ class Task(models.Model):
     def _creation_subtype(self):
         return self.env.ref('project.mt_task_new')
 
+    def _creation_message(self):
+        self.ensure_one()
+        if self.project_id:
+            return _('A new task has been created in the "%(project_name)s" project.',
+                     project_name=self.project_id.display_name)
+        return _('A new task has been created and is not part of any project.')
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         mail_message_subtype_per_state = {
