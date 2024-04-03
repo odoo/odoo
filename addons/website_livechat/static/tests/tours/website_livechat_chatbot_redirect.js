@@ -40,6 +40,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
                 await contains(".o-mail-Message", {
                     text: "Tadam, we are on the page you asked for!",
                     target: this.$anchor[0],
+                    count: 2,
                 });
                 const url = new URL(location.href);
                 if (url.pathname !== "/chatbot-redirect") {
