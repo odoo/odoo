@@ -11,7 +11,7 @@
                         <t t-set="status_map" t-value="{'online': 'text-success', 'away': 'o-away', 'offline': 'text-7000'}"/>
                         <t t-set="icon" t-value="location_map[location]"/>
                         <t t-set="text" t-value="status_map[status]"/>
-                        <i class="fa" t-attf-class="{{icon}} {{text}}" t-attf-title="{{status}}" role="img" t-attf-aria-label=" User work at {{location}} and is {{status}}"/>
+                        <i class="fa" t-attf-class="{{icon}} {{text}}" t-attf-title="At {{location}} - {{status}}" role="img" t-attf-aria-label=" User work at {{location}} and is {{status}}"/>
                     </t>
                     <t t-else="">$0</t>
                 </t>
@@ -32,7 +32,7 @@
                         <t t-set="status_map" t-value="{'online': 'text-success', 'away': 'o-away', 'offline': 'text-7000'}"/>
                         <t t-set="icon" t-value="location_map[location]"/>
                         <t t-set="text" t-value="status_map[status]"/>
-                        <i class="fa" t-attf-class="{{icon}} {{text}}" t-attf-title="{{status}}" role="img" t-attf-aria-label=" User work at {{location}} and is {{status}}"/>
+                        <i class="fa" t-attf-class="{{icon}} {{text}}" t-attf-title="At {{location}} - {{status}}" role="img" t-attf-aria-label=" User work at {{location}} and is {{status}}"/>
                     </t>
                     <t t-else="">$0</t>
                 </t>
