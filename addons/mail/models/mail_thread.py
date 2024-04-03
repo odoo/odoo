@@ -3146,7 +3146,7 @@ class MailThread(models.AbstractModel):
 
             MailMessage = self.env['mail.message']
             messages_format_prepared = MailMessage._message_format_personalized_prepare(
-                message.message_format(msg_vals=msg_vals), partner_ids=inbox_pids)
+                message._message_format(msg_vals=msg_vals), partner_ids=inbox_pids)
             for partner_id in inbox_pids:
                 bus_notifications.append(
                     (self.env['res.partner'].browse(partner_id),

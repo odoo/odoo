@@ -71,7 +71,7 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    message_format(ids) {
+    _message_format(ids) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailGuest} */
@@ -187,7 +187,7 @@ export class MailMessage extends models.ServerModel {
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 parentMessage: message.parent_id
-                    ? this.message_format([message.parent_id])[0]
+                    ? this._message_format([message.parent_id])[0]
                     : false,
                 recipients: partners.map((p) => ({ id: p.id, name: p.name, type: "partner" })),
                 record_name:
@@ -473,7 +473,7 @@ export class MailMessage extends models.ServerModel {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
 
-        const messages = this.message_format(ids);
+        const messages = this._message_format(ids);
         messages.forEach((message) => {
             if (message.model && message.res_id) {
                 const follower = MailFollowers._filter([

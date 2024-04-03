@@ -15,7 +15,7 @@ class LivechatChatbotScriptController(http.Controller):
         if not discuss_channel or not chatbot.exists():
             return None
         chatbot_language = self._get_chatbot_language()
-        return discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot).message_format()[0]
+        return discuss_channel.with_context(lang=chatbot_language)._chatbot_restart(chatbot)._message_format()[0]
 
     @http.route("/chatbot/answer/save", type="json", auth="public")
     @add_guest_to_context
@@ -73,7 +73,7 @@ class LivechatChatbotScriptController(http.Controller):
                 'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
                 'type': next_step.step_type,
             },
-            'message': posted_message.message_format()[0] if posted_message else None,
+            'message': posted_message._message_format()[0] if posted_message else None,
             'operatorFound': next_step.step_type == 'forward_operator' and len(
                 discuss_channel.channel_member_ids) > 2,
         }
@@ -96,7 +96,7 @@ class LivechatChatbotScriptController(http.Controller):
             result = chatbot._validate_email(user_answer.body, discuss_channel)
 
             if result['posted_message']:
-                result['posted_message'] = result['posted_message'].message_format()[0]
+                result['posted_message'] = result['posted_message']._message_format()[0]
 
         return result
 

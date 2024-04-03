@@ -131,7 +131,7 @@ export class MailThread extends models.ServerModel {
         }
         MailThread._notify_thread.call(this, ids, messageId, kwargs.context?.temporary_id);
         return {
-            ...MailMessage.message_format([messageId])[0],
+            ...MailMessage._message_format([messageId])[0],
             temporary_id: kwargs.context?.temporary_id,
         };
     }
@@ -413,7 +413,7 @@ export class MailThread extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
 
         const message = MailMessage._filter([["id", "=", message_id]])[0];
-        const messageFormat = MailMessage.message_format([message_id])[0];
+        const messageFormat = MailMessage._message_format([message_id])[0];
         const notifications = [];
         if (this._name === "discuss.channel") {
             // members

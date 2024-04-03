@@ -597,7 +597,7 @@ class Channel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        message_format = message.message_format()[0]
+        message_format = message._message_format()[0]
         if "temporary_id" in self.env.context:
             message_format["temporary_id"] = self.env.context["temporary_id"]
         bus_notifications = [
@@ -924,7 +924,7 @@ class Channel(models.Model):
         if last_id:
             domain.append(("id", "<", last_id))
         res = self.env['mail.message']._message_fetch(domain=domain, limit=limit)
-        return res["messages"].message_format()
+        return res["messages"]._message_format()
 
     def _channel_format(self, fields=None):
         if not fields:
