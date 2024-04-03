@@ -1062,7 +1062,7 @@ test("failure notifications are shown before channel preview", async () => {
 test("messaging menu should show new needaction messages from chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-    const env = await start();
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem-text", {
         count: 0,
@@ -1083,9 +1083,7 @@ test("messaging menu should show new needaction messages from chatter", async ()
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
-        [messageId],
-    ]);
+    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });

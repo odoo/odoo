@@ -448,7 +448,7 @@ class TestDiscuss(MailCommon, TestRecipients):
         )
 
         with self.assertRaises(exceptions.AccessError):
-            notification_msg.with_env(self.env).message_format(['id', 'body', 'date', 'author_id', 'email_from'])
+            notification_msg.with_env(self.env)._message_format()
 
         channel_message = self.env['mail.message'].sudo().search([('model', '=', 'discuss.channel'), ('res_id', 'in', channel.ids)])
         self.assertEqual(len(channel_message), 1, "Test message should have been posted")
@@ -476,12 +476,12 @@ class TestNoThread(MailCommon, TestRecipients):
             'record_name': 'Not used in message_format',
             'res_id': test_record.id,
         })
-        formatted = message.message_format()[0]
+        formatted = message._message_format()[0]
         self.assertEqual(formatted['default_subject'], test_record.name)
         self.assertEqual(formatted['record_name'], test_record.name)
 
         test_record.write({'name': 'Just Test'})
-        formatted = message.message_format()[0]
+        formatted = message._message_format()[0]
         self.assertEqual(formatted['default_subject'], 'Just Test')
         self.assertEqual(formatted['record_name'], 'Just Test')
 

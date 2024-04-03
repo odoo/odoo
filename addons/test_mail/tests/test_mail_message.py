@@ -104,10 +104,10 @@ class TestMessageValues(MailCommon):
         } for record in [record1, record2]])
         for message, record in zip(messages, [record1, record2]):
             with self.subTest(record=record):
-                formatted = message.message_format()[0]
+                formatted = message._message_format()[0]
                 self.assertEqual(formatted['record_name'], record.name)
                 record.write({'name': 'Just Test'})
-                formatted = message.message_format()[0]
+                formatted = message._message_format()[0]
                 self.assertEqual(formatted['record_name'], 'Just Test')
 
     @mute_logger('odoo.models.unlink')
@@ -127,7 +127,7 @@ class TestMessageValues(MailCommon):
         # message_format.
         self.env.flush_all()
         self.env.invalidate_all()
-        res = message.with_user(self.user_employee).message_format()
+        res = message.with_user(self.user_employee)._message_format()
         self.assertEqual(res[0].get('record_name'), 'Test1')
 
     def test_mail_message_values_body_base64_image(self):

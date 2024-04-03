@@ -896,7 +896,7 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
-    const env = await start();
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
@@ -917,9 +917,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     // simulate receiving a new needaction message
-    const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
-        [messageId],
-    ]);
+    const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
