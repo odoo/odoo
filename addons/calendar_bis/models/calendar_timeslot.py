@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError
 
 from dateutil.relativedelta import relativedelta
@@ -27,11 +27,8 @@ class CalendarTimeslot(models.Model):
     allday = fields.Boolean('All Day', default=False)
 
     # Attendee Fields
-    attendee_ids = fields.One2many('calendar.attendee_bis', 'timeslot_id', copy=True)
-
-    # Fields for attendee creations
-    partner_ids = fields.Many2many('res.partner', string="Attendees", store=False, copy=False)
-    attendee_mail_ids = fields.Many2many('calendar.attendee_bis.mail', string='Mail attendee', store=False, copy=False)
+    attendee_ids = fields.One2many('calendar.attendee_bis', 'timeslot_id', compute='_compute_attendee_ids', store=True, copy=True)
+    partner_ids = fields.Many2many('res.partner', string="Attendees")
 
     # Event Related Fields
         # Public fields
@@ -56,7 +53,7 @@ class CalendarTimeslot(models.Model):
     su = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
     freq = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')],
                             string='Frequency', default='weekly', compute="_compute_recurring", inverse="_inverse_recurring")
-    until = fields.Datetime(compute="_compute_recurring", inverse="_inverse_recurring")
+    until = fields.Datetime(compute="_compute_recurring", inverse="_inverse_recurring") # TODO Move to Date instead of datetime ?
     count = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")
     interval = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")
     monthday = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")               # 3rd of the month
@@ -111,18 +108,7 @@ class CalendarTimeslot(models.Model):
     def create(self, values):
         for vals in values:
             vals['event_id'] = vals.get('event_id') or self.env['calendar.event_bis'].create([{}]).id
-        res = super().create(values)
-        for slot, vals in zip(res, values):
-            if not 'partner_ids' in vals and not 'attendee_mail_ids' in vals:
-                continue
-            slot.partner_ids = vals.get('partner_ids', [])
-            slot.attendee_mail_ids = vals.get('attendee_mail_ids', [])
-            attendee_pids = slot.attendee_ids.partner_id.ids
-            attendee_mails = slot.attendee_ids.mapped('email')
-            slot.attendee_ids += slot.attendee_ids.create(
-                [{'partner_id': pid.id, 'timeslot_id': slot.id} for pid in slot.partner_ids if pid not in attendee_pids] + \
-                [{'email': attmail.name, 'timeslot_id': slot.id} for attmail in slot.attendee_mail_ids if attmail not in attendee_mails])
-        return res
+        return super().create(values)
 
     # ACCESS FUNCTIONS
     def _has_access(self, access):
@@ -237,6 +223,15 @@ class CalendarTimeslot(models.Model):
     def _inverse_note(self):
         for slot in self:
             slot.event_id.note = slot.note
+
+    @api.depends('partner_ids')
+    def _compute_attendee_ids(self):
+        for slot in self:
+            need_to_add = slot.partner_id + slot.partner_ids._origin - slot.attendee_ids.partner_id
+            if need_to_add:
+                slot.attendee_ids = [Command.create(
+                    {'partner_id': partner.id, 'state': 'yes' if partner == slot.partner_id else 'maybe'}
+                ) for partner in need_to_add]
 
     @api.depends('event_id.tag_ids')
     @api.depends_context('uid')

@@ -44,19 +44,11 @@
                             <field name="is_recurring"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
+                            <field name="partner_ids" widget="many2many_tags"/>
                             <field name="note"/>
                         </group>
                     </group>
                     <notebook invisible="not can_read_private">
-                        <page string="Attendees">
-                            <field name="attendee_ids">
-                                <tree editable="top" create="1">
-                                    <field name="partner_id"/>
-                                    <field name="email"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Recurrence" invisible="not is_recurring">
                             <group>
                                 <group string="Settings">
@@ -80,6 +72,15 @@
                                     <field name="monthweekday_day"/>
                                 </group>
                             </group>
+                        </page>
+                        <page string="Attendees Status">
+                            <field name="attendee_ids">
+                                <tree editable="top" create="0">
+                                    <field name="partner_id"/>
+                                    <field name="email"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -110,7 +111,6 @@
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
                             <field name="note"/>
                             <field name="partner_ids" widget="many2many_tags"/>
-                            <field name="attendee_mail_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                 </sheet>
@@ -123,7 +123,7 @@
         <field name="model">calendar.timeslot</field>
         <field name="arch" type="xml">
             <calendar js_class="calendar_bis"
-                      string="Meetings" mode="month"
+                      string="Meetings" mode="week"
                       date_start="start" date_stop="stop" date_delay="duration"
                       color="partner_id" all_day="allday"
                       quick_create="1" quick_create_view_id="%(calendar_bis_timeslot_form_quick_create)d">
