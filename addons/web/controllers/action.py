@@ -65,7 +65,9 @@ class Action(Controller):
                         continue
                     if record_id:
                         # some actions may not have a res_model (e.g. a client action)
-                        if act['res_model']:
+                        if record_id == 'new':
+                            display_names.append(_("New"))
+                        elif act['res_model']:
                             display_names.append(request.env[act['res_model']].browse(record_id).display_name)
                         else:
                             display_names.append(act['display_name'])
