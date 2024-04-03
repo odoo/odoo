@@ -103,11 +103,11 @@ function describeWhyStepFailed(step) {
             pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
         )}`;
     } else if (!stepState.isDisplayed) {
-        return "Element has been found but isn't displayed";
+        return `Element has been found but isn't displayed`;
     } else if (!stepState.isEnabled) {
-        return "Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)";
+        return `Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)`;
     } else if (stepState.isBlocked) {
-        return "Element has been found but DOM is blocked.";
+        return `Element has been found but DOM is blocked.`;
     } else if (!stepState.hasRun) {
         return `Element has been found. The error seems to be in run()`;
     }
@@ -218,8 +218,7 @@ function throwError(tour, step, errors = []) {
     // Useful for finding the failed step.
     console.warn(describeFailedStepDetailed(tour, step));
     // console.error notifies the test runner that the tour failed.
-    console.error(describeFailedStepSimple(tour, step));
-    console.error(describeWhyStepFailed(step));
+    console.error(`${describeFailedStepSimple(tour, step)}. ${describeWhyStepFailed(step)}`);
     if (errors.length) {
         console.error(errors.join(", "));
     }
