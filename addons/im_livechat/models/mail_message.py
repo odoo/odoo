@@ -21,7 +21,7 @@ class MailMessage(models.Model):
         for message in self:
             message.parent_body = message.parent_id.body if message.parent_id else False
 
-    def _message_format(self, fnames, format_reply=True):
+    def _message_format(self, format_reply=True, msg_vals=None):
         """Override to remove email_from and to return the livechat username if applicable.
         A third param is added to the author_id tuple in this case to be able to differentiate it
         from the normal name in client code.
@@ -31,7 +31,7 @@ class MailMessage(models.Model):
         This allows the frontend display to include the additional features
         (e.g: Show additional buttons with the available answers for this step). """
 
-        vals_list = super()._message_format(fnames=fnames, format_reply=format_reply)
+        vals_list = super()._message_format(format_reply=format_reply, msg_vals=msg_vals)
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             discuss_channel = self.env['discuss.channel'].browse(message_sudo.res_id) if message_sudo.model == 'discuss.channel' else self.env['discuss.channel']

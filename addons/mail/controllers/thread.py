@@ -25,7 +25,7 @@ class ThreadController(http.Controller):
         res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
         if not request.env.user._is_public():
             res["messages"].set_message_done()
-        return {**res, "messages": res["messages"].message_format()}
+        return {**res, "messages": res["messages"]._message_format()}
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
     def mail_thread_partner_from_email(self, emails, additional_values=None):
@@ -107,7 +107,7 @@ class ThreadController(http.Controller):
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         message_data = thread.message_post(
             **{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}
-        ).message_format()[0]
+        )._message_format()[0]
         if "temporary_id" in request.context:
             message_data["temporary_id"] = request.context["temporary_id"]
         return message_data
@@ -126,4 +126,4 @@ class ThreadController(http.Controller):
         guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids, partner_ids=partner_ids
         )
-        return message_sudo.message_format()[0]
+        return message_sudo._message_format()[0]

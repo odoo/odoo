@@ -76,7 +76,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
             domain.push(["id", "<", lastId]);
         }
         const messages = MailMessage._message_fetch(domain, limit);
-        return MailMessage.message_format(messages.map(({ id }) => id));
+        return MailMessage._message_format(messages.map(({ id }) => id));
     }
     /**
      * @override

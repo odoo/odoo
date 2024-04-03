@@ -318,7 +318,7 @@ export class DiscussChannel extends models.ServerModel {
                 return {
                     id: channel.id,
                     last_message: lastMessage
-                        ? MailMessage.message_format([lastMessage.id])[0]
+                        ? MailMessage._message_format([lastMessage.id])[0]
                         : false,
                 };
             })

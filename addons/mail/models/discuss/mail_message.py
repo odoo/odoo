@@ -20,7 +20,7 @@ class MailMessage(models.Model):
         self.ensure_one()
         vals = super()._message_format_extras(format_reply)
         if format_reply and self.model == "discuss.channel" and self.parent_id:
-            vals["parentMessage"] = self.parent_id.message_format(format_reply=False)[0]
+            vals["parentMessage"] = self.parent_id._message_format(format_reply=False)[0]
         return vals
 
     def _bus_notification_target(self):

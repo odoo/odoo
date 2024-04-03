@@ -436,7 +436,7 @@ test("Can reply to history message", async () => {
 test("receive new needaction messages", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
-    const env = await start();
+    await start();
     await openDiscuss();
     await contains("button.o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Thread .o-mail-Message", { count: 0 });
@@ -455,9 +455,7 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [message1] = await env.services.orm.call("mail.message", "message_format", [
-        [messageId_1],
-    ]);
+    const [message1] = pyEnv["mail.message"]._message_format(messageId_1);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message1);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
@@ -478,9 +476,7 @@ test("receive new needaction messages", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    const [message2] = await env.services.orm.call("mail.message", "message_format", [
-        [messageId_2],
-    ]);
+    const [message2] = pyEnv["mail.message"]._message_format(messageId_2);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message2);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });

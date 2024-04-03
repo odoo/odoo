@@ -100,14 +100,14 @@ class TestTracking(MailCommon):
             )
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
-        formatted = message_0.message_format()[0]
+        formatted = message_0._message_format()[0]
         self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
         mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
         self.assertEqual(mail_render['tracking_values'], [])
 
         # second record: all values displayed
         message_1 = records[1].message_ids[0]
-        formatted = message_1.message_format()[0]
+        formatted = message_1._message_format()[0]
         self.assertEqual(len(formatted['trackingValues']), 1)
         self.assertDictEqual(
             formatted['trackingValues'][0],
@@ -686,8 +686,8 @@ class TestTrackingInternals(MailCommon):
         self.record.sudo().write({'email_from': 'X'})
         self.flush_tracking()
 
-        msg_emp = self.record.message_ids.message_format()
-        msg_sudo = self.record.sudo().message_ids.message_format()
+        msg_emp = self.record.message_ids._message_format()
+        msg_sudo = self.record.sudo().message_ids._message_format()
         tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids[0].id)])
         formattedTrackingValues = [{
             'changedField': 'Email From',
