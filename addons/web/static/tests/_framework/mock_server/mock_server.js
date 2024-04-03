@@ -111,7 +111,7 @@ const authenticateUser = (user) => {
  */
 const ensureError = (error) => (error instanceof Error ? error : new Error(error));
 
-const getCurrentParams = createJobScopedGetter(
+export const getCurrentParams = createJobScopedGetter(
     /**
      * @param {ServerParams} previous
      */

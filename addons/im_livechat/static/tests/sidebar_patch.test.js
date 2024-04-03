@@ -8,15 +8,12 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { tick, mockDate } from "@odoo/hoot-mock";
 import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -83,8 +80,7 @@ test("Do not show channel when visitor is typing", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
@@ -337,14 +333,16 @@ test("Message unread counter", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, last_interest_dt: "2021-01-03 10:00:00" }),
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
             Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 10:00:00" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     withGuest(guestId, () =>
         rpc("/mail/message/post", {

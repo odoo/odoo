@@ -1,12 +1,8 @@
 import { describe, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { advanceTime } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
@@ -22,6 +18,7 @@ import {
     startServer,
     step,
 } from "../../mail_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -37,8 +34,7 @@ test('receive other member typing status "is typing"', async () => {
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -63,8 +59,7 @@ test('receive other member typing status "is typing" then "no longer is typing"'
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -98,8 +93,7 @@ test('assume other member typing status becomes "no longer is typing" after long
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
@@ -127,8 +121,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             Command.create({ partner_id: partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
@@ -176,8 +169,7 @@ test('receive several other members typing status "is typing"', async () => {
             Command.create({ partner_id: partnerId_3 }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
@@ -299,8 +291,7 @@ test("chat: correspondent is typing", async () => {
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-threadIcon");
     await contains(".fa-circle.text-success");
@@ -337,8 +328,7 @@ test("chat: correspondent is typing in chat window", async () => {
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains("[title='Demo is typing...']", { count: 0 });

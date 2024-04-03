@@ -1,8 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -31,8 +28,8 @@ import {
 } from "../mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { mockDate } from "@odoo/hoot-mock";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -49,8 +46,7 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
         channel_type: "chat",
     });
     patchUiSize({ size: SIZES.SM });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     // simulate receiving a message
@@ -635,8 +631,7 @@ test("new message separator is shown in a chat window of a chat on receiving new
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -669,8 +664,7 @@ test("new message separator is shown in chat window of chat on receiving new mes
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
@@ -701,14 +695,13 @@ test("chat window should open when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -729,14 +722,13 @@ test("chat window should not open when receiving a new DM from odoobot", async (
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -790,8 +782,7 @@ test("chat window should remain folded when new message is received", async () =
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-ChatWindow.o-folded");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
     withUser(userId, () =>
@@ -900,8 +891,7 @@ test("focusing a chat window of a chat should make new message separator disappe
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o-mail-Composer-input:not(:focus)");
     // simulate receiving a message
     withUser(userId, () =>

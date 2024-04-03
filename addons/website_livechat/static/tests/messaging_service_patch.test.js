@@ -1,10 +1,7 @@
 import { contains, openFormView, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineWebsiteLivechatModels();
@@ -22,7 +19,6 @@ test("Should open chat window on send chat request to website visitor", async ()
                 <field name="name"/>
             </form>`,
     });
-    rpc = rpcWithEnv(env);
     await rpc("/web/dataset/call_button", {
         args: [visitorId],
         kwargs: { context: env.context },

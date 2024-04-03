@@ -1,7 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -25,8 +23,8 @@ import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { presenceService } from "@bus/services/presence_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -947,8 +945,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
             }
         },
     }));
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // simulate receiving a new message of self with odoo out-of-focused
@@ -995,8 +992,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1043,8 +1039,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1094,8 +1089,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     await assertSteps(["init_messaging"]);
@@ -1156,8 +1150,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             }
         },
     }));
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
     // simulate receiving a new message in chat 1 with odoo out-of-focused
@@ -1210,8 +1203,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
             step("init_messaging");
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
@@ -1552,8 +1544,7 @@ test("new messages separator [REQUIRE FOCUS]", async () => {
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: lastMessageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 25 });
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
@@ -1795,7 +1786,6 @@ test("Message shows up even if channel data is incomplete", async () => {
     // Pass in only but not when bulk running tests
     const pyEnv = await startServer();
     const env = await start();
-    rpc = rpcWithEnv(env);
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
@@ -2084,8 +2074,7 @@ test("Read of unread chat where new message is deleted should mark as read.", as
         seen_message_id: messageId,
         message_unread_counter: 1,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
     // simulate deleted message

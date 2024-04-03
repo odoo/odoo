@@ -30,14 +30,12 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * @typedef {Object} Props
@@ -94,7 +92,6 @@ export class Message extends Component {
     static template = "mail.Message";
 
     setup() {
-        rpc = rpcWithEnv(this.env);
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,

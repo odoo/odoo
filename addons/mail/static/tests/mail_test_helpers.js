@@ -51,19 +51,23 @@ import {
 import { cancelAllTimers } from "@odoo/hoot-mock";
 import { after, before, getFixture } from "@odoo/hoot";
 import { registry } from "@web/core/registry";
-import { authenticate } from "@web/../tests/_framework/mock_server/mock_server";
+import {
+    authenticate,
+    defineParams,
+    getCurrentParams,
+} from "@web/../tests/_framework/mock_server/mock_server";
 import { session } from "@web/session";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
-import { mailGlobal } from "@mail/utils/common/misc";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
+import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
 
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
 registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
-mailGlobal.isInTest = true;
 useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.mocked; // so that RPCs after tests do not throw error
 
 //-----------------------------------------------------------------------------
@@ -241,9 +245,22 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
     dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
 }
 
-let NEXT_ENV_ID = 1;
-
+let rpcPatched = false;
 export async function start({ asTab = false } = {}) {
+    defineParams({ MAIL_START: { allowRpc: true } });
+    if (!rpcPatched) {
+        patch(rpc, {
+            _rpc() {
+                const params = getCurrentParams();
+                if (!params?.MAIL_START?.allowRpc) {
+                    return new Promise(() => {});
+                }
+                return super._rpc(...arguments);
+            },
+        });
+        rpcPatched = true;
+    }
+    after(() => (getCurrentParams().MAIL_START.allowRpc = false));
     if (!MockServer.current) {
         await startServer();
     }
@@ -266,16 +283,12 @@ export async function start({ asTab = false } = {}) {
         target.style.width = "100%";
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
-        env = await makeMockEnv({ envId }, { makeNew: true });
+        env = await makeMockEnv(undefined, { makeNew: true });
     } else {
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
         try {
-            env = await makeMockEnv({ envId });
+            env = await makeMockEnv();
         } catch {
-            env = Object.assign(getMockEnv(), { envId });
+            env = getMockEnv();
         }
     }
     const wc = await mountWithCleanup(WebClient, { target, env });
@@ -296,7 +309,6 @@ export async function start({ asTab = false } = {}) {
         target.style.top = "";
         target.style.left = "";
         cancelAllTimers(); // prevent any RPCs at end of test
-        mailGlobal.elligibleEnvs.clear();
     });
     odoo.__WOWL_DEBUG__ = { root: wc };
     return Object.assign(getMockEnv(), { target });
