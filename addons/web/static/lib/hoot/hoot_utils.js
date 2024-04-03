@@ -51,6 +51,7 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
 
 const {
     Array: { isArray: $isArray },
+    Boolean,
     clearTimeout,
     console: { debug: $debug },
     Date,
@@ -79,9 +80,9 @@ const {
     window,
 } = globalThis;
 /** @type {Clipboard["readText"]} */
-const $readText = $clipboard.readText.bind($clipboard);
+const $readText = $clipboard?.readText.bind($clipboard);
 /** @type {Clipboard["writeText"]} */
-const $writeText = $clipboard.writeText.bind($clipboard);
+const $writeText = $clipboard?.writeText.bind($clipboard);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -581,6 +582,10 @@ export function getFuzzyScore(pattern, string) {
     }
 
     return patternIndex === pattern.length ? totalScore : 0;
+}
+
+export function hasClipboard() {
+    return Boolean($clipboard);
 }
 
 /**
