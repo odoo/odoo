@@ -2,11 +2,12 @@
 /* eslint-disable no-restricted-syntax */
 
 import {
+    formatXml,
     getActiveElement,
     getNodeAttribute,
+    getNodeRect,
     getNodeText,
     getNodeValue,
-    getNodeRect,
     getStyle,
     isCheckable,
     isDisplayed,
@@ -24,7 +25,6 @@ import {
     ensureArguments,
     ensureArray,
     formatHumanReadable,
-    formatXML,
     isNil,
     isOfType,
     match,
@@ -50,14 +50,10 @@ import { Test } from "./test";
  *  message?: string;
  * }} ExpectOptions
  *
- * @typedef {{
- *  keepInlineTextNodes?: boolean;
- * }} ExpectHtmlOptions
- *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
+ * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
- * 
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  */
@@ -263,7 +259,8 @@ const beforeTest = (test) => {
 /**
  * @param {unknown} value
  */
-const canDiff = (value) => value && !["boolean", "number"].includes(typeof value);
+const canDiff = (value) =>
+    value && !["boolean", "number"].includes(typeof value) && !(value instanceof RegExp);
 
 /**
  * @template T
@@ -1491,36 +1488,40 @@ export class Matchers {
     }
 
     /**
-     * Expects the received node's outerHTML to match the `expected` regex, or to be the `expected`
-     * string (upon formatting).
+     * Expects the received node's outerHTML to match the `expected` regex, or to
+     * be the `expected` string (upon formatting).
      *
      * @param {string | RegExp} [expected]
-     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     * @param {ExpectOptions & FormatXmlOptions} [options]
      * @example
-     *  expect(queryOne(".my_element")).toHaveInnerHTML(`
+     *  expect(".my_element").toHaveInnerHTML(`
      *      <div>
      *          A
      *      </div>
-     * `);
+     *  `);
      */
     toHaveInnerHTML(expected, options) {
+        this.#saveStack();
+
         return this.#toHaveHTML("innerHTML", expected, options);
     }
 
     /**
-     * Expects the received node's outerHTML to match the `expected` regex, or to be the `expected`
-     * string (upon formatting).
+     * Expects the received node's outerHTML to match the `expected` regex, or to
+     * be the `expected` string (upon formatting).
      *
      * @param {string | RegExp} [expected]
-     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     * @param {ExpectOptions & FormatXmlOptions} [options]
      * @example
-     *  expect(queryOne(".my_element")).toHaveOuterHTML(`
+     *  expect(".my_element").toHaveOuterHTML(`
      *      <div class="my_element">
      *          <span>A</span>
      *      </div>
-     * `);
+     *  `);
      */
     toHaveOuterHTML(expected, options) {
+        this.#saveStack();
+
         return this.#toHaveHTML("outerHTML", expected, options);
     }
 
@@ -1883,42 +1884,38 @@ export class Matchers {
     /**
      * @param {"innerHTML" | "outerHTML"} fname
      * @param {string | RegExp} expected
-     * @param {ExpectOptions & ExpectHtmlOptions} [options]
+     * @param {ExpectOptions & FormatXmlOptions} [options]
      */
-    #toHaveHTML(fname, expected, options = {}) {
-        this.#saveStack();
-
+    #toHaveHTML(fname, expected, options) {
         ensureArguments([
             [expected, ["string", "regex"]],
-            [options, ["object"]],
+            [options, ["object", null]],
         ]);
 
         if (!(expected instanceof RegExp)) {
-            expected = formatXML(expected, options.keepInlineTextNodes);
+            expected = formatXml(expected, options);
         }
 
         return this.#resolve({
             name: fname === "innerHTML" ? "toHaveInnerHTML" : "toHaveOuterHTML",
-            acceptedType: "node",
-            predicate: (node) => {
-                return regexMatchOrStrictEqual(
-                    formatXML(node[fname], options.keepInlineTextNodes),
-                    expected
-                );
-            },
+            acceptedType: ["string", "node", "node[]"],
+            transform: queryAll,
+            predicate: each((node) =>
+                regexMatchOrStrictEqual(formatXml(node[fname], options), expected)
+            ),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `node's ${fname} is[! not] equal to expected value`
-                    : `expected node's ${fname} to match given regex/equal given string`),
+                    ? `${fname} of node is[! not] equal to expected value`
+                    : `expected ${fname} of node to match the given value`),
             details: (actual) => {
-                actual = formatXML(actual[fname], options.keepInlineTextNodes);
+                const actualXml = formatXml(actual[0][fname], options);
                 const details = [
                     [Markup.green("Expected:"), expected],
-                    [Markup.red("Received:"), actual],
+                    [Markup.red("Received:"), actualXml],
                 ];
-                if (canDiff(actual) && canDiff(expected)) {
-                    details.push([Markup.text("Diff:"), Markup.diff(expected, actual)]);
+                if (canDiff(actualXml) && canDiff(expected)) {
+                    details.push([Markup.text("Diff:"), Markup.diff(expected, actualXml)]);
                 }
                 return details;
             },
