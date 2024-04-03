@@ -227,7 +227,7 @@ export class HootReporting extends Component {
         if (!filter) {
             return null;
         }
-        const nFilter = parseRegExp(normalize(filter));
+        const nFilter = parseRegExp(normalize(filter), { safe: true });
         if (nFilter instanceof RegExp) {
             return (key) => nFilter.test(key);
         }
