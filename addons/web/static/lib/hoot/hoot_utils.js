@@ -50,7 +50,7 @@ import { DiffMatchPatch } from "./lib/diff_match_patch";
 //-----------------------------------------------------------------------------
 
 const {
-    Array,
+    Array: { isArray: $isArray },
     clearTimeout,
     console: { debug: $debug },
     Date,
@@ -70,7 +70,7 @@ const {
     },
     Promise,
     PromiseRejectionEvent,
-    Reflect: { ownKeys },
+    Reflect: { ownKeys: $ownKeys },
     RegExp,
     Set,
     setTimeout,
@@ -193,7 +193,7 @@ export function createMock(target, descriptors) {
     let keys;
 
     while (!keys?.length) {
-        keys = ownKeys(owner);
+        keys = $ownKeys(owner);
         owner = $getPrototypeOf(owner);
     }
 
@@ -284,30 +284,43 @@ export function deepEqual(a, b, cache = new Set()) {
         return true;
     }
     const aType = typeof a;
-    if (aType !== typeof b || !a || !b) {
+    if (aType !== typeof b || !a || !b || aType !== "object") {
         return false;
     }
-    if (aType === "object") {
-        cache.add(a);
-        if (a instanceof File) {
-            return a.name === b.name && a.size === b.size && a.type === b.type;
-        }
-        if (isIterable(a) && isIterable(b)) {
-            if (!Array.isArray(a)) {
-                a = [...a];
-            }
-            if (!Array.isArray(b)) {
-                b = [...b];
-            }
-            return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
-        }
-        const aEntries = $entries(a);
-        if (aEntries.length !== $keys(b).length) {
-            return false;
-        }
-        return aEntries.every(([key, value]) => deepEqual(value, b[key], cache));
+
+    cache.add(a);
+    if (a instanceof File) {
+        // Files
+        return a.name === b.name && a.size === b.size && a.type === b.type;
     }
-    return false;
+    if (a instanceof Date || a instanceof RegExp) {
+        // Dates & regular expressions
+        return strictEqual(String(a), String(b));
+    }
+
+    const aIsIterable = isIterable(a);
+    if (aIsIterable !== isIterable(b)) {
+        return false;
+    }
+    if (!aIsIterable) {
+        // All non-iterable objects
+        const aKeys = $ownKeys(a);
+        return (
+            aKeys.length === $ownKeys(b).length &&
+            aKeys.every((key) => deepEqual(a[key], b[key], cache))
+        );
+    }
+
+    // Iterables
+    const aIsArray = $isArray(a);
+    if (aIsArray !== $isArray(b)) {
+        return false;
+    }
+    if (!aIsArray) {
+        a = [...a];
+        b = [...b];
+    }
+    return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
 }
 
 /**
@@ -435,7 +448,7 @@ export function formatTechnical(
         return `${baseIndent}${prefix} { ... }`;
     } else if (value && typeof value === "object") {
         if (cache.has(value)) {
-            return `${baseIndent}${Array.isArray(value) ? "[...]" : "{ ... }"}`;
+            return `${baseIndent}${$isArray(value) ? "[...]" : "{ ... }"}`;
         } else {
             cache.add(value);
             const startIndent = " ".repeat((depth + 1) * 2);

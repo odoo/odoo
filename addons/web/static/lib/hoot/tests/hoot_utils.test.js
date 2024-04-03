@@ -19,13 +19,17 @@ describe(parseUrl(import.meta.url), () => {
         expect(deepEqual(true, true)).toBe(true);
         expect(deepEqual(false, false)).toBe(true);
         expect(deepEqual(null, null)).toBe(true);
+        expect(deepEqual(new Date(0), new Date(0))).toBe(true);
         expect(deepEqual({ b: 2, a: 1 }, { a: 1, b: 2 })).toBe(true);
         expect(deepEqual({ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } })).toBe(true);
+        expect(deepEqual(Symbol.for("a"), Symbol.for("a"))).toBe(true);
         expect(deepEqual([1, 2, 3], [1, 2, 3])).toBe(true);
 
         expect(deepEqual(true, false)).toBe(false);
         expect(deepEqual(null, undefined)).toBe(false);
         expect(deepEqual([1, 2, 3], [3, 1, 2])).toBe(false);
+        expect(deepEqual(new Date(0), new Date(1_000))).toBe(false);
+        expect(deepEqual({ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 })).toBe(false);
     });
 
     test("formatHumanReadable", () => {
