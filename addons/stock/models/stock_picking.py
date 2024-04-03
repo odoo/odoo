@@ -941,15 +941,14 @@ class Picking(models.Model):
                     else:
                         move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
                         move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
+
+                        if pack.package_use == 'disposable':
+                            (move_lines_in_package_level | move_lines_without_package_level).result_package_id = pack
+                        move_lines_in_package_level.result_package_id = pack
                         for ml in move_lines_in_package_level:
-                            ml.write({
-                                'result_package_id': pack.id,
-                                'package_level_id': ml.move_id.package_level_id.id,
-                            })
-                        move_lines_without_package_level.write({
-                            'result_package_id': pack.id,
-                            'package_level_id': package_level_ids[0].id,
-                        })
+                            ml.package_level_id = ml.move_id.package_level_id.id
+
+                        move_lines_without_package_level.package_level_id: package_level_ids[0]
                         for pl in package_level_ids:
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
 
