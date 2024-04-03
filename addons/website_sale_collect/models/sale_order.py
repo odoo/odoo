@@ -31,9 +31,9 @@ class SaleOrder(models.Model):
         if self.carrier_id.delivery_type != 'in_store':
             return res
 
-        self.pickup_location_data = json.loads(pickup_location_data)
-        if self.pickup_location_data:
-            self.warehouse_id = self.pickup_location_data['id']
+        if pickup_location_data:
+            self.delivery_address_id = self.env['res.partner']._address_from_json(pickup_location_data, self.partner_id)
+            self.warehouse_id = self.delivery_address_id.location_data['id']
             AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
             self.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
                 self.partner_id, delivery=self.warehouse_id.partner_id
@@ -50,8 +50,8 @@ class SaleOrder(models.Model):
         """
         if zip_code and not country:
             country_code = None
-            if self.pickup_location_data:
-                country_code = self.pickup_location_data['country_code']
+            if self.delivery_address_id.location_data:
+                country_code = self.delivery_address_id.location_data['country_code']
             elif request.geoip.country_code:
                 country_code = request.geoip.country_code
             country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
@@ -86,16 +86,7 @@ class SaleOrder(models.Model):
 
     # === TOOLING ===#
 
-    def _is_in_stock(self, wh_id):
-        """ Check whether all storable products of the cart are in stock in the given warehouse.
-
-        :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
-        :return: Whether all storable products are in stock.
-        :rtype: bool
-        """
-        return not self._get_unavailable_order_lines(wh_id)
-
-    def _get_unavailable_order_lines(self, wh_id):
+    def _get_unavailable_lines(self, wh_id):
         """ Return the order lines with unavailable products for the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
