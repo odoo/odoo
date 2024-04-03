@@ -418,7 +418,7 @@ class MrpProduction(models.Model):
         for production in self:
             production.duration = sum(production.workorder_ids.mapped('duration'))
 
-    @api.depends("workorder_ids.date_start", "workorder_ids.date_finished")
+    @api.depends("workorder_ids.date_start", "workorder_ids.date_finished", "date_start")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
@@ -1500,6 +1500,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
 
         if not self.workorder_ids:
+            self.is_planned = True
             return
 
         self._link_workorders_and_moves()
@@ -1531,6 +1532,7 @@ class MrpProduction(models.Model):
             'date_start': False,
             'date_finished': False,
         })
+        self.is_planned = False
 
     def _get_consumption_issues(self):
         """Compare the quantity consumed of the components, the expected quantity
