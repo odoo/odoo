@@ -102,6 +102,7 @@ def slug(value):
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 _UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|/)'
+UNSLUG_ROUTE_PATTERN = _UNSLUG_ROUTE_PATTERN
 
 
 def unslug(s):

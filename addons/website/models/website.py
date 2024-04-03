@@ -14,13 +14,14 @@ from collections import defaultdict
 from functools import reduce
 from lxml import etree, html
 from psycopg2 import sql
+from urllib.parse import urlparse
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, http, release, registry
-from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
+from odoo.addons.http_routing.models.ir_http import UNSLUG_ROUTE_PATTERN, RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
@@ -199,7 +200,10 @@ class Website(models.Model):
         Checks if the website menu contains a record like url.
         :return: True if the menu contains a record like url
         """
-        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url)))
+        menus = self.env['website.menu'].browse(self._get_menu_ids())
+        regex = re.compile(UNSLUG_ROUTE_PATTERN)
+        # FIXME should we ignore qs / hash ?
+        return any((menu.url and regex.search(urlparse(menu.url).path)) for menu in menus)
 
     @api.model_create_multi
     def create(self, vals_list):
