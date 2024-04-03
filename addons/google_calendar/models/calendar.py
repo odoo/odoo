@@ -141,7 +141,7 @@ class Meeting(models.Model):
             'description': google_event.description and tools.html_sanitize(google_event.description),
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
-            'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
+            'privacy': google_event.visibility or False,
             'attendee_ids': attendee_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
