@@ -67,10 +67,9 @@ class TestRobustness(TransactionCase):
         move1._do_unreserve()
 
     def test_location_usage(self):
-        """ Changing the usage of a location shouldn't be allowed while
-        quantities are reserved, else the existing move lines won't be
-        consistent with the `reserved_quantity` on the quants.
-        """
+        """Changing the usage of a location shouldn't be allowed
+        or changing a location from scrap to non-scrap or vice versa
+        shouldn't be allowed when stock is available in a location"""
         # change stock usage
         test_stock_location = self.env['stock.location'].create({
             'name': "Test Location",
@@ -86,7 +85,7 @@ class TestRobustness(TransactionCase):
         )
 
         # reserve a unit
-        move1 = self.env['stock.move'].create({
+        move = self.env['stock.move'].create({
             'name': 'test_location_archive',
             'location_id': test_stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -94,41 +93,27 @@ class TestRobustness(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1,
         })
-        move1._action_confirm()
-        move1._action_assign()
-        self.assertEqual(move1.state, 'assigned')
-
-        move2 = self.env['stock.move'].create({
-            'name': 'test_location_archive',
-            'location_id': test_stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1,
-        })
-        move2._action_confirm()
-        move2._action_assign()
-        move2.picked = True
-        move2._action_done()
-        self.assertEqual(move2.state, 'done')
-
-        quant = self.env['stock.quant']._gather(
-            self.product1,
-            test_stock_location,
-        )
-
-        # assert the reservation
-        self.assertEqual(quant.reserved_quantity, 0)  # reservation is bypassed in scrap location
-        self.assertEqual(move1.product_qty, 1)
+        move._action_confirm()
+        move._action_assign()
+        move.picked = True
+        move._action_done()
+        self.assertEqual(move.state, 'done')
 
         # change the stock usage
+        with self.cr.savepoint():
+            test_stock_location.scrap_location = False
+
+        # make some stock again
+        self.env['stock.quant']._update_available_quantity(
+            self.product1,
+            test_stock_location,
+            1,
+        )
+
+        # change the stock usage again
         with self.assertRaises(UserError):
             with self.cr.savepoint():
-                test_stock_location.scrap_location = False
-
-        # unreserve
-        move1._do_unreserve()
-        test_stock_location.scrap_location = False
+                test_stock_location.scrap_location = True
 
     def test_package_unpack(self):
         """ Unpack a package that contains quants with a reservation
