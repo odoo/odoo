@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { copy } from "../hoot_utils";
+import { copy, hasClipboard } from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -18,16 +18,20 @@ export class HootCopyButton extends Component {
     };
 
     static template = xml`
-        <button
-            type="button"
-            class="text-gray-400 hover:text-gray-500"
-            t-att-class="{ 'text-pass': state.copied }"
-            title="copy to clipboard"
-            t-on-click="onClick"
-        >
-            <i class="fa fa-clipboard" />
-        </button>
+        <t t-if="hasClipboard()">
+            <button
+                type="button"
+                class="text-gray-400 hover:text-gray-500"
+                t-att-class="{ 'text-pass': state.copied }"
+                title="copy to clipboard"
+                t-on-click="onClick"
+            >
+                <i class="fa fa-clipboard" />
+            </button>
+        </t>
     `;
+
+    hasClipboard = hasClipboard;
 
     setup() {
         this.state = useState({ copied: false });
