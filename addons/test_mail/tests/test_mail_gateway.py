@@ -14,7 +14,7 @@ from odoo import exceptions
 from odoo.addons.mail.models.mail_thread import MailThread
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.data import test_mail_data
-from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE, THAI_EMAIL_WINDOWS_874
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.sql_db import Cursor
 from odoo.tests import tagged, RecordCapturer
@@ -1771,6 +1771,18 @@ class TestMailgateway(MailCommon):
             capture.records.message_ids.attachment_ids.raw.decode(charset),
             content
         )
+
+    def test_message_windows_874(self):
+        # Email for Thai customers who use Microsoft email service.
+        # The charset is windows-874 which isn't natively supported by
+        # python, check that Odoo is still capable of decoding it.
+        # windows-874 is the Microsoft equivalent of cp874.
+        with self.mock_mail_gateway(), \
+             RecordCapturer(self.env['mail.test.gateway'], []) as capture:
+            self.env['mail.thread'].message_process('mail.test.gateway', THAI_EMAIL_WINDOWS_874)
+        capture.records.ensure_one()
+        self.assertEqual(capture.records.name, 'เรื่อง')
+        self.assertEqual(str(capture.records.message_ids.body), '<pre>ร่างกาย</pre>\n')
 
     # --------------------------------------------------
     # Emails loop detection

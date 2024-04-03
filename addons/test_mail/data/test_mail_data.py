@@ -1312,3 +1312,24 @@ JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIg
 """
 
 PDF_PARSED = b'''%PDF-1.1\n%\xc2\xa5\xc2\xb1\xc3\xab\n\n1 0 obj\n  << /Type /Catalog\n     /Pages 2 0 R\n  >>\nendobj\n\n2 0 obj\n  << /Type /Pages\n     /Kids [3 0 R]\n     /Count 1\n     /MediaBox [0 0 300 144]\n  >>\nendobj\n\n3 0 obj\n  <<  /Type /Page\n      /Parent 2 0 R\n      /Resources\n       << /Font\n           << /F1\n               << /Type /Font\n                  /Subtype /Type1\n                  /BaseFont /Times-Roman\n               >>\n           >>\n       >>\n      /Contents 4 0 R\n  >>\nendobj\n\n4 0 obj\n  << /Length 55 >>\nstream\n  BT\n    /F1 18 Tf\n    0 0 Td\n    (Hello World) Tj\n  ET\nendstream\nendobj\n\nxref\n0 5\n0000000000 65535 f \n0000000018 00000 n \n0000000077 00000 n \n0000000178 00000 n \n0000000457 00000 n \ntrailer\n  <<  /Root 1 0 R\n      /Size 5\n  >>\nstartxref\n565\n%%EOF\n'''
+
+THAI_EMAIL_WINDOWS_874 = '''\
+From: Thai Customer <outlook_windows@outlook.com>
+To: "Thai Odoo User" <thai-user@odoo.com>
+Subject: =?windows-874?B?4MPX6M2n?=
+Thread-Topic: =?windows-874?B?4MPX6M2n?=
+Thread-Index: AQHahRQ4qiMBoXtK0U2XwaGg8w9Y9g==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Tue, 2 Apr 2024 15:42:24 +0000
+Message-ID: <PH7P220MB158617DEAEC85ECA2A0D2CAFBC3E2@PH7P220MB1586.NAMP220.PROD.OUTLOOK.COM>
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="windows-874"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+=C3=E8=D2=A7=A1=D2=C2='''
