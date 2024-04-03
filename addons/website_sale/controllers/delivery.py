@@ -124,7 +124,7 @@ class Delivery(WebsiteSale):
         :return: None
         """
         order_sudo = request.cart
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
     def website_sale_get_pickup_locations(self, zip_code=None, **kwargs):

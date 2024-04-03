@@ -2924,7 +2924,7 @@
                 <t t-call="website_sale.address_edit_button"/>
                 <t
                     t-set="use_delivery_as_billing"
-                    t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
+                    t-value="order.partner_invoice_id == order.partner_shipping_id and not order.partner_shipping_id.location_data"
                 />
                 <div class="row g-0">
                     <div
@@ -2932,13 +2932,13 @@
                         t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6 ps-1'}}"
                         groups="account.group_delivery_invoice_address"
                     >
-                        <t t-if="order.pickup_location_data">
+                        <t t-if="order.partner_shipping_id.location_data">
                             <b>Deliver to pickup point</b>
                             <div
-                                t-out="order.pickup_location_data.get('name', '')
-                                    + ', ' + order.pickup_location_data.get('street', '')
-                                    + ' ' + order.pickup_location_data.get('zip_code', '')
-                                    + ' ' + order.pickup_location_data.get('city','')
+                                t-out="order.partner_shipping_id.location_data.get('name', '')
+                                    + ', ' + order.partner_shipping_id.location_data.get('street', '')
+                                    + ' ' + order.partner_shipping_id.location_data.get('zip_code', '')
+                                    + ' ' + order.partner_shipping_id.location_data.get('city','')
                                 "
                             />
                         </t>

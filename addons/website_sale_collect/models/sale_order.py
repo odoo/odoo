@@ -15,18 +15,18 @@ class SaleOrder(models.Model):
         when the warehouse was set by the pickup_location_data"""
         in_store_orders_with_pickup_data = self.filtered(
             lambda so: (
-                so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
+                so.carrier_id.delivery_type == 'in_store' and so.partner_shipping_id.location_data
             )
         )
         super(SaleOrder, self - in_store_orders_with_pickup_data)._compute_warehouse_id()
         for order in in_store_orders_with_pickup_data:
-            order.warehouse_id = order.pickup_location_data['id']
+            order.warehouse_id = order.partner_shipping_id.location_data['id']
 
     def _compute_fiscal_position_id(self):
         """Override of `sale` to set the fiscal position matching the selected pickup location
         for pickup in-store orders."""
         in_store_orders = self.filtered(
-            lambda so: so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
+            lambda so: so.carrier_id.delivery_type == 'in_store' and so.partner_shipping_id.location_data
         )
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         for order in in_store_orders:
@@ -48,18 +48,18 @@ class SaleOrder(models.Model):
         in_store_orders._compute_fiscal_position_id()
         return res
 
-    def _set_pickup_location(self, pickup_location_data):
+    def set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
         Set account fiscal position depending on selected pickup location to correctly calculate
         taxes.
         """
-        super()._set_pickup_location(pickup_location_data)
+        super().set_pickup_location(pickup_location_data)
         if self.carrier_id.delivery_type != 'in_store':
             return
 
-        self.pickup_location_data = json.loads(pickup_location_data)
-        if self.pickup_location_data:
-            self.warehouse_id = self.pickup_location_data['id']
+        pickup_location_data = json.loads(pickup_location_data)
+        if pickup_location_data:
+            self.warehouse_id = self.partner_shipping_id.location_data['id']
             self._compute_fiscal_position_id()
         else:
             self._compute_warehouse_id()
@@ -73,8 +73,8 @@ class SaleOrder(models.Model):
         """
         if zip_code and not country:
             country_code = None
-            if self.pickup_location_data:
-                country_code = self.pickup_location_data['country_code']
+            if self.partner_shipping_id.location_data:
+                country_code = self.partner_shipping_id.location_data['country_code']
             elif request.geoip.country_code:
                 country_code = request.geoip.country_code
             country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
@@ -118,7 +118,7 @@ class SaleOrder(models.Model):
                 if pickup_location_data:
                     default_pickup_locations[dm.id] = {
                         'pickup_location_data': pickup_location_data,
-                        'unavailable_order_lines': self._get_unavailable_order_lines(
+                        'unavailable_lines': self._get_unavailable_lines(
                             pickup_location_data['id']
                         ),
                     }
@@ -132,9 +132,9 @@ class SaleOrder(models.Model):
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_unavailable_order_lines(wh_id)
+        return not self._get_unavailable_lines(wh_id)
 
-    def _get_unavailable_order_lines(self, wh_id):
+    def _get_unavailable_lines(self, wh_id):
         """ Return the order lines with unavailable products for the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
