@@ -218,8 +218,7 @@ function throwError(tour, step, errors = []) {
     // Useful for finding the failed step.
     console.warn(describeFailedStepDetailed(tour, step));
     // console.error notifies the test runner that the tour failed.
-    console.error(describeFailedStepSimple(tour, step));
-    console.error(describeWhyStepFailed(step));
+    console.error(`${describeFailedStepSimple(tour, step)}. ${describeWhyStepFailed(step)}`);
     if (errors.length) {
         console.error(errors.join(", "));
     }

@@ -748,8 +748,7 @@ QUnit.module("Tour service", (hooks) => {
   "trigger": ".button6"
 },`;
         const expectedError = [
-            "error: Tour tour1 failed at step content (trigger: .wrong_selector)",
-            `error: The error appears to be that one or more elements in the following list cannot be found in DOM.\n {"trigger":".wrong_selector"}`,
+            `error: Tour tour1 failed at step content (trigger: .wrong_selector). The error appears to be that one or more elements in the following list cannot be found in DOM.\n {"trigger":".wrong_selector"}`,
         ];
         assert.verifySteps([expectedWarning, ...expectedError]);
     });
@@ -803,8 +802,7 @@ QUnit.module("Tour service", (hooks) => {
         await mock.advanceTime(750);
 
         const expectedError = [
-            "error: Tour tour2 failed at step .button1",
-            "error: Element has been found. The error seems to be in run()",
+            "error: Tour tour2 failed at step .button1. Element has been found. The error seems to be in run()",
             "error: Cannot read properties of null (reading 'click')",
             "error: tour not succeeded",
         ];
@@ -860,8 +858,7 @@ QUnit.module("Tour service", (hooks) => {
         await mock.advanceTime(10000);
 
         const expectedError = [
-            "error: Tour tour3 failed at step .button1",
-            "error: Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)",
+            "error: Tour tour3 failed at step .button1. Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)",
         ];
         assert.verifySteps(expectedError);
     });
