@@ -58,6 +58,8 @@ class Action(Controller):
                         else:
                             display_names.append({'error': 'A server action must have a path to be restored'})
                             continue
+                    if not act.get('display_name'):
+                        act['display_name'] = act['name']
                     # client actions don't have multi-record views, so we can't go further to the next controller
                     if act['type'] == 'ir.actions.client' and idx + 1 < len(actions) and action.get('action') == actions[idx + 1].get('action'):
                         continue
