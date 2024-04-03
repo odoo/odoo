@@ -328,11 +328,6 @@ export class ListController extends Component {
     }
 
     getStaticActionMenuItems() {
-        const list = this.model.root;
-        const isM2MGrouped = list.groupBy.some((groupBy) => {
-            const fieldName = groupBy.split(":")[0];
-            return list.fields[fieldName].type === "many2many";
-        });
         return {
             export: {
                 isAvailable: () => this.isExportEnable,
@@ -342,7 +337,7 @@ export class ListController extends Component {
                 callback: () => this.onExportData(),
             },
             archive: {
-                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                isAvailable: () => this.archiveEnabled,
                 sequence: 20,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
@@ -351,21 +346,21 @@ export class ListController extends Component {
                 },
             },
             unarchive: {
-                isAvailable: () => this.archiveEnabled && !isM2MGrouped,
+                isAvailable: () => this.archiveEnabled,
                 sequence: 30,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
                 callback: () => this.toggleArchiveState(false),
             },
             duplicate: {
-                isAvailable: () => this.activeActions.duplicate && !isM2MGrouped,
+                isAvailable: () => this.activeActions.duplicate,
                 sequence: 35,
                 icon: "fa fa-clone",
                 description: _t("Duplicate"),
                 callback: () => this.duplicateRecords(),
             },
             delete: {
-                isAvailable: () => this.activeActions.delete && !isM2MGrouped,
+                isAvailable: () => this.activeActions.delete,
                 sequence: 40,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),

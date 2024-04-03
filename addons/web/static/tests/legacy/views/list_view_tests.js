@@ -2362,9 +2362,10 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
+    QUnit.test("enabling archive in list when groupby m2m field", async function (assert) {
         patchUserWithCleanup({ hasGroup: () => Promise.resolve(false) });
-
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
         serverData.models.foo.fields.m2m.groupable = true;
 
         await makeView({
@@ -2377,31 +2378,176 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
             actionMenus: {},
+            groupBy: ["m2m"],
         });
-        await groupByMenu(target, "m2m");
 
-        await click(target.querySelector(".o_group_header:first-child")); // open first group
-        await click(target.querySelector(".o_data_row .o_list_record_selector input"));
-        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
-        assert.containsNone(
-            target,
-            "div.o_control_panel .o_cp_action_menus .dropdown-toggle",
-            "should not have dropdown as delete item is not there"
+        const groups = target.querySelectorAll(".o_group_name")
+        await click(groups[1]); // open second group
+        await click(groups[2]); // open third group
+        // Check for the initial number of records
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            5,
+            "Checking initial number of records"
         );
+        await click(target.querySelector(".o_data_row .o_list_record_selector input")); // select first task
+        await click(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle"); // click on actions
+        // check that all the options are available
+        assert.strictEqual(
+            target.querySelectorAll(".o-dropdown--menu .o_menu_item").length,
+            4,
+            "archive, unarchive, duplicate and delete option should be present"
+        );
+        await toggleMenuItem(target, "Archive"); // toggle archive action
+        await click(target.querySelector(".btn-primary")); // confirm the archive action
+        // check that after archive the record is removed from both 2nd and 3rd groups
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            3,
+            "record should be archived from both the groups"
+        );
+    });
 
-        // unselect group by m2m (need to unselect record first)
-        await click(target.querySelector(".o_data_row .o_list_record_selector input"));
-        await click(target, ".o_searchview .o_facet_remove");
+    QUnit.test("enabling duplicate in list when groupby m2m field", async function (assert) {
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(false) });
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.fields.m2m.groupable = true;
 
-        await click(target.querySelector(".o_data_row .o_list_record_selector input"));
-        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
-        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle");
-        await click(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle");
-        assert.deepEqual(
-            [...target.querySelectorAll(".o-dropdown--menu .o_menu_item")].map(
-                (el) => el.innerText
-            ),
-            ["Duplicate", "Delete"]
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            actionMenus: {},
+            groupBy: ["m2m"],
+        });
+
+        const groups = target.querySelectorAll(".o_group_name")
+        await click(groups[1]); // open second group
+        await click(groups[2]); // open third group
+        // Check for the initial number of records
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            5,
+            "Checking initial number of records"
+        );
+        await click(target.querySelector(".o_data_row .o_list_record_selector input")); // select first task
+        await click(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle"); // click on actions
+        // check that all the options are available
+        assert.strictEqual(
+            target.querySelectorAll(".o-dropdown--menu .o_menu_item").length,
+            4,
+            "archive, unarchive, duplicate and delete option should be present"
+        );
+        await toggleMenuItem(target, "Duplicate"); // toggle duplicate action
+        // check that after duplicate the record is duplicated in both 2nd and 3rd groups
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            7,
+            "record should be duplicated in both the groups"
+        );
+    });
+
+    QUnit.test("enabling delete in list when groupby m2m field", async function (assert) {
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(false) });
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.fields.m2m.groupable = true;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            actionMenus: {},
+            groupBy: ["m2m"],
+        });
+
+        const groups = target.querySelectorAll(".o_group_name")
+        await click(groups[1]); // open second group
+        await click(groups[2]); // open third group
+        // Check for the initial number of records
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            5,
+            "Checking initial number of records"
+        );
+        await click(target.querySelector(".o_data_row .o_list_record_selector input")); // select first task
+        await click(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle"); // click on actions
+        // check that all the options are available
+        assert.strictEqual(
+            target.querySelectorAll(".o-dropdown--menu .o_menu_item").length,
+            4,
+            "archive, unarchive, duplicate and delete option should be present"
+        );
+        await toggleMenuItem(target, "Delete"); // toggle delete action
+        await click(target.querySelector(".btn-primary")); // confirm the delete action
+        // check that after delete the record is deleted in both 2nd and 3rd groups
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            3,
+            "record should be deleted from both the groups"
+        );
+    });
+
+    QUnit.test("enabling unarchive in list when groupby m2m field", async function (assert) {
+        patchUserWithCleanup({ hasGroup: () => Promise.resolve(false) });
+        // add active field on foo model and make all records active
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.fields.m2m.groupable = true;
+        // creating archived records
+        serverData.models.foo.records = [
+            { id: 1, foo: 'First record', m2m: [1, 2], active: false },
+            { id: 2, foo: 'Second record', m2m: [1, 2], active: false },
+        ];
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            actionMenus: {},
+            groupBy: ["m2m"],
+            // apply the filter to show only records with active = false
+            domain: [['active', '=', false]]
+        });
+
+        const groups = target.querySelectorAll(".o_group_name")
+        await click(groups[0]); // open first group
+        await click(groups[1]); // open second group
+        // Check for the initial number of records
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            4,
+            "Checking initial number of records"
+        );
+        await click(target.querySelector(".o_data_row .o_list_record_selector input")); // select first task
+        await click(target, "div.o_control_panel .o_cp_action_menus .dropdown-toggle"); // click on actions
+        // check that all the options are available
+        assert.strictEqual(
+            target.querySelectorAll(".o-dropdown--menu .o_menu_item").length,
+            4,
+            "archive, unarchive, duplicate and delete option should be present"
+        );
+        await toggleMenuItem(target, "Unarchive"); // toggle unarchive action
+        // check that after unarchive the record is unarchived in both 1st and 2nd groups
+        assert.strictEqual(
+            target.querySelectorAll(".o_data_row").length,
+            2,
+            "record should be unarchived from both the groups"
         );
     });
 
