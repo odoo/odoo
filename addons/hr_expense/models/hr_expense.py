@@ -281,7 +281,7 @@ class HrExpense(models.Model):
             expense.product_has_cost = expense.product_id and not expense.company_currency_id.is_zero(expense.product_id.standard_price)
             tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
             expense.product_has_tax = bool(tax_ids)
-            if not expense.product_has_cost and expense.state in {'draft', 'reported'}:
+            if not expense.product_has_cost and expense.state in {'draft', 'reported'} and expense.quantity != 1:
                 expense.quantity = 1
 
     @api.depends('product_id.uom_id')
