@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_work_location_tree_view" model="ir.ui.view">
+            <field name="name">hr.work.location.view.tree</field>
+            <field name="model">hr.work.location</field>
+            <field name="arch" type="xml">
+                <tree string="Work Location">
+                    <field name="active" invisible="1" />
+                    <field name="name" />
+                    <field name="address_id" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="company_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_work_location_form_view" model="ir.ui.view">
+            <field name="name">hr.work.location.view.form</field>
+            <field name="model">hr.work.location</field>
+            <field name="arch" type="xml">
+                <form string="Work Location">
+                    <field name="company_id" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1" />
+                                <field name="name" />
+                                <field name="address_id" />
+                                <field name="location_number"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_work_location_action" model="ir.actions.act_window">
+            <field name="name">Work Locations</field>
+            <field name="res_model">hr.work.location</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new work location
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

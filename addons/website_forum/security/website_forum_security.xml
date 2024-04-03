@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="website_forum_public" model="ir.rule">
+        <field name="name">Website forum: Public user can only access to public forum</field>
+        <field name="model_id" ref="model_forum_forum"/>
+        <field name="domain_force">[('privacy', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_forum_connected" model="ir.rule">
+        <field name="name">Website forum: User can only access to public (or authorized) forum</field>
+        <field name="model_id" ref="model_forum_forum"/>
+        <field name="domain_force">[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&amp;',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.groups_id.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_forum_create_website_designer" model="ir.rule">
+        <field name="name">Website forum: Website designer can create private forum</field>
+        <field name="model_id" ref="model_forum_forum"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('website.group_website_designer'))]"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="1"/>
+    </record>
+    <record id="website_forum_private" model="ir.rule">
+        <field name="name">Website forum: All access for manager</field>
+        <field name="model_id" ref="model_forum_forum"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+
+    <record id="website_forum_public_post" model="ir.rule">
+        <field name="name">Website forum post: Public user can only access to public post</field>
+        <field name="model_id" ref="model_forum_post"/>
+        <field name="domain_force">[('forum_id.privacy', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_forum_connected_post" model="ir.rule">
+        <field name="name">Website forum post: User can only access to public (or authorized) post</field>
+        <field name="model_id" ref="model_forum_post"/>
+        <field name="domain_force">['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&amp;', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.groups_id.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_forum_private_post" model="ir.rule">
+        <field name="name">Website forum post : All access for manager</field>
+        <field name="model_id" ref="model_forum_post"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+
+    <record id="website_forum_public_tag" model="ir.rule">
+        <field name="name">Website forum tag: Public user can only access to tag linked to public forum</field>
+        <field name="model_id" ref="model_forum_tag"/>
+        <field name="domain_force">[('forum_id.privacy', '=', 'public')]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+    </record>
+    <record id="website_forum_connected_tag" model="ir.rule">
+        <field name="name">Website forum tag: User can only access to tag linked to public (or authorized) forum</field>
+        <field name="model_id" ref="model_forum_tag"/>
+        <field name="domain_force">['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&amp;', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.groups_id.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="website_forum_private_tag" model="ir.rule">
+        <field name="name">Website forum tag : Manager user can access to all tags</field>
+        <field name="model_id" ref="model_forum_tag"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+</odoo>

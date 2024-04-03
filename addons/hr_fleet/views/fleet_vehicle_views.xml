@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_odometer_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.view.tree.inherit.hr.fleet</field>
+        <field name="model">fleet.vehicle.odometer</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="driver_employee_id" widget="many2one_avatar" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- main view for fleet-->
+    <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
+        <field name="arch" type="xml">
+            <field name="vehicle_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="driver_id" position="after">
+                <field name="driver_employee_id" widget="many2one_avatar"/>
+            </field>
+            <field name="date_end" position="after">
+                <field name="attachment_number" optional="show" />
+                <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- for employee cars -->
+    <record id="fleet_vehicle_assignation_log_employee_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
+        <field name="arch" type="xml">
+            <field name="driver_id" position="replace" />
+            <field name="date_end" position="after">
+                <field name="driver_id" string="Current Driver" optional="hide"/>
+                <field name="attachment_number" optional="show" />
+                <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" />
+            </field>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_form_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.hr</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="driver_employee_id" invisible="1"/>
+                <field name="mobility_card" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='future_driver_id']" position="after">
+                <field name="future_driver_employee_id" invisible="1"/>
+            </xpath>
+            <button name="open_assignation_logs" position="before">
+                <button name="action_open_employee" type="object" class="oe_stat_button" icon="fa-id-card-o" groups="hr.group_hr_user" attrs="{'invisible': [('driver_employee_id', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">1</span>
+                        <span class="o_stat_text">Employee</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_search_inherit_hr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search.inherit.hr</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='license_plate']" position="after">
+                <field name="mobility_card"/>
+            </xpath>
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="driver_employee_id" string="Current Driver (Employee)"/>
+            </xpath>
+            <xpath expr="//field[@name='log_drivers']" position="attributes">
+                <attribute name="filter_domain">[
+                    '|', '|', '|', '|',
+                    ('log_drivers.driver_id.name', 'ilike', self),
+                    ('driver_id.name', 'ilike', self),
+                    ('future_driver_id.name', 'ilike', self),
+                    ('driver_employee_id.name', 'ilike', self),
+                    ('future_driver_employee_id.name', 'ilike', self),
+                ]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_tree_inherit_hr" model="ir.ui.view">
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="driver_id" position="after">
+                <field name="driver_employee_id" optional="hide"/>
+            </field>
+            <field name="future_driver_id" position="after">
+                <field name="future_driver_employee_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_attachment_kanban_inherit_hr" model="ir.ui.view">
+       <field name="name">ir.attachment.kanban.inherit.hr</field>
+       <field name="model">ir.attachment</field>
+       <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+       <field name="mode">primary</field>
+       <field name="arch" type="xml">
+           <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">hr_fleet_kanban_view</attribute>
+            </xpath>
+       </field>
+   </record>
+</odoo>

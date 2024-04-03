@@ -1,0 +1,1023 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mass_mailing_sms
+# 
+# Translators:
+# Lilach Gilliam <lilach@apprcase.com>, 2022
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2022
+# דודי מלכה <Dudimalka6@gmail.com>, 2022
+# Adi Sharashov <Adi@laylinetech.com>, 2022
+# Amit Spilman <amit@laylinetech.com>, 2022
+# שהאב חוסיין <shhab89@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Netta Waizer, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid ""
+"+32 495 85 85 77\n"
+"+33 545 55 55 55"
+msgstr ""
+"+32 495 85 85 77\n"
+"+33 545 55 55 55\n"
+" "
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
+msgstr "24 שעות סטטיסטיקה של %(mailing_type)s\"%(mailing_name)s\""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
+msgid ""
+"<br/>\n"
+"                    <span class=\"text-secondary\">\n"
+"                        <i class=\"fa fa-phone\"/> Contacts\n"
+"                    </span>"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message have been canceled and will not be "
+"sent.</span>"
+msgstr ""
+"<span name=\"canceled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">הודעת SMS בוטלה ולא תישלח.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">SMS Text Message could not be sent.</span>"
+msgstr ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">לא ניתן היה לשלוח הודעת SMS.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
+msgstr ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS שיווקי זה מתוזמן ל</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
+msgstr ""
+"<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">הודעת SMS נמצאת בתור ותישלח בקרוב.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">SMS Text Message have been sent.</span>"
+msgstr ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">הודעת טקסט SMS נשלחה.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "<span widget=\"statinfo\">Open Recipient</span>"
+msgstr "<span widget=\"statinfo\">פתח את הנמען</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
+msgid "<span>Valid SMS Recipients</span>"
+msgstr "<span>נמעני SMS תקפים</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<strong>\n"
+"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                        </strong>"
+msgstr ""
+"<strong>\n"
+"                            נראה שאין לך מספיק אשראי IAP. לחץ כאן כדי לקנות אשראי.\n"
+"                        </strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<strong>\n"
+"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                        </strong>"
+msgstr ""
+"<strong>\n"
+"נראה שחשבון ה-SMS שלך לא רשום. לחץ כאן כדי להגדיר את חשבונך.\n"
+"</strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "<strong>This SMS could not be sent.</strong>"
+msgstr "<strong>לא ניתן היה לשלוח SMS.</strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "<strong>This number appears to be invalid.</strong>"
+msgstr "<strong>נראה כי מספר זה אינו חוקי.</strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "A/B Test"
+msgstr "בדיקת A/B"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_mailings_sms_count
+msgid "A/B Test Mailings SMS #"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "A/B Test: %s"
+msgstr "בדיקת A/B: %s"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
+msgid "Action Needed"
+msgstr "נדרשת פעולה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
+msgid "Attachment Count"
+msgstr "כמות קבצים מצורפים"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Average of Bounced"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Average of Clicked"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "BOUNCED (%i)"
+msgstr "הוקפץ (%i)"
+
+#. module: mass_mailing_sms
+#: model:utm.tag,name:mass_mailing_sms.mailing_tag_0
+msgid "Bioutifoul SMS"
+msgstr "SMS יפה"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/controllers/main.py:0
+#, python-format
+msgid ""
+"Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
+msgstr ""
+"הכנס לרשימה השחורה דרך ביטול הרישום של שיווק ב- SMS  (מזהה דיוור: %s - מודל:"
+" %s)"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_blacklist
+msgid "Blacklisted"
+msgstr "ברשימה השחורה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "אל תכלול טלפון נייד מהרשימה שחורה"
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
+msgid "Blacklisted Phone Numbers"
+msgstr "מספרי טלפון ברשימה השחורה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "אל תכלול טלפון מהרשימה שחורה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Bounced (%)"
+msgstr "הוקפץ (%)"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "CLICKED (%i)"
+msgstr "לחצו (%i)"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Campaign"
+msgstr "קמפיין"
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.menu_email_campaigns
+msgid "Campaigns"
+msgstr "קמפיינים"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "Cancel"
+msgstr "בטל"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_sms_test__numbers
+msgid "Carriage-return-separated list of phone numbers"
+msgstr "רשימה של מספרי טלפון מופרדים בהחזרה עגלת הקניות"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Clicked (%)"
+msgstr "נלחץ (%)"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_code
+msgid "Code"
+msgstr "קוד"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
+msgid ""
+"Come back once some SMS Mailings are sent to check out aggregated results."
+msgstr "חזור לאחר שנשלחו כמה מיילים ב-SMS כדי לבדוק את התוצאות המצטברות."
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
+msgid "Configuration"
+msgstr "תצורה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
+msgid "Create a Mailing List"
+msgstr "צור רשימת דיוור"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
+msgid "Create a SMS Marketing Mailing"
+msgstr "צור דיוור שיווקי ב-SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
+msgid "Create a mailing contact"
+msgstr "צור איש קשר של רשימת דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Date"
+msgstr "תאריך"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_duplicate
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Duplicate"
+msgstr "שכפל"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/res_users.py:0
+#, python-format
+msgid "Email Marketing"
+msgstr "שיווק בדואר אלקטרוני"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
+msgid "Exclude Blacklisted Phone"
+msgstr "אל תכלול טלפון מהרשימה שחורה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
+msgid "Failure type"
+msgstr "סוג שגיאה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
+msgstr "שדה המשמש לאחסון מספר טלפון מאומת. עוזר לזרז חיפושים והשוואות."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
+msgid "Followers"
+msgstr "עוקבים"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "עוקבים (לקוחות/ספקים)"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"For an Email, Subject your Recipients will see in their inbox.\n"
+"                    For an SMS Text Message, internal Title of the Message."
+msgstr ""
+"עבור דואר אלקטרוני, נושא הנמענים שלך יראו בתיבת הדואר הנכנס שלהם. עבור הודעת"
+" טקסט SMS, כותרת פנימית של ההודעה."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_subject
+msgid ""
+"For an email, the subject your recipients will see in their inbox.\n"
+"For an SMS, the internal title of the message."
+msgstr ""
+"עבור אימייל, הנושא שהנמענים שלך יראו בתיבת הדואר הנכנס שלהם.\n"
+"עבור הודעת SMS, הכותרת הפנימית של ההודעה."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
+msgid "Has Message"
+msgstr "יש הודעה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
+msgid "Highest Click Rate"
+msgstr "שיעור הקליקים הגבוה ביותר"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "אם מסומן, הודעות חדשות דורשות את תשומת לבך."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "אם מסומן, בחלק מההודעות קיימת שגיאת משלוח."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"אם מספר הטלפון המחוטא נמצא ברשימה השחורה, איש הקשר לא יקבל יותר הודעות דואר "
+"המוניות מכל רשימה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
+msgid ""
+"Immediately send the SMS Mailing instead of queuing up. Use at your own "
+"risk."
+msgstr "שלח מיד את דואר ה-SMS במקום לעמוד בתור. השימוש על אחריותך בלבד."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
+msgid "Include opt-out link"
+msgstr "כלול קישור לביטול הסכמה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"מציין אם מספר טלפון המופיע ברשימה השחורה הוא מספר טלפון. עוזר להבחין איזה "
+"מספר מופיע ברשימה השחורה כאשר במודל יש גם שדה נייד וגם טלפון."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"מציין אם מספר טלפון מחוטא ברשימה השחורה הוא מספר טלפון. עוזר להבחין איזה "
+"מספר מופיע ברשימה השחורה כאשר במודל יש גם שדה נייד וגם טלפון."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
+msgid "Insufficient Credit"
+msgstr "אשראי לא מספק"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
+msgid "Insufficient IAP credits"
+msgstr "אשראי IAP לא מספק"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
+msgid "Insufficient credits"
+msgstr "אשראי לא מספק"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_is_follower
+msgid "Is Follower"
+msgstr "עוקב"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test____last_update
+msgid "Last Modified on"
+msgstr "שינוי אחרון ב"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
+msgid "Link Tracker"
+msgstr "מעקב קישורים"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mailing_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "Mailing"
+msgstr "דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_contact
+msgid "Mailing Contact"
+msgstr "איש קשר של רשימת דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_list
+msgid "Mailing List"
+msgstr "רשימת דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
+msgid "Mailing List Contacts"
+msgstr "אנשי קשר של רשימת דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_list_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mailing_list_menu_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_contacts
+msgid "Mailing Lists"
+msgstr "רשימות דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_trace
+msgid "Mailing Statistics"
+msgstr "סטטיסטיקת דיוור"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
+msgid "Mailing Type"
+msgstr "סוג דיוור"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
+msgid ""
+"Mailing contacts allow you to separate your marketing audience from your "
+"contact directory."
+msgstr ""
+"אנשי קשר בדואר מאפשרים לך להפריד בין קהל השיווק שלך לבין ספריית אנשי הקשר "
+"שלך."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "קובץ ראשי מצורף "
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
+msgid "Manual"
+msgstr "ידני"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "Marketing"
+msgstr "שיווק"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_mailing
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_id
+msgid "Mass Mailing"
+msgstr "דיוור המוני"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_ids
+msgid "Mass SMS"
+msgstr "SMS המוני"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error
+msgid "Message Delivery error"
+msgstr "הודעת שגיאת שליחה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_ids
+msgid "Messages"
+msgstr "הודעות"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
+msgid "Missing Number"
+msgstr "חסר מספר"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
+msgid "Mobile"
+msgstr "נייד"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
+msgid "My SMS Marketing"
+msgstr "שיווק ב- SMS שלי"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
+msgid "No data yet!"
+msgstr "אין דירוג עדיין"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
+msgid ""
+"No need to import mailing lists, you can send SMS Text Messages to contacts "
+"saved in other Odoo apps."
+msgstr ""
+"אין צורך לייבא רשימות דיוור, אתה יכול לשלוח הודעות SMS לאנשי קשר שנשמרו "
+"באפליקציות Odoo אחרות."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_number
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
+msgid "Number"
+msgstr "מספר"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/controllers/main.py:0
+#, python-format
+msgid "Number %s not found"
+msgstr "מספר %s לא נמצא"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction_counter
+msgid "Number of Actions"
+msgstr "מספר פעולות"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_count
+msgid "Number of Mass SMS"
+msgstr "מספר של SMS המוני"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error_counter
+msgid "Number of errors"
+msgstr "מספר השגיאות"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "מספר הודעות עם שגיאת משלוח"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
+msgid "Number(s)"
+msgstr "מספר(ים)"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
+msgid "Open Recipient"
+msgstr "פתיחת נמען"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "בוטל"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Options"
+msgstr "אפשרויות"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_sms_sms
+msgid "Outgoing SMS"
+msgstr "SMS יוצא"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "שותף ברשימה השחורה"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "נייד"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
+msgid "Please enter your phone number"
+msgstr "אנא הכנס את מספר הטלפון שלך"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "RECEIVED (%i)"
+msgstr "התקבל (%i)"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Recipients"
+msgstr "נמענים"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "Report for %(expected)i %(mailing_type)s Sent"
+msgstr "דווח עבור %(expected)i%(mailing_type)s נשלח"
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_reporting
+msgid "Reporting"
+msgstr "דו\"חות"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_mailing__mailing_type__sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__trace_type__sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_kanban
+msgid "SMS"
+msgstr "SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
+msgid "SMS Body"
+msgstr "גוף SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__contact_count_sms
+msgid "SMS Contacts"
+msgstr "אנשי קשר ב-SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "SMS Content"
+msgstr "תוכן SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "שגיאה בשליחת SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "SMS ID"
+msgstr "מזהה SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
+msgid "SMS ID (tech)"
+msgstr "מזהה SMS (טכנולוגיה)"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/res_users.py:0
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_root
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#, python-format
+msgid "SMS Marketing"
+msgstr "שיווק ב SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
+msgid "SMS Marketing Analysis"
+msgstr "ניתוח שיווק ב SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
+msgid "SMS Subscription"
+msgstr "מנוי SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
+msgid "SMS Template"
+msgstr "תבנית SMS"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "SMS Text Message"
+msgstr "הודעת SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "SMS Trace"
+msgstr "מעקב SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
+msgid "SMS Traces"
+msgstr "מעקבי SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__ab_testing_sms_winner_selection
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__ab_testing_sms_winner_selection
+msgid "SMS Winner Selection"
+msgstr "בחירת זוכה SMS"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
+#, python-format
+msgid "STOP SMS : %s"
+msgstr "עצור SMS : %s"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
+msgid "Sanitized Number"
+msgstr "מספר מאומת"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "Send"
+msgstr "שלח"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_force_send
+msgid "Send Directly"
+msgstr "שלח ישירות"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Send Now"
+msgstr "שלח כעת"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Send SMS"
+msgstr "שלח SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_sms_composer
+msgid "Send SMS Wizard"
+msgstr "אשף שליחת SMS"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid "Send a Sample SMS"
+msgstr "שלח SMS לדוגמה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
+msgid ""
+"Send a sample SMS for testing purpose to the numbers below (carriage-return-"
+"separated list)."
+msgstr ""
+"שלח הודעת SMS לדוגמה למטרת בדיקה למספרים למטה (רשימה מופרדת עם החזרת עגלה)."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_server
+msgid "Server Error"
+msgstr "שגיאת שרת"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_trace_ids
+msgid "Statistics"
+msgstr "סטטיסטיקה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
+msgid "Status"
+msgstr "סטטוס"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
+msgid "Test SMS Mailing"
+msgstr "בדוק דיוור SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
+msgid "Test SMS Marketing"
+msgstr "בדוק שיווק ב SMS"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "Test SMS could not be sent to %s:<br>%s"
+msgstr "לא ניתן לשלוח SMS לבדיקה %s:<br>%s"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "Test SMS marketing"
+msgstr "בדוק שיווק ב SMS"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "Test SMS successfully sent to %s"
+msgstr "בדיקה SMS נשלחה בהצלחה אל %s"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/utm.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the SMS Marketing."
+msgstr ""
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "The following numbers are not correctly encoded: %s"
+msgstr "המספרים הבאים אינם מקודדים כהלכה: %s"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
+msgid "There was an error when trying to unsubscribe"
+msgstr "אירעה שגיאה בעת ניסיון לבטל את המנוי"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr "דוא\"ל זה מופיע ברשימה השחורה לצורך דיוור המוני. לחץ לביטול ההופעה שם."
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"This will send SMS to all recipients now. Do you still want to proceed ?"
+msgstr "זה ישלח SMS לכל הנמענים כעת. האם אתה עדיין רוצה להמשיך?"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "This will send SMS to all recipients. Do you still want to proceed ?"
+msgstr "זה ישלח SMS לכל הנמענים. האם אתה עדיין רוצה להמשיך?"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_subject
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Title"
+msgstr "תואר"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
+msgid "Total Sent"
+msgstr "סה\"כ נשלח"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__trace_type
+msgid "Type"
+msgstr "סוג"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "קמפיין UTM"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_utm_medium
+msgid "UTM Medium"
+msgstr "ערוץ UTM"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
+msgid "Unregistered Account"
+msgstr "חשבון לא רשום"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
+msgid "Unregistered IAP account"
+msgstr "חשבון IAP לא רשום"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
+msgid "Unregistered account"
+msgstr "חשבון לא רשום"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
+msgid "Unsubscribe me"
+msgstr "בטל את הרישום שלי"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "Unsupported %s for mass SMS"
+msgstr "%s לא נתמך עבור SMS המוני"
+
+#. module: mass_mailing_sms
+#: model:ir.model,name:mass_mailing_sms.model_res_users
+msgid "User"
+msgstr "משתמש"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
+msgid "Valid SMS Recipients"
+msgstr "נמעני SMS תקינים"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
+msgid "Website Messages"
+msgstr "הודעות מאתר האינטרנט"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
+msgid "Website communication history"
+msgstr "היסטורית התקשרויות מאתר האינטרנט"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Winner Selection"
+msgstr "בחירת הזוכה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
+msgid ""
+"Write an appealing SMS Text Message, define recipients and track its "
+"results."
+msgstr "כתוב הודעת SMS מושכת, הגדירו נמענים ועקוב אחר תוצאותיה."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
+msgid "Wrong Number Format"
+msgstr "תבנית מספר שגויה"
+
+#. module: mass_mailing_sms
+#: model:utm.campaign,title:mass_mailing_sms.utm_campaign_0
+msgid "XMas Promo"
+msgstr "פרומו חג המולד"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "e.g. Black Friday SMS coupon"
+msgstr "למשל קופון SMS של Black Friday"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
+msgid "has been successfully blacklisted"
+msgstr "הועבר בהצלחה לרשימה השחורה"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
+msgid "has been successfully removed from"
+msgstr "הוסר בהצלחה מ"

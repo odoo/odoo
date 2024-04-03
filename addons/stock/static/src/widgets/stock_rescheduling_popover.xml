@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="stock.PopoverStockRescheduling" owl="1">
+        <h6>Planning Issue</h6>
+        <p>Preceding operations
+        <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
+            <a t-out="late_element.name" t-on-click="openElement" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
+        </t>
+        planned on <t t-out="props.delay_alert_date"/>.</p>
+    </div>
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.website_loader" owl="1">
+    <div t-if="state.isVisible" class="o_website_loader_container position-fixed fixed-top fixed-left
+        h-100 w-100 d-flex flex-column align-items-center fw-bold text-center">
+        <t t-if="state.title" t-esc="state.title"/>
+        <t t-elif="state.showTips">Building your website...</t>
+        <div class="o_website_loader"/>
+        <p class="o_website_loader_tip w-25">
+            <t t-if="state.showTips">
+                TIP: Once loaded, follow the
+                <span class="o_tooltip o_tooltip_visible bottom o_animated position-relative"></span>
+                <br/>pointer to build the perfect page in 7 steps.
+            </t>
+        </p>
+    </div>
+</t>
+</templates>

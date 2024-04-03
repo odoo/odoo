@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Action -->
+        <record id="rounding_list_action" model="ir.actions.act_window">
+            <field name="name">Cash Roundings</field>
+            <field name="res_model">account.cash.rounding</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create the first cash rounding</p>
+            </field>
+        </record>
+
+        <!-- Views -->
+        <record id="rounding_form_view" model="ir.ui.view">
+            <field name="name">account.cash.rounding.form</field>
+            <field name="model">account.cash.rounding</field>
+            <field name="arch" type="xml">
+                <form string="Rounding Form">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="rounding"/>
+                                <field name="strategy"/>
+                                <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
+                                    groups="account.group_account_invoice,account.group_account_readonly" domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]"/>
+                                <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('strategy', '!=', 'add_invoice_line')], 'required': [('strategy', '=', 'add_invoice_line')]}"
+                                    groups="account.group_account_invoice,account.group_account_readonly" domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]"/>
+                                <field name="rounding_method"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rounding_search_view" model="ir.ui.view">
+            <field name="name">account.cash.rounding.search</field>
+            <field name="model">account.cash.rounding</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="rounding_tree_view" model="ir.ui.view">
+            <field name="name">account.cash.rounding.tree</field>
+            <field name="model">account.cash.rounding</field>
+            <field name="arch" type="xml">
+                <tree string="Rounding Tree">
+                    <field name="name"/>
+                    <field name="rounding"/>
+                    <field name="rounding_method"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_type_view_form_inherit_question" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.question</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+            <page name="event_type_communication" position="after">
+                <page string="Questions">
+                     <field name="question_ids" class="w-100">
+                         <tree sample="1">
+                             <field name="title"/>
+                             <field name="is_mandatory_answer"/>
+                             <field name="once_per_order"/>
+                             <field name="question_type" />
+                             <field name="answer_ids" widget = "many2many_tags"/>
+                         </tree>
+                     </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.question</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <page name="event_notes" position="before">
+                    <page string="Questions" name="questions">
+                        <field name="question_ids" string="Question" nolabel="1">
+                            <tree>
+                                <field name="sequence" widget="handle" />
+                                <field name="title"/>
+                                <field name="is_mandatory_answer"/>
+                                <field name="once_per_order"/>
+                                <field name="question_type" string="Type" />
+                                <field name="answer_ids" widget="many2many_tags"
+                                    attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" />
+                                <button name="action_view_question_answers" type="object" class="fa fa-bar-chart p-0" title="Answer Breakdown" />
+                            </tree>
+                            <!-- Need to repeat the whole tree form here to be able to create answers properly
+                                Without this, the sub-fields of answer_ids are unknown to the web framework.
+                                We need this because we create questions and answers when the event type changes. -->
+                            <form string="Question">
+                                <sheet>
+                                    <h1 class="d-flex"><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' class="flex-grow-1"/></h1>
+                                    <group>
+                                        <group>
+                                            <field name="is_mandatory_answer"/>
+                                            <field name="question_type" widget="radio" options="{'horizontal': true}"/>
+                                        </group>
+                                        <group>
+                                            <field name="once_per_order"/>
+                                        </group>
+                                    </group>
+                                    <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">
+                                        <page string="Answers" name="answers">
+                                            <field name="answer_ids">
+                                                <tree editable="bottom">
+                                                    <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
+                                                    <field name="display_name" invisible="1" />
+                                                    <field name="sequence" widget="handle" />
+                                                    <field name="name"/>
+                                                </tree>
+                                            </field>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                            </form>
+                        </field>
+                    </page>
+                </page>
+        </data>
+        </field>
+    </record>
+</odoo>

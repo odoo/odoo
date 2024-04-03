@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="message_head">
+        <t t-if="move.state != 'done'">
+            <strong>The initial demand has been updated.</strong>
+        </t>
+        <t t-if="move.state == 'done'">
+            <strong>
+                The done move line has been corrected.
+            </strong>
+        </t>
+    </template>
+
+    <template id="message_body">
+        <ul>
+            <li>
+                <t t-esc="move.product_id.display_name"/>:
+            </li>
+            <t t-if="move.state != 'done'">
+                <t t-if="'product_uom_qty' in vals">
+                    <li>
+                        Quantity : <t t-esc="move.product_uom_qty"/> -&gt; <t t-esc="float(vals.get('product_uom_qty'))"/>
+                    </li>
+                </t>
+            </t>
+            <t t-if="'qty_done' in vals">
+                <li>
+                    Quantity : <t t-esc="move.qty_done"/> -&gt; <t t-esc="float(vals.get('qty_done'))"/>
+                </li>
+            </t>
+            <t t-if="'location_id' in vals">
+                <li>
+                    Source Location:
+                    <t t-if="move.location_id">
+                        <t t-esc="move.location_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['location_name']"/>
+                </li>
+            </t>
+            <t t-if="'location_dest_id' in vals">
+                <li>
+                    Destination Location:
+                    <t t-if="move.location_dest_id">
+                        <t t-esc="move.location_dest_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['location_dest_name']"/>
+                </li>
+            </t>
+            <t t-if="'lot_name' in vals">
+                <li>
+                    Lot/Serial :
+                    <t t-if="move.lot_id">
+                        <t t-esc="move.lot_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['lot_name']"/>
+                </li>
+            </t>
+            <t t-if="'package_name' in vals">
+                <li>
+                    Source Package :
+                    <t t-if="move.package_id">
+                        <t t-esc="move.package_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['package_name']"/>
+                </li>
+            </t>
+            <t t-if="'result_package_name' in vals">
+                <li>
+                    Destination Package :
+                    <t t-if="move.result_package_id">
+                        <t t-esc="move.result_package_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['result_package_name']"/>
+                </li>
+            </t>
+            <t t-if="'owner_name' in vals">
+                <li>
+                    Owner :
+                    <t t-if="move.owner_id">
+                        <t t-esc="move.owner_id.name"/> -&gt;
+                    </t>
+                    <t t-esc="vals['owner_name']"/>
+                </li>
+            </t>
+        </ul>
+    </template>
+</odoo>

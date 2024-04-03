@@ -1,0 +1,45 @@
+.o_calendar_filter {
+    span {
+        vertical-align: middle;
+    }
+
+    & img {
+        width:30px;
+
+        &.o_calendar_filter_plain {
+            content:var(--calendarFilter-icon--plain);
+        }
+
+        &.o_calendar_filter_hatched {
+            content:var(--calendarFilter-icon--hatched);
+        }
+
+        &.o_calendar_filter_line {
+            content:var(--calendarFilter-icon--line);
+        }
+    }
+
+    .o_timeoff_legend {
+        display: inline-block;
+        width: 24px;
+        height: 30px;
+        margin: 0 3px;
+        padding: 3px 0;
+        text-align: center;
+
+        &_bankholiday {
+            background-color: $gray-200;
+        }
+
+        &_stressday {
+            font-weight: 600;
+        }
+    }
+
+    @for $size from 1 through length($o-colors) {
+        .hr_stress_day_#{$size - 1}:not(.fc-disabled-day) {
+            color: nth($o-colors, $size) !important;
+        }
+    }
+}
+

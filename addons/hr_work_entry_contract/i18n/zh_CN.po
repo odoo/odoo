@@ -1,0 +1,349 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract
+# 
+# Translators:
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2023
+# Chloe Wang, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Chloe Wang, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working hours below.\n"
+"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        定义了工作记录生成的来源\n"
+"\n"
+"        工作安排：工作记录将从以下的工作时间生成。\n"
+"        出勤：工作记录将从员工的出勤生成。(需要出勤应用程序)\n"
+"        计划：工作记录将从员工的计划生成。(需要计划应用程序)\n"
+"    "
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid "%s does not have a contract from %s to %s."
+msgstr "%s没有从%s 到 %s的合同。"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+#, python-format
+msgid ""
+"%s has multiple contracts from %s to %s. A work entry cannot overlap "
+"multiple contracts."
+msgstr "%s 有多个从 %s 到 %s的合同。工作条目不能与多个合同重叠。"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" "
+"title=\"Warning\"/>您不被允许重新生成已验证的工作条目。"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr "<span class=\"text-muted\">警告：重新生成工作记录将删除选定时间段的所有手动更改。</span>"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "允许工作条目类型与休息时间类型相联系。"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "取消"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "补偿性休假"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
+msgid "Contract"
+msgstr "合同"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "最早可用日期消息"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "最早日期"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__employee_id
+msgid "Employee"
+msgstr "员工"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "员工合同"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "员工"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
+#, python-format
+msgid "Everybody's work entries"
+msgstr "每个人的工作条目"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "加班时间"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "从"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+#: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+msgid "Generate Missing Work Entries"
+msgstr "生成缺失的工作条目"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
+msgid "Generated From"
+msgstr "生成自"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
+msgid "Generated To"
+msgstr "生成到"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "一般性休息时间"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "人力资源工作"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "人力资源工作类型"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
+msgid "Home Working"
+msgstr "在家工作"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
+msgstr ""
+"为了重新生成工作条目，您需要为向导提供一个employee_id，一个date_from和一个date_to。 "
+"除此之外，由date_from和date_to定义的时间间隔不得包含任何经过验证的工作条目。"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
+msgid "Last Generation Date"
+msgstr "最后生成的日期"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "最早可用日期消息"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "最新日期"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "长期休假"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "带薪休假"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "重新生成员工工作条目"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+#, python-format
+msgid "Regenerate Work Entries"
+msgstr "重新生成工作条目"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "搜索条件已完成"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "病假"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr "抱歉，不允许从取消的合同中生成工作条目。"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+#, python-format
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"起始日期必须是> "
+"='%(earliest_available_date)s'，截止日期必须是<='%(latest_available_date)s'，对应于生成的工作条目时间间隔。"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr "此工作条目无法验证。工作条目类型未定义。"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "休假"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "至"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "待付"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "有效"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Work Entries"
+msgstr "工作分录"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
+msgid "Work Entries Within Interval"
+msgstr "间隔内的工作条目"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "工作条目重生成"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "工作记录来源"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "工作安排"

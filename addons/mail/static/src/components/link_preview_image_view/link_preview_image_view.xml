@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.LinkPreviewImageView" owl="1">
+        <div class="o_LinkPreviewImageView position-relative mb-2" t-att-class="{ 'me-2': !linkPreviewImageView.linkPreviewListViewOwner.messageViewOwner.isInChatWindow }" t-attf-class="{{ className }}" t-on-mouseenter="linkPreviewImageView.onMouseEnter" t-on-mouseleave="linkPreviewImageView.onMouseLeave" t-ref="root">
+            <a t-if="linkPreviewImageView.imageUrl" t-att-href="linkPreviewImageView.imageUrl" target="_blank">
+                <img class="h-auto w-auto rounded" t-att-src="linkPreviewImageView.imageUrl"/>
+            </a>
+            <div t-if="linkPreviewImageView.linkPreviewAsideView" class="o_LinkPreviewCardView_aside position-absolute top-0 end-0 small">
+                <LinkPreviewAsideView className="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'" record="linkPreviewImageView.linkPreviewAsideView"/>
+            </div>
+        </div>
+    </t>
+</templates>

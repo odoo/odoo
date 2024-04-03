@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit.account</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">14</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form[@name='bank_account_form']/sheet[1]" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_new_bank_setting" model="ir.actions.server">
+            <field name="name">Add a Bank Account</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.setting_init_bank_account_action()
+            </field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

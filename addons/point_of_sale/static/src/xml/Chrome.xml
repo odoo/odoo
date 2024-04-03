@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Chrome" owl="1">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
+            <div class="pos-receipt-print"></div>
+            <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
+                <div t-if="tempScreen.isShown" class="block-top-header" />
+                <div class="pos-branding">
+                    <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')"
+                         src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    <CashMoveButton t-if="showCashMoveButton()" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                </div>
+                <div class="pos-rightheader">
+                    <div class="status-buttons" t-if="state.uiState === 'READY'">
+                        <CashierName />
+                        <SaleDetailsButton t-if="env.proxy.printer" isHeaderButton="true"/>
+                        <ProxyStatus t-if="env.pos.config.use_proxy" />
+                        <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
+                        <SyncNotification />
+                        <HeaderButton />
+                    </div>
+                </div>
+            </div>
+            <t t-if="state.uiState === 'READY'">
+                <div class="pos-content">
+                    <div class="window">
+                        <div class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix screens">
+                                    <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
+                                       t-props="mainScreenPropsFielded" t-key="mainScreen.name" />
+                                    <t t-if="tempScreen.isShown" t-component="tempScreen.component"
+                                       t-props="tempScreenProps" t-key="tempScreen.name" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <Transition t-if="env.isDebug()" visible="state.debugWidgetIsShown" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
+                        <DebugWidget className="transition.className"/>
+                    </Transition>
+                </div>
+            </t>
+
+            <Transition visible="['LOADING', 'CLOSING'].includes(state.uiState)" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
+                <div class="loader" t-att-class="transition.className">
+                    <div class="loader-feedback">
+                        <!-- spinner from https://loading.io/css/ -->
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        <t t-if="state.loadingSkipButtonIsShown">
+                            <h1 class="message">Connecting to devices</h1>
+                            <div class="button skip" t-on-click="() => this.trigger('loading-skip-callback')">
+                                Skip
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </Transition>
+
+            <!-- Allow popups to be visible at any state of the ui. -->
+            <PosPopupController />
+
+            <Transition name="'o-fade'" visible="state.notification.isShown" leaveDuration="200" t-slot-scope="transition">
+                <Notification message="state.notification.message" duration="state.notification.duration" className="transition.className"/>
+            </Transition>
+
+            <NotificationSound t-if="state.sound.src" sound="state.sound" />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,46 @@
+.hr_expense {
+    @include media-breakpoint-up(md) {
+        &.o_list_view, &.o_kanban_renderer {
+            min-height: auto;
+        }
+    }
+
+    .o_view_nocontent {
+        top: 10%;
+
+        .o_view_nocontent_expense_receipt:before {
+            @extend %o-nocontent-init-image;
+            width: 300px;
+            height: 230px;
+            background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
+            background-size: 300px 230px;
+            margin-bottom: 0.75rem;
+        }
+    }
+}
+
+.o_expense_container {
+    @include media-breakpoint-down(sm) {
+        overflow: auto visible;
+    }
+}
+
+.o_dropzone {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #AAAA;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    i {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+}
+
+.o_expense_categories td[name="description"] p:last-child {
+    margin-bottom: 0;
+}

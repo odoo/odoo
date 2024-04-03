@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="1">
+        <record id="digest_digest_default" model="digest.digest">
+            <field name="name">Your Odoo Periodic Digest</field>
+            <field name="periodicity">daily</field>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="next_run_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="kpi_res_users_connected">True</field>
+            <field name="kpi_mail_message_total">True</field>
+        </record>
+
+        <record id="digest_tip_digest_0" model="digest.tip">
+            <field name="name">Tip: Speed up your workflow with shortcuts</field>
+            <field name="sequence">800</field>
+            <field name="group_id" ref="base.group_user" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Speed up your workflow with shortcuts</p>
+    <p class="tip_content">Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch.</p>
+    <img src="https://download.odoocdn.com/digests/digest/static/src/img/alt-shortcuts.gif" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_digest_1" model="digest.tip">
+            <field name="name">Tip: Click on an avatar to chat with a user</field>
+            <field name="sequence">2100</field>
+            <field name="group_id" ref="base.group_user" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Click on an avatar to chat with a user</p>
+    <p class="tip_content">Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online.</p>
+    <img src="https://download.odoocdn.com/digests/digest/static/src/img/avatar.gif" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_digest_2" model="digest.tip">
+            <field name="name">Tip: A calculator in Odoo</field>
+            <field name="sequence">2300</field>
+            <field name="group_id" ref="base.group_user" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: A calculator in Odoo</p>
+    <p class="tip_content">When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice.</p>
+    <img src="https://download.odoocdn.com/digests/digest/static/src/img/calculator.gif" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_digest_3" model="digest.tip">
+            <field name="name">Tip: How to ping users in internal notes?</field>
+            <field name="sequence">2400</field>
+            <field name="group_id" ref="base.group_user" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: How to ping users in internal notes?</p>
+    <p class="tip_content">Type "@" to notify someone in a message, or "#" to link to a channel. Try to notify @OdooBot to test the feature.</p>
+    <img src="https://download.odoocdn.com/digests/digest/static/src/img/notifications.gif" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_digest_4" model="digest.tip">
+            <field name="name">Tip: Knowledge is power</field>
+            <field name="sequence">2500</field>
+            <field name="group_id" ref="base.group_user" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Knowledge is power</p>
+    <p class="tip_content">When following documents, use the pencil icon to fine-tune the information you want to receive.
+Follow a project / sales team to keep track of this project's tasks / this team's opportunities.</p>
+    <img src="https://download.odoocdn.com/digests/digest/static/src/img/following.png" class="illustration_border" />
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadNeedactionPreview" owl="1">
+        <t t-if="threadNeedactionPreviewView">
+            <!--
+                The preview template is used by the discuss in mobile, and by the systray
+                menu in order to show preview of threads.
+            -->
+            <div class="o_NotificationListItem o_ThreadNeedactionPreview d-flex flex-shrink-0 align-items-center p-1 cursor-pointer"
+                t-attf-class="{{ className }}"
+                t-on-click="threadNeedactionPreviewView.onClick"
+                t-att-data-thread-id="threadNeedactionPreviewView.thread.id"
+                t-att-data-thread-model="threadNeedactionPreviewView.thread.model"
+                t-ref="root"
+            >
+                <div class="o_NotificationListItem_sidebar o_ThreadNeedactionPreview_sidebar m-1">
+                    <div class="o_NotificationListItem_imageContainer o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem position-relative">
+                        <img class="o_NotificationListItem_image o_ThreadNeedactionPreview_image w-100 h-100" t-att-src="image()" alt="Thread Image"/>
+                        <t t-if="threadNeedactionPreviewView.personaImStatusIconView">
+                            <PersonaImStatusIcon
+                                className="'o_NotificationListItem_personaImStatusIcon o_ThreadNeedactionPreview_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
+                                classNameObj="{
+                                    'o-isDeviceSmall': messaging.device.isSmall,
+                                    'small': !messaging.device.isSmall,
+                                }"
+                                record="threadNeedactionPreviewView.personaImStatusIconView"
+                            />
+                        </t>
+                    </div>
+                </div>
+                <div class="o_NotificationListItem_content o_ThreadNeedactionPreview_content d-flex flex-column flex-grow-1 align-self-start m-2">
+                    <div class="o_NotificationListItem_header o_ThreadNeedactionPreview_header d-flex">
+                        <span class="o_NotificationListItem_name o_ThreadNeedactionPreview_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall }">
+                            <t t-esc="threadNeedactionPreviewView.thread.displayName"/>
+                        </span>
+                        <t t-if="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length > 1">
+                            <span class="o_NotificationListItem_counter o_ThreadNeedactionPreview_counter mx-1 fw-bold">
+                                (<t t-esc="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length"/>)
+                            </span>
+                        </t>
+                        <span class="flex-grow-1"/>
+                        <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date">
+                            <small class="o_NotificationListItem_date o_ThreadNeedactionPreview_date flex-shrink-0 text-500">
+                                <t t-esc="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
+                            </small>
+                        </t>
+                    </div>
+                    <div class="o_ThreadNeedactionPreview_core d-flex align-items-baseline">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': threadNeedactionPreviewView.isEmpty }">
+                            <t t-if="threadNeedactionPreviewView.lastTrackingValue">
+                                <TrackingValue value="threadNeedactionPreviewView.lastTrackingValue"/>
+                            </t>
+                            <t t-else="">
+                                <t t-if="threadNeedactionPreviewView.messageAuthorPrefixView">
+                                    <MessageAuthorPrefix record="threadNeedactionPreviewView.messageAuthorPrefixView"/>
+                                </t>
+                                <span class="o_ThreadNeedactionPreview_messageBody" t-esc="threadNeedactionPreviewView.inlineLastNeedactionMessageAsOriginThreadBody"/>
+                            </t>
+                        </span>
+                        <span class="flex-grow-1"/>
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Mark as Read" t-on-click="threadNeedactionPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

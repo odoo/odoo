@@ -1,0 +1,454 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rating
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Sarah Park, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
+msgstr "# 평점"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
+msgstr "<i class=\"fa fa-clock-o me-2\" aria-label=\"Create date\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
+msgstr "<i class=\"fa fa-folder me-2\" aria-label=\"Open folder\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "A star"
+msgstr "별"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
+msgstr "평균 평점"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr "평균 점수 (%)"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
+msgid "Comment"
+msgstr "댓글"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Customer"
+msgstr "고객"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Customer rated %r."
+msgstr "고객 평점 %r."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Date"
+msgstr "일자"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Dissatisfied"
+msgstr "불만족"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Document"
+msgstr "문서"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
+msgid "Document Model"
+msgstr "문서 모델"
+
+#. module: rating
+#: model:ir.model,name:rating.model_mail_thread
+msgid "Email Thread"
+msgstr "이메일 스레드"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
+msgid "Filled Rating"
+msgstr "채워진 평가"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Go back to the Homepage"
+msgstr "홈페이지로 돌아가기"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
+msgid "Half a star"
+msgstr "별 반개"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr "일반 및 포털 사용자에게 숨기며, 하위 환경 설정과는 무관합니다."
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__id
+msgid "ID"
+msgstr "ID"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
+msgid "Image"
+msgstr "이미지"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
+msgid "Image URL"
+msgstr "이미지 URL"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: code:addons/rating/controllers/main.py:0
+#, python-format
+msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
+msgstr "잘못된 평점: 1, 3 또는 5 이어야 합니다 (%d 입력)"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 days"
+msgstr "최근 30일"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 days"
+msgstr "최근 7일"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
+msgid "Last Modified on"
+msgstr "최근 수정일"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: rating
+#: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
+msgid "Message"
+msgstr "메시지"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "My Ratings"
+msgstr "내 평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "이름"
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+msgid "No Rating yet"
+msgstr "아직 평가 없음"
+
+#. module: rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
+msgid "No rating yet"
+msgstr "아직 평가 없음"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Okay"
+msgstr "괜찮아요"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
+msgid "Parent Document"
+msgstr "상위 문서"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
+msgid "Parent Document Model"
+msgstr "상위 문서 모델"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
+msgid "Parent Document Name"
+msgstr "상위 문서명"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr "상위 보관"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr "상위 참조"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
+msgid "Parent Related Document Model"
+msgstr "관련된 상위 문서 모델"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr "좋음 평가 비율"
+
+#. module: rating
+#: code:addons/rating/models/mail_thread.py:0
+#, python-format
+msgid "Posting a rating should be done using message post API."
+msgstr "평점은 메시지 포스팅 API를 통해서 게시해야 합니다."
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
+msgstr "평점 연산자"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rating"
+msgstr "평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
+msgstr "평균 평가 텍스트"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "최근 의견의 평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
+msgid "Rating Last Image"
+msgstr "최근 이미지 평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
+msgid "Rating Last Value"
+msgstr "최근 값 평가"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_mixin
+msgid "Rating Mixin"
+msgstr "평가 믹스인"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
+msgstr "평가 상위 믹스인"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr "만족도 평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
+msgstr "평가 텍스트"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
+msgid "Rating Value"
+msgstr "평가 값"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating Value (/5)"
+msgstr "평가 값(/5)"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
+msgid "Rating count"
+msgstr "평가 수 "
+
+#. module: rating
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
+msgid "Rating should be between 0 and 5"
+msgstr "평점은 0에서 5 사이에 있어야 합니다."
+
+#. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
+#: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
+#, python-format
+msgid "Rating:"
+msgstr "평점:"
+
+#. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_action
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+msgid "Ratings"
+msgstr "평가"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
+msgid "Related Document Model"
+msgstr "관련 문서 모델"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
+msgid "Related ratings"
+msgstr "관련된 평가"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Resource"
+msgstr "리소스"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
+msgstr "리소스 참조"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
+msgid "Resource name"
+msgstr "자원명"
+
+#. module: rating
+#: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Satisfied"
+msgstr "만족"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
+msgid "Security Token"
+msgstr "보안 토큰"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Send Feedback"
+msgstr "의견 보내기"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
+msgid "Submitted on"
+msgstr "제출일"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Thank you for rating our services!"
+msgstr "저희 서비스를 평가해주셔서 감사합니다!"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Thank you, we appreciate your feedback!"
+msgstr "감사합니다. 피드백 주셔서 감사드립니다!"
+
+#. module: rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_action
+msgid "There is no rating for this object at the moment."
+msgstr "현재 이 대상에 대한 평가가 없습니다."
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Today"
+msgstr "오늘"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
+msgstr "내부에서만 확인 가능"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "by"
+msgstr "작성자"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "for"
+msgstr "for"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "on"
+msgstr "있음"

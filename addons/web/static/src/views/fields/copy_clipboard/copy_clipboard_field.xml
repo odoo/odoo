@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CopyClipboardField" owl="1">
+        <div class="d-grid rounded-2 overflow-hidden">
+            <Field t-props="props"/>
+            <CopyButton t-if="props.value" className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
+        </div>
+    </t>
+
+    <t t-name="web.CopyClipboardButtonField" owl="1">
+        <CopyButton t-if="props.value" className="copyButtonClassName" content="props.value" copyText="copyText" successText="successText"/>
+    </t>
+
+</templates>

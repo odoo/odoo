@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindow" owl="1">
+        <t t-if="chatWindow">
+            <div class="o_ChatWindow position-absolute bottom-0 d-flex flex-column rounded-top-3 bg-view" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow.visibleIndex"
+                t-att-class="{
+                    'o-focused': chatWindow.isFocused,
+                    'o-folded': chatWindow.isFolded,
+                    'o-fullscreen w-100 h-100': chatWindow.isFullscreen,
+                    'o-isDeviceSmall position-fixed': messaging.device.isSmall,
+                    'mw-100 mh-100': !messaging.device.isSmall,
+                    'o-new-message': !chatWindow.thread,
+                }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-id="chatWindow.thread ? chatWindow.thread.id : ''" t-ref="root"
+                t-att-data-thread-model="chatWindow.thread ? chatWindow.thread.model : ''"
+            >
+                <ChatWindowHeader
+                    className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
+                    chatWindow="chatWindow"
+                    record="chatWindow.chatWindowHeaderView"
+                />
+                <t t-if="chatWindow.channelMemberListView">
+                    <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-view'"/>
+                </t>
+                <t t-if="chatWindow.callSettingsMenu">
+                    <CallSettingsMenu record="chatWindow.callSettingsMenu" className="'bg-view'"/>
+                </t>
+                <t t-if="chatWindow.channelInvitationForm">
+                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" record="chatWindow.channelInvitationForm"/>
+                </t>
+                <t t-if="chatWindow.threadView">
+                    <ThreadView
+                        className="'o_ChatWindow_thread flex-grow-1 flex-shrink-1'"
+                        record="chatWindow.threadView"
+                    />
+                </t>
+                <t t-if="chatWindow.newMessageAutocompleteInputView">
+                    <div class="o_ChatWindow_newMessageForm d-flex align-items-center m-3">
+                        <span class="o_ChatWindow_newMessageFormLabel flex-grow-0 flex-shrink-0 me-2">
+                            To:
+                        </span>
+                        <AutocompleteInputView
+                            className="'o_ChatWindow_newMessageFormInput flex-grow-1 flex-shrink-1 border'"
+                            record="chatWindow.newMessageAutocompleteInputView"
+                        />
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

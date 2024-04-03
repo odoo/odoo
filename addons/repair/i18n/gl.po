@@ -1,0 +1,963 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-02 11:27+0000\n"
+"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Galician (https://www.transifex.com/odoo/teams/41243/gl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_repair
+#: model:mail.template,report_name:mrp_repair.mail_template_mrp_repair_quotation
+msgid "${(object.name or '').replace('/','_')}"
+msgstr ""
+
+#. module: mrp_repair
+#: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
+msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "(<i>Remove</i>)"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "(update)"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
+
+#. module: mrp_repair
+#: model:mail.template,body_html:mrp_repair.mail_template_mrp_repair_quotation
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (with reference: ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != 'none':\n"
+"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>You can reply to this email if you have any questions.</p>\n"
+"                <p>Thank you,</p>\n"
+"            </data>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<i>(Add)</i>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Lot/Serial Number:</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Operations</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Parts</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Printing Date:</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Product to Repair:</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Shipping address :</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total Without Taxes</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Warranty:</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:237
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:249
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid "Click to create a reparation order."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Company"
+msgstr "Compañía"
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:600
+#: code:addons/mrp_repair/models/mrp_repair.py:658
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Create Invoice"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_create_date
+msgid "Created on"
+msgstr "Creado o"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
+msgid "Current Location"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default Address"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
+msgid "Delivery Address"
+msgstr "Enderezo de envío"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
+msgid "Delivery Location"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_name
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Descrición"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
+msgid "Dest. Location"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Fees"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Future Activities"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
+msgid "Group by partner invoice address"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_id
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_repair
+#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
+"                operations."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:215
+#, python-format
+msgid "Insufficient Quantity"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
+msgid "Internal Notes"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_move_id
+msgid "Inventory Move"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Invoice Exception"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoice_line_id
+msgid "Invoice Line"
+msgstr "Liña de factura"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
+msgid "Invoice Method"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:389
+#, python-format
+msgid "Invoice created"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoiced
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_invoice_id
+msgid "Invoicing Address"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_write_uid
+msgid "Last Updated by"
+msgstr "Última actualización de"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_write_date
+msgid "Last Updated on"
+msgstr "Última actualización en"
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Late Activities"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
+msgid "Lot/Serial"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
+msgid "Move"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
+msgid "Move created by the repair order"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:591
+#: code:addons/mrp_repair/models/mrp_repair.py:649
+#, python-format
+msgid "No Pricelist!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:312
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:338
+#: code:addons/mrp_repair/models/mrp_repair.py:366
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:359
+#, python-format
+msgid "No product defined on Fees!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:598
+#: code:addons/mrp_repair/models/mrp_repair.py:656
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Parts"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Prezo"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist"
+msgstr "Lista de prezos"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist of the selected partner."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Print Quotation"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_id
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Product"
+msgstr "Produto"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_qty
+msgid "Product Quantity"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_uom
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
+msgid "Product to Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
+msgid "Products repaired are all belonging to this lot"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom_qty
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Quantity"
+msgstr "Cantidade"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.actions.report,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
+msgid "Quotation Notes"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Remove"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_move_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_repair_id
+msgid "Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Order #:"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
+msgid "Repair Order Reference"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Repair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation #:"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
+msgid "Repair Reference"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:203
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:408
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:436
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:419
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:251
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
+#: selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repairs"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Search Repair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
+msgid ""
+"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
+"invoice before or after the repair is done respectively. 'No invoice' means "
+"you don't want to generate invoice for this repair order."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Send Quotation"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:540
+#, python-format
+msgid "Serial number is required for operation line with product '%s'"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
+msgid "Source Location"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_state
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Status"
+msgstr "Estado"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
+msgid "Subtotal"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Tax"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Impostos"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:175
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr ""
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
+"                customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+"The status of a repair line is set automatically to the one of the linked "
+"repair order."
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
+msgid "Total"
+msgstr "Total"
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_tracking
+msgid "Tracking"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
+msgid "Type"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
+#: model_terms:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Prezo unidade"
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr "Unidade de medida"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Importe Base"
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:175
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
+msgid "Warranty Expiration"
+msgstr ""
+
+#. module: mrp_repair
+#: model_terms:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:300
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:593
+#: code:addons/mrp_repair/models/mrp_repair.py:651
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+" Please set one before choosing a product."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_stock_traceability_report
+msgid "stock.traceability.report"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair
+msgid "stock.warn.insufficient.qty.repair"
+msgstr ""

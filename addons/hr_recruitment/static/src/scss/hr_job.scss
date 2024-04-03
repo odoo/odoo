@@ -1,0 +1,108 @@
+.o_kanban_renderer.o_kanban_dashboard {
+    &.o_hr_recruitment_kanban {
+        &.o_kanban_ungrouped .o_kanban_record {
+            width: 450px;
+            &:not(.o_kanban_ghost) {
+                min-height: 220px;
+            }
+        }
+
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                padding: 5px;
+                font-size: small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                left: 0px;
+                right: 30px;
+            }
+        }
+
+        .text_top_padding{
+            padding-top: 0.375rem;
+        }
+
+        .o_primary {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 24px !important;
+
+            .fa {
+                margin-left: 0;
+            }
+        }
+
+        .o_job_activities {
+            list-style-type: none;
+
+            .to-recruit {
+                color: $o-enterprise-color;
+                font-weight: bold;
+            }
+        }
+
+        .o_kanban_card_header_title {
+            min-height: 3rem;
+
+            .o_field_boolean_favorite {
+                display: inline;
+            }
+        }
+    }
+}
+
+.o_kanban_renderer {
+    &.o_kanban_applicant {
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                padding: 5px;
+                font-size: x-small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                top: 10px;
+                left: 20px;
+            }
+        }
+    }
+}
+
+.o_kanban_view {
+    .oe_kanban_card {
+        .o_kanban_state_with_padding {
+            padding-left:7%;
+            padding-bottom:5%;
+            width: 12px;
+        }
+    }
+
+    .o_view_sample_data .ribbon {
+        display: none;
+    }
+}
+
+.o_recruitment_list {
+    .o_list_button {
+        text-align: right;
+    }
+}

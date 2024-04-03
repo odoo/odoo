@@ -1,0 +1,148 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_paypal
+# 
+# Translators:
+# Martin Trigaux, 2019
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Oleg Kuryan <oleg@ventor.tech>, 2019\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "Email"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Фиксированные внутренние сборы"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Фиксированные международные сборы"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr "Как настроить свою учетную запись PayPal?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Платежная система"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Операция Оплаты"
+
+#. module: payment_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "Paypal Instant извещение оплаты"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr ""
+"Paypal: полученные данные с отсутствующей ссылкой (%s) или txn_id (%s)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Провайдер"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid ""
+"The Merchant ID is used to ensure communications coming from Paypal are "
+"valid and secured."
+msgstr ""
+"Идентификатор Merchant ID используется для обеспечения корректности и защиты"
+" сообщений, поступающих от Paypal."
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
+msgid "Transaction type"
+msgstr "Тип транзакции"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Use IPN"
+msgstr "Использование IPN"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Переменные внутренние сборы (в процентах)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Переменные международные сборы (в процентах)"

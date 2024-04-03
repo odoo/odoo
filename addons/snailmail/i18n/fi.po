@@ -1,0 +1,777 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* snailmail
+# 
+# Translators:
+# Kari Lindgren <karisatu@gmail.com>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Tukea <nokoa@live.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Joakim Weckman, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2022
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
+# Martin Trigaux, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Add a Cover Page"
+msgstr "Lisää kansilehti"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Address"
+msgstr "Osoite"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending a letter with Snailmail."
+msgstr "Kirjeen lähettämisessä Etanapostilla tapahtui virhe."
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "An error occurred when sending the document by post.<br>Error: %s"
+msgstr "Asiakirjaa postitse lähetettäessä tapahtui virhe.<br>Error: %s"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "An unknown error happened. Please contact the support."
+msgstr "Tapahtui tuntematon virhe. Ota yhteyttä asiakaspalveluun."
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "An unknown error occurred. Please contact our"
+msgstr "Tuntematon virhe tapahtui. Ota yhteyttä"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
+msgid "Attachment"
+msgstr "Liite"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
+msgid "Attachment Filename"
+msgstr "Liitetiedoston tiedostonimi"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#, python-format
+msgid "Awaiting Dispatch"
+msgstr "Odottaa lähetystä"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
+msgid "Both side"
+msgstr "Molemmat puolet"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
+msgid "Both sides"
+msgstr "Molemmat puolet"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "Buy credits"
+msgstr "Osta krediittejä"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
+msgid "CREDIT_ERROR"
+msgstr "CREDIT_ERROR"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel Letter"
+msgstr "Peruuta kirje"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
+msgid "Cancel letter"
+msgstr "Peruuta kirje"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel notification in failure"
+msgstr "Peru epäonnistumisilmoitus"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
+#, python-format
+msgid "Canceled"
+msgstr "Peruttu"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__city
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "City"
+msgstr "Kaupunki"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+#, python-format
+msgid "Close"
+msgstr "Sulje"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
+msgid "Color"
+msgstr "Väri"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__country_id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__country_id
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Country"
+msgstr "Maa"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
+msgid "Cover Page"
+msgstr "Kansilehti"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_date
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__display_name
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
+msgid "Document"
+msgstr "Dokumentti"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
+msgid "Document ID"
+msgstr "Dokumentin ID"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_thread
+msgid "Email Thread"
+msgstr "Sähköpostiviestiketju"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
+#, python-format
+msgid "Error"
+msgstr "Virhe"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
+msgid "FORMAT_ERROR"
+msgstr "FORMAT_ERROR"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
+#, python-format
+msgid "Failed letter"
+msgstr "Epäonnistunut kirje"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "Epäonnistumisen tyyppi"
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
+msgid "Format Error"
+msgstr "Muotoiluvirhe"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_format_error
+msgid "Format Error Sending a Snailmail Letter"
+msgstr "Formaattivirhe etanapostikirjeen lähettäminen"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__id
+msgid "ID"
+msgstr "ID"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
+msgid "In Queue"
+msgstr "Lähetysjonossa"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
+msgid "Information"
+msgstr "Tiedot"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Invalid recipient name."
+msgstr "Vastaanottajan nimi on virheellinen."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
+msgid "Last Modified on"
+msgstr "Viimeksi muokattu"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_uid
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_date
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
+msgid "Letter"
+msgstr "Kirje"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Letter sent by post with Snailmail"
+msgstr "Etanapostilla lähetetty kirje"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
+msgid "Letters"
+msgstr "Kirjaimet"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
+msgid "MISSING_REQUIRED_FIELDS"
+msgstr "MISSING_REQUIRED_FIELDS"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_message
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__message_id
+msgid "Message"
+msgstr "Viesti"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_notification
+msgid "Message Notifications"
+msgstr "Viestien ilmoitukset"
+
+#. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Viestityyppi: Sähköposti  sähköposteille, Ilmoitus järjestelmän viesteille, "
+"ja Kommentti muille viesteille, kuten käyttäjien vastauksille."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
+msgid "Model"
+msgstr "Malli"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
+msgid "Model Name"
+msgstr "Mallin nimi"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
+msgid "NO_PRICE_AVAILABLE"
+msgstr "NO_PRICE_AVAILABLE"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Not enough credits for Snail Mail"
+msgstr "Ei tarpeeksi krediittejä Etanapostia varten"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
+msgid "Notification Type"
+msgstr "Ilmoitustyyppi"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
+msgid "Notifications"
+msgstr "Ilmoitukset"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "One or more required fields are empty."
+msgstr "Yksi tai useampi pakollinen kenttä on tyhjä."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
+msgid "Optional report to print and attach"
+msgstr "Raportti liitteeksi ja tulostettavaksi - ei pakollinen"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid ""
+"Our service cannot read your letter due to its format.<br/>\n"
+"                Please modify the format of the template or update your settings\n"
+"                to automatically add a blank cover page to all letters."
+msgstr ""
+"Palvelumme ei pysty lukemaan kirjettäsi sen muodon vuoksi.<br/>\n"
+"                Muokkaa mallin muotoa tai päivitä asetukset\n"
+"                jotta kaikkiin kirjeisiin lisätään automaattisesti tyhjä kansilehti."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Please use an A4 Paper format."
+msgstr "Käytä A4-paperia."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
+msgid "Print Both sides"
+msgstr "Tulosta molemmille puolille"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
+msgid "Print In Color"
+msgstr "Tulosta värillisenä"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "Re-send letter"
+msgstr "Lähetä kirje uudelleen"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
+msgid "Recipient"
+msgstr "Vastaanottaja"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
+msgid "Related Record"
+msgstr "Aiheeseen liittyvä tietue"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_ir_actions_report
+msgid "Report Action"
+msgstr "Raporttin"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
+msgid "Send Now"
+msgstr "Lähetä heti"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
+#, python-format
+msgid "Sent"
+msgstr "Lähetetty"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
+msgid "Sent by"
+msgstr "Lähettäjä"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "Snail Mails are successfully sent"
+msgstr "Etanapostit on lähetetty onnistuneesti"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/wizard/snailmail_confirm.py:0
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
+#, python-format
+msgid "Snailmail"
+msgstr "Kirjeposti"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_confirm
+msgid "Snailmail Confirm"
+msgstr "Vahvista Etanapostin lasku"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Snailmail Confirmation"
+msgstr "Etanapostin vahvistus"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
+msgid "Snailmail Credit Error"
+msgstr "Etanapostin krediittivirhe"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/models/notification_group.js:0
+#, python-format
+msgid "Snailmail Failures"
+msgstr "Etanapostin epäonnistumiset"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
+msgid "Snailmail Format Error"
+msgstr "Etanapostin muotoiluvirhe"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
+msgid "Snailmail Letter"
+msgstr "Etanapostikirje"
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.action_mail_letters
+#: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
+msgid "Snailmail Letters"
+msgstr "Etanapostikirjeet"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
+msgid "Snailmail Missing Required Fields"
+msgstr "Etanaposti Puuttuvat pakolliset kentät"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
+msgid "Snailmail No Price Available"
+msgstr "Etanaposti Ei saatavilla olevaa hintaa"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
+msgid "Snailmail Status Message"
+msgstr "Etanapostin tilaviesti"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
+msgid "Snailmail Trial Error"
+msgstr "Etanapostin koekäytön virhe"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
+msgid "Snailmail Unknown Error"
+msgstr "Etanaposti Tuntematon virhe"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
+msgid "Snailmail message in error"
+msgstr "Etanaposti viesti virheellinen"
+
+#. module: snailmail
+#: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
+#: model:ir.cron,cron_name:snailmail.snailmail_print
+msgid "Snailmail: process letters queue"
+msgstr "Etanaposti: kirjeen käsittelyjono"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "State"
+msgstr "Tila"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
+msgid "Status"
+msgstr "Tila"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street
+msgid "Street"
+msgstr "Katuosoite"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street 2..."
+msgstr "Katuosoite 2..."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street..."
+msgstr "Katu..."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street2
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__street2
+msgid "Street2"
+msgstr "Katuosoite2"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
+msgid "TRIAL_ERROR"
+msgstr "TRIAL_ERROR"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "The address of the recipient is not complete"
+msgstr "Vastaanottajan osoite ei ole täydellinen"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"Kirjeen liitettä ei voitu lähettää. Tarkista sen sisältö ja ota yhteyttä "
+"asiakaspalveluun, jos ongelma jatkuu."
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "The country of the partner is not covered by Snailmail."
+msgstr "Etanaposti ei kata kumppanin maata."
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr "Palvelumme ei tue maata, johon haluat lähettää kirjeen."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"Asiakkaan osoite ei ole täydellinen. Päivitä osoite tässä ja lähetä kirje "
+"uudelleen."
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid "The document was correctly sent by post.<br>The tracking id is %s"
+msgstr "Asiakirja on lähetetty oikein postitse.<br>Seurantatunnus on %s"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+"Kirjettä ei voitu lähettää, koska IAP-tililläsi ei ole riittävästi "
+"krediittejä."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__message_type
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
+msgid "UNKNOWN_ERROR"
+msgstr "UNKNOWN_ERROR"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Update Config and Re-send"
+msgstr "Päivitä asetukset ja lähetä uudelleen"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Update address and re-send"
+msgstr "Päivitä osoite ja lähetä uudelleen"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
+msgid "Update address of partner"
+msgstr "Kumppanin osoitteen päivittäminen"
+
+#. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
+msgid ""
+"When a letter is created, the status is 'Pending'.\n"
+"If the letter is correctly sent, the status goes in 'Sent',\n"
+"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
+msgstr ""
+"Kun kirje luodaan, sen tila on \"Odottaa\".\n"
+"Jos kirje lähetetään oikein, tila muuttuu 'Lähetetty',\n"
+"Jos näin ei tapahdu, se saa tilan 'Virhe' ja virheilmoitus näytetään kentässä 'Virheilmoitus'."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "You are about to send this"
+msgstr "Olet lähettämässä tätä"
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"Sinulla ei ole IAP-tiliä rekisteröitynä tätä palvelua varten.<br>Mene "
+"osoitteeseen &lt;a href=%s target=\"new\"&gt;iap.odoo.com</a> lunastaaksesi "
+"ilmaiset krediittisi."
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
+#, python-format
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"Sinulla ei ole tarpeeksi krediittejä tämän operaation "
+"suorittamiseen.<br>Mene &lt;a href=%s target=\"new\"&gt;iap-tilillesi</a>."
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "You need credits on your IAP account to send a letter."
+msgstr "Kirjeen lähettäminen edellyttää, että IAP-tililläsi on krediittejä."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "ZIP"
+msgstr "Postinumero"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__zip
+msgid "Zip"
+msgstr "Postinumero"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "by post. Are you sure you want to continue?"
+msgstr "postitse. Haluatko varmasti jatkaa?"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "for further assistance."
+msgstr "lisäapua varten."
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#, python-format
+msgid "support"
+msgstr "tuki"

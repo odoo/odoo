@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.rule" id="ir_rule_sms_template_so_sale_manager">
+        <field name="name">SMS Template: sale manager CRUD on sale orders</field>
+        <field name="model_id" ref="sms.model_sms_template"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
+        <field name="domain_force">[('model_id.model', 'in', ('sale.order', 'res.partner'))]</field>
+    </record>
+</odoo>

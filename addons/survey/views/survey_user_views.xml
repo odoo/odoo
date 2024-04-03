@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- USER INPUTS -->
+    <record id="survey_user_input_view_search" model="ir.ui.view">
+        <field name="name">survey.user_input.view.search</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <search string="Search Survey User Inputs">
+                <field name="email" string="Participant" filter_domain="[
+                    '|',
+                    ('partner_id', 'ilike', self),
+                    ('email', 'ilike', self)]"/>
+                <field name="partner_id"/>
+                <field name="survey_id"/>
+                <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                <separator/>
+                <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
+                <separator/>
+                <filter string="Tests Only" name="test" domain="[('test_entry','=', True)]"/>
+                <filter string="Exclude Tests" name="not_test" domain="[('test_entry','=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
+                    <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
+                    <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_form" model="ir.ui.view">
+        <field name="name">survey.user_input.view.form</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <form string="Survey User inputs" create="false">
+                <header>
+                    <button name="action_resend" string="Resend Invitation" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('state', '=', 'done'), '&amp;', ('partner_id', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_print_answers" states="done" string="Print" type="object"  class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <field name="attempts_count" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_redirect_to_attempts"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('attempts_count', '=', 1)]}"
+                            icon="fa-files-o">
+                            <field string="Attempts" name="attempts_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="test_entry" invisible="1"/>
+                    <widget name="web_ribbon" title="Test Entry" bg_color="bg-info"
+                        attrs="{'invisible': [('test_entry', '!=', True)]}"/>
+                    <widget name="web_ribbon" title="Failed" bg_color="bg-danger"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Passed"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', False)]}"/>
+                    <group col="2">
+                        <group>
+                            <field name="survey_id"/>
+                            <field name="create_date"/>
+                            <field name="deadline" attrs="{'invisible': [('state', '=', 'done'), ('deadline', '=', False)]}"/>
+                            <field name="is_attempts_limited" invisible="1"/>
+                            <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
+                            <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}" class="d-inline-flex">
+                                <field name="attempts_number" nolabel="1"/>
+                                 / 
+                                <field name="attempts_limit" nolabel="1"/>
+                            </div>
+                            <field name="test_entry" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="scoring_success" invisible="1"/>
+                            <label for="scoring_percentage" string="Score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" class="d-inline-flex">
+                                <field name="scoring_percentage" nolabel="1"/>
+                                <span>%</span>
+                            </div>
+                            <field name="partner_id"/>
+                            <field name="email" widget="email"/>
+                            <field name="access_token" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Answers">
+                            <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}" no_label="1">
+                                <tree decoration-muted="skipped == True">
+                                    <field name="question_sequence" invisible="1"/>
+                                    <field name="create_date" optional="hidden"/>
+                                    <field name="page_id" optional="hidden"/>
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="hidden"/>
+                                    <field name="skipped" hide="1"/>
+                                    <field name="display_name" string="Answer"/>
+                                    <field name="answer_is_correct"/>
+                                    <field name="answer_score" sum="Score"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_tree" model="ir.ui.view">
+        <field name="name">survey.user_input.view.tree</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
+                <field name="create_date"/>
+                <field name="survey_id"/>
+                <field name="nickname" optional="hide"/>
+                <field name="partner_id" optional="show"/>
+                <field name="email" optional="show"/>
+                <field name="attempts_number"/>
+                <field name="deadline"/>
+                <field name="test_entry" invisible="True"/>
+                <field name="scoring_success"/>
+                <field name="scoring_percentage"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'new'"
+                    decoration-info="state == 'in_progress'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="survey_user_input_viuew_kanban" model="ir.ui.view">
+        <field name="name">survey.user_input.view.kanban</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <kanban create="false" group_create="false">
+                <field name="survey_id"/>
+                <field name="create_date"/>
+                <field name="partner_id"/>
+                <field name="email"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="create_date"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right mr4">
+                                    <field name="state" widget="label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'in_progress':'warning'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_survey_user_input">
+        <field name="name">Participations</field>
+        <field name="res_model">survey.user_input</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="survey_user_input_view_tree"></field>
+        <field name="search_view_id" ref="survey_user_input_view_search"/>
+        <field name="context">{'search_default_group_by_survey': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No answers yet!
+            </p><p>
+                You can share your links through different means: email, invite shortcut, live presentation, ...
+            </p>
+        </field>
+    </record>
+
+    <!-- USER INPUT LINES
+        .. note:: these views are useful mainly for technical users/administrators -->
+    <record id="survey_user_input_line_view_form" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.form</field>
+        <field name="model">survey.user_input.line</field>
+        <field name="arch" type="xml">
+            <form string="User input line details" create="false">
+                <sheet>
+                    <group col="4">
+                        <field name="question_id"/>
+                        <field name="create_date"/>
+                        <field name="answer_type"/>
+                        <field name="skipped" />
+                        <field name="answer_score" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <field name="value_char_box" colspan='2' attrs="{'invisible': [('answer_type','!=','char_box')]}"/>
+                        <field name="value_numerical_box" colspan='2' attrs="{'invisible': [('answer_type','!=','numerical_box')]}"/>
+                        <field name="value_date" colspan='2' attrs="{'invisible': [('answer_type','!=','date')]}"/>
+                        <field name="value_datetime" colspan='2' attrs="{'invisible': [('answer_type','!=','datetime')]}"/>
+                        <field name="value_text_box" colspan='2' attrs="{'invisible': [('answer_type','!=','text_box')]}"/>
+                        <field name="matrix_row_id" colspan='2' />
+                        <field name="suggested_answer_id" colspan='2' attrs="{'invisible': [('answer_type','!=','suggestion')]}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="survey_response_line_view_tree" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.tree</field>
+        <field name="model">survey.user_input.line</field>
+        <field name="arch" type="xml">
+            <tree string="Survey Answer Line" create="false">
+                <field name="survey_id"/>
+                <field name="user_input_id"/>
+                <field name="question_id"/>
+                <field name="create_date"/>
+                <field name="answer_type"/>
+                <field name="skipped"/>
+                <field name="answer_score" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+    <record id="survey_user_input_line_view_search" model="ir.ui.view">
+        <field name="name">survey.user_input.line.view.search</field>
+        <field name="model">survey.user_input.line</field>
+        <field name="arch" type="xml">
+            <search string="Search User input lines">
+                <field name="user_input_id"/>
+                <field name="survey_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
+                    <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="survey_user_input_line_action" model="ir.actions.act_window">
+        <field name="name">Detailed Answers</field>
+        <field name="res_model">survey.user_input.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="survey_user_input_line_view_search"/>
+        <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_empty_folder">
+            No user input lines found
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Participations"
+        id="menu_survey_type_form1"
+        action="action_survey_user_input"
+        parent="menu_surveys"
+        sequence="1"/>
+</data>
+</odoo>

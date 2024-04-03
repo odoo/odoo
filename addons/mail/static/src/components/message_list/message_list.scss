@@ -1,0 +1,19 @@
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MessageList_separatorLineNewMessages {
+    border-color: lighten($o-brand-odoo, 15%);
+}
+
+.o_MessageList_separatorNewMessages {
+    color: lighten($o-brand-odoo, 15%);
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+.o_MessageList_separatorNewMessages:not(.o-disable-animation) {
+    transition: opacity 0.5s;
+}

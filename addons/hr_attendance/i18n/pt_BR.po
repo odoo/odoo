@@ -1,0 +1,1117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Maitê Dietze, 2023
+# Layna Nascimento, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
+msgstr "A \"Saída\" não pode ser feito antes do horário da \"Entrada\"."
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "%(empl_name)s from %(check_in)s"
+msgstr "%(empl_name)s de %(check_in)s"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
+msgstr "%(empl_name)s de %(check_in)s às %(check_out)s"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid ": Your user should be linked to an employee to use attendance."
+msgstr ""
+": Seu usuário deve estar vinculado a um funcionário para usar o controle de "
+"presenças."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid ""
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
+"right, please contact Human Resource staff"
+msgstr ""
+"<b>Atenção! A última Entrada foi feita a mais de 12 horas.</b><br/>Se isso "
+"não estiver correto, por favor entre em contato com a equipe de Recursos "
+"Humanos."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
+msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Período\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Month\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Último Mês\n"
+"                        </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Extra Hours</span>"
+msgstr "<span class=\"o_stat_text\">Horas extra</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span> Minutes</span>"
+msgstr "<span> minutos</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span> Minutes</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span>Time Period </span>"
+msgstr "<span>Período</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Activate the count of employees' extra hours."
+msgstr "Ative a contagem de horas extra dos funcionários."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid ""
+"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"                To create employees go to the Employees menu."
+msgstr ""
+"Adicione alguns funcionários para poder selecioná-los aqui e realizar a Entrada / Saída.\n"
+"Para criar novos funcionários vá até o menu Funcionários."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
+msgid "Adjustment"
+msgstr "Ajustamento"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_manager
+msgid "Administrator"
+msgstr "Administrador"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr ""
+"Permitir um período de tempo (do horário de trabalho) em que o tempo extra "
+"não será contado, em benefício da empresa"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr ""
+"Permitir um período de tempo (do horário de trabalho) em que o tempo extra "
+"não será deduzido, em benefício do funcionário"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+msgid "Amount of extra hours"
+msgstr "Quantidade de horas extra"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "An apple a day keeps the doctor away"
+msgstr "Uma maçã por dia mantém o médico longe"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Another good day's work! See you soon!"
+msgstr "Mais um bom dia de trabalho! Te vejo em breve!"
+
+#. module: hr_attendance
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
+msgid "Attendance"
+msgstr "Frequência"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
+msgid "Attendance Analysis"
+msgstr "Análise do Atendimento"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
+msgid "Attendance Kiosk Delay"
+msgstr "Atraso do quiosque de presença"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
+msgid "Attendance Mode"
+msgstr "Modo de presença"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
+msgid "Attendance Overtime"
+msgstr "Prolongamento da presença"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_report
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
+msgid "Attendance Statistics"
+msgstr "Estatísticas de presença"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
+msgid "Attendance Status"
+msgstr "Situação de Presença"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Attendances"
+msgstr "Controle de Presença"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Available"
+msgstr "Disponível"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
+msgid "Back Camera"
+msgstr "Câmera traseira"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Barcode"
+msgstr "Código de barras"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
+msgid "Barcode / RFID"
+msgstr "Código de barras/RFID"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode_manual
+msgid "Barcode / RFID and Manual Selection"
+msgstr "Código de barras/RFID e Seleção manual"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
+msgid "Barcode Source"
+msgstr "Fonte do código de barras"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee hasn't "
+"checked out since %(datetime)s"
+msgstr ""
+"Não é possível criar um novo registro de presença para %(empl_name)s, o "
+"funcionário não comparece ao trabalho desde %(datetime)s"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee was "
+"already checked in on %(datetime)s"
+msgstr ""
+"Não é possível criar um novo registro de presença para %(empl_name)s, o "
+"funcionário já bateu sua Entrada em %(datetime)s"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+"Não é possível realizar a Saída de %(empl_name)s, não foi encontrada a "
+"Entrada correspondente. É provável que sua presença tenha sido modificada "
+"manualmente pelo setor de recursos humanos."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Check IN"
+msgstr "Entrada"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check In"
+msgstr "Entrada"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr "Entrada / Saída"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Check OUT"
+msgstr "Saída"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check Out"
+msgstr "Saída"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out in Kiosk Mode"
+msgstr "Entrada/Saída no mode quiosque"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
+msgid "Checked in"
+msgstr "Entrada realizada"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Checked in at"
+msgstr "Entrada em"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
+msgid "Checked out"
+msgstr "Saída realizada"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Checked out at"
+msgstr "Saída em"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Choose how long the greeting message will be displayed."
+msgstr "Selecione como a mensagem de saudação será exibida."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "Logo da empresa"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Compare attendance with working hours set on employee."
+msgstr ""
+"Compare a presença com os horários de trabalho definidos para o funcionário."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
+msgid "Configuration"
+msgstr "Configuração"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
+msgid "Count Extra Hours"
+msgstr "Total de horas extra"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Count of Extra Hours"
+msgstr "Total de horas extras"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Count of extra hours is considered from this date. Potential extra hours "
+"prior to this date are not considered."
+msgstr ""
+"Total de horas extra considerado a partir desta data. Possíveis horas extra "
+"anteriores a esta data não são consideradas."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Create a new employee"
+msgstr "Criar um novo funcionário"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+msgid "Day"
+msgstr "Dia"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Define the camera used for the barcode scan."
+msgstr "Defina a câmera usada para escanear o código de barras."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Define the way the user will be identified by the application."
+msgstr "Defina o modo como o usuário será identificado pelo aplicativo."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
+msgid "Department"
+msgstr "Departamento"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Time"
+msgstr "Hora de exibição"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
+msgstr ""
+"Não tem acesso: o usuário não pode editar as presenças que não são dele."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
+msgstr "Dormir e acordar cedo torna o homem saudável, rico e sábio"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
+msgstr ""
+"Tome café da manhã como um rei, almoce como um comerciante e jante como um "
+"mendigo"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid "Employee"
+msgstr "Funcionário"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
+msgid "Employee PIN"
+msgstr "PIN do Funcionário"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Employee attendances"
+msgstr "Frequências de funcionários"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Employees"
+msgstr "Funcionários"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
+msgid "Enable PIN use"
+msgstr "Habilitar uso de PIN"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Error: could not find corresponding employee."
+msgstr "Erro: não foi possível encontrar este funcionário."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours"
+msgstr "Horas extra"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra Hours (Real)"
+msgstr "Horas extra (real)"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
+msgid "Extra Hours Starting Date"
+msgstr "Data de início das horas extra"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Extra hours today:"
+msgstr "Horas extras hoje:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra-hours including the threshold duration"
+msgstr "Horas extra incluindo a duração limite"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "First come, first served"
+msgstr "Primeiro a chegar, primeiro a ser servido"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
+msgid "Front Camera"
+msgstr "Câmera frontal"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Glad to have you back, it's been a while!"
+msgstr "Ficamos felizes em tê-lo de volta!"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Go back"
+msgstr "Volte"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good afternoon"
+msgstr "Boa tarde"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good evening"
+msgstr "Boa noite"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good morning"
+msgstr "Bom dia"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good night"
+msgstr "Boa noite"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Goodbye"
+msgstr "Até logo"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+msgid "HR Attendance Search"
+msgstr "Pesquisa de presenças no RH"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good afternoon"
+msgstr "Tenha uma boa tarde"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good day!"
+msgstr "Tenha um bom dia"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good evening"
+msgstr "Tenha uma boa noite"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a nice lunch!"
+msgstr "Tenha um bom almoço!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Hours"
+msgstr "Horas"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
+msgid "Hours Last Month"
+msgstr "Horas no Ultimo Mês"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
+msgid "Hours Last Month Display"
+msgstr "Exibir Horas no Último Mês"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
+msgid "Hours Today"
+msgstr "Horas Hoje"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
+msgid "Hours Worked"
+msgstr "Horas trabalhadas"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Hr Attendance Search"
+msgstr "Pesquisa por Frequência de RH"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Identify Manually"
+msgstr "Identificar Manualmente"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "If a job is worth doing, it is worth doing well!"
+msgstr "Se vale a pena fazer um trabalho, vale a pena fazer bem!"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Invalid request"
+msgstr "Solicitação inválida"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
+msgid "Kiosk Mode"
+msgstr "Modo de Quiosque"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
+msgid "Last Attendance"
+msgstr "Última Presença"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
+msgid "Manual Selection"
+msgstr "Seleção manual"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
+
+#. module: hr_attendance
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
+msgid "Message"
+msgstr "Mensagem"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "My Attendances"
+msgstr "Minhas Presenças"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "No Check Out"
+msgstr "Sem Registro de Saída"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+msgid "No attendance records found"
+msgstr "Nenhum registro de presença encontrado"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "No attendance records to display"
+msgstr "Nenhum registro de presença para mostrar"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "Nenhum empregado corresponde ao ID de Crachá '%(barcode)s.'"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "OK"
+msgstr "OK"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_user
+msgid "Officer : Manage all attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+msgid "Overtime"
+msgstr "Horas Extras"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please contact your administrator."
+msgstr "Entre em contato com seu administrador."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please enter your PIN to"
+msgstr "Digite seu PIN para"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please return to the main menu."
+msgstr "Favor retornar ao menu principal."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Empregado Público"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
+msgid "Reporting"
+msgstr "Relatórios"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Escaneie seu crachá"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__scanner
+msgid "Scanner"
+msgstr "Scanear"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
+"Definir código PIN no formulário do funcionário (na aba Definições de RH)."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
+msgid "Settings"
+msgstr "Definições"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Sign out"
+msgstr "Saída"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Start from"
+msgstr "Começar a partir de"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "Este agrupamento não é permitido."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "The attendance records of your employees will be displayed here."
+msgstr "O registro de presença do seu funcionário será mostrado aqui."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "The early bird catches the worm"
+msgstr "Deus ajuda quem cedo madruga"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
+msgid ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr ""
+"O usuário poderá abrir o modo quiosque e validar o PIN do funcionário."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"O usuário terá acesso ao menu de atendimento de recursos humanos, permitindo"
+" que ele gerencie seu próprio atendimento."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
+msgid ""
+"The user will have to enter his PIN to check in and out manually at the "
+"company screen."
+msgstr ""
+"O usuário precisará digitar seu PIN manualmente para fazer check in e check "
+"out"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
+"Para ativar o modo de quiosque sem um código de PIN, você precisa ter "
+"direitos de acesso como administrador ou superior no aplicativo de Controle "
+"de presenças. Entre em contrato com o seu administrador."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Today's work hours:"
+msgstr "Horas trabalhadas hoje:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Company"
+msgstr "Tempo de tolerância em favor da empresa"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Employee"
+msgstr "Tempo de tolerância em favor do funcionário"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
+msgid "Total Overtime"
+msgstr "Total de prolongamento"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Total extra hours:"
+msgstr "Total de horas extras:"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes (defined on the Employee's profile) to check-in."
+msgstr ""
+"Use códigos PIN (definidos no perfil do funcionário) para registrar entrada."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_users
+#: model:res.groups,name:hr_attendance.group_hr_attendance
+msgid "User"
+msgstr "Usuário"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "User : Only kiosk mode"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Want to check out?"
+msgstr "Deseja registrar a Saída?"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Warning"
+msgstr "Aviso"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome"
+msgstr "Bem Vindo"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome to"
+msgstr "Bem vindo ao"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome!"
+msgstr "Bem vindo!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Work Hours"
+msgstr "Horas de Trabalho"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
+msgid "Worked Hours"
+msgstr "Horas Trabalhadas"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Worked hours last month"
+msgstr "Horas trabalhadas no último mês"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Wrong PIN"
+msgstr "PIN Incorreto"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "You cannot duplicate an attendance."
+msgstr "Você não pode duplicar uma presença."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
+msgstr "Seus registros de presença serão exibidos aqui."
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "check in"
+msgstr "entrada"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "check out"
+msgstr "saída"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "o_barcode_main pt-5"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "seconds"
+msgstr "segundos"

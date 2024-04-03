@@ -1,0 +1,385 @@
+:root {
+  --o-webclient-color-scheme:#{$o-webclient-color-scheme};
+
+  font-size: $o-root-font-size;
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+// Disable default border-style added by _reboot.scss
+tfoot {
+  tr, td, th {
+    border-style: none;
+  }
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+  direction: ltr;
+  position: relative; // normally useless but required by bootstrap-datepicker
+  background-color: $o-webclient-background-color;
+  color-scheme: $o-webclient-color-scheme;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+
+// Buttons
+.o_icon_button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  outline: none;
+}
+
+
+// User input typically entered via keyboard
+kbd {
+  border: 1px solid $o-gray-200;
+  box-shadow: $kbd-box-shadow;
+}  
+
+//== Backgound light colors variations (bootstrap extensions)
+@each $-name, $-bg-color in $theme-colors {
+  $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
+  @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
+}
+
+//== Badges
+.badge {
+  min-width: $o-badge-min-width;
+}
+
+//== Btn-link
+.btn-link {
+  font-weight: $btn-font-weight;
+
+  // -- Btn-link variations
+  // Adapt the behavieur of .btn-link buttons when in conjuction with contextual
+  // classes (eg. text-warning). 'muted' is set as default text color, while
+  // the contextual-class color will be used on ':hover'.
+
+  // Apply all theme-colors variations except "secondary"
+  @each $-name, $-color in map-remove($theme-colors, "secondary") {
+    &.btn-#{$-name}, &.text-#{$-name} {
+      @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+    }
+  }
+
+  // Specific behavieur for "secondary"
+  &.btn-secondary {
+    @include o-btn-link-variant($body-color, $headings-color);
+  }
+}
+
+// Set position of our custom o-dropdown-menu (not bootstrap)
+.o-dropdown-menu {
+  top: 100%;
+  &.dropdown-menu-start {
+    left: 0;
+    right: auto;
+  }
+  &.dropdown-menu-end {
+    left: auto;
+    right: 0;
+  }
+}
+
+// == Boostrap Dropdown
+// ----------------------------------------------------------------------------
+.dropdown-menu {
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
+
+:not(.dropstart) > .dropdown-item {
+  &.active, &.selected {
+    position: relative;
+    font-weight: $font-weight-bold;
+
+    &:focus, &:hover {
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    &:not(.dropdown-item_active_noarrow) {
+      &:before {
+        @include o-position-absolute(0);
+        transform: translate(-1.5em, 90%);
+        font: .7em/1em FontAwesome;
+        color: $primary;
+        content: "\f00c";
+      }
+
+      &.disabled:before {
+        color: $dropdown-link-disabled-color;
+      }
+    }
+  }
+}
+
+/*!rtl:begin:ignore*/
+.o-dropdown.dropstart > .dropdown-item.dropdown-toggle:not(.dropdown-item_active_noarrow) {
+  &.active, &.selected {
+    &::after {
+      @include o-position-absolute(0, $left: 90%);
+      transform: translate(0, 90%);
+      font: .7em/1em FontAwesome;
+      color: $link-color;
+      display: inline-block;
+      content: "\f00c";
+      border: 0;
+    }
+
+    &.disabled:after {
+      color: $dropdown-link-disabled-color;
+    }
+  }
+}
+/*!rtl:end:ignore*/
+
+.dropdown-header {
+  font-weight: $font-weight-bold;
+  padding-bottom: .1em;
+
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
+//== Printing improvements
+@media print {
+  .table-responsive {
+    overflow-x: initial;
+  }
+}
+
+//== Action manager
+// ensure special links are styled as pointers even when they don't
+// have an href
+[type="action"],
+[type="toggle"] {
+  cursor: pointer !important;
+}
+
+.o_web_client.o_touch_device {
+  .btn {
+      &, .btn-sm {
+          font-size: $font-size-base;
+          padding: $o-touch-btn-padding;
+      }
+
+      &.fa {
+          font-size: 1.3em;
+          padding: 2px 10px;
+      }
+  }
+}
+
+//------------------------------------------------------------------------------
+// Inputs and selects (note: put the o_input class to have the style)
+//------------------------------------------------------------------------------
+[type="text"],
+[type="password"],
+[type="number"],
+[type="email"],
+[type="tel"],
+textarea,
+select {
+  width: 100%;
+  display: block;
+  outline: none;
+}
+select {
+
+  // FIXME buggy 'padding-left'
+  cursor: pointer;
+  min-width: 50px;
+
+  appearance: none;
+  background: transparent $o-caret-down no-repeat right center;
+  border-radius: 0; // webkit OSX browsers have a border-radius on select
+
+  color: $o-main-text-color;
+
+  > option {
+    background: $light;
+  }
+
+  // This is a hack to remove the outline in FF
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 $o-main-text-color;
+    > option {
+      color: $o-main-text-color;
+    }
+  }
+}
+
+@mixin o-placeholder {
+  // Rules below need to be separeted. Otherwise all browsers will discard the whole rule.
+  color: $input-placeholder-color;
+}
+::-webkit-input-placeholder {
+  // WebKit, Blink, Edge
+  @include o-placeholder;
+}
+::-moz-placeholder {
+  // Mozilla Firefox 19+
+  @include o-placeholder;
+}
+:-ms-input-placeholder {
+  // Internet Explorer 10-11
+  @include o-placeholder;
+}
+
+//------------------------------------------------------------------------------
+// Buttons
+//------------------------------------------------------------------------------
+// Bootstrap define buttons using just one base-color for each color variation
+// (eg.$primary), without control over text-color or border.
+// The following code define exceptions for buttons that needs a different
+// design by default or in specific scenarios.
+
+.btn-secondary {
+  // Customize the button design without overwrite the default '$secondary'
+  // variable that it's used by other components like list-groups, tables,
+  // badges...
+
+  @include button-variant(
+    $background: $o-btn-secondary-bg,
+    $border: $o-btn-secondary-bg,
+    $hover-background: $o-btn-secondary-hover-bg,
+    $hover-border: $o-btn-secondary-hover-border,
+    $active-background: $o-btn-secondary-hover-bg,
+    $active-border: $o-btn-secondary-hover-border
+  );
+
+  // By default, act like a .btn-link
+  @include o-hover-text-color($link-color, $link-hover-color);
+
+  &.disabled, &:disabled {
+    @include o-hover-text-color($o-gray-500, $o-gray-500);
+  }
+}
+
+.btn-outline-secondary {
+  // Slightly customize to act like an odoo custom btn-secondary with
+  // light gray border and $secondary text.
+  // Used for not prioritary actions ordropdown (eg. dashboard view).
+
+  @include button-variant(
+    $background: $o-btn-secondary-bg,
+    $border: $o-gray-200,
+    $hover-background: $o-btn-secondary-hover-bg,
+    $hover-border: $o-gray-300,
+    $active-background: $o-btn-secondary-hover-bg,
+    $active-border: $o-gray-300
+  );
+}
+
+.btn-light {
+  // Achieve "clickable text" elements that act like buttons once the
+  // the user interacts with (eg. control-panel dropdowns);
+  @include button-variant(
+    $background: $o-btn-light-bg,
+    $border: $o-btn-light-border,
+    $hover-background: $o-btn-light-background-hover,
+    $hover-border: $o-btn-light-background-hover,
+    $active-background: $o-btn-light-background-hover,
+    $active-border: $o-btn-light-background-hover
+  );
+}
+
+.btn-outline-secondary, .btn-light {
+  @include o-hover-text-color($o-main-text-color, $o-gray-900);
+
+  &.disabled, &:disabled {
+    @include o-hover-text-color($o-main-text-color, $o-main-text-color);
+  }
+}
+
+//------------------------------------------------------------------------------
+// Misc.
+//------------------------------------------------------------------------------
+
+// By default, <b> and <strong> are set to `$font-weight-bolder`.
+// Override with `$font-weight-bold` in order to ensure consistency with default
+// bold text, while keeping `$font-weight-bolder` variable untouched for specific
+// uses (eg. '.fw-bolder' class).
+b, strong {
+  font-weight: $font-weight-bold;
+}
+
+//== Titles
+@include media-breakpoint-down(md) {
+  h1 {
+    font-size: $h1-font-size * 3 / 4;
+  }
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: $o-font-size-base-touch;
+  }
+}
+
+//== Alerts
+.alert {
+  &.alert-info,
+  &.alert-success,
+  &.alert-warning,
+  &.alert-danger {
+    border-width: 0 0 0 3px;
+  }
+  a {
+    font-weight: $alert-link-font-weight;
+  }
+}
+
+//== Badges
+.badge {
+    &.text-bg-default, &.bg-light, &.text-bg-light, &.bg-default, &.text-primary{
+        outline: 1px solid $o-brand-primary;
+        outline-offset: -1px;
+    }
+}
+
+//== Buttons
+
+// Uppercase primary and secondary except when secondary is used as a dropdown
+// toggler.
+.btn-primary,
+.btn-secondary:not(.dropdown-toggle):not(.dropdown-item),
+.btn-secondary.o_arrow_button:not(.dropdown-item) {
+  text-transform: uppercase;
+}
+
+// Disable unnecessary box-shadows on mouse hover
+.btn:focus:hover {
+  box-shadow: none;
+}
+
+//== Navbar
+.navbar .navbar-toggle {
+  border-color: transparent;
+}
+
+//== Labels
+.label {
+  border-radius: 0;
+  font-size: 1em; // Override 75% of .label
+}

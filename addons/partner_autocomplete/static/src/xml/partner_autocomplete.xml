@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="partner_autocomplete.PartnerAutoCompleteCharField" t-inherit="web.CharField" owl="1">
+        <xpath expr="//t[@t-else='']" position="before">
+            <t t-elif="props.record.resModel !== 'res.partner' || props.record.data.company_type === 'company'">
+                <AutoComplete
+                    value="props.value || ''"
+                    sources="sources"
+                    onSelect.bind="onSelect"
+                    input="inputRef"
+                    placeholder="props.placeholder || ''"
+                />
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="partner_autocomplete.CharFieldDropdownOption" owl="1">
+        <img t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
+        <div class="o_partner_autocomplete_info">
+            <strong t-esc="option.label or '&#160;'"/>
+            <div t-esc="option.description"/>
+        </div>
+    </t>
+
+    <t t-name="partner_autocomplete.Many2oneDropdownOption" owl="1">
+        <i class="fa fa-magic text-muted pe-1"/>
+        <t t-esc="option.label or '&#160;'"/>,
+        <span class="text-muted" t-esc="option.description"/>
+        <img class="ms-1" t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
+    </t>
+
+    <t t-name="partner_autocomplete.InsufficientCreditNotification" owl="1">
+        <div class="o-hidden-ios">
+            <a class="btn btn-link" t-att-href="credits_url"><i class="fa fa-arrow-right"/> Buy more credits</a>
+        </div>
+    </t>
+
+    <t t-name="partner_autocomplete.AccountTokenMissingNotification" owl="1">
+        <div class="">
+            <a class="btn btn-link" t-att-href="account_url" ><i class="fa fa-arrow-right"/> Set Your Account Token</a>
+        </div>
+    </t>
+</templates>

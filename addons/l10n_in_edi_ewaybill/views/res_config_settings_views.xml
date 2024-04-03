@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in_edi_ewaybill" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in_edi_ewaybill</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div data-key="account" position="inside">
+                <h2 attrs="{'invisible': [('country_code', '!=', 'IN')]}">Indian Electronic WayBill</h2>
+                <div class='row mt16 o_settings_container' name="l10n_in_edi_ewaybill_iap" attrs="{'invisible': [('country_code', '!=', 'IN')]}">
+                    <div class="col-12 col-lg-6 o_setting_box" id="gsp_setting">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Setup E-Waybill</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Check the <a href="https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/india.html">documentation</a> to get credentials
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_in_edi_ewaybill_username" class="col-lg-4 o_light_label" string="Username"/>
+                                    <field name="l10n_in_edi_ewaybill_username"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_in_edi_ewaybill_password" class="col-lg-4 o_light_label" string="Password"/>
+                                    <field name="l10n_in_edi_ewaybill_password" password="True"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_in_edi_production_env" class="col-lg-4 o_light_label" string="Production Environment"/>
+                                    <field name="l10n_in_edi_production_env"/>
+                                </div>
+                            </div>
+                            <div class='mt8'>
+                                <button name="l10n_in_edi_ewaybill_test" icon="fa-arrow-right" type="object" string="Verify Username and Password" class="btn-link"/>
+                            </div>
+                            <div class='mt8'>
+                                <button name="l10n_in_edi_buy_iap" title="Costs 1 credit per transaction. Free 200 credits will be available for the first time." icon="fa-arrow-right" type="object" string="Buy credits" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

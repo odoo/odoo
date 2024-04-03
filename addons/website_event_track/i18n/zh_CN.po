@@ -1,0 +1,2629 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# digitalliuzg8888, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Chloe Wang, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Chloe Wang, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr "“活动应用程序名称 \"字段是必需的。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr "# 被列入愿望清单"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s from %(company)s"
+msgstr "从%(company)s到%(name)s"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s, %(function)s at %(company)s"
+msgstr "%(name)s，%(function)s在%(company)s。"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr "%s活动"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr "%s线上活动申请"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_17
+msgid "10 DIY Furniture Ideas For Absolute Beginners"
+msgstr "10个适合绝对初学者的DIY家具构思"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_18
+msgid "6 Woodworking tips and tricks for beginners"
+msgstr "6个适合初学者的木工技巧和窍门"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "<b>Contact Information</b>"
+msgstr "<b>联系信息</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Mail</b>:"
+msgstr "<b>邮件</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Phone</b>:"
+msgstr "<b>电话</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Proposed By</b>:"
+msgstr "<b>提议者</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Speaker Biography</b>:"
+msgstr "<b>歌手简历</b>。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Speaker Profile</b>"
+msgstr "<b>歌手资料</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Talk Intro</b>"
+msgstr "<b>谈话介绍</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Talk Introduction</b>:"
+msgstr "<b>演讲介绍</b>:"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
+msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t>您好！<br>\n"
+"    很高兴地通知您，您提议的活动 “<t t-out=\"object.name or ''\">（活动内容）</t>” 已被接纳及确认用于 “<t t-out=\"object.event_id.name or ''\">OpenWood 系列线上发布会</t>”活动。\n"
+"    <br>\n"
+"    更多详情请点击此处：\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            查看演讲\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    谢谢！\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban me-2\"/>未发布"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
+msgstr "<i class=\"fa fa-bell me-2 text-muted\"/> 最喜欢的讲座"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr "<i class=\"fa fa-folder-open\"/> 收藏"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                        Write one."
+msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                    写一个"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block ml-2\">&amp;bull。</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">讲座介绍</span>\n"
+"                                            <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">讲座题目</span>\n"
+"                                            <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid ""
+"<span for=\"contact_name\">Name</span>\n"
+"                    <span>*</span>"
+msgstr ""
+"<span for=\"contact_name\">名称</span>\n"
+"                    <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>结果"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
+msgid "<span> at </span>"
+msgstr "<span> 在 </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<span>New track proposal</span>"
+msgstr "<span>新的专题方案</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr "<span>小时</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
+"                                    different topics. Most topics are accepted in lightning talks."
+msgstr "<strong>闪电会谈</strong>。这是在30分钟内讨论许多不同的话题。大多数话题都可以接受闪电会谈。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr "<strong>位置。</strong>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
+"                                    alocated in slots of 60 minutes."
+msgstr "<strong>定期会谈</strong>。使用幻灯片的，在60分钟内的标准讨论。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+msgid "A technical explanation of how to use computer design apps"
+msgstr "关于如何使用计算机设计应用的技术说明"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
+msgid ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
+msgstr ""
+"专题的看板状态表示影响专题的特殊情况：\n"
+" * 灰色为默认情况\n"
+" * 红色表示此专题的进程正受到阻止\n"
+" * 绿色表示专题将进入下一阶段"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
+msgid "Action Needed"
+msgstr "需要动作"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__active
+msgid "Active"
+msgstr "启用"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活动异常勋章"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活动类型图标"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr "添加描述以帮助您的同事了解该阶段的意义和目的。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Add a description..."
+msgstr "添加描述。"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid "Add a new stage in the task pipeline"
+msgstr "在任务管道创建一个新阶段"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
+msgstr "在您的追踪上添加标签，以帮助您的与会者浏览您的活动网页。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+msgid "Advanced lead management : tips and tricks from the fields"
+msgstr "高级线索管理：字段的提示和技巧"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+msgid "Advanced reporting"
+msgstr "高级报表"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Agenda"
+msgstr "议程"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr "所有讲座"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr "允许追踪建议"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Allow push notifications?"
+msgstr "允许推送通知？"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Allow video and audio recording of their\n"
+"                                    presentation, for publishing on our website."
+msgstr ""
+"介绍他们时候、允许录制视频\n"
+"              和音频，以在我们的网站上发布。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr "常被列入愿望清单"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage2
+msgid "Announced"
+msgstr "已公布"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Application"
+msgstr "应用程序"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr "由于关键追踪不能被取消，这个字段存储了伙伴选择删除关键追踪的提醒。"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"    wood crates."
+msgstr ""
+"正如您以前可能听说过的那样，自己制作家具实际上并不像您想象的那样困难或复杂。\n"
+"    事实上，有些项目非常容易，任何人都可以成功完成。例如，用一个旧轮胎做一个可爱的凳子是小菜一碟。\n"
+"    如果您需要一个咖啡桌，您可以很容易地用木箱把它拼起来。\n"
+"    木板条箱。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件计数"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
+msgid "Audience"
+msgstr "听众"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
+msgid "Available Track Tags"
+msgstr "可用的专题标签"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Bandy clamp hack"
+msgstr "Bandy夹子黑客"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Biography"
+msgstr "传记"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
+#, python-format
+msgid "Blocked"
+msgstr "暂停"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr "预订您的最佳讲座座位"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr "预订您的讲座"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_14
+msgid "Building a DIY cabin from the ground up"
+msgstr "从头开始建造一个DIY小屋"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr "按钮目标网址"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr "按钮标题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr "按钮出现"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr "有CTA按钮"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Call for Proposals"
+msgstr "提议"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "可以发布"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Canceled Stage"
+msgstr "已取消阶段"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage5
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Categories"
+msgstr "电商品类"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "类别"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_12
+msgid "Climate positive"
+msgstr "气候积极"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "颜色"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+msgid "Color Index"
+msgstr "颜色索引"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr "即将推出"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr "即将推出 ..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "公司名称"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
+msgid "Confirmation of {{ object.name }}"
+msgstr "确认 {{ object.name }}"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage1
+msgid "Confirmed"
+msgstr "已确认"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_13
+#: model_terms:event.track,description:website_event_track.event_7_track_3
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr "考虑建造一座木制房屋？请看这个视频，了解更多关于施工过程和最终结果的信息。一步一步的简单解释!有兴趣吗？"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#, python-format
+msgid "Contact"
+msgstr "联系人"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Contact Details"
+msgstr "联系人细节"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
+#, python-format
+msgid "Contact Email"
+msgstr "联系EMail"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
+msgid "Contact Phone"
+msgstr "电话"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
+msgid "Contact email is private and used internally"
+msgstr "联系电子邮件是私密的，只能在内部使用"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact me through a different email/phone"
+msgstr "通过不同的电子邮件/电话联系我"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
+msgid "Contact of the track, may be different from speaker."
+msgstr "关注专题，可能来自不同的演讲者。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
+msgid "Contact phone is private and used internally"
+msgstr "联系电话是私密的，只在内部使用"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Create a Track"
+msgstr "创建一个专题"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid "Create a Track Location"
+msgstr "创建一个专题的地点"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid "Create a Track Tag"
+msgstr "创建一个专题标签"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "客户"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_19
+msgid "DIY Timber Cladding Project"
+msgstr "DIY木材覆层项目"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Date"
+msgstr "日期"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_11
+msgid "Day 2 Wrapup"
+msgstr "第二天的总结"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_8
+msgid "Dealing with OpenWood Furniture"
+msgstr "处理OpenWood家具的问题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Define labels explaining kanban state management."
+msgstr "定义标签，解释看板状态管理。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
+msgid "Define the order in which the location will appear on \"Agenda\" page"
+msgstr "定义地点在“议程”页上出现的顺序"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
+msgstr ""
+"定义在事件中使用的步骤，从创建轨道到关闭轨道。\n"
+"            专题的创建，直到专题的关闭。\n"
+"            您将使用这些阶段来专题事件专题的进展。\n"
+"            解决一个事件轨道。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Delete"
+msgstr "删除"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "说明"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
+msgid "Description of the partner (name, function and company name)"
+msgstr "合作伙伴的描述（姓名、职能和公司名称）。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+msgid "Design contest (entire afternoon)"
+msgstr "设计竞赛（整个下午）"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+msgid "Design contest (entire day)"
+msgstr "设计竞赛（全天）"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+msgid "Detailed roadmap of our new products"
+msgstr "我们新产品的详细路线图"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+msgid "Discover our new design team"
+msgstr "发现我们的新设计团队"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr "当您的与会者观看您的专题时，向他们显示一个行动动作按钮。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "完成"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Dowel Hack"
+msgstr "榫卯结构"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr "下拉菜单"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
+msgid "Duration"
+msgstr "时长"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_3
+msgid "Easy Way To Build a Wooden House"
+msgstr "建造木屋的简单方法"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Edit Track"
+msgstr "编辑专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Email"
+msgstr "Email"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
+msgid "Email Template"
+msgstr "EMail模板"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "错误"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event"
+msgstr "活动"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+msgid "Event Location"
+msgstr "活动地点"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
+msgid "Event Locations"
+msgstr "活动地点"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Event Page"
+msgstr "活动网页"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
+msgid "Event Proposals Menus"
+msgstr "活动建议菜单"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "活动模板"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+msgid "Event Track"
+msgstr "活动专题"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_location
+msgid "Event Track Location"
+msgstr "活动专题地点"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_stage
+msgid "Event Track Stage"
+msgstr "活动专题阶段"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
+msgid "Event Track Tag"
+msgstr "活动专题标签"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr "活动专题标签类别"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event Tracks"
+msgstr "活动专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
+msgid "Event Tracks Menus"
+msgstr "活动专题菜单"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_21
+msgid "Event Wrapup"
+msgstr "活动总结"
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
+msgid "Event: Track Confirmation"
+msgstr "事件:专题确认"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr "事件 应用程序名称"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr "活动 PWA"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr "最喜欢的成员"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "收藏"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "Filter Tracks..."
+msgstr "筛选专题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Filter by Tags"
+msgstr "按标签筛选"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "已完工"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_2
+msgid "First Day Wrapup"
+msgstr "首日总结"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
+msgid "Folded in Kanban"
+msgstr "折叠看板"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "完美的图标，例如FA任务"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
+msgid "Format"
+msgstr "格式"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
+msgid "Fully accessible"
+msgstr "完全无障碍"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Future Activities"
+msgstr "未来活动"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr "做好准备并"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Glue tip"
+msgstr "提示"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
+msgid "Green"
+msgstr "绿色"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "绿色看板标签"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+msgid "Grey"
+msgstr "灰色"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "灰色看板标签"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_11
+msgid "Happy with OpenWood"
+msgstr "对OpenWood满意"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
+msgid "Has Message"
+msgstr "有信息"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
+msgid "High"
+msgstr "高"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
+msgid "Highest"
+msgstr "最高"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "首页"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+msgid "House of World Cultures"
+msgstr "世界文化之家"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "How can our team get in touch with you?"
+msgstr "我们的团队如何与您取得联系？"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+msgid "How to build your marketing strategy within a competitive environment"
+msgstr "如何在竞争环境中建立营销策略"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+msgid "How to communicate with your community"
+msgstr "如何与您的社区沟通"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+msgid "How to design a new piece of furniture"
+msgstr "如何设计一件新家具"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+msgid "How to develop automated processes"
+msgstr "如何开发自动化流程"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+msgid "How to follow us on the social media"
+msgstr "如何在社交媒体上关注我们"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+msgid "How to improve your quality processes"
+msgstr "如何改进您的质量过程"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+msgid "How to integrate hardware materials in your pieces of furniture"
+msgstr "如何集成家具中的五金材料"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+msgid "How to optimize your sales, from leads to sales orders"
+msgstr "如何优化您的销售，从线索到销售订单"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "图标"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "表示异常活动的图标。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr "如果选中，自动发布轨道，以便提供给客户的访问链接。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "确认后, 出现提示消息."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "If checked, the related tracks will be visible in the frontend."
+msgstr "如果选中，相关轨道将在前端可见。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr "如果在专题到达这一步时，设置发送EMail给客户。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
+msgstr "如果设置了，该讲座将被设置为每个登记参加活动的与会者的最爱。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "图像网址"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "In"
+msgstr "在"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
+#, python-format
+msgid "In Progress"
+msgstr "进行中"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_15
+msgid "In this video we will see how lumber is made in a sawmill factory."
+msgstr "在这段视频中，我们将看到木材是如何在锯木厂生产的。"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "In this video, I covered 6 tips and tricks to help out beginners:"
+msgstr "在这个视频中，我介绍了6个技巧和窍门，以帮助初学者。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "安装"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr "安装应用程序"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr "交互性"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Introduction"
+msgstr "介绍"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr "CTA是否真实存在"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
+msgid "Is Follower"
+msgstr "关注者"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is Published"
+msgstr "已发布"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr "提醒是否开启"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr "专题完成了吗？"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr "专题是在线的吗？"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr "专题马上到来"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr "今日专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr "专题即将开始"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr "# 被列入愿望清单"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr "是否提醒关闭"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "工作岗位"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Job Title"
+msgstr "工作头衔"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "看板暂停说明"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "看板进展中说明"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
+msgid "Kanban State"
+msgstr "看板状态"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
+msgid "Kanban State Label"
+msgstr "看板状态标签"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "看板有效解释"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+msgid "Key Success factors selling our furniture"
+msgstr "销售我们家具的关键成功因素"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_9
+msgid "Kitchens for the Future"
+msgstr "面向未来的厨房"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Late Activities"
+msgstr "最近的活动"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+msgid "Latest trends"
+msgstr "最新趋势"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_26
+msgid "Less Furniture is More Furniture"
+msgstr "更少的家具就是更多的家具"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_4
+msgid "Life at Home Around the World: William’s Story"
+msgstr "世界各地的家庭生活。威廉的故事"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_19
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr "在这里链接到Q&amp;A!是时候把那些旧的砖墙藏起来了。我喜欢这样的简单和改造型项目。:)-"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "现场直播"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr "现在直播"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_10
+msgid "Live Testimonial"
+msgstr "现场感言"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_25
+msgid "Live Testimonials"
+msgstr "现场感言"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
+msgstr "位置"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_13
+msgid "Log House Building"
+msgstr "原木屋建筑"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_15
+msgid "Logs to lumber"
+msgstr "原木到木材"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
+msgid "Low"
+msgstr "低"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+msgid "Lunch"
+msgstr "工作餐"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr "魔术按钮"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "主要附件"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Making a center marking gauge"
+msgstr "制作一个中心标尺"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
+msgstr "从这里管理您组织专题的地方（如房间、频道...）。"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+msgid "Medium"
+msgstr "媒介"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
+msgid "Menu Type"
+msgstr "菜单类型"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
+msgid "Message Delivery error"
+msgstr "消息传递错误"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+msgid "Minimal but efficient design"
+msgstr "最小但有效的设计"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr "CTA开始前几分钟"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr "专题开始前几分钟"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr "分钟，与专题开始相比较"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Miter saw tip"
+msgstr "木锯提示"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+msgid "Morning break"
+msgstr "上午休息"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "我的活动截止时间"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+msgid "My Company global presentation"
+msgstr "我公司的全球展示"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Tracks"
+msgstr "我的专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "名称"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "您的网站的活动渐进式网络应用程序的名称"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+msgid "New Certification Program"
+msgstr "新认证项目"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+msgid "New Track"
+msgstr "新的专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一个活动日历事件"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "No Track Visitors yet!"
+msgstr "还没有专题访问者！"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "No results found"
+msgstr "未找到结果"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track favorited by this visitor"
+msgstr "没有被该访客收藏的专题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr "没有找到专题。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr "请注意，无色标签不会在网站上出现。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of Actions"
+msgstr "动作数量"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of errors"
+msgstr "错误数"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要采取行动的消息数量"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "发送错误的消息数量"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_24
+msgid "Old is New"
+msgstr "旧的就是新的"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_20
+msgid "Our Last Day Together !"
+msgstr "我们在一起的最后一天 !"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+msgid "Partnership programs"
+msgstr "合作项目"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Phone"
+msgstr "电话"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Picture"
+msgstr "图片"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr "通过将您最喜爱的会谈添加到您的愿望清单中来计划您的体验"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please enter either a contact email address or a contact phone number."
+msgstr "请输入联系电子邮件地址或联系电话。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please fill out the form correctly."
+msgstr "请正确填写表格。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+msgid "Portfolio presentation"
+msgstr "投资组合报告"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_16
+msgid "Pretty. Ugly. Lovely."
+msgstr "漂亮。丑陋。可爱的。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "上一页"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
+msgid "Priority"
+msgstr "优先级"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_7
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+"我收到的最多的问题之一可能是我是如何开始做木工的！在这个视频中，我分享了我是如何/为什么开始做家具的。在这段视频中，我与您分享了我是如何/为什么开始制作家具的!"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage0
+msgid "Proposal"
+msgstr "建议"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Proposals are closed!"
+msgstr "建议关闭！"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
+msgid "Proposals on Website"
+msgstr "网站的建议"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Published"
+msgstr "已发布"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+msgid "Raising qualitive insights from your customers"
+msgstr "提升客户的定性见解"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage5
+#, python-format
+msgid "Ready for Next Stage"
+msgstr "下一阶段就绪"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
+msgid "Red"
+msgstr "红色"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "红色的看板标签"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage4
+msgid "Refused"
+msgstr "已拒绝"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr "与专题开始相比的相对时间（秒）"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "CTA开始前的剩余时间（秒）"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr "专题开始前的剩余时间（秒）"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
+msgid "Responsible User"
+msgstr "负责用户"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_23
+msgid "Restoring Old Woodworking Tools"
+msgstr "修复旧的木工工具"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_23
+msgid "Restoring old woodworking tools"
+msgstr "修复旧的木工工具"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Right angle clamp jig"
+msgstr "直角钳夹具"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
+msgid "SEO optimized"
+msgstr "SEO优化"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "短信息发送错误"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started"
+msgstr "安排一些专题来开始"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_6
+msgid "Securing your Lumber during transport"
+msgstr "在运输过程中确保木材的安全"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "Select categories"
+msgstr "选择类别"
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
+msgstr "发送给被接受曲目建议的演讲者(在正确的舞台上设置模板)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr "Seo 名称"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr "设置收藏夹"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Show all records which has next action date is before today"
+msgstr "显示所有的在今天之前的下一个行动日期的记录"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr "展示专题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker"
+msgstr "歌手"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker Bio"
+msgstr "歌手简介"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speaker Email"
+msgstr "歌手EMail"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr "歌手照片"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_email
+msgid ""
+"Speaker email is used for public display and may vary from contact email"
+msgstr "歌手电子邮件用于公开展示，可能与联系人电子邮件不同。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_name
+msgid "Speaker name is used for public display and may vary from contact name"
+msgstr "歌手姓名用于公开展示，可能与联系人姓名不同"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_phone
+msgid ""
+"Speaker phone is used for public display and may vary from contact phone"
+msgstr "歌手电话用于公开展示，可能与联络电话不同"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speakers"
+msgstr "歌手"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Stage"
+msgstr "阶段"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Stage Description and Tooltips"
+msgstr "阶段说明和工具提示"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
+msgid "Stage Name"
+msgstr "阶段名称"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "Starting now!"
+msgstr "从现在开始"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+msgid "Status & Strategy"
+msgstr "状态&策略"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来活动。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submission Agreement"
+msgstr "提交协议"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submit Proposal"
+msgstr "提交建议"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
+msgid "Tag Line"
+msgstr "标签行"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
+msgid "Tag Name"
+msgstr "标签名"
+
+#. module: website_event_track
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "标签名称已存在!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Tags"
+msgstr "标签"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Talk Proposals"
+msgstr "演讲提案"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr "讲座添加到您的收藏夹"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr "已经在您的收藏夹中的讲座"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr "讲座从您的收藏夹中删除"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#, python-format
+msgid "Talks"
+msgstr "演讲"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talks Types"
+msgstr "演讲类型"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "任务正在进行中，单击以暂停或设置为完成。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr "任务被暂停。 单击以取消阻止或设置为已完成。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Thank you for your proposal."
+msgstr "谢谢您的建议。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_url
+msgid "The full URL to access the document through the website."
+msgstr "通过网站访问文档的完整网址。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+#: model:event.track,name:website_event_track.event_track29
+msgid "The new marketing strategy"
+msgstr "新的营销策略"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+msgid "The new way to promote your creations"
+msgstr "推广您的创意的新方法"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr "有很多想法值得探索，所以从适合绝对初学者的10个DIY家具想法开始。"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"There are several variants of wood is available in the world but we are talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+msgstr ""
+"世界上有几种不同的木材，但我们讨论的是世界上最昂贵的木材。\n"
+"    但我们谈论的是世界上最昂贵的木材，为了保持这一点，我们安排了十种最昂贵的木材。"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
+msgstr "一旦与会者开始浏览您的活动，它们就会自动创建。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "This event does not accept proposals."
+msgstr "这一活动不接受建议。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr "这个字段存放网站上用作移动应用图标的图像（PNG格式）。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "这个字段持有事件的渐进式网络应用程序名称。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr "这个网页还没有被保存为离线阅读。<br/>，请检查您的网络连接。"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr "当此阶段中没有任何记录要呈现时，将在看板视图中被收藏。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "该步骤已完成，单击设置为暂停或进行中。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "This track does not have a description."
+msgstr "这首专题没有描述。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Timely release of presentation material (slides),\n"
+"                                    for publishing on our website."
+msgstr ""
+"及时发布演示材料（幻灯片）,\n"
+"                 用以在我们的网站上发布。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__name
+msgid "Title"
+msgstr "称谓"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Today Activities"
+msgstr "今天的活动"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_22
+msgid "Tools for the Woodworking Beginner"
+msgstr "木工初学者的工具"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_5
+msgid "Top 10 Most Expensive Wood in the World"
+msgstr "世界上最昂贵的10种木材"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following different properties and use."
+msgstr ""
+"世界上最昂贵的木材是一个相当有趣的话题，一些人可能会感到惊讶，全球有数百种不同性质和用途的木材。\n"
+"    全球有数百种不同性质和用途的木材。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Track"
+msgstr "专题"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr "专题/访客链接"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_blocked
+msgid "Track Blocked"
+msgstr "专题暂停"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
+msgid "Track Count"
+msgstr "专题计数"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date
+msgid "Track Date"
+msgstr "专题日期"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr "专题结束日期"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr "专题地点"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Track Proposals Menu Item"
+msgstr "专题方案菜单项目"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_ready
+msgid "Track Ready"
+msgstr "专题已就绪"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_ready
+msgid "Track Ready for Next Stage"
+msgstr "下一阶段就绪"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
+msgid "Track Stage"
+msgstr "专题阶段"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
+#: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+msgid "Track Stages"
+msgstr "专题阶段"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr "专题标签类别"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr "专题标签类别"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
+msgid "Track Tags"
+msgstr "专题标签"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr "专题标签类别"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr "专题访问者"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr "专题访问者"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
+msgstr "专题访客存储您的事件的统计数据，包括专题被列入愿望清单的次数。"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_blocked
+msgid "Track blocked"
+msgstr "专题暂停"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr "持续时间（小时）"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
+msgid "Tracks"
+msgstr "专题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Tracks Menu Item"
+msgstr "专题菜单项目"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
+msgid "Tracks Proposals on Website"
+msgstr "专题关于网站的建议"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
+msgstr "专题定义了您的活动日程。它们可以是讲座、研讨会或任何类似的活动。"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
+msgid "Tracks on Website"
+msgstr "在网站上专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "记录的异常活动类型。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "未发布"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+msgstr ""
+"使用这些简单的步骤，可以轻松地用短箱皮卡拖运长条形木材。  一剂木匠的\n"
+"    巧，加上几块木板、一条结实的带子和几颗螺丝钉，我就可以轻松地把长木板从木场拖到下一级木工车间或工地。\n"
+"    长木板从木材厂运到下一级木工车间或工作现场。"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+msgstr ""
+"使用独特的捆扎带包裹方法（不是蹦极绳！！），可以将木材牢牢捆住，而不需要打上或解开复杂的结。\n"
+"    牢牢地束缚住木材，而不需要打和解复杂的绳结。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "View Track"
+msgstr "查看专题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "Visible in agenda"
+msgstr "在议程中可以看到"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
+msgid "Visible on current website"
+msgstr "在当前网站显示"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "访问者"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr "访客愿望清单"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr "访客愿望清单"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_1
+msgid "Voice from Customer"
+msgstr "来自客户的声音"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to add this track to their list of favorites"
+msgstr "等待访客将这一专题添加到他们的最爱列表中"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr "我们没有找到任何与您相匹配的专题"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We require speakers to accept an agreement in which they commit to:"
+msgstr "我们要求歌手接受协议，他们承诺："
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"We will accept a broad range of\n"
+"                            presentations, from reports on academic and\n"
+"                            commercial projects to tutorials and case\n"
+"                            studies. As long as the presentation is\n"
+"                            interesting and potentially useful to the\n"
+"                            audience, it will be considered for\n"
+"                            inclusion in the programme."
+msgstr ""
+"我们将接受范围广泛的\n"
+"                            的演讲，从学术和商业项目的报告到辅导和案例\n"
+"                            商业项目的报告到教程和案例研究\n"
+"                            研究。只要演讲内容是\n"
+"                            有意思，并且对听众有潜在的帮助\n"
+"                            只要演讲内容有趣，对听众有潜在的帮助，就会被考虑列入\n"
+"                            纳入该计划。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "We will evaluate your proposition and get back to you shortly."
+msgstr "我们将评估您的建议，并尽快给您回复。"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+msgid "Website"
+msgstr "网站"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr "网站应用图标"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_event_menu
+msgid "Website Event Menu"
+msgstr "网站活动菜单"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr "网站图像"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "网站菜单"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
+msgid "Website URL"
+msgstr "网站网址"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "网页访问者"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
+msgid "Website communication history"
+msgstr "网上沟通记录"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
+msgid "Website meta description"
+msgstr "网站元说明"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "网站元关键词"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
+msgid "Website meta title"
+msgstr "网站元标题"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "网站无版权图像"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_10
+msgid "Welcome to Day 2"
+msgstr "欢迎来到第2天"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_1
+msgid "What This Event Is All About"
+msgstr "本次活动的目的是什么"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "What is your talk about?"
+msgstr "您的讲座内容是什么？"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr "谁会做这个演讲？我们将向与会者展示这个，以展示您的讲座。"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_2
+msgid "Who's OpenWood anyway ?"
+msgstr "到底谁是OpenWood？"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr "# 被列入愿望清单"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+msgid "Wishlisted Tracks"
+msgstr "愿望清单中的条目"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Wishlists"
+msgstr "心愿单"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_7
+msgid "Woodworking: How I got started!"
+msgstr "木工：我是如何开始的!"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "You cannot access this page."
+msgstr "无法访问此网页。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr "您必须启用推送通知，以获得您喜欢的讲座的提醒。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr "您已经离线了!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "a few seconds"
+msgstr "几秒钟"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "ago"
+msgstr "之前"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"John Doe was born in...\""
+msgstr "如。“无名氏出生在……”"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"This talk will be about...\""
+msgstr "如。“这次演讲的主题是……”"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr "例如现在就买！。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Inspiring Business Talk"
+msgstr "例如：具启发性的商务讲座"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr "如：http://example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "hours"
+msgstr "小时"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after track starts"
+msgstr "专题开始后几分钟"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "现在就注册到您的最喜欢的讲座。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr "搜索。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr "开始<span/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr "开始<span/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr "专题"

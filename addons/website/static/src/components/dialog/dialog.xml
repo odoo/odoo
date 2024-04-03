@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.WebsiteDialog" owl="1">
+    <Dialog contentClass="contentClasses"
+        size="props.size"
+        title="props.title">
+        <t t-set-slot="default">
+            <t t-if="props.slots and props.slots.default" t-slot="default"/>
+            <t t-else="" t-esc="props.body"/>
+        </t>
+        <t t-set-slot="footer">
+            <t t-if="props.slots and props.slots.footer" t-slot="footer"/>
+            <t t-else="">
+                <button class="btn btn-primary" t-on-click="protectedClick(props.primaryClick)" t-att-disabled="state.disabled">
+                    <t t-esc="props.primaryTitle"/>
+                </button>
+                <button t-if="props.showSecondaryButton" class="btn btn-secondary" t-on-click="protectedClick(props.secondaryClick)" t-att-disabled="state.disabled">
+                    <t t-esc="props.secondaryTitle"/>
+                </button>
+            </t>
+        </t>
+    </Dialog>
+</t>
+</templates>

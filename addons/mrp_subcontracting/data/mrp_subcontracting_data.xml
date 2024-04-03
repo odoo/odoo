@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="route_resupply_subcontractor_mto" model='stock.route'>
+            <field name="name">Resupply Subcontractor on Order</field>
+            <field name="company_id"></field>
+            <field name="sequence">15</field>
+        </record>
+        <function model="res.company" name="_create_missing_subcontracting_location" />
+        <function model="stock.warehouse" name="write">
+            <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
+            <value eval="{'subcontracting_to_resupply': True}"/>
+        </function>
+    </data>
+</odoo>

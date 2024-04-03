@@ -1,0 +1,38 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatterTopbar {
+    min-height: $o-statusbar-height;
+    box-sizing: content-box;
+
+    @include media-breakpoint-down(md) {
+        overflow-x: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.o_ChatterTopbar_controllers {
+    padding-left: var(--ChatterTopbar-padding-left, 0);
+}
+
+.o_ChatterTopbar_tools {
+    padding-right: var(--ChatterTopbar-padding-right, 0);
+    border-bottom: var(--ChatterTopbar-border);
+}
+
+.o_ChatterTopbar_borderLeft {
+    border-left: var(--ChatterTopbar-border);
+}
+
+.o_ChatterTopbar_button {
+    margin-bottom: var(--ChatterTopbar-padding-v, 0);
+    margin-top: var(--ChatterTopbar-padding-v, 0);
+}
+
+.o_ChatterTopbar_buttonClose {
+    width: $o-statusbar-height;
+}

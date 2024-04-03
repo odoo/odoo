@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="inside">
+            <t t-if="props.line.get_sale_order()">
+                <li class="info orderline-sale-order">
+                    <i class="fa fa-basket" role="img" aria-label="SO" title="SO"/>
+                    <t t-esc="props.line.get_sale_order().name" />
+                </li>
+                <table t-if="props.line.get_sale_order().details" class="sale-order-info">
+                    <t t-foreach='props.line.get_sale_order().details' t-as='line' t-key='line_index'>
+                        <tr>
+                            <td><t t-esc="line['product_uom_qty']"/>x</td>
+                            <td style="max-width: 275px;">
+                                <t t-esc="line['product_name']" />
+                            </td>
+                            <td>:</td>
+                            <td><t t-esc="env.pos.format_currency(line['total'])" /> (tax incl.)</td>
+                        </tr>
+                    </t>
+                </table>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

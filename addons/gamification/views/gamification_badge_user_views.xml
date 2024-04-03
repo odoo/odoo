@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="badge_user_kanban_view" model="ir.ui.view" >
+        <field name="name">Badge User Kanban View</field>
+        <field name="model">gamification.badge.user</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey" action="action_open_badge" type="object">
+                <field name="badge_name"/>
+                <field name="badge_id"/>
+                <field name="user_id"/>
+                <field name="comment"/>
+                <field name="create_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click oe_kanban_badge oe_kanban_color_white o_kanban_gamification">
+                            <div class="o_kanban_content">
+                                <div class="o_kanban_image">
+                                    <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image_1024', record.badge_id.raw_value)" t-att-title="record.badge_name.value" t-att-alt="record.badge_name.value" /></a>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <h4 class="mt0 mb0">
+                                        <a class="o_kanban_record_title" type="open"><t t-esc="record.badge_name.raw_value" /></a>
+                                    </h4>
+                                    <t t-if="record.comment.raw_value">
+                                        <p class="o_kanban_record_subtitle"><em><field name="comment"/></em></p>
+                                    </t>
+                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</data></odoo>

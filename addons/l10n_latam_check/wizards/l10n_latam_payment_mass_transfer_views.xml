@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_latam_payment_mass_transfer_form" model="ir.ui.view">
+        <field name="name">l10n_latam.payment.mass.transfer.form</field>
+        <field name="model">l10n_latam.payment.mass.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="check_ids" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <group>
+                    <group name="destination_journal_group">
+                        <field name="destination_journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                    </group>
+                    <group name="other_check_info">
+                        <field name="payment_date"/>
+                        <field name="communication"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create Transfers"
+                        name="action_create_payments"
+                        type="object"
+                        class="oe_highlight"
+                        data-hotkey="q"/>
+                    <button string="Cancel"
+                        class="btn btn-secondary"
+                        special="cancel"
+                        data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_l10n_latam_payment_mass_transfer" model="ir.actions.act_window">
+        <field name="name">Check Transfer</field>
+        <field name="res_model">l10n_latam.payment.mass.transfer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

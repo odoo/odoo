@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <!-- email alias for maintenance requests -->
+    <record id="mail_alias_equipment" model="mail.alias">
+        <field name="alias_name">helpdesk</field>
+        <field name="alias_model_id" ref="model_maintenance_request"/>
+        <field name="alias_user_id" ref="base.user_admin"/>
+    </record>
+</data>
+</odoo>

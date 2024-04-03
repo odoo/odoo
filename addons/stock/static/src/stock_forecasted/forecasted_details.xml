@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="stock.ForecastedDetails" owl="1">
+        <table class="o_report_replenishment table table-bordered bg-view">
+            <thead>
+                <tr class="bg-light">
+                    <td>Replenishment</td>
+                    <td>Receipt</td>
+                    <td t-if="props.docs.multiple_product">Product</td>
+                    <td class="text-end"><t t-out="props.docs.uom"/></td>
+                    <td>Used by</td>
+                    <td>Delivery</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-if="onHandCondition">
+                    <td>Inventory On Hand</td>
+                    <td/>
+                    <td t-if="props.docs.multiple_product"/>
+                    <td class="text-end">0</td>
+                    <td/>
+                    <td/>
+                    <td/>
+                    <td/>
+                </tr>
+                <tr t-foreach="props.docs.lines" t-as="line" t-key="line.index" t-attf-class="#{line.is_matched and 'o_grid_match'}">
+                    <td t-attf-class="#{line.is_late and 'o_grid_warning'}">
+                        <a t-if="line.document_in"
+                            href="#" 
+                            t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
+                            t-out="line.document_in.name"
+                            class="fw-bold"/>
+
+                        <t t-elif="line.reservation">
+                            Reserved from stock
+                            <button t-if="line.move_out and line.move_out.picking_id"
+                                class="btn btn-sm btn-primary o_report_replenish_unreserve"
+                                name="unreserve_link"
+                                t-on-click="() => this._unreserve('stock.picking', line.move_out.picking_id.id)">
+                                Unreserve
+                            </button>
+                        </t>
+                        <t t-elif="line.replenishment_filled">
+                            <t t-if="line.document_out">Inventory On Hand
+                                <button t-if="displayReserve(line)"
+                                    class="btn btn-sm btn-primary o_report_replenish_reserve"
+                                    name="reserve_link"
+                                    t-on-click="() => this._reserve('stock.picking', line.move_out.picking_id.id)">
+                                    Reserve
+                                </button>
+                            </t>
+                            <t t-else="">Free Stock</t>
+                        </t>
+                        <span t-else="" class="text-muted">Not Available</span>
+                    </td>
+                    <td t-out="line.receipt_date or ''"
+                        t-attf-class="#{line.is_late and 'o_grid_warning'}"/>
+                    <td t-if="props.docs.multiple_product" t-out="line.product.display_name"/>
+                    <td class="text-end"><t t-if="! line.replenishment_filled">- </t><t t-out="_formatFloat(line.quantity)"/></td>
+                    <td t-attf-class="#{! line.replenishment_filled and 'o_grid_warning'}" name="usedby_cell">
+                        <button t-if="line.move_out and line.move_out.picking_id"
+                            t-attf-class="o_priority o_priority_star o_report_replenish_change_priority fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
+                            t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
+                            name="change_priority_link"/>
+                        <a t-if="line.document_out"
+                            href="#"
+                            t-on-click.prevent="() => this.props.openView(line.document_out._name, 'form', line.document_out.id)"
+                            t-out="line.document_out.name"
+                            class="fw-bold"/>
+                    </td>
+                    <td t-out="line.delivery_date or ''"
+                        t-attf-class="#{! line.replenishment_filled and 'o_grid_warning'}"/>
+                </tr>
+            </tbody>
+            <thead>
+                <tr class="o_forecasted_row bg-200">
+                    <td colspan="2">Forecasted Inventory</td>
+                    <td t-out="_formatFloat(this.props.docs.virtual_available)" class="text-end"/>
+                </tr>
+            </thead>
+            <tbody t-if="props.docs.qty.in or props.docs.qty.out">
+                <tr t-if="props.docs.draft_picking_qty.in" name="draft_picking_in">
+                    <td colspan="2">Incoming Draft Transfer</td>
+                    <td t-out="_formatFloat(this.props.docs.draft_picking_qty.in)" class="text-end"/>
+                </tr>
+                <tr t-if="props.docs.draft_picking_qty.out" name="draft_picking_out">
+                    <td colspan="2">Outgoing Draft Transfer</td>
+                    <td t-out="_formatFloat(this.props.docs.draft_picking_qty.out)" class="text-end"/>
+                </tr>
+            </tbody>
+            <thead>
+                <tr class="o_forecasted_row bg-200">
+                    <td colspan="2">Forecasted with Pending</td>
+                    <td t-out="_formatFloat(futureVirtualAvailable)" class="text-end"/>
+                </tr>
+            </thead>
+        </table>
+    </t>
+</templates>

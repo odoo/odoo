@@ -1,0 +1,222 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_delivery
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Jiří Podhorecký, 2022
+# Jakub Smolka, 2023
+# Katerina Horylova, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Katerina Horylova, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_shipping_method
+msgid "<b>Shipping Method: </b>"
+msgstr "<b>Způsob dopravy:</b>"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"Popis produktu, který chcete sdělit vašim zákazníkům. Tento popis bude "
+"zkopírován do každé objednávky, objednávky a zákaznické faktury / kreditní "
+"poznámky"
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "Anonymous express checkout partner for order %s"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
+msgid "Can Publish"
+msgstr "Může publikovat"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid "Choose a delivery method"
+msgstr "Zvolit způsob doručení"
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_res_country
+msgid "Country"
+msgstr "Stát"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "DHL Shipping Methods"
+msgstr "Přepravní možnosti DHL"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
+msgid "Delivery Amount"
+msgstr "množství dodávky"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery will be updated after choosing a new delivery method"
+msgstr "Dodávka bude aktualizována po výběru nového způsobu doručení"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
+msgid "Delivery:"
+msgstr "Doručení:"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
+msgid "Description displayed on the eCommerce and on online quotations."
+msgstr "Popis zobrazený na eCommerce a na online nabídkách."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
+msgid "Description for Online Quotations"
+msgstr "Popis pro online nabídky"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Easypost Shipping Methods"
+msgstr "Přepravní možnosti Easypost"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "FedEx Shipping Methods"
+msgstr "Způsoby přepravy FedEx"
+
+#. module: website_sale_delivery
+#. odoo-javascript
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
+#, python-format
+msgid "Free"
+msgstr "Zdarma"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is Published"
+msgstr "Je publikováno"
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
+msgstr ""
+"Zdá se, že způsob doručení není kompatibilní s vaší adresou. Obnovte stránku"
+" a zkuste to znovu."
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+"Zdá se, že pro vaši objednávku již proběhla transakce, způsob doručení již "
+"nelze změnit."
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
+msgstr ""
+"Pro vaši aktuální objednávku a dodací adresu není k dispozici žádný způsob "
+"přepravy. Pro více informací nás prosím kontaktujte."
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
+msgid "Published"
+msgstr "Publikováno"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr "Omezit publikování na této webstránce."
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Prodejní objednávka"
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Řádek zakázky"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+msgid "Select to compute delivery rate"
+msgstr "Vyberte pro výpočet rychlosti doručení"
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "Přepravní metody"
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "Sorry, we are unable to ship your order"
+msgstr "Je nám líto, ale vaši objednávku nemůžeme odeslat"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
+msgid "The amount without tax."
+msgstr "Částka bez daně."
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "USPS Shipping Methods"
+msgstr "Přepravní možnosti USPS"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
+msgid "Visible on current website"
+msgstr "Viditelné na aktuální webstránce"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "Webstránka"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "URL webové stránky"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "bpost Shipping Methods"
+msgstr "Přepravní možnosti bpost"

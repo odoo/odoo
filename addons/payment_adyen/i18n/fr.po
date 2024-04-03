@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+# 
+# Translators:
+# Martin Trigaux, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; plusieurs commandes trouvées"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; aucune commande trouvée"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen : Erreur de rétroaction"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen : merchantSig incorrect, %s reçu, %s calculé"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen : données reçues pour la référence %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr ""
+"Adyen : données reçues avec des références manquantes (%s) ou pspReference "
+"(%s) manquante"
+
+#. module: payment_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Comment configurer votre compte Adyen?"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Compte marchand"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Intermédiaire de Paiement"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
+msgid "Skin Code"
+msgstr "Skin Code"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Skin HMAC Key"

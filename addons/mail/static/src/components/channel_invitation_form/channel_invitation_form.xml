@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelInvitationForm" owl="1">
+        <t t-if="channelInvitationForm">
+            <div class="o_ChannelInvitationForm d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
+                <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
+                <t t-if="!messaging.isCurrentUserGuest">
+                    <div class="mx-3 my-2">
+                        <input class="o_ChannelInvitationForm_searchInput form-control" type="text" t-att-value="channelInvitationForm.searchTerm" placeholder="Type the name of a person" t-on-input="channelInvitationForm.onInputSearch" t-ref="searchInput"/>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
+                        <t t-foreach="channelInvitationForm.selectablePartnerViews" t-as="selectablePartnerView" t-key="selectablePartnerView.localId">
+                            <ChannelInvitationFormSelectablePartner record="selectablePartnerView"/>
+                        </t>
+                        <t t-if="channelInvitationForm.selectablePartners.length === 0">
+                            <div class="mx-3">No user found that is not already a member of this channel.</div>
+                        </t>
+                        <t t-if="channelInvitationForm.searchResultCount > channelInvitationForm.selectablePartners.length">
+                            <div class="mx-3">
+                                Showing <t t-esc="channelInvitationForm.selectablePartners.length"/> results out of <t t-esc="channelInvitationForm.searchResultCount"/>. Narrow your search to see more choices.
+                            </div>
+                        </t>
+                    </div>
+                    <t t-if="channelInvitationForm.selectedPartners.length > 0">
+                        <div class="mx-3 mt-3">
+                            <h4>Selected users:</h4>
+                            <div class="o_ChannelInvitationForm_selectedPartners overflow-auto">
+                                <t t-foreach="channelInvitationForm.selectedPartnerViews" t-as="selectedPartnerView" t-key="selectedPartnerView.localId">
+                                    <ChannelInvitationFormSelectedPartner record="selectedPartnerView"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="mx-3 mt-2 mb-3">
+                        <button class="o_ChannelInvitationForm_inviteButton btn btn-primary w-100" t-att-disabled="channelInvitationForm.selectedPartners.length === 0" t-on-click="channelInvitationForm.onClickInvite">
+                            <t t-esc="channelInvitationForm.inviteButtonText"/>
+                        </button>
+                    </div>
+                </t>
+                <t t-if="channelInvitationForm.thread and channelInvitationForm.thread.invitationLink">
+                    <h4 class="mx-3 mt-3 mb-2">Invitation Link</h4>
+                    <div class="mx-3 mt-2 mb-3">
+                        <div class="input-group">
+                            <input class="form-control" type="text" t-att-value="channelInvitationForm.thread.invitationLink" readonly="" t-on-focus="channelInvitationForm.onFocusInvitationLinkInput" />
+                            <button class="btn btn-primary" t-on-click="channelInvitationForm.onClickCopy">
+                                <i class="fa fa-copy"/>
+                            </button>
+                        </div>
+                        <t t-if="channelInvitationForm.accessRestrictedToGroupText">
+                            <div class="o_ChannelInvitationForm_accessRestrictedToGroup mt-2" t-esc="channelInvitationForm.accessRestrictedToGroupText"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

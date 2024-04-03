@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.form</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <field name="employee_type" position="replace"/>
+            <field name="user_id" position="replace"/>
+            <group name="location" position="after">
+                <group string="Status" name="status">
+                    <field name="employee_type"/>
+                    <field name="first_contract_date" invisible="1"/>
+                    <field name="user_id" string="Related User"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

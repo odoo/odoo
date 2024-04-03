@@ -1,0 +1,302 @@
+
+@each $font-name, $font-config in $o-theme-font-configs {
+    $url: map-get($font-config, 'url');
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        }
+    }
+}
+
+#oe_snippets {
+    top: 0;
+    .oe-toolbar {
+        .color-indicator {
+            padding: 0 2px 2px 2px;
+        }
+    }
+}
+
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+        background: rgba($o-we-content-to-translate-color, 0.5) !important;
+    }
+
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
+        background: rgba($o-we-translated-content-color, 0.25) !important;
+
+        &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.25) !important;
+        }
+    }
+}
+
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}
+
+.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+        // e.g. Useful if "Height" option (50% or 100%) is enabled.
+        display: flex !important;
+    }
+    &::before {
+        position: absolute;
+        // Content is 0px wide => use available width.
+        width: -webkit-fill-available;
+        width: -moz-available;
+        right: 20px;
+        z-index: 100;
+        background-color: $o-we-accent;
+        font-size: 0px;
+        content: "."; // Content is mandatory.
+    }
+    &.d-md-none::before, &.d-lg-none::before {
+        height: 50px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/desktop_invisible.svg") no-repeat 100% 100%;
+    }
+    &:not(.d-md-none):not(.d-lg-none)::before {
+        height: 30px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/mobile_invisible.svg") no-repeat 100% 100%;
+    }
+}
+
+// SNIPPET PANEL
+// TODO: remove me in master
+$i: 1;
+@each $font-name, $font-config in $o-theme-font-configs {
+    we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
+        font-family: o-safe-get($font-config, 'family', $font-family-base);
+    }
+    $i: $i + 1;
+}
+.o_we_add_google_font_btn {
+    border-top: 1px solid currentColor !important;
+}
+
+#oe_snippets > .o_we_customize_panel {
+    .o_we_user_value_widget.o_palette_color_preview_button {
+        display: inline-flex;
+        margin: 1% 0;
+        padding-right: 0.3rem;
+        width: 50%;
+        background: transparent;
+
+        &.active, &:hover {
+            background: transparent;
+
+            > div {
+                box-shadow: 0 0 0 2px $o-we-bg-darkest, 0 0 0 3px $o-we-accent;
+            }
+        }
+
+        > div {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: stretch;
+            justify-content: flex-end;
+            margin: 3px;
+            min-height: $o-we-sidebar-content-field-dropdown-grid-item-height * .5;
+            border-radius: $o-we-sidebar-content-field-dropdown-grid-item-height;
+            box-shadow: 0 0 0 1px $o-we-bg-darkest;
+        }
+
+        .o_palette_color_preview {
+            flex: 1 0 0;
+        }
+    }
+
+    we-select.o_scroll_effects_selector we-button {
+        padding-top: $o-we-item-spacing;
+        padding-bottom: $o-we-item-spacing;
+
+        img {
+            max-height: 80px;
+            width: auto;
+            margin-right: $o-we-item-spacing;
+            margin-left: $o-we-item-spacing * .5;
+        }
+    }
+
+    we-button.o_we_device {
+        > div {
+            // FIXME maybe there is some refactoring to do so that all SVG icons
+            // can be properly aligned with extra CSS rules...
+            display: flex;
+            align-items: center;
+
+            svg {
+                width: 12px;
+                fill: $o-we-sidebar-content-field-clickable-color;
+                margin-bottom: 0;
+
+                &:hover {
+                    fill: $o-we-sidebar-content-field-pressed-color;
+                }
+            }
+        }
+        &.active > div svg {
+            fill: $o-we-color-danger;
+            &:hover {
+                fill: darken($o-we-color-danger, 7.5%);
+            }
+        }
+    }
+
+    //----------------------------------------------------------------------
+    // 'Options' Tab Specific Components
+    //----------------------------------------------------------------------
+
+    // Theme Colors Editor
+    .o_we_theme_colors_selector {
+
+        > we-title {
+            display: none
+        }
+        .o_we_so_color_palette.o_we_user_value_widget {
+
+            + .o_we_so_color_palette {
+                margin-left: $o-we-item-spacing * .5;
+
+                &:nth-child(4) {
+                    margin-left: $o-we-item-spacing * 3;
+                }
+            }
+            .o_we_color_preview {
+                width: $o-we-sidebar-content-field-colorpicker-size-large;
+                height: $o-we-sidebar-content-field-colorpicker-size-large;
+            }
+        }
+        > div, we-select.o_we_theme_colors_select, we-toggler {
+            display: flex;
+        }
+        > div {
+            align-items: stretch;
+            width: 100%;
+        }
+        we-select.o_we_theme_colors_select {
+            justify-content: flex-end;
+            margin-left: auto;
+
+            > div, we-toggler {
+                height: 100%;
+            }
+
+            we-selection-items {
+                padding-top: $o-we-dropdown-item-height * .5;
+                padding-bottom: $o-we-dropdown-item-height * .5;
+                background: $o-we-dropdown-item-active-bg;
+            }
+        }
+        we-toggler {
+            align-items: center;
+            padding: 0 0.4rem;
+            font-size: 1.5em;
+
+            &:after {
+                content: none;
+            }
+        }
+    }
+
+    // Palettes Dropdown
+    .o_palette_color_preview_button > div {
+        min-height: 24px;
+    }
+
+    // CC Edition
+    .o_we_cc_preview_wrapper {
+        // Use box-shadow rather than border-bottom in order to
+        // avoid misalignments in the 'Options' tab.
+        border: 1px solid;
+        border-color: rgba($o-we-item-standup-color-light, .2) $o-we-sidebar-content-field-dropdown-border-color transparent;
+        box-shadow: 0 1px 0 $o-we-item-standup-color-dark;
+
+        + .o_we_collapse_toggler {
+            height: 35px; // FIXME hardcoded...
+        }
+    }
+}
+
+// SNIPPET OPTIONS
+.o_we_border_preview {
+    display: inline-block;
+    width: 999px;
+    max-width: 100%;
+    margin-bottom: 2px;
+    border-width: 4px;
+    border-bottom: none !important;
+}
+
+.pac-container { // google map autosuggestion (note: their CSS lib is not used)
+    z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    width: ceil($o-we-sidebar-width * 0.9) !important;
+    font-size: $o-we-sidebar-font-size;
+    margin-left: -$o-we-sidebar-width/2;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+    border-top: none;
+    border-radius: $o-we-item-border-radius;
+    overflow: hidden;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    margin-top: $o-we-sidebar-content-field-dropdown-spacing;
+    transform: translate(41px);
+
+    &:after {
+        display: none;
+    }
+
+    .pac-item {
+        @include o-text-overflow(block);
+        line-height: $o-we-sidebar-content-field-dropdown-item-height;
+        color: $o-we-sidebar-content-field-clickable-color;
+        padding: 0 1em 0 (2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size);
+        border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        font-size: $o-we-sidebar-font-size;
+
+        &:hover, &:focus, &.pac-item-selected {
+            background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+            cursor: pointer;
+        }
+
+        .pac-icon-marker {
+            position: absolute;
+            margin-left: -1em;
+
+            &::after {
+                content: '\f041';
+                font-family: FontAwesome;
+            }
+        }
+
+        .pac-item-query {
+            margin-right: 0.4em;
+            color: inherit;
+        }
+    }
+}
+
+// Editor UI
+.o_table_ui {
+    // TODO make a proper way to not instantiate table UI in the website.
+    display: none !important;
+}

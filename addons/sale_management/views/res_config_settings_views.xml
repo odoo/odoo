@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_config_online_confirmation_pay']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="standardized_offers_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="group_sale_order_template"/>
+                        <field name="module_sale_quotation_builder" invisible="1"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_sale_order_template"/>
+                        <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/send_quotations/quote_template.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                        <div class="text-muted">
+                            Create standardized offers with default products
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('group_sale_order_template', '=', False)]}">
+                            <div class="mt16">
+                                <label for="company_so_template_id" class="o_light_label"/>
+                                <field name="company_so_template_id" class="oe_inline"/>
+                            </div>
+                            <div class="mt8">
+                                <button name="%(sale_management.sale_order_template_action)d" icon="fa-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box"
+                    id="design_quotation_template_setting"
+                    attrs="{'invisible': [('group_sale_order_template','=',False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="module_sale_quotation_builder"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="module_sale_quotation_builder"/>
+                        <div class="text-muted">
+                            Design your quotation templates using building blocks<br/>
+                            <em attrs="{'invisible': [('module_sale_quotation_builder','=',False)]}">Warning: this option will install the Website app.</em>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_inherit_sale_management" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="attributes">
+                <attribute name="class">app_settings_block</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.HtmlField" owl="1">
+        <t t-if="props.readonly">
+            <span t-out="props.value or ''" />
+        </t>
+        <t t-else="" t-call="web.TextField" />
+    </t>
+
+</templates>

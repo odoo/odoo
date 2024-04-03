@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="InventoryReport.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
+    <xpath expr="(//div/*)[last()]" position="after">
+        <button t-if="props.resModel == 'stock.quant' and (!props.context.inventory_mode or props.context.inventory_report_mode) and !props.context.no_at_date"
+            type="button" class="btn btn-primary o_button_at_date me-2" t-on-click="onClickInventoryAtDate">
+            Inventory at Date
+        </button>
+        <button t-if="props.context.inventory_mode and !props.context.inventory_report_mode"
+            class="btn btn-secondary" type="button" t-on-click="onClickApplyAll">
+            Apply All
+        </button>
+    </xpath>
+</t>
+
+</templates>

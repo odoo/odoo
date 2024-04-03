@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="gd_fp_exempt" model="account.fiscal.position.template">
+            <field name="name">Exempt taxpayer</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+        </record>
+
+        <record id="gd_fp_do" model="account.fiscal.position.template">
+            <field name="name">Domestic</field>
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_id" ref="base.si"/>
+        </record>
+
+        <record id="gd_fp_do1" model="account.fiscal.position.template">
+            <field name="name">EU partner private</field>
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+        </record>
+
+        <record id="gd_fp_eu" model="account.fiscal.position.template">
+            <field name="name">EU partner</field>
+            <field name="sequence">30</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
+            <field name="country_group_id" ref="base.europe"/>
+        </record>
+
+        <record id="gd_fp_ne" model="account.fiscal.position.template">
+            <field name="name">Partner outside the EU</field>
+            <field name="sequence">40</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="auto_apply" eval="True"/>
+        </record>
+    </data>
+</odoo>

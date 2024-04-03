@@ -1,0 +1,130 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Add product mode"
+msgstr "Añadir modo de producto"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
+msgstr "Seleccione Variantes de Producto"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"Configurador: seleccione valores de atributo para añadir la variante de producto correspondiente a la orden.\n"
+"Tabla: añada varias variantes a la vez desde la tabla de valores de atributos."
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Plantilla del Producto"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Actualización de la plantilla"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "Almacenamiento local de matriz"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "Cuadrícula de entrada"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "Imprimir cuadrículas de variantes"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Producto"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "Configurador de productos"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de venta"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Selección de variantes de ventas"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO.\n"
+"If not, represents the matrix to open."
+msgstr ""
+"Almacenamiento técnico local de la tabla.\n"
+"Si grid_update, se cargará en la orden de venta.\n"
+"Si no, representa la matriz a abrir."
+
+#. module: sale_product_matrix
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+#, python-format
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""
+"No puede cambiar la cantidad de un producto presente en varias líneas de "
+"venta."

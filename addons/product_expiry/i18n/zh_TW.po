@@ -1,0 +1,500 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_expiry
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Tony Ng, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+"<span class=\"badge text-bg-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">到期警告</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days after receipt</span>"
+msgstr "<span> 天在收貨後</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days before expiration date</span>"
+msgstr "<span> 天在到期日前</span>"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__alert_date
+msgid "Alert Date"
+msgstr "警示日期"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "已到達過期通知日期"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "B.b."
+msgstr "最佳日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
+msgid "Best Before Date"
+msgstr "此日期前最佳"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
+msgid "Best before Date"
+msgstr "最佳日期"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "確認"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "確認採用過期組件"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "確認"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "創立者"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr "使用過期「過期警示」確定過期批次和序號的日期。"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Dates"
+msgstr "日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
+msgid "Description"
+msgstr "說明"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Discard"
+msgstr "取消"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
+msgstr "在交貨單上顯示到期日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Exp."
+msgstr "過期"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "過期通知"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "Expiration Date"
+msgstr "過期日期"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
+msgstr "到期日期將顯示在交貨單上"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Expired Lot(s)"
+msgstr "過期批次"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr "已提醒過期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr "在交貨單上包括到期日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+msgid "Last Modified on"
+msgstr "最後修改於"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "批次"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_lot
+msgid "Lot/Serial"
+msgstr "批次/序號"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__expiration_time
+msgid ""
+"Number of days after the receipt of the products (from the vendor or in "
+"stock after production) after which the goods may become dangerous and must "
+"not be consumed. It will be computed on the lot/serial number."
+msgstr "收到產品（來自供應商或生產後的庫存）後，貨物可能變得危險且不得食用的天數。它將根據批次/序號計算。"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before the Expiration Date after which an alert should be "
+"raised on the lot/serial number. It will be computed on the lot/serial "
+"number."
+msgstr "到期日之前的天數，之後應在批次/序號上發出警報。它將根據批次/序號計算。"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the Expiration Date after which the goods should be "
+"removed from the stock. It will be computed on the lot/serial number."
+msgstr "在到期日之前的天數，在此之後應將貨物從庫存中移除。它將根據批次/序號計算。"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the Expiration Date after which the goods starts "
+"deteriorating, without being dangerous yet. It will be computed on the "
+"lot/serial number."
+msgstr "在到期日之前，貨物開始變質但尚未危險的天數。它將根據批次/序號計算。"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "揀貨"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+msgstr "除了過期的，其他繼續"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "補貨組"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_template
+msgid "Product"
+msgstr "商品"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
+msgid "Product Expiry Alert"
+msgstr "產品過期警告"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "產品移動(移庫明細)"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product Variant"
+msgstr "產品款式"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_quant
+msgid "Quants"
+msgstr "數量"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
+msgid "Removal Date"
+msgstr "下架日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "顯示批次"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "庫存移動"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
+msgid "The Expiration Date has been reached."
+msgstr "已到到期日。"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "已達到此批次/序號的通知日期"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
+msgid ""
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
+msgstr "此處表明該序列號的商品變得危險的日期，此時該商品不能使用。"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
+msgid ""
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr "這是應從庫存中移除具有此序號的貨物的日期。此日期將用於 FEFO 刪除策略。"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_date
+msgid ""
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
+msgstr "此處表明該序列號的商品開始變質的日期（未變危險）。"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
+msgid "This lot is expired"
+msgstr "此批次已過期"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
+msgid "This lot is expired."
+msgstr "此批次已過期。"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_picking
+msgid "Transfer"
+msgstr "調撥"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+msgid "Use Expiration Date"
+msgstr "使用到期日"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
+msgid ""
+"When this box is ticked, you have the possibility to specify dates to manage"
+" product expiration, on the product and on the corresponding lot/serial "
+"numbers"
+msgstr "勾選後，您可以在產品和相應的批號/序號上指定管理產品過期的日期"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver some product expired lots.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+"您將交付一些過期批次的產品。\n"
+"您確認要繼續嗎？"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/wizard/confirm_expiry.py:0
+#, python-format
+msgid ""
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"Do you confirm you want to proceed ?"
+msgstr ""
+"您將交付已過期的產品 %(product_name)s, %(lot_name)s。\n"
+"您確認要繼續嗎？"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^A0N,44,33^FDUse by:"
+msgstr "^A0N,44,33^FD 使用期限："
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+"^BCN,100,Y,N,N\n"
+"^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,150"
+msgstr "^FO100,150"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDBest before:"
+msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD 此日期前最佳："
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,150\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+"^FO100,150\n"
+"^A0N,44,33^FD 使用期限："
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200"
+msgstr "^FO100,200"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,200\n"
+"^A0N,44,33^FDUse by:"
+msgstr ""
+"^FO100,200\n"
+"^A0N,44,33^FD 使用期限："
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FO100,200^BY3"
+msgstr "^FO100,200^BY3"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
+msgstr ""
+"^FO100,50\n"
+"^A0N,44,33^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid "^FS"
+msgstr "^FS"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FDLN/SN:"
+msgstr ""
+"^FS\n"
+"^FO100,100\n"
+"^A0N,44,33^FD 批次/序號："
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
+msgstr ""
+"^FS\n"
+"^FO100,200^BY3\n"
+"^BCN,100,Y,N,N\n"
+"^FD"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.label_lot_template_view_expiry
+msgid ""
+"^FS\n"
+"^FO100,250^BY3"
+msgstr ""
+"^FS\n"
+"^FO100,250^BY3"

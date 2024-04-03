@@ -1,0 +1,113 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp_mail
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Estimado/a <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> pidió que activara la autenticación de dos pasos para proteger su cuenta.<br><br>\n"
+"        La autenticación de dos pasos (\"A2P\") es un sistema de dobe autenticación.\n"
+"        El primer paso se hace con su contraseña y el segundo con un código que obtendrá de una aplicación móvil especializada.\n"
+"        Las aplicaciones populares incluyen Authy, Google Authenticator o Microsoft Authenticator.\n"
+"\n"
+"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                Activar mi autenticación de dos pasos\n"
+"            </a>\n"
+"        </p>\n"
+"    </p>\n"
+"</div>\n"
+"        "
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid "Account Security"
+msgstr "Seguridad de la cuenta"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr ""
+"Invitación a activar la autenticación de dos pasos en su cuenta de Odoo"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, python-format
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr ""
+"Se envió la invitación a activar la autenticación de dos pasos a los "
+"siguientes usuarios: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+msgid "Invite to use 2FA"
+msgstr "Invitar a usar la A2P"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+msgid "Invite to use two-factor authentication"
+msgstr "Invitar a usar la autenticación de 2 pasos"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+msgid "Name"
+msgstr "Nombre"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+msgid "Open two-factor authentication configuration"
+msgstr "Abrir la configuración de la identificación de 2 pasos"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+msgid "Settings: 2Fa Invitation"
+msgstr "Configuración: invitación 2Fa"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+msgid "User"
+msgstr "Usuario"

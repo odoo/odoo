@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_card" name="Card">
+    <div class="s_card card bg-white w-100">
+        <h4 class="card-header">Feature Title</h4>
+        <div class="card-body">
+            <p class="card-text">A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options.</p>
+        </div>
+        <div class="card-footer">
+            <i class="fa fa-1x fa-clock-o mr8"/><small>2 days ago</small>
+        </div>
+    </div>
+</template>
+
+<record id="website.s_card_000_scss" model="ir.asset">
+    <field name="name">Card 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_card/000.scss</field>
+</record>
+
+
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PartnerDetailsEdit" owl="1">
+        <section class="partner-details edit">
+            <div class="partner-picture">
+                <t t-if="partnerImageUrl">
+                    <img t-att-src="partnerImageUrl" alt="Partner"
+                         style="width: 64px; height: 64px; object-fit: cover;" />
+                </t>
+                <t t-else="">
+                    <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                </t>
+                <input type="file" class="image-uploader" t-on-change="uploadImage" />
+            </div>
+            <input class="detail partner-name" name="name" t-model="changes.name" placeholder="Name" t-on-change="captureChange" />
+            <div class="partner-details-box clearfix">
+                <div class="partner-details-left">
+                    <div class="partner-detail">
+                        <span class="label">Street</span>
+                        <input class="detail" name="street"
+                               t-model="changes.street"
+                               t-on-change="captureChange"
+                               placeholder="Street" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">City</span>
+                        <input class="detail" name="city"
+                               t-model="changes.city"
+                               t-on-change="captureChange"
+                               placeholder="City" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Postcode</span>
+                        <input class="detail" name="zip"
+                               t-model="changes.zip"
+                               t-on-change="captureChange"
+                               placeholder="ZIP" />
+                    </div>
+                    <div class="partner-detail" t-if="env.pos.states.some((state) => state.country_id[0] == changes.country_id)">
+                        <span class="label">State</span>
+                        <select class="detail" name="state_id" t-model="changes.state_id" t-on-change="captureChange">
+                            <option value="">None</option>
+                            <t t-foreach="env.pos.states" t-as="state" t-key="state.id">
+                                <option t-if="changes.country_id == state.country_id[0]" t-att-value="state.id">
+                                    <t t-esc="state.name" />
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Country</span>
+                        <select class="detail" name="country_id" t-model="changes.country_id" t-on-change="captureChange">
+                            <option value="">None</option>
+                            <t t-foreach="env.pos.countries" t-as="country" t-key="country.id">
+                                <option t-att-value="country.id">
+                                    <t t-esc="country.name" />
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div class="partner-details-right">
+                    <div class="partner-detail">
+                        <span class="label">Language</span>
+                        <select class="detail" name="lang" t-model="changes.lang" t-on-change="captureChange">
+                            <t t-foreach="env.pos.langs" t-as="lang" t-key="lang.id">
+                                <option t-att-value="lang.code">
+                                    <t t-esc="lang.name" />
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Email</span>
+                        <input class="detail" name="email" type="email" t-model="changes.email" t-on-change="captureChange" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Phone</span>
+                        <input class="detail" name="phone" type="tel" t-model="changes.phone" t-on-change="captureChange" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Mobile</span>
+                        <input class="detail" name="mobile" type="tel" t-model="changes.mobile" t-on-change="captureChange" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Barcode</span>
+                        <input class="detail barcode" name="barcode" t-model="changes.barcode" t-on-change="captureChange" />
+                    </div>
+                    <div class="partner-detail">
+                        <span class="label">Tax ID</span>
+                        <input class="detail vat" name="vat" t-model="changes.vat" t-on-change="captureChange" />
+                    </div>
+                    <div t-if="env.pos.pricelists.length gt 1" class="partner-detail">
+                        <span class="label">Pricelist</span>
+                        <select class="detail" name="property_product_pricelist" t-on-change="captureChange" t-model="changes.property_product_pricelist">
+                            <t t-foreach="env.pos.pricelists" t-as="pricelist"
+                               t-key="pricelist.id">
+                                <option t-att-value="pricelist.id">
+                                    <t t-esc="pricelist.display_name" />
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+</templates>

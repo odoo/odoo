@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Chart template of l10n_tr -->
+    <record id="chart_template_common" model="account.chart.template">
+        <field name="name">Tek Düzen Hesap Planı</field>
+        <field name="visible" eval="False"/>
+        <field name="code_digits">6</field>
+        <field name="bank_account_code_prefix">102</field>
+        <field name="cash_account_code_prefix">100</field>
+        <field name="transfer_account_code_prefix">103</field>
+        <field name="currency_id" ref="base.TRY"/>
+        <field name="country_id" ref="base.tr"/>
+    </record>
+
+    <record id="chart_template_7a" model="account.chart.template">
+        <field name="name">Tek Düzen Hesap Planı - 7/A seçeneği</field>
+        <field name="code_digits">6</field>
+        <field name="bank_account_code_prefix">102</field>
+        <field name="cash_account_code_prefix">100</field>
+        <field name="transfer_account_code_prefix">103</field>
+        <field name="parent_id" ref="l10n_tr.chart_template_common"/>
+        <field name="currency_id" ref="base.TRY"/>
+        <field name="country_id" ref="base.tr"/>
+    </record>
+
+    <record id="chart_template_7b" model="account.chart.template">
+        <field name="name">Tek Düzen Hesap Planı - 7/B seçeneği</field>
+        <field name="code_digits">6</field>
+        <field name="bank_account_code_prefix">102</field>
+        <field name="cash_account_code_prefix">100</field>
+        <field name="transfer_account_code_prefix">103</field>
+        <field name="parent_id" ref="l10n_tr.chart_template_common"/>
+        <field name="currency_id" ref="base.TRY"/>
+        <field name="country_id" ref="base.tr"/>
+    </record>
+
+</odoo>

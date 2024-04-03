@@ -1,0 +1,77 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr "任何新的“所有用户锁定日期”都必须晚于（或等于）前一个锁定日期。"
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for accountants is irreversible and can't be removed."
+msgstr "会计师的锁定日期是不可逆的，无法删除。"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr "‎新的税务锁定日期必须设置在上一个锁定日期之后。‎"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "‎税务锁定日期是不可逆的，无法删除。‎"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr "您无法锁定尚未结束的时间段。 因此，“所有用户锁定日期”必须在上个月的最后一天之前（或最后一天）。"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr "您无法锁定尚未结束的时间段。 因此，税务锁定日期必须在上个月的最后一天之前（或最后一天）。"
+
+#. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on accountants than on users. "
+"Therefore, the All Users Lock Date must be anterior (or equal) to the "
+"Invoice/Bills Lock Date."
+msgstr "您不能对会计师设置比对用户更严格的限制。因此，“所有用户锁定日期”必须位于结算单/帐单锁定日期之前（或等于）。"

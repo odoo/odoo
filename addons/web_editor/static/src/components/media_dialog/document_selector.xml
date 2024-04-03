@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.DocumentAttachment" owl="1">
+    <div class="o_existing_attachment_cell o_we_attachment_highlight card col-2 position-relative mb-2 p-2 opacity-trigger-hover cursor-pointer" t-att-class="{ o_we_attachment_selected: props.selected }" t-on-click="props.selectAttachment">
+        <RemoveButton remove="() => this.remove()"/>
+        <div t-att-data-url="props.url" role="img" t-att-aria-label="props.name" t-att-title="props.name" t-att-data-mimetype="props.mimetype" class="o_image d-flex align-items-center justify-content-center"/>
+        <small class="o_file_name d-block text-truncate" t-esc="props.name"/>
+    </div>
+</t>
+
+<t t-name="web_editor.DocumentsListTemplate" owl="1">
+    <div class="o_we_existing_attachments o_we_documents">
+        <div t-if="!hasContent" class="o_nocontent_help">
+            <p class="o_empty_folder_image">No documents found.</p>
+            <p class="o_empty_folder_subtitle">You can upload documents with the button located in the top left of the screen.</p>
+        </div>
+        <div t-else="" class="d-flex flex-wrap gap-2">
+            <t t-foreach="state.attachments" t-as="attachment" t-key="attachment.id">
+                <DocumentAttachment url="attachment.url"
+                    name="attachment.name"
+                    mimetype="attachment.mimetype"
+                    id="attachment.id"
+                    onRemoved="(attachmentId) => this.onRemoved(attachmentId)"
+                    selected="this.selectedAttachmentIds.includes(attachment.id)"
+                    selectAttachment="() => this.onClickDocument(attachment)"/>
+            </t>
+        </div>
+    </div>
+</t>
+</templates>

@@ -1,0 +1,335 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
+msgstr " '*' 不是一个有效的正则条码样式，您想的是不是'.*' ?"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+"<i>条码命名规则</i> 定义如何识别和归类条码。.\n"
+"                                当条码被扫码后，它就会关联到匹配到的 <i>第一条</i> 规则\n"
+"                                模式的语法是正则表达式，如果正则表达式匹配到条码的前缀\n"
+"                                则条码被匹配."
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr "一个条码命名规则定义了POS如何识别和解释条码"
+
+#. module: barcodes
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Add a new barcode nomenclature"
+msgstr "增加新条码命名规则"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__alias
+msgid "Alias"
+msgstr "别名"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__always
+msgid "Always"
+msgstr "总是"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr "此条形码命名规则的内部识别"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
+msgid "An internal identification of the barcode nomenclature"
+msgstr "条码命名规则的内部识别"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
+msgid "Any"
+msgstr "任意"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr "条形码事件混合"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "条码命名规则"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "条码命名规则"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
+msgid "Barcode Pattern"
+msgstr "条码模式"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "条码规则"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Barcode Scanned"
+msgstr "扫描到条码"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Barcode: "
+msgstr "条码: "
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__ean2upc
+msgid "EAN-13 to UPC-A"
+msgstr "EAN-13 转 UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean8
+msgid "EAN-8"
+msgstr "EAN-8"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
+msgid "Encoding"
+msgstr "编码"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
+msgid "Never"
+msgstr "从不"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "命名规则"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"                                zeroes."
+msgstr ""
+"模式也可以定义为如何数值化，例如重量或者价格也可以被编码到条码。\n"
+"它们以 <code>{NNN}</code>表示，在这里Ｎ用来定义号码哪儿编码为数字。\n"
+"浮点数也支持，小数用Ｄ表示，例如<code>{NNNDD}</code>。\n"
+"在这些案例中，在相关记录的条码字段<i>必填</i>显示这些数字为０。"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
+msgid "Rule Name"
+msgstr "规则名称"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
+msgid "Rules"
+msgstr "规则"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: barcodes
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "桌台"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
+msgid "The barcode matching pattern"
+msgstr "条码匹配模式"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
+msgid "The list of barcode rules"
+msgstr "条码规则列表"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
+msgid "The matched pattern will alias to this barcode"
+msgstr "匹配模式将别名到该条码"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr "‎条形码模式存在语法错误%(pattern)s： 大括号只能包含 N 的后跟 D。‎"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr "条形码模式中存在语法错误 %(pattern)s: empty braces."
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr "这条规则只应用于特殊编码的条形编码"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
+msgid "Type"
+msgstr "类型"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr "UPC代码可以通过前缀加零的方式转换为EAN。此设置确定UPC/EAN条码在尝试将规则与其他编码匹配时是否应该自动转换。"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
+msgid "UPC-A"
+msgstr "UPC-A"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
+msgid "UPC-A to EAN-13"
+msgstr "UPC-A 到 EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "UPC/EAN 转换"
+
+#. module: barcodes
+#: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
+msgid "Unit Product"
+msgstr "单位产品"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/barcode_handlers.js:0
+#, python-format
+msgid "Unknown barcode command"
+msgstr "未知条码命令"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr "用于规则排序，这样较小序列的规则最先匹配"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "上次扫描条码的值。"

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessagingMenu" owl="1">
+        <t t-if="messagingMenu">
+            <div class="o_MessagingMenu dropdown" t-att-class="{ 'show bg-black-15': messagingMenu.isOpen, 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-ref="root">
+                <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="messagingMenu.onClickToggler">
+                    <i class="o_MessagingMenu_icon fa fa-lg fa-comments" role="img" aria-label="Messages"/>
+                    <t t-if="!messaging.isInitialized">
+                        <i class="o_MessagingMenu_loading fa fa-circle-o-notch fa-spin position-absolute bottom-50 end-0 small"/>
+                    </t>
+                    <t t-elif="messagingMenu.counter > 0">
+                        <span class="o_MessagingMenu_counter badge">
+                            <t t-esc="messagingMenu.counter"/>
+                        </span>
+                    </t>
+                </a>
+                <t t-if="messagingMenu.isOpen">
+                    <div class="o_MessagingMenu_dropdownMenu o-dropdown-menu dropdown-menu-end d-flex flex-column mt-0 py-0 bg-view overflow-auto" t-att-class="{ 'o-isDeviceSmall position-fixed bottom-0 start-0 end-0 flex-grow-1 w-100 m-0 border-0': messaging.device.isSmall, 'border': !messaging.device.isSmall, 'o-messaging-not-initialized align-items-center justify-content-center': !messaging.isInitialized }" role="menu">
+                        <t t-if="!messaging.isInitialized">
+                            <span><i class="o_MessagingMenu_dropdownLoadingIcon fa fa-circle-o-notch fa-spin me-1"/>Please wait...</span>
+                        </t>
+                        <t t-else="">
+                            <div class="o_MessagingMenu_dropdownMenuHeader border-bottom" t-attf-class="{{ messaging.device.isSmall ? 'o-isDeviceSmall p-2' : 'd-flex flex-shrink-0' }}">
+                                <t t-if="!messaging.device.isSmall">
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'all'"/>
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'chat'"/>
+                                    <MessagingMenuTab messagingMenu="messagingMenu" tabId="'channel'"/>
+                                </t>
+                                <t t-if="messaging.device.isSmall">
+                                    <t t-call="mail.MessagingMenu.newMessageButton"/>
+                                </t>
+                                <div class="flex-grow-1"/>
+                                <t t-if="!messaging.device.isSmall and !messaging.discuss.discussView">
+                                    <t t-call="mail.MessagingMenu.newMessageButton"/>
+                                </t>
+                                <t t-if="messagingMenu.mobileNewMessageAutocompleteInputView">
+                                    <AutocompleteInputView
+                                        className="'o_MessagingMenu_mobileNewMessageInput mt-2 p-2 rounded-3'"
+                                        record="messagingMenu.mobileNewMessageAutocompleteInputView"
+                                    />
+                                </t>
+                            </div>
+                            <t t-if="messagingMenu.notificationListView">
+                                <NotificationList className="'o_MessagingMenu_notificationList'" classNameObj="{ 'o-isDeviceSmall flex-grow-1 overflow-auto': messaging.device.isSmall }" record="messagingMenu.notificationListView"/>
+                            </t>
+                            <t t-if="messagingMenu.mobileMessagingNavbarView">
+                                <MobileMessagingNavbar
+                                    className="'o_MessagingMenu_mobileNavbar'"
+                                    record="messagingMenu.mobileMessagingNavbarView"
+                                />
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.MessagingMenu.newMessageButton" owl="1">
+        <button class="o_MessagingMenu_newMessageButton btn"
+            t-att-class="{
+                'btn-link': !messaging.device.isSmall,
+                'btn-secondary': messaging.device.isSmall,
+                'o-isDeviceSmall': messaging.device.isSmall,
+            }" t-on-click="messagingMenu.onClickNewMessage" type="button"
+        >
+            New message
+        </button>
+    </t>
+
+</templates>

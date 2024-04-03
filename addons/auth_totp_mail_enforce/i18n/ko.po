@@ -1,0 +1,276 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp_mail_enforce
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+".\n"
+"                <br/>"
+msgstr ""
+".\n"
+"                <br/>"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"    <p>Someone is trying to log in into your account with a new device.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">N/A</t>\n"
+"        <li>Location: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"        <li>Device: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"        <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"        <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"    </ul>\n"
+"    <p>If this is you, please enter the following code to complete the login:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"    </div>\n"
+"    <small>Please note that this code expires in <t t-out=\"expiration\"></t>.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        If you did NOT initiate this log-in,\n"
+"        you should immediately change your password to ensure account security.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        We also strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            Activate my two-factor authentication\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    안녕하세요, <t t-out=\"object.partner_id.name or ''\">님</t><br><br>\n"
+"    <p>누군가가 새 디바이스를 통해 고객님의 계정으로 로그인을 시도했습니다.</p>\n"
+"    <ul>\n"
+"        <t t-set=\"not_available\">N/A</t>\n"
+"        <li>위치: <t t-out=\"ctx.get('location') or not_available\"></t></li>\n"
+"        <li>디바이스: <t t-out=\"ctx.get('device') or not_available\"></t></li>\n"
+"        <li>브라우저: <t t-out=\"ctx.get('browser') or not_available\"></t></li>\n"
+"        <li>IP 주소: <t t-out=\"ctx.get('ip') or not_available\"></t></li>\n"
+"    </ul>\n"
+"    <p>본인이 맞는 경우, 다음 코드를 입력하여 로그인 절차를 완료해 주시기 바랍니다:</p>\n"
+"    <t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"></t>\n"
+"    <t t-set=\"code\" t-value=\"code_expiration[0]\"></t>\n"
+"    <t t-set=\"expiration\" t-value=\"code_expiration[1]\"></t>\n"
+"    <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-radius: 5px;\"></span>\n"
+"    </div>\n"
+"    <small>이 코드는 <t t-out=\"expiration\"></t> 이후로 만료됩니다.</small>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        해당 로그인을 시도하지 않으셨다면,\n"
+"        계정 보안을 위해 즉시 비밀번호를 변경해 주십시오.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"        또한 더욱 강력한 계정 보안을 위해 인증 앱을 사용하여 2단계 인증을 활성화 하기를 추천드립니다.\n"
+"    </p>\n"
+"\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            2단계 인증 활성화하기\n"
+"        </a>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                로그인하려면 이메일을 통해 전송된 6자리 인증 코드를 아래에 입력하세요"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
+msgid "All users"
+msgstr "모든 사용자"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+#, python-format
+msgid "Cannot send email: user %s has no email address."
+msgstr "이메일을 보낼 수 없습니다 :  %s 사용자는 이메일 주소가 없습니다."
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
+msgid "Code Checking"
+msgstr "코드 확인 중"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
+msgid "Config Settings"
+msgstr "설정 구성"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
+msgid "Employees only"
+msgstr "직원 전용"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all users\n"
+"                                (including portal users) if they didn't enable any other two-factor authentication\n"
+"                                method."
+msgstr ""
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
+msgid "Enforce two-factor authentication"
+msgstr "2단계 인증 적용"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__ip
+msgid "Ip"
+msgstr "Ip"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log____last_update
+msgid "Last Modified on"
+msgstr "최근 수정일"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid "Learn More"
+msgstr "추가 정보"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
+msgid "Limit Type"
+msgstr "제한 유형"
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid "Re-send email"
+msgstr "이메일 재전송"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__scope
+msgid "Scope"
+msgstr "범위"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__send_email
+msgid "Send Email"
+msgstr "이메일 보내기"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid "Settings: 2Fa New Login"
+msgstr "설정: 2Fa 새로운 로그인"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
+msgid "TOTP rate limit logs"
+msgstr "TOTP 사용 제한 사항"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
+msgid "Two-factor authentication enforcing policy"
+msgstr "2단계 인증 적용 정책"
+
+#. module: auth_totp_mail_enforce
+#: model:ir.model,name:auth_totp_mail_enforce.model_res_users
+#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__user_id
+msgid "User"
+msgstr "사용자"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+#, python-format
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "인증에 실패했습니다. 6자리 코드를 다시 확인하세요."
+
+#. module: auth_totp_mail_enforce
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"계정의 보안성을 강화를 위해 인증 앱을 통한 2단계 인증 사용 설정을 적극 권장합니다.\n"
+"                <br/>"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+#, python-format
+msgid "You reached the limit of authentication mails sent for your account"
+msgstr "이 계정에 대해 전송할 수 있는 인증 메일 한도를 초과했습니다"
+
+#. module: auth_totp_mail_enforce
+#. odoo-python
+#: code:addons/auth_totp_mail_enforce/models/res_users.py:0
+#, python-format
+msgid "You reached the limit of code verifications for your account"
+msgstr "계정에 대한 코드 인증 한도를 초과했습니다"
+
+#. module: auth_totp_mail_enforce
+#: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
+msgid "Your two-factor authentication code"
+msgstr "이중 인증 코드"

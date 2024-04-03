@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="website_visitor_action_from_track" model="ir.actions.act_window">
+        <field name="name">Visitors Wishlist</field>
+        <field name="res_model">website.visitor</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="domain">[('event_track_wishlisted_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Wait for visitors to add this track to their list of favorites
+            </p>
+        </field>
+    </record>
+
+    <record id="event_track_view_form_quick_create" model="ir.ui.view">
+        <field name="name">event.track.view.form.quick.create</field>
+        <field name="model">event.track</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="event_id" invisible="context.get('default_event_id', False)"/>
+                    <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                    <field name="date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_track_kanban">
+        <field name="name">event.track.kanban</field>
+        <field name="model">event.track</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" quick_create_view="website_event_track.event_track_view_form_quick_create">
+                <field name="color"/>
+                <field name="partner_id"/>
+                <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
+                <field name="website_url"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <field name="legend_blocked"/>
+                <field name="legend_normal"/>
+                <field name="legend_done"/>
+                <templates>
+                    <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                        <img t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)"
+                                            t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value"
+                                            class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_event_track_calendar" model="ir.ui.view">
+        <field name="name">event.track.calendar</field>
+        <field name="model">event.track</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
+                <field name="location_id" filters="1"/>
+                <field name="event_id"/>
+                <field name="partner_id" avatar_field="avatar_128"/>
+                <field name="user_id" avatar_field="avatar_128"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_track_search">
+        <field name="name">event.track.search</field>
+        <field name="model">event.track</field>
+        <field name="arch" type="xml">
+            <search string="Event Tracks">
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <field name="event_id"/>
+                <field name="location_id"/>
+                <field name="stage_id"/>
+                <field name="partner_id"/>
+                <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Published" name="filter_published" domain="[('website_published', '=', True)]"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
+                <separator/>
+                <filter string="Always Wishlisted" name="filter_wishlisted_by_default" domain="[('wishlisted_by_default', '=', True)]"/>
+                <separator/>
+                <filter name="filter_date" date="date"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                    <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
+                    <filter string="Location" name="location" context="{'group_by': 'location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_track_form">
+        <field name="name">event.track.form</field>
+        <field name="model">event.track</field>
+        <field name="arch" type="xml">
+            <form string="Event Track">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet string="Track">
+                    <div class="oe_button_box" name="button_box">
+                        <field name="website_url" invisible="1"/>
+                        <button name="%(website_event_track.website_visitor_action_from_track)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-bell"
+                            groups="event.group_event_user">
+                            <field name="wishlist_visitor_count" string="Wishlisted By" widget="statinfo"/>
+                        </button>
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
+                    <field name="legend_blocked" invisible="1"/>
+                    <field name="legend_normal" invisible="1"/>
+                    <field name="legend_done" invisible="1"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="d-flex gap-4 mb-3">
+                        <div class="flex-grow-1">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                            </h1>
+                        </div>
+                        <field name="website_image" widget="image" class="oe_avatar"/>
+                        <field name="kanban_state" widget="state_selection"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="location_id"/>
+                            <label for="duration"/>
+                            <div class="o_row">
+                                <field name="duration" widget="float_time"/>
+                                <span>hours</span>
+                            </div>
+                            <field name="active" invisible="1"/>
+                            <field name="wishlisted_by_default"/>
+                        </group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
+                            <field name="event_id"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Speaker" name="speaker">
+                            <group string="Contact Details" class="display-flex justify-content-between">
+                                <group>
+                                    <field name="partner_id" context="{'default_phone': contact_phone, 'default_email': contact_email}"/>
+                                    <field name="contact_email" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                    <field name="contact_phone" class="o_force_ltr" attrs="{'readonly': [('partner_id', '!=', False)]}"/>
+                                </group>
+                            </group>
+                            <group string="Speaker Bio" class="display-flex justify-content-between">
+                                <group>
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                    <field name="partner_phone" class="o_force_ltr"/>
+                                    <field name="partner_function"/>
+                                    <field name="partner_company_name"/>
+                                </group>
+                                <group>
+                                    <field name="image" nolabel="1" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="partner_biography" string="Biography" placeholder='e.g. "John Doe was born in..."'/>
+                            </group>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder='e.g. "This talk will be about..."'/>
+                        </page>
+                        <page string="Interactivity" name="interactivity">
+                            <group>
+                                <group name="event_track_cta_group">
+                                    <field name="website_cta"/>
+                                    <field name="website_cta_title" placeholder="e.g. Get Yours Now !"
+                                        attrs="{'invisible': [('website_cta', '=', False)],
+                                                'required': [('website_cta', '=', True)]}"/>
+                                    <field name="website_cta_url" placeholder="e.g. http://www.example.com"
+                                        attrs="{'invisible': [('website_cta', '=', False)],
+                                                'required': [('website_cta', '=', True)]}"/>
+                                    <label for="website_cta_delay"
+                                        attrs="{'invisible': [('website_cta', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('website_cta', '=', False)]}">
+                                        <field name="website_cta_delay" class="oe_inline"
+                                            attrs="{'required': [('website_cta', '=', True)]}"/> minutes after track starts
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_track_tree">
+        <field name="name">event.track.tree</field>
+        <field name="model">event.track</field>
+        <field name="arch" type="xml">
+            <tree string="Event Track">
+                <field name="name"/>
+                <field name="active" invisible="1"/>
+                <field name="partner_name"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="partner_email"/>
+                <field name="partner_phone"/>
+                <field name="event_id" invisible="context.get('default_event_id')"/>
+                <field name="wishlisted_by_default" optional="hide"/>
+                <field name="wishlist_visitor_count" optional="hide"/>
+                <field name="stage_id"/>
+                <field name="color" widget="color_picker" optional="hide"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_track_graph">
+        <field name="name">event.track.graph</field>
+        <field name="model">event.track</field>
+        <field name="arch" type="xml">
+            <graph string="Tracks" sample="1">
+                <field name="location_id"/>
+                <field name="duration" operator="+"/>
+                <field name="website_cta_delay" invisible="1"/>
+                <field name="color" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_track">
+        <field name="name">Event Tracks</field>
+        <field name="res_model">event.track</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              Create a Track
+            </p><p>
+              Tracks define your event schedule. They can be talks, workshops or any similar activity.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_track_from_event">
+        <field name="res_model">event.track</field>
+        <field name="name">Event Tracks</field>
+        <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+        <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Track
+          </p><p>
+            Tracks define your event schedule. They can be talks, workshops or any similar activity.
+          </p>
+        </field>
+    </record>
+
+    <record id="event_track_action_from_visitor" model="ir.actions.act_window">
+        <field name="name">Wishlisted Tracks</field>
+        <field name="res_model">event.track</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('wishlist_visitor_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No track favorited by this visitor
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.FollowButton" owl="1">
+        <t t-if="followButtonView">
+            <div class="o_FollowButton d-flex" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="followButtonView.chatterOwner.thread and followButtonView.chatterOwner.thread.isCurrentPartnerFollowing">
+                    <button class="o_FollowButton_unfollow btn px-0" t-att-class="{ 'o_ChatterTopbar_button': followButtonView.chatterOwner, 'o-following text-success': !followButtonView.isUnfollowButtonHighlighted, 'o-unfollow text-warning': followButtonView.isUnfollowButtonHighlighted }" t-att-disabled="followButtonView.isDisabled" t-on-click="followButtonView.onClickUnfollow" t-on-mouseenter="followButtonView.onMouseEnterUnfollow" t-on-mouseleave="followButtonView.onMouseleaveUnfollow">
+                        <div class="position-relative">
+                            <!-- Hidden element used to set the button maximum size -->
+                            <span class="invisible">
+                                <i class="fa fa-fw fa fa-eye-slash"/> <t t-out="followButtonView.followingText.length > followButtonView.unfollowingText.length ? followButtonView.followingText : followButtonView.unfollowingText"></t>
+                            </span>
+                            <span t-if="followButtonView.isUnfollowButtonHighlighted" class="o_FollowButton_text position-absolute end-0 top-0 bottom-0 text-warning">
+                                <i class="fa fa-fw fa-times"/> <span t-out="followButtonView.unfollowingText"/>
+                            </span>
+                            <span t-else="" class="o_FollowButton_text d-block position-absolute end-0 top-0 bottom-0">
+                                <i class="fa fa-fw fa-check"/> <span t-out="followButtonView.followingText"/>
+                            </span>
+                        </div>
+                    </button>
+                </t>
+                <t t-else="">
+                    <button class="o_FollowButton_follow btn btn-link text-600 pe-0" t-att-disabled="followButtonView.isDisabled" t-on-click="followButtonView.onClickFollow" t-att-class="{ 'o_ChatterTopbar_button': followButtonView.chatterOwner }">
+                        Follow
+                    </button>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

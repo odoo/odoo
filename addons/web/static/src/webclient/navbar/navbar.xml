@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.NavBar" owl="1">
+    <header class="o_navbar" t-ref="root">
+      <nav
+        class="o_main_navbar"
+        data-command-category="navbar"
+      >
+        <!-- Apps Menu -->
+        <t t-call="web.NavBar.AppsMenu">
+          <t t-set="apps" t-value="menuService.getApps()" />
+        </t>
+
+        <!-- App Brand -->
+        <DropdownItem
+          t-if="currentApp"
+          href="getMenuItemHref(currentApp)"
+          t-esc="currentApp.name"
+          class="'o_menu_brand d-none d-md-block'"
+          dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
+          onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
+        />
+
+        <!-- Current App Sections -->
+        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+          <t t-set="sections" t-value="currentAppSections" />
+        </t>
+
+        <!-- Systray -->
+        <div class="o_menu_systray d-flex flex-shrink-0 ms-auto" role="menu">
+          <t t-foreach="systrayItems" t-as="item" t-key="item.key">
+            <!-- This ensures the correct order of the systray items -->
+            <div t-att-data-index="item.index"/>
+            <ErrorHandler onError="error => this.handleItemError(error, item)">
+                <t t-component="item.Component" t-props="item.props"/>
+            </ErrorHandler>
+          </t>
+        </div>
+      </nav>
+    </header>
+  </t>
+
+  <t t-name="web.NavBar.AppsMenu" owl="1">
+    <Dropdown hotkey="'h'" title="'Home Menu'" class="'o_navbar_apps_menu'">
+      <t t-set-slot="toggler">
+        <i class="oi oi-apps" />
+      </t>
+      <DropdownItem
+        t-foreach="apps"
+        t-as="app"
+        t-key="app.id"
+        class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
+        href="getMenuItemHref(app)"
+        t-esc="app.name"
+        dataset="{ menuXmlid: app.xmlid, section: app.id }"
+        onSelected="() => this.onNavBarDropdownItemSelection(app)"
+      />
+    </Dropdown>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu" owl="1">
+    <div class="o_menu_sections d-none d-md-flex flex-grow-1 flex-shrink-1" t-ref="appSubMenus" role="menu">
+
+      <t t-foreach="sections" t-as="section" t-key="section.id">
+        <t
+          t-set="sectionsVisibleCount"
+          t-value="(sections.length - currentAppSectionsExtra.length)"
+        />
+
+        <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
+          <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()" />
+        </t>
+        <t t-else="">
+          <t t-set="hotkey" t-value="undefined" />
+        </t>
+
+        <t t-if="!section.childrenTree.length">
+          <DropdownItem
+            title="section.name"
+            class="'o_nav_entry'"
+            href="getMenuItemHref(section)"
+            hotkey="hotkey"
+            t-esc="section.name"
+            dataset="{ menuXmlid: section.xmlid, section: section.id }"
+            onSelected="() => this.onNavBarDropdownItemSelection(section)"
+          />
+        </t>
+        <t t-else="">
+          <MenuDropdown
+            hotkey="hotkey"
+            title="section.name"
+            xmlid="section.xmlid"
+          >
+            <t t-set-slot="toggler">
+              <span t-esc="section.name" t-att-data-section="section.id" />
+            </t>
+            <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+              <t t-set="items" t-value="section.childrenTree" />
+              <t t-set="decalage" t-value="20" />
+            </t>
+          </MenuDropdown>
+        </t>
+      </t>
+
+      <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
+        <t t-set="sections" t-value="currentAppSectionsExtra" />
+        <t t-if="sectionsVisibleCount lt 10">
+          <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
+        </t>
+      </t>
+
+    </div>
+  </t>
+
+  <t t-name="web.NavBar.DropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-tag]" position="attributes">
+      <attribute name="t-att-style">props.style</attribute>
+    </xpath>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
+    <t t-set="style" t-value="`padding-left: ${decalage}px;`" />
+    <t t-foreach="items" t-as="item" t-key="item.id">
+      <DropdownItem
+        t-if="!item.childrenTree.length"
+        href="getMenuItemHref(item)"
+        class="{
+          'dropdown-item': true,
+          o_dropdown_menu_group_entry: decalage gt 20
+        }"
+        style="style"
+        t-esc="item.name"
+        dataset="{ menuXmlid: item.xmlid, section: item.id }"
+        onSelected="() => this.onNavBarDropdownItemSelection(item)"
+      />
+
+      <t t-else="">
+        <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-esc="item.name" />
+        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+          <t t-set="items" t-value="item.childrenTree" />
+          <t t-set="decalage" t-value="decalage + 12" />
+        </t>
+      </t>
+    </t>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
+    <Dropdown class="'o_menu_sections_more'" title="'More Menu'" hotkey="hotkey">
+      <t t-set-slot="toggler">
+        <i class="fa fa-plus"/>
+      </t>
+      <t t-foreach="sections" t-as="section" t-key="section.id">
+
+        <t t-if="!section.childrenTree.length">
+          <DropdownItem
+            class="'o_more_dropdown_section'"
+            href="getMenuItemHref(section)"
+            t-esc="section.name"
+            dataset="{ menuXmlid: section.xmlid, section: section.id }"
+            onSelected="() => this.onNavBarDropdownItemSelection(section)"
+          />
+        </t>
+        <t t-else="">
+          <div
+            class="o_more_dropdown_section o_more_dropdown_section_group dropdown-header bg-100"
+            t-esc="section.name"
+          />
+          <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+            <t t-set="items" t-value="section.childrenTree" />
+            <t t-set="decalage" t-value="20" />
+          </t>
+        </t>
+      </t>
+    </Dropdown>
+  </t>
+
+</templates>

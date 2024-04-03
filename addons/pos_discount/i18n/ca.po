@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
+# Jordi Bancells <jordibancells@pangea.org>, 2022
+# Carles Antoli <carlesantoli@hotmail.com>, 2022
+# jabelchi, 2022
+# Bàrbara Partegàs <barbararof@gmail.com>, 2022
+# Quim - eccit <quim@eccit.com>, 2022
+# Ivan Espinola, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Ivan Espinola, 2022\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_discount
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+"Es necessita un producte de descompte per utilitzar la funció Descompte "
+"global. Aneu al punt de venda . Configuració > Configuració per a establir-"
+"lo."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr "Permetre al caixer fer descomptes en tota la comanda. "
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustos de configuració"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
+#, python-format
+msgid "Discount"
+msgstr "Descompte"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount %"
+msgstr "Descompte %"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+#, python-format
+msgid "Discount Percentage"
+msgstr "Descompte en %"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Product"
+msgstr "Producte en descompte"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "No s'ha trobat cap producte en descompte"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No tax"
+msgstr "Sense impostos"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "Descomptes de comandes "
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configuració del Punt de Venda"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sessió del Punt de Venda"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr "Producte de descompte Pos"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "Impostos: %s"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr ""
+"El percentatge predeterminat de descompte en fer clic al botó Descompte"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"El producte amb descompte sembla estar mal configurat. Assegureu-vos que es "
+"marca com a \"Es pot vendre\" i \"Disponible al punt de venda\"."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to apply the discount on the ticket."
+msgstr "El producte utilitzat per aplicar el descompte al bitllet."

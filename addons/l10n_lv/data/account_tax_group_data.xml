@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="tax_group_vat_0" model="account.tax.group">
+        <field name="name">VAT 0%</field>
+        <field name="country_id" ref="base.lv"/>
+    </record>
+    <record id="tax_group_vat_exempt" model="account.tax.group">
+        <field name="name">W/O VAT</field>
+        <field name="country_id" ref="base.lv"/>
+    </record>
+    <record id="tax_group_vat_5" model="account.tax.group">
+        <field name="name">VAT 5%</field>
+        <field name="country_id" ref="base.lv"/>
+    </record>
+    <record id="tax_group_vat_12" model="account.tax.group">
+        <field name="name">VAT 12%</field>
+        <field name="country_id" ref="base.lv"/>
+    </record>
+    <record id="tax_group_vat_21" model="account.tax.group">
+        <field name="name">VAT 21%</field>
+        <field name="country_id" ref="base.lv"/>
+    </record>
+</odoo>

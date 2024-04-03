@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </t>
+    </t>
+
+    <t t-extend="wysiwyg.widgets.linkTools">
+        <t t-jquery="#url_row" t-operation="after">
+            <div style="text-align: center" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+                <small>
+                    Type '<span class="highlighted-text">/</span>' to search a page.
+                    '<span class="highlighted-text">#</span>' to link to an anchor.
+                </small>
+            </div>
+            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+                <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                    <we-title>Page Anchor</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                data-bs-toggle="dropdown" title="" tabindex="-1"
+                                data-bs-original-title="Link Size" aria-expanded="false">
+                                <we-toggler>
+                                    Loading...
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_anchor" class="dropdown-menu link-style">
+                                <we-button class="dropdown-item o_anchors_loading">Loading...</we-button>
+                            </we-selection-items>
+                            <span class="o_we_dropdown_caret"></span>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
+        </t>
+    </t>
+    <!-- Anchor Name option dialog -->
+    <div t-name="website.dialog.anchorName">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
+                <div class="invalid-feedback">
+                    <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a Google Font option dialog -->
+    <div t-name="website.dialog.addGoogleFont">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font address</label>
+            <div class="col-md-9">
+                <textarea id="google_font_html" class="form-control o_input_google_font"
+                    placeholder="https://fonts.google.com/specimen/Roboto" style="height: 100px;"/>
+                <span class="float-end text-muted">
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the address of the font page here.
+                </span>
+            </div>
+            <label class="col-form-label col-md-3" for="google_font_serve">Serve font from Google servers</label>
+            <label class="o_switch col-form-label col-md-9" for="google_font_serve">
+                <input type="checkbox" checked="checked" id="google_font_serve"/>
+                <span/>
+            </label>
+        </div>
+    </div>
+    <t t-name="website.delete_google_font_btn">
+        <i t-if="!local" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"/>
+        <t t-set="delete_font_title">Delete this font</t>
+        <i role="button"
+           class="text-danger fa fa-trash-o o_we_delete_google_font_btn"
+           t-att-aria-label="delete_font_title"
+           t-att-title="delete_font_title"
+           t-att-data-local-font="local"
+           t-att-data-font-index="index"/>
+    </t>
+    <t t-name="website.add_google_font_btn">
+        <we-button href="#" class="o_we_add_google_font_btn"
+                   t-att-data-variable="variable">
+            Add a Google Font
+        </we-button>
+    </t>
+
+    <t t-name="website.color_combination_edition">
+        <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
+        <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
+        <we-collapse>
+            <we-colorpicker string="Headings" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
+            <we-colorpicker string="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2"/>
+            <we-colorpicker string="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3"/>
+            <we-colorpicker string="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4"/>
+            <we-colorpicker string="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5"/>
+            <we-colorpicker string="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6"/>
+        </we-collapse>
+        <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
+        <we-row string="Primary Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
+        </we-row>
+        <we-row string="Secondary Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
+        </we-row>
+    </t>
+    <div t-name="website.s_google_map_modal">
+        <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>
+        <div class="row mb-0">
+            <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
+            <div class="col">
+                <div class="input-group">
+                    <div class="input-group-text"><i class="fa fa-key"/></div>
+                    <input type="text" class="form-control" id="api_key_input"
+                           t-att-value="apiKey or ''"
+                           placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
+                </div>
+                <small id="api_key_help" class="text-danger">
+                </small>
+                <div class="small form-text text-muted">
+                    Hint: How to use Google Map on your website (Contact Us page and as a snippet)
+                    <br/>
+                    <a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
+                        <i class="fa fa-arrow-right"/>
+                        Create a Google Project and Get a Key
+                    </a>
+                    <br/>
+                    <a target="_blank" href="https://cloud.google.com/maps-platform/pricing">
+                        <i class="fa fa-arrow-right"/>
+                        Enable billing on your Google Project
+                    </a>
+                </div>
+                <div class="alert alert-info mb-0 mt-3">
+                    Make sure your settings are properly configured:
+                    <ul class="mb-0">
+                        <li>
+                            Enable the right google map APIs in your google account
+                            <ul>
+                                <li>Maps Static API</li>
+                                <li>Maps JavaScript API</li>
+                                <li>Places API</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Make sure billing is enabled
+                        </li>
+                        <li>
+                            Make sure to wait if errors keep being shown: sometimes enabling an API allows to use it immediately but Google keeps triggering errors for a while
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme - custom code -->
+    <div t-name="website.custom_code_dialog_content">
+        <p class="h5">Do not copy/paste code you do not understand, this could put your data at risk.</p>
+        <div class="mb-2" t-esc="contentText"/>
+        <div class="o_ace_editor_container"/>
+    </div>
+
+    <!-- Editor Toolbar -->
+    <t t-extend="web_editor.toolbar">
+        <t t-jquery="#list .oe-toggle-checklist" t-operation="replace"/>
+        <t t-jquery="#list" t-operation="append">
+            <div title="Animate text" class="btn fa fa-play fa-fw o_we_animate_text"/>
+        </t>
+    </t>
+</templates>

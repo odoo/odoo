@@ -1,0 +1,59 @@
+.text-muted {
+  color: map-get($grays, '600');
+}
+
+.text-start {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.o_thread_window {
+  &,* {
+    box-sizing: border-box;
+  }
+  .o_thread_window_header {
+    height: 35px;
+    .fa-close {
+      text-decoration: none;
+      font-weight: bold;
+      &:before {
+        content: "\00d7";
+        font-size: initial;
+      }
+    }
+    > span {
+      margin: auto 0;
+    }
+  }
+
+  .o_email_chat_button:after {
+    content:' \27A4';
+  }
+}
+
+// Bootstrap classnames are not available in external lib
+// These are equivalent scss rules so visually it still works.
+.o_livechat_chatbot_end {
+  // @extend .bg-200;
+  font-style: italic !important; // @extend .fst-italic;
+  text-align: center !important; // @extend .text-center;
+  border: 1px solid #dee2e6 !important; // @extend .border;
+}
+
+.o_livechat_chatbot_stepAnswer {
+  display: inline-block !important; // @extend .d-inline-block;
+  border: 1px solid #dee2e6 !important; // @extend .border;
+  border-color: #017e84 !important; // @extend .border-primary;
+  border-radius: 0.25rem !important; // @extend .rounded;
+  padding: 0.5rem !important; // @extend .p-2;
+  margin-right: 1rem !important; // @extend .me-3;
+  margin-bottom: 0.25rem !important; // @extend .mb-1;
+  font-weight: 700 !important; // @extend .fw-bold;
+}
+
+.o_livechat_chatbot_options li:not(.disabled):hover {
+  background-color: #017e84 !important;
+}

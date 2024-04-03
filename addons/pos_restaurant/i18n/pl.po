@@ -1,0 +1,1469 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_restaurant
+# 
+# Translators:
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Mariusz, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# zieloo <zieloo@gmail.com>, 2022
+# Karol Rybak <karolrybak85@gmail.com>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# Paweł Wodyński <pw@myodoo.pl>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# SE-DA Konrad Lech, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
+msgid " Use a printer connected to the IoT Box"
+msgstr "Korzystanie z drukarki podłączonej do urządzenia IoT Box"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Floor Name: </strong>"
+msgstr "<strong>Nazwa piętra: </strong>"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Point of Sale: </strong>"
+msgstr "<strong>Punkt sprzedaży: </strong>"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
+msgid ""
+"A restaurant floor represents the place where customers are served, this is where you can\n"
+"                define and position the tables."
+msgstr ""
+"Sala restauracyjna jest odpowiednikiem miejsca, gdzie obsługiwani są klienci, \n"
+"tutaj możesz utworzyć i ustawić stoły. "
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Add"
+msgstr "Dodaj"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js:0
+#, python-format
+msgid "Add Internal Note"
+msgstr "Dodaj uwagę wewnętrzną"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
+msgid "Add a new restaurant floor"
+msgstr "Dodaj nową salę restauracyjną"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+msgid "Add a new restaurant order printer"
+msgstr "Dodaj nową drukarkę zamówień restauracji"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "Add a tip"
+msgstr "Dodaj wskazówkę"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#, python-format
+msgid "Add button"
+msgstr "Przycisk Dodaj"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Add internal notes on order lines for the kitchen"
+msgstr "Dodawanie wewnętrznych notatek do linii zamówień dla kuchni"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Add tip after payment (North America specific)"
+msgstr "Dodaj napiwek po dokonaniu płatności (dotyczy Ameryki Północnej)"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#, python-format
+msgid "Adjust Amount"
+msgstr "Dostosuj kwotę"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__set_tip_after_payment
+msgid ""
+"Adjust the amount authorized by payment terminals to add a tip after the "
+"customers left or at the end of the day."
+msgstr ""
+"Dostosuj kwotę autoryzowaną przez terminale płatnicze, aby dodać napiwek po "
+"wyjściu klientów lub na koniec dnia."
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Allow Bill Splitting"
+msgstr "Zezwalaj na podział rachunków"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
+msgid "Allow custom internal notes on Orderlines."
+msgstr "Zezwalaj na niestandardowe notatki wewnętrzne na liniach zamówień."
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Allow to print receipt before payment"
+msgstr "Zezwalaj na wydruk paragonu przed dokonaniem płatności"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
+msgid "Allows to print the Bill before payment."
+msgstr "Umożliwia wydrukowanie rachunku przed dokonaniem płatności."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "Amount"
+msgstr "Kwota"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
+msgid "An internal identification of a table"
+msgstr "Wewnętrzna identyfikacja stolika"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
+msgid "An internal identification of the printer"
+msgstr "Wewnętrzna identyfikacja drukarki "
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
+msgid "Appearance"
+msgstr "Wygląd"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_search
+msgid "Archived"
+msgstr "Zarchiwizowane"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Are you sure ?"
+msgstr "Jesteś pewien?"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "Back"
+msgstr "Powrót"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/ChromeWidgets/BackToFloorButton.xml:0
+#: code:addons/pos_restaurant/static/src/xml/ChromeWidgets/BackToFloorButton.xml:0
+#, python-format
+msgid "Back to floor"
+msgstr "Powrót na salę"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
+msgid "Background Color"
+msgstr "Kolor tła"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_image
+msgid "Background Image"
+msgstr "Obrazek tła"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
+msgid "Bacon Burger"
+msgstr "Burger z bekonem"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml:0
+#, python-format
+msgid "Bill"
+msgstr "Faktura zakupowa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
+#, python-format
+msgid "Bill Printing"
+msgstr "Drukowanie rachunku"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
+#, python-format
+msgid "Bill Splitting"
+msgstr "Podział rachunku"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "Blocked action"
+msgstr "Zablokowane działanie"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Blue"
+msgstr "Niebieski"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
+#, python-format
+msgid "CANCELLED"
+msgstr "ANULOWANE"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "Bar gotówkowy"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
+msgid "Cheese Burger"
+msgstr "Cheese Burger"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
+msgid "Chicken Curry Sandwich"
+msgstr "Kanapka z kurczakiem curry"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Close"
+msgstr "Zamknij"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
+#, python-format
+msgid "Close Tab"
+msgstr "Zamknij kartę"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_club_product_template
+msgid "Club Sandwich"
+msgstr "Kanapka klubowa"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "Coca-Cola"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
+msgid "Color"
+msgstr "Kolor"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Usuń"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Design floors and assign orders to tables"
+msgstr "Projektowanie sal i przypisywanie zamówień do stolików"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr "Napoje"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
+#, python-format
+msgid "Due to a connection error, the orders are not synchronized."
+msgstr "Z powodu błędu połączenia zamówienia nie są synchronizowane."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Duplicate"
+msgstr "Duplikuj"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+msgid ""
+"Each Order Printer has an IP Address that defines the IoT Box/Hardware\n"
+"                Proxy where the printer can be found, and a list of product categories.\n"
+"                An Order Printer will only print updates for products belonging to one of\n"
+"                its categories."
+msgstr ""
+"Każda drukarka zamówień ma adres IP, który definiuje IoT Box/Hardware\n"
+"Proxy, gdzie można znaleźć drukarkę, oraz listę kategorii produktów.\n"
+"Drukarka zamówień będzie drukować aktualizacje tylko dla produktów należących do jednej z jej kategorii.\n"
+"kategorii."
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Early Receipt Printing"
+msgstr "Wczesne drukowanie paragonów"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#, python-format
+msgid "Edit"
+msgstr "Edytuj"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
+msgid "Enables Bill Splitting in the Point of Sale."
+msgstr "Umożliwia dzielenie rachunków w punkcie sprzedaży."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
+#, python-format
+msgid "Failed in printing the changes in the order"
+msgstr "Nie udało się wydrukować zmian w zamówieniu"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
+msgid "Floor"
+msgstr "Sala"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
+msgid "Floor Name"
+msgstr "Nazwa sali"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
+#: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
+msgid "Floor Plans"
+msgstr "Plan sali"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid "Floor: %s - PoS Config: %s \n"
+msgstr "Sala: %s - Konfiguracja PoS: %s\n"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Floors"
+msgstr "Sale"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
+msgid "Floors & Tables"
+msgstr "Sale i stoliki"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Floors & Tables Map"
+msgstr "Mapa sal i stolików"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.food
+msgid "Food"
+msgstr "Żywność"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "For convenience, we are providing the following gratuity calculations:"
+msgstr "Dla wygody przedstawiamy poniższe obliczenia napiwków:"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
+msgid "Funghi"
+msgstr "Grzyby"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Green"
+msgstr "Zielony"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Grey"
+msgstr "Szary"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TableGuestsButton.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__customer_count
+#, python-format
+msgid "Guests"
+msgstr "Goście"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "Guests ?"
+msgstr "Goście?"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Guests:"
+msgstr "Goście:"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
+msgid "Height"
+msgstr "Wysokość"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_h
+msgid "Horizontal Position"
+msgstr "Pozycja pozioma"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
+msgid ""
+"If false, the table is deactivated and will not be available in the point of"
+" sale"
+msgstr ""
+"Jeśli wartość false, stolik jest dezaktywowany i nie będzie dostępny w "
+"punkcie sprzedaży."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml:0
+#, python-format
+msgid "Internal Note"
+msgstr "Notatka wewnętrzna"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
+msgid "Internal Note added by the waiter."
+msgstr "Uwaga wewnętrzna dodana przez kelnera."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
+msgid "Internal Notes"
+msgstr "Notatki wewnętrzne"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant
+msgid "Is a Bar/Restaurant"
+msgstr "Jest barem/restauracją"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
+#, python-format
+msgid "Keep Open"
+msgstr "Zachowaj otwarte"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Kitchen Notes"
+msgstr "Uwagi do kuchni"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Kitchen Printers"
+msgstr "Drukarki kuchenne"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
+msgid "Last printed state of the order"
+msgstr "Ostatni wydrukowany stan zamówienia"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Light grey"
+msgstr "Jasnoszary"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Logo"
+msgstr "Logo"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_maki_product_template
+msgid "Lunch Maki 18pc"
+msgstr "Lunch Maki 18szt"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
+msgid "Lunch Salmon 20pc"
+msgstr "Lunch Łosoś 20szt"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
+msgid "Lunch Temaki mix 3pc"
+msgstr "Lunch Temaki mix 3 szt."
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
+msgid "Margherita"
+msgstr "Margherita"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "Minute Maid"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
+msgid "Mozzarella Sandwich"
+msgstr "Kanapka z mozzarellą"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
+msgid "Multiprint Resume"
+msgstr "Wielokrotne drukowanie podsumowania"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
+#, python-format
+msgid "NEW"
+msgstr "NOWE"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
+#, python-format
+msgid "NOTE"
+msgstr "NOTATKA"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "No Tip"
+msgstr "Bez napiwku"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
+#, python-format
+msgid "Note"
+msgstr "Notatka"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr "Nic do drukowania"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Number of Seats ?"
+msgstr "Liczba miejsc?"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Offline"
+msgstr "Niedostępny"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
+#, python-format
+msgid "Ok"
+msgstr "Ok"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Open"
+msgstr "Otwarta"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Orange"
+msgstr "Pomarańczowy"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SubmitOrderButton.xml:0
+#, python-format
+msgid "Order"
+msgstr "Zamówienie"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_order_printer
+msgid "Order Printer"
+msgstr "Drukarka zamówień"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__printer_ids
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_printer_ids
+#: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
+msgid "Order Printers"
+msgstr "Drukarki zamówień "
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+msgid ""
+"Order Printers are used by restaurants and bars to print the\n"
+"                order updates in the kitchen/bar when the waiter updates the order."
+msgstr ""
+"Drukarki zamówień służą restauracjom i barom do drukowania\n"
+"zamówień w kuchni/barze, gdy kelner aktualizuje zamówienia."
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
+msgid "POS Printer"
+msgstr "Drukarka punktu sprzedaży"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "PRO FORMA"
+msgstr "PRO FORMA"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pasta 4 formaggi "
+msgstr "Makaron 4 sery"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
+msgid "Pasta Bolognese"
+msgstr "Makaron boloński"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
+#, python-format
+msgid "Payment"
+msgstr "Płatność"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
+msgid "Point of Sale"
+msgstr "Punkt sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Konfiguracja punktu sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Linie zamówień w punktach sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Zamówienia Punktu Sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Płatności punktu sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesja punktu sprzedaży"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
+msgid "Pos Iface Orderline Notes"
+msgstr "Pos Iface Linia zamówienia Uwagi"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
+msgid "Pos Iface Printbill"
+msgstr "Pos Iface Drukuj rachunek"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
+msgid "Pos Iface Splitbill"
+msgstr "Pos Iface Podziel rachunek"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
+msgid "Pos Is Order Printer"
+msgstr "Pos to drukarka zamówień"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
+msgid "Pos Is Table Management"
+msgstr "Pos to zarządzanie stolikami"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
+msgid "Pos Set Tip After Payment"
+msgstr "Pos Ustaw napiwek po dokonaniu płatności"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
+#, python-format
+msgid "Print"
+msgstr "Drukuj"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Print orders at the kitchen, at the bar, etc."
+msgstr "Drukowanie zamówień w kuchni, przy barze itp."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
+msgid "Printed Product Categories"
+msgstr "Wydrukowane kategorie produktów"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__name
+msgid "Printer Name"
+msgstr "Nazwa Drukarki"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__printer_type
+msgid "Printer Type"
+msgstr "Typ drukarki"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Printers"
+msgstr "Drukarki"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
+#, python-format
+msgid "Printing failed"
+msgstr "Drukowanie nie powiodło się"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Printing is not supported on some browsers"
+msgstr "Drukowanie nie jest obsługiwane w niektórych przeglądarkach"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid ""
+"Printing is not supported on some browsers due to no default printing "
+"protocol is available. It is possible to print your tickets by making use of"
+" an IoT Box."
+msgstr ""
+"Drukowanie nie jest obsługiwane w niektórych przeglądarkach, ponieważ nie "
+"jest dostępny domyślny protokół drukowania. Możliwe jest drukowanie biletów "
+"za pomocą IoT Box."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
+msgid "Proxy IP Address"
+msgstr "Adres IP serwera proxy"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Purple"
+msgstr "Purpurowy"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Red"
+msgstr "Czerwony"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Removing a table cannot be undone"
+msgstr "Nie można cofnąć usunięcia stolika "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Rename"
+msgstr "Zmień nazwę"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "Reprint receipts"
+msgstr "Ponowny wydruk paragonów"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Restaurant &amp; Bar"
+msgstr "Restauracja i bar"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_floor
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+msgid "Restaurant Floor"
+msgstr "Sala restauracyjna "
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
+msgid "Restaurant Floors"
+msgstr "Sale restauracyjne"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
+msgid "Restaurant Order Printers"
+msgstr "Drukarki zamówień "
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_printer
+msgid "Restaurant Printer"
+msgstr "Drukarka zamówień restauracji"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_table
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
+msgid "Restaurant Table"
+msgstr "Stolik w restauracji "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#, python-format
+msgid "Reverse"
+msgstr "Odwrotne"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#, python-format
+msgid "Reverse Payment"
+msgstr "Odwrócona płatność"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
+msgid "Round"
+msgstr "Okrągły"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Round Shape"
+msgstr "Okrągły kształt"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
+msgid "Salmon and Avocado"
+msgstr "Łosoś i awokado"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
+#, python-format
+msgid "Seats"
+msgstr "Miejsca"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
+msgid "Sequence"
+msgstr "Sekwencja"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Served by"
+msgstr "Obsługujący"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
+msgid "Set Tip After Payment"
+msgstr "Ustaw napiwek po płatności"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
+#, python-format
+msgid "Settle"
+msgstr "Ustaw"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
+msgid "Shape"
+msgstr "Kształt "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Signature"
+msgstr "Podpis"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
+msgid "Skip line when sending ticket to kitchen printers."
+msgstr "Pomiń wiersz przy wysyłaniu do drukarek na kuchni"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
+msgid "Spicy Tuna Sandwich"
+msgstr "Pikantna kanapka z tuńczykiem"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SplitBillButton.xml:0
+#, python-format
+msgid "Split"
+msgstr "Podziel"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Split total or order lines"
+msgstr "Podziel zamówienie lub pozycje zamówienia"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__square
+msgid "Square"
+msgstr "Kwadratowy "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Square Shape"
+msgstr "Kwadratowy kształt"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Subtotal"
+msgstr "Wartość"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
+#, python-format
+msgid "Table"
+msgstr "Stół"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
+msgid "Table Name"
+msgstr "Nazwa stolika "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Table Name ?"
+msgstr "Nazwa stolika?"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+msgid "Tables"
+msgstr "Stoliki"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Tel:"
+msgstr "Tel:"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid "The %s is already used in another Pos Config."
+msgstr "%s jest już używany w innej konfiguracji Pos."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
+msgid "The IP Address or hostname of the Printer's hardware proxy"
+msgstr "Adres IP lub nazwa hosta proxy drukarki"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
+msgid "The amount of customers that have been served by this order."
+msgstr "Liczba klientów obsługiwanych przez to zamówienie."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
+msgid "The background color of the floor in a html-compatible format"
+msgstr "Kolor tła sali w formacie zgodnym z html"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
+msgid "The default number of customer served at this table."
+msgstr "Domyślna liczba klientów obsłużonych przy tym stole. "
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
+msgid "The restaurant floors served by this point of sale."
+msgstr "Sale restauracyjne obsługiwane przez ten punkt sprzedaży."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
+msgid "The table where this order was served"
+msgstr "Stolik, do którego podano to zamówienie "
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
+msgid ""
+"The table's color, expressed as a valid 'background' CSS property value"
+msgstr ""
+"Kolor stolika, wyrażony jako prawidłowa wartość właściwości CSS "
+"\"background\"."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
+msgid "The table's height in pixels"
+msgstr "Wysokość stołu podana w pikselach "
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
+msgid ""
+"The table's horizontal position from the left side to the table's center, in"
+" pixels"
+msgstr ""
+"Pozioma pozycja stolika od lewej strony do środka stolika, w pikselach."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
+msgid ""
+"The table's vertical position from the top to the table's center, in pixels"
+msgstr "Pionowe położenie stolika od góry do środka stolika, w pikselach."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
+msgid "The table's width in pixels"
+msgstr "Szerokość stołu podana w pikselach "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/PrintBillButton.js:0
+#, python-format
+msgid "There are no order lines"
+msgstr "Nie ma linii zleceń"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#, python-format
+msgid "This floor has no tables yet, use the"
+msgstr "Na tej sali jeszcze nie ma stolików, użyj "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"To zamówienie nie jest jeszcze zsynchronizowane z serwerem. Upewnij się, że "
+"jest zsynchronizowane, a następnie spróbuj ponownie."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Tint"
+msgstr "Odcień"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/TicketScreen.xml:0
+#, python-format
+msgid "Tip"
+msgstr "Wskazówka"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Tip:"
+msgstr "Napiwek:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Tipping"
+msgstr "Napiwki"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Total:"
+msgstr "Suma:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml:0
+#, python-format
+msgid "Transfer"
+msgstr "Przekaz"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Turquoise"
+msgstr "Turkus"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Unable to change background color"
+msgstr "Brak możliwości zmiany koloru tła"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Unable to create table because you are offline."
+msgstr "Nie można utworzyć stolika, ponieważ użytkownik jest offline."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Unable to delete table"
+msgstr "Nie można usunąć tabeli"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Unable to fetch orders"
+msgstr "Nie można pobrać zamówień"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
+#, python-format
+msgid "Unable to get orders count"
+msgstr "Nie można uzyskać liczby zamówień"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
+#, python-format
+msgid "Unknown error"
+msgstr "Nieokreślony błąd"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Niezsynchronizowane zamówienie"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
+msgid "Uuid"
+msgstr "Uuid"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "VAT:"
+msgstr "NIP:"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_vege_product_template
+msgid "Vegetarian"
+msgstr "Wegetariańskie"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
+msgid "Vertical Position"
+msgstr "Pozycja pionowa "
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Woda"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
+msgid "Width"
+msgstr "Szerokość"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
+#, python-format
+msgid "With a"
+msgstr "Z"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
+#, python-format
+msgid "Yellow"
+msgstr "Żółty"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
+#, python-format
+msgid "You cannot put a number that exceeds %s "
+msgstr "Nie można wprowadzić liczby przekraczającej %s"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid ""
+"You cannot remove a floor that is used in a PoS session, close the "
+"session(s) first: \n"
+msgstr ""
+"Nie można usunąć sali, która jest używana w sesji PoS, należy najpierw "
+"zamknąć sesję (sesje):\n"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+#, python-format
+msgid ""
+"You cannot remove a table that is used in a PoS session, close the "
+"session(s) first."
+msgstr ""
+"Nie można usunąć stolika używanego w sesji PoS, należy najpierw zamknąć "
+"sesję (sesje)."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "________________________"
+msgstr "________________________"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "______________________________________________"
+msgstr "______________________________________________"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
+#, python-format
+msgid "at"
+msgstr "w"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "at table"
+msgstr "przy stoliku"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/FloorScreen.xml:0
+#, python-format
+msgid "button in the editing toolbar to create new tables."
+msgstr "na pasku narzędzi edycji, aby utworzyć nowe stoliki."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
+#, python-format
+msgid "discount"
+msgstr "upust"

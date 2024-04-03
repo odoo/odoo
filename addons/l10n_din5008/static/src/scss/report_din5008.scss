@@ -1,0 +1,192 @@
+.din_page {
+    font-size: 9pt;
+
+    .container-fluid & { // center the invoice in portal preview
+       margin-left: auto;
+       margin-right: auto;
+    }
+    &.header {
+        table {
+            width: 100%;
+            img, h3, div.h3, td, tr {
+                padding: 0;
+                margin: 0;
+            }
+            h3, div.h3 {
+                color: $o-default-report-primary-color;
+                position: relative;
+                top: -10mm;
+                margin-bottom: -10mm;
+            }
+            img {
+                padding-top: 10mm;
+                float: right;
+            }
+        }
+    }
+    &.invoice_note {
+        tr {
+            td {
+                vertical-align: bottom;
+            }
+            &:nth-child(2) td {
+                vertical-align: top;
+            }
+            .address, .information_block, .shipping_address, .invoice_address {
+                margin: 0;
+            }
+            .address {
+                height: 45mm;
+            }
+            .address, .shipping_address {
+                width: 85mm;
+                padding-left: 5mm;
+                .company_invoice_line {
+                    margin-top: 1mm;
+                }
+                > span {
+                    color: $o-default-report-secondary-color;
+                }
+            }
+            .information_block, .invoice_address {
+                width: 75mm;
+                min-height: 40mm;
+                margin-left: 20mm;
+                table {
+                    width: 100%;
+                }
+            }
+        }
+        h2, [name=payment_communication], [name=payment_term], [name=comment], [name=note], [name=incoterm] {
+            margin-left: 5mm;
+            margin-right: 10mm;
+            margin-top: 8.46mm;
+            color: $o-default-report-primary-color;
+        }
+        > .pt-5 {  // hide hardcoded address from base.template.layout
+            display: none;
+        }
+        .page {
+            margin-left: 5mm;
+            margin-right: 10mm;
+            > h2, h1, #informations, .mt-4 > h2 {
+                display: none;
+            }
+            [name=invoice_line_table], [name=stock_move_table], .o_main_table {
+                margin-top: 8.46mm;
+                th {
+                    color: $o-default-report-secondary-color;
+                }
+            }
+
+            tr {
+                td {
+                    vertical-align: bottom;
+                }
+            }
+        }
+    }
+    &.footer {
+        padding-left: 5mm;
+        padding-right: 10mm;
+        .page_number {
+            margin-top: 4.23mm;
+            width: 100%;
+            height: 4.23mm;
+        }
+        .company_details {
+            margin-top: 4.23mm;
+            width: 100%;
+            table {
+                border-top: solid 1px;
+                width: 100%;
+                td {
+                    vertical-align: baseline;
+                    padding-right: 3mm;
+                    &:last-child {
+                        padding-right: initial;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.din_page_pdf {
+    width: 180mm;
+    margin-left: -1rem;
+}
+
+
+// TODO WAN remove in master
+.din {
+    &.header {
+        min-height: 45mm;
+        max-height: 45mm;
+        overflow: hidden;
+        img {
+            max-height: 45mm;
+        }
+    }
+    .company_address {
+        position: relative;
+        left: 45mm;
+        top: 5mm;
+        width: 75mm;
+        min-width: 75mm;
+        display: inline-block;
+    }
+    .company_invoice_address {
+        position: relative;
+        left: 25mm;
+        top: 17.7mm;
+        width: 85mm;
+        min-width: 85mm;
+        margin-bottom: 1mm;
+        font-size: 7pt;
+        overflow-y: hidden;
+        word-break: break-word;
+    }
+    .company_invoice_line {
+        margin-top: 1mm;
+    }
+    .invoice_address {
+        position: relative;
+        left: 25mm;
+        top: 14.7mm;
+        width: 85mm;
+        height: 27.3mm;
+        line-height: 1.15;
+        overflow-y: hidden;
+        word-break: break-word;
+        float: left;
+    }
+    .header_address {
+        min-height: 45mm;
+    }
+    .page_number {
+        margin-top: 4.23mm;
+        margin-bottom: 4.23mm;
+    }
+    &.article {
+        .page {
+            position: relative;
+            top: 8.46mm;
+            left: 25mm;
+            width: 190mm;
+        }
+        .address {
+            margin-top: 5mm;
+        }
+    }
+    &.o_background_footer {
+        position: relative;
+        left: 25mm;
+        width: 190mm;
+    }
+    .o_account_reports_header {
+        .fallback_header {
+            display: none;
+        }
+    }
+}

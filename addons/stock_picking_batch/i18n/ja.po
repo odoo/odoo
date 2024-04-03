@@ -1,0 +1,993 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_picking_batch
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 江口和志 <sandwhale1010@gmail.com>, 2022
+# Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid ""
+"<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
+"'=', False)]}\">Group by</span>"
+msgstr ""
+"<span class=\"o_form_label fw-bold\" attrs=\"{'invisible':[('auto_batch', "
+"'=', False)]}\">以下でグループ化:</span>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>FROM</strong>"
+msgstr "<strong>以下から:</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>ロット/シリアル番号</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
+msgstr "<strong>パッケージ</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Product Barcode</strong>"
+msgstr "<strong>製品バーコード</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
+msgstr "<strong>担当者:</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>TO</strong>"
+msgstr "<strong>次へ:</strong>"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>→</strong>"
+msgstr "<strong>→</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_lines
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
+"Leave this value as '0' if no line limit."
+msgstr ""
+"この項目数を超えるバッチに転送が追加されても、転送は自動的に追加されません。\n"
+"項目数制限がない場合は、この値を '0' のままにしておきます。"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
+"Leave this value as '0' if no transfer limit."
+msgstr ""
+"この転送回数を超えるバッチには、転送は自動的に追加されません。\n"
+"転送制限がない場合は、この値を'0'のままにします。"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外の活動を示す文字装飾"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid "Activity State"
+msgstr "活動状態"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "Add Operations"
+msgstr "オペレーションを追加"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add pickings to"
+msgstr "以下にピッキングを追加:"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Add to"
+msgstr "に追加"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_move_line.py:0
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
+#, python-format
+msgid "Add to Wave"
+msgstr "ウェーブに追加"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+msgid "Add to batch"
+msgstr "バッチに追加"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
+msgid "Add to wave"
+msgstr "ウェーブに追加"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Allocation"
+msgstr "割当"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
+msgid "Allowed Picking"
+msgstr "許可されたピッキング"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid "Assigned to %s Responsible"
+msgstr "担当者 %s "
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
+msgid "Auto-confirm"
+msgstr "自動確認"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid "Automatic Batches"
+msgstr "自動バッチ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+msgid "Automatically group batches by contacts."
+msgstr "契約ごとの自動グループバッチ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Automatically group batches by destination country."
+msgstr "宛先国ごとの自動グループバッチ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Automatically group batches by their destination location."
+msgstr "宛先ロケーションごとの自動グループバッチ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Automatically group batches by their source location."
+msgstr "移動元ロケーションごとの自動グループバッチ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
+msgid ""
+"Automatically put pickings into batches as they are confirmed when possible."
+msgstr "可能であれば、ピッキングが確認された時点で自動的にバッチに入れます。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "バーコード"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
+msgid "Batch"
+msgstr "バッチ"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_move_line_view_search_inherit_stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
+#, python-format
+msgid "Batch Transfer"
+msgstr "一括転送"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Transfer Lines"
+msgstr "バッチ転送項目"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Batch Transfers"
+msgstr "一括転送"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Batch Transfers not finished"
+msgstr "バッチ転送未完了"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
+msgid "Batch associated to this transfer"
+msgstr "この転送に関連するバッチ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Batches"
+msgstr "一括処理"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__cancel
+msgid "Cancelled"
+msgstr "取消済"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "Cannot create wave transfers"
+msgstr "ウェーブ転送を作成できません"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Check Availability"
+msgstr "利用可能確認"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Choose Labels Layout"
+msgstr "ラベルレイアウトを選択"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Choose Type of Labels To Print"
+msgstr "印刷するラベルのタイプを選択する"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Clear quantities"
+msgstr "数量を消去"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
+msgid "Confirm"
+msgstr "確認"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
+msgid "Count Picking Batch"
+msgstr "ピッキングバッチ数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
+msgid "Count Picking Wave"
+msgstr "ピッキングウェーブ数"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Create a new batch transfer"
+msgstr "新規ウェーブ転送を作成"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid "Create a new wave transfer"
+msgstr "新規ウェーブ転送を作成"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
+msgid "Destination Country"
+msgstr "配送先国"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
+msgid "Destination Location"
+msgstr "移動先ロケーション"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Detailed Operations"
+msgstr "詳細オペレーション"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Done"
+msgstr "完了"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Draft"
+msgstr "ドラフト"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Future Activities"
+msgstr "将来の活動"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外的なアクティビティを示唆するアイコン"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid ""
+"If the Automatic Batches feature is enabled, at least one 'Group by' option "
+"must be selected."
+msgstr "自動バッチ機能が有効な場合、少なくとも1つの'グループごと'オプションを選択する必要があります。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
+msgid "In progress"
+msgstr "進行中"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中　"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave____last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Late Activities"
+msgstr "遅れた活動"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
+msgid "Line"
+msgstr "行"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
+msgid "List of transfers associated to this batch"
+msgstr "このバッチに関連した転送のリスト"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "主な添付"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
+msgid "Maximum lines per batch"
+msgstr "バッチごとの最大項目数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
+msgid "Maximum transfers per batch"
+msgstr "バッチごとの最小項目数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__mode
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__mode
+msgid "Mode"
+msgstr "モード"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
+msgid "Move Lines"
+msgstr "移動明細"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動の締切"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "My Transfers"
+msgstr "自分の運送"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "次の活動期限"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
+msgid "Next Activity Summary"
+msgstr "次の活動サマリ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
+msgid "Next Activity Type"
+msgstr "次の活動タイプ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクションの数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーのメッセージ数"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
+msgid "Operation Type"
+msgstr "オペレーションタイプ"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Operations"
+msgstr "オペレーション"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
+msgid "Picking"
+msgstr "ピッキング"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_type
+msgid "Picking Type"
+msgstr "ピッキングタイプ"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid ""
+"Please add 'Done' quantities to the batch picking to create a new pack."
+msgstr "新しいパックを作成するには、バッチピッキングに'完了' の数量を追加して下さい。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Print"
+msgstr "印刷"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Print Labels"
+msgstr "ラベル印刷"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "製品の移動(在庫移動ライン)"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Put in Pack"
+msgstr "梱包する"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "数量"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Responsible"
+msgstr "担当者"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
+msgid "Responsible User"
+msgstr "担当者"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "計画日"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__scheduled_date
+msgid ""
+"Scheduled date for the transfers to be processed.\n"
+"              - If manually set then scheduled date for all transfers in batch will automatically update to this date.\n"
+"              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
+"                but this scheduled date will not be set for all transfers in batch."
+msgstr ""
+"処理される転送の予定日。\n"
+"　　　　- 手動で設定した場合、バッチ内のすべての予定日が自動的にこの日付に更新されます。\n"
+"　　　　- 手動で変更されず、転送が追加/削除/更新された場合、この日が最も早い予定日となります。\n"
+"　　　　しかし、この予定日はバッチ内のすべての振込に設定されるわけではありません。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Search Batch Transfer"
+msgstr "バッチ転送を検索"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Set quantities"
+msgstr "数量を設定"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_allocation
+msgid "Show Allocation Button"
+msgstr "割り当てボタンを表示"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
+msgid "Show Check Availability"
+msgstr "チェックの可用性を表示"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
+msgid "Show Clear Qty Button"
+msgstr "数量クリアボタンを表示"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "たくさんのテキストを表示"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
+msgid "Show Set Qty Button"
+msgstr "数量設定ボタンを表示"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
+msgid "Show Validate Button"
+msgstr "検証ボタンを表示"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Show all records which has next action date is before today"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
+msgid "Source Location"
+msgstr "移動元ロケーション"
+
+#. module: stock_picking_batch
+#: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
+#: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
+msgid "Stage Changed"
+msgstr "ステージ変更"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "State"
+msgstr "都道府県/州"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "ステータス"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"活動に基づく状態\n"
+"延滞：期限は既に過ぎました\n"
+"当日：活動日は本日です\n"
+"予定：将来の活動。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
+msgid "Stock Batch Transfer"
+msgstr "在庫バッチ転送"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_package_destination
+msgid "Stock Package Destination"
+msgstr "ストックパッケージの宛先"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
+msgid "Stock move lines"
+msgstr "在庫移動項目"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
+msgid "Stock moves"
+msgstr "在庫移動"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "要約:"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid ""
+"The following transfers cannot be added to batch transfer %s. Please check their states and operation types, if they aren't immediate transfers.\n"
+"\n"
+"Incompatibilities: %s"
+msgstr ""
+"以下の転送はバッチ転送に追加できません。%s即時転送でない場合は、その状態とオペレーションタイプを確認して下さい。\n"
+"\n"
+"互換性なし:%s"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid ""
+"The goal of the batch transfer is to group operations that may\n"
+"            (needs to) be done together in order to increase their efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) or\n"
+"            help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+"バッチ転送の目的は、効率を上げるために、\n"
+"一緒に行う（必要がある）可能性のある操作をグループ化することです。\n"
+"また、仕事の割り当て（1人＝1バッチ）や、オペレーションのタイミング\n"
+"管理（午後1時に行うべきタスク）にも役立ちます。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
+msgid ""
+"The goal of the wave transfer is to group operations from different transfer\n"
+"                    together in order to increase their efficiency.\n"
+"                    It may also be useful to assign jobs (one person = one batch) or\n"
+"                    help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+"ウェーブ転送の目的は、異なる転送のオペレーションをグループ化して\n"
+"　　　　　効率化することです。\n"
+"　　　　　また、業務の割り当て(1人＝1バッチ)や、\n"
+"オペレーションのタイミング管理(午後1時に行うタスク)にも役立ちます。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected operations should belong to a unique company."
+msgstr "選択されたオペレーションは一意の会社に属している必要があります。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
+#, python-format
+msgid "The selected pickings should belong to an unique company."
+msgstr "選択されたピッキングは一意の会社に属している必要があります。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected transfers should belong to a unique company."
+msgstr "選択された転送は一意の会社に属している必要があります。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
+#, python-format
+msgid "The selected transfers should belong to the same operation type"
+msgstr "選択された転送は同一のオペレーションタイプに属している必要があります。"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
+msgid "This batch is a wave"
+msgstr "このバッチはウェーブです"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "To Do"
+msgstr "未処理"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Transfer"
+msgstr "運送"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Transferred by"
+msgstr "運送担当"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Transfers"
+msgstr "運送"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
+msgid "Type of Operation"
+msgstr "処理タイプ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外アクティビティのタイプ。"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Validate"
+msgstr "検証"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
+msgid "Wave Transfer"
+msgstr "ウェーブ転送"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_add_to_wave
+msgid "Wave Transfer Lines"
+msgstr "ウェーブ転送項目"
+
+#. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.action_picking_tree_wave
+#: model:ir.ui.menu,name:stock_picking_batch.stock_picking_wave_menu
+msgid "Wave Transfers"
+msgstr "ウェーブ転送"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
+msgid "Waves"
+msgstr "ウェーブ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website Messages"
+msgstr "ウェブサイトメッセージ"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
+msgid "Website communication history"
+msgstr "ウェブサイトコミュニケーション履歴"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
+msgid "When checked, create the batch in draft status"
+msgstr "確認して、バッチをドラフト状態で作成して下さい。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "You cannot delete Done batch transfers."
+msgstr "完了済のバッチ転送を削除することはできません。"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "You have to set some pickings to batch."
+msgstr "バッチ用のピッキングを設定して下さい。"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
+msgid "a new batch transfer"
+msgstr "新規バッチ転送"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
+msgid "a new wave transfer"
+msgstr "新規ウェーブ転送"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
+msgid "an existing batch transfer"
+msgstr "既存のバッチ転送"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
+msgid "an existing wave transfer"
+msgstr "既存のウェーブ転送"

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Tags -->
+    <record id="product_tag_form_view" model="ir.ui.view">
+        <field name="name">product.tag.form</field>
+        <field name="model">product.tag</field>
+        <field name="arch" type="xml">
+            <form string="Product Tag">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('product_ids','=',[])]}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_tag_tree_view" model="ir.ui.view">
+        <field name="name">product.tag.tree</field>
+        <field name="model">product.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Product Tags">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </tree>
+        </field>
+    </record>
+    <record id="product_tag_action" model="ir.actions.act_window">
+        <field name="name">Product Tags</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Define a new tag
+          </p><p>
+            Tags are used to search product for a given theme.
+          </p>
+        </field>
+    </record>
+</odoo>

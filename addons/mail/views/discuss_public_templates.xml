@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mail.discuss_public_layout">&lt;!DOCTYPE html&gt;
+        <html class="h-100">
+            <head>
+                <meta charset="utf-8"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+                <title t-esc="title or 'Odoo'"/>
+                <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
+
+                <script>
+                    window.odoo = {
+                        __session_info__: <t t-out="json.dumps(session_info)"/>,
+                        csrf_token: "<t t-out="request.csrf_token(None)"/>",
+                        debug: "<t t-out="debug"/>",
+                    };
+                    {
+                        const { user_context,  cache_hashes } = odoo.__session_info__;
+                        fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);
+                    }
+                </script>
+
+                <t t-call-assets="mail.assets_common_discuss_public"/>
+                <t t-call-assets="mail.assets_discuss_public"/>
+                <t t-call-assets="mail.assets_discuss_public_test_tours" t-if="'tests' in debug or test_mode_enabled"/>
+
+                <t t-out="head or ''"/>
+            </head>
+            <body class="d-flex flex-column h-100">
+                <t t-out="body or ''"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="mail.discuss_public_channel_template" name="Discuss Public Channel Template">
+        <t t-call="mail.discuss_public_layout">
+            <t t-set="head">
+                <style>
+                    body {
+                        direction: <t t-out="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'" />;
+                    }
+                </style>
+                <script>
+                    odoo.define('mail.discuss_public_channel_template', function() {
+                        return {
+                            data: <t t-out="json.dumps(data)"/>,
+                        };
+                    });
+                </script>
+            </t>
+        </t>
+    </template>
+</odoo>

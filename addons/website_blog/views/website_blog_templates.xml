@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ======   Overall pages layout   ===========================================
+============================================================================ -->
+<template id="index" name="Blog Navigation">
+    <t t-call="website.layout">
+        <div id="wrap" class="js_blog website_blog">
+            <t t-out="0"/>
+
+            <!-- Droppable-area shared across all blog's pages -->
+            <t t-set="oe_structure_blog_footer_description">Visible in all blogs' pages</t>
+            <div class="oe_structure oe_empty oe_structure_not_nearest"
+                id="oe_structure_blog_footer"
+                t-att-data-editor-sub-message="oe_structure_blog_footer_description"/>
+        </div>
+    </t>
+</template>
+
+<!-- ======  Blog(s) Index : Displaying a list of Blog Posts ===================
+Used by 'All blogs' and 'blog' (to share the same layout options) and to display
+list of filtered posts (by date or tag).
+============================================================================ -->
+<template id="blog_post_short" name="Blog Posts">
+    <t t-call="website_blog.index">
+        <t t-set="head">
+            <link t-if="blog" t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+            <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
+        </t>
+
+        <!-- Check for active options: the stored value may be used in sub-templates too  -->
+        <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design')"/>
+        <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
+        <t t-set="opt_blog_readable" t-value="is_view_active('website_blog.opt_blog_readable')"/>
+        <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
+
+        <div id="o_wblog_blog_top">
+            <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
+            <t t-if="not tag and not date_begin">
+                <div id="o_wblog_blog_top_droppable">
+                    <t t-if="blog">
+                        <t t-set="oe_structure_blog_single_header_description">Edit the '<t t-esc="blog.name"/>' page header.</t>
+                        <div t-field="blog.content"
+                            class="oe_structure"
+                            t-attf-id="oe_structure_blog_single_header_#{blog.id}"
+                            t-att-data-editor-sub-message="oe_structure_blog_single_header_description"/>
+                    </t>
+                    <t t-elif="blogs">
+                        <t t-set="oe_structure_blog_all_header_description">Edit the 'All Blogs' page header.</t>
+                        <div class="oe_structure"
+                            id="oe_structure_blog_all_header"
+                            t-att-data-editor-sub-message="oe_structure_blog_all_header_description"/>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <!-- Droppable-area for filtered results (tags or date) -->
+                <t t-set="oe_structure_blog_filtered_header_description">Edit the 'Filter Results' page header.</t>
+                <div class="oe_structure"
+                    id="oe_structure_blog_filtered_header"
+                    t-att-data-editor-sub-message="oe_structure_blog_filtered_header_description"/>
+            </t>
+        </div>
+
+        <t t-call="website_blog.blogs_nav">
+            <t t-set="search" t-value="original_search or search"/>
+        </t>
+
+        <section id="o_wblog_index_content" t-att-class="opt_blog_cards_design and 'o_wblog_page_cards_bg'">
+            <div class="container py-4">
+                <div t-if="original_search and posts" class="alert alert-warning mt8">
+                    No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                </div>
+                <div t-attf-class="row #{opt_blog_sidebar_show and 'justify-content-between' or 'justify-content-center'}">
+                    <div id="o_wblog_posts_loop_container" t-attf-class="col #{'o_container_small mx-0' if opt_blog_list_view else ''}">
+
+                        <t t-call="website_blog.posts_loop">
+                            <t t-if="not blog" t-set="posts_list_show_parent_blog" t-value="True"/>
+                        </t>
+
+                        <t t-call="website.pager" >
+                            <t t-set="classname" t-valuef="justify-content-center"/>
+                            <t t-set="extraLinkClass" t-valuef="post_link"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</template>
+
+<!-- (Option) Blog: Show latest-post as top banner
+    Replace top-banner content with the latest published post
+-->
+<template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True">
+    <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
+        <div t-if="first_post or blog" class="container">
+            <div class="row py-4">
+                <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
+                    <t t-call="website.record_cover">
+                        <t t-set="_record" t-value="blog or first_post"/>
+                        <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
+                    </t>
+                </div>
+                <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
+                    <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
+                        <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
+                            <t t-if="blog">
+                                <span t-field="blog.name" class="h1 d-block" placeholder="Blog's Title"/>
+                                <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
+                            </t>
+                            <t t-else="first_post">
+                                <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-1 d-inline-block me-auto">Latest</div>
+                                <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}"
+                                   t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
+                                <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
+
+                                <div t-if="not blog" class="d-flex">
+                                    <div class="small mt-2 mb-3 me-1">
+                                        in <i class="fa fa-folder-open text-muted"/> <a t-attf-href="#{blog_url(blog=first_post.blog_id)}" t-field="first_post.blog_id"/>
+                                    </div>
+                                </div>
+                                <div t-field="first_post.teaser" class="mb-4 lead"  placeholder=""/>
+                                <div>
+                                    <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" class="btn btn-primary">Read more</a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3"> <hr/> </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- (Option) Blog: Show latest-post as top banner : 'Full Width' design -->
+<template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True">
+    <xpath expr="//div[hasclass('container')]" position="replace">
+        <t t-if="blog or first_post" t-call="website.record_cover">
+            <t t-set="_record" t-value="blog or first_post"/>
+            <t t-set="use_filters" t-value="True"/>
+            <t t-set="use_text_align" t-value="True"/>
+            <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
+
+            <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
+                <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
+                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-1">Latest</div>
+                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
+                        <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
+                        <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                    </a>
+                    <span t-elif="blog" t-att-title="blog.name" class="text-white text-decoration-none">
+                        <div t-field="blog.name" id="o_wblog_post_name" placeholder="Blog Title"/>
+                        <div t-field="blog.subtitle" id="o_wblog_post_subtitle" placeholder="Blog Subtitle"/>
+                    </span>
+
+                    <div>
+                        <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
+                            in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
+                        </span>
+                        <span t-else="">&amp;nbsp;</span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+
+<!-- (Option) Blog: Sidebar : Show -->
+<template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
+    <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
+        <div t-if="opt_blog_list_view" class="border-end d-none d-lg-block" style="opacity: 0.5"/>
+        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ms-lg-5'}">
+            <t t-call="website_blog.sidebar_blog_index"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- (Option) Blog: Posts List: Cards design
+    Wrap posts in a standard bts cards components
+-->
+<template id="opt_blog_cards_design" name="'Cards' Design" inherit_id="website_blog.blog_post_short" active="False"/>
+
+
+<!-- (Option) Blog: Show Posts in list-view
+    Display post in a list rather than a grid
+-->
+<template id="opt_blog_list_view" name="List View" inherit_id="website_blog.blog_post_short" active="False"/>
+
+<!-- (Option) Blog: Increase readability
+    Increase font-size, adapt layout
+-->
+<template id="opt_blog_readable" name="Increase Readability" inherit_id="website_blog.blog_post_short" active="True"/>
+
+
+<!-- ====== Blog Post Complete Layout ==========================================
+============================================================================ -->
+<template id="website_blog.blog_post_complete" name="Blog Post" track="1">
+    <t t-call="website_blog.index">
+
+        <!-- Check for active options: the stored value may be used in sub-templates too  -->
+        <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
+        <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
+        <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
+        <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
+        <t t-set="opt_blog_post_select_to_tweet" t-value="is_view_active('website_blog.opt_blog_post_select_to_tweet')"/>
+        <t t-set="opt_blog_post_select_to_comment" t-value="is_view_active('website_blog.opt_blog_post_select_to_comment')"/>
+
+        <section id="o_wblog_post_top">
+            <div id="title" class="blog_header" t-ignore="True">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="blog_post"/>
+                    <t t-set="snippet_autofocus" t-value="True"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="use_size" t-value="True"/>
+                    <t t-set="display_opt_name">Blog Post Cover</t>
+                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
+
+                    <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                        <div t-attf-class="o_wblog_post_title #{opt_blog_post_select_to_tweet and 'js_tweet'} #{opt_blog_post_select_to_comment and 'js_comment'}">
+                            <h1 t-field="blog_post.name" id="o_wblog_post_name" class="o_editable_no_shadow" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
+                            <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle" class="o_editable_no_shadow" placeholder="Subtitle"/>
+                        </div>
+                        <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class', '').split(' '))"/>
+                        <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
+                            id="o_wblog_post_content_jump" href="#o_wblog_post_main"
+                            class="css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto mb-5 text-decoration-none">
+                            <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
+                        </a>
+                    </div>
+                </t>
+            </div>
+        </section>
+
+        <section id="o_wblog_post_main" t-attf-class="container pt-4 pb-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
+            <!-- Sidebar-enabled Layout -->
+            <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
+                <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
+                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
+                        <t t-call="website_blog.blog_post_content"/>
+                    </div>
+                    <div id="o_wblog_post_sidebar_col" t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
+                        <t t-call="website_blog.blog_post_sidebar"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No-Sidebar Layout -->
+            <div t-if="not opt_blog_post_sidebar" t-attf-class="#{opt_blog_post_readable and 'o_container_small'}">
+                <div class="d-flex flex-column flex-lg-row">
+                    <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_container_small w-100 flex-shrink-0'}">
+                        <t t-call="website_blog.blog_post_content"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="o_wblog_post_footer"/>
+    </t>
+</template>
+
+<!-- ====== Blog Post Content ==================================================
+============================================================================ -->
+<template id="blog_post_content" name="Blog post content">
+    <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs">
+        <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent'"></t>
+    </t>
+    <div t-field="blog_post.content"
+        data-editor-message="WRITE HERE OR DRAG BUILDING BLOCKS"
+        t-attf-class="o_wblog_post_content_field #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''} #{'o_wblog_read_text' if opt_blog_post_readable else ''}"/>
+
+    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted">
+        <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
+        <div t-if="len(blog_post.tag_ids) > 0">#
+            <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                <a class="badge text-primary border me-1 post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+            </t>
+        </div>
+    </div>
+</template>
+
+
+<!-- (Option) Post: Increase readability
+    Increase font-size, adapt content width
+-->
+<template id="opt_blog_post_readable" name="Increase Readability" inherit_id="website_blog.blog_post_complete" active="True"/>
+
+<!-- (Option) Post: Show Sidebar
+    Show sidebar beside the post content
+-->
+<template id="opt_blog_post_sidebar" name="Show Sidebar" inherit_id="website_blog.blog_post_complete" active="False"/>
+
+<!-- (Option) Post: Regular Cover
+    Use 'regular cover' design rather than the fullwidth one
+-->
+<template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="False">
+    <xpath expr="//div[@id='title']" position="replace">
+        <div class="container">
+            <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar mx-auto'"/>
+            <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'container'"/>
+
+            <div id="title" t-attf-class="blog_header o_wblog_regular_cover_container #{readableClass}">
+
+                <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs">
+                    <t t-set="additionnal_classes" t-value="'mt-4 mb-3 bg-transparent'"></t>
+                </t>
+
+                <div t-att-class="not opt_blog_post_breadcrumb and 'pt-4'">
+                    <div t-attf-class="o_wblog_post_title mb-3 #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}" t-ignore="False">
+                        <h1 t-field="blog_post.name" id="o_wblog_post_name" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Title"/>
+                        <div t-field="blog_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                    </div>
+                    <div class="text-muted mb-2">
+                        <i class="fa fa-clock-o fa-fw"/>
+                        <span t-field="blog_post.post_date" class="text-muted" t-options="{'format': 'long', 'date_only': 'true'}"/>
+                        <span>by
+                            <t t-call="website_blog.post_author">
+                                <t t-set="additionnal_classes" t-value="'d-inline-flex me-2'"/>
+                                <t t-set="hide_date" t-value="True"/>
+                            </t>
+                        </span>
+                        <span t-if="len(blog_post.message_ids) > 0" class="text-nowrap ps-2 o_not_editable">|
+                            <i class="fa fa-comment text-muted me-1"/>
+                            <a href="#discussion">
+                                <t t-esc="len(blog_post.message_ids)"/>
+                                <t t-if="len(blog_post.message_ids)>1">Comments</t>
+                                <t t-else="">Comment</t>
+                            </a>
+                        </span>
+                        <span t-elif="is_view_active('website_blog.opt_blog_post_comment')">| No comments yet</span>
+                    </div>
+                </div>
+
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="blog_post"/>
+                    <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_regular rounded shadow overflow-hidden'"/>
+                    <t t-set="use_size" t-value="True"/>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- (Option) Post: Show Breadcrumb
+    Display navigation breadcrumbs before the post content
+-->
+<template id="opt_blog_post_breadcrumb" name="Show Breadcrumb" inherit_id="website_blog.blog_post_complete" active="True"/>
+
+<!-- (Option) Post: Select text to Tweet
+    Allow to select text to tweet it
+-->
+<template id="opt_blog_post_select_to_tweet" name="Select to Tweet" inherit_id="website_blog.blog_post_complete" active="False"/>
+
+<!-- (Option) Post: Comments
+    Enable comments
+-->
+<template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False">
+    <xpath expr="//section[@id='o_wblog_post_main']" position="inside">
+        <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar'"/>
+        <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'o_container_small'"/>
+
+        <div class="container">
+            <div t-attf-class="mx-auto #{readableClass}">
+                <div id="o_wblog_post_comments" t-attf-class="pt-4 o_container_small">
+                    <div groups="base.group_public" class="small mb-4">
+                        <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
+                    </div>
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="blog_post"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- (Option) Post: Comments: Select text to Comment
+    Allow to select text to comment it
+-->
+<template id="opt_blog_post_select_to_comment" name="Select to Comment" inherit_id="website_blog.opt_blog_post_comment" active="False"/>
+
+<!-- (Option) Post : Read Next Article
+    Show 'read next' banner at the bottom of the page
+-->
+<template id="opt_blog_post_read_next" name="Read Next Article" inherit_id="website_blog.blog_post_complete" active="True">
+    <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
+        <div t-if="next_post" class="mt-5">
+            <t t-if="opt_blog_post_regular_cover">
+                <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
+                <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
+
+                <div class="container">
+                    <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
+                        <hr/>
+                        <div class="d-flex text-end py-4">
+                            <div class="flex-grow-1 pe-3">
+                                <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-1">Read Next</span>
+                                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
+                                    <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2"/>
+                                    <div t-field="next_post.subtitle" id="o_wblog_post_subtitle" placeholder="Subtitle" class="lead"/>
+                                </a>
+                            </div>
+                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25">
+                                <t t-call="website.record_cover">
+                                    <t t-set="_record" t-value="next_post"/>
+                                    <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
+                                </t>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div id="o_wblog_next_container" class="d-flex flex-column" t-cache="next_post">
+                    <t t-call="website.record_cover">
+                        <t t-set="_record" t-value="next_post"/>
+                        <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
+                        <t t-set="use_filters" t-value="True"/>
+                        <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover'"/>
+
+                        <a id="o_wblog_next_post_info" class="d-none"
+                           t-att-data-size="_cp.get('resize_class')"
+                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post) + '?anim'"/>
+
+                        <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
+                        <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
+
+                        <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                            <div t-attf-class="o_wblog_post_title">
+                                <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h1"/>
+                                <div t-field="next_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
+                            </div>
+
+                            <div t-attf-class="o_wblog_toggle #{next_cover_is_full and 'mb-n5'}">
+                                <span class="h4 d-inline-block py-1 px-2 rounded-1 text-white">
+                                    <i class="fa fa-angle-right fa-3x text-white" aria-label="Read next" title="Read Next"/>
+                                </span>
+                            </div>
+
+                            <!-- Emulate the next post's cover's height. For non-auto covers,
+                            the room that will be occupied by the 'scroll-down' link is temporary
+                            occupied  by the loader circle. For auto covers, an empty <div>
+                            creates enought separation.
+                            -->
+                            <div t-if="not next_cover_is_auto" class="o_wblog_next_loader o_wblog_toggle justify-content-center align-items-center mx-auto position-relative d-none">
+                                <div class="rounded-circle bg-black-50"/>
+                            </div>
+                            <div t-else="" class="o_wblog_next_fake_btn d-flex o_wblog_toggle"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+<!-- ======   Technical Templates   ============================================
+============================================================================ -->
+
+<!-- Atom Feed -->
+<template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<feed t-att-xmlns="'http://www.w3.org/2005/Atom'">
+    <title t-esc="blog.name"/>
+    <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
+    <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
+    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
+    <entry t-foreach="posts" t-as="post">
+        <title t-esc="post.name"/>
+        <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
+        <id t-esc="'%s%s' % (base_url, post.website_url)"/>
+        <author><name t-esc="post.sudo().author_id.name"/></author>
+        <summary t-esc="html2plaintext(post.teaser)"/>
+        <updated t-esc="str(post.post_date).replace(' ', 'T') + 'Z'"/>
+    </entry>
+</feed>
+</template>
+
+</odoo>

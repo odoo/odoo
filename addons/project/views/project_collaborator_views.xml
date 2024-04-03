@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_access_view_tree" model="ir.ui.view">
+        <field name="name">project.collaborator.view.tree</field>
+        <field name="model">project.collaborator</field>
+        <field name="arch" type="xml">
+            <tree string="Project Collaborators" create="0">
+                <field name="partner_id" options="{'no_create': True}"/>
+                <field name="partner_email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_collaborator_view_search" model="ir.ui.view">
+        <field name="name">project.collaborator.view.search</field>
+        <field name="model">project.collaborator</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id" />
+                <field name="project_id" />
+                <group expand="0" string="Group By">
+                    <filter name="project" string="Project" context="{'group_by': 'project_id'}" />
+                    <filter name="collaborator" string="Collaborator" context="{'group_by': 'partner_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_collaborator_action" model="ir.actions.act_window">
+        <field name="name">Project Collaborators</field>
+        <field name="res_model">project.collaborator</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="project_collaborator_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No collaborators found
+            </p>
+            <p>
+                Collaborate efficiently with key stakeholders by sharing with them the Kanban view of your tasks. Collaborators will be able to edit parts of tasks and send messages.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Page -->
+<template id="layout" name="Partners Layout">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Resellers</t>
+        <div id="wrap">
+            <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_1"/>
+            <div class="container mt16">
+                <div class="row">
+                    <t t-out="0" />
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_2"/>
+        </div>
+    </t>
+</template>
+
+<template id="index" name="Find Resellers">
+    <t t-call="website_crm_partner_assign.layout">
+        <div class="col-lg-12">
+            <h1 class="text-center">
+                Looking For a Local Store?
+            </h1><h2 class="text-center text-muted">
+                Contact a reseller
+            </h2>
+        </div>
+
+        <div class="col-lg-3 mb32" id="partner_left">
+
+            <ul id="reseller_grades" class="nav nav-pills flex-column mt16">
+                <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
+                <t t-foreach="grades" t-as="grade">
+                    <li class="nav-item">
+                        <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                           t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
+                            <span class="badge rounded-pill float-end" t-esc="grade['grade_id_count'] or ''"/>
+                            <t t-esc="grade['grade_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+
+            <ul id="reseller_countries" class="nav nav-pills flex-column mt16">
+                <li class="nav-header nav-item"><h3>Filter by Country</h3></li>
+                <t t-foreach="countries" t-as="country">
+                    <li t-if="country['country_id']" class="nav-item">
+                        <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                           t-attf-class="nav-link#{country['active'] and ' active' or ''}">
+                            <span class="badge rounded-pill float-end" t-esc="country['country_id_count'] or ''"/>
+                            <t t-esc="country['country_id'][1]"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+
+        </div>
+
+        <div class="col-lg-8 offset-lg-1" id="ref_content">
+            <div class="d-flex p-2">
+                <t t-call="website.pager"/>
+                <form action="" method="get" class="ms-auto">
+                    <div class="mb-3">
+                        <input t-if="country_all" type="hidden" name="country_all" value="True" />
+                        <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <p t-if="not partners">No result found</p>
+                <t t-foreach="partners" t-as="partner">
+                    <t t-if="last_grade != partner.grade_id.id">
+                        <h3 class="text-center mt-4">
+                            <span t-field="partner.grade_id"/>
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="partner.grade_id"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                            </t>
+                        </h3>
+                        <t t-set="last_grade" t-value="partner.grade_id.id"/>
+                    </t>
+                    <div class="d-flex mt-3">
+                        <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
+                           t-field="partner.avatar_128"
+                           class="me-3 text-center o_width_128"
+                           t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
+                        ></a>
+                        <div class="flex-grow-1 o_partner_body" style="min-height: 64px;">
+                            <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
+                                <span t-field="partner.display_name"/>
+                            </a>
+                            <div t-field="partner.website_short_description"/>
+                            <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+                                <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
+                                    <t t-esc="partner.implemented_partner_count"/> reference(s)
+                                </a></small>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <div class='navbar'>
+                <t t-call="website.pager">
+                   <t t-set="classname" t-valuef="float-start"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="Left World Map">
+    <xpath expr="//ul[@id='reseller_countries']" position="after">
+        <t t-if="google_maps_api_key">
+            <!-- modal for large map -->
+            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title">World Map</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+            <h3>World Map<button class="btn btn-link" data-bs-toggle="modal" data-bs-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
+            <ul class="nav">
+                <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                    style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
+            </ul>
+        </t>
+    </xpath>
+</template>
+
+<template id="partner" name="Partner Detail">
+    <t t-call="website_crm_partner_assign.layout">
+        <div class="col-lg-5">
+            <ol t-if="not edit_page" class="breadcrumb">
+                <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
+                <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
+            </ol>
+        </div>
+        <t t-call="website_partner.partner_detail">
+            <t t-set="right_column">
+                <div id="right_column" class="mb16"><t t-call="website_crm_partner_assign.references_block"/></div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="grade_in_detail" inherit_id="website_partner.partner_detail">
+  <xpath expr="//*[@id='partner_name']" position="after">
+    <h3 class="col-lg-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
+      <span t-field="partner.grade_id"/></h3>
+  </xpath>
+</template>
+
+<template id="references_block" name="Partner References Block">
+    <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
+        <h3 id="references">References</h3>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="d-flex mt-3">
+            <span t-field="reference.avatar_128" class="d-block me-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
+            <div class="flex-grow-1" style="min-height: 64px;">
+                <span t-field="reference.self"/>
+                <div t-field='reference.website_short_description'/>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Portal -->
+    <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_breadcrumbs" priority="15">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">
+                <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
+                    Leads
+                </a>
+                <t t-else="">
+                    Leads
+                </t>
+            </li>
+            <li t-if="lead" class="breadcrumb-item active">
+                <span t-field="lead.name"/>
+            </li>
+            <li t-if="page_name == 'opportunity' or opportunity" t-attf-class="breadcrumb-item #{'active ' if not opportunity else ''}">
+                <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
+                    Opportunities
+                </a>
+                <t t-else="">
+                    Opportunities
+                </t>
+            </li>
+            <li t-if="opportunity" class="breadcrumb-item active">
+                <span t-field="opportunity.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_lead" name="Show Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Leads</t>
+                <t t-set="url" t-value="'/my/leads'"/>
+                <t t-set="placeholder_count" t-value="'lead_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Opportunities</t>
+                <t t-set="url" t-value="'/my/opportunities'"/>
+                <t t-set="placeholder_count" t-value="'opp_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_leads" name="My Leads">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Leads</t>
+            </t>
+            <div t-if="not leads" class="alert alert-warning mt8" role="alert">
+                There are no leads.
+            </div>
+            <t t-if="leads" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="w-75">Name</th>
+                        <th>Contact Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="leads" t-as="lead">
+                        <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
+                        <td>
+                            <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
+                        </td>
+                        <td><span t-field="lead.contact_name" /></td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_opportunities" name="My Opportunities">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Opportunities</t>
+
+                <div class="ms-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
+                    <button class="btn btn-success btn-sm" name='new_opp' data-bs-toggle="modal" data-bs-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
+                        Create Opportunity
+                    </button>
+                </div>
+            </t>
+
+            <div class="modal fade modal_new_opp" role="form">
+                <div class="modal-dialog">
+                    <form method="POST" class="modal-content js_website_submit_form new_opp_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <header class="modal-header">
+                            <h4 class="modal-title">New Opportunity</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </header>
+                        <main class="modal-body" id="new-opp-dialog">
+                            <div class="mb-3">
+                                <label class="col-form-label hdd4" for="contact_name">Contact name</label>
+                                <input type='text' name="contact_name" class="form-control contact_name"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label h4dd" for="title">Opportunity</label>
+                                <input type='text' name="title" class="form-control title"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label hdd4" for="description">Description</label>
+                                <textarea rows="3" name="description" class="form-control description"></textarea>
+                            </div>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+            <t t-if="not opportunities">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no opportunities.
+                </div>
+            </t>
+            <t t-if="opportunities" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Date</th>
+                        <th class="w-50">Name</th>
+                        <th>Contact</th>
+                        <th>Expected</th>
+                        <th>Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="opportunities" t-as="opp">
+                        <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
+                        <td>
+                            <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
+                        </td>
+                        <td><span t-field="opp.contact_name" /></td>
+                        <td>
+                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
+                            <span> at </span>
+                            <span t-field="opp.probability" />%
+                        </td>
+                        <td>
+                            <span class="badge text-bg-info rounded-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_lead" name="My Lead">
+        <t t-call="portal.portal_layout">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span class="float-end" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
+                                <t t-foreach="range(1, 4)" t-as="i">
+                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
+                                </t>
+                            </span>
+                            <h4>
+                                Lead - <span t-field="lead.name"/>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
+                                <label class="col-4">Customer</label>
+                                <address class="col-8">
+                                    <div>
+                                        <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
+                                        <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
+                                    </div>
+                                    <div t-if="lead.phone">
+                                        <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    </div>
+                                    <div t-if="lead.mobile">
+                                        <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                    </div>
+                                    <div t-if="lead.email_from">
+                                        <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
+                                <label class="col-4">Address</label>
+                                <address class="col-8">
+                                    <div t-if="lead.street"><span t-field="lead.street"/></div>
+                                    <div t-if="lead.street2"><span t-field="lead.street2"/></div>
+                                    <div t-if="lead.city or lead.zip">
+                                        <span t-field="lead.city"/> <span t-field="lead.zip"/>
+                                    </div>
+                                    <div t-if="lead.state_id or country_id">
+                                        <span t-field="lead.state_id"/> <span t-field="lead.country_id"/>
+                                    </div>
+                                </address>
+                            </div>
+                            <div class="row" t-if="lead.user_id">
+                                <label class="col-4">Salesperson</label>
+                                <span class="col-8" t-field="lead.user_id" />
+                            </div>
+                            <div class="row" t-if="lead.team_id">
+                                <label class="col-4">Sales Team</label>
+                                <span class="col-8" t-field="lead.team_id" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row" t-if="lead.date_deadline">
+                                <label class="col-4">Expected Closing</label>
+                                <span class="col-8" t-field="lead.date_deadline" />
+                            </div>
+                            <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
+                                <label class="col-4">Tags</label>
+                                <span class="col-8">
+                                    <t t-foreach="lead.tag_ids" t-as="tag">
+                                        <span class="badge text-bg-info" t-esc="tag.name" />
+                                    </t>
+                                </span>
+                            </div>
+                            <div class="row mt16" t-if="lead.partner_assigned_id">
+                                <label class="col-4">Assigned Partner</label>
+                                <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                            </div>
+                            <div class="row mt16" t-if="lead.campaign_id">
+                                <label class="col-4">Campaign</label>
+                                <span class="col-8" t-field="lead.campaign_id" />
+                            </div>
+                            <div class="row" t-if="lead.medium_id">
+                                <label class="col-4">Medium</label>
+                                <span class="col-8" t-field="lead.medium_id" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='mt8'>
+                <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
+                <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
+                <div class="modal fade modal_partner_assign_interested" role="form">
+                    <div class="modal-dialog">
+                        <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
+                            <header class="modal-header">
+                                <h4 class="modal-title">Lead Feedback</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="comment">What is the next action? When? What is the expected revenue?</label>
+                                    <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="customer_contacted">I have contacted the customer</label>
+                                    <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
+                                </div>
+                                <div>
+                                    <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+                <div role="dialog" class="modal fade modal_partner_assign_desinterested">
+                    <div class="modal-dialog">
+                        <form method="POST" class="js_accept_json modal-content js_website_submit_form desinterested_partner_assign_form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
+                            <header class="modal-header">
+                                <h4 class="modal-title">Lead Feedback</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="comment">Why aren't you interested in this lead?</label>
+                                    <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="contacted_desinterested">I have contacted the customer</label>
+                                    <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="customer_mark_spam">This lead is a spam</label>
+                                    <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
+                                </div>
+                                <div>
+                                    <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
+                                </div>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt32">
+                <div class="col-lg-12">
+                    <h4><strong>Message and communication history</strong></h4>
+                </div>
+                <div class="col-lg-10 offset-lg-1 mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="lead"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_opportunity" name="My Opportunity">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_record_layout">
+                <t t-set="card_header">
+                    <div class="row g-0">
+                        <div class="col-md">
+                            <h5 class="mb-2 mb-md-0">
+                                <small class="text-muted">Opportunity - </small>
+                                <span t-field="opportunity.name"/>
+                            </h5>
+                        </div>
+                        <div class="col-md text-md-end">
+                            <div class="d-inline-block">
+                                <small class="me-2 mt-1 float-start"><b>Stage:</b></small>
+                                <div t-foreach="stages[::-1]" t-as="stage" class="float-start">
+                                    <i t-if="not stage_first" class="fa fa-chevron-right ms-2 me-1 small" style="opacity: 0.5"/>
+                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
+                                        <span t-field="stage.name"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-set="card_body">
+                    <div class="row">
+                        <div class="col-lg-5 mb-4 mb-lg-0">
+                            <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
+                                <h5 class="mb-0">
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-esc="opportunity.expected_revenue"/>
+                                    <span> at </span>
+                                    <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
+                                </h5>
+                                <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                            </div>
+                            <div class="row mb-2">
+                                <strong class="col-12 col-sm-4">Expected Closing</strong>
+                                <div class="col">
+                                    <span t-if="opportunity.date_deadline" t-field="opportunity.date_deadline"/>
+                                    <span t-else="" class="text-muted"> - </span>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <strong class="col-12 col-sm-4">Priority</strong>
+                                <div class="col">
+                                    <span class="" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
+                                        <t t-foreach="range(1, 4)" t-as="i">
+                                            <span t-attf-class="fa text-warning fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <strong class="col-12 col-sm-4">Next Activity</strong>
+                                <div class="col" t-if="user_activity">
+                                    <span t-field="user_activity.activity_type_id"/>
+                                    <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
+                                    <span t-field="user_activity.date_deadline"/>
+                                    <em class="d-block" t-field="user_activity.summary"/>
+                                </div>
+                                <div class="col" t-else="">
+                                    <span class="text-muted"> - </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 offset-lg-1 col-xl-5 offset-xl-2">
+                            <div class="d-flex justify-content-between py-2 mb-3 border-bottom align-items-center">
+                                <h5 class="card-title mb-0">Contact</h5>
+                                <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_contact" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
+                            </div>
+                            <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
+                                <strong class="col-12 col-sm-3">Customer</strong>
+                                <div class="col">
+                                    <div t-if="opportunity.partner_name or opportunity.contact_name">
+                                        <span class="fa fa-user fa-fw" role="img" aria-label="User" title="User"/>
+                                        <strong class="fst-italic" t-if="opportunity.partner_name" itemprop="name" t-field="opportunity.partner_name" />
+                                        <strong class="fst-italic" t-else="" itemprop="name" t-field="opportunity.contact_name" />
+                                    </div>
+                                    <div t-if="opportunity.phone">
+                                        <span class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"/>
+                                        <span itemprop="telephone" t-field="opportunity.phone"/>
+                                    </div>
+                                    <div t-if="opportunity.mobile">
+                                        <span class="fa fa-mobile fa-fw" role="img" aria-label="Mobile" title="Mobile"/>
+                                        <span itemprop="mobile" t-field="opportunity.mobile"/>
+                                    </div>
+                                    <div t-if="opportunity.email_from">
+                                        <span class="fa fa-envelope fa-fw" role="img" aria-label="Email" title="Email"/>
+                                        <span itemprop="email" t-field="opportunity.email_from"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <strong class="col-12 col-sm-3">Address</strong>
+                                <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
+                                    class="col d-flex align-items-baseline mb-0">
+                                    <span class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
+                                    <div>
+                                        <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
+                                        <span t-else="" class="text-muted"> - </span>
+                                        <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
+                                        <div t-if="opportunity.city or opportunity.zip">
+                                            <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
+                                        </div>
+                                        <div t-if="opportunity.state_id or opportunity.country_id">
+                                            <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
+                                        </div>
+                                    </div>
+                                </address>
+                            </div>
+                        </div>
+
+                        <!-- ==== MODALS ==== -->
+                        <div>
+                            <div role="dialog" class="modal fade modal_edit_opp">
+                                <div class="modal-dialog">
+                                    <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
+                                        <header class="modal-header">
+                                            <h4 class="modal-title">Edit Opportunity</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
+                                            <div class="mb-3">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto flex-grow-1">
+                                                        <div class="input-group">
+                                                            <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
+                                                            <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">at</div>
+                                                    <div class="col-auto">
+                                                        <div class="input-group">
+                                                            <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
+                                                            <div class="input-group-text">%</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-5 pe-0">
+                                                        <label>Priority:</label>
+                                                        <div class="input-group">
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="PriorityRadioOptions" value="0" t-att-checked="opportunity.priority not in ['1','2','3']" aria-label="Rating: 0 on 3" title="Rating: 0 on 3"/>
+                                                                <i class="ms-1 fa fa-star-o"></i>
+                                                            </label>
+                                                            <label class="radio-inline ms-2">
+                                                                <input type="radio" name="PriorityRadioOptions" value="1" t-att-checked="opportunity.priority == '1'" aria-label="Rating: 1 on 3" title="Rating: 1 on 3"/>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                            </label>
+                                                            <label class="radio-inline ms-2">
+                                                                <input type="radio" name="PriorityRadioOptions" value="2" t-att-checked="opportunity.priority == '2'" aria-label="Rating: 2 on 3" title="Rating: 2 on 3"/>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                            </label>
+                                                            <label class="radio-inline ms-2">
+                                                                <input type="radio" name="PriorityRadioOptions" value="3" t-att-checked="opportunity.priority == '3'" aria-label="Rating: 3 on 3" title="Rating: 3 on 3"/>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                                <i class="ms-1 fa text-warning fa-star"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label>Expected Closing:</label>
+                                                        <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
+                                                            <input type="text" name="date_deadline" data-target="#exp_closing_div" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
+                                                            <span class="input-group-text" data-target="#exp_closing_div" data-toggle="datetimepicker">
+                                                                <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <label class="col-form-label" for="next_activity">Next Activity</label>
+                                                        <select class="form-select next_activity" name="next_activity">
+                                                            <t t-foreach="activity_types" t-as="activity_type">
+                                                                <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id"
+                                                                    t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count"
+                                                                    t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary">
+                                                                <t t-esc="activity_type.name"/></option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
+                                                        <div class="input-group date" id="next_activity_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                            <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                            <span class="input-group-text" data-target="#next_activity_div" data-toggle="datetimepicker">
+                                                                <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="activity_summary">Details Next Activity</label>
+                                                <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
+                                            </div>
+                                        </main>
+                                        <footer class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
+                                        </footer>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div role="dialog" class="modal fade modal_edit_contact">
+                                <div class="modal-dialog">
+                                    <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
+                                        <header class="modal-header">
+                                            <h4 class="modal-title">Edit Contact</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
+                                            <t t-if="opportunity.partner_name">
+                                                <div class="mb-3">
+                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
+                                                    <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.partner_name"/>
+                                                </div>
+                                            </t>
+                                            <t t-if="not opportunity.partner_name">
+                                                <div class="mb-3">
+                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
+                                                    <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.contact_name"/>
+                                                </div>
+                                            </t>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="phone">Phone</label>
+                                                <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="mobile">Mobile</label>
+                                                <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="email_from">Email</label>
+                                                <input type="text" name="email_from" class="form-control email_from" t-att-value="opportunity.email_from"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="col-form-label" for="street">Address</label>
+                                                <input type="text" name="street" class="form-control street" t-att-value="opportunity.street" placeholder="Street"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <input type="text" name="street2" class="form-control street2" t-att-value="opportunity.street2" placeholder="Street2"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="city" class="form-control city" t-att-value="opportunity.city" placeholder="City"/>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <select name="state_id" class="form-select state_id">
+                                                            <option>States...</option>
+                                                            <t t-foreach="states or []" t-as="state">
+                                                                <option class="state" t-att-value="state.id" t-att-country="state.country_id.id" t-att-selected="state.id == opportunity.state_id.id">
+                                                                    <t t-esc="state.name"/>
+                                                                </option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" name="zip" class="form-control zip" t-att-value="opportunity.zip" placeholder="ZIP"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <select name="country_id" class="form-select country_id">
+                                                    <option>Countries...</option>
+                                                    <t t-foreach="countries or []" t-as="country">
+                                                        <option t-att-value="country.id" t-att-selected="country.id == opportunity.country_id.id">
+                                                            <t t-esc="country.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </main>
+                                        <footer class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
+                                        </footer>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- === / MODALS === -->
+                    </div>
+                </t>
+            </t>
+
+            <div class="mt32">
+                <h4><strong>Message and communication history</strong></h4>
+                <div class="mt16">
+                    <t t-call="portal.message_thread">
+                        <t t-set="object" t-value="opportunity"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

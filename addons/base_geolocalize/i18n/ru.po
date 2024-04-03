@@ -1,0 +1,230 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_geolocalize
+# 
+# Translators:
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Irina Fedulova <istartlin@gmail.com>, 2022
+# Иван Дроздов <hiraetari@gmail.com>, 2022
+# Martin Trigaux, 2022
+# ILMIR <karamov@it-projects.info>, 2022
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
+msgid "API"
+msgstr "API"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+msgstr ""
+"Требуется ключ API для GeoCoding (Places). \n"
+"Посетите https://developers.google.com/maps/documentation/geocoding/get-api-key для получения дополнительной информации. "
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "API:"
+msgstr "API:"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute Localization"
+msgstr "Вычислить локализацию"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute based on address"
+msgstr "Вычислить на основе адреса"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_config_settings
+msgid "Config Settings"
+msgstr "Конфигурационные настройки"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
+msgid "Created on"
+msgstr "Дата создания"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid "Error with geolocation server:"
+msgstr "Ошибка сервера геолокации:"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geocoder
+msgid "Geo Coder"
+msgstr "Гео кодировщик"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr "Местоположение"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geo_provider
+msgid "Geo Provider"
+msgstr "Гео поставщик"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geolocation"
+msgstr "Геопозиционирование"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
+msgid "Geolocation Date"
+msgstr "Дата геолокации"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid "Google Map API Key"
+msgstr "Ключ API Google карты"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "Key:"
+msgstr "Ключ:"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Lat :"
+msgstr "Широта :"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Long:"
+msgstr "Долгота:"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "Имя"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "No match found for %(partner_names)s address(es)."
+msgstr "Не найдено совпадений для адреса(адресов) %(partner_names)s."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignment"
+msgstr "Назначение партнера"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid "Provider %s is not implemented for geolocation service."
+msgstr "Провайдер %s не задан для сервиса геолокации."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh"
+msgstr "Обновить"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh Localization"
+msgstr "Обновить локализацию"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
+msgid "Tech Name"
+msgstr "Техническое название"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+msgstr ""
+"Не удалось выполнить геолокацию, возникла ошибка: \n"
+"%s\n"
+"\n"
+"Google сделал эту функцию платной. \n"
+"Вы должны сначала включить биллинг в своей учетной записи Google. \n"
+"Затем перейдите в консоль разработчика и включите API: \n"
+"Геокодирование, Статические карты, Карты Javascript.\n"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Updated on:"
+msgstr "Обновлено по:"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"Посетите https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key для получения дополнительной информации."
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "Warning"
+msgstr "Предупреждение"

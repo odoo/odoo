@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_countdown" name="Countdown">
+    <section class="s_countdown pt48 pb48"
+        data-display="dhms" data-end-action="nothing" data-size="175"
+        t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
+        data-layout="circle" data-layout-background="none"
+        data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
+        data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
+        <div class="container">
+            <div class="s_countdown_canvas_wrapper text-center"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_countdown_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="countdown" data-selector=".s_countdown">
+            <we-datetimepicker string="Due Date" data-select-data-attribute="0" data-attribute-name="endTime"/>
+            <we-row>
+                <we-select string="At The End" data-no-preview="true">
+                    <we-button data-end-action="nothing" data-name="no_end_action_opt">Nothing</we-button>
+                    <we-button data-end-action="redirect" data-name="redirect_end_action_opt">Redirect</we-button>
+                    <we-button data-end-action="message_no_countdown">Show Message and hide countdown</we-button>
+                    <we-button data-end-action="message">Show Message and keep countdown</we-button>
+                </we-select>
+                <we-button class="align-self-end toggle-edit-message" title="The message will be visible once the countdown ends">
+                    <i class="fa fa-fw fa-eye"/>
+                </we-button>
+            </we-row>
+            <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt" data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
+            <we-select string="Size" data-attribute-name="size">
+                <we-button data-select-data-attribute="80">Small</we-button>
+                <we-button data-select-data-attribute="120">Medium</we-button>
+                <we-button data-select-data-attribute="175">Large</we-button>
+            </we-select>
+            <we-select string="Display" data-attribute-name="display">
+                <we-button data-select-data-attribute="d">D</we-button>
+                <we-button data-select-data-attribute="dhm">D - H - M</we-button>
+                <we-button data-select-data-attribute="dhms">D - H - M - S</we-button>
+            </we-select>
+            <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute=""/>
+            <we-select string="Layout">
+                <we-button data-layout="circle" data-name="circle_layout_opt">Circle</we-button>
+                <we-button data-layout="boxes" data-name="boxes_layout_opt">Boxes</we-button>
+                <we-button data-layout="clean">Clean</we-button>
+                <we-button data-layout="text">Text Inline</we-button>
+            </we-select>
+            <we-select string="Layout Background" data-attribute-name="layoutBackground" data-dependencies="circle_layout_opt, boxes_layout_opt">
+                <we-button data-select-data-attribute="inner">Inner</we-button>
+                <we-button data-select-data-attribute="plain">Plain</we-button>
+                <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
+            </we-select>
+            <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+            <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
+                <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
+                <we-button data-select-data-attribute="disappear">Disappearing</we-button>
+                <we-button data-select-data-attribute="none" data-name="no_progressbar_style_opt">None</we-button>
+            </we-select>
+            <we-select string="Progress Bar Weight" data-attribute-name="progressBarWeight" data-dependencies="!no_progressbar_style_opt">
+                <we-button data-select-data-attribute="thin">Thin</we-button>
+                <we-button data-select-data-attribute="thick">Thick</we-button>
+            </we-select>
+            <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_countdown_000_js" model="ir.asset">
+    <field name="name">Countdown 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_countdown/000.js</field>
+</record>
+
+<record id="website.s_countdown_000_xml" model="ir.asset">
+    <field name="name">Countdown 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_countdown/000.xml</field>
+</record>
+
+</odoo>

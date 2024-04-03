@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.lunch</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Lunch" string="Lunch" data-key="lunch" groups="lunch.group_lunch_manager">
+                    <field name="currency_id" invisible="1"/>
+                    <h2>Lunch</h2>
+                    <div class="row mt16 o_settings_container" name="lunch_overdraft_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="lunch_minimum_threshold"
+                            title="None">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Lunch Overdraft</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    Maximum overdraft that your employees can reach
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="company_lunch_minimum_threshold" string="Overdraft" class="col-3 col-lg-3 o_light_label"/>
+                                        <field name="company_lunch_minimum_threshold" widget="monetary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container" name="lunch_notification_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="lunch_notification">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Reception notification</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-mutex">
+                                    Send this message to your users when their order has been delivered.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <field name="company_lunch_notify_message" widget="html" class="col col-lg w-100"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="lunch_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'lunch', 'bin_size': False}</field>
+    </record>
+</odoo>

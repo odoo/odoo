@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_user_input_invite" model="mail.template">
+            <field name="name">Survey: Invite</field>
+            <field name="model_id" ref="model_survey_user_input" />
+            <field name="subject">Participate to {{ object.survey_id.display_name }} survey</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ (object.partner_id.email_formatted or object.email) }}</field>
+            <field name="description">Sent to participant when you share a survey</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or 'participant'">participant</t><br/><br/>
+        <t t-if="object.survey_id.certification">
+            You have been invited to take a new certification.
+        </t>
+        <t t-else="">
+            We are conducting a survey and your response would be appreciated.
+        </t>
+        <div style="margin: 16px 0px 16px 0px;">
+            <a t-att-href="(object.get_start_url())"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                <t t-if="object.survey_id.certification">
+                    Start Certification
+                </t>
+                <t t-else="">
+                    Start Survey
+                </t>
+            </a>
+        </div>
+        <t t-if="object.deadline">
+            Please answer the survey for <t t-out="format_date(object.deadline) or ''">05/05/2021</t>.<br/><br/>
+        </t>
+        <t t-if="object.survey_id.certification">
+            We wish you good luck!
+        </t>
+        <t t-else="">
+            Thank you in advance for your participation.
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Certification Email template -->
+        <record id="mail_template_certification" model="mail.template">
+            <field name="name">Survey: Certification Success</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="subject">Certification: {{ object.survey_id.display_name }}</field>
+            <field name="email_from">{{ (object.survey_id.create_uid.email_formatted or user.email_formatted or user.company_id.catchall_formatted) }}</field>
+            <field name="email_to">{{ (object.partner_id.email_formatted or object.email) }}</field>
+            <field name="description">Sent to participant if they succeeded the certification</field>
+            <field name="body_html" type="html">
+<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+    <table style="width:600px;margin:5px auto;">
+        <tbody>
+            <tr><td>
+                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->
+                <a href="/"><img t-attf-src="/logo.png?company={{ object.survey_id.create_uid.company_id.id }}" style="vertical-align:baseline;max-width:100px;" /></a>
+            </td><td style="text-align:right;vertical-align:middle;">
+                    Certification: <t t-out="object.survey_id.display_name or ''">Feedback Form</t>
+            </td></tr>
+        </tbody>
+    </table>
+    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+        <tbody>
+            <tr><td style="padding:15px 20px 10px 20px;">
+                <p>Dear <span t-out="object.partner_id.name or 'participant'">participant</span></p>
+                <p>
+                    Please find attached your
+                        <strong t-out="object.survey_id.display_name or ''">Furniture Creation</strong>
+                    certification
+                </p>
+                <p>Congratulations for passing the test with a score of <strong t-out="object.scoring_percentage"/>% !</p>
+            </td></tr>
+        </tbody>
+    </table>
+</div>
+            </field>
+            <field name="report_template" ref="certification_report"/>
+            <field name="report_name">Certification Document</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

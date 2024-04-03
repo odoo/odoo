@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.CallOptionMenu" owl="1">
+        <t t-if="callOptionMenu">
+            <div class="o_CallOptionMenu d-flex flex-column p-3" t-attf-class="{{ className }}" t-ref="root">
+                <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickDownloadLogs">
+                    <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-file-text-o m-1 p-1"/>
+                    <span class="o_CallOptionMenu_buttonText text-truncate">Download logs</span>
+                </button>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PopoverView" owl="1">
+        <t t-if="popoverView">
+            <div class="o_PopoverView border bg-view shadow-sm" t-attf-class="{{ className }}" t-ref="root">
+                <t
+                    t-component="constructor.components[popoverView.contentComponentName]"
+                    className="popoverView.contentClassName"
+                    t-props="{ record: popoverView.content }"
+                />
+            </div>
+        </t>
+    </t>
+
+</templates>

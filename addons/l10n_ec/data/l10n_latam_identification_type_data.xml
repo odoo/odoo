@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id='ec_ruc' model='l10n_latam.identification.type'>
+            <field name='name'>RUC</field>
+            <field name='description'>Registro Unico de Contribuyente</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='is_vat' eval='True'/>
+            <field name='sequence'>10</field>
+        </record>
+        <record id='ec_dni' model='l10n_latam.identification.type'>
+            <field name='name'>Cédula</field>
+            <field name='description'>Cédula de Ciudadanía o Cédula de Identidad</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='sequence'>20</field>
+        </record>
+        <!-- TODO: Remove in master -->
+        <record id='ec_passport' model='l10n_latam.identification.type'>
+            <field name='name'>Pasaporte</field>
+            <field name='description'>Pasaporte para extranjeros con domicilio en el país (Deprecado)</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
+            <field name='sequence'>20</field>
+        </record>
+        <!-- TODO: Remove in master -->
+        <record id='ec_unknown' model='l10n_latam.identification.type'>
+            <field name='name'>Unknown</field>
+            <field name='description'>Por identificar, util para registro rápido de ventas (Deprecado)</field>
+            <field name='country_id' ref='base.ec'/>
+            <field name='active' eval="False"/>
+            <field name='sequence'>110</field>
+        </record>
+    </data>
+</odoo>

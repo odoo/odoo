@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadViewTopbar" owl="1">
+        <t t-if="threadViewTopbar">
+            <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3 bg-100" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="threadViewTopbar.thread">
+                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon me-2 align-self-center'" thread="threadViewTopbar.thread"/>
+                </t>
+                <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
+                    <t t-if="threadViewTopbar.thread">
+                        <t t-if="!threadViewTopbar.isEditingThreadName">
+                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem lead flex-shrink-0 px-1 border text-truncate fw-bold" t-att-title="threadViewTopbar.thread.displayName" t-on-click="threadViewTopbar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadName" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadName" t-attf-class="{{ threadViewTopbar.isMouseOverThreadName and !messaging.isCurrentUserGuest ? 'o-threadNameEditable bg-view' : 'border-light' }}">
+                                <t t-esc="threadViewTopbar.thread.displayName"/>
+                            </div>
+                        </t>
+                        <t t-if="threadViewTopbar.isEditingThreadName">
+                            <input class="o_ThreadViewTopbar_threadNameInput form-control lead fw-bold" type="text" t-att-value="threadViewTopbar.pendingThreadName" t-on-input="threadViewTopbar.onInputThreadNameInput" t-on-keydown="threadViewTopbar.onKeyDownThreadNameInput" t-ref="threadNameInput"/>
+                        </t>
+                    </t>
+                    <t t-if="!threadViewTopbar.thread">
+                        <div class="o_ThreadViewTopbar_threadName lead flex-shrink-0 px-1 text-truncate fw-bold">
+                            Discuss
+                        </div>
+                    </t>
+                    <t t-if="threadViewTopbar.hasDescriptionArea">
+                        <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2 py-2 border-start"/>
+                        <t t-if="!threadViewTopbar.isEditingThreadDescription">
+                            <t t-if="threadViewTopbar.thread.description">
+                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem px-1 border text-truncate" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-attf-class="{{ threadViewTopbar.isDescriptionHighlighted ? 'o-threadDescriptionEditable bg-view' : 'border-light' }}">
+                                    <t t-esc="threadViewTopbar.thread.description"/>
+                                </div>
+                            </t>
+                            <t t-if="!threadViewTopbar.thread.description">
+                                <div class="o_ThreadViewTopbar_threadAddDescriptionEmptyLabel text-truncate text-900 opacity-50 opacity-100-hover cursor-pointer" t-on-click="threadViewTopbar.onClickTopbarThreadDescription">
+                                    Add a description
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if="threadViewTopbar.isEditingThreadDescription">
+                            <input class="o_ThreadViewTopbar_threadDescriptionInput form-control" type="text" t-att-value="threadViewTopbar.pendingThreadDescription" t-on-input="threadViewTopbar.onInputThreadDescriptionInput" t-on-keydown="threadViewTopbar.onKeyDownThreadDescriptionInput" t-ref="threadDescriptionInput"/>
+                        </t>
+                    </t>
+                </div>
+                <div class="o_ThreadViewTopbar_actions d-flex align-items-center ms-1">
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.inbox.thread">
+                        <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickInboxMarkAllAsRead">Mark all read</button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.starred.thread">
+                        <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="threadViewTopbar.onClickPhone">
+                            <i class="fa fa-lg fa-phone text-700"/>
+                        </button>
+                        <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Video Call" t-on-click="threadViewTopbar.onClickCamera">
+                            <i class="fa fa-lg fa-video-camera text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasInviteFeature">
+                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'o-isActive' : '' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
+                            <i class="fa fa-lg fa-user-plus text-700"/>
+                        </button>
+                    </t>
+                    <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
+                    <t t-if="!messaging.isCurrentUserGuest and threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and !threadViewTopbar.threadView.isMemberListOpened">
+                        <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Member List" t-on-click="threadViewTopbar.onClickShowMemberList">
+                            <i class="fa fa-lg fa-users text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and threadViewTopbar.threadView.isMemberListOpened">
+                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button o-isActive btn px-2 border-none rounded shadow-none" title="Hide Member List" t-on-click="threadViewTopbar.onClickHideMemberList">
+                            <i class="fa fa-lg fa-users text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and !threadViewTopbar.threadView.isCallSettingsMenuOpen">
+                        <button class="o_ThreadViewTopbar_openCallSettingsButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Call Settings" t-on-click="threadViewTopbar.onClickShowCallSettingsMenu">
+                            <i class="fa fa-lg fa-gear text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.threadView.isCallSettingsMenuOpen">
+                        <button class="o_ThreadViewTopbar_button o-isActive btn px-2 border-none rounded shadow-none" title="Hide Call Settings" t-on-click="threadViewTopbar.onClickHideCallSettingsMenu">
+                            <i class="fa fa-lg fa-gear text-700"/>
+                        </button>
+                    </t>
+                </div>
+                <!-- FIXME: handle display on mobile -->
+                <t t-if="threadViewTopbar.threadView.threadViewer.discussPublicView and !messaging.device.isSmall">
+                    <div class="o_ThreadViewTopbar_userInfo d-flex align-items-center">
+                        <img class="o_ThreadViewTopbar_avatar mx-1 rounded-circle o_object_fit_cover" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
+                        <t t-if="!threadViewTopbar.isEditingGuestName">
+                            <span class="o_ThreadViewTopbar_userName o_ThreadViewTopbar_editableItem px-1 border fw-bold text-truncate" t-attf-class="{{ threadViewTopbar.isMouseOverUserName and messaging.isCurrentUserGuest ? 'o-userNameEditable bg-view' : 'border-light' }}" t-on-click="threadViewTopbar.onClickUserName" t-on-mouseenter="threadViewTopbar.onMouseEnterUserName" t-on-mouseleave="threadViewTopbar.onMouseLeaveUserName">
+                                <t t-esc="messaging.isCurrentUserGuest ? messaging.currentGuest.name : messaging.currentUser.nameOrDisplayName"/>
+                            </span>
+                        </t>
+                        <t t-if="threadViewTopbar.isEditingGuestName">
+                            <input class="o_ThreadViewTopbar_guestNameInput form-control" type="text" t-att-value="messaging.currentGuest.name" t-on-input="threadViewTopbar.onInputGuestNameInput" t-on-keydown="threadViewTopbar.onKeyDownGuestNameInput" t-ref="guestNameInput"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

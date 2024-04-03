@@ -1,0 +1,148 @@
+.o_wevent_event {
+    min-height: calc(98vh - 70px);
+
+    // Multi-line event title, even in mobile mode
+    nav > div > a.navbar-brand {
+        text-overflow: revert;
+        white-space: normal;
+        overflow: hidden;
+        max-width: calc(100% - 80px);
+    }
+
+    // Ensure menu labels are not split
+    #o_wevent_event_submenu {
+        li.nav-item {
+            white-space: nowrap;
+        }
+    }
+
+    .o_wevent_event_title {
+        margin: 3rem 0;
+
+        .o_wevent_event_name {
+            font-weight: $display-font-weight;
+            line-height: $display-line-height;
+            @include font-size(map-get($display-font-sizes, 4));
+        }
+        .o_wevent_event_subtitle {
+            font-weight: $lead-font-weight;
+            @include font-size($lead-font-size);
+        }
+    }
+
+    .o_wevent_registration_single {
+        .o_wevent_nowrap {
+            white-space: nowrap;
+        }
+    }
+
+    .o_wevent_registration_title {
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+    }
+
+    .o_wevent_registration_btn {
+        transition: none;
+
+        &:not(.collapsed) {
+            box-shadow: none;
+        }
+
+        &.collapsed {
+            flex: 0 0 33%;
+        }
+    }
+
+    .o_wevent_sidebar_title {
+        margin-bottom: $spacer;
+        opacity: .5;
+        text-transform: uppercase;
+    }
+
+    .o_wevent_sidebar_block {
+        padding: $spacer * 3;
+        border-bottom: $border-width solid $border-color;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+
+.o_wevent_event {
+    .o_record_cover_container {
+        overflow: hidden;
+        z-index: 0;
+
+        .o_record_cover_component {
+            z-index: -1;
+        }
+        &.o_record_has_cover {
+            .o_record_cover_image {
+                background-attachment: fixed;
+
+                &::after {
+                    content: "";
+                    display: block;
+                    @include o-position-absolute(0,0,50%,0);
+                }
+            }
+            .o_wevent_event_title {
+                color: white;
+            }
+        }
+    }
+}
+
+/*
+ * EVENT PAGE VIEW
+ */
+
+.o_wevent_event .event_color_0 {
+    background-color: $o-wevent-bg-color-base;
+    color: $o-wevent-color;
+}
+.o_wevent_event .event_color_1 {
+    background-color: #cccccc;
+    color: #424242;
+}
+.o_wevent_event .event_color_2 {
+    background-color: #ffc7c7;
+    color: #7a3737;
+}
+.o_wevent_event .event_color_3 {
+    background-color: #fff1c7;
+    color: #756832;
+}
+.o_wevent_event .event_color_4 {
+    background-color: #e3ffc7;
+    color: #5d6937;
+}
+.o_wevent_event .event_color_5 {
+    background-color: #c7ffd5;
+    color: #1a7759;
+}
+.o_wevent_event .event_color_6 {
+    background-color: #c7ffff;
+    color: #1a5d83;
+}
+.o_wevent_event .event_color_7 {
+    background-color: #c7d5ff;
+    color: #3b3e75;
+}
+.o_wevent_event .event_color_8 {
+    background-color: #e3c7ff;
+    color: #4c3668;
+}
+.o_wevent_event .event_color_9 {
+    background-color: #ffc7f1;
+    color: #6d2c70;
+}
+
+/*
+ * SPONSORS
+ */
+
+.o_wevent_hide_sponsors .o_wevent_sponsor_wrapper {
+    display: none !important;
+}

@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales -->
+    <record id="l10n_bg_sale_vat_20" model="account.tax.template">
+        <field name="sequence">101</field>
+        <field name="name">20% VAT</field>
+        <field name="description">20% VAT</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_21_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_21_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_sale_vat_20_remote" model="account.tax.template">
+        <field name="sequence">102</field>
+        <field name="name">20% Remote</field>
+        <field name="description">20% Remote</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag'), ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_21_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag'), ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_21_tag')]                 }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_sale_vat_20_personal" model="account.tax.template">
+        <field name="sequence">103</field>
+        <field name="name">20% Personal use</field>
+        <field name="description">20% Personal use</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_23_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_11_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_23_tag')]                 }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_sale_vat_9" model="account.tax.template">
+        <field name="sequence">111</field>
+        <field name="name">9% VAT</field>
+        <field name="description">9% VAT</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_13_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_24_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_13_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_24_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_sale_vat_9_personal" model="account.tax.template">
+        <field name="sequence">112</field>
+        <field name="name">9% Personal use</field>
+        <field name="description">9% Personal use</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_13_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_23_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_13_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_23_tag')]                 }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_export" model="account.tax.template">
+        <field name="sequence">121</field>
+        <field name="name">0% Export</field>
+        <field name="description">0% Export</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_14_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_14_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_icd" model="account.tax.template">
+        <field name="sequence">122</field>
+        <field name="name">0% ICD</field>
+        <field name="description">0% Intra-Community Deliveries</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_15_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_15_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_140" model="account.tax.template">
+        <field name="sequence">123</field>
+        <field name="name">0% Art. 140, 146, 173</field>
+        <field name="description">0% Art. 140, 146, 173</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_16_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_16_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_21" model="account.tax.template">
+        <field name="sequence">124</field>
+        <field name="name">0% Art. 21</field>
+        <field name="description">0% Art. 21</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_17_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_17_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_exempt" model="account.tax.template">
+        <field name="sequence">125</field>
+        <field name="name">0% Exempt</field>
+        <field name="description">0% Exempt</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_sale_vat_0_tri" model="account.tax.template">
+        <field name="sequence">126</field>
+        <field name="name">0% Tripartite</field>
+        <field name="description">0% Tripartite</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <!-- Sales [END] -->
+    <!-- Purchases -->
+    <record id="l10n_bg_purchase_vat_20_ftc" model="account.tax.template">
+        <field name="sequence">201</field>
+        <field name="name">20% FTC</field>
+        <field name="description">20% Foreign Tax Credit</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ptc" model="account.tax.template">
+        <field name="sequence">202</field>
+        <field name="name">20% PTC</field>
+        <field name="description">20% Payable Tax Credit</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_otc" model="account.tax.template">
+        <field name="sequence">203</field>
+        <field name="name">20% OTC</field>
+        <field name="description">20% Other Tax Credit</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ftc_exempt" model="account.tax.template">
+        <field name="sequence">204</field>
+        <field name="name">20% FTC (Exempt)</field>
+        <field name="description">20% Foreign Tax Credit – Exempt</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ftc_ica" model="account.tax.template">
+        <field name="sequence">204</field>
+        <field name="name">20% FTC (ICA)</field>
+        <field name="description">20% Foreign Tax Credit – Intra-Community Acquisition</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_12_1_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_12_1_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ftc_82" model="account.tax.template">
+        <field name="sequence">205</field>
+        <field name="name">20% FTC (Art. 82)</field>
+        <field name="description">20% Foreign Tax Credit – Art. 82</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_12_2_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_12_2_tag'), ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ptc_exempt" model="account.tax.template">
+        <field name="sequence">206</field>
+        <field name="name">20% PTC (Exempt)</field>
+        <field name="description">20% Payable Tax Credit – Exempt</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ptc_ica" model="account.tax.template">
+        <field name="sequence">206</field>
+        <field name="name">20% PTC (ICA)</field>
+        <field name="description">20% Payable Tax Credit – Intra-Community Acquisition</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_12_1_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_12_1_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_20_ptc_82" model="account.tax.template">
+        <field name="sequence">207</field>
+        <field name="name">20% PTC (Art. 82)</field>
+        <field name="description">20% Payable Tax Credit - Art. 82</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_12_2_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_12_2_tag'), ref('l10n_bg_tax_report_32_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_42_tag')]                 }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4532'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_22_tag')]                 }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_9_ftc" model="account.tax.template">
+        <field name="sequence">211</field>
+        <field name="name">9% FTC</field>
+        <field name="description">9% Foreign Tax Credit</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_31_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_41_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_9_otc" model="account.tax.template">
+        <field name="sequence">212</field>
+        <field name="name">9% OTC</field>
+        <field name="description">9% Other Tax Credit</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_9"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')]                 }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('l10n_bg_4531'),
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')]                 }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_0_otc_ica" model="account.tax.template">
+        <field name="sequence">231</field>
+        <field name="name">0% OTC (ICA)</field>
+        <field name="description">0% Other Tax Credit – Intra-Community Acquisition</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_19_tag'), ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_0_otc_exempt" model="account.tax.template">
+        <field name="sequence">232</field>
+        <field name="name">0% OTC (Exempt)</field>
+        <field name="description">0% Other Tax Credit – Exempt</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_30_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+    </record>
+    <record id="l10n_bg_purchase_vat_0_tri" model="account.tax.template">
+        <field name="sequence">233</field>
+        <field name="name">0% Tripartite</field>
+        <field name="description">0% Tripartite</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_bg_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_expression_ids': [ref('l10n_bg_tax_report_18_tag')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="active" eval="False"/>
+    </record>
+    <!-- Purchase [END] -->
+</odoo>

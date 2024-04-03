@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.ShouldConsume" owl="1">
+        <t t-if="displayShouldConsume">
+            <span t-attf-class="o_should_consume ps-1 {{!props.readonly ? 'o_row mx-0' : ''}}">
+                <span><t t-esc="shouldConsumeQty"/> / </span>
+                <t t-call="web.FloatField"/>
+            </span>
+        </t>
+        <t t-else="">
+            <t t-call="web.FloatField"/>
+        </t>
+    </t>
+</templates>

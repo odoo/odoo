@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerTextInput" owl="1">
+        <t t-if="composerView">
+            <div class="o_ComposerTextInput position-relative bg-view" t-attf-class="{{ className }} {{ composerView.isCompact ? 'border border-end-0' : 'border-0' }}" t-att-class="{ 'border-start-0': composerView.isInChatWindow }" t-on-paste="composerView.onPasteTextInput" t-ref="root">
+                <t t-if="composerView.composerSuggestionListView">
+                    <ComposerSuggestionListView record="composerView.composerSuggestionListView"/>
+                </t>
+                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle form-control px-3 border-0 shadow-none overflow-auto" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerView.isCompact, 'rounded-3': !composerView.isCompact }" t-esc="composerView.composer.textInputContent" t-att-placeholder="composerView.composer.placeholder" t-on-click="composerView.onClickTextarea" t-on-focusin="composerView.onFocusinTextarea" t-on-focusout="composerView.onFocusoutTextarea" t-on-keydown="composerView.onKeydownTextarea" t-on-keyup="composerView.onKeyupTextarea" t-on-input="composerView.onInputTextarea" t-ref="textarea"/>
+                <!--
+                     This is an invisible textarea used to compute the composer
+                     height based on the text content. We need it to downsize
+                     the textarea properly without flicker.
+                -->
+                <textarea class="o_ComposerTextInput_mirroredTextarea o_ComposerTextInput_textareaStyle position-absolute px-3 border-0 overflow-hidden opacity-0" t-att-class="{ 'o-composer-is-compact rounded-0 rounded-start-3': composerView.isCompact, 'rounded-3': !composerView.isCompact }" t-esc="composerView.composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

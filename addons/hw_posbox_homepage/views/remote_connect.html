@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block head %}
+    <script>
+        $(function () {
+            var upgrading = false;
+            $('#enable_debug').click(function () {
+                var auth_token = $('#auth_token').val();
+                if (auth_token == "") {
+                    alert('Please provide an authentication token.');
+                } else {
+                    $.ajax({
+                        url: '/enable_ngrok',
+                        data: {
+                            'auth_token': auth_token
+                        }
+                    }).always(function (response) {
+                        if (response === 'already running') {
+                            alert('Remote debugging already activated.');
+                        } else {
+                            $('#auth_token').attr('disabled','disabled');
+                            $('#enable_debug').html('Enabled remote debugging');
+                            $('#enable_debug').removeAttr('href', '')
+                            $('#enable_debug').off('click');
+                        }
+                    });
+                }
+            });
+        });
+        $(function() {
+            $('.view-password').click(function() {
+                $.ajax({
+                    url:'/hw_posbox_homepage/password',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({}),
+                }).done(function(password) {
+                    $('.password').val(password['result']);
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center">Remote Debugging</h2>
+    <p class='text-red'>
+        This allows someone who give a ngrok authtoken to gain remote access to your IoT Box, and
+        thus your entire local network. Only enable this for someone
+        you trust.
+    </p>
+    <div class='text-center'>
+        <input class="password" type="text" placeholder="pi user password" disabled>
+        <a class="btn view-password" style="margin: 18px auto;"href="#">Generate password</a><br/>
+        <input type="text" id="auth_token" size="42" placeholder="Authentication Token"/> <br/>
+        <a class="btn" style="margin: 18px auto;" id="enable_debug" href="#">Enable Remote Debugging</a>
+    </div>
+{% endblock %}

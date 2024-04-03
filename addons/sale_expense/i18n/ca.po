@@ -1,0 +1,158 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_expense
+# 
+# Translators:
+# Martin Trigaux, 2022
+# marcescu, 2022
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
+# Quim - eccit <quim@eccit.com>, 2022
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Ivan Espinola, 2024
+# Josep Anton Belchi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Josep Anton Belchi, 2024\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
+msgid "# of Expenses"
+msgstr "# de despeses"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
+msgid "Can be reinvoiced"
+msgstr "Es pot tornar a facturar"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr "Client a refacturar"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense
+msgid "Expense"
+msgstr "Despesa"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
+msgid "Expense Policy Tooltip"
+msgstr "Indicador de la política de despeses"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Informe de despeses"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
+msgstr "Full de despeses"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_split
+msgid "Expense Split"
+msgstr "Divisió de despeses"
+
+#. module: sale_expense
+#: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Expenses"
+msgstr "Despeses"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid "Expenses of this category may not be added to a Sales Order."
+msgstr ""
+"Les despeses d'aquesta categoria no es poden afegir a una comanda de vendes."
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+"Les despeses s'afegiran a la comanda de vendes al seu cost real quan es "
+"publiquin."
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+#, python-format
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
+"Les despeses s'afegiran a la comanda de vendes al seu preu de venda (preu de"
+" producte, llista de preus, etc.) quan es publiquin."
+
+#. module: sale_expense
+#: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+"Si la categoria té una política de despeses, es refacturarà en aquesta "
+"comanda de venda"
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+msgid "Invoicing"
+msgstr "Facturació"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Assentament comptable"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunt comptable"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_product_template
+msgid "Product"
+msgstr "Producte"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid "Reinvoiced Sales Orders"
+msgstr "Comandes de vendes facturades"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
+msgid "Sale Order Count"
+msgstr "Nombre de comandes"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Sales Order"
+msgstr "Comanda de venda"
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
+msgid "Sales Orders"
+msgstr "Comandes de venda"

@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.no"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+                <field name="sequence" eval="1"/>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_sales_goods_services_homeland" model="account.report.line">
+                <field name="name">Salg av varer og tjenester i Norge</field>
+                <field name="sequence" eval="1"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_3" model="account.report.line">
+                        <field name="name">3 Salg og uttak av varer og tjenester (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_3</field>
+                        <field name="sequence" eval="2"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_3_tax" model="account.report.line">
+                        <field name="name">3 Salg og uttak av varer og tjenester (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_3</field>
+                        <field name="sequence" eval="3"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_3_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_31" model="account.report.line">
+                        <field name="name">31 Salg og uttak av varer og tjenester (middels sats 15%) - grunnlag</field>
+                        <field name="code">BASE_31</field>
+                        <field name="sequence" eval="4"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_31_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_31_tax" model="account.report.line">
+                        <field name="name">31 Salg og uttak av varer og tjenester (middels sats 15%) - avgift</field>
+                        <field name="code">TAX_31</field>
+                        <field name="sequence" eval="5"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_31_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_33" model="account.report.line">
+                        <field name="name">33 Salg og uttak av varer og tjenester (lav sats 12%) - grunnlag</field>
+                        <field name="code">BASE_33</field>
+                        <field name="sequence" eval="6"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_33_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_33_tax" model="account.report.line">
+                        <field name="name">33 Salg og uttak av varer og tjenester (lav sats 12%) - avgift</field>
+                        <field name="code">TAX_33</field>
+                        <field name="sequence" eval="7"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_33_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_5" model="account.report.line">
+                        <field name="name">5 Salg og uttak av varer og tjenester som er fritatt for merverdiavgift (0%)</field>
+                        <field name="code">BASE_5</field>
+                        <field name="sequence" eval="8"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_6" model="account.report.line">
+                        <field name="name">6 Salg av varer og tjenester som er unntatt merverdiavgiftsloven (0%)</field>
+                        <field name="code">BASE_6</field>
+                        <field name="sequence" eval="9"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_6_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_sales_goods_services_abroad" model="account.report.line">
+                <field name="name">Salg av varer og tjenester til utlandet</field>
+                <field name="sequence" eval="10"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_52" model="account.report.line">
+                        <field name="name">52 Salg av varer og tjenester til utlandet som er fritatt for merverdiavgift (0%)</field>
+                        <field name="code">BASE_52</field>
+                        <field name="sequence" eval="11"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_52_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">52 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_purchases_goods_services_homeland" model="account.report.line">
+                <field name="name">Kjøp av varer og tjenester i Norge</field>
+                <field name="sequence" eval="12"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_1" model="account.report.line">
+                        <field name="name">1 Kjøp av varer og tjenester med fradragsrett (høy sats 25%)</field>
+                        <field name="code">TAX_1</field>
+                        <field name="sequence" eval="13"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">1 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_11" model="account.report.line">
+                        <field name="name">11 Kjøp av varer og tjenester med fradragsrett (middels sats 15%)</field>
+                        <field name="code">TAX_11</field>
+                        <field name="sequence" eval="14"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_13" model="account.report.line">
+                        <field name="name">13 Kjøp av varer og tjenester med fradragsrett (lav sats 12%)</field>
+                        <field name="code">TAX_13</field>
+                        <field name="sequence" eval="15"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">13 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_purchases_goods_abroad" model="account.report.line">
+                <field name="name">Kjøp av varer fra utlandet (import)</field>
+                <field name="sequence" eval="16"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_14" model="account.report.line">
+                        <field name="name">14 Fradrag på kjøp av varer fra utlandet (merverdiavgift betalt ved innførsel, høy sats 25%)</field>
+                        <field name="code">TAX_14</field>
+                        <field name="sequence" eval="17"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">14 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_15" model="account.report.line">
+                        <field name="name">15 Fradrag på kjøp av varer fra utlandet (merverdiavgift betalt ved innførsel, middels sats 15%)</field>
+                        <field name="code">TAX_15</field>
+                        <field name="sequence" eval="18"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">15 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_81" model="account.report.line">
+                        <field name="name">81 Kjøp av varer fra utlandet med fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_81</field>
+                        <field name="sequence" eval="19"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_81_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">81 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_81_tax" model="account.report.line">
+                        <field name="name">81 Kjøp av varer fra utlandet med fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_81</field>
+                        <field name="sequence" eval="20"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_81_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">81 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_82" model="account.report.line">
+                        <field name="name">82 Kjøp av varer fra utlandet uten fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_82</field>
+                        <field name="sequence" eval="21"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_82_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">82 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_82_tax" model="account.report.line">
+                        <field name="name">82 Kjøp av varer fra utlandet uten fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_82</field>
+                        <field name="sequence" eval="22"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_82_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">82 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_83" model="account.report.line">
+                        <field name="name">83 Kjøp av varer fra utlandet med fradragsrett (middels sats 15%) - grunnlag</field>
+                        <field name="code">BASE_83</field>
+                        <field name="sequence" eval="23"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_83_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">83 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_83_tax" model="account.report.line">
+                        <field name="name">83 Kjøp av varer fra utlandet med fradragsrett (middels sats 15%) - avgift</field>
+                        <field name="code">TAX_83</field>
+                        <field name="sequence" eval="24"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_83_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">83 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_84" model="account.report.line">
+                        <field name="name">84 Kjøp av varer fra utlandet som er uten fradragsrett (middels sats 15%) - grunnlag</field>
+                        <field name="code">BASE_84</field>
+                        <field name="sequence" eval="25"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_84_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">84 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_84_tax" model="account.report.line">
+                        <field name="name">84 Kjøp av varer fra utlandet som er uten fradragsrett (middels sats 15%) - avgift</field>
+                        <field name="code">TAX_84</field>
+                        <field name="sequence" eval="26"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_84_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">84 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_85" model="account.report.line">
+                        <field name="name">85 Kjøp av varer fra utlandet som det ikke skal beregnes merverdiavgift på (nullsats 0%)</field>
+                        <field name="code">BASE_85</field>
+                        <field name="sequence" eval="27"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_85_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">85 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_purchases_services_abroad" model="account.report.line">
+                <field name="name">Kjøp av tjenester fra utlandet (import)</field>
+                <field name="sequence" eval="28"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_86" model="account.report.line">
+                        <field name="name">86 Kjøp av tjenester fra utlandet med fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_86</field>
+                        <field name="sequence" eval="29"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_86_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">86 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_86_tax" model="account.report.line">
+                        <field name="name">86 Kjøp av tjenester fra utlandet med fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_86</field>
+                        <field name="sequence" eval="30"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_86_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">86 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_87" model="account.report.line">
+                        <field name="name">87 Kjøp av tjenester fra utlandet uten fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_87</field>
+                        <field name="sequence" eval="31"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_87_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">87 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_87_tax" model="account.report.line">
+                        <field name="name">87 Kjøp av tjenester fra utlandet uten fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_87</field>
+                        <field name="sequence" eval="32"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_87_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">87 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_88" model="account.report.line">
+                        <field name="name">88 Kjøp av tjenester fra utlandet med fradragsrett (lav sats 12%) - grunnlag</field>
+                        <field name="code">BASE_88</field>
+                        <field name="sequence" eval="33"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_88_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">88 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_88_tax" model="account.report.line">
+                        <field name="name">88 Kjøp av tjenester fra utlandet med fradragsrett (lav sats 12%) - avgift</field>
+                        <field name="code">TAX_88</field>
+                        <field name="sequence" eval="34"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_88_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">88 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_89" model="account.report.line">
+                        <field name="name">89 Kjøp av tjenester fra utlandet uten fradragsrett (lav sats 12%) - grunnlag</field>
+                        <field name="code">BASE_89</field>
+                        <field name="sequence" eval="35"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_89_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">89 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_89_tax" model="account.report.line">
+                        <field name="name">89 Kjøp av tjenester fra utlandet uten fradragsrett (lav sats 12%) - avgift</field>
+                        <field name="code">TAX_89</field>
+                        <field name="sequence" eval="36"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_89_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">89 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_fish_etc" model="account.report.line">
+                <field name="name">Fisk mv.</field>
+                <field name="sequence" eval="37"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_12" model="account.report.line">
+                        <field name="name">12 Kjøp av fisk og andre marine viltlevende ressurser (11,11%)</field>
+                        <field name="code">TAX_12</field>
+                        <field name="sequence" eval="38"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_32" model="account.report.line">
+                        <field name="name">32 Salg av fisk og andre marine viltlevende ressurser (11,11%) - grunnlag</field>
+                        <field name="code">BASE_32</field>
+                        <field name="sequence" eval="39"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_32_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_32_tax" model="account.report.line">
+                        <field name="name">32 Salg av fisk og andre marine viltlevende ressurser (11,11%) - avgift</field>
+                        <field name="code">TAX_32</field>
+                        <field name="sequence" eval="40"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_32_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_emission_and_gold" model="account.report.line">
+                <field name="name">Klimakvoter og gull</field>
+                <field name="sequence" eval="41"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_code_51" model="account.report.line">
+                        <field name="name">51 Salg av klimakvoter og gull til næringsdrivende (0%)</field>
+                        <field name="code">BASE_51</field>
+                        <field name="sequence" eval="42"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_51_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">51 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_91" model="account.report.line">
+                        <field name="name">91 Kjøp av klimakvoter og gull med fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_91</field>
+                        <field name="sequence" eval="43"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_91_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">91 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_91_tax" model="account.report.line">
+                        <field name="name">91 Kjøp av klimakvoter og gull med fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_91</field>
+                        <field name="sequence" eval="44"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_91_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">91 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_92" model="account.report.line">
+                        <field name="name">92 Kjøp av klimakvoter og gull uten fradragsrett (høy sats 25%) - grunnlag</field>
+                        <field name="code">BASE_92</field>
+                        <field name="sequence" eval="45"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_92_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">92 Base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_code_92_tax" model="account.report.line">
+                        <field name="name">92 Kjøp av klimakvoter og gull uten fradragsrett (høy sats 25%) - avgift</field>
+                        <field name="code">TAX_92</field>
+                        <field name="sequence" eval="46"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_code_92_tax_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">92 Tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_sum" model="account.report.line">
+                <field name="name">Sum</field>
+                <field name="sequence" eval="47"/>
+                <field name="children_ids">
+                    <record id="tax_report_line_to_be_paid" model="account.report.line">
+                        <field name="name">Avgift å betale</field>
+                        <field name="code">SUM</field>
+                        <field name="sequence" eval="48"/>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_to_be_paid_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TAX_3.balance+TAX_31.balance+TAX_32.balance+TAX_33.balance+TAX_81.balance+TAX_82.balance+TAX_83.balance+TAX_84.balance+TAX_86.balance+TAX_87.balance+TAX_88.balance+TAX_89.balance+TAX_91.balance+TAX_92.balance-TAX_1.balance-TAX_11.balance-TAX_12.balance-TAX_13.balance-TAX_14.balance-TAX_15.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

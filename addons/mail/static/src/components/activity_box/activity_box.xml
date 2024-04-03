@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActivityBox" owl="1">
+        <t t-if="activityBoxView">
+            <div class="o_ActivityBox" t-attf-class="{{ className }}" t-ref="root">
+                <a href="#" role="button" class="o_ActivityBox_title btn d-flex align-items-center p-0 w-100 fw-bold" t-att-aria-expanded="activityBoxView.isActivityListVisible ? 'true' : 'false'" t-on-click="activityBoxView.onClickActivityBoxTitle">
+                    <hr class="o_ActivityBox_titleLine w-auto flex-grow-1 me-3" />
+                    <span class="o_ActivityBox_titleText">
+                        <i class="fa fa-fw" t-att-class="activityBoxView.isActivityListVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
+                        Planned activities
+                    </span>
+                    <t t-if="!activityBoxView.isActivityListVisible">
+                        <span class="o_ActivityBox_titleBadges ms-2">
+                            <t t-if="activityBoxView.chatter.thread.overdueActivities.length > 0">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-danger">
+                                    <t t-esc="activityBoxView.chatter.thread.overdueActivities.length"/>
+                                </span>
+                            </t>
+                            <t t-if="activityBoxView.chatter.thread.todayActivities.length > 0">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-warning">
+                                    <t t-esc="activityBoxView.chatter.thread.todayActivities.length"/>
+                                </span>
+                            </t>
+                            <t t-if="activityBoxView.chatter.thread.futureActivities.length > 0">
+                                <span class="o_ActivityBox_titleBadge me-1 badge text-bg-success">
+                                    <t t-esc="activityBoxView.chatter.thread.futureActivities.length"/>
+                                </span>
+                            </t>
+                        </span>
+                    </t>
+                    <hr class="o_ActivityBox_titleLine w-auto flex-grow-1 ms-3"/>
+                </a>
+                <t t-if="activityBoxView.isActivityListVisible">
+                    <div class="o_ActivityBox_activityList">
+                        <t t-foreach="activityBoxView.activityViews" t-as="activityView" t-key="activityView.localId">
+                            <Activity className="'o_ActivityBox_activity'" record="activityView"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

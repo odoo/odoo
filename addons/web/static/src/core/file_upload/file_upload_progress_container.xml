@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.FileUploadProgressContainer" owl="1">
+        <t t-foreach="Object.values(props.fileUploads)" t-as="fileUpload" t-key="fileUpload.id">
+            <t t-if="!props.shouldDisplay || props.shouldDisplay(fileUpload)" t-component="props.Component" fileUpload="fileUpload" selector="props.selector"/>
+        </t>
+    </t>
+</templates>

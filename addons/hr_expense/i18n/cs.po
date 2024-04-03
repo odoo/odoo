@@ -1,0 +1,2461 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_expense
+# 
+# Translators:
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
+# Ladislav Tomm <tomm@helemik.cz>, 2022
+# Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# milda dvorak <milda.dvorak@optimal4.cz>, 2022
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Jiří Podhorecký, 2022
+# Martin Trigaux, 2023
+# Michal Veselý <michal@veselyberanek.net>, 2023
+# Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jakub Smolka, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"%(user)s confirms this expense is not a duplicate with similar expense."
+msgstr ""
+"%(user)s potvrzuje, že tento výdaj není duplikátem s podobným výdajem."
+
+#. module: hr_expense
+#: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
+msgid ""
+"'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
+msgstr ""
+"'Výdaje - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
+msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"<span class=\"d-inline-block\"><i class=\"text-muted\">Use this reference as"
+" a subject prefix when submitting by email.</i></span>"
+msgstr ""
+"<span class=\"d-inline-block\"><i class=\"text-muted\">Při odesílání "
+"e-mailem použijte tuto referenci jako předponu předmětu.</i></span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Company Expense Journal</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Výdajový deník společnosti</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Employee Expense Journal</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Výdajový deník zaměstnanců</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "<span>@</span>"
+msgstr "<span>@</span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Datum:</strong>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Description:</strong>"
+msgstr "<strong>Popis:</strong>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Employee:</strong>"
+msgstr "<strong>Zaměstnanec:</strong>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Payment By:</strong>"
+msgstr "<strong>Platba od:</strong>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Total</strong>"
+msgstr "<strong>Celkem</strong>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "<strong>Validated By:</strong>"
+msgstr "<strong>Ověřeno od:</strong>"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
+msgid "Account"
+msgstr "Účet"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Accounting"
+msgstr "Účetnictví"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__accounting_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
+msgid "Accounting Date"
+msgstr "Datum účtování"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction
+msgid "Action Needed"
+msgstr "Vyžaduje akci"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_ids
+msgid "Activities"
+msgstr "Aktivity"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorace výjimky aktivity"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_state
+msgid "Activity State"
+msgstr "Stav aktivity"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_icon
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktivity"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
+#: model:ir.ui.menu,name:hr_expense.hr_expense_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Typy aktivit"
+
+#. module: hr_expense
+#: model:res.groups,name:hr_expense.group_hr_expense_manager
+msgid "Administrator"
+msgstr "Administrátor"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Alias"
+msgstr "Zástupce"
+
+#. module: hr_expense
+#: model:res.groups,name:hr_expense.group_hr_expense_user
+msgid "All Approver"
+msgstr "Všichni schvalovatelé"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
+msgid "All Expense Reports"
+msgstr "Všechny výkazy výdajů"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
+msgid "All Reports"
+msgstr "Všetky správy"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
+msgid "Amount Due"
+msgstr "Částka splatná"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/mixins/document_upload.js:0
+#, python-format
+msgid "An error occurred during the upload"
+msgstr "Počas nahrávania sa vyskytla chyba"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
+msgid "An expense account is expected"
+msgstr "Očekává se výdajový účet"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/expense_form_view.js:0
+#, python-format
+msgid "An expense of same category, amount and date already exists."
+msgstr "Výdaj se stejnou kategorií, částkou a datumem již existuje."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "An expense report must contain only lines from the same company."
+msgstr "Výkaz výdavkov musí obsahovať iba riadky od tej istej spoločnosti."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
+msgid "Analytic"
+msgstr "Analytický"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analytický účet"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_search
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Hledání analytické distribuce"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Použitelnost analytického plánu"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_precision
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_precision
+msgid "Analytic Precision"
+msgstr "Analytická přesnost"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid "Apple App Store"
+msgstr "Apple App Store"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_date
+msgid "Approval Date"
+msgstr "Datum schválení"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
+msgid "Approve"
+msgstr "Schválit"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
+#, python-format
+msgid "Approve Report"
+msgstr "Schváliť správu"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__approve
+#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
+msgid "Approved"
+msgstr "Schváleno"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_by
+msgid "Approved By"
+msgstr "Schváleno od"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_on
+msgid "Approved On"
+msgstr "Schváleno dne"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Archived"
+msgstr "Archivováno"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+#, python-format
+msgid "Attach Receipt"
+msgstr "Priložte potvrdenie"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Attach a receipt - usually an image or a PDF file."
+msgstr "Přiložte účtenku - obvykle obrázek nebo soubor PDF."
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Příloha"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
+msgid "Attachment Count"
+msgstr "Počet příloh"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Přílohy"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
+msgid "Bank Journal"
+msgstr "Bankovní deník"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
+msgid "Bill Reference"
+msgstr "Referenčné číslo faktury"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
+msgid ""
+"Both price-included and price-excluded taxes will behave as price-included "
+"taxes for expenses."
+msgstr ""
+"Daně včetně ceny i daně bez ceny se budou chovat jako daně se zahrnutím ceny"
+" pro výdaje."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
+msgid "Can Approve"
+msgstr "Může Schválit"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
+msgid "Can Reset"
+msgstr "Možno resetovat"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
+#: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_template_search_view_inherit_hr_expense
+msgid "Can be Expensed"
+msgstr "Může byť zaúčtovaný"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
+msgid "Categories"
+msgstr "Kategorie"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Category:"
+msgstr "Kategorie:"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Category: not found"
+msgstr "Kategorie: nenalezeno"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
+msgstr "Certifikovaný čestný a konformný,<br/>(Dátum a podpis).<br/><br/>"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.expense_product_communication_product_template
+msgid "Communication"
+msgstr "Komunikace"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_company
+msgid "Companies"
+msgstr "Společnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__company_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__company_id
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Company"
+msgstr "Firma"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
+msgid "Configuration"
+msgstr "Konfigurace"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Převod mezi měrnými jednotkami lze uskutečnit jen když patří do stejné "
+"kategorie. Převod bude proveden na základě vzájemných poměrů."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create"
+msgstr "Vytvořit"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+#, python-format
+msgid "Create Report"
+msgstr "Vytvořit zprávu"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+msgid "Create a new expense report"
+msgstr "Vytvořit nový přehled výdajů"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Create a report to submit one or more expenses to your manager."
+msgstr "Vytvořte zprávu a odešlete jeden nebo více výdajů svému manažerovi."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Create expenses from incoming emails"
+msgstr "Vytvářejte výdaje z příchozích e-mailů"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "Create new expenses to get statistics."
+msgstr "Vytvořte nové výdaje a získejte statistiky."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create record"
+msgstr "Vytvořit záznam"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__create_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__currency_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__currency_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__currency_id
+msgid "Currency"
+msgstr "Měna"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_rate
+msgid "Currency Rate"
+msgstr "Kurz měny"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Dear"
+msgstr "Vážený"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
+msgid "Default Alias Name for Expenses"
+msgstr "Výchozí název zástupce pro výdaje"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_journal_id
+msgid "Default Company Expense Journal"
+msgstr "Výchozí výdajový deník společnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+msgid "Default Expense Journal"
+msgstr "Výchozí výdajový deník"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default Journals"
+msgstr "Výchozí deníky"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default accounting journal for expenses paid by employees."
+msgstr "Výchozí účetní deník pro výdaje hrazené zaměstnanci."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default accounting journal for expenses paid by the company."
+msgstr "Výchozí účetní deník pro výdaje hrazené společností."
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_department
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "Department"
+msgstr "Oddělení"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__name
+msgid "Description"
+msgstr "Popis"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid "Did you try the mobile app?"
+msgstr "Vyzkoušeli jste mobilní aplikaci?"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Digitalize your receipts with OCR and Artificial Intelligence"
+msgstr "Digitalizujte své příjmy pomocí OCR a umělé inteligence"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: hr_expense
+#: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
+msgid ""
+"Do not keep your expense tickets in your pockets any longer. Just snap a "
+"picture of your receipt and let Odoo digitalizes it for you. The OCR and "
+"Artificial Intelligence will fill the data automatically."
+msgstr ""
+"Už si nenechávejte své výdajové lístky v kapsách. Stačí pořídit fotografii "
+"dokladu a nechat Odoo digitalizovat za vás. OCR a umělá inteligence vyplní "
+"data automaticky."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Doména"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__done
+msgid "Done"
+msgstr "Hotovo"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/mixins/qrcode.js:0
+#, python-format
+msgid "Download our App"
+msgstr "Stáhněte si naši aplikaci"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
+msgid "Draft"
+msgstr "Návrh"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid "Drag and drop files to create expenses"
+msgstr "Přetažením souborů vytvoříte výdaje"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
+#, python-format
+msgid "Duplicate Expense"
+msgstr "Duplicitní výdaj"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__employee_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__employee_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Employee"
+msgstr "Zaměstnanec"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
+msgid "Employee (to reimburse)"
+msgstr "Zaměstnanec (k úhradě)"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
+msgid "Employee Expenses"
+msgstr "Výdaje zaměstnanců"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id
+msgid "Employee Home Address"
+msgstr "Adresa bydliště zaměstnance"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Enter a name then choose a category and configure the amount of your "
+"expense."
+msgstr "Zadejte název, vyberte kategorii a nakonfigurujte výši svých výdajů."
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_move_line__expense_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__expense_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__expense_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_users__expense_manager_id
+#: model:ir.model.fields.selection,name:hr_expense.selection__account_analytic_applicability__business_domain__expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Expense"
+msgstr "Výdaje"
+
+#. module: hr_expense
+#: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
+msgid "Expense Approval"
+msgstr "Schválení výdajů"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
+msgid "Expense Approve Duplicate"
+msgstr "Duplikát při schvalování výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
+msgid "Expense Approver"
+msgstr "Schvalovatel výdajů"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
+#: model:ir.ui.menu,name:hr_expense.menu_hr_product
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Expense Categories"
+msgstr "Kategorie výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Expense Date"
+msgstr "Datum nákladu"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Digitalization (OCR)"
+msgstr "Digitalizace nákladů (OCR)"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
+msgid "Expense Journal"
+msgstr "Nákladový deník"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_line_ids
+msgid "Expense Lines"
+msgstr "Řádky výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
+msgid "Expense Lines Are Editable By Current User"
+msgstr "Položky výdajů lze upravovat aktuálním uživatelem"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
+msgid "Expense Manager"
+msgstr "Správce výdajů"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
+msgid "Expense Refuse Reason Wizard"
+msgstr "Průvodce důvodem odmítnutí výdajů"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_sheet
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
+msgid "Expense Report"
+msgstr "Zpráva o výdajích"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
+msgid "Expense Report Summary"
+msgstr "Souhrnný přehled výdajů"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Expense Reports"
+msgstr "Výkazy výdajů"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
+msgid "Expense Reports Analysis"
+msgstr "Analýza výkazů výdajů"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
+msgid "Expense Reports to Approve"
+msgstr "Zprávy o výdajích ke schválení"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
+msgstr "Výdajový list"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_split
+msgid "Expense Split"
+msgstr "Rozdělení výdaje"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
+msgid "Expense Split Line"
+msgstr "Položka rozdělení výdaje"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
+msgid "Expense Split Wizard"
+msgstr "Průvodce rozdělením výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+msgid "Expense Validate Duplicate"
+msgstr "Ověřit duplikát výdajů"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "Expense categories can be reinvoiced to your customers."
+msgstr "Kategorie výdajů mohou být vašim zákazníkům přefakturovány."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Expense entry Created"
+msgstr "Položka výdajů Vytvořena"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+msgid "Expense refuse reason"
+msgstr "Důvod odmítnutí výdajů"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_approved
+msgid "Expense report approved"
+msgstr "Zpráva o výdajích schválena"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_paid
+msgid "Expense report paid"
+msgstr "Zpráva o výdajích zaplacena"
+
+#. module: hr_expense
+#: model:mail.message.subtype,description:hr_expense.mt_expense_refused
+msgid "Expense report refused"
+msgstr "Zpráva o výdajích byla odmítnuta"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
+msgid ""
+"Expense reports regroup all the expenses incurred during a specific event."
+msgstr ""
+"Výkazy výdajů přeskupují všechny výdaje vzniklé během konkrétní události."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Expense split"
+msgstr "Rozdělení výdaje"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
+msgid "Expenses"
+msgstr "Výdaje"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_all_expenses
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_graph
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_pivot
+msgid "Expenses Analysis"
+msgstr "Analýza výdajů"
+
+#. module: hr_expense
+#: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Expenses Report"
+msgstr "Zpráva o výdajích"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
+msgid "Expenses Reports to Approve"
+msgstr "Výkazy výdajů ke schválení"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "Expenses by Date"
+msgstr "Výdaje podle data"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Expenses must have the same To Reimburse status."
+msgstr "Výdaje musí mít stejný stav K úhradě."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Expenses of Your Team Member"
+msgstr "Výdaje člena týmu"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_hr_expense
+msgid "Expenses to Process"
+msgstr "Náklady na zpracování"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
+msgid "Explicitly Refused by manager or accountant"
+msgstr "Správce nebo účetní výslovně odmítl"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
+msgid "Followers"
+msgstr "Sledující"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_partner_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sledující (partneři)"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Skvělá ikona písma, např. fa-úkoly"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Former Employees"
+msgstr "Bývalí zaměstnanci"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Future Activities"
+msgstr "Budoucí činnosti"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "General Information"
+msgstr "Obecná informace"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Generate Expenses"
+msgstr "Vytvořit výdaje"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.expense_product_gift_product_template
+msgid "Gifts"
+msgstr "Dárky"
+
+#. module: hr_expense
+#: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
+msgid "Gifts to customers or vendors"
+msgstr "Dárky zákazníkům nebo dodavatelům"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid "Google Play Store"
+msgstr "Google Play Store"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Group By"
+msgstr "Seskupit podle"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_multiple_currency
+msgid "Handle lines with different currencies"
+msgstr "Zpracovat řádky s různými měnami"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__has_message
+msgid "Has Message"
+msgstr "Má zprávu"
+
+#. module: hr_expense
+#: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
+msgid "Hotel, plane ticket, taxi, etc."
+msgstr "Hotel, letenka, taxi atd."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_ids
+msgid "Hr Expense"
+msgstr "HR výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__hr_expense_sheet_id
+msgid "Hr Expense Sheet"
+msgstr "HR výdajový list"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_icon
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona označuje vyjímečnou aktivitu."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_sms_error
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "In Payment"
+msgstr "V platbě"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
+msgid "Included taxes"
+msgstr "Včetně daně"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Incoming Emails"
+msgstr "Příchozí e-maily"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Internal Note"
+msgstr "Interní poznámka"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__description
+msgid "Internal Notes"
+msgstr "Interní poznámky"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Invalid attachments!"
+msgstr "Neplatné přílohy!"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
+msgid "Is Editable By Current User"
+msgstr "Lze upravovat aktuálním uživatelem"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_is_follower
+msgid "Is Follower"
+msgstr "Je sledující"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
+msgid "Is currency_id different from the company_currency_id"
+msgstr "Je currency_id rozdílné od company_currency_id"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_cost
+msgid "Is product with non zero cost selected"
+msgstr "Je vybrán produkt s nenulovými náklady"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "It all begins here - let's go!"
+msgstr "Vše začíná zde - pojďme na to!"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_journal
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_displayed_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "Journal"
+msgstr "Deník"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__account_move_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Journal Entry"
+msgstr "Položka deníku"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Položka deníku"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
+msgid "Label Convert Rate"
+msgstr "Míra konverze štítků"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split____last_update
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_uid
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__write_date
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Late Activities"
+msgstr "Zpožděné činnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__use_mailgateway
+msgid "Let your employees record expenses by email"
+msgstr "Nechte své zaměstnance zaznamenat výdaje emailem"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Let's check out where you can manage all your employees expenses"
+msgstr ""
+"Pojďme se podívat, kde můžete spravovat všechny výdaje svých zaměstnanců"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Let's go back to your expenses."
+msgstr "Vraťme se na vaše výdaje."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hlavní příloha"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__user_id
+msgid "Manager"
+msgstr "Manažer"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Managers can approve the report here, then an accountant can post the "
+"accounting entries."
+msgstr ""
+"Manažeři zde mohou zprávu schválit, poté může účetní zaúčtovat účetní "
+"zápisy."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Managers can inspect all expenses from here."
+msgstr "Manažeři odtud mohou kontrolovat všechny výdaje."
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.expense_product_meal_product_template
+msgid "Meals"
+msgstr "Jídlo"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error
+msgid "Message Delivery error"
+msgstr "Chyba při doručování zpráv"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_ids
+msgid "Messages"
+msgstr "Zprávy"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.expense_product_mileage_product_template
+msgid "Mileage"
+msgstr "Ujeté kilometry"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mé aktivity"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "My Expenses"
+msgstr "Mé výdaje"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "My Reports"
+msgstr "Mé výkazy"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "My Team"
+msgstr "Můj tým"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Name"
+msgstr "Jméno"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Report"
+msgstr "Nová zpráva o výdajích"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Reports"
+msgstr "Nové výkazy výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Termín další aktivity"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_summary
+msgid "Next Activity Summary"
+msgstr "Souhrn další aktivity"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_type_id
+msgid "Next Activity Type"
+msgstr "Další typ aktivity"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "No Home Address found for the employee %s, please configure one."
+msgstr ""
+"Pro zaměstnance nebyla nalezena žádná domácí adresa %s, nakonfigurujte si "
+"prosím jeden."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "No attachment was provided"
+msgstr "Nebyla poskytnuta žádná příloha"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_department_filtered
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
+msgid "No data yet!"
+msgstr "Zatím žádná data!"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid "No expense categories found. Let's create one!"
+msgstr "Nebyly nalezeny žádné kategorie výdajů. Vytvořme si jednu!"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+msgid "No expense report found. Let's create one!"
+msgstr "Nebyl nalezen žádný výkaz výdajů. Vytvořme si jeden!"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
+msgid "No expense reports found. Let's create one!"
+msgstr "Nebyly nalezeny žádné výkazy výdajů. Vytvořme si jeden!"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Notes..."
+msgstr "Poznámky ..."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Počet akcí"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
+msgid "Number of Attachments"
+msgstr "Počet příloh"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
+msgid "Number of Expenses"
+msgstr "Počet výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
+msgid "Number of errors"
+msgstr "Počet chyb"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Počet zpráv s chybou při doručení"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
+msgid ""
+"Once you have created your expense, submit it to your manager who will "
+"validate it."
+msgstr ""
+"Jakmile vytvoříte své výdaje, odešlete je svému nadřízenému, který je ověří."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Once your <b>Expense Report</b> is ready, you can submit it to your manager "
+"and wait for approval."
+msgstr ""
+"Jakmile je váš <b>výkaz výdajů</b> připraven, můžete jej odeslat svému "
+"nadřízenému a počkat na jeho schválení."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Only HR Officers or the concerned employee can reset to draft."
+msgstr "Pouze pracovníci HR nebo dotyčný zaměstnanec mohou obnovit návrh."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Only Managers and HR Officers can approve expenses"
+msgstr "Pouze manažeři a HR pracovníci mohou schvalovat výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid "Or"
+msgstr "Nebo"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
+msgid "Original Amount"
+msgstr "Původní částka"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.product_product_no_cost_product_template
+msgid "Others"
+msgstr "Ostatní"
+
+#. module: hr_expense
+#: model:mail.message.subtype,name:hr_expense.mt_expense_paid
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Paid"
+msgstr "Zaplaceno"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_mode
+msgid "Paid By"
+msgstr "Hradí"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Partial"
+msgstr "Částečný"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
+msgid "Payment Status"
+msgstr "stav platby"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/account_payment.py:0
+#, python-format
+msgid "Payment created for: %s"
+msgstr "Platba vytvořena pro: %s"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment
+msgid "Payments"
+msgstr "Platby"
+
+#. module: hr_expense
+#: model_terms:product.template,description:hr_expense.expense_product_communication_product_template
+msgid "Phone bills, postage, etc."
+msgstr "Účty za telefon, poštovné atd."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
+#, python-format
+msgid "Post Entries"
+msgstr "Příspěvky"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Post Journal Entries"
+msgstr "Zaúčtovat vnitřní účetní doklady"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
+msgid "Posted"
+msgstr "Schváleno"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+msgid "Powered by"
+msgstr "Běží na"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Price"
+msgstr "Cena"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Price in Company Currency"
+msgstr "Cena v měně společnosti"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Price:"
+msgstr "Cena:"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_template
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_id
+msgid "Product"
+msgstr "Produkt"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
+msgid "Product Description"
+msgstr "Popis produktu"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Product Name"
+msgstr "Název výrobku"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Produktová varianta"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
+msgid "Product Variants"
+msgstr "Varianty výrobku"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Veřejný zaměstnanec"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Qty"
+msgstr "Množství"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__quantity
+msgid "Quantity"
+msgstr "Množství"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid ""
+"Ready? You can save it manually or discard modifications from here. You "
+"don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
+"navigate."
+msgstr ""
+"Připraveni? Odtud je můžete ručně uložit nebo zrušit úpravy. Již nebude "
+"<em>potřeba ukládat</em> - Odoo za vás při navigaci uloží vše."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
+msgid "Reason"
+msgstr "Důvod"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
+msgid "Reason :"
+msgstr "Důvod:"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+msgid "Reason to refuse Expense"
+msgstr "Důvod odmítnutí výdajů"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Ref."
+msgstr "Odk."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_ref_editable
+msgid "Reference Is Editable By Current User"
+msgstr "Lze upravovat aktuálním uživatelem"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Refuse"
+msgstr "Odmítnout"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
+msgid "Refuse Expense"
+msgstr "Důvod odmítnutí výdajů"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__cancel
+#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Refused"
+msgstr "Odmítnuto"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Refused Expenses"
+msgstr "Odmítnuté výdaje"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#: model:ir.model,name:hr_expense.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
+msgid "Register Payment"
+msgstr "Zaznamenat platbu"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_payroll_expense
+msgid "Reimburse Expenses in Payslip"
+msgstr "Hrazené výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Reimburse expenses in payslips"
+msgstr "Hrazené výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Reimburse in Payslip"
+msgstr "Hrazené výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
+msgid "Report"
+msgstr "Sestava"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__company_currency_id
+msgid "Report Company Currency"
+msgstr "Měna společnosti"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
+msgid "Reporting"
+msgstr "Přehledy"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Reset to Draft"
+msgstr "Obnovit návrh"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_user_id
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_user_id
+msgid "Responsible User"
+msgstr "Zodpovědný uživatel"
+
+#. module: hr_expense
+#: model_terms:product.template,description:hr_expense.expense_product_meal_product_template
+msgid "Restaurants, business lunches, etc."
+msgstr "Restaurace, pracovní obědy atd."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručení SMS"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
+msgid "Sales Price"
+msgstr "Zlevněné ceny"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sample
+msgid "Sample"
+msgstr "Vzorek"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Scan"
+msgstr "Skenování"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "Naskenováním tohoto QR kódu získáte aplikaci Odoo:"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
+#: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
+msgid ""
+"Select the user responsible for approving \"Expenses\" of this employee.\n"
+"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+msgstr ""
+"Vyberte uživatele odpovědného za schválení „Výdaje“ tohoto zaměstnance.\n"
+"Pokud je prázdné, schválení provede administrátor nebo schvalovatel (určeno v nastavení / uživatelé)."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"Selected Unit of Measure for expense %(expense)s does not belong to the same"
+" category as the Unit of Measure of product %(product)s."
+msgstr ""
+"Zvolená měrná jednotka výdaje %(expense)s nepatří do stejné kategorie jako "
+"měrná jednotka produktu %(product)s."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"Send an email to this email alias with the receipt in attachment to create "
+"an expense in one click. If the first word of the mail subject contains the "
+"category's internal reference or the category name, the corresponding "
+"category will automatically be set. Type the expense amount in the mail "
+"subject to set it on the expense too."
+msgstr ""
+"Odesláním e-mailu na tento e-mailový alias s účtenkou v příloze vytvoříte "
+"výdaj jedním kliknutím. Pokud první slovo předmětu e-mailu obsahuje interní "
+"odkaz na kategorii nebo název kategorie, automaticky se nastaví odpovídající"
+" kategorie. Zadáním částky výdaje do předmětu e-mailu ji nastavíte i na "
+"výdaj."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
+msgid "Send bills to OCR to generate expenses"
+msgstr "Odesílejte přijaté faktury OCR za účelem generování nákladů"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_global_settings
+msgid "Settings"
+msgstr "Nastavení"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Setup your domain alias"
+msgstr "Nastavte alias domény"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__sheet_ids
+msgid "Sheet"
+msgstr "List"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_is_editable
+msgid "Sheet Is Editable"
+msgstr "List je upravitelný"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
+msgid ""
+"Snap pictures of your receipts and let Odoo<br> automatically create "
+"expenses for you."
+msgstr ""
+"Pořiďte fotografie svých účtenek a nechte Odoo<br> automaticky za vás "
+"vytvoří výdaje."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Specify expense journal to generate accounting entries."
+msgstr "Pro generování účetních záznamů zadejte deník výdajů."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
+#: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
+msgid "Specify whether the product can be selected in an expense."
+msgstr "Zvolte, zda může být výrobek vybrán na řádku potvrzení objednávky."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Split Expense"
+msgstr "Rozdělit výdaj"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
+#, python-format
+msgid "Split Expenses"
+msgstr "Rozdělit výdaje"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
+msgid "Split Possible"
+msgstr "Možné rozdělení"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__state
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Status"
+msgstr "Stav"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_state
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Stav na základě aktivit\n"
+"Vypršeno: Datum již uplynulo\n"
+"Dnes: Datum aktivity je dnes\n"
+"Plánováno: Budoucí aktivity."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
+#, python-format
+msgid "Submit"
+msgstr "Odeslat"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
+msgid "Submit to Manager"
+msgstr "Předložit manažerovi"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__reported
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__submit
+msgid "Submitted"
+msgstr "Odesláno"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
+msgid "Tax"
+msgstr "Daň"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount"
+msgstr "Výše daně"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__amount_tax
+msgid "Tax amount in Currency"
+msgstr "Výše daně v měně"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount in company currency"
+msgstr "Výše daně v měně společnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
+msgid "Tax amount in currency"
+msgstr "Výše daně v měně"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_taxes
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Taxes"
+msgstr "Daně"
+
+#. module: hr_expense
+#: model:res.groups,name:hr_expense.group_hr_expense_team_approver
+msgid "Team Approver"
+msgstr "Schvalovatel týmu"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_res_company__company_expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_settings__company_expense_journal_id
+msgid "The company's default journal used when a company expense is created."
+msgstr "Výchozí deník společnosti použitý při vytvoření firemního nákladu."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+msgid ""
+"The company's default journal used when an employee expense is created."
+msgstr "Výchozí deník společnosti použitý při vytvoření výdaje zaměstnanců."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The current user has no related employee. Please, create one."
+msgstr ""
+"Aktuální uživatel nemá žádného souvisejícího zaměstnance. Vytvořte si prosím"
+" jednu."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The expense reports were successfully approved."
+msgstr "Výkazy výdajů byly úspěšně schváleny."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid ""
+"The first word of the email subject did not correspond to any category code."
+" You'll have to set the category manually on the expense."
+msgstr ""
+"První slovo předmětu e-mailu neodpovídalo žádnému kódu kategorie. Kategorii "
+"budete muset na výdajích nastavit ručně."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
+msgid ""
+"The following approved expenses have similar employee, amount and category "
+"than some expenses of this report. Please verify this report does not "
+"contain duplicates."
+msgstr ""
+"Následující schválené výdaje mají podobné zaměstnance, částku a kategorii "
+"jako některé výdaje tohoto výkazu. Ověřte prosím, že tento výkaz neobsahuje "
+"duplikáty."
+
+#. module: hr_expense
+#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
+msgid "The journal must be set on posted expense"
+msgstr "Deník musí být nastaven na zaúčtované výdaje"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__journal_id
+msgid "The journal used when the expense is done."
+msgstr "Deník použitý po dokončení výdajů."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
+msgid "The payment method used when the expense is paid by the company."
+msgstr "Způsob platby v případě, když společnost zaplatí výdaj."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Pro zaslání výkazu výdajů je vyžadována soukromá adresa zaměstnance. "
+"Přidejte ji prosím do formuláře zaměstnance."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "The status of all your current expenses is visible from here."
+msgstr "Stav všech vašich aktuálních výdajů je viditelný odtud."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__split_possible
+msgid "The sum of after split shut remain the same"
+msgstr "Součet po rozdělení zůstává stejný"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "There are no expense reports to approve."
+msgstr "Nejsou zde žádné výkazy výdajů ke schválení."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unsubmitted expenses linked to this category. Updating the "
+"category cost will change expense amounts. Make sure it is what you want to "
+"do."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "There you go - expense management in a nutshell!"
+msgstr "Tady to máte - správa výdajů ve zkratce!"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"This note will be shown to users when they select this expense product."
+msgstr ""
+"Tato poznámka bude zobrazena uživatelům, kteří zvolí tento výdaj produktu."
+
+#. module: hr_expense
+#: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
+#: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
+msgid "Tip: Snap pictures of your receipts with the remote app"
+msgstr "Tip: pořizujte snímky účtenek pomocí vzdálené aplikace"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "To Report"
+msgstr "Ohlásit"
+
+#. module: hr_expense
+#: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
+msgid "To Submit"
+msgstr "Předložit"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
+msgid "Today Activities"
+msgstr "Dnešní činnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "Total"
+msgstr "Celkem"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Total Amount"
+msgstr "Celková částka"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+msgid "Total Company Currency"
+msgstr "Celková měna společnosti"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__total_amount
+msgid "Total In Currency"
+msgstr "Celkem v měně"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
+msgid "Total Untaxed Amount In Currency"
+msgstr "Celková částka bez daně v měně"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
+msgid "Total amount of the original Expense that we are splitting"
+msgstr "Celková částka původních výdajů, které rozdělujeme"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_original
+msgid "Total amount original"
+msgstr "Původní celková částka"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.expense_product_travel_accommodation_product_template
+msgid "Travel & Accommodation"
+msgstr "Cestování a ubytování"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ zaznamenané výjimečné aktivity."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Unit Price"
+msgstr "Jednotková cena"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount_display
+msgid "Unit Price Display"
+msgstr "Zobrazení jednotkové ceny"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
+msgid "Unit of Measure"
+msgstr "Měrná jednotka"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__untaxed_amount
+msgid "Untaxed Amount"
+msgstr "Částka bez daně"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
+msgid "UoM Category"
+msgstr "Kategorie MJ"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
+#, python-format
+msgid "Upload"
+msgstr "Nahrát"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Use the breadcrumbs to go back to the list of expenses."
+msgstr "Pomocí navigace se vraťte zpět na seznam výdajů."
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_users
+msgid "User"
+msgstr "Uživatel"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
+msgid "Validate Duplicate Expenses"
+msgstr "Ověření duplicitních výdajů"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "View Attachments"
+msgstr "Zobrazit přílohy"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "View Expense"
+msgstr "Zobrazit výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "View Report"
+msgstr "Zobrazit hlášení"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#, python-format
+msgid "Wasting time recording your receipts? Let’s try a better way."
+msgstr "Ztrácíte čas zaznamenávání vašich příjmů? Zkusme lepší způsob."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__website_message_ids
+msgid "Website Messages"
+msgstr "Zprávy webstránky"
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__website_message_ids
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__website_message_ids
+msgid "Website communication history"
+msgstr "Historie komunikace webstránky"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid ""
+"When the cost of an expense product is different than 0, then the user using"
+" this product won't be able to change the amount of the expense, only the "
+"quantity. Use a cost different than 0 for expense categories funded by the "
+"company at fixed cost like allowances for mileage, per diem, accommodation "
+"or meal."
+msgstr ""
+"Pokud jsou náklady na výdaj produktu jiné než 0, pak uživatel používající "
+"tento produkt nebude moci změnit výši výlohy, pouze množství. Použijte "
+"náklady odlišné od 0 pro kategorie výdajů financované společností za fixní "
+"náklady, jako jsou příspěvky na ujeté kilometry, diety, ubytování nebo "
+"jídlo."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_tax
+msgid "Whether tax is defined on a selected product"
+msgstr "Zda je daň definována na vybraný produkt"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
+msgid "Wizard"
+msgstr "Průvodce"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You are not authorized to edit the reference of this expense report."
+msgstr "Nejste oprávněni upravovat odkaz na tento výkaz výdajů."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You are not authorized to edit this expense report."
+msgstr "Nemáte oprávnění upravovat tento výkaz výdajů."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can not create report without category."
+msgstr "Bez kategorie nelze hlášení vytvořit."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "You can now submit it to the manager from the following link."
+msgstr "Nyní jej můžete odeslat správci pomocí následujícího odkazu."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can only approve your department expenses"
+msgstr "Schválit můžete pouze výdaje vašeho oddělení"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can only generate accounting entry for approved expense(s)."
+msgstr "Účetní záznam můžete vygenerovat pouze pro schválené výdaje."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can only refuse your department expenses"
+msgstr "Můžete odmítnout jen náklady vašeho oddělení "
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You can't mix sample expenses and regular ones"
+msgstr "Nemůžete kombinovat výdaje vzorku a běžné"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot add expenses of another employee."
+msgstr "Nemůžete přidat výdaje jiného zaměstnance."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot approve your own expenses"
+msgstr "Nemůžete schválit vlastní výdaje"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot delete a posted or approved expense."
+msgstr "Vyúčtovaný nebo schválený výdaj nemůžete smazat."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot delete a posted or paid expense."
+msgstr "Nemůžete odstranit účtované nebo placené náklady."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/analytic.py:0
+#, python-format
+msgid "You cannot delete an analytic account that is used in an expense."
+msgstr "Nemůžete odstranit analytický účet, který se používá ve výdaji."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/account_payment.py:0
+#, python-format
+msgid ""
+"You cannot do this modification since the payment is linked to an expense "
+"report."
+msgstr ""
+"Tuto úpravu nemůžete provést, protože platba je propojena s výkazem výdajů."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot refuse your own expenses"
+msgstr "Nemůžete odmítnout své vlastní náklady"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different companies in the same report."
+msgstr "V téže zprávě nemůžete vykázat výdaje za různé společnosti."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report expenses for different employees in the same report."
+msgstr "V téže zprávě nemůžete vykázat výdaje za různé zaměstnance."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report the expenses without amount!"
+msgstr "Nemůžete vykazovat výdaje bez částky!"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You cannot report twice the same line!"
+msgstr "Nelze nahlásit dvakrát stejný řádek.."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You have no expense to report"
+msgstr "Nemáte žádné výdaje na vykazování"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "You need to add a manual payment method on the journal (%s)"
+msgstr "Musíte k deníku přidat způsob ruční platby (%s)"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You need to have at least one category that can be expensed in your database"
+" to proceed!"
+msgstr ""
+"Abyste mohli pokračovat, musíte mít ve své databázi alespoň jednu kategorii,"
+" kterou lze zařadit do nákladů!"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
+msgid "Your Expense"
+msgstr "Vaše výdaje"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
+msgid "Your expense has been successfully registered."
+msgstr "Váš výdaj byl úspěšně zaregistrován."
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "e.g. Lunch"
+msgstr "např. Oběd"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "e.g. Lunch with Customer"
+msgstr "např. oběd se zákazníkem"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "e.g. Trip to NY"
+msgstr "např. Výlet do New Yorku"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
+msgid "has been refused"
+msgstr "bylo odmítnuto"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "to be reimbursed"
+msgstr "k úhradě"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "to report"
+msgstr "ohlásit"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "under validation"
+msgstr "probíhá validace"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "use OCR to fill data from a picture of the bill"
+msgstr "použijte OCR k vyplnění údajů z obrázku účtu"

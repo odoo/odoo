@@ -1,0 +1,242 @@
+// ============================
+// Mass Mailing "Theme Default"
+// ============================
+
+// ===== Default Theme palette =====
+$o-mm-def-color-1: #f5f5f5;
+$o-mm-def-color-2: #ffffff;
+$o-mm-def-color-3: #706482;
+$o-mm-def-color-4: #464646;
+$o-mm-def-color-5: darken($o-mm-def-color-3, 5%);
+$o-mm-def-color-6: #706482;
+$o-mm-def-color-7: #87a6b5;
+
+// ===== Default Theme variables =====
+$o-mm-def-body-width    : 600px;
+$o-mm-def-body-bobile   : 480px;
+$o-mm-def-b-radius      : 2px;
+$o-mm-def-body-bg       : $o-mm-def-color-2;
+
+$o-mm-def-font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+$o-mm-def-text-color    : $o-mm-def-color-4;
+
+$o-mm-def-btn-bg        : $o-mm-def-color-3;
+$o-mm-def-btn-text      : $o-mm-def-color-2;
+
+// ===== Colors =====
+@include bg-variant(".bg-o-color-2", $o-mm-def-color-6);
+@include text-emphasis-variant(".text-o-color-2", $o-mm-def-color-6);
+@include bg-variant(".bg-o-color-4", $o-mm-def-color-7);
+@include bg-variant(".bg-gray-lighter", $o-mm-def-color-1);
+
+div.col:not([align]) {
+    // Default browser style but needed so that alignment works on some mail
+    // clients (see convert_inline)
+    text-align: inherit;
+}
+
+.btn {
+    &.rounded-circle {
+        border-radius: 100px !important;
+        padding: 0.45rem 1.35rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    &.flat {
+        border: 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0;
+    }
+}
+
+// ===== Layout =====
+.o_layout {
+    overflow: hidden;
+    box-sizing: content-box;
+    min-height: 100%;
+
+    > .o_mail_wrapper {
+        width: 100%;
+        margin: 0 auto;
+
+        &.o_mail_small {
+            max-width: 600px;
+        }
+        &.o_mail_regular {
+            max-width: 720px;
+        }
+
+        .o_mail_wrapper_td {
+            flex: none;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+}
+
+// ===== Snippets (general) =====
+.o_mail_snippet_general {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+
+    .container > div.row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    a:not(.btn), .btn.btn-link {
+        font-weight: bold;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        border: none!important;
+    }
+
+    // Icons
+    .fa {
+        @mixin size($width, $height: $width) {
+          width: $width;
+          height: $height;
+        }
+
+        $size: 3rem;
+
+        &.rounded-circle,
+        &.rounded,
+        &.rounded-0,
+        &.rounded-leaf,
+        &.img-thumbnail,
+        &.shadow {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            // fa-1x is not ouput
+            width: $size;
+            height: $size;
+            line-height: $size;
+            @for $i from 2 through 5 {
+                &.fa-#{$i}x {
+                    width: $size + $i;
+                    height: $size + $i;
+                    line-height: $size + $i;
+                }
+            }
+        }
+    }
+    // Background Images
+    .oe_img_bg {
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        &.o_bg_img_opt_repeat {
+            background-size: auto;
+            background-repeat: repeat;
+        }
+        &.o_bg_img_center {
+            background-position: center;
+        }
+
+        // Compatibility <= 13.0, TODO remove?
+        // -----------------------------------
+        &.o_bg_img_opt_contain {
+            background-size: contain;
+            background-position: center center;
+        }
+        &.o_bg_img_opt_custom {
+            background-size: auto;
+        }
+        &.o_bg_img_opt_repeat_x {
+            background-repeat: repeat-x;
+        }
+        &.o_bg_img_opt_repeat_y {
+            background-repeat: repeat-y;
+        }
+    }
+}
+
+// ===== Snippets (specific) =====
+.o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+    .o_mail_header_social {
+        a:not(.btn), .btn.btn-link {
+            display: inline-block;
+        }
+    }
+    div .col, div[class*="col-"] {
+        align-self: center;
+    }
+}
+
+.o_mail_block_footer_social {
+    .btn-link{
+        padding: 0;
+    }
+}
+
+// -- Bootstrap overrides for transparent colors -- //
+
+.list-group .list-group-item {
+    border-color: #d2d2d2;
+
+}
+
+.card {
+    border-color: #d2d2d2;
+    .card-header,.card-footer {
+        background-color: inherit!important;
+    }
+    .card-body {
+        background-color: white!important;
+    }
+}
+
+// ===== Misc =====
+
+.o_mail_snippet_general .container {
+    width: 100%;
+    border-collapse:separate;
+}
+
+// Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
+// instead of margins before the introduction of pb/pt classes. As thoses mb/mt
+// classes may remain on clients' templates, <td/> are forced to 0 margin to
+// be sure (normally <td/> should not consider margin properties but some mail
+// clients might make the mistake to do so).
+div.col[class*="mb"], div.col[class*="mt"] {
+    margin: 0!important;
+}
+
+// DEFAULT_CSS styles
+
+.o_mail_wrapper {
+    h1 {
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    }
+    h2 {
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    }
+    h3 {
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    }
+    p, p > *, li, li > * {
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+    }
+    a.btn-primary, a.btn-outline-primary, a.btn-fill-primary {
+        color: #FFFFFF;
+        background-color: #35979c;
+        border-color: #35979c;
+    }
+    a.btn-secondary, a.btn-outline-secondary, a.btn-fill-secondary {
+        color: #FFFFFF;
+        background-color: #685563;
+        border-color: #685563;
+    }
+    hr {
+        border-top-color: #212529;
+        width: 100%;
+    }
+}

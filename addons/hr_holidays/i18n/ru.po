@@ -1,0 +1,4831 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays
+# 
+# Translators:
+# Андрей Гусев <gaussgss@gmail.com>, 2022
+# Vasiliy Korobatov <korobatov@gmail.com>, 2022
+# Evgeniia Kotova, 2022
+# Иван Дроздов <hiraetari@gmail.com>, 2022
+# Ekaterina <nawsikaya@bk.ru>, 2022
+# Irina Fedulova <istartlin@gmail.com>, 2022
+# ILMIR <karamov@it-projects.info>, 2022
+# Oleg Kuryan <oleg@ventor.tech>, 2022
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# valmasone, 2023
+# Alena Vlasova, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# alenafairy, 2023
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"\n"
+"The employees that lack allocation days are:\n"
+"%s"
+msgstr ""
+"\n"
+"Сотрудниками, которым не хватает дней на отсутствие, являются:\n"
+"%s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid " days"
+msgstr "дней"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid " hours"
+msgstr "часа"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "!important &gt;&lt;/td&gt;"
+msgstr "!important &gt;&lt;/td&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "!important /&gt;"
+msgstr "!important /&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "!important/&gt;"
+msgstr "!important/&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "!important; font-size: 10px\" &gt;"
+msgstr "!important; font-size: 10px\" &gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
+msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%(employee_name)s - From %(date_from)s To %(date_to)s - %(state)s"
+msgstr "%(employee_name)s - С %(date_from)s По %(date_to)s - %(state)s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%(leave_type)s: %(duration).2f days (%(start)s)"
+msgstr "%(leave_type)s: %(duration).2f дней (%(start)s)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)"
+msgstr "%(person)s  %(leave_type)s: %(duration).2f дней (%(start)s)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s"
+msgstr "%(person)s  %(leave_type)s: %(duration).2f часов %(date)s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid "%g remaining out of %g"
+msgstr "осталось %g из %g"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копия)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "%s (from %s to %s)"
+msgstr "%s (с %s по %s)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "%s (from %s to No Limit)"
+msgstr "%s (с %s без ограничений)"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s : %.2f days"
+msgstr " %s:%.2f дней"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s : %.2f hours"
+msgstr "%s : %.2f часов"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr "%s отгул : %.2f дней"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
+msgstr "%s отгул : %.2f часов"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "%s: Time Off"
+msgstr "%s: Отгул"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "&gt;"
+msgstr "&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "&lt;/td&gt;"
+msgstr "&lt;/td&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "&lt;/th&gt;"
+msgstr "&lt;/th&gt;"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid ""
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
+msgstr ""
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "&lt;td style=background-color:"
+msgstr "&lt;td style=background-color:"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "&lt;th class=\"text-center\" colspan="
+msgstr "&lt;th class=\"text-center\" colspan="
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "(based on worked time)"
+msgstr "(исходя из отработанного времени)"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "(valid until"
+msgstr "(действует до"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__10
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__10
+msgid "10:00 AM"
+msgstr "10:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__22
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__22
+msgid "10:00 PM"
+msgstr "22:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__10_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__10_5
+msgid "10:30 AM"
+msgstr "10:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__22_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__22_5
+msgid "10:30 PM"
+msgstr "22:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__11
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__11
+msgid "11:00 AM"
+msgstr "11:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__23
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__23
+msgid "11:00 PM"
+msgstr "23:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__11_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__11_5
+msgid "11:30 AM"
+msgstr "11:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__23_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__23_5
+msgid "11:30 PM"
+msgstr "23:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0
+msgid "12:00 AM"
+msgstr "00:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12
+msgid "12:00 PM"
+msgstr "12:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0_5
+msgid "12:30 AM"
+msgstr "00:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12_5
+msgid "12:30 PM"
+msgstr "12:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__1
+msgid "1:00 AM"
+msgstr "1:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__13
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__13
+msgid "1:00 PM"
+msgstr "13:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__1_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__1_5
+msgid "1:30 AM"
+msgstr "1:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__13_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__13_5
+msgid "1:30 PM"
+msgstr "13:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__2
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__2
+msgid "2:00 AM"
+msgstr "2:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__14
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__14
+msgid "2:00 PM"
+msgstr "14:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__2_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__2_5
+msgid "2:30 AM"
+msgstr "2:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__14_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__14_5
+msgid "2:30 PM"
+msgstr "14:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__3
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__3
+msgid "3:00 AM"
+msgstr "3:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__15
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__15
+msgid "3:00 PM"
+msgstr "15:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__3_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__3_5
+msgid "3:30 AM"
+msgstr "3:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__15_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__15_5
+msgid "3:30 PM"
+msgstr "15:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__4
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__4
+msgid "4:00 AM"
+msgstr "4:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__16
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__16
+msgid "4:00 PM"
+msgstr "16:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__4_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__4_5
+msgid "4:30 AM"
+msgstr "4:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__16_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__16_5
+msgid "4:30 PM"
+msgstr "16:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__5
+msgid "5:00 AM"
+msgstr "5:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__17
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__17
+msgid "5:00 PM"
+msgstr "17:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__5_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__5_5
+msgid "5:30 AM"
+msgstr "5:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__17_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__17_5
+msgid "5:30 PM"
+msgstr "17:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__6
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__6
+msgid "6:00 AM"
+msgstr "6:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__18
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__18
+msgid "6:00 PM"
+msgstr "18:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__6_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__6_5
+msgid "6:30 AM"
+msgstr "6:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__18_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__18_5
+msgid "6:30 PM"
+msgstr "18:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__7
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__7
+msgid "7:00 AM"
+msgstr "7:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__19
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__19
+msgid "7:00 PM"
+msgstr "19:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__7_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__7_5
+msgid "7:30 AM"
+msgstr "7:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__19_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__19_5
+msgid "7:30 PM"
+msgstr "19:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__8
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__8
+msgid "8:00 AM"
+msgstr "8:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__20
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__20
+msgid "8:00 PM"
+msgstr "20:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__8_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__8_5
+msgid "8:30 AM"
+msgstr "8:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__20_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__20_5
+msgid "8:30 PM"
+msgstr "20:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__9
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__9
+msgid "9:00 AM"
+msgstr "9:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__21
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__21
+msgid "9:00 PM"
+msgstr "21:00"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__9_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__9_5
+msgid "9:30 AM"
+msgstr "9:30"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__21_5
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__21_5
+msgid "9:30 PM"
+msgstr "21:30"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<i class=\"fa fa-check\"/> Validate"
+msgstr "<i class=\"fa fa-check\"/>Проверить"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" attrs=\"{'invisible': ['|', ('allocation_type', '=', "
+"'accrual'), ('state', 'not in', ('draft', 'confirm'))]}\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" attrs=\"{'invisible': ['|', ('allocation_type', '=', "
+"'accrual'), ('state', 'not in', ('draft', 'confirm'))]}\"/>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" attrs=\"{'invisible': [('allocation_type', '=', "
+"'accrual')]}\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\" attrs=\"{'invisible': [('allocation_type', '=', "
+"'accrual')]}\"/>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_form
+msgid "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"To\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" title=\"To\"/>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<i class=\"fa fa-thumbs-up\"/> Approve"
+msgstr "<i class=\"fa fa-thumbs-up\"/> Согласовать"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<i class=\"fa fa-times\"/> Refuse"
+msgstr "<i class=\"fa fa-times\"/> Отказать"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    ("
+msgstr ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"У сотрудника другой часовой пояс! Даты и время отображаются в часовом поясе сотрудника\n"
+"</span>\n"
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"Часовой пояс департамента компании отличается от вашего! Даты и время отображаются в часовом поясе компании\n"
+"</span>\n"
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"Часовой пояс компании отличается от вашего! Даты и время отображаются в часовом поясе компании\n"
+"</span>\n"
+"("
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_public_employees_kanban
+msgid ""
+"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
+"                    </span>"
+msgstr ""
+"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
+"                    </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_public_employees_kanban
+msgid ""
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"On Leave\"/>"
+msgstr ""
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"On Leave\"/>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Days</span>\n"
+"                                <span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '!=', 'hour')]}\">Hours</span>"
+msgstr ""
+"<span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '=', 'hour')]}\">Дней</span>\n"
+"                                <span class=\"ml8\" attrs=\"{'invisible': [('type_request_unit', '!=', 'hour')]}\">Часов</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Time Off\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Отгул\n"
+"                                </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Off Till\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Отсутствует по\n"
+"                        </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Time Off\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Отгул\n"
+"                        </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                           Time Off\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                           Отгул\n"
+"                        </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "<span class=\"o_stat_text\">Accruals</span>"
+msgstr "<span class=\"o_stat_text\">Расчет отпускных</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "<span class=\"o_stat_text\">Allocations</span>"
+msgstr "<span class=\"o_stat_text\">График отпусков</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "<span class=\"o_stat_text\">Time Off</span>"
+msgstr "<span class=\"o_stat_text\">Отгул</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr "<span class=\"text-muted\"> на </span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "<span class=\"text-muted\">From</span>"
+msgstr "<span class=\"text-muted\">С</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "<span class=\"text-muted\">To</span>"
+msgstr "<span class=\"text-muted\">По</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<span class=\"text-muted\">from </span>"
+msgstr "<span class=\"text-muted\">с</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "<span>Days</span>"
+msgstr "<span>Дней</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "<strong>Departments and Employees</strong>"
+msgstr "<strong>Отделы и сотрудники</strong>"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
+msgid ""
+"A great way to keep track on employee’s PTOs, sick days, and approval "
+"status."
+msgstr ""
+"Отличный способ отслеживать количество отпускных дней сотрудников, "
+"больничных и статусов согласований. "
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
+msgid ""
+"A great way to keep track on your time off requests, sick days, and approval"
+" status."
+msgstr ""
+"Отличный способ вести учет отсутствий и отслеживать статус согласований. "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "A time off cannot be duplicated."
+msgstr "Отгул не может быть продублирован."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
+msgid "Able to see Remaining Time Off"
+msgstr "Возможность просмотра оставшегося времени отдыха"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid "Absence"
+msgstr "Отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__absence_of_today
+msgid "Absence by Today"
+msgstr "Отсутствие на сегодня"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+msgid ""
+"Absent Employee(s), Whose time off requests are either confirmed or "
+"validated on today"
+msgstr ""
+"Отсутствующий сотрудник (сотрудники), чьи заявки на отгул были подтверждены "
+"или одобрены сегодня"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
+msgid "Absent Employees"
+msgstr "Отсутствующие сотрудники "
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__is_absent
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__is_absent
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
+msgid "Absent Today"
+msgstr "Отсутствует сегодня"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
+msgid "Accrual Allocation"
+msgstr "Резервирование по начислению"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Accrual Level"
+msgstr "Уровень начисления"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_plan_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_plan_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Accrual Plan"
+msgstr "Порядок расчета"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
+msgid "Accrual Plan Level"
+msgstr "Уровень плана начислений"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid "Accrual Plan's Employees"
+msgstr "Сотрудники плана начисления"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_view_accrual_plans
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_accrual_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_tree
+msgid "Accrual Plans"
+msgstr "Расчет дней отпуска"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
+#: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
+msgid "Accrual Time Off: Updates the number of time off"
+msgstr "Расчет отгулов: Обновление количества отгулов"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
+msgid "Accruals"
+msgstr "Расчеты"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
+msgid "Accruals count"
+msgstr "Подсчет начислений"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_needaction
+msgid "Action Needed"
+msgstr "Требует внимания"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__active
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__active
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__active
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Active Allocations"
+msgstr "Текущие отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__active_employee
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__active_employee
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__active_employee
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Active Employee"
+msgstr "Активный сотрудник"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Active Time Off"
+msgstr "Действующее отсутствие"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Active Types"
+msgstr "Активные виды"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_ids
+msgid "Activities"
+msgstr "Действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Оформление исключения активности"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_state
+msgid "Activity State"
+msgstr "Статус действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Иконка типа действия"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Типы действий"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Add a description..."
+msgstr "Добавить описание…"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Add a new level"
+msgstr "Добавить новый уровень"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Add a reason..."
+msgstr "Добавьте причину..."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Add some description for the people that will validate it"
+msgstr "Добавьте описание для людей, которые будут проверять."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value_type
+msgid "Added Value Type"
+msgstr "Тип добавленной стоимости"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Adds"
+msgstr "Добавляет"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_manager
+msgid "Administrator"
+msgstr "Администратор"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
+msgid "After this accrual's period"
+msgstr "После этого периода"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__pm
+msgid "Afternoon"
+msgstr "День"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_all
+msgid "All Allocations"
+msgstr "Все плановые отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__all_employee_ids
+msgid "All Employee"
+msgstr "Все сотрудники"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
+msgid "All Time Off"
+msgstr "Все отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
+msgid "Allocated (Days/Hours)"
+msgstr "Запланировано (дни / часы)"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Allocated:"
+msgstr "Запрошено:"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_allocation_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__allocation_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__closest_allocation_to_expire
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
+msgid "Allocation"
+msgstr "Плановое отсутствие"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
+msgid "Allocation Approval"
+msgstr "Согласовать отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__private_name
+msgid "Allocation Description"
+msgstr "Описание планируемого отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
+msgid "Allocation Display"
+msgstr "Отображение отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_type
+msgid "Allocation Mode"
+msgstr "Вид планируемого отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
+msgid "Allocation Notification Subtype"
+msgstr "Подтип уведомления об отсутствии"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_remaining_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_remaining_display
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_remaining_display
+msgid "Allocation Remaining Display"
+msgstr "Отображение остатка дней"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__allocation_id
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#, python-format
+msgid "Allocation Request"
+msgstr "Запрос на отсутствие"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+msgid "Allocation Requests"
+msgstr "Заявки на отсутствие"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
+msgid "Allocation Second Approve"
+msgstr "Второе подтверждение отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Allocation Type"
+msgstr "Тип планируемого отсутствия"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation of %(allocation_name)s : %(duration).2f %(duration_type)s to "
+"%(person)s"
+msgstr "%(allocation_name)s : %(duration).2f %(duration_type)s %(person)s"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
+msgid "Allocation on"
+msgstr "Отсутствие"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Allocation request must be confirmed in order to approve it."
+msgstr "Для утверждения запроса на отсутствие, его необходимо подтвердить."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request must be confirmed or validated in order to refuse it."
+msgstr ""
+"Для того чтобы отклонить запрос на отсутствие, его необходимо подтвердить "
+"или проверить."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request must be in Draft state (\"To Submit\") in order to "
+"confirm it."
+msgstr ""
+"Чтобы подтвердить запрос на отсутсвие, он должен быть в статусе Черновик "
+"(\"Отправить на согласование\")."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Allocation request state must be \"Refused\" or \"To Approve\" in order to "
+"be reset to Draft."
+msgstr ""
+"Статус запроса на отсутствие должен быть \"Отклонен\" или \"Одобрить\", "
+"чтобы ее можно было сбросить на Черновик."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
+msgid "Allocation to Approve"
+msgstr "Отсутствие для согласования"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_count
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_approve_allocations
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
+msgid "Allocations"
+msgstr "Запланированные отcутствия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Allow To Attach Supporting Document"
+msgstr "Разрешить приложить подтверждающий документ"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
+msgid ""
+"Allow to create requests in batchs:\n"
+"- By Employee: for a specific employee\n"
+"- By Company: all employees of the specified company\n"
+"- By Department: all employees of the specified department\n"
+"- By Employee Tag: all employees of the specific employee group category"
+msgstr ""
+"Позвольте создавать запросы группой: - Сотрудником: для конкретного "
+"сотрудника - Компанией: всех работников указанной компании - Отделом: все "
+"сотрудники указанного отдела - По тегу Работник: все работники конкретной "
+"категории группы работников"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Analyze from"
+msgstr "Анализировать из"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_evaluation_report_graph
+msgid "Appraisal Analysis"
+msgstr "Аттестационный анализ"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Approval"
+msgstr "Согласование"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
+msgid "Approvals"
+msgstr "Согласования"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+#, python-format
+msgid "Approve"
+msgstr "Одобрить"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
+msgid "Approve Allocations"
+msgstr "Согласовать отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__approved
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__validate
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__validate
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "Approved"
+msgstr "Одобрено"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Approved Allocations"
+msgstr "Согласованные отсутствия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+msgid "Approved Requests"
+msgstr " Одобренные заявки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Approved Time Off"
+msgstr "Одобренный отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
+msgid "Approved by Time Off Officer"
+msgstr "Одобрено сотрудником отдела кадров"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Approved:"
+msgstr "Одобрено:"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__apr
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__apr
+msgid "April"
+msgstr "Апрель"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__archive_allocation
+msgid "Archive Employee Allocations"
+msgstr "Поместите в архив отсутствия сотрудника"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Archived"
+msgstr "Архивировано"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Archived Time Off"
+msgstr "Архивное отсутствие"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#, python-format
+msgid "Are you sure you want to delete this record ?"
+msgstr "Вы действительно хотите удалить эту запись?"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
+msgid "At the end of the calendar year, unused accruals will be"
+msgstr "В конце календарного года неиспользованный отпуск будет"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "At the end of the year, unused accruals will be"
+msgstr "В конце года неиспользованный отпуск будет"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids
+msgid "Attach File"
+msgstr "Прикрепить файл"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_attachment_count
+msgid "Attachment Count"
+msgstr "Количество вложений"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__attachment_ids
+msgid "Attachments"
+msgstr "Вложения"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__aug
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__aug
+msgid "August"
+msgstr "Август"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Available"
+msgstr "Доступно"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
+#, python-format
+msgid "Away"
+msgstr "Далеко"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
+msgid "Based on worked time"
+msgstr "На основе отработанного времени"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Сотрудник"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__black
+msgid "Black"
+msgstr "Черный"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__blue
+msgid "Blue"
+msgstr "Синий"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
+msgid "Both Approved and Confirmed"
+msgstr "Одобрено и утверждено"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__brown
+msgid "Brown"
+msgstr "Коричневый"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__company
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__holiday_type__company
+msgid "By Company"
+msgstr "По компании "
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__department
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__holiday_type__department
+msgid "By Department"
+msgstr "По отделу"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__employee
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__holiday_type__employee
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__holiday_type__employee
+msgid "By Employee"
+msgstr "По сотруднику"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__category
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__holiday_type__category
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__holiday_type__category
+msgid "By Employee Tag"
+msgstr "По тегу сотрудника"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
+msgid "By Employee's Approver"
+msgstr "По руководителю"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
+msgid "By Employee's Approver and Time Off Officer"
+msgstr "По руководителю и сотруднику отдела кадров"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
+msgid ""
+"By Employee: Allocation/Request for individual Employee, By Employee Tag: "
+"Allocation/Request for group of employees in category"
+msgstr ""
+"По сотруднику: Отсутствие/Запрос для каждого сотрудника, По тегу сотрудника:"
+" Отсутствие/Запрос для группы сотрудников в категории"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
+msgid "By Time Off Officer"
+msgstr "По сотруднику отдела кадров"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_approve
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__can_approve
+msgid "Can Approve"
+msgstr "Можно одобрить"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_cancel
+msgid "Can Cancel"
+msgstr "Можно отменить"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__can_reset
+msgid "Can reset"
+msgstr "Можно сбросить"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
+msgid "Cancel Future Leaves"
+msgstr "Отменить будущие отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
+msgid "Cancel Leave Wizard"
+msgstr "Мастер отмены отпуска"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
+#, python-format
+msgid "Cancel Time Off"
+msgstr "Отменить отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
+msgid "Cancel all time off after this date."
+msgstr "Отменить все отсутствия после этой даты."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Canceled"
+msgstr "Отменено"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__cancel
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__cancel
+msgid "Cancelled"
+msgstr "Отменено"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Cancelled Time Off"
+msgstr "Отмененные отгулы"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__category_id
+msgid "Category of Employee"
+msgstr "Категория сотрудника"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__maximum_leave
+msgid "Choose a cap for this accrual. 0 means no cap."
+msgstr "Выберите лимит для этого начисления. 0 означает отсутствие лимита."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__responsible_id
+msgid ""
+"Choose the Time Off Officer who will be notified to approve allocation or "
+"Time Off request"
+msgstr ""
+"Выберите сотрудника, который будет уведомлен о необходимости утвердить "
+"запрос на отсутствие."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Click on any date or on this button to request a time-off"
+msgstr "Нажмите на любую дату или на эту кнопку, чтобы запросить отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__color
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__color
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Color"
+msgstr "Цвет"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__color_name
+msgid "Color in Report"
+msgstr "Цвет в отчете"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__company_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
+msgid "Company"
+msgstr "Компания"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
+msgid "Company Mode"
+msgstr "Режим работы компании"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_comp
+msgid "Compensatory Days"
+msgstr "Компенсационные дни"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
+msgid "Configuration"
+msgstr "Настройки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
+msgid "Confirmed"
+msgstr "Подтвержден"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Congrats, we can see that your request has been validated."
+msgstr "Поздравляем, ваш запрос был одобрен."
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid ""
+"Count of allocations for this time off type (approved or waiting for "
+"approbation) with a validity period starting this year."
+msgstr ""
+"Количество запросов на отсутствие для данного типа отгулов (утвержденных или"
+" ожидающих утверждения) со сроком действия, начинающимся в этом году."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Count of plans linked to this time off type."
+msgstr "Количество планов, связанных с данным типом отсутствий."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid ""
+"Count of time off requests for this time off type (approved or waiting for "
+"approbation) with a start date in the current year."
+msgstr ""
+"Количество заявок на отгулы данного типа (утвержденные или ожидающие "
+"утверждения) с датой начала в текущем году."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
+msgid "Cover Image"
+msgstr "Обложка"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
+msgid "Create a new time off allocation"
+msgstr "Создать запись о плановом отсутствии"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
+msgid "Create a new time off allocation request"
+msgstr "Создать заявку на плановое отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__create_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__create_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_date
+msgid "Created on"
+msgstr "Дата создания"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__current_leave_state
+msgid "Current Time Off Status"
+msgstr "Текущий статус отгула"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
+msgid "Current Time Off Type"
+msgstr "Текущий тип отсутствий"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Current Year"
+msgstr "Текущий год"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_hours
+msgid "Custom Hours"
+msgstr "С точностью до часа"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
+msgid "Daily"
+msgstr "Ежедневно"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_new_request
+msgid "Dashboard"
+msgstr "Календарь"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Date"
+msgstr "Дата"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
+msgid "Date Period Start"
+msgstr "Дата начала периода"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__lastcall
+msgid "Date of the last accrual allocation"
+msgstr "Дата последней заявки на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
+msgid "Date of the next accrual allocation"
+msgstr "Дата следующего отсутствия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Dates"
+msgstr "Даты"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__day
+msgid "Day"
+msgstr "День"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__days
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#, python-format
+msgid "Days"
+msgstr "Дни"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__dec
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__dec
+msgid "December"
+msgstr "Декабрь"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+#, python-format
+msgid "Delete"
+msgstr "Удалить"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/hooks.js:0
+#, python-format
+msgid "Delete Confirmation"
+msgstr "Удалить подтверждение"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
+msgid "Delete Time Off"
+msgstr "Удалить отгул"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_department
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__department_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__department_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__department_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__department_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__department_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Department"
+msgstr "Подразделение"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "Department search"
+msgstr "Поиск подразделения"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__department_ids
+msgid "Departments"
+msgstr "Подразделения"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Мастер увольнения"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__name
+msgid "Description"
+msgstr "Описание"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__name_validity
+msgid "Description with validity"
+msgstr "Описание с указанием срока действия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
+msgid "Discard"
+msgstr "Отменить"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__display_name
+msgid "Display Name"
+msgstr "Тип отсутствия "
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Display Option"
+msgstr "Отобразить опцию"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid "Display Time Off in Calendar"
+msgstr "Отобразить отгул в календаре"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "Dropdown menu"
+msgstr "Выпадающее меню"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/resource.py:0
+#, python-format
+msgid ""
+"Due to a change in global time offs, you have been granted %s day(s) back."
+msgstr ""
+"В связи с изменением в производственном календаре, вам был возвращен %s "
+"дней."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Duration"
+msgstr "Длительность"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_days
+msgid "Duration (Days)"
+msgstr "Продолжительность (дни)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days_display
+msgid "Duration (days)"
+msgstr "Длительность (дни)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_hours_display
+msgid "Duration (hours)"
+msgstr "Продолжительность (часы)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_days_display
+msgid "Duration in days"
+msgstr "Продолжительность в днях"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days
+msgid "Duration in days. Reference field to use when necessary."
+msgstr ""
+"Продолжительность в днях. Поле ссылки для использования при необходимости."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_display
+msgid "Duration in hours"
+msgstr "Продолжительность в часах"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+msgid "Edit Allocation"
+msgstr "Редактировать планируемое отсутствие"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "Edit Time Off"
+msgstr "Редактировать отгул"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_employee
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__employee_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__employee_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
+msgid "Employee"
+msgstr "Сотрудник"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__active_employee
+msgid "Employee Active"
+msgstr "Сотрудник активен"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
+msgid "Employee Requests"
+msgstr "Заявки сотрудников"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__category_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__category_id
+msgid "Employee Tag"
+msgstr "Тег сотрудника"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
+msgid "Employee(s)"
+msgstr "Сотрудник(и)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__employees_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__employee_ids
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Employees"
+msgstr "Сотрудники"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__end_date
+msgid "End Date"
+msgstr "Дата окончания"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
+msgid "Extra Days Requests Allowed"
+msgstr "Запросы на дополнительные дни разрешены"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__employee_requests
+msgid ""
+"Extra Days Requests Allowed: User can request an allocation for himself.\n"
+"\n"
+"        Not Allowed: User cannot request an allocation."
+msgstr ""
+"Запросы на дополнительные дни разрешены: Пользователь может сделать запрос на отсутствие для себя.\n"
+"\n"
+" Не разрешено: Пользователь не может сделать запрос на отсутствие."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__feb
+msgid "February"
+msgstr "Февраль"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
+msgid ""
+"Field allowing to see the allocation duration in days or hours depending on "
+"the type_request_unit"
+msgstr ""
+"Поле позволяет видеть длительность отсутствия в днях или часах в зависимости"
+" от type_request_unit"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
+msgid ""
+"Field allowing to see the leave request duration in days or hours depending "
+"on the leave_type_request_unit"
+msgstr ""
+"Поле позволяет видеть продолжительность запроса на отпуск в днях и часах в "
+"зависимости от leave_type_request_unit"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid ""
+"Filters only on allocations that belong to an time off type that is 'active'"
+" (active field is True)"
+msgstr ""
+"Фильтрует только те запросы, которые принадлежат к типу отсутствий со "
+"значением \"активно\"."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+msgid ""
+"Filters only on requests that belong to an time off type that is 'active' "
+"(active field is True)"
+msgstr ""
+"Фильтрует только те запросы, которые принадлежат к типу отсутствий со "
+"значением \"активно\"."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__approver_id
+msgid "First Approval"
+msgstr "Первое согласование"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_day
+msgid "First Day"
+msgstr "Первый день"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_day_display
+msgid "First Day Display"
+msgstr "Отобразить первый день"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_month
+msgid "First Month"
+msgstr "Первый месяц"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_month_day
+msgid "First Month Day"
+msgstr "День первого месяца"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__first_month_day_display
+msgid "First Month Day Display"
+msgstr "Отобразить день первого месяца"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_follower_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_follower_ids
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_partner_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Подписчики (Партнеры)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Иконка со шрифтом Font awesome, например. fa-tasks"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "Не найдены данные в форме, отчет не сформирован"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
+msgid "Frequency"
+msgstr "Частота"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__fri
+msgid "Friday"
+msgstr "Пятница"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__start_datetime
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "From"
+msgstr "C"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "From %(date_from)s To %(date_to)s - %(state)s"
+msgstr "С %(date_from)s по %(date_to)s - %(state)s"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_from
+msgid "From Date"
+msgstr "С даты"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "From:"
+msgstr "С:"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Future Activities"
+msgstr "Будущие действия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Group By"
+msgstr "Группировка"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
+msgid "Group Time Off"
+msgstr "Сгруппировать отгулы"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.action_hr_approval
+msgid "HR Approval"
+msgstr "Согласование HR"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__report_note
+msgid "HR Comments"
+msgstr "HR комментарии"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
+msgid "HR Time Off Summary Report By Employee"
+msgstr "Сводный отчет об отгулах по сотрудникам"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__half_day
+msgid "Half Day"
+msgstr "Полдня"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_message
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__has_message
+msgid "Has Message"
+msgstr "Есть сообщение"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__has_stress_day
+msgid "Has Stress Day"
+msgstr "День стресса"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__has_valid_allocation
+msgid "Has Valid Allocation"
+msgstr "Имеет действующий запрос на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_hatched
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_hatched
+msgid "Hatched"
+msgstr "Заштриховано "
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__multi_employee
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__multi_employee
+msgid "Holds whether this allocation concerns more than 1 employee"
+msgstr ""
+"Указывает, касается ли данный запрос на отсутствие более чем 1 сотрудника"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__holiday_status
+msgid "Holiday Status"
+msgstr "Статус праздника"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
+msgid "Holidays Summary Report"
+msgstr "Сводный отчет о праздниках"
+
+#. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_home_working
+msgid "Home Working"
+msgstr "Работа удаленно"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_from
+msgid "Hour from"
+msgstr "Время с"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
+msgid "Hour to"
+msgstr "часов до"
+
+#. module: hr_holidays
+#. odoo-javascript
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__hours
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__request_unit__hour
+#, python-format
+msgid "Hours"
+msgstr "Часы"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__hr_icon_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__hr_icon_display
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__hr_icon_display
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__hr_icon_display
+msgid "Hr Icon Display"
+msgstr "Отображение значка HR"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_exception_icon
+msgid "Icon"
+msgstr "Иконка"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Значок, обозначающий действие исключения."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
+msgid "If Accrual Allocation: Days given by the accrual system."
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
+msgid ""
+"If Accrual Allocation: Number of hours allocated in addition to the ones you"
+" will get via the accrual' system."
+msgstr ""
+"При расчете: количество часов, выделенных в дополнение к тем, которые вы "
+"получите через систему расчета."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+"Если флажок установлен, новые сообщения будут требовать вашего внимания."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Если флажок установлен, некоторые сообщения имеют ошибку доставки."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
+msgid ""
+"If checked, the rate will be prorated on time off type where type is set on "
+"Working Time in the configuration."
+msgstr ""
+"Если флажок установлен, ставка будет начисляться по типу отсутствий, где тип"
+" установлен на Рабочее время в настройках."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__active_employee
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Если для поля Активно установлено значение НЕТ, это позволит скрыть запись "
+"ресурса, не удаляя ее."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the time off "
+"type without removing it."
+msgstr ""
+"Если для поля Активно установлено значение НЕТ, это позволит скрыть тип "
+"отсутствий, не удаляя его."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__parent_id
+msgid "If this field is empty, this level is the first one."
+msgstr "Если это поле пустое, то данный уровень является первым."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
+msgid ""
+"If you want to change the number of days you should use the 'period' mode"
+msgstr ""
+"Если вы хотите изменить количество дней, вы должны использовать режим "
+"'период'"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
+msgid "Immediately"
+msgstr "Сейчас"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
+msgid ""
+"Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level\n"
+"                After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds"
+msgstr ""
+"Сейчас: Когда дата соответствует новому уровню, количество дней автоматически рассчитывается, предоставляется и вы переходите на новый уровень\n"
+"                После периода расчета: Когда расчет завершен (неделя, месяц) и предоставлен, вы переходите на следующий уровень, если дата отсутствия соответствует"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Incorrect state for new allocation"
+msgstr "Неправильное состояние для нового распределения"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_is_follower
+msgid "Is Follower"
+msgstr "Подписчик"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
+msgid "Is Officer"
+msgstr "Сотрудник"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__unpaid
+msgid "Is Unpaid"
+msgstr "Без оплаты"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__ivory
+msgid "Ivory"
+msgstr "Слоновой кости"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__jan
+msgid "January"
+msgstr "Январь"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__job_id
+msgid "Job"
+msgstr "Должность"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "Job Position"
+msgstr "Должность"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__jul
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__jul
+msgid "July"
+msgstr "Июль"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jun
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__jun
+msgid "June"
+msgstr "Июнь"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
+msgid "Keep track of your PTOs."
+msgstr "Учет отсутствий "
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__time_type
+msgid "Kind of Time Off"
+msgstr "Вид отгула"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day____last_update
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__write_uid
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__write_date
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Late Activities"
+msgstr "Просроченные действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lavender
+msgid "Lavender"
+msgstr "Бледно-лиловый"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__leave_id
+msgid "Leave"
+msgstr "Отпуск"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
+msgid "Leave Count"
+msgstr "Подсчет дней отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_id
+#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__holiday_id
+msgid "Leave Request"
+msgstr "Заявка на отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__leave_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_status_id
+msgid "Leave Type"
+msgstr "Тип отгула"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
+msgid "Leave Validation"
+msgstr "Подтверждение отпуска"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
+msgid "Leaves Taken"
+msgstr "Взятые отпуска"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
+msgid "Left"
+msgstr "Осталось"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Left:"
+msgstr "Осталось:"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Legend"
+msgstr "Легенда"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Let's approve it"
+msgstr "Подтвердить"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Let's discover the Time Off application"
+msgstr "Давайте познакомимся с приложением Отсутствие"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Let's go validate it"
+msgstr "Подтвердите"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Let's try to create a Sick Time Off, select it in the list"
+msgstr "Давайте попробуем оформить больничный, выберите его в списке"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_ids
+msgid "Level"
+msgstr "Уровень"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Level <span class=\"o_hr_holidays_plan_level_level\"/>"
+msgstr "Уровень <span class=\"o_hr_holidays_plan_level_level\"/>"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
+msgid "Level Transition"
+msgstr "Переход на другой уровень"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
+msgid "Levels"
+msgstr "Уровни"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightblue
+msgid "Light Blue"
+msgstr "Светло-синий"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightcoral
+msgid "Light Coral"
+msgstr "Светло-коралловый"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightcyan
+msgid "Light Cyan"
+msgstr "Светло-голубой"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightgreen
+msgid "Light Green"
+msgstr "Светло-зеленый"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightpink
+msgid "Light Pink"
+msgstr "Светло-розовый"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightsalmon
+msgid "Light Salmon"
+msgstr "Светлый оранжево-розовый"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightyellow
+msgid "Light Yellow"
+msgstr "Светло-желтый"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Limit of"
+msgstr "Предел"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave
+msgid "Limit to"
+msgstr "Предел"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__linked_request_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__linked_request_ids
+msgid "Linked Requests"
+msgstr "Связанные заявки"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__lost
+msgid "Lost"
+msgstr "Утрачен"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__magenta
+msgid "Magenta"
+msgstr "Пурпурный"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Основное вложение"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__manager_id
+msgid "Manager"
+msgstr "Руководитель"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.action_manager_approval
+msgid "Manager Approval"
+msgstr "Согласование руководителя"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__mar
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__mar
+msgid "March"
+msgstr "Март"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Mark as Draft"
+msgstr "Пометить как черновик"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
+msgid "Max Leaves"
+msgstr "Максимум отпусков"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Max Time Off:"
+msgstr "Максимум отгулов"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
+msgid "Maximum Allowed"
+msgstr "Максимум разрешено"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__remaining_leaves
+msgid "Maximum Time Off Allowed - Time Off Already Taken"
+msgstr "Максимум разрешено отгулов - отгулы, которые уже взяты"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
+msgid ""
+"Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
+"Approval"
+msgstr ""
+"Максимум разрешено отгулов - отгулы, которые уже взяты - отгулы, которые "
+"ждут подтверждения"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
+msgid "Maximum amount of accruals to transfer"
+msgstr "Максимальное количество дней для переноса"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__may
+msgid "May"
+msgstr "Май"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
+msgid "Meet the time off dashboard."
+msgstr "Ознакомьтесь с графиком отсутствий."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
+msgid "Meeting"
+msgstr "Встреча"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
+msgid "Message Delivery error"
+msgstr "Ошибка доставки сообщения"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_mail_message_subtype
+msgid "Message subtypes"
+msgstr "Подтип сообщения"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_ids
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_ids
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Mode"
+msgstr "Способ"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__mon
+msgid "Monday"
+msgstr "Понедельник"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Month"
+msgstr "Месяц"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__monthly
+msgid "Monthly"
+msgstr "Ежемесячно"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__am
+msgid "Morning"
+msgstr "Утро"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__multi_employee
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__multi_employee
+msgid "Multi Employee"
+msgstr "Несколько сотрудников"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Крайний срок моего действия"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
+#: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "My Allocations"
+msgstr "Мои плановые отсутствия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "My Department"
+msgstr "Мой отдел"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+msgid "My Requests"
+msgstr "Мои заявки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "My Team"
+msgstr "Моя команда"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "My Time Off"
+msgstr "Мои отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__name
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__name
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_leaves_tree_inherit
+msgid "Name"
+msgstr "Имя"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Need Second Approval"
+msgstr "Требуется повторить согласование"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__draft
+#, python-format
+msgid "New"
+msgstr "Новый"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "New %(leave_type)s Request created by %(user)s"
+msgstr "%(leave_type)s Заявка создана %(user)s"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#, python-format
+msgid "New Allocation"
+msgstr "Новое планируемое отсутствие"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"New Allocation Request created by %(user)s: %(count)s Days of "
+"%(allocation_type)s"
+msgstr ""
+"Заявка на отсутствие создана %(user)s: %(count)s дней%(allocation_type)s"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
+#, python-format
+msgid "New Time Off"
+msgstr "Новое отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Встреча в календаре для следующего действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Крайний срок следующего действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
+msgid "Next Activity Summary"
+msgstr "Краткое описание следующего действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_id
+msgid "Next Activity Type"
+msgstr "Тип следующего действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__requires_allocation__no
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid "No Limit"
+msgstr "Без ограничений"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__no_validation
+msgid "No Validation"
+msgstr "Без проверки"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+#: model_terms:ir.actions.server,help:hr_holidays.act_hr_employee_holiday_request
+msgid "No data to display"
+msgstr "Нет данных для отображения"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_department
+msgid "No data yet!"
+msgstr "Данных пока нет!"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid "No limit"
+msgstr "Без ограничений"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "No rule has been set up for this accrual plan."
+msgstr "Для этого плана расчетов не установлено никаких правил."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no
+msgid "No validation needed"
+msgstr "Проверка не требуется"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
+#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
+#, python-format
+msgid "None"
+msgstr "Нет"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
+msgid "Not Allowed"
+msgstr "Не допускаются"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__nov
+msgid "November"
+msgstr "Ноябрь"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_hours_text
+msgid "Number Of Hours Text"
+msgstr "Кол-во часов текстом"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кол-во действий"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__number_of_days
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__number_of_days
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__number_of_days
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
+msgid "Number of Days"
+msgstr "Кол-во дней"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leaves_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
+msgid "Number of Time Off"
+msgstr "Кол-во отгулов"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
+msgid ""
+"Number of days of the time off request according to your working schedule. "
+"Used for interface."
+msgstr ""
+"Количество дней запроса на отсутствие в соответствии с вашим рабочим "
+"графиком. Используется для интерфейса."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
+msgid ""
+"Number of days of the time off request. Used in the calculation. To manually"
+" correct the duration, use this field."
+msgstr ""
+"Количество дней запроса на отсутствие. Используется при расчете. Чтобы в "
+"ручную скорректировать продолжительность, используйте это поле."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error_counter
+msgid "Number of errors"
+msgstr "Количество ошибок"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours_display
+msgid ""
+"Number of hours of the time off request according to your working schedule. "
+"Used for interface."
+msgstr ""
+"Количество часов запроса на отсутствие в соответствии с вашим рабочим "
+"графиком. Используется для интерфейса."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Количество сообщений, требующих действия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error_counter
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Количество сообщений с ошибкой отправки"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__oct
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__oct
+msgid "October"
+msgstr "Октябрь"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid "Off Till"
+msgstr "Отсутствует до"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "Off Today"
+msgstr "Отсутствует сегодня"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_user
+msgid "Officer : Manage all requests"
+msgstr "Сотрудник: управлять всеми заявками"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid "On Leave"
+msgstr "В отпуске"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_absent
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_absent
+msgid "On leave"
+msgstr "В отпуске"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
+#, python-format
+msgid "Online"
+msgstr "Онлайн"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only a Time Off Manager can approve/refuse its own requests."
+msgstr "Только менеджер по отгулам может утверждать/отклонять заявки."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only a Time Off Manager can reset a refused leave."
+msgstr "Только менеджер по отгулам может восстановить запрос на отпуск."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only a Time Off Manager can reset a started leave."
+msgstr "Только менеджер по отгулам может сбросить начатый отпуск."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only a Time Off Manager can reset other people leaves."
+msgstr "Только менеджер по отгулам может сбросить отгулы других людей."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Only a time off Manager can approve its own requests."
+msgstr "Только менеджер по отгулам может подтвердить свои заявки."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Only a time off Manager can reset other people allocation."
+msgstr "Только менеджер по отгулам может восстановить заявку на отсутствие."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Only a time off Officer/Responsible or Manager can approve or refuse time "
+"off requests."
+msgstr ""
+"Только кадровик или руководитель могут утверждать или отклонять заявки на "
+"отгулы."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
+msgid "Open"
+msgstr "Открытые"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операция не поддерживается"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
+#, python-format
+msgid "Out of office"
+msgstr "Не в офисе"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/models/partner.js:0
+#, python-format
+msgid "Out of office until %s"
+msgstr "Не в офисе до %s"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
+msgid "Overview"
+msgstr "График отсутствий"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_cl
+msgid "Paid Time Off"
+msgstr "Оплачиваемый отпуск"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__parent_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__parent_id
+msgid "Parent"
+msgstr "Родитель"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
+msgid "Parental Leaves"
+msgstr "Отпуск по уходу за ребенком"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
+msgid "Period"
+msgstr "Период"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__planned
+msgid "Planned"
+msgstr "Запланировано"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Planned:"
+msgstr "Запланировано:"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_present
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_present
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_present
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid "Present but on leave"
+msgstr "Присутствует, но находится в отпуске"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__parent_id
+msgid "Previous Level"
+msgstr "Предыдущий уровень"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
+msgid "Print"
+msgstr "Печать"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
+msgid "Provide a reason for cancellation of an approved time off"
+msgstr "Указать причину отмены подтвержденного отгула"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
+msgid "Public"
+msgstr "Публичный"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Public Holiday"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
+#, python-format
+msgid "Public Holidays"
+msgstr "Праздники"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
+msgid "Rate"
+msgstr "Ставка"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__reason
+msgid "Reason"
+msgstr "Причина"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__notes
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__notes
+msgid "Reasons"
+msgstr "Причины"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__red
+msgid "Red"
+msgstr "Красный"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+#, python-format
+msgid "Refuse"
+msgstr "Отказать"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__refuse
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__refuse
+#, python-format
+msgid "Refused"
+msgstr "Отказано"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
+msgid "Regular Allocation"
+msgstr "Стандартное отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Пользователь, управляющий доступом к ресурсу."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
+msgid "Remaining Days"
+msgstr "Оставшиеся дни"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__remaining_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
+msgid "Remaining Paid Time Off"
+msgstr "Оставшийся оплачиваемый отпуск"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__remaining_leaves
+msgid "Remaining Time Off"
+msgstr "Оставшийся отгул"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid "Remaining leaves"
+msgstr "Оставшиеся отгулы"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__archive_allocation
+msgid "Remove employee from existing accrual plans."
+msgstr "Исключить сотрудника из плана расчетов."
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
+msgid "Reporting"
+msgstr "Отчетность"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+msgid "Request Allocation"
+msgstr "Запрос на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
+msgid "Request End Date"
+msgstr "Конечная дата запроса"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from
+msgid "Request Start Date"
+msgstr "Начальная дата запроса"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
+msgid "Request Time off"
+msgstr "Запросить отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__leave_type
+msgid "Request Type"
+msgstr "Тип запроса"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
+msgid "Requested (Days/Hours)"
+msgstr "Запрошенные (дни/часы)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
+msgid "Requires allocation"
+msgstr "Требует запрос на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
+msgid "Resource Time Off"
+msgstr "Отгул ресурса"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Детали отгула ресурса"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Рабочее время ресурса"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
+msgid "Responsible Time Off Officer"
+msgstr "Ответственный сотрудник отдела кадров"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_user_id
+msgid "Responsible User"
+msgstr "Ответственный"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Rules"
+msgstr "Правила"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Run until"
+msgstr "запуск в"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sat
+msgid "Saturday"
+msgstr "Суббота"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
+#, python-format
+msgid "Save"
+msgstr "Сохранить"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
+msgid "Search Time Off"
+msgstr "Поиск отгула"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Search Time Off Type"
+msgstr "Поиск типа отсутствий"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Search allocations"
+msgstr "Поиск плановых отсутствий"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__second_approver_id
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__validate1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__validate1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__validate1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__validate1
+msgid "Second Approval"
+msgstr "Повторное согласование"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day
+msgid "Second Day"
+msgstr "Второй день"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day_display
+msgid "Second Day Display"
+msgstr "Отображение второго дня"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month
+msgid "Second Month"
+msgstr "Второй месяц"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day
+msgid "Second Month Day"
+msgstr "День второго месяца"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month_day_display
+msgid "Second Month Day Display"
+msgstr "Отображение дня второго месяца"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Select Time Off"
+msgstr "Выбрать отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
+msgid "Select Time Off Type"
+msgstr "Выбрать тип отсутствий"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__validation_type
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allocation_validation_type
+msgid ""
+"Select the level of approval needed in case of request by employee\n"
+"        - No validation needed: The employee's request is automatically approved.\n"
+"        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer."
+msgstr ""
+"Выберите уровень утверждения, необходимый в случае запроса на отсутствие\n"
+" - Утверждение не требуется: Запрос сотрудника утверждается автоматически. \n"
+" - Утверждается сотрудником отдела кадров: Запрос на отсутствие должен быть вручную одобрен кадровиком."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Select the request you just created"
+msgstr "Выберите созданный запрос на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_res_users__leave_manager_id
+msgid ""
+"Select the user responsible for approving \"Time Off\" of this employee.\n"
+"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+msgstr ""
+"Выберите пользователя, ответственного за утверждение \"Отгулов\" данного сотрудника.\n"
+"Если это поле пустое, утверждение производится администратором или уполномоченным лицом (определяется в настройках/пользователях)."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__sep
+msgid "September"
+msgstr "Сентябрь"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__sequence
+msgid "Sequence"
+msgstr "Нумерация"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__sequence
+msgid "Sequence is generated automatically by start time delta."
+msgstr "Последовательность формируется автоматически по времени начала."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
+msgid ""
+"Set a maximum of days an allocation keeps at the end of the year. 0 for no "
+"limit."
+msgstr ""
+"Установите максимальное количество дней для отсутствия, которое хранится до "
+"конце года. 0 - без ограничения."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
+msgid "Show Transition Mode"
+msgstr "Показать режим перехода"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Показать все записи, у которых дата следующего действия не превышает текущей"
+" даты"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_sl
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
+msgid "Sick Time Off"
+msgstr "Отсутствие по болезни"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
+msgid ""
+"Specify if this accrual plan can only be used with this Time Off Type.\n"
+"                Leave empty if this accrual plan can be used with any Time Off Type."
+msgstr ""
+"Укажите, можно ли использовать этот план расчета только с данным типом отгулов.\n"
+"Оставьте пустым, если этот план расчета можно использовать с любым типом отсутствий."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__date_from
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__start_date
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+msgid "Start Date"
+msgstr "Дата начала"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__start_count
+msgid "Start after"
+msgstr "Начать после"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Starts"
+msgstr "Начинается"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "Starts immediately after allocation start date"
+msgstr "Начинается сразу после даты начала отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__state
+msgid "State"
+msgstr "Статус"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "State is now confirmed. We can go back to the calendar"
+msgstr "Статус подтвержден. Теперь можно вернуться к календарю"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__state
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__state
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Status"
+msgstr "Статус"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_state
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Статус основан на плановых действиях\n"
+"Просрочено: срок исполнения истек\n"
+"Сегодня: выполнить сегодня\n"
+"Запланировано: срок в будущем."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: model:ir.model,name:hr_holidays.model_hr_leave_stress_day
+#, python-format
+msgid "Stress Day"
+msgstr "День борьбы со стрессом"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_stress_day_action
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_stress_day_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_stress_day_view_search
+#, python-format
+msgid "Stress Days"
+msgstr "Запрещенные дни"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_striked
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_striked
+msgid "Striked"
+msgstr "Размещено"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid "Submit your request"
+msgstr "Отправить запрос"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "Такая группировка не допускается."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Sum"
+msgstr "Сумма"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_leaves_taken
+msgid "Sum of validated and non validated time off requests."
+msgstr "Сумма подтвержденных и не подтвержденных заявок на отгулы."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sun
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids_count
+msgid "Supported Attachment Ids Count"
+msgstr "Кол-во идентификаторов вложений"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_support_document
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__support_document
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "Supporting Document"
+msgstr "Подтверждающий документ"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Supporting Documents"
+msgstr "Подтверждающие документы"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__type_request_unit
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
+msgid "Take Time Off in"
+msgstr "Взять отгул"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__taken
+#, python-format
+msgid "Taken"
+msgstr "Взято"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__taken_leave_ids
+msgid "Taken Leave"
+msgstr "Взятый отпуск"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
+msgid ""
+"The accrual starts after a defined period from the allocation start date. "
+"This field defines the number of days, months or years after which accrual "
+"is used."
+msgstr ""
+"Расчет начинается по истечении определенного периода с даты начала работы "
+"сотрудника. Это поле определяет количество дней, месяцев или лет, после "
+"которых используется расчет."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color
+msgid ""
+"The color selected here will be used in every screen with the time off type."
+msgstr ""
+"Выбранный здесь цвет будет использоваться на всех экранах с данным типом "
+"отсутствий."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_check_dates
+msgid "The dates you've set up aren't correct. Please check them."
+msgstr "Установленные даты не верны. Пожалуйста, проверьте еще раз."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
+msgid ""
+"The distinction between working time (ex. Attendance) and absence (ex. "
+"Training) will be used in the computation of Accrual's plan rate."
+msgstr ""
+"Различие между рабочим временем (например, посещение) и отсутствием "
+"(например, обучение) будет использоваться при расчете ставки "
+"неиспользованных дней отпуска."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
+msgid "The duration must be greater than 0."
+msgstr "Продолжительность должна быть больше 0."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_type_value
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_value
+msgid ""
+"The employee, department, company or employee category of this request is "
+"missing. Please make sure that your user login is linked to an employee."
+msgstr ""
+"Категория этого сотрудника, отдела, компании для этого запроса отсутствует. "
+"Убедитесь, что ваша учетная запись связана с работником."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The following employees are not supposed to work during that period:\n"
+" %s"
+msgstr ""
+"Следующие сотрудники не должны работать в этот период:\n"
+"%s"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
+msgid ""
+"The number of hours/days that will be incremented in the specified Time Off "
+"Type for every period"
+msgstr ""
+"Количество часов/дней, которое будет увеличиваться в указанном типе "
+"отсутствий за каждый период"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The number of remaining time off is not sufficient for this time off type.\n"
+"Please also check the time off waiting for validation."
+msgstr ""
+"Количество оставшихся отгулов недостаточно для данного типа отсутствий.\n"
+"Пожалуйста, проверьте также отгулы, ожидающие подтверждения."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_stress_day_date_from_after_day_to
+msgid "The start date must be anterior than the end date."
+msgstr "Дата начала должна быть раньше даты окончания."
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
+msgid "The start date must be anterior to the end date."
+msgstr "Начальная дата должна быть раньше конечной даты."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
+msgid ""
+"The status is set to 'To Submit', when a time off request is created.\n"
+"The status is 'To Approve', when time off request is confirmed by user.\n"
+"The status is 'Refused', when time off request is refused by manager.\n"
+"The status is 'Approved', when time off request is approved by manager."
+msgstr ""
+"Статус \"Отправить на согласование\" устанавливается, когда запрос на отгул создан.\n"
+" Статус \"К одобрению\", когда запрос на отгул подтвержден пользователем.\n"
+" Статус \"Отказано\", когда запрос на отгул отклонен руководителем.\n"
+" Статус \"Одобрено\", когда запрос на отгул одобрен руководителем."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
+msgid ""
+"The status is set to 'To Submit', when an allocation request is created.\n"
+"The status is 'To Approve', when an allocation request is confirmed by user.\n"
+"The status is 'Refused', when an allocation request is refused by manager.\n"
+"The status is 'Approved', when an allocation request is approved by manager."
+msgstr ""
+"Статус \"Отправить на согласование\" устанавливается, когда запрос на отсутствие создан.\n"
+"Статус \"К одобрению\", когда запрос на отсутствие подтвержден пользователем.\n"
+"Статус \"Отказано\", когда запрос на отсутствие отклонен руководителем.\n"
+"Статус \"Одобрено\", когда запрос на отсутствие одобрен руководителем."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "The time off has been automatically approved"
+msgstr "Отгул был автоматически одобрен"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "The time off has been canceled: %s"
+msgstr "Отгул был отменен:%s"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
+msgid ""
+"The type with the smallest sequence is the default value in time off request"
+msgstr ""
+"Тип отсутствий с наименьшей продолжительностью является значением по "
+"умолчанию в запросе на отсутсвие"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"This allocation have already ran once, any modification won't be effective "
+"to the days allocated to the employee. If you need to change the "
+"configuration of the allocation, cancel and create a new one."
+msgstr ""
+"Этот расчет уже был произведен, любое изменение не будет влиять на дни "
+"отгула, выделенные сотруднику. Если вам нужно изменить настройки расчета, "
+"отмените его и создайте новый."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the time off"
+msgstr ""
+"Эта область автоматически заполняется пользователем, который подтверждает "
+"отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
+msgid ""
+"This area is automatically filled by the user who validate the time off with"
+" second level (If time off type need second validation)"
+msgstr ""
+"Эта область автоматически заполняется пользователем, который подтверждает "
+"отгул на втором уровне (если тип отгула требует второго подтверждения)"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
+msgid ""
+"This area is automatically filled by the user who validates the allocation"
+msgstr ""
+"Эта область автоматически заполняется пользователем, который подтверждает "
+"отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
+msgid ""
+"This color will be used in the time off summary located in Reporting > Time "
+"off by Department."
+msgstr ""
+"Этот цвет будет использоваться в сводке отгулов, расположенной в разделе "
+"Отчетность > Отгулы по отделам."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
+msgid "This field defines the unit of time after which the accrual starts."
+msgstr "Это поле определяет единицу времени, после которой начинается расчет."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
+msgid "This indicates if it is still possible to use this type of leave"
+msgstr "Указывает можно ли использовать этот вид отпуска"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "This modification is not allowed in the current state."
+msgstr "Эти изменения не возможны для текущего статуса."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "This time off cannot be canceled."
+msgstr "Этот отгул нельзя отменить."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
+msgid ""
+"This value is given by the sum of all time off requests with a negative "
+"value."
+msgstr ""
+"Эта величина определяется суммой всех заявок на отсутствие с отрицательным "
+"значением."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
+msgid ""
+"This value is given by the sum of all time off requests with a positive "
+"value."
+msgstr ""
+"Эта величина определяется суммой всех заявок на отсутствие с положительным "
+"значением."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__thu
+msgid "Thursday"
+msgstr "Четверг"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_holiday_allocation_id
+#: model:ir.model,name:hr_holidays.model_hr_leave
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_manager_id
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
+#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
+#: model:mail.message.subtype,name:hr_holidays.mt_leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
+msgid "Time Off"
+msgstr "Отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr "Запрос на отгул"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/hr_leave_employee_type_report.py:0
+#: code:addons/hr_holidays/report/hr_leave_report.py:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_department
+#, python-format
+msgid "Time Off Analysis"
+msgstr "Анализ отсутствий"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_approval
+msgid "Time Off Approval"
+msgstr "Согласовать отгул"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
+msgid "Time Off Approver"
+msgstr "Специалист по согласованию отгулов"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_report_calendar
+msgid "Time Off Calendar"
+msgstr "Календарь отсутствий"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_employee.py:0
+#, python-format
+msgid "Time Off Dashboard"
+msgstr "График отсутствий"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
+msgid "Time Off Description"
+msgstr "Описание отсутствия"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
+msgid "Time Off Notification Subtype"
+msgstr "Подтип уведомления об отсутствиях"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
+#: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
+msgid ""
+"Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
+"                Employees request allocations to Time Off Officers (e.g. recuperation days)."
+msgstr ""
+"Кадровики выделяют сотрудникам дни отгулов (например, оплачиваемые отгулы).\n"
+"Сотрудники обращаются к кадровикам с запросом на выделение отгулов (например, дней для реабилитации)."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_request
+#: model:mail.message.subtype,description:hr_holidays.mt_leave
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_employee_view_dashboard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
+msgid "Time Off Request"
+msgstr "Запрос на отсутствие"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Time Off Requests"
+msgstr "Заявки на отсутствие"
+
+#. module: hr_holidays
+#: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
+msgid "Time Off Responsible"
+msgstr "Ответственный за отсутсвие сотрудников"
+
+#. module: hr_holidays
+#: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
+msgid "Time Off Second Approve"
+msgstr "Подтвердить отгул"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary2
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_graph
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_pivot
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
+msgid "Time Off Summary"
+msgstr "Сводка по отгулам"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_employee_type_report
+#: model:ir.model,name:hr_holidays.model_hr_leave_report
+msgid "Time Off Summary / Report"
+msgstr "Сводка/отчет по отгулам"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Time Off Taken:"
+msgstr "Отгулы:"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_leave_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_status_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__name
+#: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time Off Type"
+msgstr "Тип отсутствий"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
+#: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
+msgid "Time Off Types"
+msgstr "Типы отсутствий"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time Off of Your Team Member"
+msgstr "Отгул члена вашей команды"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
+msgid "Time Off to Approve"
+msgstr "Отгулы на утверждение"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "Time Off."
+msgstr "Отгул."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
+msgid "Time off Already Taken"
+msgstr "Отгул уже взят"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.act_hr_employee_holiday_request
+msgid "Time off Analysis"
+msgstr "Анализ отсутствий"
+
+#. module: hr_holidays
+#: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
+msgid "Time off Analysis by Employee and Time Off Type"
+msgstr "Анализ отсутствий по сотрудникам и типу отсутствий"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+msgid "Time off Taken/Total Allocated"
+msgstr "Отгулы/Всего выделено"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Time off of people you are manager of"
+msgstr "Отсутствия людей, которыми вы руководите"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Time off request must be confirmed (\"To Approve\") in order to approve it."
+msgstr ""
+"Чтобы утвердить запрос на отсутствие, его необходимо подтвердить "
+"(\"Одобрить\")."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Time off request must be confirmed in order to approve it."
+msgstr "Запрос на отгул должен быть подтвержден для того, чтобы его одобрили."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Time off request must be confirmed or validated in order to refuse it."
+msgstr ""
+"Запрос на отгул должен быть подтвержден или одобрен для того, чтобы в нем "
+"было отказано."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Time off request must be in Draft state (\"To Submit\") in order to confirm "
+"it."
+msgstr ""
+"Чтобы подтвердить запрос на отсутствие, он должен находиться в статусе "
+"Черновик (\"Отправить на согласование\")."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Time off request state must be \"Refused\" or \"To Approve\" in order to be "
+"reset to draft."
+msgstr ""
+"Статус запроса на отсутствие должен быть \"Отказано\" или \"Одобрить\", "
+"чтобы его можно было вернуть в черновик."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
+msgid "Timezone"
+msgstr "Часовой пояс"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__stop_datetime
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "To"
+msgstr "По"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__confirm
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+#, python-format
+msgid "To Approve"
+msgstr "К одобрению"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "To Approve or Approved Allocations"
+msgstr "Утвердить или одобренный расчет"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "To Approve or Need Second Approval or Approved Time Off"
+msgstr "Согласовать или требуется повторное согласование или одобренный отгул"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leave_date_to
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__leave_date_to
+msgid "To Date"
+msgstr "По дату"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__draft
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__draft
+msgid "To Submit"
+msgstr "Отправить на согласование"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+msgid "To:"
+msgstr "По:"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Today Activities"
+msgstr "Действия на сегодня"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocations_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocations_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocations_count
+msgid "Total number of allocations"
+msgstr "Общее число запросов на отсутствие"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_count
+#: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_count
+msgid "Total number of days allocated."
+msgstr "Общее количество выделенных дней."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee__remaining_leaves
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_base__remaining_leaves
+#: model:ir.model.fields,help:hr_holidays.field_hr_employee_public__remaining_leaves
+msgid ""
+"Total number of paid time off allocated to this employee, change this value "
+"to create allocation/time off request. Total based on all the time off types"
+" without overriding limit."
+msgstr ""
+"Общее количество оплачиваемых дней отдыха, предоставленных данному "
+"сотруднику; измените это значение, чтобы создать запрос на отсутствия. Общее"
+" количество на основе всех типов отсутствий без превышения лимита."
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_training
+msgid "Training Time Off"
+msgstr "Учебный отпуск"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__postponed
+msgid "Transferred to the next year"
+msgstr "Перенесен на следующий год"
+
+#. module: hr_holidays
+#: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
+msgid ""
+"Try to add some records, or make sure that there is no active filter in the "
+"search bar."
+msgstr ""
+"Попробуйте добавить несколько записей или убедитесь, что в строке поиска нет"
+" активного фильтра."
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
+msgid "Tuesday"
+msgstr "Вторник"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__bimonthly
+msgid "Twice a month"
+msgstr "Два раза в месяц"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__biyearly
+msgid "Twice a year"
+msgstr "Два раза в год"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/resource.py:0
+#, python-format
+msgid ""
+"Two public holidays cannot overlap each other for the same working hours."
+msgstr ""
+"Два праздничных дня не могут накладываться друг на друга в течение одного и "
+"того же рабочего времени."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
+msgid "Type"
+msgstr "Раздел"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Тип активности исключения в записи."
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
+msgid "Tz"
+msgstr "ТЗ"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
+msgid "Tz Mismatch"
+msgstr "Несоответствие ТЗ"
+
+#. module: hr_holidays
+#: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid
+msgid "Unpaid"
+msgstr "Без оплаты"
+
+#. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_leave_unpaid
+#: model:mail.message.subtype,name:hr_holidays.mt_leave_unpaid
+msgid "Unpaid Time Off"
+msgstr "Отпуск без оплаты"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
+msgid "Unread Messages"
+msgstr "Есть непрочитанные сообщения"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Usable:"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_users
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__user_id
+msgid "User"
+msgstr "Пользователь"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#, python-format
+msgid "User is away"
+msgstr "Пользователь отсутствует"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#, python-format
+msgid "User is online"
+msgstr "Пользователь в сети"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
+#, python-format
+msgid "User is out of office"
+msgstr "Пользователь находится вне офиса"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
+msgid "Validate"
+msgstr "Подтвердить"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
+#, python-format
+msgid "Validated"
+msgstr "Проверено"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
+msgid "Validation Type"
+msgstr "Тип подтверждения"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid "Validity Period"
+msgstr "Период действия"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+msgid "Validity Start"
+msgstr "Начало проверки"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
+msgid "Validity Stop"
+msgstr "Остановка проверки"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__violet
+msgid "Violet"
+msgstr "Фиолетовый"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
+msgid "Virtual Remaining Time Off"
+msgstr "Виртуальный остаток времени"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_leaves_taken
+msgid "Virtual Time Off Already Taken"
+msgstr "Виртуальный отгул уже взят"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__confirm
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__confirm
+msgid "Waiting Approval"
+msgstr "Ожидает согласования"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
+msgid "Waiting Second Approval"
+msgstr "Ожидает повторное согласование"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "Waiting for Approval"
+msgstr "Ожидает согласования"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__wed
+msgid "Wednesday"
+msgstr "Среда"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/year/calendar_year_renderer.js:0
+#, python-format
+msgid "Week"
+msgstr "Неделя"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__weekly
+msgid "Weekly"
+msgstr "Еженедельно"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__wheat
+msgid "Wheat"
+msgstr "Пшеничный"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
+msgid "Worked Time"
+msgstr "Отработанное время"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_stress_day__resource_calendar_id
+msgid "Working Hours"
+msgstr "Рабочие часы"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__yearly
+msgid "Yearly"
+msgstr "Ежегодно"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day
+msgid "Yearly Day"
+msgstr "День года"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day_display
+msgid "Yearly Day Display"
+msgstr "Отображение дня года"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_month
+msgid "Yearly Month"
+msgstr "Ежегодный месяц"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__requires_allocation__yes
+msgid "Yes"
+msgstr "Да"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__requires_allocation
+msgid ""
+"Yes: Time off requests need to have a valid allocation.\n"
+"\n"
+"              No Limit: Time Off requests can be taken without any prior allocation."
+msgstr ""
+"Да: Заявки на отсутствие должны иметь действующее распределение.\n"
+"\n"
+" Без ограничений: Заявки на отсутствие могут приниматься без предварительного распределения."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You are not allowed to request a time off on a Stress Day."
+msgstr "Вы не можете брать отгул в день стресса."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You can not have 2 time off that overlaps on the same day."
+msgstr ""
+"Вы не можете иметь 2 отгула, которые накладываются на один и тот же день."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You can not set two time off that overlap on the same day for the same employee.\n"
+"Existing time off:\n"
+"%s"
+msgstr ""
+"Вы не можете установить два отгула, которые пересекаются в один и тот же день для одного и того же сотрудника.\n"
+"Действующие отгулы:\n"
+"%s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You can not set two time off that overlap on the same day for the same employees.\n"
+"Existing time off:\n"
+"%s"
+msgstr ""
+"Вы не можете установить два отгула, которые пересекаются в один и тот же день для одних и тех же сотрудников.\n"
+"Действующие отгулы:\n"
+"%s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You can not set two time off that overlap on the same day.\n"
+"Existing time off:\n"
+"%s"
+msgstr ""
+"Вы не можете установить два отгула, которые пересекаются в один и тот же день.\n"
+"Действующие отгулы:\n"
+"%s"
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
+msgid "You can not start an accrual in the past."
+msgstr "Вы не можете начать расчет в прошлом."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
+#, python-format
+msgid ""
+"You can select the period you need to take off, from start date to end date"
+msgstr "Вы можете выбрать период отсутствия, от даты начала до даты окончания"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You can't manually archive/unarchive a time off."
+msgstr "Вы не можете вручную архивировать/разархивировать отгул."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot archive an allocation which is in confirm or validate state."
+msgstr ""
+"Вы не можете архивировать распределение, находящееся в состоянии "
+"подтверждения или проверки."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You cannot delete a time off assigned to several employees"
+msgstr "Вы не можете удалить отгул, предоставленный нескольким сотрудникам"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You cannot delete a time off which is in %s state"
+msgstr "Вы не можете удалить отгул, который в статусе %s"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You cannot delete a time off which is in the past"
+msgstr "Вы не можете удалить отгул, который относиться к прошлому"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"You cannot delete an allocation request which has some validated leaves."
+msgstr ""
+"Вы не можете удалить запрос на отсутствие, который имеет несколько "
+"подтвержденных отпусков."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "You cannot delete an allocation request which is in %s state."
+msgstr ""
+"Вы не можете удалить запрос на отсутствие, который находится в статусе %s."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You cannot first approve a time off for %s, because you are not his time off"
+" manager"
+msgstr ""
+"Вы не можете сначала утвердить отгул для сотрудника %s, потому что вы не "
+"являетесь его менеджером по отсутствию."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You don't have the rights to apply second approval on a time off request"
+msgstr "У вас нет прав на повторное согласование заявки на отсутствие"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "You must be %s's Manager to approve this leave"
+msgstr "Вы должны быть руководителем %s, чтобы одобрить этот отпуск"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You must be either %s's manager or Time off Manager to approve this leave"
+msgstr ""
+"Вы должны быть либо руководителем %s, либо менеджером по отсутствию, чтобы "
+"одобрить этот отпуск."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You must either be a Time off Officer or Time off Manager to approve this "
+"leave"
+msgstr ""
+"Чтобы утвердить этот отпуск, вы должны сотрудником отдела кадров или "
+"руководителем "
+
+#. module: hr_holidays
+#: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
+msgid "You must give a rate greater than 0 in accrual plan levels."
+msgstr "Вы должны указать ставку больше 0 в уровнях плана расчета отпусков."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"You must have manager rights to modify/validate a time off that already "
+"begun"
+msgstr ""
+"У вас должны быть права руководителя, чтобы изменить/подтвердить уже "
+"начавшийся отгул."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Your %(leave_type)s planned on %(date)s has been accepted"
+msgstr "Ваша заявка %(leave_type)s %(date)s была одобрена"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Your %(leave_type)s planned on %(date)s has been refused"
+msgstr "Ваша заявка %(leave_type)s %(date)s была отклонена"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
+#, python-format
+msgid "Your time off has been canceled."
+msgstr "Ваша отгул был отменен."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/resource.py:0
+#, python-format
+msgid "a new public holiday completely overrides this leave."
+msgstr "новый государственный праздник полностью отменяет этот отпуск."
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "after allocation date"
+msgstr "после даты начала отпуска"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "after allocation start date"
+msgstr "после даты начала отпуска"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "and on the"
+msgstr "и на"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "available"
+msgstr "доступно"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
+msgid "by Employee"
+msgstr "По сотруднику"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
+msgid "by Type"
+msgstr "По типу"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "day of the month"
+msgstr "день месяца"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
+#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__day
+#, python-format
+msgid "day(s)"
+msgstr "дней"
+
+#. module: hr_holidays
+#. odoo-javascript
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+#, python-format
+msgid "days"
+msgstr "дней"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "days of the months"
+msgstr "дней месяцев"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
+msgid "e.g. Time Off type (From validity start to validity end / no limit)"
+msgstr "например, Плановый отпуск (с 01.01.2000 по 14.01.2000)"
+
+#. module: hr_holidays
+#. odoo-javascript
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "hours"
+msgstr "часы"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
+#, python-format
+msgid "in"
+msgstr "в"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
+#, python-format
+msgid "last day"
+msgstr "последний день"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "lost"
+msgstr "потерянный"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__month
+msgid "month(s)"
+msgstr "месяц(ы)"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "of"
+msgstr "из"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "of the"
+msgstr "из"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "of the month"
+msgstr "месяца"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "on"
+msgstr "на"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "on the"
+msgstr "на"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
+msgid "postponed"
+msgstr "отложено"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "refused"
+msgstr "отказано"
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__sequence
+msgid "sequence"
+msgstr "последовательность"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "taken"
+msgstr "взят"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
+msgid "to"
+msgstr "до"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "to refuse"
+msgstr "отказываться"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "valid until"
+msgstr "действует до"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+msgid "validate"
+msgstr "подтвердить"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "validated"
+msgstr "подтверждено"
+
+#. module: hr_holidays
+#: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
+msgid "year(s)"
+msgstr "год(а)"

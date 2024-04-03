@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="event_report_full_page_ticket_layout_inherit_exhibitor" inherit_id="event.event_report_full_page_ticket_layout">
+        <xpath expr="//div[hasclass('o_event_full_page_ticket_powered_by')]" position="before">
+            <div class="o_event_full_page_ticket_sponsors_container text-center mb-2">
+                <t t-foreach="event.sponsor_ids.filtered(lambda sponsor: sponsor.image_128 and sponsor.website_published)[:10]"
+                    t-as="sponsor">
+                    <div class="o_event_full_page_ticket_sponsor_card d-inline-block">
+                        <div class="h-100 p-2 pb-0">
+                            <!-- Has to be base64-ified otherwise the reporting engine will sometimes load images
+                            and sometimes not before printing, resulting in random results. -->
+                            <img class="img img-fluid" t-attf-src="data:images/png;base64,#{sponsor.image_128}"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

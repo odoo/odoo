@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_inherit_project_task_view_form" model="ir.ui.view">
+        <field name="name">project.task.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <field name="display_sale_order_button" invisible="1"/>
+                <button class="oe_stat_button"
+                        type="object" name="action_project_sharing_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('display_sale_order_button', '=', False)]}"
+                        string="Sales Order"/>
+            </div>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_open': True, 'no_create': True, 'no_edit': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="commercial_partner_id" invisible="1" />
+                <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//group/filter[@name='customer']" position="after">
+                <filter name="sale_order_id" string="Sales Order Id" context="{'group_by': 'sale_order_id'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

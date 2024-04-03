@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_transaction_form" model="ir.ui.view">
+        <field name="name">payment.transaction.form</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <button name="action_view_refunds" position="before">
+                <button name="action_view_invoices" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        attrs="{'invisible': [('invoices_count', '=', 0)]}">
+                    <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
+                </button>
+            </button>
+            <field name="reference" position="after">
+                <field name="payment_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

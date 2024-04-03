@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DeleteMessageConfirm" owl="1">
+        <t t-if="deleteMessageConfirmView">
+            <div class="o_DeleteMessageConfirm card bg-view" t-attf-class="{{ className }}" t-ref="root">
+                <h4 class="m-3">Confirmation</h4>
+                <hr class="mt-0 mb-3"/>
+                <p class="mx-3 mb-3">Are you sure you want to delete this message?</p>
+                <blockquote class="o_DeleteMessageConfirm_blockquote mx-3 mb-3 fst-normal">
+                    <Message record="deleteMessageConfirmView.messageView"/>
+                </blockquote>
+                <small t-if="!deleteMessageConfirmView.message.originThread or deleteMessageConfirmView.message.originThread.model !== 'mail.channel'" class="mx-3 mb-3">Pay attention: The followers of this document who were notified by email will still be able to read the content of this message and reply to it.</small>
+                <hr class="mt-0 mb-3"/>
+                <div class="o_DeleteMessageConfirm_buttons mx-3 mb-3">
+                    <button class="btn btn-primary me-2" t-on-click="deleteMessageConfirmView.onClickDelete">Delete</button>
+                    <button class="btn btn-secondary me-2" t-on-click="deleteMessageConfirmView.onClickCancel">Cancel</button>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

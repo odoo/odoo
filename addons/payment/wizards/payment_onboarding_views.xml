@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_onboarding_wizard_form" model="ir.ui.view">
+        <field name="name">payment.provider.onboarding.wizard.form</field>
+        <field name="model">payment.provider.onboarding.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Choose a payment method" class="o_onboarding_payment_provider_wizard">
+                <div class="container">
+                    <div class="row align-items-start">
+                        <div class="col col-4" name="left-column">
+                                <field name="payment_method" widget="radio"/>
+                        </div>
+                        <div class="col" name="right-column">
+                            <div attrs="{'invisible': [('payment_method', '!=', 'paypal')]}">
+                                <group>
+                                    <field name="paypal_email_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" string="Email"/>
+                                    <field name="paypal_pdt_token" password="True" attrs="{'required': [('payment_method', '=', 'paypal')]}" />
+                                </group>
+                                <p>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/finance/payment_providers/paypal.html" target="_blank">
+                                        <span><i class="fa fa-arrow-right"/> How to configure your PayPal account</span>
+                                    </a>
+                                </p>
+                            </div>
+
+                            <div attrs="{'invisible': [('payment_method', '!=', 'manual')]}">
+                                <group>
+                                    <field name="manual_name" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
+                                    <field name="journal_name" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
+                                    <field name="acc_number" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
+                                    <field name="manual_post_msg" attrs="{'required': [('payment_method', '=', 'manual')]}"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button name="add_payment_methods" string="Apply" class="oe_highlight"
+                            type="object" data-hotkey="q" />
+                    <button special="cancel" data-hotkey="z" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

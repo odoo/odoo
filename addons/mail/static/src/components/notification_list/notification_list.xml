@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NotificationList" owl="1">
+        <t t-if="notificationListView">
+            <div class="o_NotificationList d-flex flex-column overflow-auto" t-att-class="{ 'o-empty justify-content-center': notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="notificationListView.notificationViews.length === 0">
+                    <div class="o_NotificationList_noConversation d-flex align-items-center justify-content-center py-4 px-2 text-muted">
+                        No conversation yet...
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-foreach="notificationListView.notificationViews" t-as="notificationView" t-key="notificationView.localId">
+                        <t t-if="notificationView.constructor.name === 'ChannelPreviewView'">
+                            <ChannelPreviewView
+                                className="'o_NotificationList_preview'"
+                                classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
+                                record="notificationView"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'ThreadNeedactionPreviewView'">
+                            <ThreadNeedactionPreview
+                                className="'o_NotificationList_preview'"
+                                classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
+                                record="notificationView"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'NotificationGroupView'">
+                            <NotificationGroup
+                                className="'o_NotificationList_group'"
+                                classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
+                                record="notificationView"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
+                            <NotificationRequest
+                                className="'o_NotificationList_notificationRequest'"
+                                classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
+                                record="notificationView"
+                            />
+                        </t>
+                        <t t-if="!notificationView_last">
+                            <div class="o_NotificationList_separator flex-shrink-0 w-100 border-bottom"/>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

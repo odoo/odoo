@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.ResequenceRenderer" owl="1" >
+            <table t-if="data.changeLines.length" class="table table-sm">
+                <thead><tr>
+                    <th>Date</th>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr></thead>
+                <tbody>
+                    <t t-foreach="data.changeLines" t-as="changeLine" t-key="changeLine.id">
+                        <ChangeLine changeLine="changeLine" ordering="data.ordering"/>
+                    </t>
+                </tbody>
+            </table>
+    </t>
+
+    <t t-name="account.ResequenceChangeLine" owl="1">
+        <tr>
+            <td t-esc="props.changeLine.date"/>
+            <td t-esc="props.changeLine.current_name"/>
+            <td t-if="props.ordering == 'keep'" t-esc="props.changeLine.new_by_name" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
+            <td t-else="" t-esc="props.changeLine.new_by_date" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
+        </tr>
+    </t>
+</templates>

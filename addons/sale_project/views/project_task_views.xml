@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_inherit_project_filter" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.project.tree.inherit.sale.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_line_id" optional="hide" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_edit_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.project.view.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="has_any_so_to_invoice" invisible="1"/>
+                <field name="has_any_so_with_nothing_to_invoice" invisible="1"/>
+                <!-- remove me in master -->
+                <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-primary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': [('has_any_so_to_invoice', '=', False)]}" data-hotkey="w" invisible="1"/>
+                <!-- remove me in master -->
+                <button name="action_create_invoice" string="Create Invoice" type="object" class="btn-secondary" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': ['|', ('has_any_so_with_nothing_to_invoice', '=', False), ('has_any_so_to_invoice', '=', True)]}" data-hotkey="w" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_time_managment']" position="after">
+                 <group name="group_sales_invoicing" string="Sales &amp; Invoicing" col="1" class="row mt16 o_settings_container col-lg-6">
+                    <div>
+                        <div class="o_setting_box" id="allow_billable_container">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_billable"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_billable"/>
+                                <div class="text-muted" id="allow_billable_setting">
+                                    Invoice your time and material to customers
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_sale_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.task.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@id='start_rating_buttons']" position="before">
+                <button class="oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman_all_leads"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="after">
+                <field name="sale_order_id" attrs="{'invisible': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" groups="!sales_team.group_sale_salesman" string="Sales Order Item" options='{"no_create": True, "no_open": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"/>
+                <field name="sale_line_id" groups="sales_team.group_sale_salesman" string="Sales Order Item" options='{"no_create": True}' readonly="0" context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"/>
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='customer']" position="after">
+                <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_form" model="ir.ui.view">
+        <field name="name">project.milestone.view.form.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='main_details']" position="after">
+                <field name="allow_billable" invisible="1"/>
+                <group attrs="{'invisible': [('allow_billable', '=', False)]}">
+                    <field name="project_partner_id" invisible="1"/>
+                    <field name="sale_line_id" groups="!sales_team.group_sale_salesman" placeholder="Non-billable" options="{'no_open': True}" readonly="1"/>
+                    <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" placeholder="Non-billable" readonly="0"/>
+                    <field name="quantity_percentage" groups="!sales_team.group_sale_salesman" widget="percentage" readonly="1"/>
+                    <field name="quantity_percentage" class="w-25" groups="sales_team.group_sale_salesman" widget="percentage" readonly="0"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.tree.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="project.project_milestone_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="project_partner_id" invisible="1"/>
+                <field name="allow_billable" invisible="1"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" placeholder="Non-billable" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_create': True}" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" optional="hide" widget="percentage" readonly="1" groups="!sales_team.group_sale_salesman"/>
+                <field name="quantity_percentage" optional="hide" widget="percentage" groups="sales_team.group_sale_salesman"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.tree.inherit</field>
+        <field name="model">project.milestone</field>
+        <field name="inherit_id" ref="sale_project.project_milestone_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_line_id'][1]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_id'][2]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity_percentage'][1]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='quantity_percentage'][2]" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

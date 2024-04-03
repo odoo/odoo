@@ -1,0 +1,253 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_ldap
+# 
+# Translators:
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Emily Jia <eji@odoo.com>, 2023
+# Martin Trigaux, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-16 09:20+0000\n"
+"PO-Revision-Date: 2023-07-13 13:02+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
+msgid ""
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+"    用来在LDAP数据库中查找用户账户的过滤器。它是一个任意的LDAP过滤器，用字符串表示。任何`%s`占位符将被用户提供的登录（标识符）所取代，过滤器应该至少包含一个这样的占位符。\n"
+"\n"
+"    过滤器的结果必须正好是一（1）个，否则登录将被认为是无效的。\n"
+"\n"
+"    示例（实际属性取决于LDAP服务器和设置）。\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s)\n"
+"\n"
+"    或\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr "通过LDAP，为新用户自动创建本地用户账户。"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
+msgid "Company"
+msgstr "公司"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "公司 LDAP 配置"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
+msgid "Create User"
+msgstr "创建用户"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
+msgstr "用户搜索范围的DN：这个基地的所有后代都将被搜索到用户。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP 配置"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_test__ldaps
+msgid "LDAP Parameters"
+msgstr "LDAP 参数"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+msgid "LDAP Server"
+msgstr "LDAP 服务器"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
+msgid "LDAP Server address"
+msgstr "LDAP 服务器地址"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
+msgid "LDAP Server port"
+msgstr "LDAP 服务器端口"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
+msgid "LDAP base"
+msgstr "LDAP 基节点"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "LDAP binddn"
+msgstr "LDAP 绑定dn"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
+msgid "LDAP filter"
+msgstr "LDAP 筛选"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
+msgid "LDAP password"
+msgstr "LDAP 密码"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
+msgid "Last Modified on"
+msgstr "最后修改日期"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "登录信息"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, python-format
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr "没有找到用于LDAP登录的本地用户，也没有配置为创建"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "处理参数"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr "当连接 LDAP 服务器时请求服务器使用安全的 TLS/SSL 加密。该选项需要服务器启用 STARTTLS，否则所有用户验证都将失败。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
+msgid "Sequence"
+msgstr "序列"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "服务器信息"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "设置您的 LDAP 服务器"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
+msgid "Template User"
+msgstr "模版用户"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "LDAP 服务器上的用户账号密码，用于查询该目录服务。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "用于查询 LDAP 服务器目录的用户账号。如果要匿名连接请保持为空。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Use TLS"
+msgstr "使用TLS传输层协议"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "用户"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "用户信息"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
+msgid "User to copy when creating new users"
+msgstr "当创建新用户时复制的用户"

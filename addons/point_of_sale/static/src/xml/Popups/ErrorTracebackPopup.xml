@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ErrorTracebackPopup" owl="1">
+            <div class="popup popup-error">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <main class="body traceback">
+                    <t t-esc="props.body" />
+                </main>
+                <footer class="footer">
+                    <div t-if="!props.exitButtonIsShown" class="button cancel" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div t-if="props.exitButtonIsShown" class="button cancel" t-on-click="() => this.trigger(props.exitButtonTrigger)">
+                        <t t-esc="props.exitButtonText" />
+                    </div>
+                    <a t-att-download="tracebackFilename" t-att-href="tracebackUrl">
+                        <div class="button icon download">
+                            <i class="fa fa-download" role="img"
+                               aria-label="Download error traceback"
+                               title="Download error traceback"></i>
+                        </div>
+                    </a>
+                    <div class="button icon email" t-on-click="emailTraceback">
+                        <i class="fa fa-paper-plane" role="img" aria-label="Send by email"
+                           title="Send by email"></i>
+                    </div>
+                </footer>
+            </div>
+    </t>
+
+</templates>

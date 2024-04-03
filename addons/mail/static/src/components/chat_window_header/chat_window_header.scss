@@ -1,0 +1,34 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    height: $o-mail-chat-window-header-height;
+
+    &.o-isDeviceSmall {
+        height: $o-mail-chat-window-header-height-mobile;
+    }
+}
+
+.o_ChatWindowHeader_command {
+    &:hover {
+        background-color: rgba($black, 0.1);
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    background-color: var(--ChatWindowHeader-background-color, #{$o-brand-odoo});
+    color: #FFFFFF;
+}
+
+.o_ChatWindowHeader_command.o-isDeviceSmall {
+    font-size: 1.3rem;
+}
+
+.o_ChatWindowHeader_name {
+    user-select: none;
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_gift_card" model="mail.template">
+        <field name="name">Gift Card: Gift Card Information</field>
+        <field name="model_id" ref="model_loyalty_card"/>
+        <field name="subject">Your Gift Card at {{ object.company_id.name }}</field>
+        <field name="partner_to">{{ object._get_mail_partner().id }}</field>
+        <field name="lang">{{ object._get_mail_partner().lang }}</field>
+        <field name="description">Sent to customer who purchased a gift card</field>
+        <field name="body_html" type="html">
+            <div style="background: #ffffff">
+                <div style="margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center">
+                    Here is your gift card!
+                </div>
+                <div style="padding-top:20px; padding-bottom:20px">
+                    <img src="/loyalty/static/img/gift_card.png" style="display:block; border:0; outline:none; text-decoration:none; margin:auto;" width="300"/>
+                </div>
+                <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;">
+                    <h3 style="margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center">
+                        <strong t-out="format_amount(object.points, object.currency_id) or ''">$ 150.00</strong></h3>
+                </div>
+                <div style="padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;">
+                    <p style="margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333">
+                        <strong>Gift Card Code</strong>
+                    </p>
+                    <p style="margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9" t-out="object.code or ''">4f10-15d6-41b7-b04c-7b3e</p>
+                </div>
+                <div t-if="object.expiration_date" style="padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;">
+                    <h3 style="margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center">Card expires <t t-out="format_date(object.expiration_date) or ''">05/05/2021</t></h3>
+                </div>
+                <div style="padding:20px; margin:0px; text-align:center;">
+                    <span style="background-color:#999999; display:inline-block; width:auto; border-radius:5px;">
+                        <a t-attf-href="{{ object.get_base_url() }}/shop" target="_blank" style="text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center">Use it right now!</a>
+                    </span>
+                </div>
+            </div>
+        </field>
+        <field name="report_template" ref="loyalty.report_gift_card"/>
+        <field name="report_name">Your Gift Card</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_loyalty_card" model="mail.template">
+        <field name="name">Coupon: Coupon Information</field>
+        <field name="model_id" ref="loyalty.model_loyalty_card"/>
+        <field name="subject">Your reward coupon from {{ object.program_id.company_id.name }} </field>
+        <field name="email_from">{{ object.program_id.company_id.email }}</field>
+        <field name="partner_to">{{ object._get_mail_partner().id }}</field>
+        <field name="lang">{{ object._get_mail_partner().lang }}</field>
+        <field name="description">Sent to customer with coupon information</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0px auto; background:#ffffff; color:#333333;"><tbody>
+<tr>
+    <td valign="top" style="text-align: center; font-size: 14px;">
+        <t t-if="object._get_mail_partner().name">
+            Congratulations <t t-out="object._get_mail_partner().name or ''">Brandon Freeman</t>,<br />
+        </t>
+
+        Here is your reward from <t t-out="object.program_id.company_id.name or ''">YourCompany</t>.<br />
+
+        <t t-foreach="object.program_id.reward_ids" t-as="reward">
+            <t t-if="reward.required_points &lt;= object.points">
+                <span style="font-size: 50px; color: #875A7B; font-weight: bold;" t-esc="reward.description">Reward Description</span>
+                <br/>
+            </t>
+        </t>
+    </td>
+</tr>
+<tr style="margin-top: 16px">
+    <td valign="top" style="text-align: center; font-size: 14px;">
+        Use this promo code
+        <t t-if="object.expiration_date">
+            before <t t-out="object.expiration_date or ''">2021-06-16</t>
+        </t>
+        <p style="margin-top: 16px;">
+            <strong style="padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;" t-out="object.code or ''">15637502648479132902</strong>
+        </p>
+        <t t-foreach="object.program_id.rule_ids" t-as="rule">
+            <t t-if="rule.minimum_qty not in [0, 1]">
+                <span style="font-size: 14px;">
+                    Minimum purchase of <t t-out="rule.minimum_qty or ''">10</t> products
+                </span><br />
+            </t>
+            <t t-if="rule.minimum_amount != 0.00">
+                <span style="font-size: 14px;">
+                    Valid for purchase above <t t-out="rule.company_id.currency_id.symbol or ''">$</t><t t-out="'%0.2f' % float(rule.minimum_amount) or ''">10.00</t>
+                </span><br />
+            </t>
+        </t>
+        <br/>
+        Thank you,
+        <t t-if="object._get_signature()">
+            <br />
+            <t t-out="object._get_signature() or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </td>
+</tr>
+</tbody></table>
+        </field>
+        <field name="report_template" ref="loyalty.report_loyalty_card"/>
+        <field name="report_name">Your Coupon Code</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

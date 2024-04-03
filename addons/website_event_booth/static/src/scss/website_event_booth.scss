@@ -1,0 +1,73 @@
+label.o_wbooth_category_unavailable {
+    opacity: 0.5;
+    overflow: hidden;
+}
+
+#o_wbooth_contact_details_form {
+
+    .col-form-label {
+        width: 200px;
+    }
+
+}
+
+.o_wbooth_registration_form label {
+
+    position: relative;
+
+    & > input {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    & > input + div {
+        padding: 10px;
+        border: 5px solid mix(map-get($theme-colors, 'secondary'), #e9ecef);
+    }
+
+    &:not(.o_wbooth_category_unavailable) > input + div {
+        cursor: pointer;
+    }
+
+    &:not(.o_wbooth_category_unavailable):hover > input + div {
+        border-color: map-get($theme-colors, 'secondary');
+    }
+
+    &:hover > input + div:before {
+        color: map-get($theme-colors, 'secondary');
+    }
+
+    & > input:checked + div,
+    &:hover > input:checked + div {
+        border-color: map-get($theme-colors, 'primary');
+    }
+
+    & > input:checked + div:before,
+    &:hover > input:checked + div:before {
+        color: map-get($theme-colors, 'primary');
+    }
+
+    & > input:checked + div:before,
+    &:not(.o_wbooth_category_unavailable):hover > input + div:before {
+        content: "\f058";
+        font-family: "FontAwesome";
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        line-height: 40px;
+        top: -16px;
+        right: -16px;
+        background-color: $o-wevent-bg-color-base;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    & img {
+        min-height: 250px;
+    }
+
+}
+
+.o_wevent_booth_category {
+    background-color: $o-wevent-bg-color-light;
+}

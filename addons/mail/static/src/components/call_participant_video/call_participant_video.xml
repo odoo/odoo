@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.CallParticipantVideo" owl="1">
+        <t t-if="callParticipantVideoView">
+            <video class="o_CallParticipantVideo w-100 h-100 rounded-1 cursor-pointer"
+                t-attf-class="{{ className }}"
+                playsinline="true"
+                autoplay="true"
+                muted="true"
+                t-on-loadedmetadata="callParticipantVideoView.onVideoLoadedMetaData"
+                t-ref="root"
+            />
+        </t>
+    </t>
+
+</templates>

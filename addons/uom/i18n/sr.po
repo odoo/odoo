@@ -1,0 +1,523 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* uom
+# 
+# Translators:
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                </span>"
+msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                </span>"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
+msgstr ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr "Add a new unit of measure"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr "Add a new unit of measure category"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
+msgid "Bigger Ratio"
+msgstr "Bigger Ratio"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
+msgid "Bigger than the reference Unit of Measure"
+msgstr "Bigger than the reference Unit of Measure"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "Boja"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr "Combined Ratio"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Do konverzije između mernih jedinica može doć́i samo ako pripadaju istoj "
+"kategoriji. Konverzija će se izvršiti na osnovu odnosa."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_day
+msgid "Days"
+msgstr "dana"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozens"
+msgstr "Dozens"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "Grupiši po"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_hour
+msgid "Hours"
+msgstr "Sati"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__id
+#: model:ir.model.fields,field_description:uom.field_uom_uom__id
+msgid "ID"
+msgstr "ID"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
+#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr "Poslednja izmena dana"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
+msgid "Last Updated by"
+msgstr "Poslednje izmenio/la"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
+msgid "Last Updated on"
+msgstr "Poslednje ažuriranje dana"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_length
+msgid "Length / Distance"
+msgstr "Duzina / Udaljenost"
+
+#. module: uom
+#: model:res.groups,name:uom.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "Manage Multiple Units of Measure"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Jedinica mere proizvoda"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_category
+msgid "Product UoM Categories"
+msgstr "Product UoM Categories"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+msgid "Ratio"
+msgstr "Odnos"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
+msgid "Reference Unit of Measure for this category"
+msgstr "Reference Unit of Measure for this category"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr "Reference UoM"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
+msgid "Rounding Precision"
+msgstr "Preciznost zaokruživanja"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Search UOM"
+msgstr "Search UOM"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
+msgstr "Search UoM Category"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
+msgid "Smaller than the reference Unit of Measure"
+msgstr "Smaller than the reference Unit of Measure"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr "Surface"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__rounding
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "The conversion ratio for a unit of measure cannot be 0!"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr "The reference unit must have a conversion factor equal to 1."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
+msgid "The rounding precision must be strictly positive."
+msgstr "The rounding precision must be strictly positive."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category as the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category as the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
+msgstr "The value of ratio could not be Zero"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
+msgid "Type"
+msgstr "Vrsta"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__active
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_unit
+msgid "Unit"
+msgstr "Jedinica"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit of Measure"
+msgstr "Jedinica Mere"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Unit of Measure Category"
+msgstr "Unit of Measure Category"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_unit
+msgid "Units"
+msgstr "Kom"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Jedinice mere"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Units of Measure Categories"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
+msgid "Units of Measure categories"
+msgstr "Jedinica za merenje kategorija"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+msgstr ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s must have at least one reference unit of measure."
+msgstr "UoM category %s must have at least one reference unit of measure."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s should have a reference unit of measure."
+msgstr "UoM category %s should have a reference unit of measure."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "UoM category %s should only have one reference unit of measure."
+msgstr "UoM category %s should only have one reference unit of measure."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+msgstr "Uom"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_vol
+msgid "Volume"
+msgstr "Obim"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Warning for %s"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Težina"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_wtime
+msgid "Working Time"
+msgstr "Vreme rada"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+msgstr ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz (US)"
+msgstr "fl oz (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "ft"
+msgstr "ft"
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
+msgstr "ft²"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr "ft³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal (US)"
+msgstr "gal (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_inch
+msgid "in"
+msgstr "in"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr "in³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_lb
+msgid "lb"
+msgstr "lb"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mi"
+msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr "mm"
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr "m²"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr "m³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz"
+msgstr "oz"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt (US)"
+msgstr "qt (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr "yd"

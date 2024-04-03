@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_quotation_layout_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Quotation Layout</t>
+            <t t-set="description">Customize the look of your quotations.</t>
+            <t t-set="done_icon" t-value="'fa-star'" />
+            <t t-set="done_text">Looks great!</t>
+            <t t-set="btn_text">Customize</t>
+            <t t-set="model" t-value="'base.document.layout'" />
+            <t t-set="method" t-value="'action_open_base_document_layout'" />
+            <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
+        </t>
+    </template>
+    <template id="sale_onboarding_order_confirmation_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Order Confirmation</t>
+            <t t-set="description">Choose between electronic signatures or online payments.</t>
+            <t t-set="btn_text">Set payments</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_payment_provider'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('sale_onboarding_order_confirmation_state')" />
+        </t>
+    </template>
+    <template id="sale_onboarding_sample_quotation_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Sample Quotation</t>
+            <t t-set="description">Send a quotation to test the customer portal.</t>
+            <t t-set="btn_text">Send sample</t>
+            <t t-set="method" t-value="'action_open_sale_onboarding_sample_quotation'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('sale_onboarding_sample_quotation_state')" />
+        </t>
+    </template>
+
+    <!-- ONBOARDING PANEL-->
+    <template id="sale_quotation_onboarding_panel" name="sale.quotation.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes" t-value="'o_onboarding_violet'" />
+            <t t-set="bg_image" t-value="'/sale/static/src/img/sale_quotation_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
+            <t t-set="close_model" t-value="'res.company'" />
+            <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="sale.onboarding_quotation_layout_step" name="quotation_layout_step" />
+            <t t-call="sale.sale_onboarding_order_confirmation_step" name="payment_provider_step" />
+            <t t-call="sale.sale_onboarding_sample_quotation_step" name="sample_quotation_step" />
+        </t>
+    </template>
+    <!-- ORDER CONFIRMATION -->
+    <record id="action_open_sale_payment_provider_onboarding_wizard" model="ir.actions.act_window">
+        <field name="name">Choose how to confirm quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.payment.provider.onboarding.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment.payment_provider_onboarding_wizard_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>

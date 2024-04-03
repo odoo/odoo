@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.NotificationMessageView" owl="1">
+        <div class="o_NotificationMessageView d-flex justify-content-center" t-ref="root">
+            <div class="flex-grow-1"/>
+            <div class="text-500 small px-3">
+                <span class="d-inline" t-esc="notificationMessageView.message.authorName"/> <t t-out="notificationMessageView.message.prettyBodyAsMarkup"/>
+            </div>
+            <div class="flex-grow-1"/>
+        </div>
+    </t>
+</templates>

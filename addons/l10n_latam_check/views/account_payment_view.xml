@@ -1,0 +1,239 @@
+<odoo>
+
+    <!-- Own checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">20</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Third party checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
+        <field name="name">account.check.search</field>
+        <field name="model">account.payment</field>
+        <field name="priority">22</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="check_number"/>
+            </field>
+            <field name="journal_id" position="after">
+                <field name="l10n_latam_check_current_journal_id"/>
+            </field>
+            <filter name="date" position="after">
+                <separator/>
+                <filter string="Checks on hand" name="checks_on_hand"
+                    domain="[('state', '=', 'posted'),
+                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+            </filter>
+            <filter name="journal" position="after">
+                <filter name="groupby_third_party_check_current_journal"
+                    string="Current Journal"
+                    context="{'group_by': 'l10n_latam_check_current_journal_id'}"/>
+            </filter>
+            <filter name="unmatched" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="groupby_date" position="after">
+                <filter string="Check Cash-In Date"
+                    name="groupby_l10n_latam_check_payment_date"
+                    context="{'group_by': 'l10n_latam_check_payment_date'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_inherited" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_payment_form_inherited" />
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div class="alert alert-danger mb-0" role="alert"
+                        attrs="{'invisible': [('l10n_latam_check_warning_msg', '=', False)]}">
+                    <field name="l10n_latam_check_warning_msg" nolabel="1"/>
+                </div>
+            </sheet>
+
+            <field name="destination_journal_id" position="after">
+                <!-- Move Third party checks -->
+                <field name="l10n_latam_check_id"
+                    attrs="{
+                        'invisible': [('payment_method_code', 'not in', ['in_third_party_checks', 'out_third_party_checks']), ('l10n_latam_check_id', '=', False)],
+                        'required': [('payment_method_code', 'in', ['in_third_party_checks', 'out_third_party_checks'])]}"
+                    domain="
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
+                            if payment_type == 'outbound' else
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
+                            if is_internal_transfer else
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]"
+                    context="{'search_view_ref': 'l10n_latam_check.view_account_payment_third_party_checks_search'}"
+                    options="{'no_create': True}"
+                />
+            </field>
+            <field name="payment_method_line_id" position="after">
+                <field name="l10n_latam_manual_checks" invisible="1"/>
+                <field name="l10n_latam_check_number"
+                    string='Check Number'
+                    attrs="{
+                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_manual_checks', '=', False)],
+                        'required': ['|', ('payment_method_code', '=', 'new_third_party_checks'), '&amp;', ('payment_method_code', '=', 'check_printing'), ('l10n_latam_manual_checks', '=', True)],
+                        'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="l10n_latam_check_payment_date" attrs="{
+                        'invisible': [('payment_method_code', '!=', 'new_third_party_checks'), '|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_manual_checks', '=', False)]}"/>
+                <field name="l10n_latam_check_bank_id" string="Check Bank"
+                    attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat"
+                    attrs="{'invisible': [('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                <label for="l10n_latam_check_current_journal_id" string="Check Current Journal"
+                    attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'new_third_party_checks')]}"/>
+                <div class="oe_inline"
+                        attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('payment_method_code', '!=', 'new_third_party_checks')]}">
+                    <field name="l10n_latam_check_current_journal_id"/>
+                    <span attrs="{'invisible': [('l10n_latam_check_current_journal_id', '!=', False)]}">Not in Wallet</span>
+                    <button name="button_open_check_operations" type="object" string="⇒ Check Operations" class="oe_link"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_third_party_check_operations_tree">
+        <field name="name">account.check.operations.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <tree default_order="date desc, id desc, name desc">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="payment_type"/>
+                <field name="journal_id"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_check_calendar">
+        <field name="name">account.check.calendar</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <calendar
+                    mode="month"
+                    date_start="l10n_latam_check_payment_date"
+                    color="journal_id">
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_check_pivot">
+        <field name="name">account.check.calendar</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="l10n_latam_check_payment_date" type="row" interval="month"/>
+                <field name="l10n_latam_check_payment_date" type="row" interval="week"/>
+            <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+ <!-- Own Check Views and menus -->
+
+    <record model="ir.ui.view" id="view_account_own_check_tree">
+        <field name="name">account.check.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority">100</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="check_number"/>
+            </field>
+            <field name="payment_method_line_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="date" position="after">
+                <field name="l10n_latam_check_payment_date" optional="show"/>
+            </field>
+            <tree>
+                <field name="is_matched"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_own_check">
+        <field name="name">Own Checks</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="view_account_own_check_tree"/>
+        <field name="search_view_id" ref="view_account_payment_search"/>
+        <field name="domain">[('payment_method_code', '=', 'check_printing')]</field>
+        <field name="context">{'search_default_unmatched': True}</field>
+    </record>
+
+    <menuitem
+        action="action_own_check"
+        id="menu_own_check"
+        sequence="50"
+        parent="account.menu_finance_payables"/>
+
+<!-- Third party check Views and menus -->
+
+    <record model="ir.ui.view" id="view_account_third_party_check_tree">
+        <field name="name">account.check.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority">110</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_account_own_check_tree"/>
+        <field name="arch" type="xml">
+            <field name="is_matched" position="replace"/>
+            <field name="journal_id" position="replace">
+                <field name="l10n_latam_check_current_journal_id" string="Current Journal"/>
+            </field>
+            <tree position="attributes">
+                <attribute name="create">false</attribute>
+            </tree>
+            <tree position="inside">
+                <header>
+                    <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer" groups="account.group_account_user"/>
+                </header>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_third_party_check">
+        <field name="name">Third Party Checks</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="view_account_third_party_check_tree"/>
+        <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
+        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks')]</field>
+        <field name="context">{'search_default_checks_on_hand': 1}</field>
+    </record>
+
+    <menuitem
+        action="action_third_party_check"
+        id="menu_third_party_check"
+        sequence="40"
+        parent="account.menu_finance_receivables"/>
+
+</odoo>

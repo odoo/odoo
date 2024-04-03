@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_purchase_order_inherit" model="ir.ui.view">
+        <field name="name">Purchase Order Inherit Dropship Subcontractor</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="dest_address_id" position="before">
+                <field name="default_location_dest_id_is_subcontracting_loc" invisible="1"/>
+            </field>
+            <field name="dest_address_id" position="attributes">
+                <attribute name="attrs">{'invisible': [('default_location_dest_id_usage', '!=', 'customer'), ('default_location_dest_id_is_subcontracting_loc', '=', False)],
+                    'required': ['|', ('default_location_dest_id_usage', '=', 'customer'), ('default_location_dest_id_is_subcontracting_loc', '=', True)]}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

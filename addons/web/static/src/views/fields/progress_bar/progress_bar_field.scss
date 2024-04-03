@@ -1,0 +1,48 @@
+.o_progressbar {
+    .o_progress {
+        width: 100px;
+        height: 15px;
+        border: 1px solid $o-gray-300;
+        background-color: $o-view-background-color;
+
+        > div {
+            background-color: $o-brand-primary;
+            &.o_progress_exceed {
+                background-color: $o-gray-700;
+            }
+        }
+    }
+
+    .o_progressbar_value input {
+        // Prevent the input to grow and deteriorate the visibility
+        width: 45px;
+        min-width: 45px;
+        transition: width .2s;
+    }
+}
+
+.o_form_view {
+    .o_progressbar_value input {
+        &:focus-within {
+            // To improve the edition of the value, the
+            // input grows to the full available width
+            width: 100%;
+        }
+    }
+}
+
+.o_list_view .o_data_cell {
+    .o_progressbar {
+        // Force progress bars to respect table's layout
+        display: table-row;
+        justify-content: end;
+    }
+}
+
+.o_kanban_renderer {
+    .o_progressbar:not(:hover):not(:focus-within) {
+        input {
+            border-color: transparent;
+        }
+    }
+}

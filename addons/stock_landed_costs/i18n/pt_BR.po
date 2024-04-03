@@ -1,0 +1,759 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_landed_costs
+# 
+# Translators:
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
+# Marcos Rodrigues, 2022
+# Martin Trigaux, 2022
+# Kevilyn Rosa, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Maitê Dietze, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid " already out"
+msgstr "Já saiu"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"Data\" role=\"img\" aria-label=\"Data\"/>"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Um produto armazenável é um produto no qual você pode gerenciar o estoque. O aplicativo Inventário deve ser instalado.\n"
+"Um produto consumível é um produto para o qual o estoque não é gerenciado.\n"
+"Um serviço é um produto não material que você fornece."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
+msgid "Account"
+msgstr "Conta"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
+msgid "Account Journal"
+msgstr "Diário de Conta"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "Ação Necessária"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr "Atividades"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Decoração de Atividade Excepcional"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
+msgstr "Estado de Atividade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ícone do Tipo de Atividade"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Additional Costs"
+msgstr "Custos Adicionais"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
+msgid "Additional Landed Cost"
+msgstr "Custo Adicional"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
+msgid "Apply On"
+msgstr "Aplicar Em"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
+msgid "Attachment Count"
+msgstr "Contagem de Anexos"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
+msgid "By Current Cost"
+msgstr "Por Custo Atual"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_quantity
+msgid "By Quantity"
+msgstr "Pela Quantidade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_volume
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_volume
+msgid "By Volume"
+msgstr "Pelo Volume"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_weight
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_weight
+msgid "By Weight"
+msgstr "Pelo Peso"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__cancel
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__company_id
+msgid "Company related to this journal"
+msgstr "Empresa relacionada a este diário"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Compute"
+msgstr "Calcular"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
+msgid "Cost"
+msgstr "Custo"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_line_id
+msgid "Cost Line"
+msgstr "Linhas de Custo"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Cost Lines"
+msgstr "Linhas de Custo"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+"Custo e linhas de ajustes não correspondem. Você deve talvez recalcular os "
+"custos adicionais."
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+msgid "Create Landed Costs"
+msgstr "Criar custos adicionais"
+
+#. module: stock_landed_costs
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+msgid "Create a new landed cost"
+msgstr "Criar um novo custo adicional"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__create_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__currency_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__currency_id
+msgid "Currency"
+msgstr "Moeda"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Date"
+msgstr "Data"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Default Journal"
+msgstr "Diário Padrão"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method"
+msgstr "Método de Entrega Padrão"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
+msgid "Default Split Method when used for Landed Cost"
+msgstr "Default Split Method when used for Landed Cost"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__name
+msgid "Description"
+msgstr "Descrição"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Done"
+msgstr "Concluído"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Draft"
+msgstr "Rascunho"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__equal
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__equal
+msgid "Equal"
+msgstr "Igual"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid ""
+"Equal : Cost will be equally divided.\n"
+"By Quantity : Cost will be divided according to product's quantity.\n"
+"By Current cost : Cost will be divided according to product's current cost.\n"
+"By Weight : Cost will be divided depending on its weight.\n"
+"By Volume : Cost will be divided depending on its volume."
+msgstr ""
+"Igual: O custo será dividido igualmente.\n"
+"Por Quantidade: O custo será dividido de acordo com a quantidade do produto.\n"
+"Por custo atual: O custo será dividido de acordo com o custo atual do produto.\n"
+"Por Peso: O custo será dividido dependendo do seu peso.\n"
+"Por Volume: O custo será dividido dependendo do seu volume."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Parceiros)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ícone do Font Awesome. Ex: fa-tasks"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr "Atividades Futuras"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__has_message
+msgid "Has Message"
+msgstr "Tem uma mensagem"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon"
+msgstr "Ícone"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ícone para indicar uma atividade excepcional."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Se marcado, algumas mensagens tem erro de entrega."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+msgid ""
+"Indicates whether the product is a landed cost: when receiving a vendor "
+"bill, you can allocate this cost on preceding receipts."
+msgstr ""
+"Indica se o produto é um custo adicional: ao receber uma fatura de "
+"fornecedor, você pode alocar esse custo em recibos anteriores."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "É um seguidor"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
+msgid "Is Landed Costs Line"
+msgstr "É uma linha de custos adicionais"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr "É um custo adicional"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
+msgid "Item Description"
+msgstr "Descrição do item"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Journal"
+msgstr "Diário"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
+msgid "Journal Entry"
+msgstr "Lançamento de Diário"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_account_move_line
+msgid "Journal Item"
+msgstr "Item de Diário"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__stock_landed_cost_id
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Landed Cost"
+msgstr "Custo adicional"
+
+#. module: stock_landed_costs
+#: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_ids
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_ids
+#: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.account_view_move_form_inherited
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree2
+msgid "Landed Costs"
+msgstr "Custos adicionais"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_bank_statement_line__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__landed_costs_visible
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_payment__landed_costs_visible
+msgid "Landed Costs Visible"
+msgstr "Custos adicionais visíveis"
+
+#. module: stock_landed_costs
+#: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
+msgid "Landed cost validated"
+msgstr "Custo adicional validado"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_uid
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__write_date
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr "Últimas Atividades"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
+msgid "Lc Journal"
+msgstr "Diário de custos desembarcados"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Anexo Principal"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr "Erro na entrega da Mensagem"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "Mensagens"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Prazo da Minha Atividade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Name"
+msgstr "Nome"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "New"
+msgstr "Novo"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
+msgid "New Value"
+msgstr "Novo valor"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Próxima Atividade do Calendário de Eventos"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Prazo Final para Próxima Atividade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr "Próximo Sumário de Atividade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo da Próxima Atividade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de Ações"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de Erros"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensagens que requerem ação"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensagens com erro de entrega"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Only draft landed costs can be validated"
+msgstr "Somente custos adicionais provisórios podem ser validados"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
+msgid "Original Value"
+msgstr "Valor Original"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Picking"
+msgstr "Separação"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please configure Stock Expense Account for product: %s."
+msgstr "Por favor configurar a conta de despesa para o produto: %s."
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid "Please define %s on which those additional costs should apply."
+msgstr "Defina o %s no qual esses custos adicionais devem ser aplicados."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
+msgid "Posted"
+msgstr "Lançado"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_product_template
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__product_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__product_id
+msgid "Product"
+msgstr "Produto"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
+msgid "Product Type"
+msgstr "Tipo de Produto"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Linha de Pedido de Compra"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
+msgid "Quantity"
+msgstr "Quantidade"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr "Usuário Responsável"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erro no envio de SMS"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mostrar todas as gravações em que a próxima data de ação seja antes de hoje"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
+msgid "Split Method"
+msgstr "Método de Separação"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__state
+msgid "State"
+msgstr "Estado"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Status"
+msgstr "Situação"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baseado em atividades\n"
+"Atrasado: Data definida já passou\n"
+"Hoje: Data de atividade é hoje\n"
+"Planejado: Atividades futuras."
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr "Custo adicionais de estoque"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
+msgid "Stock Landed Cost Line"
+msgstr "Linha de custos adicionais de estoque"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
+msgid "Stock Move"
+msgstr "Movimentação de estoque"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr "Camada de valoração de estoque"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
+msgstr "Atividades de hoje"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
+msgid "Total"
+msgstr "Total"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
+#: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
+msgid "Transfers"
+msgstr "Transferências"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipo de atividade de exceção registrada."
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Validate"
+msgstr "Validar"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Validated landed costs cannot be cancelled, but you could create negative "
+"landed costs to reverse them"
+msgstr ""
+"Custos adicionais validados não podem ser cancelados, mas você pode criar "
+"custos adicionais negativos para revertê-los"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation"
+msgstr "Valorização"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Valuation Adjustment Lines"
+msgstr "Linhas de ajuste de avaliação"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+msgid "Valuation Adjustments"
+msgstr "Ajustes de valoração"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
+msgid "Vendor Bill"
+msgstr "Fatura de fornecedor"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
+msgid "Volume"
+msgstr "Volume"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "Mensagens do site"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "Histórico de comunicação do site"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
+msgid "Weight"
+msgstr "Peso"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
+"applied for products with FIFO or average costing method."
+msgstr ""
+"Não é possível aplicar os custos adicionais nos %s(s) escolhidos. Os custos "
+"adicionais só podem ser aplicados a produtos com método de custeio PEPS ou "
+"custo médio."
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/product.py:0
+#, python-format
+msgid ""
+"You cannot change the product type or disable landed cost option because the"
+" product is used in an account move line."
+msgstr ""
+"Não é possível alterar o tipo de produto ou desativar a opção de custos "
+"adicionais porque o produto é usado em uma linha de movimentação de conta."

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">l10n.ke.tremol.inherit.res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='account_vendor_bills']" position="after">
+                <div attrs="{'invisible':[('country_code', '!=', 'KE')]}">
+                    <h2>Kenya TIMS Integration</h2>
+                    <div class="row mt16 o_settings_container" id="l10n_ke_cu_details">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Tremol Device Settings</span>
+                                <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                <div class="text-muted">
+                                    The tremol device makes use of a proxy server, which can be running locally on your computer or on an IoT Box.
+                                    The proxy server must be on the same network as the fiscal device.
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt8">
+                                        <label for="l10n_ke_cu_proxy_address" class="col-lg-5 o_light_label"/>
+                                        <field name="l10n_ke_cu_proxy_address"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

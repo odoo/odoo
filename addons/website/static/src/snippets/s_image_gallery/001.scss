@@ -1,0 +1,284 @@
+
+.s_image_gallery[data-vcss="001"] {
+    &.o_grid, &.o_masonry {
+        .img {
+            width: 100%;
+        }
+    }
+    &.o_grid {
+        &.o_spc-none div.row {
+            margin-bottom: 0px;
+        }
+        &.o_spc-small div.row > div {
+            margin-bottom: $spacer;
+        }
+        &.o_spc-medium div.row > div {
+            margin-bottom: $spacer * 2;
+        }
+        &.o_spc-big div.row > div {
+            margin-bottom: $spacer * 3;
+        }
+    }
+    &.o_masonry {
+        &.o_spc-none div.o_masonry_col {
+            padding: 0;
+            > img, > a > img, > .media_iframe_video {
+                margin: 0 !important;
+            }
+        }
+        &.o_spc-small div.o_masonry_col {
+            padding: 0 ($spacer * .5);
+            > img, > a > img, > .media_iframe_video {
+                margin-bottom: $spacer !important;
+            }
+        }
+        &.o_spc-medium div.o_masonry_col {
+            padding: 0 $spacer;
+            > img, > a > img, > .media_iframe_video {
+                margin-bottom: $spacer * 2 !important;
+            }
+        }
+        &.o_spc-big div.o_masonry_col {
+            padding: 0 ($spacer * 1.5);
+            > img, > a > img, > .media_iframe_video {
+                margin-bottom: $spacer * 3 !important;
+            }
+        }
+    }
+    &.o_nomode {
+        &.o_spc-none .row > div {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        &.o_spc-small .row > div {
+            padding-top: $spacer * .5;
+            padding-bottom: $spacer * .5;
+        }
+        &.o_spc-medium .row > div {
+            padding-top: $spacer;
+            padding-bottom: $spacer;
+        }
+        &.o_spc-big .row > div {
+            padding-top: $spacer * 1.5;
+            padding-bottom: $spacer * 1.5;
+        }
+    }
+    &:not(.o_slideshow) {
+        img {
+            cursor: pointer;
+        }
+    }
+    &.o_slideshow {
+        .carousel {
+            .carousel-item.active,
+            .carousel-item-next,
+            .carousel-item-prev,
+            .carousel-control-next,
+            .carousel-control-prev {
+                padding-bottom: 64px;
+            }
+            ul.carousel-indicators li {
+                border: 1px solid #aaa;
+            }
+            .media_iframe_video {
+                // 70% because the carousel controls are each 15% and the user
+                // must be able to click on the video buttons.
+                width: 70%;
+                height: 100%;
+            }
+        }
+        ul.carousel-indicators {
+            position: absolute;
+            left: 0%;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+            margin-left: 0;
+            padding: 0;
+            border-width: 0;
+            > * {
+                list-style-image: none;
+                display: inline-block;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                margin: 2.5px 2.5px 2.5px 2.5px;
+                padding: 0;
+                border: 1px solid #aaa;
+                text-indent: initial;
+                background-size: cover;
+                background-color: #fff;
+                background-position: center;
+                border-radius: 0;
+                vertical-align: bottom;
+                flex: 0 0 40px;
+                &:not(.active) {
+                    opacity: 0.8;
+                    filter: grayscale(1);
+                }
+            }
+        }
+        > .container, > .container-fluid, > .o_container_small {
+            height: 100%;
+        }
+        &.s_image_gallery_cover .carousel-item {
+            > a {
+                width: 100%;
+                height: 100%;
+            }
+            > a > img,
+            > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &:not(.s_image_gallery_show_indicators) .carousel {
+            ul.carousel-indicators {
+                display: none;
+            }
+            .carousel-item.active,
+            .carousel-item-next,
+            .carousel-item-prev,
+            .carousel-control-next,
+            .carousel-control-prev {
+                padding-bottom: 0px;
+            }
+        }
+        &.s_image_gallery_indicators_arrows_boxed, &.s_image_gallery_indicators_arrows_rounded {
+            .carousel {
+                .carousel-control-prev .fa,
+                .carousel-control-next .fa {
+                    text-shadow: none;
+                }
+            }
+        }
+        &.s_image_gallery_indicators_arrows_boxed {
+            .carousel {
+                .carousel-control-prev .fa:before {
+                    content: "\f104";
+                    padding-right: 2px;
+                }
+                .carousel-control-next .fa:before {
+                    content: "\f105";
+                    padding-left: 2px;
+                }
+                .carousel-control-prev .fa:before,
+                .carousel-control-next .fa:before {
+                    display: block;
+                    width: 3rem;
+                    height: 3rem;
+                    line-height: 3rem;
+                    color: black;
+                    background: white;
+                    font-size: 1.25rem;
+                    border: 1px solid $gray-500;
+                }
+            }
+        }
+        &.s_image_gallery_indicators_arrows_rounded {
+            .carousel {
+                .carousel-control-prev .fa:before { content: "\f060"; }
+                .carousel-control-next .fa:before { content: "\f061"; }
+                .carousel-control-prev .fa:before,
+                .carousel-control-next .fa:before {
+                    color: black;
+                    background: white;
+                    font-size: 1.25rem;
+                    border-radius: 50%;
+                    padding: 1.25rem;
+                    border: 1px solid $gray-500;
+                }
+            }
+        }
+        &.s_image_gallery_indicators_rounded {
+            .carousel {
+                ul.carousel-indicators li {
+                    border-radius: 50%;
+                }
+            }
+        }
+        &.s_image_gallery_indicators_dots {
+            .carousel {
+                ul.carousel-indicators {
+                    height: 40px;
+                    margin: auto;
+
+                    li {
+                        max-width: 8px;
+                        max-height: 8px;
+                        margin: 0 6px;
+                        border-radius: 10px;
+                        background-color: $black;
+                        background-image: none !important;
+
+                        &:not(.active) {
+                            opacity: .4;
+                        }
+                    }
+                }
+            }
+        }
+
+        @extend %image-gallery-slideshow-styles;
+    }
+    .carousel-inner .item img {
+        max-width: none;
+    }
+}
+
+.s_gallery_lightbox {
+    .modal-dialog {
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+    }
+    @include media-breakpoint-up(sm) {
+        .modal-dialog {
+            max-width: 100%;
+            padding: 0;
+        }
+    }
+    ul.carousel-indicators {
+        display: none;
+    }
+
+    .modal-body.o_slideshow {
+        @extend %image-gallery-slideshow-styles;
+    }
+}
+
+%image-gallery-slideshow-styles {
+    &:not(.s_image_gallery_cover) .carousel-item {
+        > a {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        > a > img,
+        > img {
+            max-height: 100%;
+            max-width: 100%;
+            margin: auto;
+        }
+    }
+    .carousel {
+        height: 100%;
+
+        .carousel-inner {
+            height: 100%;
+        }
+        .carousel-item.active,
+        .carousel-item-next,
+        .carousel-item-prev,
+        .carousel-control-next,
+        .carousel-control-prev {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+        .carousel-control-next .fa,
+        .carousel-control-prev .fa {
+            text-shadow: 0px 0px 3px $gray-800;
+        }
+    }
+}

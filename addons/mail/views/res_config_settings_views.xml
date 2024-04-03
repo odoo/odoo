@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.mail</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <div id="emails" position='replace'>
+                    <h2>Discuss</h2>
+                    <div class="row mt16 o_settings_container" id="emails">
+                        <div class="col-12 col-lg-6 o_setting_box" id="activities_setting">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Activities</span>
+                                <div class="text-muted">
+                                    Configure your activity types
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <button name="%(mail.mail_activity_type_action)d" string="Activity Types" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="email_servers_setting"
+                            title="Using your own email server is required to send/receive emails in Community and Enterprise versions. Online users already benefit from a ready-to-use email server (@mycompany.odoo.com).">
+                            <div class="o_setting_left_pane">
+                                <field name="external_email_server_default"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="external_email_server_default"/>
+                                <a href="https://www.odoo.com/documentation/16.0/applications/general/email_communication/email_servers.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted" id="external_email_server_default">
+                                    Configure your own email servers
+                                </div>
+                                <div class="content-group mb-3"  attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                                    <div class="mt16" id="mail_alias_domain" dir="ltr">
+                                        <label for="alias_domain" class="o_light_label"/>
+                                        <span>@</span>
+                                        <field name="alias_domain" placeholder='e.g. "mycompany.com"'/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(action_email_server_tree)d"
+                                        string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button type="action"
+                                        name="%(base.action_ir_mail_server_list)d"
+                                        string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex" attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                                    <field name="module_google_gmail"/>
+                                    <div>
+                                        <label string="Gmail Credentials" for="module_google_gmail"/>
+                                        <a href="https://console.developers.google.com/" title="Get Gmail API credentials" class="o_doc_link" target="_blank"/>
+                                        <div class="text-muted">
+                                            Send and receive emails through your Gmail account.
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('module_google_gmail','=',False)]}" id="msg_module_google_gmail">
+                                            <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex" attrs="{'invisible': [('external_email_server_default', '=', False)]}">
+                                    <field name="module_microsoft_outlook"/>
+                                    <div>
+                                        <label string="Outlook Credentials" for="module_microsoft_outlook"/>
+                                        <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app"
+                                            title="Get Outlook API credentials" class="o_doc_link" target="_blank"/>
+                                        <div class="text-muted">
+                                            Send and receive emails through your Outlook account.
+                                        </div>
+                                        <div class="content-group" id="msg_module_microsoft_outlook"
+                                            attrs="{'invisible': [('module_microsoft_outlook','=',False)]}">
+                                            <div class="mt16 text-warning">
+                                                <strong>Save</strong> this page and come back here to set up the feature.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="use_twilio_rtc_servers"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="use_twilio_rtc_servers"/>
+                                <div class="text-muted col-md-12">
+                                    Add your twilio credentials for ICE servers
+                                </div>
+                                <div class="content-group"  attrs="{'invisible': [('use_twilio_rtc_servers', '=', False)]}">
+                                    <div class="row mt16" id="mail_twilio_sid">
+                                        <label for="twilio_account_sid" class="col-lg-3"/>
+                                        <field name="twilio_account_sid" placeholder="e.g. ACd5543a0b450ar4c7t95f1b6e8a39t543"/>
+                                    </div>
+                                    <div class="row mt16" id="mail_twilio_auth_token">
+                                        <label for="twilio_account_token" class="col-lg-3"/>
+                                        <field name="twilio_account_token" placeholder="e.g. 65ea4f9e948b693N5156F350256bd152"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Custom ICE server list</span>
+                                <div class="row">
+                                    <div class="text-muted col-md-12">
+                                        Configure your ICE server list for webRTC
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <div class="row col-lg-4">
+                                        <button type="action" name="%(mail.action_ice_servers)d" string="ICE Servers" icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="restrict_template_rendering_setting">
+                            <div class="o_setting_left_pane">
+                                <field name="restrict_template_rendering"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="restrict_template_rendering"/>
+                                <div class="text-muted" id="restrict_template_rendering">
+                                    Restrict mail templates edition and QWEB placeholders usage.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="companies_setting" position="inside">
+                    <br/>
+                    <div class="o_setting_right_pane" id="mail_templates_setting"
+                        groups="mail.group_mail_template_editor,base.group_system">
+                        <span class="o_form_label">Email Templates</span>
+                        <div class="text-muted">
+                            Customize the look and feel of automated emails
+                        </div>
+                        <div class="w-50 row">
+                            <span class="d-block w-75 py-2">Header Color</span>
+                            <field name="primary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">Button Color</span>
+                            <field name="secondary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <button name="open_email_layout" icon="fa-arrow-right"
+                            type="object" string="Update Mail Layout"
+                            groups="base.group_no_one" class="btn-link"/>
+                        <br groups="base.group_no_one"/>
+                        <button name="open_mail_templates" icon="fa-arrow-right" type="object" string="Review All Templates" class="btn-link"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

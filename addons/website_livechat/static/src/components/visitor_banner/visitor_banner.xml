@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_livechat.VisitorBanner" owl="1">
+        <t t-if="visitor">
+            <div class="o_VisitorBanner" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_VisitorBanner_sidebar">
+                    <div class="o_VisitorBanner_avatarContainer">
+                        <img class="o_VisitorBanner_avatar rounded-circle" t-att-src="visitor.avatarUrl" alt="Avatar"/>
+                        <t t-if="visitor.is_connected">
+                            <i class="o_VisitorBanner_onlineStatusIcon fa fa-circle" title="Online" role="img" aria-label="Visitor is online"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="o_VisitorBanner_content">
+                    <t t-if="visitor.country">
+                        <img class="o_VisitorBanner_country o_country_flag" t-att-src="visitor.country.flagUrl" t-att-alt="visitor.country.code or visitor.country.name"/>
+                    </t>
+                    <span class="o_VisitorBanner_visitor" t-esc="visitor.nameOrDisplayName"/>
+                    <span class="o_VisitorBanner_language">
+                        <i class="o_VisitorBanner_languageIcon fa fa-comment-o" aria-label="Lang"/>
+                        <t t-esc="visitor.lang_name"/>
+                    </span>
+                    <t t-if="visitor.website_name">
+                        <span class="o_VisitorBanner_website">
+                            <i class="o_VisitorBanner_websiteIcon fa fa-globe" aria-label="Website"/>
+                            <span t-esc="visitor.website_name"/>
+                        </span>
+                    </t>
+                    <div class="o_VisitorBanner_history">
+                        <i class="o_VisitorBanner_historyIcon fa fa-history" aria-label="History"/>
+                        <span t-esc="visitor.history"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

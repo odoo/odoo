@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='payment_term']" position="after">
+            <p t-if="o.company_id.country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
+                Supply between <b>United Arab Emirates</b> and
+                <b>
+                    <span t-field="o.partner_id.country_id.name"/>
+                </b>
+            </p>
+        </xpath>
+        <xpath expr="//h2/span" position="before">
+            <span t-if="o.company_id.country_id.code == 'AE' and o.move_type in ['out_invoice', 'out_refund']">TAX
+            </span>
+        </xpath>
+
+        <xpath expr="//thead//th[@name='th_taxes']" position="replace">
+            <th name="th_taxes"
+                t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="o.company_id.country_id.code == 'AE'">VAT</span>
+                <span t-else="">Taxes</span>
+            </th>
+            <th t-if="o.company_id.country_id.code == 'AE'" name="tax_amount"
+                t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span>VAT Amount</span>
+            </th>
+        </xpath>
+
+        <xpath expr="//span[@id='line_tax_ids']/.." position="after">
+            <td t-if="o.company_id.country_id.code == 'AE'">
+                <span t-field="line.l10n_ae_vat_amount" id="line_tax_amount"/>
+            </td>
+        </xpath>
+
+        <xpath expr="//div[hasclass('clearfix')]" position="after">
+            <div t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_id.currency_id"
+                 id="aed_amounts" class="row clearfix ms-auto my-3 text-nowrap table">
+                <t t-set="aed_rate"
+                   t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
+                <div name="exchange_rate" class="col-auto">
+                    <strong>Exchange Rate</strong>
+                    <p class="m-0" t-esc="aed_rate" t-options='{"widget": "float", "precision": 5}'/>
+                </div>
+                <div name="aed_subtotal" class="col-auto">
+                    <strong>Subtotal (AED)</strong>
+                    <p class="m-0" t-esc="o.amount_untaxed_signed"
+                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+                <div name="aed_vat_amount" class="col-auto">
+                    <strong>VAT Amount (AED)</strong>
+                    <p class="m-0"
+                       t-esc="o.currency_id._convert(o.amount_tax, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+                <div name="aed_total" class="col-auto">
+                    <strong>Total (AED)</strong>
+                    <p class="m-0" t-esc="o.amount_total_signed"
+                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

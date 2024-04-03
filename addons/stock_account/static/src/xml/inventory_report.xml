@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="stock.InventoryReport.Buttons" t-inherit-mode="extension" owl="1">
+    <xpath expr="//button[hasclass('o_button_at_date')]" position="after">
+        <button t-if="props.resModel == 'stock.valuation.layer'" type="button"
+            class="btn btn-primary o_button_at_date me-2" t-on-click="onClickInventoryAtDate">
+            Valuation at Date
+        </button>
+    </xpath>
+</t>
+
+</templates>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadTypingIcon" owl="1">
+        <div class="o_ThreadTypingIcon d-flex align-items-center" t-attf-class="{{ className }}" t-att-title="props.title" t-ref="root">
+            <span class="o_ThreadTypingIcon_dot o_ThreadTypingIcon_dot1 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                'o-animationBounce': props.animation === 'bounce',
+                'o-animationPulse': props.animation === 'pulse',
+                'o-sizeMedium': props.size === 'medium',
+                'o-sizeSmall': props.size === 'small',
+            }"/>
+            <span class="o_ThreadTypingIcon_separator flex-grow-1 flex-shrink-0"/>
+            <span class="o_ThreadTypingIcon_dot o_ThreadTypingIcon_dot2 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                'o-animationBounce': props.animation === 'bounce',
+                'o-animationPulse': props.animation === 'pulse',
+                'o-sizeMedium': props.size === 'medium',
+                'o-sizeSmall': props.size === 'small',
+            }"/>
+            <span class="o_ThreadTypingIcon_separator flex-grow-1 flex-shrink-0"/>
+            <span class="o_ThreadTypingIcon_dot o_ThreadTypingIcon_dot3 d-flex flex-shrink-0 rounded-pill bg-500" t-att-class="{
+                'o-animationBounce': props.animation === 'bounce',
+                'o-animationPulse': props.animation === 'pulse',
+                'o-sizeMedium': props.size === 'medium',
+                'o-sizeSmall': props.size === 'small',
+            }"/>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentList" owl="1">
+        <t t-if="attachmentList">
+            <div class="o_AttachmentList d-flex flex-column mt-1" t-att-class="{ 'me-2 pe-4': attachmentList.isInChatWindowAndIsAlignedLeft and !attachmentList.composerViewOwner, 'ms-2 ps-4': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }" t-attf-class="{{ className }}" t-ref="root">
+                <div t-if="attachmentList.attachmentImages.length > 0" class="o_AttachmentList_partialList o_AttachmentList_partialListImages d-flex flex-grow-1 flex-wrap" t-att-class="{ 'justify-content-end': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }">
+                    <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">
+                        <AttachmentImage className="'o_AttachmentList_attachment mw-100 mb-1'" classNameObj="{ 'ms-1': attachmentList.isInChatWindowAndIsAlignedRight, 'me-1': !attachmentList.isInChatWindowAndIsAlignedRight }" record="attachmentImage"/>
+                    </t>
+                </div>
+                <div t-if="attachmentList.attachmentCards.length > 0" class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages d-flex flex-grow-1 flex-wrap mt-1" t-att-class="{ 'justify-content-end': attachmentList.isInChatWindowAndIsAlignedRight and !attachmentList.composerViewOwner }">
+                    <t t-foreach="attachmentList.attachmentCards" t-as="attachmentCard" t-key="attachmentCard.localId">
+                        <AttachmentCard className="'o_AttachmentList_attachment mw-100 mb-1'" classNameObj="{ 'ms-1': attachmentList.isInChatWindowAndIsAlignedRight, 'me-1': !attachmentList.isInChatWindowAndIsAlignedRight }" record="attachmentCard"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

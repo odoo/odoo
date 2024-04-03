@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_l10nfrresultat">
+    <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+            <div class="page">
+                <h2>Compte de résultat</h2>
+                <div class="row mt32 mb32">
+                    <div class="col-3">
+                        <span t-esc="res_company.name"/>
+                        <br/>au
+                        <span t-esc="time.strftime('%d-%m-%Y', time.strptime(date_stop,'%Y-%m-%d'))"/>
+                    </div>
+                    <div class="col-3">
+                        <p>Imprimé le
+                            <span t-esc="time.strftime('%d-%m-%Y')"/>
+                            <br/>Tenue de compte:
+                            <span t-esc="res_company.currency_id.name"/>
+                        </p>
+                    </div>
+                </div>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Charges (hors taxes)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CHARGES D'EXPLOITATION</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Achat de marchandises</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc1" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Variation des stocks</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc2" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Achats de mati&#xE8;res premi&#xE8;res et autres approvisionnements</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc3" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Variation des stocks</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc4" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Autres achats et charges externes</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc5" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Redevances de cr&#xE9;dit-bail mobilier</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc6" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Redevances de cr&#xE9;dit-bail immobilier</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc7" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Imp&#xF4;ts, taxes et versements assimil&#xE9;s</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc8" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Salaires et traitements</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc9" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Charges sociales</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc10" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dotation aux amortissements et aux d&#xE9;pr&#xE9;ciations</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Sur immobilisations : dotations aux amortissements</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc11" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sur immobilisations : dotations aux d&#xE9;pr&#xE9;ciations</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc12" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sur actif circulant : dotations aux d&#xE9;pr&#xE9;ciations</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc13" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dotations aux provisions</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc14" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Autres charges</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc15" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL I</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="ct1" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quotes-parts de r&#xE9;sultat sur op&#xE9;rations faites en commun ( II )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc16" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>                            
+                            <td><strong>CHARGES FINANCI&#xC8;RES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Dotations aux amortissements, aux d&#xE9;pr&#xE9;ciations et aux provisions</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc17" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Int&#xE9;r&#xEA;ts et charges assimil&#xE9;es</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc18" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Diff&#xE9;rences n&#xE9;gatives de change</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc19" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Charges nettes sur cessions de valeurs mobili&#xE8;res de placement</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc20" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL III</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="ct3" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>CHARGES EXCEPTIONNELLES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Sur op&#xE9;rations de gestion</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc21" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sur op&#xE9;rations en capital</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc22" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dotations aux amortissements, aux d&#xE9;pr&#xE9;ciations et aux provisions</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc23" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL IV</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="ct4" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Participation des salariés aux résultats ( V )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc24" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Impôts sur les bénéfices ( VI )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="cdrc25" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL CHARGES ( I + II + III + IV+ V+ VI )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="charges" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>PRODUITS (hors taxes)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>PRODUITS D'EXPLOITATION</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Vente de marchandises</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp1" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Production vendue [biens et services]</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp2" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sous-total A - Montant net du chiffre d'affaires</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="pta" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Production stock&#xE9;e</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp3" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Production immobilis&#xE9;e</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp4" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Subventions d'exploitation</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp5" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Reprises sur provisions, d&#xE9;pr&#xE9;ciations (et amortissements) et transferts de charges</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp6" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Autres produits</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp7" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sous-total B</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="ptb" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL I ( A + B )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="pt1" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quotes-parts de r&#xE9;sultat sur op&#xE9;rations faites en commun (II)</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp8" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>PRODUITS FINANCIERS</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>De participation</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp9" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>D'autres valeurs mobili&#xE8;res et cr&#xE9;ances de l'actif immobilis&#xE9;</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp10" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Autres int&#xE9;r&#xEA;ts et produits assimil&#xE9;s</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp11" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Reprises sur provisions, d&#xE9;pr&#xE9;ciations et transferts de charges</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp12" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Diff&#xE9;rences positives de change</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp13" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Produits nets sur cessions de valeurs mobili&#xE8;res de placement</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp14" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL III</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="pt3" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>PRODUITS EXCEPTIONNELS</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Sur op&#xE9;rations de gestion</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp15" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sur op&#xE9;rations en capital</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp16" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Reprises sur provisions, d&#xE9;pr&#xE9;ciations et transferts de charges</td>
+                            <td>
+                                <span class="text-end" t-esc="cdrp17" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL IV</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="pt4" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>TOTAL DES PRODUITS ( I + II + III + IV )</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="produits" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-end"><strong>PRODUITS - CHARGES</strong></td>
+                            <td>
+                                <span class="text-end" t-esc="produits-charges" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

@@ -1,0 +1,156 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_hr
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "Allowed Employees"
+msgstr "Employés autorisés"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+msgid "Cashier"
+msgstr "Caissier"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Change Cashier"
+msgstr "Changer de caissier"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_hr_employee
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
+msgid "Employee"
+msgstr "Employé"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid "Employee: %s - PoS Config(s): %s \n"
+msgstr "Employee: %s - Configuration(s) du point de vente : %s \n"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_employee_ids
+msgid "Employees with access"
+msgstr "Employés ayant accès"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_employee_ids
+msgid "If left empty, all employees can log in to the PoS session"
+msgstr ""
+"Si laissé vide, tous les employés peuvent se connecter à la session du point"
+" de vente"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Incorrect Password"
+msgstr "Mot de passe incorrect"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Log in to"
+msgstr "Connectez-vous à"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
+#, python-format
+msgid "Password ?"
+msgstr "Mot de passe ? "
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr ""
+"Personnes qui utilisent la caisse. Il peut s'agir d'un remplaçant, d'un "
+"étudiant ou d'un employé intérimaire."
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Configuration du point de vente"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Commandes du point de vente"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_order
+msgid "Point of Sale Orders Report"
+msgstr "Rapport sur les commandes du point de vente"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Session du point de vente"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Scannez votre badge"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Select Cashier"
+msgstr "Sélectionner le caissier"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr ""
+"Vous ne pouvez pas supprimer un employé qui pourrait être utilisé dans une "
+"session de point de vente active, fermez d'abord la ou les sessions : \n"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "or"
+msgstr "ou"

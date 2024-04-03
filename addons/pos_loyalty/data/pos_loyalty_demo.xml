@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 15% next order -->
+        <record id="15_pc_on_next_order" model="loyalty.program">
+            <field name="name">15% on next order</field>
+            <field name="program_type">next_order_coupons</field>
+            <field name="trigger">auto</field>
+            <field name="applies_on">future</field>
+            <field name="pos_config_ids" eval="[(6,0,[ref('point_of_sale.pos_config_main')])]"/>
+            <field name="portal_visible">True</field>
+            <field name="portal_point_name">Coupon point(s)</field>
+        </record>
+
+        <record id="15_pc_on_next_order_rule" model="loyalty.rule">
+            <field name="minimum_amount">100</field>
+            <field name="program_id" ref="pos_loyalty.15_pc_on_next_order"/>
+        </record>
+        
+        <record id="15_pc_on_next_order_reward" model="loyalty.reward">
+            <field name="discount_mode">percent</field>
+            <field name="discount">15</field>
+            <field name="discount_applicability">order</field>
+            <field name="program_id" ref="pos_loyalty.15_pc_on_next_order"/>
+        </record>
+
+        <record id="loyalty.3_cabinets_plus_1_free" model="loyalty.program">
+            <field name="pos_config_ids" eval="[(6,0,[ref('point_of_sale.pos_config_main')])]" />
+        </record>
+
+        <record id="loyalty.10_percent_with_code" model="loyalty.program">
+            <field name="pos_config_ids" eval="[(6,0,[ref('point_of_sale.pos_config_main')])]" />
+        </record>
+
+        <record id="loyalty.10_percent_coupon" model="loyalty.program">
+            <field name="pos_config_ids" eval="[(6,0,[ref('point_of_sale.pos_config_main')])]" />
+        </record>
+
+        <function name="create" model="loyalty.generate.wizard">
+            <value model="loyalty.generate.wizard" eval="dict(
+                obj().default_get(list(obj().fields_get())),
+                **{
+                    'coupon_qty': 10,
+                    'program_id': ref('loyalty.10_percent_coupon'),
+                }
+            )"/>
+        </function>
+
+        <!-- Create 10 coupons for the 10% coupon program based on the created record above -->
+        <function name="generate_coupons" model="loyalty.generate.wizard">
+            <value model="loyalty.generate.wizard" eval="obj().search([('coupon_qty', '=', 10)]).id"/>
+        </function>
+
+        <function name="unlink" model="loyalty.generate.wizard">
+            <value model="loyalty.generate.wizard" eval="obj().search([('coupon_qty', '=', 10)]).id"/>
+        </function>
+    </data>
+
+    <record id="simple_pen" model="product.product">
+        <field name="available_in_pos">True</field>
+        <field name="list_price">1.20</field>
+        <field name="name">Simple Pen</field>
+        <field name="weight">0.01</field>
+        <field name="default_code">CONS_0002</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="image_1920" type="base64" file="pos_loyalty/static/img/simple_pen.png"/>
+    </record>
+
+    <!-- Loyalty program -->
+    <record id="loyalty_program" model="loyalty.program">
+        <field name="name">Loyalty Program</field>
+        <field name="program_type">loyalty</field>
+        <field name="applies_on">both</field>
+        <field name="trigger">auto</field>
+        <field name="portal_visible">True</field>
+        <field name="portal_point_name">Loyalty Points</field>
+    </record>
+
+    <record id="loyalty_program_rule" model="loyalty.rule">
+        <field name="reward_point_mode">money</field>
+        <field name="reward_point_amount">10</field>
+        <field name="program_id" ref="pos_loyalty.loyalty_program"/>
+    </record>
+
+    <record id="loyalty_program_reward" model="loyalty.reward">
+        <field name="reward_type">product</field>
+        <field name="required_points">5</field>
+        <field name="reward_product_id" ref="pos_loyalty.simple_pen"/>
+        <field name="program_id" ref="pos_loyalty.loyalty_program"/>
+    </record>
+
+     <!-- Gift Cards -->
+    <record id="loyalty.gift_card_program" model="loyalty.program">
+        <field name="pos_report_print_id" ref="loyalty.report_gift_card"/>
+    </record>
+</odoo>

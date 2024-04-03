@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DropZone" owl="1">
+        <div class="o_DropZone position-absolute top-0 start-0 align-items-center justify-content-center d-flex w-100 h-100 border-primary bg-view text-primary opacity-75" t-att-class="{ 'o-dragging-inside': dropZoneView.isDraggingInside }" t-attf-class="{{ className }}" t-on-dragenter="dropZoneView.onDragenter" t-on-dragleave="dropZoneView.onDragleave" t-on-dragover="dropZoneView.onDragover" t-on-drop="dropZoneView.onDrop" t-ref="root">
+            <h4>
+                Drag Files Here <i class="fa fa-download"/>
+            </h4>
+        </div>
+    </t>
+
+</templates>

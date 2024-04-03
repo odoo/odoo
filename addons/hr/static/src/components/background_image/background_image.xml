@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr.BackgroundImage" owl="1">
+        <div
+            t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
+            t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
+            t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"
+            t-attf-style="background-image: url('#{getUrl(props.previewImage or props.name)}');"/>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+     <template id="my_view_name" inherit_id="l10n_it_edi.account_invoice_it_FatturaPA_export">
+        <xpath expr='//DatiDDT' position="after">
+            <t t-if="ddt_dict and not record.l10n_it_ddt_id" t-foreach="ddt_dict" t-as="picking">
+            <DatiDDT>
+                <NumeroDDT t-if="picking.l10n_it_ddt_number" t-esc="format_alphanumeric(picking.l10n_it_ddt_number[-20:])"/>
+                <DataDDT t-esc="format_date(picking.date_done)"/>
+                <t t-if="len(ddt_dict) > 1" t-foreach="ddt_dict[picking]" t-as="line_ref">
+                <RiferimentoNumeroLinea t-esc="line_ref"/>
+                </t>
+            </DatiDDT>
+            </t>
+        </xpath>
+    </template>
+</odoo>

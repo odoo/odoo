@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="analytic.AnalyticDistribution" owl="1">
+        <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
+            <TagsList tags="this.tags"/>
+            <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
+                <span class="analytic_distribution_placeholder"/>
+                <a role="button" class="o_dropdown_button" draggable="false"/>
+                <t t-call="analytic.AnalyticDistributionPopup"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="analytic.AnalyticDistributionPopup" owl="1">
+        <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
+            <div class="popover-header sticky-top">
+                <div class="d-flex">
+                    <div class="h5 mt-2 me-auto">
+                        Analytic
+                        <span t-if="tags.length and allowSave" class="btn btn-link" t-on-click="onSaveNew">New Model</span>
+                    </div>
+                    <div class="popupButtons">
+                        <span class="o_button ms-2 cursor-pointer" t-on-click.stop="() => this.closeAnalyticEditor()"><span class="fa fa-close"/></span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-2">
+                <span t-if="!sortedList.length">No plans available</span>
+                <t t-foreach="sortedList" t-as="plan" t-key="plan.id">
+                    <table class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-borderless" t-attf-id="plan_{{plan.id}}">
+                        <tr class="border-bottom">
+                            <th class="o_analytic_account_name">
+                                <t t-esc="plan.name"/>
+                                <t t-if="plan.account_count === 0"> (no accounts)</t>
+                                <span t-if="plan.applicability === 'mandatory'" t-attf-class="o_status d-inline-block o_analytic_status_{{groupStatus(plan.id)}}" t-att-title="statusDescription(plan.id)"/>
+                            </th>
+                        </tr>
+                        <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">
+                            <tr t-attf-class="{{tagIsReady(dist_tag) and 'ready' or !!dist_tag.analytic_account_id and 'to_remove' or 'incomplete'}} tag_{{dist_tag.id}}">
+                                <td class="o_analytic_account_name">
+                                    <AutoComplete
+                                        id="dist_tag.id.toString()"
+                                        placeholder="'Search Analytic Account'"
+                                        value="dist_tag.analytic_account_name"
+                                        sources="sourcesAnalyticAccount(plan.id)"
+                                        autoSelect="true"
+                                        onSelect.alike="(option, params) => this.onSelect(option, params, dist_tag)"
+                                        onChange.alike="({inputValue}) => this.autoCompleteInputChanged(dist_tag, inputValue)"/>
+                                </td>
+                                <td class="o_analytic_percentage">
+                                    <input
+                                        class="o_input"
+                                        inputmode="numeric"
+                                        type="text"
+                                        t-att-value="formatPercentage(dist_tag.percentage)"
+                                        t-on-click.stop=""
+                                        t-on-change="(ev) => this.percentageChanged(dist_tag, ev)"/>
+                                </td>
+                                <td>
+                                    <span t-if="dist_tag.analytic_account_id" class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteTag(dist_tag.id, dist_tag.group_id)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </t>
+                <div tabindex="0" class="hidden-focus"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

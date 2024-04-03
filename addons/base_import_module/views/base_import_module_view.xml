@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_base_module_import" model="ir.ui.view">
+            <field name="name">base.import.module.form</field>
+            <field name="model">base.import.module</field>
+            <field name="arch" type="xml">
+                <form string="Import module">
+                    <field name="state" invisible="1"/>
+                    <separator string="Import Module" colspan="4"/>
+                    <p class="alert alert-warning" role="alert">Note: you can only import data modules (.xml files and static assets)</p>
+                    <group states="init" col="4">
+                        <label for="module_file" string="Select module package to import (.zip file):" colspan="4"/>
+                        <field name="module_file" colspan="4"/>
+
+                        <field name="force"/>
+                    </group>
+                    <group states="done" col="4">
+                        <field name="import_message" colspan="4" nolabel="1" readonly="1"/>
+                    </group>
+                    <footer>
+                        <div states="init">
+                            <button name="import_module" string="Import App" type="object" class="btn-primary"/>
+                            <button special="cancel" data-hotkey="z" string="Cancel" class="btn-secondary"/>
+                        </div>
+                        <div states="done">
+                            <button name="action_module_open" string="Open Modules" type="object" class="btn-primary" data-hotkey="q"/>
+                            <button special="cancel" data-hotkey="z" string="Close" class="btn-secondary"/>
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_import" model="ir.actions.act_window">
+            <field name="name">Import Module</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.import.module</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Import Module"
+            action="action_view_base_module_import"
+            id="menu_view_base_module_import"
+            parent="base.menu_management"
+            groups="base.group_no_one"
+            sequence="100"/>
+
+</odoo>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base_view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="l10n_ar_afip_responsibility_type_id" string="AFIP Responsibility" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='accounting']/group" position="inside">
+                <group string="Accounting Documents" name="accounting_documents">
+                    <field name="l10n_ar_special_purchase_document_type_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+
+            <field name="property_account_position_id" position="after">
+                <label for="l10n_ar_gross_income_number" string="Gross Income"/>
+                <div name="gross_income">
+                    <field name="l10n_ar_gross_income_type" class="oe_inline"/>
+                    <field name="l10n_ar_gross_income_number" placeholder="Number..." class="oe_inline" attrs="{'invisible': [('l10n_ar_gross_income_type', 'not in', ['multilateral', 'local'])], 'required': [('l10n_ar_gross_income_type', 'in', ['multilateral', 'local'])]}"/>
+                </div>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">view.res.partner.filter.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="l10n_ar_afip_responsibility_type_id"/>
+            </field>
+            <filter name="salesperson" position="before">
+                <filter string="AFIP Responsibility Type" name="l10n_ar_afip_responsibility_type_id_filter" context="{'group_by': 'l10n_ar_afip_responsibility_type_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

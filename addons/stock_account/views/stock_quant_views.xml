@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_stock_quant_tree_inherit">
+        <field name="name">stock.quant.tree.inherit</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="value" optional="hidden"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_stock_quant_tree_editable_inherit">
+        <field name="name">stock.quant.tree.editable.inherit</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_editable"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="cost_method" invisible="1"/>
+                <field name="value" optional="hidden" sum="Total Value"/>
+            </xpath>
+            <xpath expr="//button[@name='action_view_orderpoints']" position="after">
+                <button name="%(stock_valuation_layer_report_action)d" title="Stock Valuation"
+                        string="Valuation" type="action" class="btn-link" icon="fa-bar-chart"
+                        context="{'search_default_product_id': product_id}"
+                        attrs="{'invisible': [('cost_method', '!=', 'fifo')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

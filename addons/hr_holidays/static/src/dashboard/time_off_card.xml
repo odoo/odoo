@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.TimeOffCard" owl="1" class="o_timeoff_card py-3 text-odoo">
+        <t t-set="data" t-value="props.data"/>
+        <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken"/>
+        <t t-set="show_popover" t-value="true"/>
+
+        <strong class="o_timeoff_name"><t t-esc="props.name"/></strong>
+        <span class="o_timeoff_duration">
+            <t t-if="data and data.icon">
+                <img t-att-src="data.icon" />
+            </t>
+            <t t-esc="duration"/>
+        </span>
+        <div class="text-uppercase">
+            <t t-if="data.request_unit == 'hour'" name="duration_unit">hours</t>
+            <t t-else="">days</t>
+            <t t-if="props.requires_allocation" name="duration_type">
+                available
+            </t>
+            <t t-else="">
+                taken
+            </t>
+            <t t-if="show_popover">
+                <TimeOffCardPopover
+                    allocated="data.max_leaves"
+                    approved="data.leaves_approved"
+                    planned="data.leaves_requested"
+                    left="data.virtual_remaining_leaves"
+                    usable="data.usable_remaining_leaves" />
+            </t>
+        </div>
+        <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
+            <t t-if="data.closest_allocation_remaining != data.virtual_remaining_leaves">
+                (<t t-esc="data.closest_allocation_remaining"/> <t t-if="data.request_unit == 'hour'">hours</t><t t-else="">days</t>
+                valid until <span t-esc="data.closest_allocation_expire"/>)
+            </t>
+            <t t-else="">
+                (valid until <span t-esc="data.closest_allocation_expire"/>)
+            </t>
+        </span>
+    </div>
+
+    <t t-name="hr_holidays.TimeOffCardMobile" owl="1">
+        <t t-set="data" t-value="props.data"/>
+        <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken" />
+
+        <span class="float-end o_timeoff_card_mobile">
+            <t t-if="props.requires_allocation" name="duration_type">
+                <strong t-esc="duration" class="o_timeoff_green"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
+            </t>
+            <t t-else="">
+                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-odoo">Taken</span>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="hr_holidays.TimeOffCardPopover" owl="1">
+        <div class="o_timeoff_info">
+            <Popover position="'right'" popoverClass="'o_timeoff_popover'">
+                <span class="fa fa-question-circle-o"/>
+                <t t-set-slot="opened">
+                    <ul>
+                        <li>Allocated: <span t-esc="props.allocated"/></li>
+                        <li>Approved: <span t-esc="props.approved"/></li>
+                        <li style="border-bottom: 1px solid gray;">Planned: <span t-esc="props.planned"/></li>
+                        <li>Left: <span t-esc="props.left"/></li>
+                        <li t-if="props.left != props.usable">Usable: <span t-esc="props.usable"/></li>
+                    </ul>
+                </t>
+            </Popover>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,41 @@
+<templates xml:space="preserve">
+    <t t-name="portal.identitycheck">
+        <form string="Security Control">
+            <h3><strong>Please enter your password to confirm you own this account</strong></h3>
+            <br/>
+            <div>
+                <input class="form-control col-10 col-md-6" autocomplete="current-password"
+                       name="password" type="password" required="required"/>
+            </div>
+            <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
+        </form>
+    </t>
+    <t t-name="portal.keydescription">
+        <form string="Key Description">
+            <h3><strong>Name your key</strong></h3>
+            <p>Enter a description of and purpose for the key.</p>
+            <input type="text" class="form-control col-10 col-md-6" placeholder="What's this key for?"
+                name="description" required="required"/>
+            <p>
+                It is very important that this description be clear
+                and complete, <strong>it will be the only way to
+                identify the key once created</strong>.
+            </p>
+        </form>
+    </t>
+    <t t-name="portal.keyshow">
+        <div>
+            <h3><strong>Write down your key</strong></h3>
+            <p>
+                Here is your new API key, use it instead of a password for RPC access.
+                Your login is still necessary for interactive usage.
+            </p>
+            <p><code><span t-out="key"/></code></p>
+            <p class="alert alert-warning" role="alert">
+                <strong>Important:</strong>
+                The key cannot be retrieved later and provides <b>full access</b>
+                to your user account, it is very important to store it securely.
+            </p>
+        </div>
+    </t>
+</templates>

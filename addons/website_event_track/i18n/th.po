@@ -1,0 +1,2662 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track
+# 
+# Translators:
+# Odoo Thaidev <odoothaidev@gmail.com>, 2022
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr "ต้องระบุช่อง \"ชื่อแอปอีเวนต์\""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr "# รายการที่อยากได้"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s from %(company)s"
+msgstr "%(name)s จาก %(company)s"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s, %(function)s at %(company)s"
+msgstr "%(name)s, %(function)s ที่ %(company)s"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr "%s อีเวนต์"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr "%s แอปพลิเคชันอีเวนต์ออนไลน์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_17
+msgid "10 DIY Furniture Ideas For Absolute Beginners"
+msgstr "10 ไอเดียเฟอร์นิเจอร์ DIY สำหรับมือใหม่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_18
+msgid "6 Woodworking tips and tricks for beginners"
+msgstr "6 เคล็ดลับและเทคนิคงานไม้สำหรับผู้เริ่มต้น"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "<b>Contact Information</b>"
+msgstr "<b>ข้อมูลติดต่อ</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Mail</b>:"
+msgstr "<b>เมล</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Phone</b>:"
+msgstr "<b>โทรศัพท์</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Proposed By</b>:"
+msgstr "<b>เสนอโดย</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Speaker Biography</b>:"
+msgstr "<b>ประวัติวิทยากร</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Speaker Profile</b>"
+msgstr "<b>โปรไฟล์ของวิยากร</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Talk Intro</b>"
+msgstr "<b>พูดคุยแนะนำ</b>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Talk Introduction</b>:"
+msgstr "<b>พูดคุยแนะนำ</b>:"
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
+msgstr ""
+"<div>\n"
+"  เรียน <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"  เรายินดีที่แจ้งให้ทราบว่าข้อเสนอของคุณสำหรับ <t t-out=\"object.name or ''\">กิจกรรมนี้เกี่ยวกับอะไร</t> ได้รับการยอมรับและยืนยันสำหรับกิจกรรม <t t-out=\"object.event_id.name or ''\">เปิดเผยคอลเลกชัน OpenWood ออนไลน์</t> แล้ว\n"
+"<br>\n"
+"คุณสามารถดูรายละเอียดเพิ่มเติมได้ที่นี่:\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        ดูการพูดคุย\n"
+"    </a>\n"
+"</div>\n"
+"<br><br>\n"
+"ขอขอบคุณ,\n"
+"<t t-if=\"user.signature\">\n"
+"    <br>\n"
+"    <t t-out=\"user.signature or ''\">--<br>แอดมิน Mitchell</t>\n"
+"</t>\n"
+"</div>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban me-2\"/>ไม่เผยแพร่"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr "<i class=\"fa fa-folder-open\"/>ชื่นชอบ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                        Write one."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" "
+"title=\"ค่าที่ตั้งไว้นี้เป็นค่าเฉพาะเว็บไซต์\" "
+"groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">พูดคุยแนะนำ</span>\n"
+"                                            <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">หัวเรื่องการสนทนา</span>\n"
+"                                            <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid ""
+"<span for=\"contact_name\">Name</span>\n"
+"                    <span>*</span>"
+msgstr ""
+"<span for=\"contact_name\">ชื่อ</span>\n"
+"                    <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>ผลลัพธ์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
+msgid "<span> at </span>"
+msgstr "<span> ที่ </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<span>New track proposal</span>"
+msgstr "<span>ข้อเสนอแทร็กใหม่</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr "<span>ชั่วโมง</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
+"                                    different topics. Most topics are accepted in lightning talks."
+msgstr ""
+"<strong>คุยไฟแลบ</strong>นี่คือการพูดคุย 30 นาทีในหลาย ๆ หัวข้อ\n"
+"                                    หัวข้อส่วนใหญ่เป็นที่ยอมรับในการพูดคุยแบบรวดเร็ว"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr "<strong>ที่ตั้ง:</strong>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
+"                                    alocated in slots of 60 minutes."
+msgstr ""
+"<strong>พูดคุยปกติ</strong>นี่คือการพูดคุยมาตรฐานพร้อมสไลด์\n"
+"                                    ที่จัดสรรในช่วง 60 นาที"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+msgid "A technical explanation of how to use computer design apps"
+msgstr "คำอธิบายทางเทคนิคเกี่ยวกับวิธีใช้แอปออกแบบคอมพิวเตอร์"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
+msgid ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
+msgstr ""
+"สถานะคัมบังของแทร็กระบุถึงสถานการณ์พิเศษที่ส่งผลต่อสถานะดังกล่าว:\n"
+" * สีเทาคือสถานการณ์เริ่มต้น\n"
+" * สีแดงแสดงว่ามีบางอย่างขัดขวางความคืบหน้าของแทร็กนี้\n"
+" * สีเขียวแสดงว่าแทร็กนี้พร้อมที่จะดึงไปยังขั้นตอนถัดไป"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
+msgid "Activities"
+msgstr "กิจกรรม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
+msgid "Activity State"
+msgstr "สถานะกิจกรรม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ไอคอนประเภทกิจกรรม"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr ""
+"เพิ่มคำอธิบายเพื่อช่วยให้เพื่อนร่วมงานของคุณเข้าใจความหมายและวัตถุประสงค์ของขั้นตอน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Add a description..."
+msgstr "เพิ่มคำอธิบาย..."
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid "Add a new stage in the task pipeline"
+msgstr "เพิ่มขั้นตอนใหม่ในไปป์ไลน์งาน"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
+msgstr ""
+"เพิ่มแท็กให้กับแทร็กของคุณเพื่อช่วยให้ผู้เข้าร่วมเรียกดูหน้าเว็บอีเวนต์ของคุณ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+msgid "Advanced lead management : tips and tricks from the fields"
+msgstr "การจัดการลูกค้าเป้าหมายขั้นสูง : เคล็ดลับและลูกเล่นต่าง ๆ จากภาคสนาม"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+msgid "Advanced reporting"
+msgstr "การรายงานขั้นสูง"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Agenda"
+msgstr "กำหนดการ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr "การพูดคุยทั้งหมด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr "อนุญาตให้แทร็กข้อเสนอ"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Allow push notifications?"
+msgstr "อนุญาตการแจ้งเตือนแบบพุชหรือไม่?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Allow video and audio recording of their\n"
+"                                    presentation, for publishing on our website."
+msgstr ""
+"อนุญาตให้บันทึกวิดีโอและเสียงของ\n"
+"                                    การนำเสนอเพื่อเผยแพร่บนเว็บไซต์ของเรา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr "รายการที่อยากได้เสมอ"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage2
+msgid "Announced"
+msgstr "ประกาศ"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Application"
+msgstr "แอปพลิเคชัน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr ""
+"เนื่องจากแทร็กคีย์ไม่สามารถเลิกเป็นรายการโปรดได้ "
+"ฟิลด์นี้จะจัดเก็บตัวเลือกของพาร์ทเนอร์เพื่อลบการเตือนสำหรับแทร็กคีย์"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"    wood crates."
+msgstr ""
+"อย่างที่คุณอาจเคยได้ยินมาก่อน การทำเฟอร์นิเจอร์ของคุณเองนั้นจริง ๆ แล้วไม่ได้ยากหรือซับซ้อนอย่างที่คุณคิด\n"
+"    อันที่จริง บางโปรเจกต์นั้นง่ายมากที่ใคร ๆ ก็สามารถทำสำเร็จได้ เช่น ม้านั้งน่ารักๆจาก\n"
+"    ยางเก่าก็ง่ายดายมาก ๆ  และถ้าคุณต้องการโต๊ะกาแฟ คุณสามารถประกอบเข้าด้วยกันได้อย่างง่ายดาย\n"
+"   ลังไม้"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
+msgid "Audience"
+msgstr "ผู้ชม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
+msgid "Available Track Tags"
+msgstr "แท็กแทร็กที่มีอยู่"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Bandy clamp hack"
+msgstr "แฮกคีมปากโค้ง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Biography"
+msgstr "ชีวประวัติ"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
+#, python-format
+msgid "Blocked"
+msgstr "บล็อก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr "สำรองที่นั่งเพื่อการพูดคุยที่ดีที่สุด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr "จองการพูดคุยของคุณ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_14
+msgid "Building a DIY cabin from the ground up"
+msgstr "สร้างกระท่อม DIY จากพื้นดิน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr "ปุ่ม URL เป้าหมาย"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr "ชื่อปุ่ม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr "ปรากฏปุ่ม"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr "มีปุ่ม CTA"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Call for Proposals"
+msgstr "เรียกร้องข้อเสนอ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "สามารถเผยแพร่"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Canceled Stage"
+msgstr "ขั้นตอนที่ถูกยกเลิก"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage5
+msgid "Cancelled"
+msgstr "ยกเลิก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Categories"
+msgstr "หมวดหมู่"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "หมวดหมู่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_12
+msgid "Climate positive"
+msgstr "สภาพภูมิอากาศเป็นบวก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "สี"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+msgid "Color Index"
+msgstr "ดัชนีสี"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr "เร็ว ๆ นี้"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr "เร็ว ๆ นี้ ..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "บริษัทเดียว"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "ชื่อบริษัท"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
+msgid "Confirmation of {{ object.name }}"
+msgstr "คำยืนยันของ {{ object.name }}"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage1
+msgid "Confirmed"
+msgstr "ยืนยันแล้ว"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_13
+#: model_terms:event.track,description:website_event_track.event_7_track_3
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr ""
+"คิดจะสร้างบ้านไม้? "
+"ดูวิดีโอนี้เพื่อค้นหาข้อมูลเพิ่มเติมเกี่ยวกับขั้นตอนการก่อสร้างและผลลัพธ์ขั้นสุดท้าย"
+" อธิบายง่าย ๆ ทีละขั้นตอน! สนใจไหม?"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#, python-format
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Contact Details"
+msgstr "รายละเอียดการติดต่อ"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
+#, python-format
+msgid "Contact Email"
+msgstr "อีเมลติดต่อ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
+msgid "Contact Phone"
+msgstr "ติดต่อทางโทรศัพท์"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
+msgid "Contact email is private and used internally"
+msgstr "อีเมลติดต่อเป็นแบบส่วนตัวและใช้ภายใน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact me through a different email/phone"
+msgstr "ติดต่อฉันผ่านอีเมล/โทรศัพท์อื่น ๆ "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
+msgid "Contact of the track, may be different from speaker."
+msgstr "การติดต่อแทร็กอาจแตกต่างจากวิทยากร"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
+msgid "Contact phone is private and used internally"
+msgstr "โทรศัพท์ที่ติดต่อเป็นแบบส่วนตัวและใช้ภายใน"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Create a Track"
+msgstr "สร้างแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid "Create a Track Location"
+msgstr "สร้างตำแหน่งการแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid "Create a Track Tag"
+msgstr "สร้างแท็กแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "ลูกค้า"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_19
+msgid "DIY Timber Cladding Project"
+msgstr "โปรเจกต์งานไม้ DIY"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Date"
+msgstr "วันที่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_11
+msgid "Day 2 Wrapup"
+msgstr "สรุปวันที่ 2"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_8
+msgid "Dealing with OpenWood Furniture"
+msgstr "การจัดการกับเฟอร์นิเจอร์ OpenWood"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Define labels explaining kanban state management."
+msgstr "กำหนดป้ายกำกับที่อธิบายสถานะการจัดการในรูปแบบคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
+msgid "Define the order in which the location will appear on \"Agenda\" page"
+msgstr "กำหนดลำดับสถานที่ที่จะแสดงในหน้า \"กำหนดการ\""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
+msgstr ""
+"กำหนดขั้นตอนที่จะใช้ในอีเวนต์จาก\n"
+"            การสร้างแทร็กจนถึงการปิดแทร็ก\n"
+"            คุณจะใช้การแสดงเหล่านี้เพื่อติดตามความคืบหน้าใน\n"
+"           การแก้ปัญหาอีเวนต์แทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
+msgid "Description of the partner (name, function and company name)"
+msgstr "คำอธิบายของพาร์ทเนอร์ (ชื่อ หน้าที่ และชื่อบริษัท)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+msgid "Design contest (entire afternoon)"
+msgstr "ประกวดการออกแบบ (ช่วงบ่าย)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+msgid "Design contest (entire day)"
+msgstr "ประกวดการออกแบบ (ตลอดทั้งวัน)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+msgid "Detailed roadmap of our new products"
+msgstr "แผนงานโดยละเอียดของผลิตภัณฑ์ใหม่ของเรา"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+msgid "Discover our new design team"
+msgstr "พบกับทีมออกแบบใหม่ของเรา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr ""
+"แสดงปุ่มคำกระตุ้นการตัดสินใจให้ผู้เข้าร่วมของคุณดูขณะที่พวกเขาดูแทร็กของคุณ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "เสร็จสิ้น"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Dowel Hack"
+msgstr "   การแฮกหมุด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr "เมนูดรอปดาว์น"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_3
+msgid "Easy Way To Build a Wooden House"
+msgstr "วิธีง่ายๆ ในการสร้างบ้านไม้"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Edit Track"
+msgstr "แก้ไขแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Email"
+msgstr "อีเมล"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
+msgid "Email Template"
+msgstr "เทมเพลตอีเมล"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "ผิดพลาด"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event"
+msgstr "อีเวนต์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+msgid "Event Location"
+msgstr "สถานที่จัดอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
+msgid "Event Locations"
+msgstr "ตำแหน่งอีเวนต์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Event Page"
+msgstr "เพจกิจกรรม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
+msgid "Event Proposals Menus"
+msgstr "เมนูข้อเสนออีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "เทมเพลตอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+msgid "Event Track"
+msgstr "แทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_location
+msgid "Event Track Location"
+msgstr "ตำแหน่งแทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_stage
+msgid "Event Track Stage"
+msgstr "ขั้นตอนอีเวนต์แทร็ก"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
+msgid "Event Track Tag"
+msgstr "แท็กแทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr "หมวดหมู่แท็กแทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event Tracks"
+msgstr "แทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
+msgid "Event Tracks Menus"
+msgstr "เมนูแทร็กอีเวนต์"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_21
+msgid "Event Wrapup"
+msgstr "สรุปสั้น ๆ ของอีเวนต์"
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
+msgid "Event: Track Confirmation"
+msgstr "กิจกรรม: การยืนยันการติดตาม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr "ชื่อแอปอีเวนต์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr "PWA อีเวนต์"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr "รายการโปรดบน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "รายการโปรด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "Filter Tracks..."
+msgstr "ตัวกรองแทร็ก..."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Filter by Tags"
+msgstr "กรองตามแท็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "เสร็จสิ้นแล้ว"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_2
+msgid "First Day Wrapup"
+msgstr "บทสรุปสั้น ๆ ของวันแรก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
+msgid "Folded in Kanban"
+msgstr "พับในคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
+msgid "Format"
+msgstr "รูปแบบ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
+msgid "Fully accessible"
+msgstr "เข้าถึงได้อย่างเต็มที่"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Future Activities"
+msgstr "กิจกรรมในอนาคต"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr "เตรียมตัวให้พร้อมและ"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Glue tip"
+msgstr "เคล็ดลับกาว"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
+msgid "Green"
+msgstr "สีเขียว"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "ป้ายคัมบังสีเขียว"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+msgid "Grey"
+msgstr "สีเทา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "ป้ายคัมบังสีเทา"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Group By"
+msgstr "กลุ่มโดย"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_11
+msgid "Happy with OpenWood"
+msgstr "มีความสุขกับ OpenWood"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
+msgid "High"
+msgstr "สูง"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
+msgid "Highest"
+msgstr "สูงสุด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "โฮมเพจ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+msgid "House of World Cultures"
+msgstr "บ้านวัฒนธรรมโลก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "How can our team get in touch with you?"
+msgstr "ทีมงานของเราจะติดต่อกับคุณได้อย่างไร ?"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+msgid "How to build your marketing strategy within a competitive environment"
+msgstr "วิธีสร้างกลยุทธ์ทางการตลาดของคุณในสภาพแวดล้อมการแข่งขัน"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+msgid "How to communicate with your community"
+msgstr "สื่อสารกับชุมชนของคุณอย่างไร"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+msgid "How to design a new piece of furniture"
+msgstr "ออกแบบเฟอร์นิเจอร์ชิ้นใหม่อย่างไร"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+msgid "How to develop automated processes"
+msgstr "สามารถพัฒนากระบวนการอัตโนมัติได้อย่างไร"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+msgid "How to follow us on the social media"
+msgstr "ติดตามเราบนโซเชียลมีเดียได้อย่างไร"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+msgid "How to improve your quality processes"
+msgstr "ปรับปรุงกระบวนการคุณภาพของคุณได้อย่างไร"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+msgid "How to integrate hardware materials in your pieces of furniture"
+msgstr "วิธีผสานวัสดุฮาร์ดแวร์เข้ากับเฟอร์นิเจอร์ของคุณ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+msgid "How to optimize your sales, from leads to sales orders"
+msgstr ""
+"วิธีเพิ่มประสิทธิภาพการขายของคุณ เริ่มตั้งแต่ลูกค้าเป้าหมายไปจนถึงใบสั่งขาย"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "ไอคอนเพื่อระบุการยกเว้นกิจกรรม"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr ""
+"หากเลือกไว้ จะเผยแพร่แทร็กโดยอัตโนมัติเพื่อให้เข้าถึงลิงก์ไปยังลูกค้าได้"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "If checked, the related tracks will be visible in the frontend."
+msgstr "หากเลือก แทร็กที่เกี่ยวข้องจะปรากฏในส่วนหน้า"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr "หากตั้งค่าอีเมลจะถูกส่งไปยังลูกค้าเมื่อแทร็กมาถึงขั้นตอนนี้"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
+msgstr ""
+"หากตั้งค่าไว้ "
+"การพูดคุยจะถูกกำหนดให้เป็นรายการโปรดสำหรับผู้เข้าร่วมแต่ละคนที่ลงทะเบียนเข้าร่วมงาน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "URL รูปภาพ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "In"
+msgstr "ใน"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
+#, python-format
+msgid "In Progress"
+msgstr "กำลังดำเนินการ"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_15
+msgid "In this video we will see how lumber is made in a sawmill factory."
+msgstr "ในวิดีโอนี้ เราจะมาดูวิธีการทำไม้แปรรูปในโรงงานโรงเลื่อย"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "In this video, I covered 6 tips and tricks to help out beginners:"
+msgstr "ในวิดีโอนี้ ฉันพูดถึง 6 เคล็ดลับและคำแนะนำเพื่อช่วยเหลือมือใหม่"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "ติดตั้ง"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr "ติดตั้งแอปพลิเคชัน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr "การโต้ตอบ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Introduction"
+msgstr "แนะนำ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr "คือไลฟ์ CTA"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is Published"
+msgstr "เผยแพร่"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr "เป็นการแจ้งเตือนบน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr "แทร็กเสร็จสิ้นแล้ว"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr "ไลฟ์แทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr "แทร็กในเร็ว ๆ นี้"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr "แทร็กวันนี้"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr "แทร็กที่กำลังจะเกิด"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr "เป็นรายการสิ่งที่อยากได้"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr "เป็นปิดการเตือน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "ตำแหน่งงาน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Job Title"
+msgstr "ชื่อตำแหน่งงาน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "คำอธิบายที่ถูกบล็อกคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "คำอธิบายอย่างต่อเนื่องคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
+msgid "Kanban State"
+msgstr "สถานะคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
+msgid "Kanban State Label"
+msgstr "ป้ายสถานะคัมบัง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "คำอธิบายที่ถูกต้องคัมบัง"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+msgid "Key Success factors selling our furniture"
+msgstr "ปัจจัยความสำเร็จที่สำคัญในการขายเฟอร์นิเจอร์ของเรา"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_9
+msgid "Kitchens for the Future"
+msgstr "ครัวแห่งอนาคต"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งล่าสุดเมื่อ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Late Activities"
+msgstr "กิจกรรมล่าสุด"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+msgid "Latest trends"
+msgstr "เทรนด์ล่าสุด"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_26
+msgid "Less Furniture is More Furniture"
+msgstr "เฟอร์นิเจอร์ที่น้อยกว่าคือเฟอร์นิเจอร์ที่มากกว่า"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_4
+msgid "Life at Home Around the World: William’s Story"
+msgstr "ชีวิตที่บ้านทั่วโลก: เรื่องราวของ William"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_19
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr ""
+"ลิงก์ถึง Q&amp;A ที่นี้! ถึงเวลาที่จะซ่อนกำแพงบล็อกเก่าเหล่านั้นแล้ว "
+"ชอบโปรเจกต์ประเภทเรียบง่ายแต่แปลงร่างได้แบบนี้จัง! :)-"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "ไลฟ์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr "ไลฟ์ตอนนี้"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_10
+msgid "Live Testimonial"
+msgstr "การรับรองแบบไลฟ์"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_25
+msgid "Live Testimonials"
+msgstr "การรับรองแบบไลฟ์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
+msgstr "สถานที่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_13
+msgid "Log House Building"
+msgstr "บ้านไม้ซุง"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_15
+msgid "Logs to lumber"
+msgstr "ไม้ซุงสู่ไม้แปรรูป"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
+msgid "Low"
+msgstr "ต่ำ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+msgid "Lunch"
+msgstr "อาหารเที่ยง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr "ปุ่มวิเศษ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "เอกสารหลักที่แนบมา"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Making a center marking gauge"
+msgstr "ทำเกจ์วัดกลาง"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
+msgstr "จัดการสถานที่ที่คุณจัดระเบียบแทร็กต่าง ๆ (เช่น ห้อง ช่องทาง)"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+msgid "Medium"
+msgstr "สื่อกลาง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
+msgid "Menu Type"
+msgstr "ประเภทเมนู"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+msgid "Minimal but efficient design"
+msgstr "การออกแบบที่เรียบง่ายแต่มีประสิทธิภาพ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr "ไม่กี่นาทีก่อน CTA จะเริ่มต้น"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr "ไม่กี่นาทีก่อนเริ่มแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr "นาทีเปรียบเทียบกับการเริ่มต้นแทร็ก"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Miter saw tip"
+msgstr "ยอดเลื่อยวงเดือน"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+msgid "Morning break"
+msgstr "พักตอนเช้า"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมของฉัน"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+msgid "My Company global presentation"
+msgstr "การนำเสนอทั่วโลกของบริษัทของฉัน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Tracks"
+msgstr "แทร็กของเรา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "ชื่อของแอปพลิเคชันความคืบหน้าเว็บไซต์อีเวนต์ของคุณ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+msgid "New Certification Program"
+msgstr "โปรแกรมการรับรองใหม่"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+msgid "New Track"
+msgstr "แทร็กใหม่"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมถัดไป"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
+msgid "Next Activity Summary"
+msgstr "สรุปกิจกรรมถัดไป"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
+msgid "Next Activity Type"
+msgstr "ประเภทกิจกรรมถัดไป"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "No Track Visitors yet!"
+msgstr "ยังไม่มีผู้มาเยี่ยมชมแทร็ก!"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "No results found"
+msgstr "ไม่พบผลลัพธ์"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track favorited by this visitor"
+msgstr "ไม่มีแทร็กที่ผู้เยี่ยมชมรายนี้ชื่นชอบ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr "ไม่พบแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr "โปรดทราบว่าแท็กที่ไม่มีสีจะไม่สามารถใช้ได้บนเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_24
+msgid "Old is New"
+msgstr "เก่าคือใหม่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_20
+msgid "Our Last Day Together !"
+msgstr "วันสุดท้ายของพวกเรา!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+msgid "Partner"
+msgstr "พาร์ทเนอร์"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+msgid "Partnership programs"
+msgstr "โปรแกรม ร่วมเป็นพาร์ทเนอร์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Phone"
+msgstr "โทรศัพท์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Picture"
+msgstr "รูปภาพ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr ""
+"วางแผนประสบการณ์ของคุณโดยเพิ่มการพูดคุยในรายการโปรดของคุณในรายการสิ่งที่อยากได้"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please enter either a contact email address or a contact phone number."
+msgstr "โปรดป้อนที่อยู่อีเมลสำหรับติดต่อหรือหมายเลขโทรศัพท์สำหรับติดต่อ"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please fill out the form correctly."
+msgstr "กรุณากรอกแบบฟอร์มให้ถูกต้อง"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+msgid "Portfolio presentation"
+msgstr "การนำเสนอ Portfolio"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_16
+msgid "Pretty. Ugly. Lovely."
+msgstr "สวย น่าเกลียด น่ารัก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "หน้าก่อนหน้า"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
+msgid "Priority"
+msgstr "ระดับความสำคัญ"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_7
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+"อาจเป็นหนึ่งในคำถามที่ถูกถามบ่อยที่สุดที่ฉันได้รับ "
+"นั้นคือสามารถเริ่มงานไม้ได้อย่างไร! ในวิดีโอนี้ "
+"ฉันจะแบ่งปันกับคุณว่าเหตุใดฉันจึงเริ่มสร้างเฟอร์นิเจอร์!"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage0
+msgid "Proposal"
+msgstr "ข้อเสนอ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Proposals are closed!"
+msgstr "ปิดข้อเสนอ!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
+msgid "Proposals on Website"
+msgstr "ข้อเสนอบนเว็บไซต์"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Published"
+msgstr "เผยแพร่แล้ว"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+msgid "Raising qualitive insights from your customers"
+msgstr "เพิ่มข้อมูลคุณภาพเชิงลึกจากลูกค้าของคุณ"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage5
+#, python-format
+msgid "Ready for Next Stage"
+msgstr "เตรียมพร้อมสำหรับขั้นตอนถัดไป"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
+msgid "Red"
+msgstr "สีแดง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "ป้ายคัมบังสีแดง"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage4
+msgid "Refused"
+msgstr "ปฏิเสธ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr "เวลาสัมพัทธ์เทียบกับการเริ่มต้นแทร็ก (วินาที)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "เวลาที่เหลือก่อนเริ่ม CTA (วินาที)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr "เวลาที่เหลือก่อนเริ่มแทร็ก (วินาที)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Responsible"
+msgstr "รับผิดชอบ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
+msgid "Responsible User"
+msgstr "ผู้ใช้ที่รับผิดชอบ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_23
+msgid "Restoring Old Woodworking Tools"
+msgstr "การกู้คืนเครื่องมืองานไม้เก่า"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_23
+msgid "Restoring old woodworking tools"
+msgstr "การกู้คืนเครื่องมืองานไม้เก่า"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Right angle clamp jig"
+msgstr "แคลมป์เข้ามุมขวา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
+msgid "SEO optimized"
+msgstr "ปรับ SEO ให้เหมาะสม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started"
+msgstr "กำหนดเวลาแทร็กเพื่อเริ่มต้น"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_6
+msgid "Securing your Lumber during transport"
+msgstr "การรักษาความปลอดภัยไม้ของคุณระหว่างการขนส่ง"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "Select categories"
+msgstr "เลือกหมวดหมู่"
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
+msgstr ""
+"ส่งไปยังวิทยากรที่ได้รับการยอมรับข้อเสนอของแทร็ค "
+"(กำหนดเทมเพลตให้อยู่ในระยะที่ถูกต้อง)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr "ชื่อ Seo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr "ตั้งค่ารายการโปรด"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Show all records which has next action date is before today"
+msgstr "แสดงระเบียนทั้งหมดที่มีวันที่ดำเนินการถัดไปคือก่อนวันนี้"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr "แทร็กงานแสดง"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker"
+msgstr "วิยากร"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker Bio"
+msgstr "ประวัติวิทยากร"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speaker Email"
+msgstr "อีเมลวิทยากร"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr "รูปภาพวิทยากร"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_email
+msgid ""
+"Speaker email is used for public display and may vary from contact email"
+msgstr ""
+"อีเมลของวิทยากรใช้สำหรับแสดงต่อสาธารณะและอาจแตกต่างไปจากอีเมลติดต่อส่วนตัว"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_name
+msgid "Speaker name is used for public display and may vary from contact name"
+msgstr "ชื่อวิทยากรสำหรับแสดงต่อสาธารณะและอาจแตกต่างไปจากชื่อผู้ติดต่อส่วนตัว"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_phone
+msgid ""
+"Speaker phone is used for public display and may vary from contact phone"
+msgstr ""
+"โทรศัพท์ของวิทยากรใช้สำหรับแสดงต่อสาธารณะและอาจแตกต่างไปโทรศัพท์ที่ใช้ติดต่อส่วนตัว"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speakers"
+msgstr "วิทยากร"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Stage"
+msgstr "ขั้นตอน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Stage Description and Tooltips"
+msgstr "คำอธิบายขั้นตอนและทูลทิป"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
+msgid "Stage Name"
+msgstr "ชื่อสถานะ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "Starting now!"
+msgstr "เริ่มตอนนี้!"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+msgid "Status & Strategy"
+msgstr "สถานะและกลยุทธ์"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"สถานะตามกิจกรรม\n"
+"เกินกำหนด: วันที่ครบกำหนดผ่านไปแล้ว\n"
+"วันนี้: วันที่จัดกิจกรรมคือวันนี้\n"
+"วางแผน: กิจกรรมในอนาคต"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submission Agreement"
+msgstr "การส่งข้อตกลง"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submit Proposal"
+msgstr "ส่งข้อเสนอ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
+msgid "Tag Line"
+msgstr "แท็กไลน์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
+msgid "Tag Name"
+msgstr "ชื่อแท็ก"
+
+#. module: website_event_track
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "ชื่อแท็กนี้มีอยู่แล้ว!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Tags"
+msgstr "แท็ก"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Talk Proposals"
+msgstr "ข้อเสนอการพูดคุย"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr "การพูดคุยถูกเพิ่มเป็นรายการโปรด"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr "การพูดคุยถูกเพิ่มเป็นรายการโปรดแล้ว"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr "การพูดคุยถูกนำออกจากรายการโปรด"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#, python-format
+msgid "Talks"
+msgstr "การพูดคุย"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talks Types"
+msgstr "ประเภทการพูดคุย"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "งานอยู่ระหว่างดำเนินการ คลิกเพื่อบล็อกหรือตั้งเป็นเสร็จสิ้น"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr "งานถูกบล็อก คลิกเพื่อเลิกบล็อกหรือตั้งค่าเป็นเสร็จสิ้น"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Thank you for your proposal."
+msgstr "ขอบคุณสำหรับข้อเสนอของคุณ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL แบบเต็มเพื่อเข้าถึงเอกสารผ่านเว็บไซต์"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+#: model:event.track,name:website_event_track.event_track29
+msgid "The new marketing strategy"
+msgstr "กลยุทธ์การตลาดใหม่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+msgid "The new way to promote your creations"
+msgstr "วิธีใหม่ในการโปรโมตผลงานของคุณ"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr ""
+"มีแนวคิดมากมายที่ควรค่าแก่การสำรวจ "
+"ดังนั้นให้เริ่มต้นด้วยแนวคิดเกี่ยวกับเฟอร์นิเจอร์ DIY 10 "
+"ชิ้นสำหรับผู้เริ่มต้นอย่างแท้จริง"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"There are several variants of wood is available in the world but we are talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+msgstr ""
+"ไม้มีอยู่หลายแบบในโลก แต่เรากำลังพูดถึงไม้ที่แพงที่สุด\n"
+"   หนึ่งเดียวในโลกและเราได้จัดไม้ที่แพงที่สุดสิบอันดับ"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
+msgstr "จะถูกสร้างขึ้นโดยอัตโนมัติเมื่อผู้เข้าร่วมเริ่มเรียกดูกิจกรรมของคุณ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "This event does not accept proposals."
+msgstr "อีเวนต์นี้ไม่ยอมรับข้อเสนอ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr "ฟิลด์นี้เก็บรูปภาพที่ใช้เป็นไอคอนแอปมือถือบนเว็บไซต์ (รูปแบบ PNG)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "ฟิลด์นี้เก็บชื่อของแอปพลิเคชันความคืบหน้าเว็บไซต์อีเวนต์"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+"ยังไม่ได้บันทึกหน้านี้สำหรับการอ่านแบบออฟไลน์<br/>โปรดตรวจสอบการเชื่อมต่อเครือข่ายของคุณ"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr "ขั้นตอนนี้ถูกพับในมุมมองคัมบัง เมื่อไม่มีการบันทึกในขั้นตอนที่จะแสดง"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "ขั้นตอนนี้เสร็จสิ้น คลิกเพื่อบล็อกหรือตั้งค่าว่าอยู่ระหว่างดำเนินการ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "This track does not have a description."
+msgstr "เพลงนี้ไม่มีคำอธิบาย"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Timely release of presentation material (slides),\n"
+"                                    for publishing on our website."
+msgstr ""
+"การนำเสนอเนื้อหาการนำเสนอในเวลาที่เหมาะสม (สไลด์)\n"
+"                                    เพื่อเผยแพร่บนเว็บไซต์ของเรา"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__name
+msgid "Title"
+msgstr "ชื่อเรื่อง"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Today Activities"
+msgstr "กิจกรรมวันนี้"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_22
+msgid "Tools for the Woodworking Beginner"
+msgstr "เครื่องมือสำหรับช่างไม้มือใหม่"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_5
+msgid "Top 10 Most Expensive Wood in the World"
+msgstr "10 อันดับไม้ที่แพงที่สุดในโลก"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following different properties and use."
+msgstr ""
+"ไม้ที่แพงที่สุดในโลกเป็นหัวข้อที่ค่อนข้างน่าสนใจและหลายคนอาจจะแปลกใจ\n"
+"    มีไม้หลายร้อยชนิดทั่วโลกตามคุณสมบัติและการใช้งานที่แตกต่างกัน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Track"
+msgstr "แทร็ก"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr "แทร็ก / ลิงก์ผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_blocked
+msgid "Track Blocked"
+msgstr "บล็อกแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
+msgid "Track Count"
+msgstr "จำนวนแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date
+msgid "Track Date"
+msgstr "วันที่แทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr "วันสิ้นสุดแทร็ก"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr "ตำแหน่งแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Track Proposals Menu Item"
+msgstr "รายการเมนูข้อเสนอแทร็ก"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_ready
+msgid "Track Ready"
+msgstr "แทร็กที่พร้อม"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_ready
+msgid "Track Ready for Next Stage"
+msgstr "แทร็กที่พร้อมสำหรับขั้นตอนต่อไป"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
+msgid "Track Stage"
+msgstr "แทร็กขั้นตอน"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
+#: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+msgid "Track Stages"
+msgstr "แทร็กขั้นตอน"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr "หมวดหมู่แท็กแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr "หมวดหมู่แท็กแทร็ก"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
+msgid "Track Tags"
+msgstr "แท็กแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr "หมวดหมู่แท็กแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr "แทร็กผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr "แทร็กผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
+msgstr ""
+"แทร็กผู้เยี่ยมชมเก็บสถิติเกี่ยวกับอีเวนต์ของคุณ "
+"รวมถึงจำนวนแทร็กที่ถูกบันทึกเป็นรายการที่อยากได้"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_blocked
+msgid "Track blocked"
+msgstr "บล็อกแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr "ระยะเวลาในการแทร็กเป็นชั่วโมง"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
+msgid "Tracks"
+msgstr "แทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Tracks Menu Item"
+msgstr "รายการเมนูแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
+msgid "Tracks Proposals on Website"
+msgstr "แทร็กข้อเสนอบนเว็บไซต์"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
+msgstr ""
+"แทร็กกำหนดตารางอีเวนต์ของคุณ อาจเป็นการพูดคุย เวิร์คช็อป หรือกิจกรรมอื่น ๆ "
+"ที่คล้ายคลึงกัน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
+msgid "Tracks on Website"
+msgstr "แทร็กบนเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "ยกเลิกการเผยแพร่"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Unread Messages"
+msgstr "ข้อความที่ยังไม่ได้อ่าน"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+msgstr ""
+"ใช้ขั้นตอนง่าย ๆ เหล่านี้เพื่อลากไม้ท่อนยาวในรถกระบะตอนสั้น ปริมาณของช่างไม้\n"
+"   ใช้เพียงความเฉลียวฉลาดของช่างไม้พร้อมกับกระดานคู่ สายรัดที่แข็งแรง และสกรูสองสามตัวเพื่อลากได้ง่ายดาย\n"
+"   กระดานยาวจากลานตัดไม้ไปจนถึงร้านช่างไม้หรือไซต์งาน"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+msgstr ""
+"ใช้วิธีการพันแบบพิเศษในการมัดสาย (ไม่ใช่สายบันจี้จัม!!!) ช่วยให้ไม้เป็น\n"
+"   ถูกมัดได้อย่างปลอดภัยโดยไม่จำเป็นต้องผูกและแก้ปมที่ยุ่งยากหรือซับซ้อน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "View Track"
+msgstr "ดูแทร็ก"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "Visible in agenda"
+msgstr "ปรากฏให้เห็นในวาระการประชุม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
+msgid "Visible on current website"
+msgstr "ปรากฏบนเว็บไซต์ปัจจุบัน"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "ผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr "รายการโปรดของผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr "รายการโปรดของผู้เยี่ยมชม"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_1
+msgid "Voice from Customer"
+msgstr "เสียงจากลูกค้า"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to add this track to their list of favorites"
+msgstr "รอให้ผู้เยี่ยมชมเพิ่มแทร็กนี้ในรายการโปรดของพวกเขา"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr "เราไม่พบแทร็กใด ๆ ที่ตรงกับคุณ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We require speakers to accept an agreement in which they commit to:"
+msgstr "เราต้องการให้วิทยากรยอมรับข้อตกลงและให้คำมั่นที่จะ:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"We will accept a broad range of\n"
+"                            presentations, from reports on academic and\n"
+"                            commercial projects to tutorials and case\n"
+"                            studies. As long as the presentation is\n"
+"                            interesting and potentially useful to the\n"
+"                            audience, it will be considered for\n"
+"                            inclusion in the programme."
+msgstr ""
+"เราจะยอมรับ\n"
+"                            การนำเสนอจากรายงานทางวิชาการและ\n"
+"                            โครงการเชิงพาณิชย์สำหรับบทเรียนและกรณี\n"
+"                            ศึกษา ตราบใดที่การนำเสนอนั้น\n"
+"                            น่าสนใจและอาจเป็นประโยชน์ต่อ\n"
+"                           ผู้ชม ก็จะได้รับการพิจารณาสำหรับ\n"
+"                            การรวมไว้ในโปรแกรม"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "We will evaluate your proposition and get back to you shortly."
+msgstr "เราจะประเมินข้อเสนอของคุณและติดต่อกลับในไม่ช้า"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+msgid "Website"
+msgstr "เว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr "ไอคอนแอปเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_event_menu
+msgid "Website Event Menu"
+msgstr "เมนูเว็บไซต์อีเวนต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr "รูปภาพเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "เมนูเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
+msgid "Website URL"
+msgstr "เว็บไซต์ URL"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "ผู้เยี่ยมชมเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
+msgid "Website meta description"
+msgstr "คำอธิบายเนื้อหาเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "คำสำคัญในคำอธิบายเนื้อหาเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
+msgid "Website meta title"
+msgstr "ชื่อข้อมูลเว็บไซต์"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "รูป Opengraph บนเว็บไซต์"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_10
+msgid "Welcome to Day 2"
+msgstr "ยินดีต้อนรับเข้าสู่วันที่ 2"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_1
+msgid "What This Event Is All About"
+msgstr "อีเวนต์นี้เกี่ยวกับอะไร"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "What is your talk about?"
+msgstr "คุณกำลังพูดเกี่ยวกับอะไร?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr ""
+"ใครจะเป็นผู้บรรยายนี้ เราจะแสดงสิ่งนี้ให้ผู้เข้าร่วมแสดงการพูดคุยของคุณ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_2
+msgid "Who's OpenWood anyway ?"
+msgstr "ใครคือ OpenWood?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr "รายการสิ่งที่อยากได้โดย"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+msgid "Wishlisted Tracks"
+msgstr "แทร็กที่อยากได้"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Wishlists"
+msgstr "รายการที่อยากได้"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_7
+msgid "Woodworking: How I got started!"
+msgstr "งานไม้: ฉันเริ่มต้นได้อย่างไร!"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "You cannot access this page."
+msgstr "คุณไม่สามารถเข้าถึงเพจนี้"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr ""
+"คุณต้องเปิดใช้งานการแจ้งเตือนแบบพุชเพื่อรับการแจ้งเตือนสำหรับแทร็กโปรดของคุณ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr "คุณออฟไลน์อยู่!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "a few seconds"
+msgstr "ไม่กี่วินาที"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "ago"
+msgstr "ที่ผ่านมา"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"John Doe was born in...\""
+msgstr "เช่น \"John Doe เกิดที่...\""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"This talk will be about...\""
+msgstr "เช่น “การพูดคุยครั้งนี้จะเกี่ยวกับ...”"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr "เช่น รับของคุณตอนนี้ !"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Inspiring Business Talk"
+msgstr "เช่น การพูดคุยทางธุรกิจที่สร้างแรงบันดาลใจ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr "เช่น http://www.example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "hours"
+msgstr "ชั่วโมง"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after track starts"
+msgstr "นาทีหลังจากเริ่มแทร็ก"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "ลงทะเบียนในรายการโปรดของคุณตอนนี้"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr "ค้นหา"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr "เริ่มใน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr "เริ่มบน"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr "แทร็ก"

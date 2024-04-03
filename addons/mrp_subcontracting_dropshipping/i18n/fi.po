@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_subcontracting_dropshipping
+# 
+# Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Martin Trigaux, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
+# Marko Happonen <marko.happonen@sprintit.fi>, 2022
+# Jussi Lehto <jussi@gulfeo.com>, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Merkitse tämä, jos haluat luoda yritykselle uuden alihankintapaikan. Huomaa,"
+" että alihankinnan vakioreittejä mukautetaan siten, että nämä otetaan "
+"automaattisesti huomioon."
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_res_company__dropship_subcontractor_pick_type_id
+msgid "Dropship Subcontractor Pick Type"
+msgstr "Dropship alihankkijan poimintatyyppi"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: model:stock.route,name:mrp_subcontracting_dropshipping.route_subcontracting_dropshipping
+#, python-format
+msgid "Dropship Subcontractor on Order"
+msgstr "Dropship alihankkija tilauksesta"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
+msgid "Dropship Subcontractors"
+msgstr "Dropship alihankkijat"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
+msgid "Dropship subcontractors with components"
+msgstr "Alihankkijat, jotka toimittavat komponentteja"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
+msgid "Is a Subcontracting Location?"
+msgstr "Onko alihankinnan sijaintipaikka?"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Minimivarastosääntö"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid "Please note this purchase order is for subcontracting purposes."
+msgstr "Huomaa, että tämä ostotilaus on tarkoitettu alihankintaa varten."
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ostotilaus"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_move
+msgid "Stock Move"
+msgstr "Varastosiirto"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_rule
+msgid "Stock Rule"
+msgstr "Varaston sääntö"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_pull_id
+msgid "Subcontracting-Dropshipping MTS Rule"
+msgstr "Alihankinta- ja drophipping MTS-sääntö"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Varasto"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid "Warning"
+msgstr "Varoitus"

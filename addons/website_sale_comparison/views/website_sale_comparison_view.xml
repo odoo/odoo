@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_category_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.category.tree</field>
+        <field name="model">product.attribute.category</field>
+        <field name="arch" type="xml">
+            <tree string="Product Attribute Category" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="attribute_ids" widget="many2many_tags" options="{'no_create': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_attribute_category_action" model="ir.actions.act_window">
+        <field name="name">Attribute Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attribute.category</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new attribute category
+            </p><p>
+                Group attributes by category that will appear in the specification
+                part of a product page.
+            </p>
+        </field>
+    </record>
+
+    <menuitem action="product_attribute_category_action"
+        id="menu_attribute_category_action"
+        parent="website_sale.menu_catalog" groups="base.group_no_one" sequence="11"/>
+
+    <record id="product_attribute_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.attribute.tree.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+               <field name="category_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.form.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <field name='name' position='after'>
+                <field name="category_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

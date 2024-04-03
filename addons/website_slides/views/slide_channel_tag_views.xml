@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- SLIDE.CHANNEL.TAG -->
+    <record id="slide_channel_tag_view_search" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.search</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <search string="Course Tags">
+                <field name="name"/>
+                <field name="group_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.form</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <form string="Course Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="group_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_view_tree" model="ir.ui.view">
+        <field name="name">slide.channel.tag.view.tree</field>
+        <field name="model">slide.channel.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Course Tags" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="group_sequence" invisible="1"/>
+                <field name="name"/>
+                <field name="group_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_action" model="ir.actions.act_window">
+        <field name="name">Course Tags</field>
+        <field name="res_model">slide.channel.tag</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- SLIDE.CHANNEL.TAG.GROUP -->
+    <record id="slide_channel_tag_group_view_search" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.search</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <search string="Course Tag Groups">
+                <field name="name"/>
+                <filter string="Has Menu Entry" name="filter_is_published" domain="[('is_published', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_view_form" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.form</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <form string="Course Tag Group">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Course Group Name"/>
+                        <h1><field name="name" default_focus="1" placeholder="e.g. Your Level"/></h1>
+                        <label for="is_published" string="Menu Entry" class="me-4"/>
+                        <field name="is_published"/><br/>
+                    </div>
+                    <group>
+                        <field name="tag_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="group_sequence" invisible="1"/>
+                                <field name="name" string="Tag Name"/>
+                                <field name="color" string="Color" widget="color_picker"/>
+                                <control>
+                                    <create string="Add a tag"/>
+                                </control>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_view_tree" model="ir.ui.view">
+        <field name="name">slide.channel.tag.group.view.tree</field>
+        <field name="model">slide.channel.tag.group</field>
+        <field name="arch" type="xml">
+            <tree string="Course Tag Groups">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_published" string="Menu Entry"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_channel_tag_group_action" model="ir.actions.act_window">
+        <field name="name">Course Groups</field>
+        <field name="res_model">slide.channel.tag.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Course Group
+            </p>
+            <p>
+                Use Course Groups to classify and organize your Courses.
+            </p>
+        </field>
+    </record>
+
+    </data>
+</odoo>

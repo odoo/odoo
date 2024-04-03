@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiGridView" owl="1">
+    <div class="o_EmojiGridView o_EmojiGridView_container" t-attf-style="--rowHeight: {{emojiGridView.rowHeight}}px; --itemWidth: {{emojiGridView.itemWidth}}px; height: {{emojiGridView.height}}px; width: {{emojiGridView.width}}px;" t-on-scroll="emojiGridView.onScroll" t-ref="containerRef">
+        <EmojiGridLoadingScreen t-if="!this.messaging.emojiRegistry.isLoaded" record="emojiGridView.loadingScreenView"/>
+        <EmojiGridSearchNoContentView t-if="emojiGridView.searchNoContentView" record="emojiGridView.searchNoContentView"/>
+        <div t-if="!emojiGridView.searchNoContentView" class="o_EmojiGridView_list" t-attf-style="height: {{emojiGridView.listHeight}}px; min-height: {{emojiGridView.listHeight}}px;" t-ref="listRef">
+            <div t-if="emojiGridView.lastRenderedRowIndex >= emojiGridView.firstRenderedRowIndex" class="o_EmojiGridView_viewBlock" t-attf-style="top: {{ emojiGridView.distanceFromTop - emojiGridView.distanceInRowOffset }}px; width: {{ emojiGridView.width }}px;" t-ref="viewBlockRef">
+                <EmojiGridRowView t-foreach="emojiGridView.renderedRows" t-as="row" t-key="row" record="row"/>
+            </div>
+        </div>
+    </div>
+    </t>
+
+</templates>

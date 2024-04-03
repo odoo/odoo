@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="chatbot_test_script_page">
+            <script>
+                <t t-call="im_livechat.loader">
+                    <t t-set="info" t-value="{ 'available': True, 'options': { 'isTestChatbot': True, 'testChatbotChannelData': channel_data, 'testChatbotData': chatbot_data }, 'server_url': server_url }"/>
+                </t>
+            </script>
+            <t t-call="web.frontend_layout">
+                <t t-set="no_livechat" t-value="True"/>
+                <t t-set="title" t-value="chatbot_data['chatbot_name']"/>
+
+                <div id="wrap">
+                    <div groups="im_livechat.im_livechat_group_user" t-ignore="true"
+                            class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden mb-0">
+                        <div t-ignore="true" class="text-center">
+                            <a t-attf-href="/web#view_type=form&amp;model=chatbot.script&amp;id=#{chatbot_data['chatbot_script_id']}&amp;action=im_livechat.chatbot_script_action">
+                                <span>You are currently testing</span>
+                                <span t-out="chatbot_data['chatbot_name']"/>
+                                <i class="fa fa-fw fa-arrow-right"/>Back to edit mode
+                            </a>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

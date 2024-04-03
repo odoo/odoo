@@ -1,0 +1,440 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_id_efaktur
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-04 02:05+0000\n"
+"PO-Revision-Date: 2023-12-04 19:08+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__01
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__01
+msgid "01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)"
+msgstr "01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__02
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__02
+msgid "02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)"
+msgstr "02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__03
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__03
+msgid "03 Kepada Pemungut Selain Bendaharawan (BUMN)"
+msgstr "03 Kepada Pemungut Selain Bendaharawan (BUMN)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__04
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__04
+msgid "04 DPP Nilai Lain (PPN 1%)"
+msgstr "04 DPP Nilai Lain (PPN 1%)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__05
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__05
+msgid "05 Besaran Tertentu"
+msgstr "05 Besaran Tertentu"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__06
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__06
+msgid "06 Penyerahan Lainnya (Turis Asing)"
+msgstr "06 Penyerahan Lainnya (Turis Asing)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__07
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__07
+msgid ""
+"07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)"
+msgstr ""
+"07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__08
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__08
+msgid "08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)"
+msgstr "08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__account_move__l10n_id_kode_transaksi__09
+#: model:ir.model.fields.selection,name:l10n_id_efaktur.selection__res_partner__l10n_id_kode_transaksi__09
+msgid "09 Penyerahan Aktiva ( Pasal 16D UU PPN )"
+msgstr "09 Penyerahan Aktiva ( Pasal 16D UU PPN )"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Nilai yang ditentukan di "
+"sini spesifik pada perusahaan.\" aria-label=\"Nilai yang ditentukan di sini "
+"spesifik pada perusahaan.\" groups=\"base.group_multi_company\" "
+"role=\"img\"/>"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "A tax number must begin by a valid Kode Transaksi"
+msgstr "Nomor pajak harus dimulai dengan Kode Transaksi yang valid"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "A tax number should have 16 digits"
+msgstr "Nomor pajak harus memiliki 16 angka"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__available
+msgid "Available"
+msgstr "Tersedia"
+
+#. module: l10n_id_efaktur
+#: model:ir.model,name:l10n_id_efaktur.model_l10n_id_efaktur_efaktur_range
+msgid "Available E-faktur range"
+msgstr "Rentang E-faktur yang tersedia"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_csv_created
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_csv_created
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_csv_created
+msgid "CSV Created"
+msgstr "CSV Dibuat"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid ""
+"Cannot mix VAT subject and Non-VAT subject items in the same invoice with "
+"this kode transaksi."
+msgstr ""
+"Tidak dapat menggabungkan subjek PPN dan subjek Bukan PPN dalam faktur yang "
+"sama dengan kode transaksi ini."
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: l10n_id_efaktur
+#: model:ir.model,name:l10n_id_efaktur.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "Connect %(move_number)s with E-faktur to download this report"
+msgstr "Hubungkan %(move_number)s dengan E-faktur untuk mengunduh laporan ini"
+
+#. module: l10n_id_efaktur
+#: model:ir.model,name:l10n_id_efaktur.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "Could not download E-faktur in draft state"
+msgstr "Tidak dapat mengunduh E-faktur dalam status draft"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: l10n_id_efaktur
+#: model:ir.actions.server,name:l10n_id_efaktur.dowload_efaktur_action
+msgid "Download e-Faktur"
+msgstr "Unduh e-Faktur"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,help:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_kode_transaksi
+#: model:ir.model.fields,help:l10n_id_efaktur.field_account_move__l10n_id_kode_transaksi
+#: model:ir.model.fields,help:l10n_id_efaktur.field_account_payment__l10n_id_kode_transaksi
+#: model:ir.model.fields,help:l10n_id_efaktur.field_res_partner__l10n_id_kode_transaksi
+#: model:ir.model.fields,help:l10n_id_efaktur.field_res_users__l10n_id_kode_transaksi
+msgid "Dua digit pertama nomor pajak"
+msgstr "Dua digit pertama nomor pajak"
+
+#. module: l10n_id_efaktur
+#. odoo-python
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "E-faktur is not available for invoices without any taxes."
+msgstr "E-faktur tidak tersedia untuk faktur tanpa pajak apapun."
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.efaktur_tree_view
+msgid "Efaktur Number"
+msgstr "Nomor Efaktur"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/efaktur.py:0
+#, python-format
+msgid "Efaktur interleaving range detected"
+msgstr "Interleaving range Efaktur dideteksi"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.account_move_efaktur_form_view
+msgid "Electronic Tax"
+msgstr "Pajak Elektronik"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/efaktur.py:0
+#, python-format
+msgid "First 5 digits should be same in Start Number and End Number."
+msgstr "5 angka pertama harus sama dengan Nomor Awal dan Nomor Akhir."
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_partner__l10n_id_pkp
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_users__l10n_id_pkp
+msgid "ID PKP"
+msgstr "ID PKP"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.actions.act_window,help:l10n_id_efaktur.efaktur_invoice_action
+msgid ""
+"In order to be able to export customer invoices as e-Faktur\n"
+"                    for the Indonesian government, you need to put here the "
+"ranges\n"
+"                    of numbers you were assigned by the government.\n"
+"                    When you validate an invoice, a number will be assigned "
+"based on these ranges.\n"
+"                    Afterwards, you can filter the invoices still to export "
+"in the\n"
+"                    invoices list and click on Action &gt; Download e-Faktur"
+msgstr ""
+"Agar dapat mengekspor faktur pelanggan sebagai e-Faktur\n"
+"                    untuk pemerintah Indonesia, Anda harus menaruh di sini "
+"rentang\n"
+"                    nomor yang diberikan ke Anda oleh pemerintah.\n"
+"                    Saat Anda memvalidasi faktur, nomor akan diberikan ke "
+"Anda berdasarkan rentang-rentang ini.\n"
+"                    Setelahnya, Anda dapat memfilter faktur yang masih akan "
+"diekspor di\n"
+"                    daftar faktur dan klik pada Action &gt; Unduh e-Faktur"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.res_config_settings_view_form
+msgid "Indonesian Localization"
+msgstr "Lokalisasi Indonesia"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.res_partner_tax_form_view
+msgid "Indonesian Taxes"
+msgstr "Pajak-Pajak Indonesia"
+
+#. module: l10n_id_efaktur
+#: model:ir.model,name:l10n_id_efaktur.model_account_move
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_partner__l10n_id_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_users__l10n_id_kode_transaksi
+msgid "Kode Transaksi"
+msgstr "Kode Transaksi"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_attachment_id
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_attachment_id
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_attachment_id
+msgid "L10N Id Attachment"
+msgstr "Lampiran L10N Id"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_need_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_need_kode_transaksi
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_need_kode_transaksi
+msgid "L10N Id Need Kode Transaksi"
+msgstr "L10N Id Membutuhkan Kode Transaksi"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/efaktur.py:0
+#, python-format
+msgid ""
+"Last 8 digits of End Number should be greater than the last 8 digit of "
+"Start Number"
+msgstr ""
+"8 angka terakhir dari Nomor Akhir harus lebih besar dari 8 angka terakhir "
+"dari Nomor Awal"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range____last_update
+msgid "Last Modified on"
+msgstr "Dimodifikasi Terakhir pada"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__write_uid
+msgid "Last Updated by"
+msgstr "Diperbarui Terakhir oleh"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__write_date
+msgid "Last Updated on"
+msgstr "Diperbarui Terakhir pada"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__max
+msgid "Max"
+msgstr "Maks"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_l10n_id_efaktur_efaktur_range__min
+msgid "Min"
+msgstr "Min"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_partner__l10n_id_nik
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_users__l10n_id_nik
+msgid "NIK"
+msgstr "NIK"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_replace_invoice_id
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_replace_invoice_id
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_replace_invoice_id
+msgid "Replace Invoice"
+msgstr "Ganti Faktur"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid ""
+"Replacement invoice only for invoices on which the e-Faktur is generated. "
+msgstr "Faktur pengganti hanya untuk faktur yang dibuat oleh e-Faktur. "
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.account_move_efaktur_form_view
+msgid "Reset E-Faktur"
+msgstr "Reset E-Faktur"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "Some documents are not Customer Invoices"
+msgstr "Beberapa dokumen bukan merupakan Faktur Pelanggan"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "Some documents don't have a transaction code"
+msgstr "Beberapa dokumen tidak memiliki kode transaksi"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_config_settings__l10n_id_tax_address
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_partner__l10n_id_tax_address
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_users__l10n_id_tax_address
+msgid "Tax Address"
+msgstr "Alamat Pajak"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_config_settings__l10n_id_tax_name
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_partner__l10n_id_tax_name
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_res_users__l10n_id_tax_name
+msgid "Tax Name"
+msgstr "Nama Pajak"
+
+#. module: l10n_id_efaktur
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_bank_statement_line__l10n_id_tax_number
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_move__l10n_id_tax_number
+#: model:ir.model.fields,field_description:l10n_id_efaktur.field_account_payment__l10n_id_tax_number
+msgid "Tax Number"
+msgstr "Nomor Pajak"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/efaktur.py:0
+#, python-format
+msgid "The difference between the two numbers must not be greater than 10.000"
+msgstr "Perbedaan antara dua nomor tidak boleh lebih besar dari 10.000"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "The third digit of a tax number must be 0 or 1"
+msgstr "Angka ketiga dari nomor pajak harus 0 atau 1"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid ""
+"There is no Efaktur number available.  Please configure the range you get "
+"from the government in the e-Faktur menu. "
+msgstr ""
+"Tidak ada nomor Efaktur yang tersedia. Silakan konfigurasi rentang yang "
+"Anda dapat dari pemerintah di menu e-Faktur. "
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/efaktur.py:0
+#, python-format
+msgid "There should be 13 digits in each number."
+msgstr "Harus ada 13 angka di setiap nomor."
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.view_account_invoice_filter
+msgid "To Generate e-Faktur"
+msgstr "Untuk Membuat e-Faktur"
+
+#. module: l10n_id_efaktur
+#: model_terms:ir.ui.view,arch_db:l10n_id_efaktur.efaktur_tree_view
+msgid "Total Available"
+msgstr "Total Tersedia"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid ""
+"You can only change the number manually for a Vendor Bills and Credit Notes"
+msgstr ""
+"Anda hanya dapat mengubah nomor secara manual untuk Tagihan Vendor dan Nota "
+"Kredit"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "You have already generated the tax report for this document: %s"
+msgstr "Anda sudah membuat laporan pajak untuk dokumen berikut: %s"
+
+#. module: l10n_id_efaktur
+#: code:addons/l10n_id_efaktur/models/account_move.py:0
+#, python-format
+msgid "You need to put a Kode Transaksi for this partner."
+msgstr "Anda harus mengisi Kode Transaksi untuk partner ini."
+
+#. module: l10n_id_efaktur
+#: model:ir.actions.act_window,name:l10n_id_efaktur.efaktur_invoice_action
+#: model:ir.ui.menu,name:l10n_id_efaktur.menu_efaktur_action
+msgid "e-Faktur"
+msgstr "e-Faktur"

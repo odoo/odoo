@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.stock</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="30"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside" >
+                    <div class="app_settings_block" data-string="Inventory" string="Inventory" data-key="stock" groups="stock.group_stock_manager">
+                        <h2>Operations</h2>
+                        <div class="row mt16 o_settings_container" name="operations_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="product_packs_tracking"
+                                title="Put your products in packs (e.g. parcels, boxes) and track them">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_tracking_lot"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_tracking_lot"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/products/usage.html#packages" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Put your products in packs (e.g. parcels, boxes) and track them
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="process_transfers">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_picking_batch"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_stock_picking_batch"/>
+                                    <div class="text-muted">
+                                        Process transfers in batch per worker
+                                    </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_stock_picking_batch','=',False)]}">
+                                        <field name="group_stock_picking_wave" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                        <div class="col ps-0">
+                                            <label for="group_stock_picking_wave"/>
+                                            <div class="text-muted">Process operations in wave transfers</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="warning_info">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_warning_stock"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_warning_stock" string="Warnings"/>
+                                    <div class="text-muted">
+                                        Get informative or blocking warnings on partners
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="quality_control">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_quality_control" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_quality_control"/>
+                                    <div class="text-muted">
+                                        Add quality checks to your transfer operations
+                                    </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                        <div class="col ps-0">
+                                            <label for="module_quality_control_worksheet"/>
+                                            <div class="text-muted">
+                                                Create customizable worksheets for your quality checks
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="annual_inventory_date" groups='stock.group_stock_manager'>
+                                <div class="o_setting_right_pane">
+                                    <label for="annual_inventory_day" string="Annual Inventory Day and Month"/>
+                                    <div class="text-muted">
+                                        Day and month that annual inventory counts should occur.
+                                    </div>
+                                    <div class="content-group">
+                                        <field name="annual_inventory_day" class="o_light_label" style="width: 30px;"/>
+                                        <field name="annual_inventory_month" class="o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="reception_report">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_reception_report"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_reception_report"/>
+                                    <div class="text-muted">
+                                        View and allocate received quantities.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Barcode</h2>
+                        <div class="row mt16 o_settings_container" name="barcode_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="process_operations_barcodes">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="barcode_settings">
+                                    <label for="module_stock_barcode"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/barcode/setup/software.html" title="Documentation" class="me-2 o_doc_link" target="_blank"></a>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted" name="stock_barcode">
+                                        Process operations faster with barcodes
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="use_product_barcode"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Shipping</h2>
+                        <div class="row mt16 o_settings_container" name="shipping_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="stock_move_email">
+                                <div class="o_setting_left_pane">
+                                    <field name="stock_move_email_validation"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="stock_move_email_validation" string="Email Confirmation"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Send an automatic confirmation email when Delivery Orders are done
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="stock_sms">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_sms"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_stock_sms"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted">
+                                        Send an automatic confirmation SMS Text Message when Delivery Orders are done
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_confirmation_sms"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="signature_delivery_orders">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_sign_delivery"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_sign_delivery"/>
+                                    <div class="text-muted">
+                                        Require a signature on your delivery orders
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="delivery" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery"/>
+                                    <div class="text-muted" id="delivery_carrier">
+                                        Compute shipping costs
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Shipping Connectors</h2>
+                        <div class="row mt16 o_settings_container" name="product_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_ups">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_ups"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with UPS
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_ups"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_dhl">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_dhl"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with DHL
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_dhl"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_fedex">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_fedex"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with FedEx
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_fedex"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_usps">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_usps"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with USPS
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_usps"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_bpost">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_bpost"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with bpost
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_bpost"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_easypost">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_easypost" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_easypost"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with Easypost
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_easypost"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="compute_shipping_costs_sendcloud">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_sendcloud" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_sendcloud"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with Sendcloud
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_sendcloud"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Products</h2>
+                        <div class="row mt16 o_settings_container" name="product_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="product_attributes">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_product_variant"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_product_variant"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/sales/products_prices/products/variants.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Set product attributes (e.g. color, size) to manage variants
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt8" attrs="{'invisible': [('group_product_variant', '=', False)]}">
+                                            <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="sell_purchase_uom">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_uom"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_uom"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/products/uom.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Sell and purchase products in different units of measure
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt8" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                            <button name="%(uom.product_uom_categ_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="manage_product_packaging"
+                                title="Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_packaging"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_packaging"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/products/usage.html#packaging" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
+                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packagings" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Traceability</h2>
+                        <div class="row mt16 o_settings_container" id="production_lot_info">
+                            <div class="col-12 col-lg-6 o_setting_box" id="full_traceability">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_production_lot"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_production_lot"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/lots_serial_numbers/differences.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Get a full traceability from vendors to customers
+                                    </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
+                                        <field name="group_stock_lot_print_gs1" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                        <div class="col ps-0">
+                                            <label for="group_stock_lot_print_gs1"/>
+                                            <div class="text-muted">Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and serial numbers.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="expiration_dates_serial_numbers"
+                                attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"
+                                title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_product_expiry"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_product_expiry"/>
+                                    <div class="text-muted">
+                                        Set expiration dates on lots &amp; serial numbers
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_delivery_slip">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_lot_on_delivery_slip"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_lot_on_delivery_slip"/>
+                                    <div class="text-muted">
+                                        Lots &amp; Serial numbers will appear on the delivery slip
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="owner_stored_products">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_tracking_owner"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_tracking_owner"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/misc/owned_stock.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Set owner on stored products
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt32">Warehouse</h2>
+                        <div class="row mt16 o_settings_container" name="warehouse_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="track_product_location"
+                                title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_multi_locations"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_multi_locations"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/management/warehouses/warehouses_locations.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Track product location in your warehouse
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                            <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/><br/>
+                                            <button name="stock.action_putaway_tree" icon="fa-arrow-right" type="action" string="Putaway Rules" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="use_own_routes"
+                                title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_adv_location"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_adv_location"/>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/inventory_and_mrp/inventory/routes/concepts/use_routes.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <div class="text-muted">
+                                        Use your own routes
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt8" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="categorize_locations"
+                                attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_storage_categories"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_storage_categories"/>
+                                    <div class="text-muted">
+                                        Categorize your locations for smarter putaway rules
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_stock_storage_categories', '=', False)]}">
+                                        <div class="mt8">
+                                            <button name="%(stock.action_storage_category)d" icon="fa-arrow-right" type="action" string="Storage Categories" class="btn-link"/>
+                                        </div>
+                                        <div class="mt4" groups="base.group_no_one">
+                                            <button name="%(stock.action_storage_category_capacity)d" icon="fa-arrow-right" type="action" string="Storage Category Capacity" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="schedule_info" invisible="1">Advanced Scheduling</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div id="sale_security_lead"/>
+                            <div id="purchase_po_lead"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'stock', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+            sequence="100" groups="group_stock_manager"/>
+        <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
+            sequence="0" action="action_stock_config_settings" groups="base.group_system"/>
+    </data>
+</odoo>

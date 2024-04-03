@@ -1,0 +1,64 @@
+# The officially supported versions of the following packages are their
+# python3-* equivalent distributed in Ubuntu 22.04 and Debian 11
+Babel==2.9.1  # min version = 2.6.0 (Focal with security backports)
+chardet==4.0.0
+cryptography==3.4.8
+decorator==4.4.2
+docutils==0.16
+ebaysdk==2.1.5
+freezegun==0.3.11; python_version < '3.8'
+freezegun==0.3.15; python_version >= '3.8'
+gevent==1.5.0 ; python_version == '3.7'
+gevent==20.9.0 ; python_version > '3.7' and python_version <= '3.9'
+gevent==21.8.0 ; python_version > '3.9' and python_version <= '3.10'  # (Jammy)
+gevent==22.10.2; python_version > '3.10'
+greenlet==0.4.15 ; python_version == '3.7'
+greenlet==0.4.17 ; python_version > '3.7' and python_version <= '3.9'
+greenlet==1.1.2 ; python_version  > '3.9' and python_version <= '3.10'  # (Jammy)
+greenlet==2.0.2 ; python_version > '3.10'
+idna==2.10
+Jinja2==2.11.3 ; python_version <= '3.10'  # min version = 2.10.1 (Focal - with security backports)
+Jinja2==3.1.2 ; python_version > '3.10'
+libsass==0.20.1
+lxml==4.6.5 ; python_version <= '3.10'  # min version = 4.5.0 (Focal - with security backports)
+lxml==4.9.2 ; python_version > '3.10'
+MarkupSafe==1.1.1 ; python_version <= '3.10'
+MarkupSafe==2.1.2 ; python_version > '3.10'
+num2words==0.5.9
+ofxparse==0.19; python_version <= '3.9'
+ofxparse==0.21; python_version > '3.9'  # (Jammy)
+passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
+Pillow==9.0.1 ; python_version <= '3.10'  # min version = 7.0.0 (Focal with security backports)
+Pillow==9.4.0 ; python_version > '3.10'
+polib==1.1.0
+psutil==5.8.0 ; python_version <= '3.10' 
+psutil==5.9.4 ; python_version > '3.10' 
+psycopg2==2.7.7 ; sys_platform != 'win32' and python_version < '3.8'
+psycopg2==2.8.6 ; sys_platform != 'win32' and python_version >= '3.8'and python_version <= '3.10'
+psycopg2==2.8.6 ; sys_platform == 'win32' and python_version < '3.10'
+psycopg2==2.9.5 ; python_version > '3.10' or ( sys_platform == 'win32' and python_version == '3.10')
+pydot==1.4.2
+pyopenssl==20.0.1
+PyPDF2==1.26.0 ; python_version <= '3.10'
+PyPDF2==2.12.1 ; python_version > '3.10'
+pypiwin32 ; sys_platform == 'win32'
+pyserial==3.5
+python-dateutil==2.8.1
+python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
+python-stdnum==1.16
+pytz  # no version pinning to avoid OS perturbations
+pyusb==1.0.2 ; python_version <= '3.10'
+pyusb==1.2.1 ; python_version > '3.10'
+qrcode==6.1
+reportlab==3.5.59 ; python_version <= '3.10'  # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye
+reportlab==3.6.12 ; python_version > '3.10'
+requests==2.25.1 # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
+urllib3==1.26.5 # indirect / min version = 1.25.8 (Focal with security backports)
+vobject==0.9.6.1
+Werkzeug==0.16.1 ; python_version <= '3.9'
+Werkzeug==2.0.2 ; python_version > '3.9'  # (Jammy)
+xlrd==1.1.0; python_version < '3.8'
+xlrd==1.2.0; python_version >= '3.8'
+XlsxWriter==1.1.2
+xlwt==1.3.*
+zeep==4.0.0

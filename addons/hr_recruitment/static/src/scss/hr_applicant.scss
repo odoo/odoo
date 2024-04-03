@@ -1,0 +1,22 @@
+.o_applicant_interviewer_form {
+    .o_ChatterTopbar_buttonSendMessage,
+    .o_ChatterTopbar_buttonLogNote,
+    .o_MessageList_empty {
+        display: none;
+    }
+}
+
+.o_applicant_form {
+    &.o_form_readonly {
+        .o_field_empty:empty {
+            min-height: unset;
+        }
+    }
+
+    &.o_form_editable {
+        .oe_title {
+            max-width: unset;
+        }
+    }
+}
+

@@ -1,0 +1,899 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_stock
+# 
+# Translators:
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2022
+# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2022
+# hish, 2022
+# Munkhbaatar g <muuguu17@gmail.com>, 2022
+# Насан-Очир <nasaaskii@gmail.com>, 2022
+# Minj P <pminj322@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
+"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "% On-Time Delivery"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "+ %d day(s)"
+msgstr "+ %d хоног(ууд)"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
+"Delivery Data</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_text\">On-time Rate</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Худалдан авалт</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_value\">%</span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>Тээврийн нөхцөл:</strong>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Хүргэх хаяг:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
+msgid "Action"
+msgstr "Үйлдэл"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
+msgid ""
+"Amount of time between expected and effective receipt date. Due to a hack "
+"needed to calculate this,               every record will show the same "
+"average value, therefore only use this as an aggregated value with "
+"group_operator=avg"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
+msgid "Arrival"
+msgstr "Ирж буй төлбөр"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
+msgid "Average Receipt Delay"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
+#: model:stock.route,name:purchase_stock.route_warehouse0_buy
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#, python-format
+msgid "Buy"
+msgstr "Худалдан авах"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
+msgid "Buy rule"
+msgstr "Худалдан авалтын дүрэм"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Buy to Resupply"
+msgstr "Худалдан авч нөхөн дүүргэх"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
+msgid "Completion date of the first receipt order."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Тохиргооны тохируулга"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_partner
+msgid "Contact"
+msgstr "Харилцах хаяг"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Corresponding receipt not found."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
+msgid "Created Purchase Order Line"
+msgstr "Үүссэн худалдан авалтын захиалгын мөр"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid "Currency exchange rate difference"
+msgstr "Валют ханшийн зөрүү"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
+msgid "Custom Description"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
+msgid "Days needed to confirm a PO, define when a PO should be validated"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
+#, python-format
+msgid "Days to Purchase"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
+msgid "Deliver To"
+msgstr "Хүргэх"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
+"Суулгасан модулиас хамааран, барааны хэрэгцээг хангах үндсэн дүрмийг "
+"тохируулна: Борлуулалтын захиалганд үндэслэн худалдан авах, үйлдвэрлэх, өөр "
+"агуулахаас нөхөн дүүргэх гэх мэт. "
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Хүргэх байрлалын төрөл"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Баримтжуулалт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
+msgid "Downstream Moves"
+msgstr "Орлогодсны дараах хөдөлгөөн"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
+msgid "Dropship Address"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
+msgid "Dropshipping"
+msgstr "Шууд хүргэлт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
+msgid "Effective Date"
+msgstr "Хэрэгжсэн огноо"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "Effective Date Last Year"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Худалдан авалтанд тохиосон саатал:"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s):"
+msgstr "Саатал:"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Forecast Report"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
+msgid "Forecasted Issue"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Generate the draft vendor bill."
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Go back to the purchase order to generate the vendor bill."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
+msgid "Incoming Shipment count"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Incoming Shipments"
+msgstr "Ирж буй ачаа"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
+msgid "Incoterm"
+msgstr "Худалдааны нөхцөл"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
+msgid "Incoterm Location"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"Олон улсын худалдааны нөхцөл нь улс дамнасан арилжаа худалдаанд зориулан "
+"тодорхойлогдсон нөхцлүүдийн жагсаалт юм."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
+msgid "Is Shipped"
+msgstr "Хүргэгдсэн эсэх"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
+msgid "Is the Sale Module Installed"
+msgstr "Борлуулалтын модуль суусан эсэх"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entry"
+msgstr "Ажил гүйлгээ"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Журналын бичилт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
+msgid "Last Modified on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
+msgid "Last Purchase"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Logistics"
+msgstr "Ложистик"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Серийн дугаар"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Manual actions may be needed."
+msgstr "Гар ажиллагаа шаардагдаж магадгүй."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Нийлүүлэгчийн урьтал хугацааны хоцролтоос сэргийлэх. Систем хэрэгцээт "
+"бараанд худалдан авах захиалгыг үүсгэж хүлээн авах огноог тооцохдоо "
+"нийлүүлэгчийн урьтал хугацаан дээр энд тохируулсан нөөц хоногийн хугацааг "
+"нэмж тооцоолно."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Зохистой нөөцийн дүрэм"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Move forward expected request creation date by"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Next transfer(s) impacted:"
+msgstr "Нөлөөлөх дараагийн хөдөлгөөн:"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "No data yet"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr "Хүлээн аваагүй"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
+msgid "On-Time Delivery"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
+msgid "On-Time Delivery Rate"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
+msgid "On-Time Quantity"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "On-time Delivery"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "On-time Rate"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
+msgid "Orderpoint"
+msgstr "Дахин захиалах дүрэм"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
+msgid ""
+"Over the past 12 months; the number of products received on time divided by "
+"the number of ordered products."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
+msgid "PO Lines"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Process all the receipt quantities."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
+msgid "Procurement Group"
+msgstr "Нөөц хангалтын бүлэг"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_template
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
+msgid "Product"
+msgstr "Бараа"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
+msgid "Product Category"
+msgstr "Барааны ангилал"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+msgid "Product Supplier"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_product
+msgid "Product Variant"
+msgstr "Барааны хувилбар"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
+msgstr "Өөрчлөлтийг цуцлах"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
+msgid "Purchase Lines"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order
+msgid "Purchase Order"
+msgstr "Худалдан авалтын захиалга"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
+msgid "Purchase Order Line"
+msgstr "Худалдан авалтын захиалгын мөр"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "Purchase Orders"
+msgstr "Худалдан авалт"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr "Худалдан авалтын тайлан"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Purchase Security Lead Time"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Purchase Visibility Days"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
+msgid "Purchase order count"
+msgstr "Худалдан авалтын баримтын тоо"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Хэрэв шууд нийлүүлэгчээс захиалагчид хүргэж өгөхийг хүсвэл энэ хаягийг "
+"бөглөнө. Үгүй бол хоосон үлдээснээр өөрийн компанид хүргүүлнэ."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receipt"
+msgstr "Хүлээн авах баримт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receive Products"
+msgstr "Хүлээн авах бараа"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Receive the ordered products."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr "Хүлээн авсан тооны бодлого"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
+msgid "Receptions"
+msgstr "Хүлээн авалт"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Request your vendors to deliver to your customers"
+msgstr "Нийлүүлэгчдийг шууд захиалагчдад хүргэж өгөхийг зөвшөөрөх"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
+#, python-format
+msgid "Requests for quotation"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
+msgid "Reservation"
+msgstr "Урьдчилсан захиалга"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Буцаалтын баримт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
+msgid "Routes"
+msgstr "Дамжлагууд"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Schedule request for quotations earlier to avoid delays"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
+msgid "Set as Supplier"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
+msgid "Show Set Supplier Button"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
+msgid "Show supplier column"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Барааны хөдөлгөөн"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+msgid "Stock Moves"
+msgstr "Барааны хөдөлгөөнүүд"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Нөөц дүүргэлтийн тайлан"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "Агуулахын дүрэм"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "Агуулахын дүрмийн тайлан"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_info
+msgid "Stock supplier replenishment information"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Нийлүүлэлтийн үнийн хүснэгт"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
+msgid "Supplierinfo"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Шууд хүргэлтийн хаяг харуулахад хэрэглэгддэг техникийн талбар"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#, python-format
+msgid "The following replenishment order has been generated"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
+msgstr ""
+" Энэхүү%s барааны хувьд худалдан авалтын захиалга үүсгэхэд тохирох ямар нэг "
+"нийлүүлэгчийн мэдээлэл олдсонгүй (нийлүүлэгч тодорхойгүй, захиалгын доод "
+"хэмжээнд хүрээгүй, огноонд харгалзах үнэ байхгүй, ...). Барааны дэлгэрэнгүй "
+"бүртгэл рүү очоод нийлүүлэгчийн мэдээллийг бүрдүүлнэ үү."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Энэхүү нэмэгдэл нь бараан дээр нийлүүлэгчээс үйлчлүүлэгч рүү шууд хүргэлт "
+"хийх чиглэл тохируулах боломжыг олгоно. Шууд хүргэлт хийхээр тохируулагдсан "
+"барааг борлуулалтын захиалганд бичиж батлахад худалдан авалтын ноорог "
+"захиалга шууд үүснэ. Энэ бол on-demand урсгал. Худалдан авалтын захиалга "
+"дээрх хүлээх авах хаяг нь танай агуулах бус шууд харилцагчийн хүлээн авах "
+"хаяг байх болно."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
+msgid "This will determine operation type of incoming shipment"
+msgstr "Энэ нь хүлээн авах баримтын төрлийг тодорхойлно"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Those dates have been updated accordingly on the receipt %s."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
+msgid "Total Quantity"
+msgstr "Нийт тоо хэмжээ"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Шилжүүлэг"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Зарим хүлээн авалтууд аль хэдийн хийгдсэн тул %s худалдан авалтын захиалгыг "
+"цуцлах боломжгүй."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Validate the receipt of all ordered products."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
+msgid "Vendor"
+msgstr "Нийлүүлэгч"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_vendor_delay_report
+msgid "Vendor Delay Report"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Vendor Lead Time"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
+msgid "Vendor On-time Delivery analysis"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
+msgid "Vendors"
+msgstr "Нийлүүлэгчид"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Visibility Days applied on the purchase routes."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
+msgid "Warehouse"
+msgstr "Агуулах"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr "Худалдан авсан бараанууд энэ агуулахад хүргэгдэх болно"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+"Та захиалсан тоог хүлээн авсан тооноос бууруулж өөрчлөх боломжгүй.\n"
+"Эхлээд буцаалтын барааны баримт үүсгэнэ үү."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "%s харилцагч дээр нийлүүлэгчийн байрлал сонгох ёстой"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "өдөр"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "of"
+msgstr "ын"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "ordered instead of"
+msgstr "оронд нь захиалагдсан"

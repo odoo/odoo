@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">PayPal Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group attrs="{'invisible': [('code', '!=', 'paypal')]}">
+                    <field name="paypal_email_account"
+                           attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                    <!-- This field should no longer be used but is kept in debug mode for the time
+                         being, until we are sure that the verification protocol of IPN can be used
+                         for DPT notifications -->
+                    <field name="paypal_pdt_token" password="True"/>
+                    <field name="paypal_use_ipn"
+                           attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
+                    <a href="https://www.odoo.com/documentation/16.0/applications/finance/payment_providers/paypal.html"
+                       target="_blank"
+                       colspan="2">
+                        How to configure your paypal account?
+                    </a>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        @param {im_livechat.legacy.PublicLivechatWindow} widget
+    -->
+    <t t-name="im_livechat.legacy.PublicLivechatWindow">
+        <div class="o_thread_window o_in_home_menu"
+            t-att-data-thread-id="widget.messaging.publicLivechatGlobal.publicLivechat.id"
+            t-att-data-thread-model='widget.messaging.publicLivechatGlobal.publicLivechat.model'
+        >
+            <div class="o_thread_window_header">
+                <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
+                    <t t-set="status" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.status"/>
+                    <t t-set="title" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
+                    <t t-set="unreadCounter" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>
+                    <t t-set="thread" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget"/>
+                </t>
+            </div>
+            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.operator">
+                <div class="o_thread_window_content">
+                </div>
+                <div class="o_thread_composer o_chat_mini_composer">
+                    <input class="o_composer_text_field o_PublicLivechatWindow_composer" t-att-placeholder="widget.messaging.publicLivechatGlobal.chatWindow.inputPlaceholder"/>
+                </div>
+            </t>
+            <div t-else="" class="d-flex justify-content-center align-items-center flex-grow-1">
+                <p class="text-500">No operator available</p>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {im_livechat/legacy/widgets/public_livechat_window/public_livechat_window} widget
+    -->
+    <t t-name="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
+        <span class="o_thread_window_title">
+            <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
+            <span t-if="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
+            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+        </span>
+        <span class="o_thread_window_buttons">
+            <a href="#" class="o_thread_window_close fa fa-close"/>
+        </span>
+    </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
+</templates>

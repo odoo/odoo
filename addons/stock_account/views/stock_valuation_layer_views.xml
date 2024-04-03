@@ -1,0 +1,163 @@
+<odoo>
+    <record id="stock_valuation_layer_form" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.form</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <form edit="0" create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="Date" />
+                            <field name="product_id" />
+                            <field name="stock_move_id" attrs="{'invisible': [('stock_move_id', '=', False)]}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Valuation" name="valuation">
+                            <group>
+                                <field name="quantity" />
+                                <field name="uom_id" groups="uom.group_uom" />
+                                <field name="currency_id" invisible="1" />
+                                <field name="unit_cost" />
+                                <field name="value" />
+                                <field name="remaining_qty" />
+                            </group>
+                        </page>
+                        <page string="Other Info" name="other_info">
+                            <group>
+                                <field name="description" />
+                                <field name="account_move_id" groups="account.group_account_invoice" attrs="{'invisible': [('account_move_id', '=', False)]}" />
+                                <field name="company_id" groups="base.group_multi_company" />
+                                <field name="stock_valuation_layer_id" attrs="{'invisible': [('stock_valuation_layer_id', '=', False)]}" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_valuation_layer_tree" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.tree</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" create="0"
+                  import="0" js_class="inventory_report_list"
+                  action="action_open_reference" type="object">
+                <field name="create_date" string="Date" />
+                <field name="reference"/>
+                <button name="action_open_layer" icon="fa-arrow-right" title="Open Valuation Layer" type="object"/>
+                <field name="product_id" />
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="quantity" string="Moved Quantity"/>
+                <field name="unit_cost" />
+                <field name="uom_id" groups="uom.group_uom" />
+                <field name="currency_id" invisible="1" />
+                <field name="value" sum="Total Value"/>
+                <groupby name="product_id">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="quantity_svl" invisible="1"/>
+                    <button name="action_revaluation" icon="fa-plus" title="Add Manual Valuation" type="object" attrs="{'invisible':['|', ('cost_method', '=', 'standard'), ('quantity_svl', '&lt;=', 0)]}" />
+                </groupby>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stock_valuation_layer_pivot" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.pivot</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="quantity" type="measure"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_valuation_layer_action" model="ir.actions.act_window">
+        <field name="name">Stock Valuation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.valuation.layer</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="stock_valuation_layer_tree"/>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+            <p>
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_inventory_valuation_search" model="ir.ui.view">
+        <field name="name">Inventory Valuation</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <search string="Inventory Valuation">
+                <field name="product_id"/>
+                <field name="categ_id" />
+                <field name="product_tmpl_id" />
+                <separator/>
+                <filter string="Incoming" name="incoming" domain="[('stock_move_id.location_id.usage', 'not in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
+                <filter string="Outgoing" name="outgoing" domain="[('stock_move_id.location_id.usage', 'in', ('internal', 'transit')), ('stock_move_id.location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
+                <separator/>
+                <filter string="Has Remaining Qty" name="has_remaining_qty" domain="[('remaining_qty', '>', 0)]"/>
+                <group expand='0' string='Group by...'>
+                    <filter string='Product' name="group_by_product_id" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- reporting view -->
+    <record id="stock_valuation_layer_report_tree" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.report.tree</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_valuation_layer_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="quantity" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="unit_cost" position="after">
+                <field name="remaining_qty" sum="Total Remaining Quantity"/>
+            </field>
+            <field name="value" position="before">
+                <field name="remaining_value" sum="Total Remaining Value"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_valuation_layer_report_action" model="ir.actions.act_window">
+        <field name="name">Stock Valuation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.valuation.layer</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="stock_valuation_layer_report_tree"/>
+        <field name="context">{'search_default_has_remaining_qty': 1}</field>
+        <field name="domain">[('product_id.type', '=', 'product')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+            <p>
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action" groups="base.group_no_one"/>
+
+    <record id="stock_valuation_layer_picking" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.picking</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button string="Valuation" type="object"
+                    name="action_view_stock_valuation_layers"
+                    class="oe_stat_button" icon="fa-dollar" groups="base.group_no_one"
+                    attrs="{'invisible': [('state', 'not in', ['done'])]}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

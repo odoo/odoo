@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='fleet_vehicle_model_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.form</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <form string="Model">
+                <sheet>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_model_vehicle" type="object" icon="fa-car" class="oe_stat_button"
+                            attrs="{'invisible': [('vehicle_count', '=', 0)]}">
+                            <field name="vehicle_count" widget="statinfo" string="Vehicles"/>
+                        </button>
+                    </div>
+                    <field name="image_128" widget='image' class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Model S"/>
+                        </h1>
+                        <label for="brand_id"/>
+                        <h2>
+                            <field name="brand_id" placeholder="e.g. Tesla"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="vehicle_type"/>
+                            <field name="category_id" options="{'no_create_edit': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Information" name="information">
+                            <group>
+                                <group string="Model" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                                    <field name="seats"/>
+                                    <field name="doors"/>
+                                    <field name="color"/>
+                                    <field name="model_year"/>
+                                    <field name="trailer_hook"/>
+                                </group>
+                                <group id="vehicle_information" string="Vehicle Information" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
+                                    <field name="electric_assistance"/>
+                                </group>
+                            </group>
+                            <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                                <group>
+                                    <field name="default_fuel_type" required="1"/>
+                                    <label for="default_co2"/>
+                                    <div class="o_row" name="default_co2">
+                                        <field name="default_co2"/><span>g/km</span>
+                                    </div>
+                                    <field name="co2_standard"/>
+                                    <field name="transmission"/>
+                                </group>
+                                <group>
+                                    <label for="power"/>
+                                    <div class="o_row">
+                                        <field name="power"/><span>kW</span>
+                                    </div>
+                                    <field name="horsepower"/>
+                                    <field name="horsepower_tax"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Vendors" name="vendors">
+                            <field name="vendors">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative" class="oe_kanban_global_click">
+                                                <div>
+                                                    <div class="o_kanban_record_title">
+                                                        <field name="name"/>
+                                                        <div class="o_kanban_details float-end">
+                                                            <span class="text-muted">
+                                                                <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
+                                                                <t t-if="record.email.raw_value"><field name="email"/></t>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.tree</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <tree string="Models">
+                <field name="brand_id" />
+                <field name="name" />
+                <field name="vehicle_count" string="Vehicles"/>
+                <field name="category_id" optional="show"/>
+                <field name="vehicle_type" optional="show"/>
+                <field name="default_co2" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.kanban</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <kanban string="Models">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click oe_kanban_details">
+                            <div><strong><field name="name"/></strong></div>
+                            <div><field name="brand_id"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_view_search' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.search</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="arch" type="xml">
+            <search string="Vehicles costs" >
+                <field name="brand_id" />
+                <group expand="1" string="Group By">
+                    <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Contains Vehicles"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_action' model='ir.actions.act_window'>
+        <field name="name">Models</field>
+        <field name="res_model">fleet.vehicle.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{"search_default_groupby_brand" : True,}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new model
+          </p><p>
+            You can define several models (e.g. A3, A4) for each make (Audi).
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Fleet" id="menu_root" sequence="220" groups="fleet_group_user" web_icon="fleet,static/description/icon.svg"/>
+    <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="fleet_group_manager"/>
+
+    <record id='fleet_vehicle_model_brand_view_tree' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.brand.tree</field>
+        <field name="model">fleet.vehicle.model.brand</field>
+        <field name="arch" type="xml">
+            <tree string="Model Make">
+                <field name="name" />
+                <field name="model_count" string="Models"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_brand_view_form' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.brand.form</field>
+        <field name="model">fleet.vehicle.model.brand</field>
+        <field name="arch" type="xml">
+            <form string="Model Make">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_brand_model" type="object" icon="fa-car" class="oe_stat_button"
+                            attrs="{'invisible': [('model_count', '=', 0)]}">
+                            <field name="model_count" widget="statinfo" string="Models"/>
+                        </button>
+                    </div>
+                    <group>
+                        <div>
+                            <field name="image_128" widget="image" class="oe_avatar"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_brand_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.model.brandkanban</field>
+        <field name="model">fleet.vehicle.model.brand</field>
+        <field name="arch" type="xml">
+            <kanban default_order="name" action="action_brand_model" type="object">
+                <field name="id"/>
+                <field name="name" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_image">
+                                <img alt="img" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_128', record.id.raw_value)" class="o_image_64_max" height="52"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <h4 class="oe_partner_heading">
+                                    <a type="open" class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </a>
+                                </h4>
+                                <div>
+                                    <field name="model_count"/> MODELS
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_brand_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.brand.view.search</field>
+        <field name="model">fleet.vehicle.model.brand</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="With Models" name="with_models"
+                    domain="[('model_count', '>', 0)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_model_brand_action' model='ir.actions.act_window'>
+        <field name="name">Manufacturers</field>
+        <field name="res_model">fleet.vehicle.model.brand</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new manufacturer
+          </p>
+        </field>
+    </record>
+
+    <!-- Model Category -->
+    <record id='fleet_vehicle_model_category_action' model='ir.actions.act_window'>
+        <field name="name">Categories</field>
+        <field name="res_model">fleet.vehicle.model.category</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new category
+            </p>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_category_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.tree</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="arch" type="xml">
+            <tree string="Model Category" editable="bottom" default_order="sequence, id">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_category_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.form</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="arch" type="xml">
+            <form string="Model Category">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem name="Models" parent="fleet_configuration" id="fleet_models_configuration" sequence="10" groups="fleet_group_manager"/>
+    <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_models_configuration" id="fleet_vehicle_model_brand_menu" sequence="1"/>
+    <menuitem action="fleet_vehicle_model_action" parent="fleet_models_configuration" id="fleet_vehicle_model_menu" sequence="5"/>
+    <menuitem action="fleet_vehicle_model_category_action" parent="fleet_models_configuration" id="fleet_vehicle_model_category_menu" sequence="10"/>
+</odoo>

@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_accrual_level_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.level.form</field>
+        <field name="model">hr.leave.accrual.level</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Level">
+                <sheet>
+                    <group>
+                        <field name="sequence" invisible="1" force_save="1"/>
+                        <label for="start_count"/>
+                        <div class="o_col">
+                            <div class="o_row">
+                                <field name="start_count"/>
+                                <field name="start_type" nolabel="1"/><label for="start_type" string="after allocation date" class="o_form_label"/>
+                            </div>
+                        </div>
+                        <field name="is_based_on_worked_time"/>
+                        <label for="added_value"/>
+                        <div class="o_col">
+                            <div class="o_row">
+                                <field name="added_value"/>
+                                <field name="added_value_type" nolabel="1"/>
+                            </div>
+                        </div>
+                        <label for="frequency"/>
+                        <div class="o_col">
+                            <field name="frequency"/>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'weekly')]}">
+                                <label for="week_day" string="on"/><field name="week_day"/>
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'monthly')]}">
+                                <label for="first_day_display" string="on the"/><field name="first_day_display" required="1"/> of the month
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'bimonthly')]}">
+                                <label for="first_day_display" string="on the"/><field name="first_day_display" required="1"/> and on the <field name="second_day_display" required="1"/> of the month
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'biyearly')]}">
+                                <label for="first_month_day_display" string="on the"/><field name="first_month_day_display" required="1"/> of <field name="first_month"/> and on the <field name="second_month_day_display" required="1"/> of <field name="second_month"/>
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('frequency', '!=', 'yearly')]}">
+                                <label for="yearly_day_display" string="on the"/><field name="yearly_day_display" required="1"/> of <field name="yearly_month" class="w-25"/>
+                            </div>
+                        </div>
+                        <label for="maximum_leave"/>
+                        <div class="o_col">
+                            <div class="o_row">
+                                <field name="maximum_leave"/>
+                                <!-- force_save is required here since it would otherwise not be saved due to the readonly
+                                     there is an issue when the field is present twice in the view. -->
+                                <field name="added_value_type" nolabel="1" readonly="1" force_save="1"/>
+                            </div>
+                        </div>
+                        <field name="action_with_unused_accruals" style="width: 40%"/>
+                        <field name="postpone_max_days" attrs="{'invisible': [('action_with_unused_accruals', '!=', 'postponed')]}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.tree</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Accrual Plans">
+                <field name="name"/>
+                <field name="level_count"/>
+                <field name="time_off_type_id"/>
+                <field name="employees_count"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.form</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Plan">
+                <field name="show_transition_mode" invisible="1" />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" attrs="{'invisible': [('id', '=', False)]}">
+                        <button name="action_open_accrual_plan_employees" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="employees_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="time_off_type_id"/>
+                        </group>
+                        <group>
+                            <field name="transition_mode" widget="radio" attrs="{'invisible': [('show_transition_mode', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <span class="oe_grey" invisible="1">
+                        
+                    </span>
+                    <div class="o_hr_holidays_hierarchy">
+                        <div class="o_hr_holidays_title">Rules</div>
+                        <div class="o_hr_holidays_hierarchy_readonly" attrs="{'invisible': [('level_ids', '!=', [])]}">
+                            <p>
+                                No rule has been set up for this accrual plan.
+                            </p>
+                        </div>
+                        <field name="level_ids" mode="kanban" nolabel="1"
+                            class="o_hr_holidays_plan_level_container o_hr_holidays_plan_level_hierarchy"
+                            add-label="Add a new level"
+                            >
+                            <kanban default_order="sequence">
+                                <field name="sequence"/>
+                                <field name="start_count"/>
+                                <field name="start_type"/>
+                                <field name="added_value"/>
+                                <field name="added_value_type"/>
+                                <field name="frequency"/>
+                                <field name="week_day"/>
+                                <field name="first_day"/>
+                                <field name="second_day"/>
+                                <field name="first_month_day"/>
+                                <field name="first_month"/>
+                                <field name="second_month_day"/>
+                                <field name="second_month"/>
+                                <field name="yearly_day"/>
+                                <field name="yearly_month"/>
+                                <field name="maximum_leave"/>
+                                <field name="action_with_unused_accruals"/>
+                                <field name="is_based_on_worked_time"/>
+                                <templates>
+                                    <div t-name="kanban-box" class="border-0 bg-transparent">
+                                        <div class="o_hr_holidays_body oe_kanban_global_click">
+                                            <div class="o_hr_holidays_timeline text-center">
+                                                Level <span class="o_hr_holidays_plan_level_level"/>
+                                            </div>
+                                            <t t-if="!read_only_mode">
+                                                <a type="edit" t-attf-class="oe_kanban_action oe_kanban_action_a text-black">
+                                                    <t t-call="level_content"/>
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-call="level_content"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <t t-name="level_content">
+                                        <div class="o_hr_holidays_card">
+                                            <div class="content">
+                                                <div>
+                                                    <t t-if="record.start_count.value > 0">
+                                                        Starts <field name="start_count" widget="integer"/> <field name="start_type"/> after allocation start date
+                                                    </t>
+                                                    <t t-else="">
+                                                        Starts immediately after allocation start date
+                                                    </t>
+                                                </div>
+                                                <div>
+                                                    Adds <field name="added_value" widget="float_without_trailing_zeros"/> <field name="added_value_type"/>
+                                                    <t t-if="record.is_based_on_worked_time.raw_value">(based on worked time)</t>
+                                                </div>
+                                                <div>
+                                                    <field name="frequency"/>
+                                                    <t t-if="record.frequency.raw_value == 'weekly'">
+                                                        on <field name="week_day"/>
+                                                    </t>
+                                                    <t t-elif="record.frequency.raw_value === 'monthly'">
+                                                        on the <field name="first_day"/> day of the month
+                                                    </t>
+                                                    <t t-elif="record.frequency.raw_value === 'bimonthly'">
+                                                        on the <field name="first_day"/> and on the <field name="second_day"/> days of the months
+                                                    </t>
+                                                    <t t-elif="record.frequency.raw_value === 'biyearly'">
+                                                        on the <field name="first_month_day"/> <field name="first_month"/> and on the <field name="second_month_day"/> <field name="second_month"/>
+                                                    </t>
+                                                    <t t-elif="record.frequency.raw_value === 'yearly'">
+                                                        on <field name="yearly_day"/> <field name="yearly_month"/>
+                                                    </t>
+                                                </div>
+                                                <div t-if="record.maximum_leave.value">
+                                                    Limit of <field name="maximum_leave" widget="float_without_trailing_zeros"/> <field name="added_value_type"/>
+                                                </div>
+                                                <div t-if="record.action_with_unused_accruals.raw_value">
+                                                    At the end of the year, unused accruals will be <t t-if="record.action_with_unused_accruals.raw_value == 'postponed'">postponed</t><t t-else="">lost</t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </div>
+               </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_view_accrual_plans" model="ir.actions.act_window">
+        <field name="name">Accrual Plans</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave.accrual.plan</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

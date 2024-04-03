@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Required simply to set SO on expense before submitting. Used to avoid crash on name_get/name_search -->
+    <record id="sale_order_rule_expense_user" model="ir.rule">
+        <field name="name">Expense Employee can read confirmed SO</field>
+        <field ref="sale.model_sale_order" name="model_id"/>
+        <field name="domain_force">[('state', '=', 'sale')]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="active" eval="False"/> <!-- opw-2027005: this rules breaks sale "see own document" -->
+    </record>
+
+</odoo>

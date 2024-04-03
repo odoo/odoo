@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="PresenceIndicator">
+        <div id="oe_hr_attendance_status" class="fa fa-circle me-1 text-400 " role="img" aria-label="Available" title="Available">
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceCardLayout">
+        <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background d-flex flex-column align-items-center justify-content-center h-100 text-center">
+            <span class="o_hr_attendance_kiosk_backdrop position-absolute top-0 start-0 end-0 bottom-0 bg-black-25"/>
+            <div class="o_hr_attendance_clock bg-black-50 p-3 py-md-2 m-0 mt-md-5 me-md-5 h2 text-white font-monospace"/>
+            <div t-attf-class="o_hr_attendance_kiosk_mode flex-grow-1 flex-md-grow-0 card pb-3 px-0 px-lg-5 {{kioskModeClasses ? kioskModeClasses : '' }}">
+                <div class="card-body d-flex flex-column p-0 p-md-4">
+                    <t t-out="bodyContent"></t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceUserBadge">
+        <div class="o_hr_attendance_user_badge o_home_menu_background d-flex align-items-end justify-content-center flex-grow-1 pt-5 pt-md-4 bg-odoo">
+            <img class="img rounded-circle mb-n5" t-attf-src="/web/image?model=hr.employee.public&amp;field=avatar_128&amp;id=#{userId}" t-att-title="userName" height="80" t-att-alt="userName"/>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceCheckInOutButtons">
+        <div class="flex-grow-1">
+            <button t-attf-class="o_hr_attendance_sign_in_out_icon btn btn-{{ checked_in ? 'warning' : 'success' }} align-self-center px-5 py-3 mt-4 mb-2">
+                <span class="align-middle fs-2 me-3 text-white" t-if="!checked_in">Check IN</span>
+                <i t-attf-class="fa fa-4x fa-sign-{{ checked_in ? 'out' : 'in' }} align-middle"/>
+                <span class="align-middle fs-2 ms-3" t-if="checked_in">Check OUT</span>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceKioskMode">
+        <t t-call="HrAttendanceCardLayout">
+            <t t-set="kioskModeClasses" t-translation="off">o_barcode_main pt-5</t>
+            <t t-set="bodyContent">
+                <h2 class="mb-2"><small>Welcome to</small> <t t-esc="widget.company_name"/></h2>
+                <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center img img-fluid mb-3" width="200"/>
+                <div class="o_hr_attendance_kiosk_welcome_row d-flex flex-column pb-5">
+                    <div class="col-md-5 mt-5 mb-5 mb-md-0 align-self-center" t-if="widget.kiosk_mode != 'manual'">
+                        <img src="/barcodes/static/img/barcode.png" alt="Barcode" style="width: 115px;height: 60px"/>
+                        <h6 class="mt-2 text-muted">Scan your badge</h6>
+                    </div>
+                    <div class="mt-5 align-self-end" t-if="widget.kiosk_mode == 'barcode_manual'">
+                        <button class="o_hr_attendance_button_employees btn btn-link">
+                            Identify Manually
+                        </button>
+                    </div>
+                    <div class="mt-5 align-self-center" t-if="widget.kiosk_mode == 'manual'">
+                        <button class="o_hr_attendance_button_employees btn btn-primary px-5 py-3 mt-4 mb-2">
+                            <span class="fs-2">Identify Manually</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="HrAttendanceMyMainMenu">
+        <t t-call="HrAttendanceCardLayout">
+            <t t-set="bodyContent">
+                <t t-if="widget.employee">
+                    <t t-set="checked_in" t-value="widget.employee.attendance_state=='checked_in'"/>
+
+                    <t t-call="HrAttendanceUserBadge">
+                        <t t-set="userId" t-value="widget.employee.id"/>
+                        <t t-set="userName" t-value="widget.employee.name"/>
+                    </t>
+
+                    <div class="flex-grow-1">
+                        <h1 class="mt-5" t-esc="widget.employee.name"/>
+                        <h3><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
+                        <h4 class="mt0 mb0 text-muted" t-if="checked_in">Today's work hours: <span t-esc="widget.hours_today"/></h4>
+                    </div>
+
+                    <t t-call="HrAttendanceCheckInOutButtons"/>
+                </t>
+                <div class="alert alert-warning" t-else="">
+                    <b>Warning</b> : Your user should be linked to an employee to use attendance.<br/> Please contact your administrator.
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="HrAttendanceKioskConfirm">
+        <t t-call="HrAttendanceCardLayout">
+            <t t-set="bodyContent">
+                <t t-set="checked_in" t-value="widget.employee_state=='checked_in'"/>
+
+                <button class="o_hr_attendance_back_button btn btn-block btn-secondary btn-lg d-block d-md-none py-5">
+                    <i class="fa fa-chevron-left me-2"/> Go back
+                </button>
+
+                <t t-if="widget.employee_id" t-call="HrAttendanceUserBadge">
+                    <t t-set="userId" t-value="widget.employee_id"/>
+                    <t t-set="userName" t-value="widget.employee_name"/>
+                </t>
+
+                <button class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle">
+                    <i class="fa fa-2x fa-fw fa-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+                </button>
+
+                <div t-if="widget.employee_id" class="flex-grow-1">
+                    <h1 class="mt-5 mb8"><t t-esc="widget.employee_name"/></h1>
+                    <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
+                    <h4 class="mt0 mb0 text-muted" t-if="checked_in">Today's work hours: <span t-esc="widget.employee_hours_today"/></h4>
+
+                    <t t-if="!widget.use_pin" t-call="HrAttendanceCheckInOutButtons"/>
+
+                    <t t-else="">
+                        <h3 class="mt-4 mb0 text-muted">Please enter your PIN to <b t-if="checked_in">check out</b><b t-else="">check in</b></h3>
+                        <div class="row">
+                            <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
+                                <div class="row g-0" >
+                                    <div class="col-12 mb8 mt8">
+                                        <input class="o_hr_attendance_PINbox border-0 bg-white fs-1 text-center" type="password" disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="row g-0">
+                                    <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', ['C', 'btn-warning'], '0', ['ok', 'btn-primary']]" t-as="btn_name">
+                                        <div class="col-4 p-1">
+                                            <a href="#" t-attf-class="o_hr_attendance_PINbox_button btn {{btn_name[1]? btn_name[1] : 'btn-secondary border'}} btn-block btn-lg {{ 'o_hr_attendance_pin_pad_button_' + btn_name[0] }} d-flex align-items-center justify-content-center">
+                                                <t t-esc="btn_name[0]"/>
+                                            </a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div t-else="" class="alert alert-danger mx-3" role="alert">
+                    <h4 class="alert-heading">Error: could not find corresponding employee.</h4>
+                    <p>Please return to the main menu.</p>
+                </div>
+                <a role="button" class="oe_attendance_sign_in_out" aria-label="Sign out" title="Sign out"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="HrAttendanceGreetingMessage">
+        <t t-call="HrAttendanceCardLayout">
+            <t t-set="bodyContent">
+                <t t-set="checked_in" t-value="widget.employee_state=='checked_in'"/>
+
+                <t t-if="widget.attendance">
+                    <t t-call="HrAttendanceUserBadge">
+                        <t t-set="userId" t-value="widget.attendance.employee_id[0]"/>
+                        <t t-set="userName" t-value="widget.employee_name"/>
+                    </t>
+
+                    <div t-if="widget.attendance.check_out" class="flex-grow-1">
+                        <h1 class="mt-5">Goodbye <t t-esc="widget.employee_name"/>!</h1>
+                        <h2 class="o_hr_attendance_message_message mt4 mb24"/>
+                        <div class="alert alert-info fs-2 mx-3" role="status">
+                            Checked out at <b><t t-esc="widget.attendance.check_out_time"/></b>
+                            <br/><b><t t-esc="widget.hours_today"/></b>
+                        </div>
+                        <div t-att-class="'alert ' + (widget.today_overtime_float &gt;= 0 ? 'alert-success' : 'alert-danger') + ' h3 mx-3'" role="status">
+                            Extra hours today:
+                            <span t-esc="widget.today_overtime"/>
+                        </div>
+                        <t t-if="widget.total_overtime_float &gt; 0">
+                            Total extra hours: <span t-esc="widget.total_overtime"/>
+                        </t>
+                        <h3 class="o_hr_attendance_random_message fst-italic mb24"/>
+                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
+                    </div>
+                    <div t-else="" class="flex-grow-1">
+                        <h1 class="mt-5 mb0">Welcome <t t-esc="widget.employee_name"/>!</h1>
+                        <h2 class="o_hr_attendance_message_message mt4 mb24"/>
+                        <div class="alert alert-info fs-2 mx-3" role="status">
+                            Checked in at <b><t t-esc="widget.attendance.check_in_time"/></b>
+                        </div>
+                        <h3 class="o_hr_attendance_random_message mb24"/>
+                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
+                    </div>
+                    <div class="flex-grow-1">
+                        <button class="o_hr_attendance_button_dismiss align-self-center btn btn-primary btn-lg px-5 py-3">
+                            <span class="fs-2" t-if="widget.attendance.check_out">Goodbye</span>
+                            <span class="fs-2" t-else="">OK</span>
+                        </button>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="flex-grow-1">
+                        <div class="alert alert-warning mt-5 mx-3" role="alert">
+                            <h4 class="alert-heading">Invalid request</h4>
+                            <p>Please return to the main menu.</p>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <button class="o_hr_attendance_button_dismiss btn btn-primary btn-lg fs-2 px-5 py-3">
+                            <i class="fa fa-chevron-left me-2"/>
+                            <span class="fs-2">Go back</span>
+                        </button>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+</template>

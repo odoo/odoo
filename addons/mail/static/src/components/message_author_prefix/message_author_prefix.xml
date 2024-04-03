@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageAuthorPrefix" owl="1">
+        <t t-if="messageAuthorPrefixView">
+            <span class="o_MessageAuthorPrefix" t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="messageAuthorPrefixView.message">
+                    <t t-if="messageAuthorPrefixView.message.author and messageAuthorPrefixView.message.author === messaging.currentPartner">
+                        <i class="o_MessageAuthorPrefixIcon fa fa-mail-reply me-1"/>You:
+                    </t>
+                    <t t-elif="messageAuthorPrefixView.thread and (!messageAuthorPrefixView.thread.channel or messageAuthorPrefixView.message.author !== messageAuthorPrefixView.thread.channel.correspondent)">
+                        <t t-esc="messageAuthorPrefixView.message.author.nameOrDisplayName"/>:
+                    </t>
+                </t>
+            </span>
+        </t>
+    </t>
+
+</templates>

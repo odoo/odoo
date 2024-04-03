@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.UrlField" owl="1">
+        <t t-if="props.readonly">
+            <a class="o_field_widget o_form_uri" t-on-click.stop="" t-att-href="formattedHref" t-esc="props.text || props.value || ''" target="_blank"/>
+        </t>
+        <t t-else="">
+            <div class="d-inline-flex w-100">
+                <input
+                    class="o_input"
+                    t-att-id="props.id"
+                    type="text"
+                    autocomplete="off"
+                    t-att-placeholder="props.placeholder"
+                    t-att-required="props.required"
+                    t-ref="input"
+                />
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.FormUrlField" t-inherit="web.UrlField" t-inherit-mode="primary">
+        <xpath expr="//input" position="after">
+            <a
+                t-if="props.value"
+                t-att-href="formattedHref"
+                class="ms-3 d-inline-flex align-items-center"
+                target="_blank"
+            >
+                <i class="fa fa-globe" data-tooltip="Go to URL" aria-label="Go to URL"></i>
+            </a>
+        </xpath>
+    </t>
+
+</templates>

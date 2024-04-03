@@ -1,0 +1,45 @@
+// ------- Pivot renderer -------
+.o_pivot table {
+    width: var(--PivotView-width, auto);
+
+    // Inform the user that he may click on a cell to be redirected to a list view of the
+    // items corresponding to the clicked cell
+    &.o_enable_linking .o_pivot_cell_value:not(.o_empty) {
+        @include o-hover-text-color($body-color, $o-main-link-color);
+    }
+
+    .o_pivot_measure_row,
+    .o_pivot_origin_row,
+    .o_pivot_header_cell_closed,
+    .o_pivot_header_cell_opened {
+        @include o-hover-text-color($body-color, $headings-color);
+
+        &:hover {
+            background-color: map-get($grays, "200") !important;
+        }
+    }
+
+    .o_pivot_cell_value.o_cell_hover {
+        background-color: $table-hover-bg;
+    }
+
+    .o_pivot_cell_value {
+        /*rtl:ignore*/
+        text-align: right !important;
+        /*rtl:ignore*/
+        direction: ltr;
+    }
+}
+
+.o_pivot_view {
+    .o_cp_bottom_left {
+        display: block;
+    }
+}
+
+// ------- Sample mode -------
+.o_pivot_view .o_view_sample_data {
+    table {
+        @include o-sample-data-disabled;
+    }
+}

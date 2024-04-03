@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.SwitchCompanyMenu" owl="1">
+    <Dropdown class="'o_switch_company_menu d-none d-md-block'" position="'bottom-end'">
+        <t t-set-slot="toggler">
+            <i class="fa fa-building d-lg-none"/>
+            <span class="oe_topbar_name d-none d-lg-block" t-esc="currentCompany.name"/>
+        </t>
+        <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company" t-key="company.id">
+            <t t-call="web.SwitchCompanyItem">
+                <t t-set="company" t-value="company" />
+            </t>
+        </t>
+    </Dropdown>
+</t>
+
+
+<t t-name="web.SwitchCompanyItem" owl="1">
+    <DropdownItem class="'p-0 bg-white'">
+        <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)"/>
+        <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id"/>
+        <div class="d-flex" data-menu="company" t-att-data-company-id="company.id">
+            <div
+                role="menuitemcheckbox"
+                t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
+                t-att-aria-label="company.name"
+                t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + company.name + ' content.'"
+                tabindex="0"
+                class="border-end toggle_company"
+                t-attf-class="{{isCurrent ? 'border-primary' : ''}}"
+                t-on-click.stop="() => this.toggleCompany(company.id)">
+
+                <span class="btn btn-light border-0 p-2">
+                    <i class="fa fa-fw py-2" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+                </span>
+            </div>
+
+            <div
+                role="button"
+                t-att-aria-pressed="isCurrent ? 'true' : 'false'"
+                t-att-aria-label="'Switch to ' + company.name "
+                t-att-title="'Switch to ' + company.name "
+                tabindex="0"
+                class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
+                t-att-class="isCurrent ? 'alert-primary ms-1 me-2' : 'btn btn-light fw-normal border-0'"
+                t-on-click="() => this.logIntoCompany(company.id)">
+
+                <span
+                    class='company_label pe-3'
+                    t-att-class="isCurrent ? 'text-900 fw-bold' : 'ms-1'">
+                    <t t-esc="company.name"/>
+                </span>
+            </div>
+        </div>
+    </DropdownItem>
+</t>
+
+</templates>

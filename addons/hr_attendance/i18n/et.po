@@ -1,0 +1,1121 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance
+# 
+# Translators:
+# Aveli Kannel <aveli@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Egon Raamat <egon@avalah.ee>, 2022
+# Martin Trigaux, 2022
+# Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Rivo Zängov <eraser@eraser.ee>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
+# Patrick-Jordan Kiudorv, 2022
+# JanaAvalah, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
+msgstr "\"Väljaregistreerimise\" aeg ei saa olla enne \"sisseregistreerimise\" aega."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "%(empl_name)s from %(check_in)s"
+msgstr "%(empl_name)s alates %(check_in)s"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
+msgstr "%(empl_name)s alates %(check_in)s kuni %(check_out)s"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid ": Your user should be linked to an employee to use attendance."
+msgstr ""
+": Teie kasutaja peab olema seotud töötajaga, et kasutada Kohalolekuid."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid ""
+"<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
+"right, please contact Human Resource staff"
+msgstr ""
+"<b>Hoiatus! Viimane logimine oli 12 tundi tagasi.</b><br/>Kui see pole õige,"
+" võtke ühendus personaliosakonnaga"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
+msgid "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Month\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                           Eelmine kuu\n"
+"                        </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Extra Hours</span>"
+msgstr "<span class=\"o_stat_text\">Ületunnid</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span> Minutes</span>"
+msgstr "<span> Minutid</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span> Minutes</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+msgstr ""
+"<span> Minutid</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span>Time Period </span>"
+msgstr "<span>Ajavahemik </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Activate the count of employees' extra hours."
+msgstr "Aktiveerige töötajate ületundide arv."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid ""
+"Add a few employees to be able to select an employee here and perform his check in / check out.\n"
+"                To create employees go to the Employees menu."
+msgstr ""
+"Lisage mõned töötajad, et saaksite siin töötaja valida ja tema sisse-/väljaregistreerimist teha.\n"
+"                Töötajate loomiseks minge menüüsse Töötajad."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
+msgid "Adjustment"
+msgstr "Korrigeerimine"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_manager
+msgid "Administrator"
+msgstr "Administraator"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr "Lubage ajavahemik ettevõtte kasuks, mida lisaajana ei arvestata."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr "Lubage ajavahemik töötaja kasuks, mida lisaajana ei arvestata."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+msgid "Amount of extra hours"
+msgstr "Ületundide arv"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "An apple a day keeps the doctor away"
+msgstr "Üks õun päevas hoiab arsti eemal"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Another good day's work! See you soon!"
+msgstr "Jälle üks hea tööpäev on möödas! Kohtumiseni!"
+
+#. module: hr_attendance
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
+msgid "Attendance"
+msgstr "Kohalolek"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
+msgid "Attendance Analysis"
+msgstr "Kohaloleku analüüs"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
+msgid "Attendance Kiosk Delay"
+msgstr "Kioski hilinemised"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_mode
+msgid "Attendance Mode"
+msgstr "Kohalolekurežiim"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
+msgid "Attendance Overtime"
+msgstr "Kohaloleku ületunnid"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_report
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
+msgid "Attendance Statistics"
+msgstr "Kohaloleku statistika"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
+msgid "Attendance Status"
+msgstr "Kohaloleku staatus"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Attendances"
+msgstr "Kohalolekud"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Available"
+msgstr "Saadaval"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
+msgid "Back Camera"
+msgstr "Tagakaamera"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Barcode"
+msgstr "Triipkood"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
+msgid "Barcode / RFID"
+msgstr "Triipkood / RFID"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode_manual
+msgid "Barcode / RFID and Manual Selection"
+msgstr "Triipkood / RFID ja manuaalne valik"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_barcode_source
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_barcode_source
+msgid "Barcode Source"
+msgstr "Triipkoodi allikas"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee hasn't "
+"checked out since %(datetime)s"
+msgstr ""
+"Töötajale %(empl_name)s ei saa luua uut kohaloleku kirjet, kuna töötaja ei "
+"ole välja registreerinud alates %(datetime)s"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Cannot create new attendance record for %(empl_name)s, the employee was "
+"already checked in on %(datetime)s"
+msgstr ""
+"Töötajale%(empl_name)s ei saa luua uut kohaloleku kirjet, kuna töötaja oli "
+"sisse registreerinud juba %(datetime)s"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Cannot perform check out on %(empl_name)s, could not find corresponding "
+"check in. Your attendances have probably been modified manually by human "
+"resources."
+msgstr ""
+"Töötajat %(empl_name)s ei ole võimalik välja registreerida, sest ei leitud "
+"vastavat töötaja sisse registreerimist. Teie külastust on tõenäoliselt "
+"muudetud inimese poolt."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Check IN"
+msgstr "REGISTREERI sisse"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check In"
+msgstr "Registreeri SISSE"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr "Registreeri sisse / Registreeri välja"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Check OUT"
+msgstr "Registreeri VÄLJA"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check Out"
+msgstr "Registreeri välja"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out in Kiosk Mode"
+msgstr "Registreeri Kioski režiimilt sisse/välja"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
+msgid "Checked in"
+msgstr "Sisse registreeritud"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Checked in at"
+msgstr "Registreeris sisse"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
+msgid "Checked out"
+msgstr "Välja registreeritud"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Checked out at"
+msgstr "Registreeris välja"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Choose how long the greeting message will be displayed."
+msgstr "Valige, kui kaua tervitussõnumit kuvatakse."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+msgid "Companies"
+msgstr "Ettevõtted"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__company_id
+msgid "Company"
+msgstr "Ettevõte"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "Ettevõtte logo"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Compare attendance with working hours set on employee."
+msgstr "Võrrelge kohalolekut töötajale määratud tööaegadega."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "Config Settings"
+msgstr "Seadistused"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
+msgid "Configuration"
+msgstr "Seadistus"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
+msgid "Count Extra Hours"
+msgstr "Ületunnid kokku"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Count of Extra Hours"
+msgstr "Ületundide loendus"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Count of extra hours is considered from this date. Potential extra hours "
+"prior to this date are not considered."
+msgstr ""
+"Ületundide arvu arvestatakse alates sellest kuupäevast. Võimalikke ületunde "
+"enne seda kuupäeva ei arvestata."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Create a new employee"
+msgstr "Loo uus töötaja"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
+msgid "Created by"
+msgstr "Loonud"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
+msgid "Created on"
+msgstr "Loomise kuupäev"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+msgid "Day"
+msgstr "Päev"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Define the camera used for the barcode scan."
+msgstr "Määrake vöötkoodi skanneerimiseks kasutatav kaamera."
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Define the way the user will be identified by the application."
+msgstr "Määrake, kuidas rakendus kasutaja tuvastab."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
+msgid "Department"
+msgstr "Osakond"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
+msgid "Display Name"
+msgstr "Näidatav nimi"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Display Time"
+msgstr "Näidatav aeg"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
+msgstr "Korralik unetundide arv teeb mehe terveks, rikkaks ja targaks."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
+msgstr "Söö hommikut kui kuningas, lõunat kui kaupmees ja õhtut kui kerjus."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
+msgid "Employee"
+msgstr "Töötaja"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
+msgid "Employee PIN"
+msgstr "Töötaja PIN"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Employee attendances"
+msgstr "Töötaja kohalviibimised"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
+msgid "Employees"
+msgstr "Töötajad"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
+msgid "Enable PIN use"
+msgstr "Luba PIN-koodi kasutamine"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Error: could not find corresponding employee."
+msgstr "Viga: vastavat töötajat ei leitud."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours"
+msgstr "Ületunnid"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra Hours (Real)"
+msgstr "Ületunnid (Reaalsed)"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
+msgid "Extra Hours Starting Date"
+msgstr "Ületundide alguskuupäev"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Extra hours today:"
+msgstr "Ületunde täna:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra-hours including the threshold duration"
+msgstr "Ületunnid, sh lubatud piiri ületanud"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "First come, first served"
+msgstr "Kes ees, see mees"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__front
+msgid "Front Camera"
+msgstr "Esikaamera"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Glad to have you back, it's been a while!"
+msgstr "Rõõm taaskohtuda! Viimasest kohtumisest on juba tükk aeg möödas!"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Go back"
+msgstr "Mine tagasi"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good afternoon"
+msgstr "Tere päevast"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good evening"
+msgstr "Tere õhtust"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good morning"
+msgstr "Tere hommikust"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Good night"
+msgstr "Head ööd"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Goodbye"
+msgstr "Head aega"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Group By"
+msgstr "Grupeeri"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+msgid "HR Attendance Search"
+msgstr "HR kohaloleku otsing"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good afternoon"
+msgstr "Ilusat pärastlõunat"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good day!"
+msgstr "Ilusat päeva!"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a good evening"
+msgstr "Head õhtut"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "Have a nice lunch!"
+msgstr "Head lõunat!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Hours"
+msgstr "Tunnid"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
+msgid "Hours Last Month"
+msgstr "Tunnid eelmisel kuul"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
+msgid "Hours Last Month Display"
+msgstr "Eelmise kuu tunnid"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
+msgid "Hours Today"
+msgstr "Tunnid täna"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
+msgid "Hours Worked"
+msgstr "Töötatud tunde"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Hr Attendance Search"
+msgstr "Kohalviibijate otsing"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Identify Manually"
+msgstr "Tuvasta käsitsi"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "If a job is worth doing, it is worth doing well!"
+msgstr "Kui tööd teha, siis korralikult!"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Invalid request"
+msgstr "Vigane päring"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
+msgid "Kiosk Mode"
+msgstr "Kassarežiim"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
+msgid "Last Attendance"
+msgstr "Viimane kohalolek"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report____last_update
+msgid "Last Modified on"
+msgstr "Viimati muudetud"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendas"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__manual
+msgid "Manual Selection"
+msgstr "Manuaalne valik"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menüü"
+
+#. module: hr_attendance
+#: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
+msgid "Message"
+msgstr "Sõnum"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "My Attendances"
+msgstr "Minu kohalolekud"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "No Check Out"
+msgstr "Välja registreerimised puuduvad"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+msgid "No attendance records found"
+msgstr "Kohaloleku andmed puuduvad"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "No attendance records to display"
+msgstr "Kohaloleku kirjed puuduvad"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "Ükski töötaja ei vasta märgi ID-le '%(barcode)s.'"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "OK"
+msgstr "OK"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_user
+msgid "Officer : Manage all attendances"
+msgstr "Töötaja: haldab kõiki kohalolekuid"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+msgid "Overtime"
+msgstr "Ületunnid"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please contact your administrator."
+msgstr "Palun võtke ühendust oma administraatoriga."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please enter your PIN to"
+msgstr "Palun sisestage oma PIN kood"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Please return to the main menu."
+msgstr "Palun naaske peamenüüsse."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Avalik töötaja"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
+msgid "Reporting"
+msgstr "Aruandlus"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Skaneeri oma märk"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__scanner
+msgid "Scanner"
+msgstr "Skänner"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr "Määrake PIN-kood töötaja andmete ankeedil (personali seadetes)"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
+msgid "Settings"
+msgstr "Seaded"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Sign out"
+msgstr "Logi välja"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Start from"
+msgstr "Alustage"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "Taoline grupeering pole lubatud."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "The attendance records of your employees will be displayed here."
+msgstr "Siin kuvatakse ettevõtte töötajate kohalviibimisi."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:0
+#, python-format
+msgid "The early bird catches the worm"
+msgstr "Varajane lind saab ussi"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
+msgid ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr "Kasutaja saab avada kassarežiimi ja kinnitada töötaja PIN-koodi."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"Kasutaja saab ligipääsu personali kohalviibimiste menüüle, võimaldades tal "
+"hallata oma kohalviibimisi."
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
+msgid ""
+"The user will have to enter his PIN to check in and out manually at the "
+"company screen."
+msgstr ""
+"Kasutaja peab manuaalseks sisse- ja väljaregistreermiseks sisestama PIN-"
+"koodi ettevõtte ekraanil."
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr ""
+"Kioski režiimi aktiveerimiseks ilma PIN-koodita peab Teil olema kinnitaja "
+"roll või laiendatud õigused Puudumiste moodulis. Võtke ühendust oma "
+"administraatoriga."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Today's work hours:"
+msgstr "Tänased tööajad:"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Company"
+msgstr "Tolerantsaeg ettevõtte kasuks"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Employee"
+msgstr "Tolerantsaeg töötaja kasuks"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
+msgid "Total Overtime"
+msgstr "Ületunnid kokku"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Total extra hours:"
+msgstr "Ületunnid kokku:"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes (defined on the Employee's profile) to check-in."
+msgstr ""
+"Kasutage sisseregistreerimiseks PIN-koode (määratletud töötaja profiilil)."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_users
+#: model:res.groups,name:hr_attendance.group_hr_attendance
+msgid "User"
+msgstr "Kasutaja"
+
+#. module: hr_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "User : Only kiosk mode"
+msgstr "Kasutaja: ainult Kioski režiim"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Want to check out?"
+msgstr "Soovid välja registreerida?"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Warning"
+msgstr "Hoiatus"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome"
+msgstr "Tere tulemast"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome to"
+msgstr "Tere tulemast"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Welcome!"
+msgstr "Tere tulemast!"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
+msgid "Work Hours"
+msgstr "Tööaeg"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
+msgid "Worked Hours"
+msgstr "Töötatud tunnid"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Worked hours last month"
+msgstr "Eelmisel kuul töötatud tunnid"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Wrong PIN"
+msgstr "Vale PIN-kood"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid "You cannot duplicate an attendance."
+msgstr "Osalemist ei saa kopeerida."
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
+msgstr "Siin kuvatakse teie kohaloleku andmed."
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "check in"
+msgstr "sisse registreerida"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "check out"
+msgstr "välja registreerida"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "seconds"
+msgstr "sekundit"

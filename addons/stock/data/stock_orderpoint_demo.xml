@@ -1,0 +1,44 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Resource: stock.warehouse.orderpoint -->
+
+        <record id="stock_warehouse_orderpoint_1" model="stock.warehouse.orderpoint">
+            <field name="product_max_qty">10.0</field>
+            <field name="product_min_qty">5.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field name="product_id" ref="product.product_delivery_02"/>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_warehouse_orderpoint_2" model="stock.warehouse.orderpoint">
+            <field name="product_max_qty">12.0</field>
+            <field name="product_min_qty">5.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field name="product_id" ref="product.product_product_20"/>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_warehouse_orderpoint_5" model="stock.warehouse.orderpoint">
+            <field name="product_max_qty">5.0</field>
+            <field name="product_min_qty">3.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_warehouse_orderpoint_shop1_cpu1" model="stock.warehouse.orderpoint">
+            <field name="product_max_qty">20.0</field>
+            <field name="product_min_qty">10.0</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="company_id" ref="stock.res_company_1"/>
+            <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
+            <field name="location_id" ref="stock.stock_location_shop0"/>
+            <field name="product_id" ref="product.product_product_9"/>
+        </record>
+
+    </data>
+</odoo>

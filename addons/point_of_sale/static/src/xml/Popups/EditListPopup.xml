@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="EditListPopup" owl="1">
+            <div class="popup popup-text">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <main class="list-lines" t-on-remove-item="removeItem"
+                      t-on-create-new-item="createNewItem">
+                    <t t-foreach="state.array" t-as="item" t-key="item._id">
+                        <EditListInput item="item" />
+                    </t>
+                </main>
+                <footer class="footer">
+                    <div class="button confirm highlight" t-on-click="confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+    </t>
+
+</templates>

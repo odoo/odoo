@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Authorize.Net Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group attrs="{'invisible': [('code', '!=', 'authorize')]}">
+                    <field name="authorize_login" attrs="{'required':[('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+                    <field name="authorize_transaction_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+                    <field name="authorize_signature_key" password="True" attrs="{'required':[ ('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+                    <label for="authorize_client_key"/>
+                    <div class="o_row" col="2">
+                        <field name="authorize_client_key"/>
+                        <button class="oe_link" icon="fa-refresh" type="object"
+                                name="action_update_merchant_details"
+                                string="Generate Client Key"/>
+                    </div>
+                    <a colspan="2" href="https://www.odoo.com/documentation/16.0/applications/finance/payment_providers/authorize.html" target="_blank">
+                        How to get paid with Authorize.Net
+                    </a>
+                </group>
+            </group>
+            <field name="display_as" position="before">
+                <field name="authorize_payment_method_type"
+                       attrs="{'invisible': [('code', '!=', 'authorize')], 'required':[('code', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
+            </field>
+            <field name="available_country_ids" position="after">
+                <label for="authorize_currency_id" string="Currency" attrs="{'invisible': [('code', '!=', 'authorize')]}"/>
+                <div  class="o_row" col="2" attrs="{'invisible': [('code', '!=', 'authorize')]}">
+                    <field name="authorize_currency_id"/>
+                    <button class="oe_link" icon="fa-refresh" type="object"
+                            name="action_update_merchant_details"
+                            string="Set Account Currency"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+</odoo>

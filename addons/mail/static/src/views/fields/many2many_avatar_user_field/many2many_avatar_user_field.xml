@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.Many2ManyAvatarUserTagsList" t-inherit="web.TagsList" t-inherit-mode="primary" owl="1">
+        <img position="attributes">
+            <attribute name="t-on-click.stop.prevent">tag.onImageClicked</attribute>
+        </img>
+    </t>
+
+    <t t-name="mail.KanbanMany2ManyTagsAvatarUserField" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">
+        <TagsList position="attributes">
+            <attribute name="displayBadge">!props.readonly</attribute>
+            <attribute name="displayText">displayText</attribute>
+        </TagsList>
+    </t>
+</templates>

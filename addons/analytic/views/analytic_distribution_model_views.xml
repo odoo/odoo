@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_analytic_distribution_model_tree_view" model="ir.ui.view">
+        <field name="name">account.analytic.distribution.model.tree</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Distribution Model" editable="top" multi_edit="1">
+                <field name="partner_id" optional="show"/>
+                <field name="partner_category_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="analytic_distribution" widget="analytic_distribution" optional="show"/>
+                <button name="action_read_distribution_model" type="object" string="View" class="float-end btn-secondary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_analytic_distribution_model_form_view" model="ir.ui.view">
+        <field name="name">account.analytic.distribution.model.form</field>
+        <field name="model">account.analytic.distribution.model</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Distribution Model">
+                <sheet>
+                    <group>
+                        <group string="Simultaneous conditions to meet" colspan="2">
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="partner_category_id"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Analytic distribution to apply" colspan="2">
+                            <field name="analytic_distribution" widget="analytic_distribution"
+                                   options="{'force_applicability': 'optional', 'disable_save': true}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_analytic_distribution_model" model="ir.actions.act_window">
+        <field name="name">Analytic Distribution Models</field>
+        <field name="res_model">account.analytic.distribution.model</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

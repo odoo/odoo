@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="sale_project.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="before">
+            <ProjectRightSidePanelSection
+                name="'sales'"
+                show="state.data.sale_items and state.data.sale_items.total &gt; 0"
+            >
+                <t t-set-slot="title" owl="1">
+                    Sales
+                </t>
+                <table class="table table-striped table-hover mb-4">
+                    <thead>
+                        <tr>
+                            <th>Sales Order Items</th>
+                            <th class="text-end">Sold</th>
+                            <th class="text-end">Delivered</th>
+                            <th class="text-end">Invoiced</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.data.sale_items.data" t-as="sale_item" t-key="sale_item.id">
+                            <t t-set="uom_name" t-value="sale_item.product_uom and sale_item.product_uom[1]"/>
+                            <td>
+                                <t t-set="sol_name" t-value="sale_item.display_name"/>
+                                <a t-if="sale_item.action" class="o_rightpanel_button" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                    <t t-esc="sol_name"/>
+                                </a>
+                                <t t-else="" t-esc="sol_name"/>
+                            </td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
+                            <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="o_rightpanel_nohover border-0" t-if="state.data.sale_items.total &gt; state.data.sale_items.data.length">
+                            <td class="pb-0 border-0 text-center" colspan="4">
+                                <a class="btn btn-link" t-on-click="onLoadSalesOrderLinesClick">
+                                    Load more
+                                </a>
+                            </td>
+                        </tr>
+                        <tr t-else="">
+                            <td class="pb-0 border-0 shadow-none text-center" colspan="4">
+                                <small class="text-muted">All items have been loaded</small>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </ProjectRightSidePanelSection>
+        </xpath>
+    </t>
+
+</templates>

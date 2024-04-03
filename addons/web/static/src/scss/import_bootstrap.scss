@@ -1,0 +1,108 @@
+/*!
+ * Copied from Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+// This file is importing bootstrap. While a simple "import "bootstrap";"
+// should be enough, this does not allow overridding mixins/functions.
+// Overridding those is necessary for some of our need and allow to generate
+// more efficient CSS than adding more rules. This file instead copies the
+// content of the "bootstrap.scss" files but do not import functions, variables
+// and mixins which will be handled "by hand" in _assets_helpers.
+
+// scss-docs-start import-stack
+// Configuration
+// @import "functions";
+// @import "variables";
+// @import "mixins";
+@import "utilities";
+
+// Layout & components
+@import "root";
+@import "reboot";
+@import "type";
+@import "images";
+@import "containers";
+@import "grid";
+
+// Bootstrap tables can basically be customized with the `$table-bg` and
+// `$table-color` variables. The problem is that, by default, BS5 defines them
+// so that the background-color is null (so transparent: displaying the
+// background-color of its ancestors) but the color is forced to the body color
+// (by default: white). This is a problem as soon as the ancestors background
+// colors are a color close to the body text color: the text becomes invisible.
+// For instance: in website,
+// - Set a body background color to black, the body text will automatically
+//   become white.
+// - Add a table in a snippet: still ok, the text in the table is white over
+//   the black body (the table being transparent).
+// - Then set the snippet background to white -> the table text will still be
+//   white... but now over a white background.
+//
+// TODO this should be reviewed in master: it should be ok to set the variable
+// $table-color to `null` thus letting the table be transparent and have the
+// same text color as its parent. But in stable, changing a color variable to
+// `null` could break customizations relying on the fact this is a set color. It
+// would also not make sense if the user set up a `$table-bg` value going well
+// with table text forced to the body color.
+// Instead, here, in the very specific case we have a transparent table bg and
+// table color equal to the body color, we temporarily unset the table color
+// variable for the duration of the bootstrap table rules.
+// Note: we cannot create a rule in an "Odoo file" to fix this as unsetting the
+// color for the `.table` rule would also unset the case of a `.table.bg-XXX`
+// where we still want `.bg-XXX` to force the color.
+$-tmp: $table-color;
+$-tmp-hover: $table-hover-color;
+@if ($table-bg == null or alpha($table-bg) < 0.01) and $table-color == $body-color {
+    @if $table-hover-color == $table-color {
+        $table-hover-color: null;
+    }
+    $table-color: null;
+}
+@import "tables";
+$table-color: $-tmp;
+$table-hover-color: $-tmp-hover;
+
+@import "forms";
+
+// Small hack in bootstrap (see bootstrap_review.scss): prevent it to generate
+// primary, secondary, and other color/outline classes by itself to be able to
+// do it ourself properly.
+$-tmp: $theme-colors;
+$theme-colors: ();
+@import "buttons";
+$theme-colors: $-tmp;
+
+@import "transitions";
+@import "dropdown";
+@import "button-group";
+@import "nav";
+@import "navbar";
+@import "card";
+@import "accordion";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "alert";
+@import "progress";
+@import "list-group";
+@import "close";
+@import "toasts";
+@import "modal";
+@import "tooltip";
+@import "popover";
+@import "carousel";
+@import "spinners";
+@import "offcanvas";
+@import "placeholders";
+
+// Helpers
+@import "helpers";
+
+// Utilities
+// Moved into bundle after bs_utilities_custom.scss file to allow to extend
+// the utilities
+// @import "utilities/api";
+// scss-docs-end import-stack

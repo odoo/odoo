@@ -1,0 +1,3426 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
+msgid "# emails to send"
+msgstr "#要發送的電子郵件"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "%(activity)s, assigned to %(name)s, due on the %(deadline)s"
+msgstr "%(activity)s，已分配給 %(name)s，到期日為 %(deadline)s。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_job.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: hr
+#: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
+msgid "'Print Badge - %s' % (object.name).replace('/', '')"
+msgstr "'列印識別證 - %s' % (object.name).replace('/', '')"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Onsite Interview"
+msgstr "1 現場面試"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Phone Call"
+msgstr "1 電話"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "12 days / year, including <br>6 of your choice."
+msgstr "12 天/年，包括<br>6 任你選擇。"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "2 open days"
+msgstr "2 個開放日"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "4 Days after Interview"
+msgstr "面試後 4 天"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"<b>Congratulations!</b> May I recommend you to setup an <a "
+"href=\"%s\">onboarding plan?</a>"
+msgstr "<b>恭喜你！</b>我可以協助您設置<a href=\"%s\">到職計畫嗎？</a>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"公司\" title=\"公司\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_present')]}\" aria-label=\"Present\" title=\"Present\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle text-warning o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_to_define')]}\" aria-label=\"To define\" title=\"To define\" "
+"name=\"presence_to_define\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-muted o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent')]}\" aria-label=\"Absent\" title=\"Absent\" "
+"name=\"presence_absent\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"<small role=\"img\" class=\"fa fa-fw fa-circle-o text-success o_button_icon "
+"hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
+"'presence_absent_active')]}\" aria-label=\"Present but not active\" "
+"title=\"Present but not active\" name=\"presence_absent_active\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<small><b>READ</b></small>"
+msgstr "<small><b>讀取</b></small>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-success\" role=\"img\" aria-label=\"Present\" title=\"Present\" name=\"presence_present\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle text-warning\" role=\"img\" aria-label=\"To define\" title=\"To define\" name=\"presence_to_define\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-muted\" role=\"img\" aria-label=\"Absent\" title=\"Absent\" name=\"presence_absent\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+msgid ""
+"<span class=\"fa fa-circle-o text-success\" role=\"img\" aria-label=\"Present but not active\" title=\"Present but not active\" name=\"presence_absent_active\">\n"
+"                                                    </span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"此處設定的值是特定於每間公司的。\" "
+"role=\"img\" aria-label=\"此處設定的值是特定於每間公司的。\" "
+"groups=\"base.group_multi_company\"/>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses (comma-separated)</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IP 位址（逗號分隔）</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"flex-shrink-0 ml8 me-2\">Minimum number of emails to "
+"send</span>"
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">要發送電郵的最小數目</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "<span class=\"fw-bolder\">Reporting</span>"
+msgstr "<span class=\"fw-bolder\">報告</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Close "
+"Activities</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">關閉活動</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid ""
+"<span class=\"o_form_label o_hr_form_label cursor-default\">Detailed "
+"Reason</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">詳細理由</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label cursor-default\">HR Info</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label cursor-default\">人力資源資料</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Presence Control</span>"
+msgstr "<span class=\"o_form_label\">出勤管理</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Not Connected\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    未上線\n"
+"                                </span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "<span class=\"o_stat_text\">Connected Since</span>"
+msgstr "<span class=\"o_stat_text\">連結自</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
+msgid "<span class=\"o_stat_text\">Contacts</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Employee(s)</span>"
+msgstr "<span class=\"o_stat_text\">員工）</span>"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
+msgstr "<span class=\"text-muted small\">天以獲得取錄</span>"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Process</span>"
+msgstr "<span class=\"text-muted small\">過程</span>"
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Time to Answer</span>"
+msgstr "<span class=\"text-muted small\">回應時間</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "<span>Km</span>"
+msgstr "<span>公里</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span>new Employees</span>"
+msgstr "<span>新員工</span>"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "A full-time position <br>Attractive salary package."
+msgstr "全職職位，<br>具吸引力的薪酬待遇。"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
+msgid "A user cannot be linked to multiple employees in the same company."
+msgstr "使用者不能連結到同一公司的多個員工。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__absent
+msgid "Absent"
+msgstr "病假"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Achieve monthly sales objectives"
+msgstr "實現每月銷售目標"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
+msgid "Action Needed"
+msgstr "需採取行動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__active
+#: model:ir.model.fields,field_description:hr.field_hr_job__active
+#: model:ir.model.fields,field_description:hr.field_hr_plan__active
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__active
+msgid "Active"
+msgstr "啟用"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
+msgid "Activities"
+msgstr "活動"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Activities To Generate"
+msgstr "要生成的活動"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
+msgid "Activity"
+msgstr "活動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活動異常圖示"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan
+msgid "Activity Planning"
+msgstr "活動規劃"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
+msgid "Activity State"
+msgstr "活動狀態"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__activity_type_id
+msgid "Activity Type"
+msgstr "活動類型"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動類型圖示"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Activity by"
+msgstr "活動由"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Add a new employee"
+msgstr "添加一個新員工"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_action
+msgid "Add a new plan"
+msgstr "添加新計劃"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
+msgid "Add a new plan activity"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_description
+msgid "Additional Information"
+msgstr "額外的資訊"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
+#: model:ir.model.fields,field_description:hr.field_res_users__additional_note
+msgid "Additional Note"
+msgstr "附加說明"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Additional languages"
+msgstr "其他語言"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
+msgid "Address"
+msgstr "地址"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Administrative Work"
+msgstr "行政工作"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_manager
+msgid "Administrator"
+msgstr "管理員"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
+msgid "Advanced Presence Control"
+msgstr "高級狀態控制"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Advanced presence of employees"
+msgstr "員工的高級存在"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+msgid "Alias Contact Security"
+msgstr "別名聯絡人安全"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__lang
+#: model:ir.model.fields,help:hr.field_res_users__private_lang
+msgid ""
+"All the emails and documents sent to this contact will be translated in this"
+" language."
+msgstr "發送到該聯絡人的所有電子郵件和文件將以這種語言翻譯。"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data"
+msgstr "允許員工更新自己的資料"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Allow employees to update their own data."
+msgstr "允許員工更新自己的資料。"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Application Settings"
+msgstr "模組設定"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Apply"
+msgstr "套用"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Approvers"
+msgstr "流程審批管理人"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
+msgid "Archive Private Address"
+msgstr "存檔私人地址"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Archived"
+msgstr "已封存"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
+"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"                                <br><br>\n"
+"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                you will have solid solving problem skills."
+msgstr ""
+"作為我們公司的員工，您將<b>與每個部門合作建立和部署顛覆性產品。</b>來到一家成長中的公司工作，該公司提供巨大的好處，並有機會與有成就的領導者一起前進和學習。我們正在尋找一位經驗豐富且優秀的員工。<br><br>這個職位<b>本質上既富有創意又嚴謹</b>，你需要跳出框框思考。我們希望候選人積極主動並具有“完成任務”的精神。要取得成功，您將擁有紮實的解決問題的能力。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件數"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Attendance"
+msgstr "出勤"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Attendance/Point of Sale"
+msgstr "出勤/POS"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
+msgid "Authenticated Employees"
+msgstr "已驗證的員工"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
+msgid "Auto Subscribe Departments"
+msgstr "自動訂閱部門"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
+msgid "Automatically subscribe members of those departments to the channel."
+msgstr "自動將這些部門的成員訂閱到道。"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Autonomy"
+msgstr "當責"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Available"
+msgstr "可用"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
+msgid "Avatar"
+msgstr "頭像"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
+msgid "Avatar 1024"
+msgstr "頭像 1024"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
+msgid "Avatar 128"
+msgstr "頭像 128"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
+msgid "Avatar 256"
+msgstr "頭像 256"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
+msgid "Avatar 512"
+msgstr "頭像 512"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Away"
+msgstr "離開"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__bachelor
+msgid "Bachelor"
+msgstr "學士"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Bachelor Degree or Higher"
+msgstr "本科及以上學歷"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+#: model:ir.model.fields,field_description:hr.field_res_users__barcode
+msgid "Badge ID"
+msgstr "識別證 ID"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
+msgid "Bank Account Number"
+msgstr "銀行帳戶號碼"
+
+#. module: hr
+#: model:ir.model,name:hr.model_base
+msgid "Base"
+msgstr "基礎"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
+msgid "Based on IP Address"
+msgstr "基於 IP 位址"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_attendance
+msgid "Based on attendances"
+msgstr "基於出席人數"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
+msgid "Based on number of emails sent"
+msgstr "根據發送的電子郵件數量"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
+msgid "Based on user status in system"
+msgstr "基於系統中的使用者狀態"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "一般員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__can_edit
+msgid "Can Edit"
+msgstr "能編輯"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
+#: model:ir.model.fields,field_description:hr.field_res_users__certificate
+msgid "Certificate Level"
+msgstr "證書級別"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.res_users_action_my
+msgid "Change my Preferences"
+msgstr "更改我的個人設定"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
+#, python-format
+msgid "Chat"
+msgstr "聊天"
+
+#. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr "首席執行官"
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr "首席技術官"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
+msgid "Child Departments"
+msgstr "子部門"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Citizenship"
+msgstr "個人資料"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "City"
+msgstr "縣市"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,field_description:hr.field_res_users__coach_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
+msgid "Coach"
+msgstr "教練"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "Coach of employee %s is not set."
+msgstr "未設置員工 %s 的輔導。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
+msgid "Color Index"
+msgstr "顏色索引"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_company
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Company"
+msgstr "公司"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
+msgid "Company Country"
+msgstr "公司國家"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Company Logo"
+msgstr "公司 Logo"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
+msgid "Company Working Hours"
+msgstr "公司的上班時間"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_id
+msgid "Company employee"
+msgstr "公司員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
+msgid "Complete Name"
+msgstr "完整名稱"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+msgid "Configuration"
+msgstr "配置"
+
+#. module: hr
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr "主辦會計"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Contact Information"
+msgstr "聯繫資訊"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_contact
+msgid "Contact Name"
+msgstr "聯絡人姓名"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
+msgid "Contact Phone"
+msgstr "聯絡電話"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_contract_type
+msgid "Contract Type"
+msgstr "契約類型"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
+msgid "Contract Types"
+msgstr "合同類型"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__contractor
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__contractor
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__contractor
+msgid "Contractor"
+msgstr "承包人"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Country"
+msgstr "國家"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
+msgid "Country Code"
+msgstr "國家/地區代碼"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__country_of_birth
+msgid "Country of Birth"
+msgstr "出生國家"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_date
+msgid "Create Date"
+msgstr "建立日期"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
+msgid "Create Employee"
+msgstr "新增員工"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.server,name:hr.action_hr_employee_create_user
+#, python-format
+msgid "Create User"
+msgstr "建立使用者"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid "Create a new department"
+msgstr "建立新部門"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr "新增聘用類型"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr "新增工作地點"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Create content that will help our users on a daily basis"
+msgstr "建立每天可以幫助我們的用戶的內容"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Create employee"
+msgstr "建立員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
+msgid "Created by"
+msgstr "創立者"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
+msgid "Current Number of Employees"
+msgstr "目前員工數量"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Customer Relationship"
+msgstr "客戶關係"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
+#: model:ir.model.fields,field_description:hr.field_res_users__birthday
+msgid "Date of Birth"
+msgstr "出生日期"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_departure_reason.py:0
+#, python-format
+msgid "Default departure reasons cannot be deleted."
+msgstr "預設離職原因無法刪除."
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__department_id
+#: model:ir.model.fields,field_description:hr.field_res_users__department_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Department"
+msgstr "部門"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__name
+msgid "Department Name"
+msgstr "部門名稱"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_department_kanban_action
+#: model:ir.actions.act_window,name:hr.hr_department_tree_action
+#: model:ir.ui.menu,name:hr.menu_hr_department_kanban
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+msgid "Departments"
+msgstr "部門"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Departure"
+msgstr "離職"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
+msgid "Departure Date"
+msgstr "離職日期"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_reason
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason_id
+msgid "Departure Reason"
+msgstr "離職原因"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_departure_reason_action
+#: model:ir.ui.menu,name:hr.menu_hr_departure_reason_tree
+msgid "Departure Reasons"
+msgstr "離職原因"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "離職作業"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Dependant"
+msgstr "撫養親屬"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_ids
+msgid "Direct subordinates"
+msgstr "直接下屬"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_employee
+msgid "Directory"
+msgstr "目錄"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Discard"
+msgstr "取消"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Discover our products."
+msgstr "了解我們的產品。"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion Channel"
+msgstr "討論群組"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
+msgid "Divorced"
+msgstr "離異"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
+msgid "Doctor"
+msgstr "博士"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
+msgid "Driving License"
+msgstr "駕照"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Each employee has a chance to see the impact of his work.\n"
+"                        You can make a real contribution to the success of the company.\n"
+"                        <br>\n"
+"                        Several activities are often organized all over the year, such as weekly\n"
+"                        sports sessions, team building events, monthly drink, and much more"
+msgstr ""
+"每個員工都有機會看到自己工作的影響。您可以為公司的成功做出真正的貢獻。<br>全年通常會組織多項活動，例如每週運動會、團隊建設活動、每月飲酒等等"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Eat &amp; Drink"
+msgstr "員工餐食"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Education"
+msgstr "教育"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Email"
+msgstr "電郵"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_alias
+msgid "Email Aliases"
+msgstr "電郵別名"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Emergency"
+msgstr "緊急"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_ids
+#: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__employee
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
+#: model:ir.ui.menu,name:hr.menu_config_employee
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee"
+msgstr "員工"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "員工類別"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_count
+msgid "Employee Count"
+msgstr "員工計數"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
+msgid "Employee Editing"
+msgstr "員工資料自助修正"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
+msgid "Employee Image"
+msgstr "員工照片"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_lang
+msgid "Employee Lang"
+msgstr "員工語言"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__name
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "Employee Name"
+msgstr "員工姓名"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.model.fields,field_description:hr.field_res_users__category_ids
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
+msgid "Employee Tags"
+msgstr "員工標籤"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/views/archive_employee_hook.js:0
+#, python-format
+msgid "Employee Termination"
+msgstr "員工終止日"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__employee_type
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_type
+msgid "Employee Type"
+msgstr "員工類型"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Employee Update Rights"
+msgstr "員工資料更新權限"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
+#: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_id
+msgid "Employee bank account to pay salaries"
+msgstr "支付工資的員工銀行賬戶"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_id
+msgid "Employee's Bank Account Number"
+msgstr "員工的銀行帳號"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_country_id
+msgid "Employee's Country"
+msgstr "員工國家/地區"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Employee's Name"
+msgstr "員工姓名"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
+msgid "Employee's Working Hours"
+msgstr "員工工作時間"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
+msgid "Employee(s)"
+msgstr "員工"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.act_employee_from_department
+#: model:ir.actions.act_window,name:hr.hr_employee_action_from_user
+#: model:ir.actions.act_window,name:hr.hr_employee_public_action
+#: model:ir.actions.act_window,name:hr.open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
+#: model:ir.ui.menu,name:hr.menu_hr_employee_user
+#: model:ir.ui.menu,name:hr.menu_hr_root
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
+msgid "Employees"
+msgstr "員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
+#: model:ir.model.fields,field_description:hr.field_res_users__employees_count
+msgid "Employees Count"
+msgstr "員工人數"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_employee_tree
+msgid "Employees Structure"
+msgstr "員工架構"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
+msgid "Employees Tags"
+msgstr "員工標籤"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__contract_type_id
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Employment Type"
+msgstr "聘用類型"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_contract_type_action
+#: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
+msgid "Employment Types"
+msgstr "聘用類型"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Enrich employee profiles with skills and resumes"
+msgstr "用技能和簡歷豐富員工主檔"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
+#: model:ir.model.fields,help:hr.field_res_users__address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr "在此處輸入員工的家庭地址，非辦公地址."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Expand your knowledge of various business industries"
+msgstr "擴展您對各種商業行業的了解"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__expected_employees
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr "新的招聘後這個職位上預期的員工人數."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Experience in writing online content"
+msgstr "編寫線上內容的經驗"
+
+#. module: hr
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
+msgstr "有經驗的開發人員"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Family Status"
+msgstr "家庭狀態"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__female
+msgid "Female"
+msgstr "女性"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
+#: model:ir.model.fields,field_description:hr.field_res_users__study_field
+msgid "Field of Study"
+msgstr "研究領域"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_fired
+msgid "Fired"
+msgstr "解雇"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
+msgid "Followers"
+msgstr "關注人"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注人（業務夥伴）"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome 圖示，例如，fa-task"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/mail_channel.py:0
+#, python-format
+msgid ""
+"For %(channels)s, channel_type should be 'channel' to have the department "
+"auto-subscription."
+msgstr "對於 %(channels)s，其 channel_type 應為「頻道」，以便部門自動訂閱。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__freelance
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__freelance
+msgid "Freelancer"
+msgstr "自由職業者"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Fruit, coffee and <br>snacks provided."
+msgstr "水果、咖啡和<br>提供小吃。"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Future Activities"
+msgstr "未來活動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__gender
+#: model:ir.model.fields,field_description:hr.field_res_users__gender
+msgid "Gender"
+msgstr "性別"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Generate"
+msgstr "生成"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Google Adwords experience"
+msgstr "google Adwords 體驗"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
+msgid "Graduate"
+msgstr "畢業生"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Great team of smart people, in a friendly and open culture"
+msgstr "優秀的聰明人團隊，在友好和開放的文化中"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Group By"
+msgstr "分組方式"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
+msgid "HR Departments"
+msgstr "部門"
+
+#. module: hr
+#: model:ir.actions.server,name:hr.ir_cron_data_check_work_permit_validity_ir_actions_server
+#: model:ir.cron,cron_name:hr.ir_cron_data_check_work_permit_validity
+msgid "HR Employee: check work permit validity"
+msgstr "人力資源員工：檢查工作簽證的有效性"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "HR Settings"
+msgstr "HR 設定"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_job__has_message
+msgid "Has Message"
+msgstr "有訊息"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Highly creative and autonomous"
+msgstr "高度創造性和自主性"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
+msgid "Hired Employees"
+msgstr "已僱用員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
+#: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
+msgid "Home-Work Distance"
+msgstr "住家-工作距離"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_homeworking
+msgid "Homeworking"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_icon_display
+msgid "Hr Icon Display"
+msgstr "小時圖示顯示"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
+#: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
+msgid "Hr Presence State"
+msgstr "Hr 出席狀態"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_main
+msgid "Human Resources"
+msgstr "人力資源"
+
+#. module: hr
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr "人力資源管理員"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__id
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr.field_hr_job__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
+msgid "ID Card Copy"
+msgstr "身份證複印件"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__barcode
+#: model:ir.model.fields,help:hr.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "用於員工識別證的ID。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+msgid "Icon"
+msgstr "圖示"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "用於指示異常活動的圖示。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
+#: model:ir.model.fields,field_description:hr.field_res_users__identification_id
+msgid "Identification No"
+msgstr "身份證號"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "勾選代表有新訊息需要您留意。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_job__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "勾選代表有訊息發生傳送錯誤。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr "如果這有效欄位設為否，它將隱藏而無須刪除。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
+msgid "Image"
+msgstr "圖像"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
+msgid "Image 1024"
+msgstr "圖像 1024"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
+msgid "Image 128"
+msgstr "圖像 128"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
+msgid "Image 256"
+msgstr "圖像 256"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
+msgid "Image 512"
+msgstr "圖像 512"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "Import Template for Employees"
+msgstr "匯入用員工範本"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_interim
+msgid "Interim"
+msgstr "Interim"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
+msgid "Is Follower"
+msgstr "是關注人"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__is_system
+msgid "Is System"
+msgstr "為系統"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+msgid "Job"
+msgstr "工作"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__description
+msgid "Job Description"
+msgstr "工作說明"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__name
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Job Position"
+msgstr "工作職缺"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_view_hr_job
+msgid "Job Positions"
+msgstr "職務管理"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Summary"
+msgstr "工作摘要"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__job_title
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__job_title
+#: model:ir.model.fields,field_description:hr.field_res_users__job_title
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+msgid "Job Title"
+msgstr "職務頭銜"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Jobs"
+msgstr "工作"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__lang
+msgid "Lang"
+msgstr "語言"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Language"
+msgstr "語言"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity
+msgid "Last Activity"
+msgstr "最後有效"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__last_activity_time
+#: model:ir.model.fields,field_description:hr.field_res_users__last_activity_time
+msgid "Last Activity Time"
+msgstr "上次啟用時間"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_job____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_work_location____last_update
+msgid "Last Modified on"
+msgstr "最後修改於"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Late Activities"
+msgstr "逾期活動"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.plan_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr.plan_wizard
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+msgid "Launch Plan"
+msgstr "啟動計畫"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "Launch Plans"
+msgstr "開展計劃"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Lead the entire sales cycle"
+msgstr "帶領整個銷售循環"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
+msgid "Legal Cohabitant"
+msgstr "法定同居人"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
+msgid "Let's create a job position."
+msgstr "讓我們建立一個工作職位."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Location"
+msgstr "地點"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__location_number
+msgid "Location Number"
+msgstr "位置編號"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "主要附件"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
+msgid "Male"
+msgstr "男性"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__parent_id
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_parent_id
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__manager
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Manager"
+msgstr "管理員"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "Manager of employee %s is not set."
+msgstr "未設置員工 %s 的經理。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__marital
+#: model:ir.model.fields,field_description:hr.field_res_users__marital
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Marital Status"
+msgstr "婚姻狀況"
+
+#. module: hr
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr "市場及社區經理"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
+msgid "Married"
+msgstr "已婚"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
+msgid "Master"
+msgstr "主要"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
+msgid "Master Department"
+msgstr "主部門"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Master demos of our software"
+msgstr "我們軟體的主演示"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
+msgid "Member of department"
+msgstr "部門數目"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
+msgid "Members"
+msgstr "會員"
+
+#. module: hr
+#: model:ir.model,name:hr.model_ir_ui_menu
+msgid "Menu"
+msgstr "選單"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
+msgid "Message Delivery error"
+msgstr "訊息遞送錯誤"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
+msgid "Messages"
+msgstr "訊息"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Must Have"
+msgstr "建議學/經歷"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "我的活動截止時間"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Department"
+msgstr "我的部門"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/user_menu/my_profile.js:0
+#, python-format
+msgid "My Profile"
+msgstr "我的個人資料"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "My Team"
+msgstr "我的部屬"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
+#: model:ir.model.fields,field_description:hr.field_hr_plan__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
+msgid "Nationality (Country)"
+msgstr "國籍(國家)"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Negotiate and contract"
+msgstr "談判和簽約"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一個活動日曆事件"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活動截止日期"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活動摘要"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活動類型"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Nice to have"
+msgstr "擇優條件"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No dumb managers, no stupid tools to use, no rigid working hours"
+msgstr "沒有愚蠢的管理者，沒有愚蠢的工具，沒有嚴格的工作時間"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "No specific user given on activity %s."
+msgstr "活動 %s 沒有指定特定用戶。"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr "在企業流程中聰明工作，真正的自主與當責"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Not available"
+msgstr "不可用"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__note
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__note
+msgid "Note"
+msgstr "備註"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__notes
+msgid "Notes"
+msgstr "備註"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
+msgid "Number of Actions"
+msgstr "動作數量"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__children
+#: model:ir.model.fields,field_description:hr.field_res_users__children
+msgid "Number of Dependent Children"
+msgstr "供養子女數目"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
+msgid "Number of employees currently occupying this job position."
+msgstr "這個工作職位上現有的員工人數."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
+msgid "Number of errors"
+msgstr "錯誤數量"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
+msgid ""
+"Number of hired employees for this job position during recruitment phase."
+msgstr "招聘階段此職位已經聘請的員工數量。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "有發送錯誤的郵件數量"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
+msgid "Number of new employees you expect to recruit."
+msgstr "您計劃招聘的新員工數。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contacts_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contacts_count
+msgid "Number of related contacts"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                    related to employees by departments: expenses, timesheets,\n"
+"                    leaves, recruitments, etc."
+msgstr ""
+"Odoo 的部門結構用於管理所有文檔\n"
+"                    按部門與員工相關的：費用、時間表、\n"
+"                    休假、招聘等。"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
+msgid ""
+"Odoo's department structure is used to manage all documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                time off, recruitments, etc."
+msgstr ""
+"Odoo 的部門結構用於管理所有文檔\n"
+"                按部門與員工相關的：費用、時間表、\n"
+"                休假、招聘等"
+
+#. module: hr
+#: model:res.groups,name:hr.group_hr_user
+msgid "Officer : Manage all employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_plan_plan
+msgid "On/Offboarding Plans"
+msgstr "入職/離職計劃"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "不支援該操作"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
+#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
+msgid "Other"
+msgstr "其他"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
+msgid "Other Responsible"
+msgstr "其他負責人"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Our Product"
+msgstr "我們的產品/服務"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+#: model:ir.model.fields,field_description:hr.field_res_users__pin
+msgid "PIN"
+msgstr "密碼"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "PIN Code"
+msgstr "PIN 碼"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__pin
+#: model:ir.model.fields,help:hr.field_res_users__pin
+msgid ""
+"PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if"
+" enabled in Configuration) and to change the cashier in the Point of Sale "
+"application."
+msgstr "PIN 用於在考勤模組的 Kiosk 模式中登入/登出（如果在設定中啟用）以及在POS模組中更改收銀員/業務員。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
+msgid "Parent Department"
+msgstr "上級部門"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
+msgid "Parent Path"
+msgstr "上層路徑"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__user_partner_id
+msgid "Partner-related data of the user"
+msgstr "該使用者之業務夥伴相關的資料"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Passion for software products"
+msgstr "對軟體產品的熱情"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
+#: model:ir.model.fields,field_description:hr.field_res_users__passport_id
+msgid "Passport No"
+msgstr "護照號"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Payroll"
+msgstr "薪酬管理"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perfect written English"
+msgstr "英語書寫能力流暢"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perks"
+msgstr "薪酬津貼"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_permanent
+msgid "Permanent"
+msgstr "永久"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Personal Evolution"
+msgstr "個人發展"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Phone"
+msgstr "電話"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
+#: model:ir.model.fields,field_description:hr.field_res_users__place_of_birth
+msgid "Place of Birth"
+msgstr "出生地"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
+msgid "Plan"
+msgstr "計劃"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+msgid "Plan Activities"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "Plan Name"
+msgstr "計劃名稱"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_wizard
+msgid "Plan Wizard"
+msgstr "規劃嚮導"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan_activity_type
+msgid "Plan activity type"
+msgstr "計畫活動類型"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
+msgid "Planning"
+msgstr "規劃"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+msgid "Plans"
+msgstr "計劃"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
+msgid "Plans Count"
+msgstr "計劃數目"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Play any sport with colleagues, <br>the bill is covered."
+msgstr "和同事一起進行任何運動，<br>由公司埋單。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"通過信件網關在文件上提交一個消息政策。\n"
+"- 任何人：任何人都可以提交\n"
+"- 合作夥伴：只有認證過的合作夥伴\n"
+"- 跟隨者：只有相關文件或下列頻道成員的跟隨者\n"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence of employees"
+msgstr "員工出席"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Presence reporting screen, email and IP address control."
+msgstr "狀態報表螢幕、電子郵件和 IP 位址控制。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_present
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__present
+msgid "Present"
+msgstr "現在"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
+msgid "Present but not active"
+msgstr "存在但不使用"
+
+#. module: hr
+#: model:ir.actions.report,name:hr.hr_employee_print_badge
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Print Badge"
+msgstr "列印識別證"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Private Address"
+msgstr "家庭住址"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_city
+msgid "Private City"
+msgstr "私人城市"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Contact"
+msgstr "私人聯絡方式"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_country_id
+msgid "Private Country"
+msgstr "私人國家"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__private_email
+#: model:ir.model.fields,field_description:hr.field_res_users__private_email
+msgid "Private Email"
+msgstr "私人電子郵件"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Information"
+msgstr "私密資訊"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__phone
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_phone
+msgid "Private Phone"
+msgstr "私人電話"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
+msgid "Private State"
+msgstr "私人縣市"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street
+msgid "Private Street"
+msgstr "私人街"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_street2
+msgid "Private Street2"
+msgstr "私人街2"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__private_zip
+msgid "Private Zip"
+msgstr "私人郵編"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公開員工"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Qualify the customer needs"
+msgstr "聆聽並確定客戶需求"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
+msgid "Ready to recruit more efficiently?"
+msgstr "準備更有效地招聘？"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Real responsibilities and challenges in a fast evolving company"
+msgstr "在一家快速發展的公司中的真正責任和挑戰"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
+msgid "Reason"
+msgstr "原因"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_config_recruitment
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "招聘"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
+#, python-format
+msgid "Register Departure"
+msgstr "申請離職"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
+msgid "Related Contact"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
+#, python-format
+msgid "Related Contacts"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0
+#, python-format
+msgid "Related Employees"
+msgstr "相關員工"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Related User"
+msgstr "相關使用者"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
+msgid "Related employee"
+msgstr "相關員工"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee_ids
+msgid "Related employees based on their private address"
+msgstr "基於私人地址的相關員工"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "用於管理資源存取權限的使用者名."
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.hr_menu_hr_reports
+#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+msgid "Reporting"
+msgstr "報表"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__requirements
+msgid "Requirements"
+msgstr "要求"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_resigned
+msgid "Resigned"
+msgstr "辭職"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_id
+msgid "Resource"
+msgstr "資源"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
+msgid "Resource Calendar"
+msgstr "資源日曆"
+
+#. module: hr
+#: model:ir.model,name:hr.model_resource_resource
+msgid "Resources"
+msgstr "資源"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Responsibilities"
+msgstr "工作內容"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
+msgid "Responsible"
+msgstr "負責人"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
+msgid "Responsible User"
+msgstr "責任使用者"
+
+#. module: hr
+#: model:hr.departure.reason,name:hr.departure_retired
+msgid "Retired"
+msgstr "退休"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
+msgid "SIN No"
+msgstr "社會保險號SIN"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
+msgid "SSN No"
+msgstr "社會保險號SSN"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
+msgid "Save"
+msgstr "儲存"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Schedule"
+msgstr "安排"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
+#: model:ir.model.fields,field_description:hr.field_res_users__study_school
+msgid "School"
+msgstr "學校"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_base__coach_id
+#: model:ir.model.fields,help:hr.field_hr_employee_public__coach_id
+#: model:ir.model.fields,help:hr.field_res_users__coach_id
+msgid ""
+"Select the \"Employee\" who is the coach of this employee.\n"
+"The \"Coach\" has no specific rights or responsibilities by default."
+msgstr ""
+"選擇作為該員工的教練的“員工”。\n"
+"預設情況下，“教練”沒有特定的權利或責任。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_contract_type__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_job__sequence
+msgid "Sequence"
+msgstr "序號"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Set default company schedule to manage your employees working time"
+msgstr "設置預設公司計畫以管理員工工作時間"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
+msgid "Settings"
+msgstr "設定"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__show_hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__show_hr_icon_display
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__show_hr_icon_display
+msgid "Show Hr Icon Display"
+msgstr "顯示人力資源圖示"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
+msgid "Single"
+msgstr "單身"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
+msgid "Skills Management"
+msgstr "技能管理"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__sinid
+msgid "Social Insurance Number"
+msgstr "社會保險號"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
+msgid "Social Security Number"
+msgstr "社會保障號"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
+msgid "Specific responsible of activity if not linked to the employee."
+msgstr "具體負責活動（如果與員工無關）。"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Sport Activity"
+msgstr "公司活動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_birthdate
+msgid "Spouse Birthdate"
+msgstr "配偶出生日期"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
+#: model:ir.model.fields,field_description:hr.field_res_users__spouse_complete_name
+msgid "Spouse Complete Name"
+msgstr "配偶姓名"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "State"
+msgstr "縣市"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Status"
+msgstr "狀態"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"根據活動的狀態 \n"
+" 逾期：已經超過截止日期 \n"
+" 現今：活動日期是當天 \n"
+" 計劃：未來活動。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
+msgid "Steps Count"
+msgstr "步驟數目"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street 2..."
+msgstr "街道2..."
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "Street..."
+msgstr "街道..."
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Strong analytical skills"
+msgstr "高分析能力"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__student
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__student
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__student
+msgid "Student"
+msgstr "學生"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+msgid "Summary"
+msgstr "摘要"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
+msgid "Tag Name"
+msgstr "標籤名稱"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
+msgid "Tag name already exists !"
+msgstr "標籤名已存在!"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Tags"
+msgstr "標籤"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
+msgid "Target"
+msgstr "目標"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Technical Expertise"
+msgstr "技術專長"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
+msgid "Technical field, bind user to this employee on create"
+msgstr "技術欄位，在創建時將用戶綁定至此員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__create_employee
+msgid "Technical field, whether to create an employee"
+msgstr "技術欄位，是否創建員工"
+
+#. module: hr
+#: model:hr.contract.type,name:hr.contract_type_temporary
+msgid "Temporary"
+msgstr "臨時工"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
+msgid ""
+"The Badge ID must be unique, this one is already assigned to another "
+"employee."
+msgstr "識別證 ID必須是唯一的，這個已經分配給另一個員工。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__company_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO 國家代碼使用兩個字元。\n"
+" 您可以使用此欄位進行快速搜尋。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The PIN must be a sequence of digits."
+msgstr "密碼必須是一串數字序列。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The employee %s should be linked to a user."
+msgstr "員工 %s 應連結至用戶。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_res_users__is_address_home_a_company
+msgid "The employee address has a company linked"
+msgstr "員工位址已連結有公司"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__employee_type
+#: model:ir.model.fields,help:hr.field_hr_employee_base__employee_type
+#: model:ir.model.fields,help:hr.field_hr_employee_public__employee_type
+#: model:ir.model.fields,help:hr.field_res_users__employee_type
+msgid ""
+"The employee type. Although the primary purpose may seem to categorize "
+"employees, this field has also an impact in the Contract History. Only "
+"Employee type is supposed to be under contract and will have a Contract "
+"History."
+msgstr "員工類型。儘管主要目的似乎是對員工進行分類，但該欄位對契約歷史也有影響。只有 Employee 類型應該在契約中，並且會有契約歷史。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The employees should belong to the same company."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
+msgid "The expected number of new employees must be positive."
+msgstr "新員工的預期數量必須為正數。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"The fields \"%s\" you try to read is not available on the public employee "
+"profile."
+msgstr "您嘗試讀取的欄位\"%s\"在公共員工設定檔中不可用。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The manager of %s should be linked to a user."
+msgstr "%s 的經理應連結至用戶。"
+
+#. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_name_company_uniq
+msgid "The name of the job position must be unique per department in company!"
+msgstr "在公司內每個部門的職位名稱必須唯一！"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s cannot be launched: <br><ul>"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/wizard/hr_plan_wizard.py:0
+#, python-format
+msgid "The plan %s has been started"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The user of %s's coach is not set."
+msgstr "未設置 %s 的教練的用戶。"
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_user
+msgid "The user will be able to approve document created by employees."
+msgstr "使用者能夠批准員工建立的文檔."
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"The user will have access to the human resources configuration as well as "
+"statistic reports."
+msgstr "使用者可以存取人力資源配置以及統計報告."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "The work permit of %(employee)s expires at %(date)s."
+msgstr "%(employee)s 的工作簽證將於 %(date)s 到期。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "This employee already has an user."
+msgstr "這名員工已經有綁定用戶。"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,help:hr.field_hr_employee_public__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr "此欄位用於定義資源在哪個時區工作."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__tz
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__tz
+msgid "Timezone"
+msgstr "時區"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_presence_state__to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__to_define
+msgid "To Define"
+msgstr "定義"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To avoid multi company issues (losing the access to your previous contracts,"
+" leaves, ...), you should create another employee in the new company "
+"instead."
+msgstr "為了避免多公司問題（無法存取以往合約、休假等），你應該在新公司中創建另一名員工。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
+msgid "To define"
+msgstr "下定義"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+msgid "Today Activities"
+msgstr "今天的活動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
+msgid "Total Employee"
+msgstr "員工總數"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
+msgid "Total Forecasted Employees"
+msgstr "預計員工數合計"
+
+#. module: hr
+#: model:hr.job,name:hr.job_trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__trainee
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__trainee
+msgid "Trainee"
+msgstr "見習"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Trainings"
+msgstr "培訓計畫"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記錄的異常活動的類型。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
+msgid "Undetermined"
+msgstr "未確定"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
+msgid "Unread Messages"
+msgstr "未讀消息"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
+msgid "User"
+msgstr "使用者"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_partner_id
+msgid "User's partner"
+msgstr "使用者的合作夥伴"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr "職位空缺:"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
+msgid "Valid IP addresses"
+msgstr "有效的 IP 位址"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Valid work permit for Belgium"
+msgstr "比利時的有效工作簽證"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
+msgid "Visa Expiration Date"
+msgstr "簽證到期日"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
+#: model:ir.model.fields,field_description:hr.field_res_users__visa_no
+msgid "Visa No"
+msgstr "簽證號"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
+#, python-format
+msgid "Warning"
+msgstr "警告"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What We Offer"
+msgstr "福利制度"
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What's great in the job?"
+msgstr "這份工作的優點?"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_base__member_of_department
+#: model:ir.model.fields,help:hr.field_hr_employee_public__member_of_department
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
+msgstr "員工是生效用戶部門的成員還是其子部門之一的成員。"
+
+#. module: hr
+#: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
+msgid "Widower"
+msgstr "喪偶"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+"隨著Odoo員工的螢幕上只是一個快速瀏覽，您\n"
+"可以很容易地找到您所需要的每個人\n"
+"的資訊、聯絡人資料、工作職位、可用性等。"
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"               can easily find all the information you need for each person;\n"
+"               contact data, job position, availability, etc."
+msgstr ""
+"只需在odoo員工資料庫快速瀏覽，您\n"
+"可以很容易地找到您所需要的每個人\n"
+"的資訊、聯絡人資料、工作職位、可用性等。"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__address_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__address_id
+#: model:ir.model.fields,field_description:hr.field_res_users__address_id
+msgid "Work Address"
+msgstr "工作地址"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
+msgid "Work Contact"
+msgstr "工作聯絡"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_email
+#: model:ir.model.fields,field_description:hr.field_res_users__work_email
+msgid "Work Email"
+msgstr "工作Email"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "工作資訊"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_location_id
+#: model:ir.model.fields,field_description:hr.field_hr_work_location__name
+#: model:ir.model.fields,field_description:hr.field_res_users__work_location_id
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_form_view
+#: model_terms:ir.ui.view,arch_db:hr.hr_work_location_tree_view
+msgid "Work Location"
+msgstr "工作地點"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_work_location_action
+#: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
+msgid "Work Locations"
+msgstr "工作地點"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__mobile_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__mobile_phone
+msgid "Work Mobile"
+msgstr "工作手機"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr "工作組織架構"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__has_work_permit
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "工作簽證"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_expiration_date
+msgid "Work Permit Expiration Date"
+msgstr "工作簽證到期日"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
+#: model:ir.model.fields,field_description:hr.field_res_users__permit_no
+msgid "Work Permit No"
+msgstr "工作簽證編號"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_scheduled_activity
+msgid "Work Permit Scheduled Activity"
+msgstr "工作簽證預定活動"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_phone
+#: model:ir.model.fields,field_description:hr.field_res_users__work_phone
+msgid "Work Phone"
+msgstr "工作電話"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
+msgid "Working Hours"
+msgstr "工作時間"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_users.py:0
+#, python-format
+msgid ""
+"You are only allowed to update your preferences. Please contact a HR officer"
+" to update other information."
+msgstr "您只能更新您的個人設定。請聯絡人力資源部門更新其他資訊。"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/models/employee.js:0
+#, python-format
+msgid "You can only chat with employees that have a dedicated user."
+msgstr "您只能與擁有專用用戶的員工聊天。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_department.py:0
+#, python-format
+msgid "You cannot create recursive departments."
+msgstr "您無法建立遞迴部門."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+#, python-format
+msgid "You do not have access to this document."
+msgstr "你沒有權限存取此文件。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_config_settings.py:0
+#, python-format
+msgid "You should select at least one Advanced Presence Control option."
+msgstr "您應該至少選擇一個 Advanced Presence Control 選項。"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
+msgid "ZIP"
+msgstr "郵編"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/mail_alias.py:0
+#, python-format
+msgid "addresses linked to registered employees"
+msgstr "與註冊員工相關的地址"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+msgid "department"
+msgstr "部門"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+msgid "e.g. John Doe"
+msgstr "例：陳大文"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
+msgid "e.g. Onboarding"
+msgstr "例如到職"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "e.g. Sales Manager"
+msgstr "例如：銷售經理"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_plan
+msgid "plan"
+msgstr "計劃"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/models.py:0
+#, python-format
+msgid "restricted to employees"
+msgstr "僅限員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

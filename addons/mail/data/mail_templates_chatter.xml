@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Discuss utility templates for notifications -->
+        <template id="message_user_assigned">
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span>
+    <br/><br/>
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
+    <br/>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-if="feedback">
+        <t t-foreach="feedback.split('\n')" t-as="feedback_line">
+            <t t-esc="feedback_line"/>
+            <br t-if="not feedback_line_last"/>
+        </t>
+    </div>
+    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title"><strong>Original note:</strong></div>
+        <div t-field="activity.note"/>
+    </t>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    Dear <span t-field="activity.user_id.name"/>,
+    <br/><br/>
+    <p>
+        <span t-field="activity.create_uid.name"/> has just assigned you the following activity:
+        <ul>
+            <li>Document: "<t t-esc="activity.res_name"/>"
+                <t t-if="model_description"> (<t t-esc="model_description"/>)</t>
+            </li>
+            <li t-if="activity.summary">Summary: <span t-field="activity.summary"/></li>
+            <li>Deadline: <span t-field="activity.date_deadline"/></li>
+        </ul>
+    </p>
+</div>
+        </template>
+
+        <template id="message_origin_link">
+            <p>
+                <t t-if="edit">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
+                <t t-else="">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                </t>
+            </p>
+        </template>
+    </data>
+</odoo>

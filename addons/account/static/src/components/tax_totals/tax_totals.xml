@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="account.TaxGroupComponent" owl="1">
+        <tr>
+            <td class="o_td_label">
+                <label class="o_form_label o_tax_total_label" t-esc="props.taxGroup.tax_group_name"/>
+            </td>
+
+            <td  class="o_tax_group">
+                <t t-if="!props.isReadonly">
+                    <t t-if="['edit', 'disable'].includes(state.value)">
+                        <span class="o_tax_group_edit_input">
+                            <input
+                                type="text"
+                                t-ref="taxValueInput"
+                                class="o_field_float
+                                o_field_number o_input"
+                                t-att-disabled="state.value === 'disable'"
+                                t-on-change.prevent="_onChangeTaxValue"
+                                t-on-blur="_onChangeTaxValue"/>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
+                            <span class="o_tax_group_amount_value o_list_monetary">
+                                <i class="fa fa-pencil me-2"/> <t t-out="props.taxGroup.formatted_tax_group_amount"/>
+                            </span>
+                        </span>
+                    </t>
+                </t>
+                <t t-else="">
+                    <span class="o_tax_group_amount_value o_list_monetary">
+                        <t t-out="props.taxGroup.formatted_tax_group_amount" style="white-space: nowrap;"/>
+                    </span>
+                </t>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="account.TaxTotalsField" owl="1">
+        <table t-if="totals" class="oe_right">
+            <tbody>
+                <t t-foreach="totals.subtotals" t-as="subtotal" t-key="subtotal['name']">
+                    <tr>
+                        <td class="o_td_label">
+                            <label class="o_form_label o_tax_total_label" t-esc="subtotal['name']"/>
+                        </td>
+
+                        <td class="o_list_monetary">
+                            <span t-att-name="subtotal['name']" style="white-space: nowrap; font-weight: bold;" t-out="subtotal['formatted_amount']"/>
+                        </td>
+                    </tr>
+
+                    <t t-foreach="totals.groups_by_subtotal[subtotal['name']]" t-as="taxGroup" t-key="taxGroup.group_key">
+                        <TaxGroupComponent
+                            currency="currency"
+                            taxGroup="taxGroup"
+                            isReadonly="readonly"
+                            onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
+                            invalidate.bind="invalidate"
+                        />
+                    </t>
+                </t>
+
+                <tr t-if="'formatted_rounding_amount' in totals and totals.rounding_amount !== 0 and totals.display_rounding">
+                    <td class="o_td_label">
+                        <label class="o_form_label o_tax_total_label">Rounding</label>
+                    </td>
+                    <td class="o_list_monetary">
+                        <span
+                            t-out="totals.formatted_rounding_amount"
+                        />
+                    </td>
+                </tr>
+
+                <!-- Total amount with all taxes-->
+                <tr>
+                    <td class="o_td_label">
+                        <label class="o_form_label o_tax_total_label">Total</label>
+                    </td>
+
+                    <td class="o_list_monetary">
+                        <span
+                            name="amount_total"
+                            t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
+                            t-out="totals.formatted_amount_total"
+                            style="font-size: 1.3em; font-weight: bold; white-space: nowrap;"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </t>
+</templates>

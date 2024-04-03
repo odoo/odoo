@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_payulatam" model="payment.provider">
+        <field name="name">PayU Latam</field>
+        <field name="display_as">Credit Card (powered by PayU Latam)</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_payulatam/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_payulatam"/>
+        <!-- https://www.payulatam.com/medios-de-pago/ -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_visa'),
+                   ref('payment.payment_icon_cc_codensa_easy_credit'),
+               ])]"/>
+        <field name="code">payulatam</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="enrich_company" inherit_id="iap_mail.enrich_company">
+        <xpath expr="//div[hasclass('o_partner_autocomplete_enrich_info')]" position="inside">
+            <t t-if="people_data">
+                <t t-set="hasPhoneNumbers" t-value="any([people['phone'] for people in people_data])"/>
+                <div style="font-size:16px; margin: 9px 0;">
+                    <b>Contacts</b>
+                </div>
+                <table style="width:100%;
+                    border-top-style: solid;border-top-color: #eeeeee;border-top-width: 1px;
+                    border-bottom-style: solid;border-bottom-color: #eeeeee;border-bottom-width: 1px;
+                    border-start-style: solid;border-start-color: #eeeeee;border-start-width: 1px;
+                    border-end-style: solid;border-end-color: #eeeeee;border-end-width: 1px;" t-if="people_data">
+                    <thead>
+                        <tr style="background-color: #eeeeee">
+                            <th t-attf-style="padding: 5px; width: {{hasPhoneNumbers and '30%;' or '50%;'}}">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61447/rgb(102,102,102)/13"/>
+                                Name
+                            </th>
+                            <th t-attf-style="padding: 5px; width: {{hasPhoneNumbers and '40%;' or '50%;'}}">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61664/rgb(102,102,102)/13"/>
+                                Email
+                            </th>
+                            <th style="padding: 5px; width: 30%;" t-if="hasPhoneNumbers">
+                                <img style="vertical-align: text-top;" src="web_editor/font_to_img/61589/rgb(102,102,102)/13"/>
+                                Phone
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="people_data" t-as="people">
+                            <tr t-att-style="people_odd and 'background-color:#eeeeee' or None">
+                                <td style="padding: 5px">
+                                    <t t-set="fullName" t-value="people['full_name'] or ''"/>
+                                    <t t-set="title" t-value="people['title'] or ''"/>
+                                    <t t-if="fullName">
+                                        <h5 style="margin: 0;"><t t-esc="fullName"/><t t-if="title">,</t></h5>
+                                    </t>
+                                    <small t-esc="title" t-if="title"/>
+                                </td>
+                                <td style="padding: 5px">
+                                    <a t-if="people['email']" t-attf-href="mailto:{{people['email']}}" target="_top">
+                                        <t t-esc="people['email']"/>
+                                    </a>
+                                </td>
+                                <td style="padding: 5px" t-if="hasPhoneNumbers">
+                                    <a t-if="people['phone']" t-attf-href="tel:{{people['phone']}}">
+                                        <t t-esc="people['phone']"/>
+                                    </a>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

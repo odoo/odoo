@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="BackToFloorButton" owl="1">
+        <span
+            t-if="hasTable"
+            class="order-button floor-button"
+            t-att-class="{ oe_hidden: props.mobileSearchBarIsShown }"
+            t-on-click="backToFloorScreen"
+        >
+            <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
+            <t t-if="env.isMobile">
+                <span class="table-name" t-esc="table.name"/>
+            </t>
+            <t t-else="">
+                <span t-esc="floor.name" /><span class="table-name">(<t t-esc="table.name" />)</span>
+            </t>
+        </span>
+        <span t-else=""></span>
+    </t>
+
+</templates>

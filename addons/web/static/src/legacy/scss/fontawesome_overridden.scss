@@ -1,0 +1,82 @@
+// This is a patch of the font awesome library to add TikTok & Twitter icons.
+@font-face {
+    font-family: 'FontAwesome-tiktok-only';
+    src: url('../../../fonts/tiktok_only.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'FontAwesome-twitter-x-only';
+    src: url('../../../fonts/twitter_x_only.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+.fa.fa-tiktok {
+    font-family: 'FontAwesome-tiktok-only' !important;
+
+    &:before {
+        content: '\e07b';
+    }
+}
+
+// Don't write `.fa.fa-twitter` or this will be considered like a new icon in
+// the media dialog. The css here is just about overriding the existing twitter
+// icon and should not be considered as a new icon, otherwise those icons will
+// be shown twice in the media dialog. Grep: `iconsParser` and `fontIcons`.
+.fa-twitter.fa {
+    font-family: 'FontAwesome-twitter-x-only' !important;
+
+    &:before {
+        content: '\e800';
+    }
+}
+.fa-twitter-square.fa {
+    font-family: 'FontAwesome-twitter-x-only' !important;
+
+    &:before {
+        content: '\e803';
+    }
+}
+
+// This is rtl language specific fix
+// It will override the font awesome symbols and flip them 180 degree
+.o_rtl {
+    .fa {
+        &.fa-align-right,
+        &.fa-align-left,
+        &.fa-chevron-right,
+        &.fa-chevron-left,
+        &.fa-arrow-right,
+        &.fa-arrow-left,
+        &.fa-hand-o-right,
+        &.fa-hand-o-left,
+        &.fa-arrow-circle-right,
+        &.fa-arrow-circle-left,
+        &.fa-caret-right,
+        &.fa-caret-left,
+        &.fa-rotate-right,
+        &.fa-rotate-left,
+        &.fa-angle-double-right,
+        &.fa-angle-double-left,
+        &.fa-angle-right,
+        &.fa-angle-left,
+        &.fa-quote-right,
+        &.fa-quote-left,
+        &.fa-chevron-circle-right,
+        &.fa-chevron-circle-left,
+        &.fa-long-arrow-right,
+        &.fa-long-arrow-left,
+        &.fa-toggle-right,
+        &.fa-toggle-left,
+        &.fa-caret-square-o-right,
+        &.fa-arrow-circle-o-left,
+        &.fa-arrow-circle-o-right,
+        &.fa-caret-square-o-left {
+            transform: rotate(180deg);
+        }
+    }
+}

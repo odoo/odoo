@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Basic product for gift card program -->
+    <record id="gift_card_product_50" model="product.product">
+        <field name="name">Gift Card</field>
+        <field name="list_price">50</field>
+        <field name="detailed_type">service</field>
+        <field name="purchase_ok" eval="False"/>
+        <field name="image_1920" type="base64" file="loyalty/static/img/gift_card.png"/>
+    </record>
+    <!-- Basic product for eWallet programs -->
+    <record id="ewallet_product_50" model="product.product">
+        <field name="name">Top-up eWallet</field>
+        <field name="list_price">50</field>
+        <field name="detailed_type">service</field>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <data noupdate="1">
+        <record forcecreate="0" id="config_online_sync_proxy_mode" model="ir.config_parameter">
+            <field name="key">loyalty.compute_all_discount_product_ids</field>
+            <field name="value">False</field>
+        </record>
+    </data>
+</odoo>

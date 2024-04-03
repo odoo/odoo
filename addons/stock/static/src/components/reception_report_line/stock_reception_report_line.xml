@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <tr t-name="stock.ReceptionReportLine" class="align-middle" owl="1">
+        <td t-esc="data.product.display_name"/>
+        <td>
+            <t t-esc="formatFloat(data.quantity)"/> <t t-if="props.showUom" t-esc="data.uom"/>
+            <button class="btn btn-link fa fa-area-chart" t-on-click="onClickForecast" name="forecasted_report_link"/>
+        </td>
+        <td t-if="data.is_qty_assignable">
+            <button t-if="!data.is_assigned"
+                t-on-click="onClickAssign"
+                class="btn btn-sm btn-primary"
+                name="assign_link">
+                Assign
+            </button>
+            <button t-else=""
+                t-on-click="onClickUnassign"
+                class="btn btn-sm btn-primary"
+                name="unassign_link">
+                Unassign
+            </button>
+        </td>
+        <td>
+            <button t-if="data.is_qty_assignable &amp;&amp; data.source"
+                class="btn btn-sm btn-primary"
+                t-attf-disabled="{{ !data.is_assigned }}"
+                name="print_label"
+                t-on-click="onClickPrint">
+                <span class="d-sm-block">Print Label</span>
+            </button>
+        </td>
+    </tr>
+
+</templates>

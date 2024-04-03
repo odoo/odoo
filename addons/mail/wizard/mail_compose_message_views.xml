@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form">
+                    <group>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="author_id" invisible="1"/>
+                        <field name="auto_delete" invisible="1"/>
+                        <field name="auto_delete_message" invisible="1"/>
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="email_layout_xmlid" invisible="1"/>
+                        <field name="is_log" invisible="1"/>
+                        <field name="mail_server_id" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="record_name" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="subtype_id" invisible="1"/>
+                        <!-- visible wizard -->
+                        <field name="email_from"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <label for="partner_ids" string="Recipients" attrs="{'invisible': ['|', ('is_log', '=', True), ('composition_mode', '!=', 'comment')]}"/>
+                        <div groups="base.group_user" attrs="{'invisible': ['|', ('is_log', '=', True), ('composition_mode', '!=', 'comment')]}">
+                            <span name="document_followers_text" attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">Followers of the document and</span>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                context="{'force_email':True, 'show_email':True}"/>
+                        </div>
+                        <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
+                        <!-- mass post -->
+                        <field name="notify"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_post')]}"/>
+                    </group>
+                    <field name="can_edit_body" invisible="1"/>
+                    <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                        <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
+                        <group col="4">
+                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                            <field name="template_id" string="Load template" options="{'no_create': True}"
+                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                        </group>
+                    </div>
+                    <notebook attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                        <page string="Content">
+                            <div>
+                                <field name="body" class="oe-bordered-editor" placeholder="Write your message here..." options="{'style-inline': true}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
+                                <group col="4">
+                                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                                    <field name="template_id" string="Load template" options="{'no_create': True}"
+                                        context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                                </group>
+                            </div>
+                        </page>
+                        <page string="Settings">
+                            <!-- mass mailing -->
+                            <field name="reply_to_force_new" invisible="1"/>
+                            <field name="reply_to_mode" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}" widget="radio"/>
+                            <group>
+                                <field name="reply_to" string="Reply-to Address" placeholder='e.g: "info@mycompany.odoo.com"'
+                                    attrs="{'invisible':['|', ('reply_to_mode', '=', 'update'), ('composition_mode', '!=', 'mass_mail')],
+                                            'required':[('reply_to_mode', '!=', 'update'), ('composition_mode', '=', 'mass_mail')]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send" data-hotkey="q"/>
+                        <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                        <button icon="fa-lg fa-save" type="object"
+                                name="action_save_as_template" string="Save as new template"
+                                attrs="{'invisible': [('can_edit_body', '=', False)]}"
+                                class="float-end btn-secondary" help="Save as a new template" data-hotkey="w"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
+            <field name="name">Compose Email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="binding_model_id" ref="mail.model_mail_compose_message"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

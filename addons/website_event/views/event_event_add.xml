@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="event_event_view_form_add" model="ir.ui.view">
+    <field name="name">event.event.view.form.add</field>
+    <field name="model">event.event</field>
+    <field name="arch" type="xml">
+        <form js_class="website_new_content_form">
+            <group>
+                <field name="website_url" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="name" placeholder="e.g. &quot;Conference for Architects&quot;" string="Event Name"/>
+                <field name="address_id" context="{'show_address': 1}" options='{"always_reload": True}'/>
+                <label for="date_begin" string="Start &#8594; End"/>
+                <div class="o_row w-100">
+                    <field name="date_begin" widget="daterange" nolabel="1" options="{'related_end_date': 'date_end'}"/>
+                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                    <field name="date_end" widget="daterange" nolabel="1" options="{'related_start_date': 'date_begin'}"/>
+                </div>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="event_event_action_add" model="ir.actions.act_window">
+    <field name="name">New Event</field>
+    <field name="res_model">event.event</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="view_id" ref="event_event_view_form_add"/>
+    <field name="context">{'default_address_id': False}</field>
+</record>
+
+</odoo>

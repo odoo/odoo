@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindowHiddenMenu" owl="1">
+        <div class="o_ChatWindowHiddenMenu dropup position-fixed bottom-0 align-items-stretch d-flex px-2 py-1 rounded-top-3 bg-900 cursor-pointer" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_ChatWindowHiddenMenu_dropdownToggle dropdown-toggle justify-content-center align-items-center flex-grow-1 d-flex mw-100" t-att-class="{ 'show opacity-50': messaging.chatWindowManager.isHiddenMenuOpen }" data-bs-toggle="dropdown" t-on-click="messaging.chatWindowManager.onClickHiddenMenuToggler">
+                <div class="o_ChatWindowHiddenMenu_dropdownToggleIcon o_ChatWindowHiddenMenu_dropdownToggleItem me-1 fa fa-comments-o"/>
+                <div class="o_ChatWindowHiddenMenu_dropdownToggleItem o_ChatWindowHiddenMenu_windowCounter mx-1 text-truncate">
+                    <t t-esc="messaging.chatWindowManager.allOrderedHidden.length"/>
+                </div>
+            </div>
+            <ul class="o_ChatWindowHiddenMenu_list dropdown-menu dropdown-menu-end m-0 p-0 overflow-auto" t-att-class="{ show: messaging.chatWindowManager.isHiddenMenuOpen }" role="menu" t-ref="list">
+                <t t-foreach="messaging.chatWindowManager.hiddenChatWindowHeaderViews" t-as="chatWindowHeaderView" t-key="chatWindowHeaderView.localId">
+                    <ChatWindowHiddenMenuItem chatWindowHeaderView="chatWindowHeaderView" isLast="chatWindowHeaderView_last"/>
+                </t>
+            </ul>
+            <t t-if="messaging.chatWindowManager.unreadHiddenConversationAmount > 0">
+                <div class="o_ChatWindowHiddenMenu_unreadCounter position-absolute end-0 top-0 badge rounded-pill text-bg-primary">
+                    <t t-esc="messaging.chatWindowManager.unreadHiddenConversationAmount"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

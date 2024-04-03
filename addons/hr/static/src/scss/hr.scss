@@ -1,0 +1,48 @@
+.o_kanban_dashboard.o_hr_department_kanban {
+    --KanbanRecord-width: 450px;
+    --KanbanRecord-width-small: 350px;
+}
+
+.o_employee_form {
+    .o_employee_avatar {
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .o_employee_availability {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            padding-bottom: 1px;
+            border-radius: 50%;
+            background-color: $o-view-background-color;
+            height: 1rem;
+            width: 1rem;
+            * {
+                margin-bottom: -1px;
+                height: 1rem;
+                width: 1rem;
+            }
+        }
+    }
+    .oe_title {
+        max-width: 75%;
+    }
+}
+
+.o_hr_narrow_field {
+    width: 8rem!important;
+    max-width: 8rem!important;
+    * {
+        max-width: 100%;
+    }
+}
+
+@for $size from 10 through 15 {
+    .o_hr_narrow_field-#{$size} {
+        width: #{$size}rem!important;
+        max-width: #{$size}rem!important;
+    }
+}

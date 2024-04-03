@@ -1,0 +1,2583 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track
+# 
+# Translators:
+# Zsolt Godó <zsolttokio@gmail.com>, 2022
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# Tamás Dombos, 2022
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# Martin Trigaux, 2022
+# krnkris, 2022
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
+# Szabolcs Rádi, 2023
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s from %(company)s"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "%(name)s, %(function)s at %(company)s"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_17
+msgid "10 DIY Furniture Ideas For Absolute Beginners"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_18
+msgid "6 Woodworking tips and tricks for beginners"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "<b>Contact Information</b>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Mail</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Phone</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Proposed By</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Speaker Biography</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Speaker Profile</b>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "<b>Talk Intro</b>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Talk Introduction</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br><br>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                        Write one."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
+"                                            <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid ""
+"<span for=\"contact_name\">Name</span>\n"
+"                    <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
+msgid "<span> at </span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<span>New track proposal</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
+"                                    different topics. Most topics are accepted in lightning talks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
+"                                    alocated in slots of 60 minutes."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+msgid "A technical explanation of how to use computer design apps"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
+msgid ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__active
+msgid "Active"
+msgstr "Aktív"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
+msgid "Activities"
+msgstr "Tevékenységek"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Tevékenység kivétel dekoráció"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
+msgid "Activity State"
+msgstr "Tevékenység állapota"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Tevékenység típus ikon"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Add a description..."
+msgstr "Új leírás..."
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid "Add a new stage in the task pipeline"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+msgid "Advanced lead management : tips and tricks from the fields"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+msgid "Advanced reporting"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Agenda"
+msgstr "Napirend"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Allow push notifications?"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Allow video and audio recording of their\n"
+"                                    presentation, for publishing on our website."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage2
+msgid "Announced"
+msgstr "Bejelentett"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Application"
+msgstr "Alkalmazás"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"    wood crates."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
+msgid "Attachment Count"
+msgstr "Mellékletek száma"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
+msgid "Audience"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
+msgid "Available Track Tags"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Bandy clamp hack"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Biography"
+msgstr "Életrajz"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
+#, python-format
+msgid "Blocked"
+msgstr "Blokkolva"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_14
+msgid "Building a DIY cabin from the ground up"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Call for Proposals"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "Publikálhat"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Canceled Stage"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage5
+msgid "Cancelled"
+msgstr "Törölve"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Categories"
+msgstr "Kategóriák"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "Kategória"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_12
+msgid "Climate positive"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "Szín"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+msgid "Color Index"
+msgstr "Színjegyzék"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "Vállalat neve"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "Beállítások módosítása"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
+msgid "Confirmation of {{ object.name }}"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage1
+msgid "Confirmed"
+msgstr "Megerősített"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_13
+#: model_terms:event.track,description:website_event_track.event_7_track_3
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#, python-format
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Contact Details"
+msgstr "Partner részletei"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
+#, python-format
+msgid "Contact Email"
+msgstr "Kapcsolat Email"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
+msgid "Contact Phone"
+msgstr "Telefonszám"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
+msgid "Contact email is private and used internally"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact me through a different email/phone"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
+msgid "Contact of the track, may be different from speaker."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
+msgid "Contact phone is private and used internally"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Create a Track"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid "Create a Track Location"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
+msgid "Create a Track Tag"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "Ügyfél"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_19
+msgid "DIY Timber Cladding Project"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Date"
+msgstr "Dátum"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_11
+msgid "Day 2 Wrapup"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_8
+msgid "Dealing with OpenWood Furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Define labels explaining kanban state management."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
+msgid "Define the order in which the location will appear on \"Agenda\" page"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Delete"
+msgstr "Törlés"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "Leírás"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
+msgid "Description of the partner (name, function and company name)"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+msgid "Design contest (entire afternoon)"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+msgid "Design contest (entire day)"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+msgid "Detailed roadmap of our new products"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+msgid "Discover our new design team"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "Kész"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Dowel Hack"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr "Legördülő menü"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
+msgid "Duration"
+msgstr "Időtartam"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_3
+msgid "Easy Way To Build a Wooden House"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Edit Track"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Email"
+msgstr "E-mail"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
+msgid "Email Template"
+msgstr "E-mail sablon"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "Hiba"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event"
+msgstr "Esemény"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+msgid "Event Location"
+msgstr "Esemény helyszíne"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
+msgid "Event Locations"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Event Page"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
+msgid "Event Proposals Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "Esemény sablon"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+msgid "Event Track"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_location
+msgid "Event Track Location"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_stage
+msgid "Event Track Stage"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
+msgid "Event Track Tag"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
+msgid "Event Tracks Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_21
+msgid "Event Wrapup"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
+msgid "Event: Track Confirmation"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "Kedvencek"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "Filter Tracks..."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Filter by Tags"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "Befejezett"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_2
+msgid "First Day Wrapup"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
+msgid "Folded in Kanban"
+msgstr "Kanban nézetben behajtott"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome ikon pld: fa-tasks"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
+msgid "Format"
+msgstr "Formátum"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
+msgid "Fully accessible"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Future Activities"
+msgstr "Jövőbeni tevékenységek"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Glue tip"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
+msgid "Green"
+msgstr "Zöld"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "Zöld kanban címke"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+msgid "Grey"
+msgstr "Szürke"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "Szürke kanban címke"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_11
+msgid "Happy with OpenWood"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
+msgid "Has Message"
+msgstr "Van üzenet"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
+msgid "High"
+msgstr "Magas"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
+msgid "Highest"
+msgstr "Legmagasabb"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+msgid "House of World Cultures"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "How can our team get in touch with you?"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+msgid "How to build your marketing strategy within a competitive environment"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+msgid "How to communicate with your community"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+msgid "How to design a new piece of furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+msgid "How to develop automated processes"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+msgid "How to follow us on the social media"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+msgid "How to improve your quality processes"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+msgid "How to integrate hardware materials in your pieces of furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+msgid "How to optimize your sales, from leads to sales orders"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Kivétel tevékenységet jelző ikon"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "If checked, the related tracks will be visible in the frontend."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "Kép elérési út"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "In"
+msgstr "Ebben"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_normal:website_event_track.event_track_stage5
+#, python-format
+msgid "In Progress"
+msgstr "Folyamatban"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_15
+msgid "In this video we will see how lumber is made in a sawmill factory."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "In this video, I covered 6 tips and tricks to help out beginners:"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "Telepítés"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Introduction"
+msgstr "Bemutatás"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
+msgid "Is Follower"
+msgstr "Követő"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is Published"
+msgstr "Közzétett"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "Munkakör"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Job Title"
+msgstr "Beosztás"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "Kanban szakasz blokkolásának magyarázata"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Kanban szakaszból való továbbhaladás magyarázata"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
+msgid "Kanban State"
+msgstr "Kanban állapot"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
+msgid "Kanban State Label"
+msgstr "Kanban állapot címkéje"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Kanban érvényes magyarázat"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+msgid "Key Success factors selling our furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_9
+msgid "Kitchens for the Future"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb frissítve"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
+msgid "Last Updated on"
+msgstr "Frissítve ekkor"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Late Activities"
+msgstr "Késő tevékenységek"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+msgid "Latest trends"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_26
+msgid "Less Furniture is More Furniture"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_4
+msgid "Life at Home Around the World: William’s Story"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_19
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "Élő"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_10
+msgid "Live Testimonial"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_25
+msgid "Live Testimonials"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
+msgstr "Helyszín"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_13
+msgid "Log House Building"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_15
+msgid "Logs to lumber"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
+msgid "Low"
+msgstr "Alacsony"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+msgid "Lunch"
+msgstr "Ebéd"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Fő melléklet"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Making a center marking gauge"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+msgid "Medium"
+msgstr "Közepes"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
+msgid "Menu Type"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
+msgid "Message Delivery error"
+msgstr "Üzenetkézbesítési hiba"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+msgid "Minimal but efficient design"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Miter saw tip"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+msgid "Morning break"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Tevékenységeim határideje"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+msgid "My Company global presentation"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "Név"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+msgid "New Certification Program"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+msgid "New Track"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Következő tevékenység naptár esemény"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Következő tevékenység határideje"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
+msgid "Next Activity Summary"
+msgstr "Következő tevékenység összegzés"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
+msgid "Next Activity Type"
+msgstr "Következő tevékenység típusa"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "No Track Visitors yet!"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "No results found"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track favorited by this visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of errors"
+msgstr "Hibák száma"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Kézbesítési hibával rendelkező üzenetek száma"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_24
+msgid "Old is New"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_20
+msgid "Our Last Day Together !"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+msgid "Partnership programs"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Picture"
+msgstr "Kép"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please enter either a contact email address or a contact phone number."
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "Please fill out the form correctly."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+msgid "Portfolio presentation"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_16
+msgid "Pretty. Ugly. Lovely."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
+msgid "Priority"
+msgstr "Prioritás"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_7
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage0
+msgid "Proposal"
+msgstr "Javaslat"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Proposals are closed!"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
+msgid "Proposals on Website"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage3
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Published"
+msgstr "Közzétett"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+msgid "Raising qualitive insights from your customers"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track_stage.py:0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage0
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage1
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage2
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage3
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage4
+#: model:event.track.stage,legend_done:website_event_track.event_track_stage5
+#, python-format
+msgid "Ready for Next Stage"
+msgstr "Készen áll a következő szakaszra"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
+msgid "Red"
+msgstr "Piros"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "Piros kanban címke"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage4
+msgid "Refused"
+msgstr "Elutasított"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Responsible"
+msgstr "Felelős"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
+msgid "Responsible User"
+msgstr "Felelős felhasználó"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_23
+msgid "Restoring Old Woodworking Tools"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_23
+msgid "Restoring old woodworking tools"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Right angle clamp jig"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
+msgid "SEO optimized"
+msgstr "SEO optimalizált"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS kézbesítési hiba"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_6
+msgid "Securing your Lumber during transport"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
+#, python-format
+msgid "Select categories"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
+msgid "Sequence"
+msgstr "Sorszám"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Az összes olyan rekord megjelenítése, melynél a következő művelet dátuma a "
+"mai nap előtti"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker"
+msgstr "Előadó"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Speaker Bio"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speaker Email"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_email
+msgid ""
+"Speaker email is used for public display and may vary from contact email"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_name
+msgid "Speaker name is used for public display and may vary from contact name"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__partner_phone
+msgid ""
+"Speaker phone is used for public display and may vary from contact phone"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speakers"
+msgstr "Hangszórók"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Stage"
+msgstr "Szakasz"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Stage Description and Tooltips"
+msgstr "Szakasz leírása és súgók"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
+msgid "Stage Name"
+msgstr "Szakasz neve"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "Starting now!"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+msgid "Status & Strategy"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tevékenységeken alapuló állapot\n"
+"Lejárt: A tevékenység határideje lejárt\n"
+"Ma: A határidő ma van\n"
+"Tervezett: Jövőbeli határidő."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submission Agreement"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submit Proposal"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
+msgid "Tag Line"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
+msgid "Tag Name"
+msgstr "Címke neve"
+
+#. module: website_event_track
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Ez a címkenév már létezik!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Tags"
+msgstr "Címkék"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Talk Proposals"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#, python-format
+msgid "Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talks Types"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr ""
+"A feladat folyamatban van. Kattintson a blokkolásához, vagy állítsa készre."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr ""
+"A feladat blokkolva van. Kattintson a blokkolás megszüntetéséhez, vagy "
+"állítsa készre."
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "Thank you for your proposal."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+#: model:event.track,name:website_event_track.event_track29
+msgid "The new marketing strategy"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+msgid "The new way to promote your creations"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"There are several variants of wood is available in the world but we are talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your "
+"events."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "This event does not accept proposals."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Ez a szakasz behajtott a kanban nézetben, ha nincsenek benne megjeleníthető "
+"rekordok."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr ""
+"Ez a lépés készen van. Kattintson a blokkoláshoz, vagy állítsa be "
+"folyamatban lévőként."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "This track does not have a description."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Timely release of presentation material (slides),\n"
+"                                    for publishing on our website."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__name
+msgid "Title"
+msgstr "Név"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Today Activities"
+msgstr "Mai tevékenységek"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_22
+msgid "Tools for the Woodworking Beginner"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_5
+msgid "Top 10 Most Expensive Wood in the World"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following different properties and use."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Track"
+msgstr "Követés"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_blocked
+msgid "Track Blocked"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
+msgid "Track Count"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date
+msgid "Track Date"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Track Proposals Menu Item"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_ready
+msgid "Track Ready"
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_ready
+msgid "Track Ready for Next Stage"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
+msgid "Track Stage"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
+#: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+msgid "Track Stages"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
+msgid "Track Tags"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
+msgstr ""
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_blocked
+msgid "Track blocked"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
+msgid "Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
+msgid "Tracks Menu Item"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
+msgid "Tracks Proposals on Website"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
+msgid "Tracks on Website"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Kivétel tevékenység típusa a rekordon."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "Nem közzétett"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "View Track"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
+msgid "Visible in agenda"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
+msgid "Visible on current website"
+msgstr "Látható ezen a weboldalon"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "Látogató"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_1
+msgid "Voice from Customer"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to add this track to their list of favorites"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We require speakers to accept an agreement in which they commit to:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"We will accept a broad range of\n"
+"                            presentations, from reports on academic and\n"
+"                            commercial projects to tutorials and case\n"
+"                            studies. As long as the presentation is\n"
+"                            interesting and potentially useful to the\n"
+"                            audience, it will be considered for\n"
+"                            inclusion in the programme."
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
+#, python-format
+msgid "We will evaluate your proposition and get back to you shortly."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+msgid "Website"
+msgstr "Honlap"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_event_menu
+msgid "Website Event Menu"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Honlap menü"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
+msgid "Website Messages"
+msgstr "Honlap üzenetek"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
+msgid "Website URL"
+msgstr "Honlap címe"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "Látogató"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
+msgid "Website communication history"
+msgstr "Weboldali kommunikációs előzmények"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
+msgid "Website meta description"
+msgstr "Weboldal meta leírás"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Weboldal meta kulcsszavak"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
+msgid "Website meta title"
+msgstr "Weboldal meta cím"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Weboldal opengraph kép"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_10
+msgid "Welcome to Day 2"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_1
+msgid "What This Event Is All About"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "What is your talk about?"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_2
+msgid "Who's OpenWood anyway ?"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+msgid "Wishlisted Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+msgid "Wishlists"
+msgstr "Kívánságlisták"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_7
+msgid "Woodworking: How I got started!"
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#, python-format
+msgid "You cannot access this page."
+msgstr ""
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "a few seconds"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_card
+msgid "ago"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"John Doe was born in...\""
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. \"This talk will be about...\""
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Inspiring Business Talk"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "hours"
+msgstr "óra"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after track starts"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr ""

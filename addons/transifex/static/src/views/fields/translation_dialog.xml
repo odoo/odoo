@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-inherit="web.TranslationDialog" t-inherit-mode="extension">
+    <xpath expr="//div[hasclass('row')]/div/t" position="after">
+        <a t-if="term.transifex_url" t-attf-href="#{term.transifex_url}" title="Contribute" target="_blank"> <i class="fa fa-globe"/></a>
+    </xpath>
+</t>
+
+</templates>

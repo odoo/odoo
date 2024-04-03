@@ -1,0 +1,13 @@
+.o_form_view:not(.o_field_highlight) {
+    .o_field_many2one_selection {
+        .o_external_button, .o_dropdown_button {
+            visibility: hidden;
+        }
+
+        &:hover, &:focus-within {
+            .o_external_button, .o_dropdown_button {
+                visibility: visible;
+            }
+        }
+    }
+}

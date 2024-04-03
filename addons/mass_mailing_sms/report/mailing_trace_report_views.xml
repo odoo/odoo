@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_trace_report_sms_view_tree" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.tree</field>
+        <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_tree"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='opened']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_trace_report_sms_view_pivot" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.pivot</field>
+        <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_pivot"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">pivot</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='opened']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_trace_report_sms_view_graph" model="ir.ui.view">
+        <field name="name">mailing.sms.trace.report.view.graph</field>
+        <field name="model">mailing.trace.report</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_graph"/>
+        <field name="priority" eval="50"/>
+        <field name="mode">primary</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='replied']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Actions and Menuitems -->
+    <record id="mailing_trace_report_action_sms" model="ir.actions.act_window">
+        <field name="name">SMS Marketing Analysis</field>
+        <field name="res_model">mailing.trace.report</field>
+        <field name="view_mode">graph,pivot,tree</field>
+        <field name="domain">[('mailing_type', '=', 'sms')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Come back once some SMS Mailings are sent to check out aggregated results.
+            </p>
+        </field>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence">0</field>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_graph"/>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_pivot"/>
+    </record>
+
+    <record id="mailing_trace_report_action_sms_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
+        <field name="view_id" ref="mailing_trace_report_sms_view_tree"/>
+    </record>
+</odoo>

@@ -1,0 +1,87 @@
+id,code,name,account_type,reconcile,tag_ids/id,chart_template_id:id
+il_account_100100,100100,Land and buildings,asset_fixed,FALSE,,il_chart_template
+il_account_100200,100200,Machinery and equipment,asset_fixed,FALSE,,il_chart_template
+il_account_100300,100300,Vehicles,asset_fixed,FALSE,,il_chart_template
+il_account_100400,100400,Other property,asset_fixed,FALSE,,il_chart_template
+il_account_101110,101110,Stock Valuation,asset_current,FALSE,,il_chart_template
+il_account_101120,101120,Stock Interim Account (Received),asset_current,FALSE,,il_chart_template
+il_account_101130,101130,Stock Interim Account (Delivered),asset_current,FALSE,,il_chart_template
+il_account_101140,101140,Inventory - Raw materials,asset_current,FALSE,,il_chart_template
+il_account_101150,101150,Inventory - Work in progress,asset_current,FALSE,,il_chart_template
+il_account_101160,101160,Inventory - Finished goods,asset_current,FALSE,,il_chart_template
+il_account_101200,101200,Account Receivable,asset_receivable,TRUE,,il_chart_template
+il_account_101201,101201,Account Receivable(POS),asset_receivable,TRUE,,il_chart_template
+il_account_101250,101250,Allowance for credit losses,asset_current,TRUE,,il_chart_template
+il_account_101410,101410,Bank Deposit,asset_cash,FALSE,,il_chart_template
+il_account_101420,101420,Cheques,asset_cash,FALSE,,il_chart_template
+il_account_101430,101430,Financial Assets,asset_cash,FALSE,,il_chart_template
+il_account_101440,101440,Petty Cash,asset_cash,FALSE,,il_chart_template
+il_account_101310,101310,VAT - Inputs,asset_current,FALSE,,il_chart_template
+il_account_101320,101320,VAT - Fixed Assets,asset_current,FALSE,,il_chart_template
+il_account_101330,101330,VAT - Import Transactions,asset_current,FALSE,,il_chart_template
+il_account_101340,101340,VAT - PA Import Transactions,asset_current,FALSE,,il_chart_template
+il_account_101840,101840,VAT - Inputs import line,asset_current,FALSE,,il_chart_template
+il_account_100110,100110,Land and buildings depreciation,asset_non_current,FALSE,,il_chart_template
+il_account_100210,100210,Machinery and equipment depreciation,asset_non_current,FALSE,,il_chart_template
+il_account_100310,100310,Vehicles depreciation,asset_non_current,FALSE,,il_chart_template
+il_account_100410,100410,Other property depreciation,asset_non_current,FALSE,,il_chart_template
+il_account_100420,100420,Intangible Assets,asset_non_current,FALSE,,il_chart_template
+il_account_101350,101350,Prepayments,asset_current,FALSE,,il_chart_template
+il_account_111000,111000,Current Liabilities,liability_current,FALSE,,il_chart_template
+il_account_111100,111100,Account Payable,liability_payable,TRUE,,il_chart_template
+il_account_111110,111110,VAT Sales,liability_current,FALSE,,il_chart_template
+il_account_111120,111120,VAT PA Sales,liability_current,FALSE,,il_chart_template
+il_account_111200,111200,Income tax withheld - vendors,liability_current,FALSE,account_tag_retention_tax_vendor_account,il_chart_template
+il_account_111210,111210,Income tax withheld - employees,liability_current,FALSE,account_tag_retention_tax_employees_account,il_chart_template
+il_account_111220,111220,Income tax withheld - dividends,liability_current,FALSE,account_tag_retention_tax_dividend_account,il_chart_template
+il_account_111230,111230,Income tax withheld - customers,liability_current,FALSE,account_tag_retention_tax_customers_account,il_chart_template
+il_account_300300,300300,Reserve and Profit/Loss,equity,FALSE,,il_chart_template
+il_account_111400,111400,Credit cards,liability_current,FALSE,,il_chart_template
+il_account_111450,111450,Short term loans,liability_current,FALSE,,il_chart_template
+il_account_111460,111460,Interest Payable,liability_current,TRUE,,il_chart_template
+il_account_111500,111500,Employees wages,liability_current,TRUE,,il_chart_template
+il_account_111550,111550,Employees Benefits,liability_current,TRUE,,il_chart_template
+il_account_112210,112210,Deferred Revenue,liability_non_current,FALSE,,il_chart_template
+il_account_111650,111650,Advances,liability_current,TRUE,,il_chart_template
+il_account_111660,111660,Other Payable,liability_current,TRUE,,il_chart_template
+il_account_111700,111700,Income Tax,liability_current,TRUE,,il_chart_template
+il_account_111710,111710,National Insurance,liability_current,TRUE,,il_chart_template
+il_account_111720,111720,VAT due,liability_current,TRUE,,il_chart_template
+il_account_111730,111730,Deferred Taxes,liability_current,FALSE,,il_chart_template
+il_account_112000,112000,Non-current Liabilities,liability_non_current,FALSE,,il_chart_template
+il_account_112100,112100,Long Term loans,liability_non_current,FALSE,,il_chart_template
+il_account_112150,112150,Provisions,liability_non_current,FALSE,,il_chart_template
+il_account_200000,200000,Product Sales,income,FALSE,account.account_tag_operating,il_chart_template
+il_account_200100,200100,Services Sales,income,FALSE,account.account_tag_operating,il_chart_template
+il_account_200200,200200,Other Income,income_other,FALSE,account.account_tag_operating,il_chart_template
+il_account_200300,200300,Interest Income,income_other,FALSE,account.account_tag_operating,il_chart_template
+il_account_202000,202000,Other Expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_202100,202100,Foreign Exchange Gain&Loss,expense,FALSE,account.account_tag_financing,il_chart_template
+il_account_202200,202200,Interest Expenses,expense,FALSE,account.account_tag_financing,il_chart_template
+il_account_202300,202300,Donations,expense,FALSE,,il_chart_template
+il_account_202400,202400,Fines,expense,FALSE,,il_chart_template
+il_account_201000,201000,Cost of Goods Sold,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_211000,211000,Cost of Services Sold,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_212000,212000,Customer discounts,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_212100,212100,Salary Expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_212200,212200,Purchase of Equipments,expense,FALSE,account.account_tag_investing,il_chart_template
+il_account_212300,212300,Bank Fees,expense,FALSE,account.account_tag_financing,il_chart_template
+il_account_213000,213000,Customer returns,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_214000,214000,Vendor returns,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_215000,215000,Vendor discounts,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_216000,216000,Good's Shrinkage,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_217000,217000,Lost goods,expense_direct_cost,FALSE,account.account_tag_operating,il_chart_template
+il_account_220000,220000,G&A Expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220100,220100,Rent Expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220200,220200,Communication expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220300,220300,Transportation expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220400,220400,Depretiation expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220500,220500,Credit provision expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220600,220600,Sales and marketing expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220700,220700,Other non-operating expenses,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_220800,220800,Bad debts expense,expense,FALSE,account.account_tag_operating,il_chart_template
+il_account_300100,300100,Capital,equity,FALSE,,il_chart_template
+il_account_300110,300110,Ordinary Shares,equity,FALSE,,il_chart_template
+il_account_300120,300120,Preferred Shares,equity,FALSE,,il_chart_template
+il_account_300130,300130,Shares Premium,equity,FALSE,,il_chart_template
+il_account_300270,300270,current year earnings,equity_unaffected,FALSE,,il_chart_template

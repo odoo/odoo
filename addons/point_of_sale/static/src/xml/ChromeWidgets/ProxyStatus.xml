@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProxyStatus" owl="1">
+        <div class="oe_status js_proxy" t-on-click="() => this.trigger('connect-to-proxy')">
+            <span t-if="state.msg and !env.isMobile" class="js_msg">
+                <t t-esc="state.msg" />
+            </span>
+            <span t-if="state.status === 'connected'" class="js_connected oe_green">
+                <i class="fa fa-fw fa-sitemap" role="img" aria-label="Proxy Connected"
+                   title="Proxy Connected"></i>
+            </span>
+            <span t-if="state.status === 'connecting'" class="js_connecting">
+                <i class="fa fa-fw fa-spin fa-circle-o-notch" role="img" aria-label="Connecting to Proxy"
+                   title="Connecting to Proxy"></i>
+            </span>
+            <span t-if="state.status === 'warning'" class="js_warning oe_orange">
+                <i class="fa fa-fw fa-sitemap" role="img" aria-label="Proxy Warning"
+                   title="Proxy Warning"></i>
+            </span>
+            <span t-if="state.status === 'disconnected'" class="js_disconnected oe_red">
+                <i class="fa fa-fw fa-sitemap" role="img" aria-label="Proxy Disconnected"
+                   title="Proxy Disconnected"></i>
+            </span>
+        </div>
+    </t>
+
+</templates>

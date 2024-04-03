@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindowManager" owl="1">
+        <div class="o_ChatWindowManager flex-row-reverse d-flex" t-attf-class="{{ className }}" t-ref="root">
+            <!-- Note: DOM elements are ordered from left to right -->
+            <t t-if="messaging.chatWindowManager.visual.isHiddenMenuVisible">
+                <ChatWindowHiddenMenu className="'o_ChatWindowManager_hiddenMenu'"/>
+            </t>
+            <t t-foreach="messaging.chatWindowManager.allOrderedVisible" t-as="chatWindow" t-key="chatWindow.localId">
+                <ChatWindow record="chatWindow"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

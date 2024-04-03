@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Items" id="s_product_list">
+    <t t-set="url" value="url or '#'"/>
+    <section class="s_product_list">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_1" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Furniture</a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_2" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Clothes</a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_3" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Books</a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_4" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Essential oils</a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_5" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Service</a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <a t-att-href="url">
+                        <img src="/web/image/website.s_product_list_default_image_6" alt="" class="img img-fluid"/>
+                    </a>
+                    <div class="s_product_list_item_link">
+                        <a t-att-href="url" class="btn btn-primary">Multimedia</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_product_list_000_variables_scss" model="ir.asset">
+    <field name="name">Product list 000 variables SCSS</field>
+    <field name="bundle">web._assets_primary_variables</field>
+    <field name="path">website/static/src/snippets/s_product_list/000_variables.scss</field>
+</record>
+
+<record id="website.s_product_list_000_scss" model="ir.asset">
+    <field name="name">Product list 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_product_list/000.scss</field>
+</record>
+
+</odoo>

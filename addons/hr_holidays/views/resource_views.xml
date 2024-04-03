@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <!-- Holiday on resource leave -->
+    <record id="resource_calendar_leaves_view_search_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.search.inherit</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_leaves_search"/>
+        <field name="arch" type="xml">
+            <filter name="resource" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+        </field>
+    </record>
+    <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.form.inherit</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="holiday_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_calendar_leaves_tree_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.tree.inherit</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="resource.resource_calendar_leave_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Name</attribute>
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_to']" position="after">
+                <field name="company_id" invisible="1"/>
+                <xpath expr="//field[@name='calendar_id']" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_calendar_global_leaves_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Resource Time Off</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
+        <field name="domain">['&amp;', ('resource_id', '=', False), ('calendar_id', 'in', (active_id, False))]</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
+            'search_default_filter_date': True}</field>
+        <field name="search_view_id" ref="hr_holidays.resource_calendar_leaves_view_search_inherit"/>
+    </record>
+
+    <record id="resource_calendar_form_inherit" model="ir.ui.view">
+        <field name="name">resource.calendar.form.inherit</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(resource.resource_calendar_leaves_action_from_calendar)d']" position="before">
+                <button name="%(resource_calendar_global_leaves_action_from_calendar)d" type="action"
+                                icon="fa-sun-o" class="oe_stat_button">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            <field name="associated_leaves_count"/> Public
+                        </span>
+                        <span class="o_stat_text">
+                            Time Off
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="open_view_public_holiday" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('resource_id', '=', False)]</field>
+        <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
+        <field name="context">{
+            'search_default_filter_date': True}</field>
+    </record>
+</odoo>

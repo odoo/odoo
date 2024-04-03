@@ -1,0 +1,8 @@
+<odoo>
+    <template id="fields" inherit_id="auth_signup.fields"
+              name="Password policy data for auth_signup">
+        <xpath expr="//input[@name='password']" position="attributes">
+            <attribute name="t-att-minlength">password_minimum_length</attribute>
+        </xpath>
+    </template>
+</odoo>

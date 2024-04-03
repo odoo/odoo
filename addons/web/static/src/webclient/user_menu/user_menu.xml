@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.UserMenu" owl="1">
+        <Dropdown class="'o_user_menu d-none d-md-block pe-0'" togglerClass="'py-1 py-lg-0'">
+            <t t-set-slot="toggler">
+                <img class="rounded-circle o_user_avatar h-75 py-1" t-att-src="source" alt="User"/>
+                <span class="oe_topbar_name d-none d-lg-block ms-1 text-truncate"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
+            </t>
+            <t t-foreach="getElements()" t-as="element" t-key="element_index">
+                <t t-if="!element.hide">
+                    <DropdownItem
+                        t-if="element.type == 'item' || element.type == 'switch'"
+                        href="element.href"
+                        dataset="{ menu: element.id }"
+                        onSelected="element.callback"
+                    >
+                        <CheckBox
+                            t-if="element.type == 'switch'"
+                            value="element.isChecked"
+                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0'"
+                            onChange="element.callback"
+                        >
+                            <t t-out="element.description"/>
+                        </CheckBox>
+                        <t t-else="" t-out="element.description"/>
+                    </DropdownItem>
+                    <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

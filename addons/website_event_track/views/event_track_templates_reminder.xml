@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Options
+    * reminder_light: no text displayed
+    * reminder_small: text displayed as small
+    * light_theme: bell is white/gold if set; otherwse bell is gray / white
+ -->
+<template id="track_widget_reminder">
+    <t t-set="_btn_style" t-value="'btn-link' if reminder_light else (track.is_reminder_on and 'btn-primary') or 'btn-outline-primary'"/>
+    <t t-set="_btn_size" t-value="'btn-sm' if reminder_small else ''"/>
+    <div t-att-class="'o_wetrack_js_reminder btn %s %s' % (_btn_style, _btn_size)">
+        <t t-if="track.is_reminder_on" t-set="title">Favorite On</t>
+        <t t-else="track.is_reminder_on" t-set="title">Set Favorite</t>
+        <i t-att-class="'fa fa-bell%s inactive_color_%s' % ('' if track.is_reminder_on else '-o', 'dark' if reminder_light and not light_theme else 'light')"
+           t-att-data-track-id="track.id"
+           t-att-title="title"
+           t-att-data-is-reminder-light="reminder_light"
+           t-att-data-reminder-on="bool(track.is_reminder_on)"></i>
+        <span t-if="not reminder_light" class="o_wetrack_js_reminder_text">
+            <t t-if="not track.is_reminder_on">
+                Set Favorite
+            </t><t t-else="">
+                Favorite On
+            </t>
+        </span>
+    </div>
+</template>
+
+</odoo>

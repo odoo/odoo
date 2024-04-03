@@ -1,0 +1,72 @@
+.s_popup[data-vcss='001']  {
+    .modal-content {
+        min-height: $font-size-lg * 2;
+        border: 0;
+        border-radius: 0;
+        box-shadow: $modal-content-box-shadow-sm-up;
+    }
+
+    // Close icon
+    .s_popup_close {
+        z-index: $zindex-modal;
+        @include o-position-absolute(0, 0);
+        width: $font-size-lg * 2;
+        height: $font-size-lg * 2;
+        line-height: $font-size-lg * 2;
+        @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
+        box-shadow: $box-shadow-sm;
+        cursor: pointer;
+        font-size: $font-size-lg;
+        text-align: center;
+    }
+
+    // Size option - Full
+    .s_popup_size_full {
+        padding: 0 !important;
+        max-width: 100%;
+
+        > .modal-content {
+            // Use the backdrop color as background-color
+            background-color: transparent;
+            box-shadow: none;
+            border-radius: 0;
+        }
+    }
+
+    // Position option
+    .modal-dialog {
+        margin: 0 0 0 auto;
+        min-height: 100%;
+        &:not(.s_popup_size_full) {
+            padding: $spacer !important;
+        }
+    }
+    .s_popup_top .modal-dialog {
+        align-items: flex-start;
+    }
+    .s_popup_middle .modal-dialog {
+        align-items: center;
+        margin-right: auto;
+    }
+    .s_popup_bottom .modal-dialog {
+        align-items: flex-end;
+    }
+
+    // No backdrop
+    .s_popup_no_backdrop {
+        // Allow scrolling on elements behind
+        pointer-events: none;
+
+        // Allow Chrome to scroll the modal content even if there is no scroll on the document behind.
+        // Not needed for Firefox and Safari
+        .modal-dialog {
+            height: 100%;
+
+            .modal-content {
+                max-height:100%;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+    }
+}

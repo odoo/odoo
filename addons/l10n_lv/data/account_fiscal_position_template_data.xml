@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Account Fiscal Position Template -->
+    <!--For Latvian VAT/non VAT tax subjects-->
+    <record id="fiscal_position_lv" model="account.fiscal.position.template">
+        <field name="name">Latvia</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.lv"/>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="sequence" eval="10"/>
+    </record>
+
+    <!--For all EU companies -->
+    <record id="fiscal_position_eu" model="account.fiscal.position.template">
+        <field name="name">EU Companies</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="sequence" eval="20"/>
+    </record>
+
+    <!--For all EU consumers -->
+    <record id="fiscal_position_eu_private" model="account.fiscal.position.template">
+        <field name="name">EU Consumer</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="sequence" eval="30"/>
+    </record>
+
+    <!--For all 3rd country members -->
+    <record id="fiscal_position_ex" model="account.fiscal.position.template">
+        <field name="name">Outside EU</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="sequence" eval="40"/>
+    </record>
+
+    <!--EU members-->
+    <record id="account_fiscal_position_tax_template_eu_sale_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_sale_vat_21"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_eu_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_sale_reverse" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_sale_vat_reverse"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_eu_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_sale_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_sale_vat_12"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_eu_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_sale_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_sale_vat_5"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_eu_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_purchase_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_21"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_21_eu"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_purchase_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_12"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_12_eu"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_eu_purchase_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_eu"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_5"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_5_eu"/>
+    </record>
+
+    <!-- Extracom members-->
+    <record id="account_fiscal_position_tax_template_ex_sale_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_sale_vat_5"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_sale_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_sale_vat_12"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_sale_reverse" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_sale_vat_reverse"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_sale_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_sale_vat_21"/>
+        <field name="tax_dest_id" ref="tax_sale_vat_0_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_purchase_21" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_21"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_21_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_purchase_12" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_12"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_21_ex_g"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_template_ex_purchase_5" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_ex"/>
+        <field name="tax_src_id" ref="tax_purchase_vat_5"/>
+        <field name="tax_dest_id" ref="tax_purchase_vat_21_ex_g"/>
+    </record>
+</odoo>

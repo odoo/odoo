@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Chart Template -->
+        <record id="l10nnl_chart_template" model="account.chart.template">
+            <field name="name">Nederlands Grootboekschema</field>
+            <field name="cash_account_code_prefix">101</field>
+            <field name="bank_account_code_prefix">103</field>
+            <field name="transfer_account_code_prefix">1060</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="country_id" ref="base.nl"/>
+            <field name="use_anglo_saxon" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

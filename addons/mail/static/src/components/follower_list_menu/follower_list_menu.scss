@@ -1,0 +1,16 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_FollowerListMenu_buttonFollowers:focus {
+    background-color: $gray-200;
+}
+
+.o_FollowerListMenu_dropdown {
+    /**
+     * Note: Min() refers to CSS min() and not SCSS min().
+     *
+     * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
+     */
+    max-width: Min(400px, 95vw);
+}

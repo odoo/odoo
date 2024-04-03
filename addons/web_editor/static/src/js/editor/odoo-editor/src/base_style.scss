@@ -1,0 +1,34 @@
+li.oe-nested {
+    display: block;
+}
+.o_table tr {
+    border-color: $o-gray-300;
+
+    td {
+        padding: 0.5rem;
+    }
+}
+$sizes: 'xs', 'sm', 'md', 'lg', 'xl', 'xxl';
+.o_text_columns {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+.o_text_columns > .row {
+    margin: 0 !important;
+    @each $size in $sizes {
+        @for $i from 1 through 12 {
+            & > .col-#{$size}-#{$i}:first-of-type {
+                padding-left: 0;
+            }
+            & > .col-#{$size}-#{$i}:last-of-type {
+                padding-right: 0;
+            }
+        }
+    }
+}
+.oe-tabs {
+    display: inline-block;
+    white-space: pre-wrap;
+    max-width: 40px;
+    width: 40px;
+}

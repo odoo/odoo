@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiCategoryBarView" owl="1">
+        <div class="o_EmojiCategoryBarView d-flex flex-shrink-0 overflow-auto border-end" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="emojiCategoryBarView.emojiCategoryViews" t-as="emojiCategoryView" t-key="emojiCategoryView.localId">
+                <EmojiCategoryView record="emojiCategoryView"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.social_hover">
+        <div class="text-nowrap css_editable_mode_hidden">
+            <t t-foreach="medias" t-as="media">
+                <a href="#"
+                    t-attf-class="fa fa-3x fa-#{media}-square text-#{media} oe_social_#{media}"
+                    t-att-title="media"
+                    t-att-aria-label="media"/>
+            </t>
+        </div>
+    </t>
+</templates>

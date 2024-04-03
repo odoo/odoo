@@ -1,0 +1,915 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_stock
+# 
+# Translators:
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Michal Zábrodský <zabry23@gmail.com>, 2022
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
+# Pauline Thiry <pth@odoo.com>, 2022
+# Ladislav Tomm <tomm@helemik.cz>, 2022
+# Michal Veselý <michal@veselyberanek.net>, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Martin Trigaux, 2022
+# Jiří Podhorecký, 2022
+# Ivana Bartonkova, 2023
+# Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "% On-Time Delivery"
+msgstr "% Včasného doručení"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "+ %d day(s)"
+msgstr "+ %d dní"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
+"Delivery Data</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">Žádné údaje o "
+"včasném doručení</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_text\">On-time Rate</span>"
+msgstr "<span class=\"o_stat_text\">Míra včasnosti</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Nákup</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "<span class=\"o_stat_value\">%</span>"
+msgstr "<span class=\"o_stat_value\">%</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>Incoterm:</strong>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong>Shipping address:</strong>"
+msgstr "<strong>Dodací adresa:</strong>"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
+msgid ""
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"Podle konfigurace produktu lze přijaté množství automaticky vypočítat pomocí mechanismu :\n"
+"  - Ručně: množství se nastavuje ručně na lince\n"
+"  - Stock Moves: množství pochází z potvrzených výběrů\n"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
+msgid "Action"
+msgstr "Akce"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
+msgid ""
+"Amount of time between expected and effective receipt date. Due to a hack "
+"needed to calculate this,               every record will show the same "
+"average value, therefore only use this as an aggregated value with "
+"group_operator=avg"
+msgstr ""
+"Doba mezi očekávaným a platným datem přijetí. Kvůli hacku potřebnému k "
+"výpočtu tohoto bude každý záznam zobrazovat stejnou průměrnou hodnotu, proto"
+" ji používejte pouze jako agregovanou hodnotu s group_operator = avg"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
+msgid "Arrival"
+msgstr "Příchod"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
+msgid "Average Receipt Delay"
+msgstr "Průměrné zpoždění příjmu"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#: model:ir.model.fields.selection,name:purchase_stock.selection__stock_rule__action__buy
+#: model:stock.route,name:purchase_stock.route_warehouse0_buy
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
+#, python-format
+msgid "Buy"
+msgstr "Koupit"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_pull_id
+msgid "Buy rule"
+msgstr "Nákupní pravidlo"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Buy to Resupply"
+msgstr "Zakoupit a doplnit zásoby"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_company
+msgid "Companies"
+msgstr "Společnosti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
+msgid "Completion date of the first receipt order."
+msgstr "Datum dokončení první objednávky příjmu."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Corresponding receipt not found."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
+msgid "Created Purchase Order Line"
+msgstr "Byl vytvořen řádek nákupní objednávky"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid "Currency exchange rate difference"
+msgstr "Rozdíl směnného kurzu měny"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
+msgid "Custom Description"
+msgstr "Vlastní popis"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Days needed to confirm a PO"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
+msgid "Days needed to confirm a PO, define when a PO should be validated"
+msgstr ""
+"Dny potřebné k potvrzení objednávky, určete, kdy má být objednávka ověřena"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
+#, python-format
+msgid "Days to Purchase"
+msgstr "Dny do nákupu"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
+msgid "Deliver To"
+msgstr "Doručit"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, replenished on "
+"order, etc."
+msgstr ""
+"V závislosti na nainstalovaných modulech vám to umožní definovat trasu "
+"produktu: zda bude zakoupen, vyroben, doplněn na objednávku atd."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Typ místa určení"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Dokumentace"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
+msgid "Downstream Moves"
+msgstr "Následné pohyby"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
+msgid "Dropship Address"
+msgstr "Adresa pro uložení zásilky"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
+msgid "Dropshipping"
+msgstr "Drop doprava"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
+msgid "Effective Date"
+msgstr "Datum účinnosti"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "Effective Date Last Year"
+msgstr "Datum účinnosti v loňském roce"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Výjimka(y) se vyskytly na objednávce (objednávkách):"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Exception(s):"
+msgstr "Výjimka(y):"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"For the product %s, the warehouse of the operation type (%s) is inconsistent"
+" with the location (%s) of the reordering rule (%s). Change the operation "
+"type or cancel the request for quotation."
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Forecast Report"
+msgstr "Výkaz předpokladu"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
+msgid "Forecasted Issue"
+msgstr "Předpokládaný problém"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Generate the draft vendor bill."
+msgstr "Vygenerujte návrh faktury dodavatele."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Go back to the purchase order to generate the vendor bill."
+msgstr "Vraťte se k nákupní objednávce a vygenerujte vyúčtování dodavatele."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
+msgid "Incoming Shipment count"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Incoming Shipments"
+msgstr "Příchozí zásilky"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
+msgid "Incoterm Location"
+msgstr "Incoterm lokace"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__incoterm_id
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"Mezinárodní obchodní podmínky jsou série předem definovaných obchodních "
+"termínů používaných v mezinárodních transakcích."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
+msgid "Is Shipped"
+msgstr "Je doručováno"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
+msgid "Is the Sale Module Installed"
+msgstr "Je nainstalován modul Prodej"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move
+msgid "Journal Entry"
+msgstr "Položka deníku"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "Položka deníku"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
+msgid "Last Purchase"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Logistics"
+msgstr "Logistika"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Šarže / seriové číslo"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Manual actions may be needed."
+msgstr "Mohlo by být nutné provést ruční akce."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
+msgstr ""
+"Rozpětí chyby pro dodací lhůty dodavatele. Když systém vygeneruje nákupní "
+"objednávky pro změnu pořadí produktů, bude naplánováno, že o mnoho dní dříve"
+" se vypořádají s neočekávanými prodlevami dodavatele."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Pravidlo minimálních skladových zásob"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Move forward expected request creation date by"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "Next transfer(s) impacted:"
+msgstr "Další ovlivněné převody:"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "No data yet"
+msgstr "Zatím žádná data"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr "Not Received"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo není schopen generovat anglosaské záznamy. Celkové ocenění %s je nula."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
+msgid "On-Time Delivery"
+msgstr "Dodání včas"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
+msgid "On-Time Delivery Rate"
+msgstr "Míra včasného doručení"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
+msgid "On-Time Quantity"
+msgstr "Množství včas"
+
+#. module: purchase_stock
+#: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
+#: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
+msgid "On-time Delivery"
+msgstr "Dodání včas"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "On-time Rate"
+msgstr "Míra včasnosti"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
+msgid "Orderpoint"
+msgstr "Orderpoint"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
+#: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
+msgid ""
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
+msgid "PO Lines"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Process all the receipt quantities."
+msgstr "Zpracujte všechna přijatá množství."
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
+msgid "Procurement Group"
+msgstr "Skupina zásobování"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_template
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
+msgid "Product"
+msgstr "Produkt"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
+msgid "Product Category"
+msgstr "Kategorie výrobku"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
+msgid "Product Supplier"
+msgstr "Dodavatel produktu"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_product
+msgid "Product Variant"
+msgstr "Varianta výrobku"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
+msgid "Propagate cancellation"
+msgstr "Propagujte zrušení"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
+msgid "Purchase Lines"
+msgstr "Řádky nákupu"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order
+msgid "Purchase Order"
+msgstr "Objednávka"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
+msgid "Purchase Order Line"
+msgstr "Řádek objednávky"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "Purchase Orders"
+msgstr "Objednávky"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr "Zpráva o nákupu"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Purchase Security Lead Time"
+msgstr "Koupit dodací lhůtu pro zabezpečení"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Purchase Visibility Days"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
+msgid "Purchase order count"
+msgstr "Počet objednávek"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__dest_address_id
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Zadejte adresu, pokud chcete doručit přímo od dodavatele zákazníkovi. Jinak "
+"ponechte prázdné, abyste je mohli doručit své vlastní společnosti."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receipt"
+msgstr "Účtenka"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid "Receive Products"
+msgstr "Obdržet výrobky"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Receive the ordered products."
+msgstr "Získejte objednané produkty."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
+msgid "Received Qty Method"
+msgstr "Metoda přijatého množství"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
+msgid "Receptions"
+msgstr "Příjem zboží"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid "Request your vendors to deliver to your customers"
+msgstr "Výzva vašim dodavatelům na doručení k vašim zákazníkům"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
+#, python-format
+msgid "Requests for quotation"
+msgstr "Žádosti o cenovou nabídku"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
+msgid "Reservation"
+msgstr "Rezervace"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Vrátit dodávku"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
+#: model:ir.model.fields,field_description:purchase_stock.field_product_template__route_ids
+msgid "Routes"
+msgstr "Trasy"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "Schedule request for quotations earlier to avoid delays"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
+msgid "Set as Supplier"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
+msgid "Show Set Supplier Button"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
+msgid "Show supplier column"
+msgstr "Zobrazit sloupec dodavatele"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Pohyb zásob"
+
+#. module: purchase_stock
+#: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
+msgid "Stock Moves"
+msgstr "Pohyby zásob"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Zpráva o doplnění zásob"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "Pravidlo zásob"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr "Přehled skladových pravidel"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_replenishment_info
+msgid "Stock supplier replenishment information"
+msgstr "Informace o dodavateli doplnění"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Ceník dodavatele"
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
+msgid "Supplierinfo"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Technické pole použité k zobrazení adresy přepravní lodi"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock.py:0
+#, python-format
+msgid "The following replenishment order has been generated"
+msgstr "Bylo vygenerováno následující pořadí doplňování"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund."
+msgstr ""
+"Množství na vaší objednávce označují méně, než kolik je účtováno. Měli byste"
+" požádat o vrácení peněz."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"There is no matching vendor price to generate the purchase order for product"
+" %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
+" Go on the product form and complete the list of vendors."
+msgstr ""
+"Neexistuje žádná odpovídající cena dodavatele, která by vygenerovala nákupní"
+" objednávku produktu%s(není definován žádný dodavatel, minimální množství "
+"nebylo dosaženo, data nejsou platná, ...). Přejděte do produktového "
+"formuláře a vyplňte seznam prodejců."
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
+msgid ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
+msgstr ""
+"Tím se přidává trasa pro dropshipping, která se použije na produkty, aby "
+"bylo možné požadovat, aby vaši dodavatelé doručili zákazníkům. Produkt na "
+"dropship vygeneruje požadavek na nákup po předložení nabídky po potvrzení "
+"prodejní objednávky. Jedná se o tok na vyžádání. Požadovaná adresa pro "
+"doručení bude adresa doručení zákazníka, nikoliv váš sklad."
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
+msgid "This will determine operation type of incoming shipment"
+msgstr "Tím se určí druh operace s příchozí zásilkou"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"Those dates couldn’t be modified accordingly on the receipt %s which had "
+"already been validated."
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "Those dates have been updated accordingly on the receipt %s."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
+msgid "Total Quantity"
+msgstr "Celkové množství"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Převod"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
+msgstr ""
+"Objednávku %s nelze zrušit, protože některé recepce již byly provedeny."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
+#, python-format
+msgid "Validate the receipt of all ordered products."
+msgstr "Potvrďte příjem všech objednaných produktů."
+
+#. module: purchase_stock
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_id
+#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__partner_id
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_warehouse_orderpoint_tree_editable_inherited_mrp
+msgid "Vendor"
+msgstr "Dodavatel"
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_vendor_delay_report
+msgid "Vendor Delay Report"
+msgstr "Zpráva o prodlení dodavatele"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Vendor Lead Time"
+msgstr "Dodací lhůta dodavatele"
+
+#. module: purchase_stock
+#: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
+msgid "Vendor On-time Delivery analysis"
+msgstr "Analýza včasného dodání dodavatele"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.view_stock_replenishment_info_stock_purchase_inherit
+msgid "Vendors"
+msgstr "Dodavatelé"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__purchase_visibility_days
+msgid "Visibility Days applied on the purchase routes."
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_warehouse
+#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__picking_type_id
+msgid "Warehouse"
+msgstr "Sklad"
+
+#. module: purchase_stock
+#: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "When products are bought, they can be delivered to this warehouse"
+msgstr "Když jsou produkty zakoupeny, mohou být dodány do tohoto skladu"
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need.<br/>Note: This rule will be used in combination"
+" with the rules<br/>of the reception route(s)"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the received quantity.\n"
+"Create a return first."
+msgstr ""
+"Nelze snížit objednané množství pod přijaté množství. \n"
+"Nejprve vytvořte vrácení."
+
+#. module: purchase_stock
+#. odoo-python
+#: code:addons/purchase_stock/models/purchase.py:0
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "U tohoto partnera musíte nastavit umístění dodavatele %s"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "days"
+msgstr "dnů"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "of"
+msgstr "z "
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
+msgid "ordered instead of"
+msgstr "objednané namísto"

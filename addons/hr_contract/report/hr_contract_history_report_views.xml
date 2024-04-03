@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_history_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.history.search</field>
+        <field name="model">hr.contract.history</field>
+        <field name="arch" type="xml">
+            <search string="Search Reference Contracts">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="job_id"/>
+                <field name="department_id" operator="child_of"/>
+                <field name="resource_calendar_id"/>
+                <field name="state"/>
+                <field name="is_under_contract"/>
+                <filter string="Running Contracts" name="open_contracts" domain="[('state', '=', 'open')]"/>
+                <filter string="Contracts to Review" name="contract_to_review" domain="['|', ('state', 'in', ['draft', 'close', 'cancel']), ('is_under_contract', '!=', True)]"/>
+                <filter string="No Contracts" name="no_contracts" domain="[('contract_id', '=', False)]"/>
+                <filter string="Currently Under Contract" name="currently_under_contract" domain="[('is_under_contract', '=', True)]"/>
+                <filter string="Active Employees" name="active_employees" domain="[('active_employee', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Job Position" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
+                    <filter string="Status" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Reference Working Time" name="group_by_resource_calendar_id" domain="[]" context="{'group_by': 'resource_calendar_id'}"/>
+                    <filter string="Salary Structure Type" name="group_by_structure_type_id" domain="[]" context="{'group_by': 'structure_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="hr_contract_history_view_form_action" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">hr.contract.history</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'search_default_active_employees': 1}</field>
+    </record>
+    <record id="hr_contract_history_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.history.form</field>
+        <field name="model">hr.contract.history</field>
+        <field name="arch" type="xml">
+            <form string="Contract History"
+                  create="false"
+                  edit="false"
+                  delete="false"
+                  duplicate="false"
+                  import="false">
+                <header>
+                    <button name="hr_contract_view_form_new_action" string="Create" type="object" groups="hr_contract.group_hr_contract_manager" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <h1>
+                        <div class="d-flex justify-content-start">
+                            <div>
+                                <field name="display_name"/>
+                            </div>
+                            <div class="ps-3">
+                                <field name="under_contract_state" widget="state_selection" readonly="1"/>
+                            </div>
+                        </div>
+                    </h1>
+                    <h2>
+                        <field name="employee_id"/>
+                    </h2>
+                    <group>
+                        <group>
+                            <field name="contract_id" invisible="1"/>
+                            <field name="company_country_id" invisible="1"/>
+                            <field name="country_code" invisible="1"/>
+                            <field name="structure_type_id"/>
+                            <field name="resource_calendar_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="wage" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Contract History" name="contract_history">
+                            <field name="contract_ids" widget="one2many" readonly="0">
+                                <tree string="Current Contracts"
+                                      decoration-primary="state == 'open'"
+                                      decoration-muted="state == 'close'"
+                                      decoration-bf="id == parent.contract_id"
+                                      default_order = "date_start desc, state desc"
+                                      editable="bottom"
+                                      no_open="1"
+                                      create="0" delete="0">
+                                    <button name="action_open_contract_form" type="object" icon="fa-external-link" title="Open Contract"/>
+                                    <field name="id" invisible="1"/>
+                                    <field name="name" string="Contract Name"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="resource_calendar_id"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="wage" string="Monthly Wage"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Employee Information" name="contract_others">
+                            <group>
+                                <field name="date_hired"/>
+                                <field name="hr_responsible_id"/>
+                                <field name="company_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hr_contract_history_view_list_action" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.contract.history</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="hr_contract_history_view_search"/>
+        <field name="context">
+            {
+                'search_default_active_employees': 1,
+                'search_default_group_by_state': 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+        </field>
+    </record>
+    <record id="hr_contract_history_to_review_view_list_action" model="ir.actions.act_window">
+        <field name="name">Contracts to Review</field>
+        <field name="res_model">hr.contract.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_contract_history_view_search"/>
+        <field name="context">
+            {
+                'search_default_to_review': 1,
+                'search_default_active_employees': 1
+            }
+        </field>
+    </record>
+    <record id="hr_contract_history_view_list" model="ir.ui.view">
+        <field name="name">hr.contract.history.list</field>
+        <field name="model">hr.contract.history</field>
+        <field name="arch" type="xml">
+            <tree string="Contracts"
+                  js_class="hr_contract_history_list"
+                  default_order = 'is_under_contract, date_start desc'
+                  edit="false"
+                  delete="false"
+                  duplicate="false"
+                  import="false"
+                  create="false">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="date_hired"/>
+                <field name="is_under_contract" invisible="1"/>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field string="Reference Working Time" name="resource_calendar_id" optional="hide"/>
+                <field name="under_contract_state" widget="state_selection" optional="hide"/>
+                <field name="structure_type_id" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="wage" optional="hide"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'close'"
+                       decoration-success="state == 'open'"/>
+                <field name="contract_count"/>
+            </tree>
+        </field>
+    </record>
+    <record id="hr_contract_history_view_kanban" model="ir.ui.view">
+        <field name="name">hr.contract.history.view.kanban</field>
+        <field name="model">hr.contract.history</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_order="date_end" sample="1" create="0">
+                <field name="employee_id"/>
+                <field name="activity_state"/>
+                <field name="state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_hr_contract_state">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="display_name"/>
+                                    </strong>
+                                </div>
+                                <div class="text-muted o_kanban_record_subtitle o_hr_contract_job_id">
+                                    <field name="job_id"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span class="float-end">
+                                        <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_menu_contract_history"
+        action="hr_contract_history_view_list_action"
+        parent="hr.menu_hr_employee_payroll"
+        name="Contracts"
+        sequence="4"
+        groups="hr_contract.group_hr_contract_manager"/>
+</odoo>

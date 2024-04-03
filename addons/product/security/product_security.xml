@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+
+    <record id="group_product_pricelist" model="res.groups">
+        <field name="name">Basic Pricelists</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_sale_pricelist" model="res.groups">
+        <field name="name">Advanced Pricelists</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
+    </record>
+
+    <record id="group_stock_packaging" model="res.groups">
+        <field name="name">Manage Product Packaging</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_product_variant" model="res.groups">
+        <field name="name">Manage Product Variants</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_discount_per_so_line" model="res.groups">
+        <field name="name">Discount on lines</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record id="product_comp_rule" model="ir.rule">
+        <field name="name" >Product multi-company</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_comp_rule">
+        <field name="name">product pricelist company rule</field>
+        <field name="model_id" ref="model_product_pricelist"/>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_item_comp_rule">
+        <field name="name">product pricelist item company rule</field>
+        <field name="model_id" ref="model_product_pricelist_item"/>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="ir.rule" id="product_supplierinfo_comp_rule">
+        <field name="name">product supplierinfo company rule</field>
+        <field name="model_id" ref="model_product_supplierinfo"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="ir.rule" id="product_packaging_comp_rule">
+        <field name="name">product packaging company rule</field>
+        <field name="model_id" ref="model_product_packaging"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+</data>
+</odoo>

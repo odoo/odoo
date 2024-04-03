@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_recaptcha
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Generate reCAPTCHA v3 keys"
+msgstr "<i class=\"fa fa-arrow-right\"/> Створити ключи reCAPTCHA v3"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid ""
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
+msgstr ""
+"За замовчуванням має бути один з 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 це дуже ймовірно, хороша взаємодія, 0.0 це дуже ймовірно що бот"
+
+#. module: google_recaptcha
+#: model:ir.model,name:google_recaptcha.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: google_recaptcha
+#: model:ir.model,name:google_recaptcha.model_ir_http
+msgid "HTTP Routing"
+msgstr "Маршрутизація HTTP"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid "If no keys are provided, no checks will be done."
+msgstr "Якщо не надано жодного ключа, не буде виконано жодних перевірок."
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid "Minimum score"
+msgstr "Мінімальна оцінка"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+#, python-format
+msgid "No recaptcha site key set."
+msgstr "Не встановлено ключа сайту recaptcha."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+#, python-format
+msgid "Privacy Policy"
+msgstr "Політика приватності"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+#, python-format
+msgid "Protected by reCAPTCHA,"
+msgstr "Захищено reCAPTCHA,"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
+msgid "Secret Key"
+msgstr "Секретний ключ"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
+msgid "Site Key"
+msgstr "Ключ сайту"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+#, python-format
+msgid "Terms of Service"
+msgstr "Умови надання послуг"
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+#, python-format
+msgid "The reCaptcha private key is invalid."
+msgstr "Приватний ключ reCaptcha недійсний."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+#, python-format
+msgid "The reCaptcha token is invalid."
+msgstr "Токен reCaptcha недійсний."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+#, python-format
+msgid "The recaptcha site key is invalid."
+msgstr "Ключ сайту recaptcha недійсний."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+#, python-format
+msgid "The request is invalid or malformed."
+msgstr "Ваш запит недійсний чи неправильно сформований."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+#, python-format
+msgid "Your request has timed out, please retry."
+msgstr "Термін вашого запиту минув, спробуйте ще раз."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+#, python-format
+msgid "apply."
+msgstr "застосувати."

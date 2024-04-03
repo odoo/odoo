@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PartnerLine" owl="1">
+        <tr t-attf-class="partner-line {{highlight}}" t-att-data-id="props.partner.id"
+            t-on-click="() => this.props.onClickPartner(props.partner)">
+            <td>
+                <div>
+                    <t t-esc="props.partner.name or ''" />
+                </div>
+                <div class="company-field">
+                    <t t-esc="props.partner.parent_name or ''" />
+                </div>
+                <div t-if="_isPartnerSelected" class="unselect-tag">
+                    <i class="fa fa-times"></i>
+                    <span> unselect </span>
+                </div>
+            </td>
+            <td t-if="!env.isMobile">
+                <t t-esc="shortAddress" />
+            </td>
+            <td class="partner-line-email" t-if="!env.isMobile">
+                <div t-if="props.partner.phone">
+                    <i class="fa fa-phone fa-fw"/><t t-esc="props.partner.phone"/>
+                </div>
+                <div t-if="props.partner.mobile">
+                    <i class="fa fa-mobile fa-lg fa-fw"/><t t-esc="props.partner.mobile"/>
+                </div>
+                <div t-if="props.partner.email" class="email-field">
+                    <i class="fa fa-paper-plane-o fa-fw"/><t t-esc="props.partner.email" />
+                </div>
+            </td>
+            <td t-if="env.isMobile">
+                <t t-esc="props.partner.zip or ''" />
+                <span t-if="highlight"><br/></span>
+            </td>
+            <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
+            <td>
+                <button class="edit-partner-button" t-on-click.stop="() => props.onClickEdit(props.partner)">DETAILS</button>
+            </td>
+            <td class="partner-line-last-column-placeholder oe_invisible"></td>
+        </tr>
+    </t>
+
+</templates>

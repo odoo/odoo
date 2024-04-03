@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">payment.provider.form</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <form string="Payment provider">
+                <field name="company_id" invisible="1"/>
+                <field name="is_published" invisible="1"/>
+                <field name="main_currency_id" invisible="1"/>
+                <field name="support_fees" invisible="1"/>
+                <field name="support_manual_capture" invisible="1"/>
+                <field name="support_tokenization" invisible="1"/>
+                <field name="support_express_checkout" invisible="1"/>
+                <field name="module_id" invisible="1"/>
+                <field name="module_state" invisible="1"/>
+                <field name="module_to_buy" invisible="1"/>
+                <field name="show_credentials_page" invisible="1"/>
+                <field name="show_allow_express_checkout" invisible="1"/>
+                <field name="show_allow_tokenization" invisible="1"/>
+                <field name="show_payment_icon_ids" invisible="1"/>
+                <field name="show_pre_msg" invisible="1"/>
+                <field name="show_pending_msg" invisible="1"/>
+                <field name="show_auth_msg" invisible="1"/>
+                <field name="show_done_msg" invisible="1"/>
+                <field name="show_cancel_msg" invisible="1"/>
+                <field name="code" invisible="1"/>
+                <sheet>
+                    <!-- === Stat Buttons === -->
+                    <div class="oe_button_box" name="button_box"
+                         attrs="{'invisible': [('module_state', '!=', 'installed')]}">
+                        <button name="action_toggle_is_published"
+                                attrs="{'invisible': [('is_published', '=', False)]}"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-globe">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Published</span>
+                            </div>
+                        </button>
+                        <button name="action_toggle_is_published"
+                                attrs="{'invisible': [('is_published', '=', True)]}"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-eye-slash">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-danger">Unpublished</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="image_128" widget="image" class="oe_avatar"
+                           attrs="{'readonly': [('module_state', '!=', 'installed')]}"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Name"/></h1>
+                        <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
+                            <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info" role="button">Upgrade</a>
+                            <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                        </div>
+                    </div>
+                    <div id="provider_creation_warning" attrs="{'invisible': [('id', '!=', False)]}" class="alert alert-warning" role="alert">
+                        <strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.
+                        Please use the <em>Duplicate</em> action instead.
+                    </div>
+                    <group>
+                        <group name="payment_state" attrs="{'invisible': [('module_state', 'not in', ('installed', False))]}">
+                            <field name="code" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="state" widget="radio"/>
+                            <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
+                        <page string="Credentials" name="credentials" attrs="{'invisible': ['|', ('code', '=', 'none'), ('show_credentials_page', '=', False)]}">
+                            <group name="provider_credentials"/>
+                        </page>
+                        <page string="Configuration" name="configuration">
+                            <group name="provider_config">
+                                <group string="Payment Form" name="payment_form">
+                                    <field name="display_as" placeholder="If not defined, the provider name will be used."/>
+                                    <field name="payment_icon_ids" attrs="{'invisible': [('show_payment_icon_ids', '=', False)]}" widget="many2many_tags"/>
+                                    <field name="allow_tokenization" attrs="{'invisible': ['|', ('support_tokenization', '=', False), ('show_allow_tokenization', '=', False)]}"/>
+                                    <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
+                                    <field name="allow_express_checkout" attrs="{'invisible': ['|', ('support_express_checkout', '=', False), ('show_allow_express_checkout', '=', False)]}"/>
+                                </group>
+                                <group string="Availability" name="availability">
+                                    <field name="maximum_amount"/>
+                                    <field name="available_country_ids"
+                                           widget="many2many_tags"
+                                           placeholder="Select countries. Leave empty to make available everywhere."
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                </group>
+                                <group string="Payment Followup" name="payment_followup" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Fees" name="fees" attrs="{'invisible': [('support_fees', '=', False)]}">
+                            <group name="payment_fees">
+                                <field name="fees_active"/>
+                                <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                            </group>
+                        </page>
+                        <page string="Messages"
+                            name="messages"
+                            attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
+                            <group>
+                                <field name="pre_msg" attrs="{'invisible': [('show_pre_msg', '=', False)]}"/>
+                                <field name="pending_msg" attrs="{'invisible': [('show_pending_msg', '=', False)]}"/>
+                                <field name="auth_msg" attrs="{'invisible': ['|', ('support_manual_capture', '=', False), ('show_auth_msg', '=', False)]}"/>
+                                <field name="done_msg" attrs="{'invisible': [('show_done_msg', '=', False)]}"/>
+                                <field name="cancel_msg" attrs="{'invisible': [('show_cancel_msg', '=', False)]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="payment_provider_list" model="ir.ui.view">
+        <field name="name">payment.provider.list</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Providers" create="false">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state"/>
+                <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">payment.provider.kanban</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <kanban create="false" quick_create="false" class="o_kanban_dashboard">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="is_published"/>
+                <field name="code"/>
+                <field name="module_id"/>
+                <field name="module_state"/>
+                <field name="module_to_buy"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
+                        <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
+                        <t t-set="is_disabled" t-value="record.state.raw_value=='disabled'"/>
+                        <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
+                        <t t-set="to_upgrade" t-value="!installed and to_buy"/>
+                        <div t-attf-class="oe_kanban_global_click" class="d-flex p-2">
+                            <div class="o_payment_provider_desc d-flex gap-2">
+                                <img type="open"
+                                     t-att-src="kanban_image('payment.provider', 'image_128', record.id.raw_value)"
+                                     class="mb-0 o_image_64_max"
+                                     alt="provider"/>
+                                <div class="d-flex flex-column justify-content-between w-100">
+                                    <div class="o_payment_kanban_info">
+                                        <h4 class="mb-0"><t t-esc="record.name.value"/></h4>
+                                        <t t-if="installed">
+                                            <field name="state"
+                                                   widget="label_selection"
+                                                   options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
+                                            <t t-if="!is_disabled">
+                                                <span t-if="is_published and installed"
+                                                      class="badge text-bg-success ms-1">
+                                                    Published
+                                                </span>
+                                                <span t-if="!is_published and installed"
+                                                      class="badge text-bg-info ms-1">
+                                                    Unpublished
+                                                </span>
+                                            </t>
+                                        </t>
+                                        <span t-if="to_upgrade" class="badge text-bg-primary ms-1">Enterprise</span>
+                                    </div>
+                                    <div class="o_payment_kanban_button text-end">
+                                        <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary float-end" name="button_immediate_install">Install</button>
+                                        <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary float-end">Activate</button>
+                                        <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary float-end">Upgrade</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="payment_provider_search" model="ir.ui.view">
+        <field name="name">payment.provider.search</field>
+        <field name="model">payment.provider</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="provider" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="code"/>
+                <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Provider" name="code" context="{'group_by': 'code'}"/>
+                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_provider" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new payment provider
+            </p>
+        </field>
+    </record>
+
+</odoo>

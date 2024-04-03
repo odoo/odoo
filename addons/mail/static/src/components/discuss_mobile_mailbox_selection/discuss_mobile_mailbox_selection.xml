@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
+        <div class="o_DiscussMobileMailboxSelection d-flex" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="discussView.orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
+                <DiscussMobileMailboxSelectionItem discussView="discussView" mailbox="mailbox"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.it</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='advanced_options']" position="inside">
+                <group attrs="{'invisible': [('country_code', '!=', 'IT')]}">
+                    <group>
+                        <field name="l10n_it_vat_due_date" invisible="1"/>
+                        <field name="l10n_it_has_exoneration"/>
+                        <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+                        <field name="l10n_it_law_reference"/>
+                    </group>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_partner_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.it</field>
+        <field name="model">res.partner</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="l10n_it_pec_email" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_pa_index" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="res_company_form_l10n_it" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.it</field>
+        <field name="model">res.company</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+                <field name="l10n_it_tax_system" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
+            </xpath>
+            <xpath expr="//page" position="after">
+                <page string="Electronic Invoicing" name="electronic_invoicing" attrs="{'invisible': [('country_code', '!=', 'IT')]}">
+                    <group>
+                        <separator string="Economic and Administrative Index" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a company listed on the register of companies and as
+                            such must also indicate the registration data on all documents (art. 2250, Italian
+                            Civil Code)
+                        </div>
+                        <group>
+                            <field name="l10n_it_has_eco_index" string="Company listed on the register of companies"/>
+                            <field name="l10n_it_eco_index_office" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_number" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_share_capital" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_sole_shareholder" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_liquidation_state" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <separator string="Tax representative" colspan="4"/>
+                        <div colspan="4">
+                            The seller/provider is a non-resident subject which carries out transactions in Italy
+                            with relevance for VAT purposes and which takes avail of a tax representative in Italy
+                        </div>
+                        <group>
+                            <field name="l10n_it_has_tax_representative" string="Company have a tax representative"/>
+                            <field name="l10n_it_tax_representative_partner_id" attrs="{'invisible': [('l10n_it_has_tax_representative', '=', False)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_it_edi_transaction" optional="hide"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_in_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="edi_state" optional="hide"/>
+                <field name="edi_blocking_level" optional="hide"/>
+                <field name="edi_error_message" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_out_invoice_tree_inherit" />
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_it_edi_transaction" optional="hide" invisible="1"/>
+                <field name="l10n_it_edi_attachment_id" optional="hide" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_edi.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_it_edi_transaction" groups="base.group_no_one" invisible="1"/>
+                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_invoice_form_l10n_it" model="ir.ui.view">
+        <field name="name">account.move.form.l10n.it</field>
+        <field name="model">account.move</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Electronic Invoicing"
+                    name="electronic_invoicing"
+                    attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('country_code', '!=', 'IT')]}">
+                    <group>
+                        <group>
+                            <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
+                            <field name="l10n_it_stamp_duty"/>
+                            <field name="l10n_it_ddt_id"
+                                   attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt" model="ir.ui.view">
+        <field name="name">ddt.form.l10n.it</field>
+        <field name="model">l10n_it.ddt</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_it_ddt_list_view" model="ir.ui.view">
+      <field name="name">l10n_it.ddt.list.view</field>
+      <field name="model">l10n_it.ddt</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="date"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_ddt_account" model="ir.actions.act_window">
+        <field name="name">Transport Document</field>
+        <field name="res_model">l10n_it.ddt</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="l10n_it_ddt_list_view"/>
+    </record>
+
+    <menuitem
+            name="DDT"
+            parent="account.account_account_menu"
+            action="action_ddt_account"
+            id="menu_action_ddt_account"
+            sequence="15"
+            groups="base.group_no_one"/>
+</odoo>

@@ -1,0 +1,149 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_vat
+# 
+# Translators:
+# Maksym <ms@myodoo.pl>, 2022
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Firmy"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Obszar podatkowy"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+"Jeśli to pole wyboru jest zaznaczone, nie będzie można zapisać kontaktu, "
+"jeśli jego numer NIP nie może zostać zweryfikowany przez europejską usługę "
+"VIES."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
+msgid "Technical field display a message to the user if the VIES check fails."
+msgstr ""
+"Pole techniczne wyświetla komunikat dla użytkownika, jeśli sprawdzenie VIES "
+"zakończy się niepowodzeniem."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"%(vat_label)s liczba  [%(wrong_vat)s] nie wydaje się być prawidłowa. \n"
+"Uwaga: oczekiwany format to %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"%(vat_label)s liczba [%(wrong_vat)s] dla %(record_label)s nie wydaje się być prawidłowa. \n"
+"Uwaga: oczekiwany format to %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "The VAT number %s failed the VIES VAT validation check."
+msgstr ""
+"Numer VAT %s nie przeszedł pomyślnie kontroli poprawności VAT w systemie "
+"VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country detected for this foreign VAT number does not match the one set "
+"on this fiscal position."
+msgstr ""
+"Kraj wykryty dla tego zagranicznego numeru VAT nie jest zgodny z ustawionym "
+"na tej pozycji fiskalnej."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "VAT"
+msgstr "NIP"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "Zweryfikuj nr NIP"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "Weryfikuj numery NIP za pomocą europejskiej usługi VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid "fiscal position [%s]"
+msgstr "pozycja fiskalna [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "partner [%s]"
+msgstr "partner [%s]"

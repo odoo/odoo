@@ -1,0 +1,3926 @@
+/* --- Fonts --- */
+
+@font-face{
+    font-family: 'Inconsolata';
+    src: url(../fonts/Inconsolata.otf);
+}
+
+/* --- Styling of OpenERP Elements --- */
+.ui-dialog, .modal-dialog {
+    background: white;
+    padding: 10px;
+    border-radius: 3px;
+    font-family: sans-serif;
+    box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+    position: absolute;
+    top: 30px;
+    height: 400px;
+    overflow: scroll;
+}
+.ui-dialog button, .modal-dialog button {
+    padding: 8px;
+    min-width: 48px;
+}
+.ui-dialog .ui-icon-closethick{
+    float: right;
+}
+div.modal.in {
+    position: absolute;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 10px 20px black;
+    border-radius: 3px;
+    max-width: 600px;
+    max-height: 400px;
+    margin-top: -200px;
+    margin-left: -300px;
+    top: 50%;
+    left: 50%;
+}
+
+@media screen and (max-width: 768px) {
+    .ui-dialog, .modal-dialog {
+        padding: 0;
+        overflow: auto;
+    }
+}
+
+/* --- Generic Restyling and Resets --- */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: sans-serif;
+}
+
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+td {
+    padding: 0px;
+}
+
+.oe_hidden{
+    display: none !important;
+}
+.oe_invisible{
+    visibility: hidden !important;
+}
+.clearfix:after {
+    content:" ";
+    display: block;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    clear: both;
+}
+
+
+.pos input::-webkit-outer-spin-button,
+.pos input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pos button{
+    box-shadow: none;
+    outline: none;
+    border: none;
+    font-family: 'Lato';
+}
+.pos button:hover{
+    background: default;
+}
+.pos textarea {
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+}
+.pos textarea:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px $primary;
+}
+
+
+.pos .oe_hidden{
+    display: none !important;
+}
+
+.pos ul, .pos li  {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.pos {
+    background: $gray-900;
+    --btn-height-size: 54px;
+    direction: ltr;
+    padding: 0;
+    margin: 0;
+    background-color: #f0eeee;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: $gray-700;
+    font-size: 12px;
+    /* Some elements inside .pos are allowed to be moved/resized. When
+     * this 'move/resize' event is performed in touch devices, .pos
+     * element also tries to scroll (as the default action of touchstart+
+     * touchmove events).
+     * Position is fixed to prevent the movement of .pos element during
+     * the described touch events.
+     */
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    text-shadow: none;
+    overflow: hidden;
+}
+
+/*  ********* The black loading screen ********* */
+
+.pos .loader{
+    background-color: #222;
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    z-index: 999;
+    text-align: center;
+    font-family: Lato;
+    color: $gray-700;
+}
+
+.pos .loader-feedback{
+    width: 400px;
+    height: 160px;
+    margin: -60px -200px;
+    position: absolute;
+    left: 50%; top: 50%;
+    text-align: center;
+}
+.pos .loader-feedback h1{
+    font-weight: 300;
+}
+.pos .loader-feedback .progressbar{
+    background: rgb(73,73,73);
+    height: 1px;
+}
+.pos .loader-feedback .progressbar > .progress{
+    height: 100%;
+    background: white;
+    width: 0%;
+    box-shadow: 0px 0px 5px rgba(255,255,255,0.35);
+}
+.pos .loader-feedback .button{
+    display: inline-block;
+    margin: 25px auto;
+    line-height: 42px;
+    padding: 0px 16px;
+    font-size: 20px;
+    font-weight: 300;
+    border: solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pos .loader-feedback .button:active{
+    color: #222;
+    background: $gray-700;
+}
+/*  ********* Generic Layout Constructs  ********* */
+
+.pos .window{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    border: none;
+    overflow: hidden;
+}
+.pos .window .subwindow{
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .window .subwindow-container .collapsed{
+    height: 0px;
+}
+.pos .subwindow .subwindow-container{
+    display: table-cell;
+    position: relative;
+}
+/* firefox seems to ignore the relative positionning of the subwindow-container
+ * putting this inside subwindow-container fixes it.
+ */
+.pos .subwindow .subwindow-container-fix{
+    height: 100%;
+    position: relative;
+}
+
+.pos .partnerlist-screen .window,
+.pos .partnerlist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .partnerlist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .partnerlist-screen .full-content .subwindow.collapsed,
+.pos .partnerlist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
+}
+
+/* ---- Scrollers ----- */
+
+.pos .scroller-container{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+.pos .scroller{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .scroller.horizontal{
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.pos .scroller-content{
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .scroller-container ::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos .scroller-container ::-webkit-scrollbar-track{
+    background: $gray-200;
+    border-left: solid 1px rgb(200,200,200);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.pos .scroller-container ::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
+}
+
+/*  ********* Generic element styling  ********* */
+
+.pos a {
+    text-decoration: none;
+    color: $gray-700;
+}
+.pos button, .pos a.button {
+    display: inline-block;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid $gray-200;
+    color: $primary;
+    background: #fff;
+}
+.pos ul, .pos ol {
+    padding: 0;
+    margin: 0;
+}
+.pos li {
+    list-style-type: none;
+}
+.pos .pos-right-align {
+    text-align: right;
+}
+.pos .pos-center-align {
+    text-align: center;
+}
+.pos .pos-disc-font {
+    font-size: 12px;
+    font-style:italic;
+    color: #808080;
+}
+
+/*  ********* The black header bar ********* */
+
+
+.pos .pos-topheader {
+    position:absolute;
+    left:0;
+    top:0;
+    width: 100%;
+    height: 48px;
+    margin:0;
+    padding:0;
+    color: gray;
+    background: $o-brand-odoo;
+    display: flex;
+}
+
+/*  a) The left part of the top-bar */
+
+.pos .pos-branding{
+    max-width: 503px;
+    flex-grow: 1;
+    height:100%;
+    margin:0;
+    padding:0;
+    text-align:left;
+    line-height:100%;
+    vertical-align: middle;
+    display: flex;
+    justify-content: flex-start;
+}
+.pos .pos-logo {
+    height: 50%;
+    margin-left: 10px;
+    margin-right: auto;
+    align-self: center;
+}
+.pos .pos-branding .username{
+    float:right;
+    color:#DDD;
+    font-size:16px;
+    margin-right:32px;
+    line-height: 48px;
+    font-style:italic;
+    cursor: pointer;
+}
+
+.pos .ticket-button {
+    display: flex;
+}
+
+/*  b) The right part of the top-bar */
+
+.pos .pos-rightheader {
+    flex-grow: 1;
+    height:100%;
+    display: flex;
+    overflow : hidden;
+    overflow-x: auto;
+}
+.pos .pos-rightheader > * {
+    border-right: 1px solid $o-brand-odoo;
+}
+
+.pos .status-buttons {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    height: 100%;
+    color: white;
+}
+
+.pos .status-buttons > div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px; /*$dropdown-item-padding-x * .5*/
+}
+
+.pos .status-buttons i.fa {
+    font-size: large;
+}
+
+.pos .status-buttons .avatar, .pos .status-buttons i.fa-sign-out {
+    vertical-align: middle;
+}
+
+.pos .status-buttons .avatar {
+    width: 25px;
+    border-radius: 50%;
+}
+
+.pos .order-button{
+    color: #f0f0f0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 46px;
+    padding: 4px 8px;
+    margin: 3px;
+    margin-bottom: 0px;
+    margin-right: 2px;
+    padding-top: 0px;
+    background: #8b8b8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    vertical-align: top;
+    line-height: 42px;
+    text-align: center;
+    box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
+    cursor: pointer;
+    min-width: 45px;
+}
+
+.pos .order-button.selected{
+    font-weight: 900;
+    background: #EEEEEE;
+    color: rgb(75,75,75);
+    height: 45px;
+    border-bottom: solid 1px rgb(196, 196, 196);
+    box-shadow: none;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+}
+
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+    vertical-align: middle;
+}
+.pos .order-button.selected .order-sequence{
+    color: white;
+    background: black;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 24px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-left: -4px;
+}
+
+.pos .order-button.square{
+    margin-left:1px;
+    background: #5c5c5c;
+    color: rgb(160,160,160);
+    font-size: 18px;
+    line-height: 45px;
+}
+.pos .order-button:not(.square) > .fa {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.pos .order-selector {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+/*  c) The session buttons */
+
+.pos .pos-rightheader .header-button {
+    cursor: pointer;
+
+    -webkit-transition-property: background;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+.pos .pos-rightheader .header-button:active{
+    background: rgba(0,0,0,0.2);
+    color:#EEE;
+}
+
+/*  c) The notifications indicator */
+
+.pos .oe_status{
+    cursor:pointer;
+}
+.pos .oe_status.oe_inactive{
+    cursor: default;
+}
+.pos .oe_status .oe_icon{
+    color: white;
+}
+.pos .oe_status .oe_red,
+.pos .oe_icon.oe_red {
+    color: rgb(197, 52, 0);
+}
+.pos .oe_status .oe_green,
+.pos .oe_icon.oe_green {
+    color: rgb(94, 185, 55);
+}
+.pos .oe_status .oe_orange,
+.pos .oe_icon.oe_orange {
+    color: rgb(239, 153, 65);
+}
+.pos .oe_link_icon{
+    cursor:pointer;
+}
+/*  ********* Contains everything below the  bar ********* */
+
+.pos .pos-content {
+    width: 100%;
+    position: absolute;
+    top: 48px;
+    bottom: 0;
+    background: $gray-200;
+}
+
+/*  ********* The leftpane contains the order, numpad and paypad ********* */
+
+.pos .switchpane {
+    display: flex;
+}
+
+.pos .switchpane .order-info {
+    flex-grow: 1;
+    border-top: 1px solid #ebebeb;
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    color: $primary;
+}
+.pos .switchpane .order-info h2 {
+    padding: 0px;
+    margin: 3px 0px;
+    font-weight: bold;
+}
+
+.pos .switchpane .btn-switchpane {
+    background-color: $primary;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    flex-grow: 1;
+    flex-basis: 50%;
+    padding-bottom: 20px;
+}
+.pos .switchpane .btn-switchpane h1 {
+    margin-bottom: 0px;
+}
+
+.pos .switchpane .btn-switchpane.secondary {
+    background-color: #FFFFFF;
+    color: $primary;
+}
+
+.pos .pane-border {
+    border-right: solid 3px $gray-300;
+}
+
+.pos .leftpane {
+    background: $gray-200;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product-screen .order,
+    .product-screen .leftpane {
+        max-width: inherit;
+    }
+    .product-screen .leftpane {
+        border-right: none;
+    }
+}
+
+.pos .leftpane .pads {
+    border-top: solid 1px $gray-300;
+}
+
+.pos .leftpane .pads .subpads {
+    display: flex;
+    flex-direction: row;
+}
+
+/*  ********* The control buttons ********* */
+
+.pos .control-buttons {
+    display: flex;
+    flex-flow: row wrap;
+}
+.pos .popup-control-buttons .control-buttons {
+    flex-direction: column;
+}
+.pos .leftpane .control-buttons .control-button {
+    flex: 1 1 29%;
+}
+.pos .control-button {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    background: #fff;
+    border-left: solid 1px $gray-300;
+    border-bottom: solid 1px $gray-300;
+    display: inline-block;
+    line-height: 38px;
+    min-width: 80px;
+    text-align: center;
+    padding: 0px 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all linear 150ms;
+}
+.pos .control-button:hover {
+    background: $gray-200;
+}
+.pos .control-button:active {
+    background: black;
+    color: white;
+    border-color: black;
+}
+.pos .control-button .fa{
+    margin-right: 4px;
+}
+.pos .control-button .control-button-number {
+    color: rgb(226, 226, 226);
+    background: rgb(85, 85, 85);
+    display: inline-block;
+    height: 28px;
+    vertical-align: middle;
+    font-weight: bold;
+    line-height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    text-align: center;
+    margin-left: -16px;
+    margin-right: 4px;
+}
+
+.pos .control-button.highlight,
+.pos .button.highlight {
+    background: $primary !important;
+    border-color: $primary !important;
+    color: white !important;
+}
+.pos .control-button.altlight,
+.pos .button.altlight {
+    background: #7F82AC !important;
+    border: solid 1px #756A99 !important;
+    color: white !important;
+}
+.pos .control-button.disabled,
+.pos .control-button.disabled:active{
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    opacity: 0.5;
+    cursor: default;
+    color: inherit;
+}
+
+/*  ********* The actionpad (payment, set customer) ********* */
+
+.pos .actionpad {
+    padding: 0;
+    text-align: center;
+    vertical-align: top;
+    border: none;
+    border-right: 1px solid $gray-300;
+    flex-grow: 1;
+    width: 50%;
+}
+.pos .actionpad .button {
+    position: relative;
+    display: block;
+    height: var(--btn-height-size);
+    width: 100%;
+    font-weight: bold;
+    vertical-align: middle;
+    color: $gray-700;
+    font-size: 14px;
+    border-bottom: 1px solid;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+.pos .button.validation .pay-circle.highlight {
+    color: white;
+    background-color: $primary;
+}
+.pos .actionpad .button:hover {
+    background: $gray-200;
+}
+.pos .actionpad .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.pos .button.validation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: calc(var(--btn-height-size) * 3);
+    border: none;
+    background: $primary;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 150ms linear;
+}
+.pos .button.validation:hover {
+    background: darken($primary, 5%) !important;
+}
+@media screen and (max-width: 768px) {
+    .pos .button.validation {
+        height: calc(var(--btn-height-size) * 2);
+    }
+}
+.pos .button.validation .pay-circle {
+    display: block;
+    font-size: 32px;
+    line-height: var(--btn-height-size);
+    padding-top: 6px;
+    background: $gray-900;
+    color: white;
+    width: 60px;
+    text-align: center;
+    border-radius: 30px;
+    margin-bottom: 10px;
+}
+.pos .button.validation .pay-circle .fa {
+    position: relative;
+    top: -1px;
+    left: 3px;
+}
+
+.pos .actionpad .button.set-partner{
+    padding-left: 40px;
+    padding-right: 40px;
+    border-top: none;
+    border-right: none;
+    overflow-wrap: break-word;
+}
+.pos .actionpad .button.set-partner.decentered {
+    padding-left: 40px;
+    padding-right: 5px;
+}
+.pos .actionpad .button .fa-user {
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    margin-right: 8px;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    line-height: 30px;
+    width: 30px;
+    border-radius: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.set-partner{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .pos .actionpad .button.set-partner.decentered{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
+/*  ********* The Numpad ********* */
+
+.pos .numpad {
+    /*rtl:ignore*/
+    direction: ltr;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    flex-grow: 1;
+    width: 50%;
+    min-width: 216px;
+}
+.pos .numpad button {
+    float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
+    height: 54px;
+    vertical-align: middle;
+    color: $gray-700;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: $gray-300;
+    transition: all 150ms linear;
+    padding: unset;
+    width: 100%;
+    font-weight: bold;
+}
+.pos .numpad button:hover {
+    background: $gray-200;
+}
+.pos .numpad button:active {
+    background: black;
+    color: white;
+    border-color: transparent;
+}
+.pos .input-button {
+    font-size: map-get($font-sizes, 4);
+}
+.pos .mode-button {
+    font-size: 14px;
+}
+.number-char,
+.numpad-minus {
+    width: 54px;
+}
+.pos .mode-button.selected-mode {
+    color: white;
+    background: $o-brand-odoo;
+    border-color: transparent;
+}
+.pos .mode-button.selected-mode:hover {
+    background: $primary;
+    color: white;
+    border-color: transparent;
+}
+.pos .numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
+    background: $gray-200;
+    color: $gray-500;
+    cursor: not-allowed;
+}
+
+/*  ********* The right pane contains the screens and headers ********* */
+
+.pos .rightpane {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 25%;
+    flex-grow: 1;
+    background: $gray-300;
+}
+
+.pos .products-widget {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.pos .products-widget .products-widget-control{
+    display: grid;
+    z-index: 1;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .08);
+}
+
+.pos .product-list-container {
+    overflow: hidden;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.pos .rightpane-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    background: #fff;
+    text-align: center;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.pos .rightpane-header .categories-header {
+    display: flex;
+}
+
+.pos .rightpane-header .breadcrumbs {
+    display: flex;
+}
+
+.pos .green-border-bottom {
+    border-bottom: solid 3px rgb(110, 200, 155);
+}
+
+.pos .grey-border-bottom {
+    border-bottom: 1px solid #c7c7c7;
+}
+
+/*  ********* The product list  ********* */
+
+.pos .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    padding: 3px;
+    gap: 3px;
+}
+.pos .product-list-container .product-list-empty p {
+    margin: 10px;
+    text-align: center;
+}
+
+.pos .search-more-button {
+    display: flex;
+    justify-content: center;
+
+    .button {
+        flex-basis: 1;
+        line-height: 32px;
+        padding: 3px 13px;
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+        margin-left: 6px;
+        margin-right: 6px;
+        cursor: pointer;
+        transition: all 150ms linear;
+        background: $primary;
+        color: white;
+        border: solid 1px $primary;
+    }
+    
+}
+
+.pos .product-list-scroller{
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translate3d(0,0,0);
+
+}
+
+/*  a) the product list navigation bar */
+
+.pos .breadcrumb{
+    float: left;
+    display: inline-block;
+    line-height: 48px;
+    height: 48px;
+    min-width: 48px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.pos .breadcrumb:last-child {
+    padding-right: 3px;
+}
+.pos .breadcrumb-button {
+    display: inline-block;
+    padding: 0 9px;
+    vertical-align: top;
+    color: $primary;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.pos .breadcrumb-button.breadcrumb-home {
+    line-height: 50px;
+    font-size: 25px;
+    text-align: center;
+}
+
+.pos .breadcrumb-arrow{
+    width: 28px;
+}
+.pos .breadcrumb-homeimg {
+    width: 27px;
+    margin: 12px 6px;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .breadcrumb-button.breadcrumb-home {
+        width: auto;
+        margin-left: 3px;
+    }
+}
+
+.pos .search-clear {
+    top: 9px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear.left {
+    left: 11px;
+    color: #808080;
+    margin: 6px;
+}
+
+.search-clear.right {
+    color: #808080;
+    cursor: pointer;
+    margin: 6px;
+}
+
+@media screen and (max-width: 768px) {
+  .search-clear.left {
+      position: relative;
+      top: -40px;
+      left: 5%;
+  }
+
+  .search-clear.right {
+      position: relative;
+      top: -70px;
+      left: 85%;
+  }
+}
+
+/*  c) the categories list */
+
+.pos .categories {
+    position: relative;
+    border-bottom: solid 3px rgb(110, 200, 155);
+    flex: 1;
+}
+.pos .categories h4 {
+    display: inline-block;
+    margin: 9px 5px;
+}
+.pos .category-list-scroller{
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    width:100%;
+    height:100%;
+    max-height:40vh;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translate3d(0,0,0);
+
+}
+.pos .category-list {
+    text-align: left;
+    padding: 10px;
+    background: rgb(229, 229, 229);
+}
+.pos .category-list.simple {
+    padding: 0px;
+    background: #fff;
+    display: flex;
+    flex: 1;
+}
+
+
+/*  d) the category button */
+
+.pos .category-button {
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+    font-size: 11px;
+    margin: 8px !important;
+    width: 120px;
+    height:120px;
+    background:#fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 3px;
+    border-bottom-width: 3px;
+    cursor: pointer;
+}
+
+.pos .category-simple-button{
+    display: inline-block;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 12px;
+    cursor: pointer;
+    text-align: left;
+    background: #fff;
+    max-width: 300px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.pos .category-simple-button:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
+.pos .category-simple-button:active{
+    color: white;
+    background: black;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+
+
+.pos .category-button .category-img {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pos .category-button .category-img img {
+    max-height: 100px;
+    max-width:  120px;
+    vertical-align: middle;
+}
+
+.pos .category-button .category-name {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    bottom: 0;
+    top: auto;
+    line-height: 14px;
+    width: 100%;
+    /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh.
+    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
+    /*background:#FFF;*/
+    padding: 3px;
+    padding-top: 15px;
+    color: #7C7BAD;
+}
+
+/*  e) the product */
+
+.pos .product {
+    position:relative;
+    background:#fff;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.pos .product-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.pos .product .product-img img {
+    width: 100%;
+    height: 100px;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product:active {
+        box-shadow: 0 0 0 3px $primary;
+    }
+}
+
+.pos .product .price-tag {
+    color: $o-brand-odoo;
+    padding: 2px 5px;
+    font-weight: bold;
+    padding: 0 map-get($spacers, 2) map-get($spacers, 2);
+}
+
+.pos .product .product-name.no-image {
+    -webkit-line-clamp: 9;
+}
+
+.pos .product .product-info-button {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    font-size: 13px;
+    border-radius: 2px;
+    background-color: #7f82ac;
+    color: white;
+    padding: 1px 4px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;}
+
+.pos .product .product-info-button:hover {
+    background-color: #595b79;
+}
+
+.pos .product .product-name {
+    box-sizing: border-box;
+    line-height: 14px;
+    overflow: hidden;
+    margin: map-get($spacers, 2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/*  ********* The BlockUI Component (frontend)  ********* */
+.o_blockUI {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: #000000;
+    color: white;
+    opacity: 0.6;
+}
+
+/*  ********* The Screens  ********* */
+
+.pos .screen {
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    width:100%;
+    background: $gray-100;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .screen header h2 {
+    margin-top: 0px;
+    padding-top: 7px;
+}
+.pos .screen p{
+    font-size: 18px;
+}
+.pos .dialog{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+.pos .dialog p{
+    font-size: 25px;
+    margin-top: 10px;
+    color: #5a5a5a;
+}
+
+/* a) Generic Screen Layout Constructs */
+
+.screen .screen-content{
+    position: relative;
+    margin: 0px auto;
+    text-align: left;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.screen .screen-full-width{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.screen .top-content{
+    height: 64px;
+    border-bottom: solid 1px $gray-300;
+    text-align: center;
+    display: flex;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.screen .top-content .search-bar-container {
+    margin-right: -10px;
+}
+.screen .top-content .pos-search-bar {
+    border-left: solid 1px $gray-300;
+}
+.screen .top-content .button {
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 14px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 6px;
+    margin-right: 6px;
+    border: solid 1px $gray-200;
+    color: $primary;
+    cursor: pointer;
+    transition: all 150ms linear;
+}
+.screen .top-content .button:hover {
+    background: $gray-200;
+}
+.screen .top-content .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.screen .top-content .button.highlight {
+    background: $primary;
+    color: white;
+    border: solid 1px $primary;
+}
+.screen .top-content .button.highlight:hover {
+    background: rgb(120,210,165);
+}
+
+.screen .button.next.validation {
+    position: sticky;
+    bottom: 0;
+    height: auto;
+    padding: map-get($spacers, 5) 0;
+}
+.screen .button.next:not(.highlight) {
+    cursor: not-allowed;
+    background: $gray-300;
+    color: $gray-600;
+    opacity: .3;
+    pointer-events: none;
+}
+
+.screen .top-content .top-content-center {
+    flex-grow: 1;
+}
+
+.screen .main-content{
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    overflow-y: auto;
+}
+.screen .left-content{
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: solid 1px $gray-300;
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.screen .center-content{
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+}
+.screen .right-content {
+    flex-grow: 1;
+    min-width: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-left: solid 1px $gray-300;
+}
+
+@media screen and (min-width: 768px) {
+    .screen .left-content {
+        max-width: 34%
+    }
+}
+
+.pos .btn-switch-payment {
+    background-color: $primary;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    height: 100px;
+    width: 100%;
+}
+.screen .centered-content{
+    border-right: solid 1px $gray-300;
+    border-left: solid 1px $gray-300;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 512px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.screen .full-content{
+    position: absolute;
+    right: 0%; top: 65px; bottom: 0px;
+    left: 0%;
+}
+
+/* a) Layout for the Product Screen */
+
+.pos .screen .layout-table {
+    border:none;
+    width:100%;
+    display: flex;
+    flex-grow: 1;
+}
+
+.pos .screen .header-cell{
+    border:none;
+    width:100%;
+    height:0px;
+}
+.pos .screen .content-row {
+    width:100%;
+    height:100%;
+}
+.pos .screen .content-cell{
+    width:100%;
+}
+.pos .screen .content-cell .content-container{
+    height:100%;
+    position:relative;
+}
+
+
+/* b) The payment screen */
+
+.payment-screen .main-content {
+    display: flex;
+}
+.payment-screen .left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    border: none;
+    max-height: 100%;
+}
+.payment-screen .center-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 10px solid $gray-300;
+    width: 30rem;
+}
+.payment-screen p.title-category {
+    margin: 0;
+    padding: map-get($spacers, 1) map-get($spacers, 3);
+    background: $gray-300;
+    color: $gray-700;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: $small-font-size;
+    order: 1;
+}
+
+.pos .payment-buttons-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.pos .payment-numpad {
+    box-sizing: border-box;
+    text-align: center;
+    flex-grow: 1;
+}
+.pos .payment-numpad .numpad {
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: $gray-300;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+.pos .payment-numpad .numpad button {
+    height: 100%;
+    min-height: 54px;
+    font-size: clamp(map-get($font-sizes, 6), 3vw, 36px);
+}
+
+.pos .payment-numpad .numpad button:nth-child(16) img {
+    width: 35%;
+    max-width: 64px;
+    height: auto;
+}
+
+.pos .paymentlines-container {
+    padding: 16px;
+    padding-top: 0;
+    border-bottom: solid 10px $gray-300;
+    min-height: 154px;
+}
+
+.pos .paymentlines {
+    display: flex;
+    flex-direction: column-reverse;
+    border-spacing: 0px 10px;
+    border-collapse: inherit;
+}
+
+.paymentlines .paymentline:first-child {
+    border-top-width: 1px;
+}
+.pos .paymentline {
+    background: #fff;
+    font-size: 16px;
+    border-bottom: solid 1px $gray-300;
+    border-top-width: 0px;
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 100%;
+    min-height: 60px;
+    overflow: auto;
+}
+.paymentline:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.paymentline .payment-name {
+    flex-grow: 1;
+    /* make the name of the payment line to be truncated with ellipsis */
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    padding: map-get($spacers, 3);
+}
+.paymentline .payment-amount {
+    padding: map-get($spacers, 3);
+}
+.paymentline .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: map-get($spacers, 3);
+  font-size: x-large;
+}
+.paymentline.selected{
+  background: $gray-200;
+}
+
+.pos .payment-buttons {
+    box-sizing: border-box;
+    padding-left: 0;
+    flex-grow: 5;
+}
+.payment-screen .payment-buttons .button {
+    background: #fff;
+    font-size: 16px;
+    padding: map-get($spacers, 3);
+    border-bottom: solid 1px $gray-300;
+    border-top-width: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    transition: background-color, border-color, color 150ms linear;
+    box-sizing: border-box;
+    height: 60px;
+}
+.payment-screen .payment-buttons .button:hover {
+    background-color: $gray-200;
+}
+.payment-screen .payment-buttons .button:first-child {
+    border-top-width: 1px;
+}
+.payment-screen .payment-buttons .button.highlight:not(:first-child) {
+    margin-top: -1px;
+    border-top: solid 1px;
+}
+.payment-screen .payment-buttons .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.payment-screen .payment-buttons .button .fa {
+    margin-right: map-get($spacers, 2);
+    transition: all 150ms linear;
+}
+.payment-screen .paymentlines-empty .total {
+    text-align: center;
+    padding: 24px 0px 18px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
+}
+.payment-screen .paymentlines-empty .message {
+    text-align: center;
+}
+
+.paymentlines .button {
+    cursor: pointer;
+    border: 1px solid #cacaca;
+}
+.paymentlines .electronic_payment {
+    background: $gray-200;
+    border-collapse: unset;
+    font-size: 16px;
+    padding-right: 0;
+}
+
+.paymentline .electronic_status {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+    /* make the name of the payment line to be truncated with ellipsis */
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    padding: map-get($spacers, 3);
+}
+
+.paymentlines .electronic_payment div:first-child {
+    flex-grow: 2;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.paymentlines .electronic_payment div:last-child {
+    flex-grow: 1;
+    text-align: center;
+    padding: map-get($spacers, 3);
+}
+
+.payment-status-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.payment-status-total-due {
+    font-size: 17px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: $gray-500;
+}
+
+.payment-status-container .amount.highlight {
+    font-weight: bold;
+    color: $primary;
+}
+
+.payment-status-container .label {
+    padding-right: 7px;
+}
+
+@media screen and (max-width: 992px) {
+    .payment-screen .main-content {
+        grid-template-columns: 300px 1fr;
+        grid-template-rows: 1fr auto;
+    }
+    .screen .center-content {
+        border-bottom: none;
+    }
+    .screen .right-content {
+        grid-column: span 2;
+    }
+    .pos .payment-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        background: $gray-300;
+        padding: 10px;
+        gap: 10px;
+    }
+    .pos .payment-buttons > div {
+        flex-grow: 1;
+        flex-basis: 25%;
+        border: 1px solid $gray-300;
+    }
+    .pos .payment-buttons .button {
+        max-width: inherit;
+        text-align: center;
+    }
+    .pos .paymentlines-container {
+        min-height: auto;
+    }
+    .payment-status-container {
+        flex-direction: column-reverse;
+    }
+    .payment-status-container > div:first-child {
+        margin-top: map-get($spacers, 2);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .payment-screen .main-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+    .payment-screen .center-content {
+        grid-template-rows: 1fr;
+    }
+    .payment-screen .left-content,
+    .payment-screen .right-content {
+        justify-content: flex-start;
+        overflow: initial;
+    }
+    .screen .right-content {
+        grid-column: span 1;
+    }
+    .payment-screen .paymentlines-empty .message {
+        padding-bottom: map-get($spacers, 3);
+    }
+    .pos .payment-numpad .numpad button:nth-child(16) img {
+        max-width: 48px;
+    }
+    .pos .paymentlines-container {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        border-bottom: 1px solid $gray-300;
+        min-height: inherit;
+        padding-bottom: 3px;
+    }
+      .pos .paymentlines {
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      .payment-status-container {
+          font-size: 22px;
+      }
+
+}
+
+@media screen and (max-width: 576px) {
+    .pos .payment-buttons {
+        flex-direction: column;
+    }
+}
+
+/* c) The receipt screen */
+
+.pos .receipt-screen .screen-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+}
+
+.pos .receipt-screen .left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: inherit;
+}
+
+.pos .receipt-screen .top-content {
+    grid-column: span 2;
+}
+
+.pos .receipt-screen .centered-content .button {
+    line-height: 40px;
+    padding: 3px 13px;
+    font-size: 20px;
+    text-align: center;
+    background: $gray-200;
+    margin: 16px;
+    margin-bottom: 0px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
+
+.pos .pos-receipt-container {
+    font-size: 0.75em;
+    text-align: center;
+    direction: ltr;
+}
+
+.pos .pos-receipt-container > div {
+    text-align: left;
+    width: 300px;
+    background-color: white;
+    margin: 20px;
+    padding: 15px;
+    font-size: 16px;
+    padding-bottom:30px;
+    display: inline-block;
+    border: solid 1px rgb(220,220,220);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+@page {
+    margin: 0;
+}
+
+@media print {
+    body {
+        background: white;
+    }
+    body * {
+        visibility: hidden;
+        height: 0 !important;
+    }
+    .pos, .pos * {
+        position: static !important;
+    }
+    .pos .receipt-screen .pos-receipt-container {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+    }
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
+        visibility: visible;
+        background: white !important;
+        color: black !important;
+        height: auto !important;
+    }
+    .pos .pos-receipt {
+        margin: 0 !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border: none !important;
+        font-size: 14px !important;
+        width: 266px !important;
+    }
+}
+
+/* d) The Scale screen */
+
+.pos .scale-screen .product-price{
+    font-size: 25px;
+    margin: 16px;
+    text-align: center;
+    display: inline-block;
+    width: 35%;
+}
+.pos .scale-screen .computed-price{
+    font-size: 25px;
+    display: inline-block;
+    text-align: right;
+    margin: 16px;
+    margin-top: 0px;
+    padding: 16px;
+    background: white;
+    width: 35%;
+    border-radius: 3px;
+    font-family: Inconsolata;
+    font-weight: bold;
+    text-shadow: 0px 2px 0px rgb(210,210,210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
+    float: right;
+}
+.pos .scale-screen .buy-product{
+    text-align: center;
+    font-size: 32px;
+    background: $primary;
+    color: white;
+    border-radius: 3px;
+    padding: 16px;
+    margin: 16px;
+    cursor: pointer;
+}
+
+.pos .scale-screen .weight{
+    text-align: right;
+    margin: 16px;
+    background: white;
+    padding: 20px;
+    padding-right: 30px;
+    font-size: 56px;
+    border-radius: 3px;
+    font-family: Inconsolata;
+    text-shadow: 0px 2px 0px rgb(210, 210, 210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
+}
+
+
+/* e) The Partner List Screen */
+
+.pos .partnerlist-screen .full-content{
+    overflow: auto;
+}
+
+.pos .no-results-message {
+    text-align: center;
+}
+
+.pos .no-results-message {
+    margin-top: 45px;
+    padding: 0 10%;
+}
+
+.pos .no-results-message .button {
+    margin: auto;
+    width: 180px;
+    border-radius: 25px;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: large;
+    box-shadow: 0px -2px 5px -3px rgb(82,82,82) inset;
+    transition: all linear 75ms;
+}
+
+.pos .no-results-message .button:hover {
+    opacity: 0.8;
+}
+
+.pos .no-results-message .button:active {
+    opacity: 0.5;
+}
+
+.pos .partnerlist-screen .top-content div.top-right-buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.pos .partnerlist-screen .partner-list{
+    font-size: 16px;
+    width: 100%;
+}
+.pos .partnerlist-screen .partner-list th,
+.pos .partnerlist-screen .partner-list td {
+    padding: 12px;
+}
+
+.pos .partnerlist-screen .fa.fa.fa-phone,
+.pos .partnerlist-screen .fa.fa-mobile,
+.pos .partnerlist-screen .fa.fa-paper-plane-o {
+    margin-right: 4px;
+}
+
+.pos .partnerlist-screen .e-mail-field {
+    white-space: nowrap;
+}
+
+.pos .partnerlist-screen tr div.company-field {
+    opacity: .75;
+}
+
+.pos .partnerlist-screen tr.highlight div.company-field {
+    color: white;
+}
+
+.pos .partnerlist-screen tr.highlight div.unselect-tag {
+    display: inline-block;
+    color: #fff;
+    padding: 3px 6px;
+    font-size: small;
+    border-radius: 2px;
+    margin-top: 12px;
+    background: rgba(255,255,255,.25);
+}
+
+.pos .partnerlist-screen .partner-list th.partner-line-last-column-placeholder,
+.pos .partnerlist-screen .partner-list td.partner-line-last-column-placeholder {
+    padding: 0;
+}
+
+.pos .partnerlist-screen .partner-list tr{
+    transition: all 150ms linear;
+    background: $gray-200;
+}
+.pos .partnerlist-screen .partner-list thead > tr,
+.pos .partnerlist-screen .partner-list tr:nth-child(even) {
+    background: rgba(247,247,247,0.1);
+}
+.pos .partnerlist-screen .partner-list tr.highlight{
+    background: $primary;
+    color: white;
+}
+.pos .partnerlist-screen .partner-list tr.highlight:active {
+    background-color: black;
+    color: white;
+}
+.pos .partnerlist-screen tr.partner-line:hover {
+    cursor: pointer;
+    background: $primary;
+    color: #fff;
+}
+.pos .partnerlist-screen tr.partner-line:active {
+    background-color: black;
+    color: white;
+}
+.pos .edit-partner-button:hover {
+    background: $gray-200;
+}
+.pos .partner-line {
+    vertical-align: text-top;
+}
+.pos .partner-line-email .fa {
+    width: 30px;
+    opacity: .75;
+}
+.pos .edit-partner-button {
+    margin-top: 6px;
+    color: black;
+    font-weight: bold;
+}
+.pos .partner-list tr.partner-line.highlight{
+    background: $primary;
+    color: white;
+}
+.pos .partnerlist-screen .partner-details{
+    padding: 16px;
+}
+.pos .partnerlist-screen .partner-picture{
+    height: 64px;
+    width: 64px;
+    border-radius: 32px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+    margin-right: 16px;
+    background: white;
+    position: relative;
+}
+.pos .partnerlist-screen .partner-picture > img {
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    left: -9999px;
+    max-height: 64px;
+    margin: auto;
+}
+.pos .partnerlist-screen .partner-picture > .fa {
+    line-height: 64px;
+    font-size: 32px;
+}
+.pos .partnerlist-screen .partner-picture .image-uploader {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.pos .partnerlist-screen .partner-name {
+    font-size: 32px;
+    line-height: 64px;
+    margin-bottom:16px;
+}
+.pos .partnerlist-screen .edit-buttons {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+}
+.pos .partnerlist-screen .edit-buttons .button{
+    display: inline-block;
+    margin-left: 16px;
+    color: rgb(128,128,128);
+    cursor: pointer;
+    font-size: 36px;
+}
+.pos .partnerlist-screen .partner-details-box{
+    position: relative;
+    font-size: 16px;
+}
+.pos .partnerlist-screen .partner-details-left{
+    width: 50%;
+    float: left;
+}
+.pos .partnerlist-screen .partner-details-right{
+    width: 50%;
+    float: right;
+}
+.pos .partnerlist-screen .partner-detail{
+    line-height: 24px;
+}
+.pos .partnerlist-screen .partner-detail > .label{
+    font-weight: bold;
+    display: inline-block;
+    width: 75px;
+    text-align: right;
+    margin-right: 8px;
+}
+.pos .partnerlist-screen .partner-details input,
+.pos .partnerlist-screen .partner-details select
+{
+    padding: 4px;
+    border-radius: 3px;
+    border: solid 1px #cecbcb;
+    margin-bottom: 4px;
+    background: white;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: $gray-700;
+    width: 340px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.pos .partnerlist-screen .partner-details input.partner-name {
+    font-size: 24px;
+    line-height: 24px;
+    margin: 18px 6px;
+    width: 340px;
+}
+.pos .partnerlist-screen .partner-detail > .empty{
+    opacity: 0.3;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .partnerlist-screen .partner-details-box {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .pos .partnerlist-screen .partner-details-left{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .partnerlist-screen .partner-details-right{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .partnerlist-screen .partner-detail{
+        display: flex;
+        flex-direction: column;
+    }
+    .pos .partnerlist-screen .partner-details input,
+    .pos .partnerlist-screen .partner-details select
+    {
+        width: 100%;
+    }
+    .pos .partnerlist-screen .partner-details input.partner-name {
+        width: 100%;
+    }
+    .pos .partnerlist-screen .partner-detail > .label{
+        width: auto;
+        text-align: left;
+    }
+    .pos .partnerlist-screen .partner-list td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+
+
+
+
+/*  ********* The OrderWidget  ********* */
+
+.pos .order-container{
+    top: 0px;
+    width:100%;
+    height: 100%;
+    background: white;
+    flex-grow: 1;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.pos .scrollable-y{
+    overflow: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.pos .order {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: white;
+    font-size: 16px;
+    text-align: left;
+    max-width: 500px;
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .order .orderlines {
+    flex-grow: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .order .order-empty {
+    text-align: center;
+    margin: 48px;
+    color: $gray-200;
+}
+.pos .order .order-empty .fa {
+    font-size: 64px;
+}
+.pos .order .order-empty h1 {
+    font-size: 20px;
+}
+
+.pos .order .summary{
+    position: sticky;
+    bottom: 0;
+    width:100%;
+    text-align:right;
+    font-weight: bold;
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border-top: 1px solid $gray-200;
+    box-sizing: border-box;
+    background:  inherit;
+}
+.pos .order .summary .total {
+    font-size: 22px;
+}
+.pos .order .summary .line .subentry{
+    font-size: 16px;
+    font-weight: normal;
+}
+.pos .order .summary .line.empty{
+    text-align: right;
+    border-color:#BBB;
+    color:#999;
+}
+
+.pos .order .summary .fidpoints{
+    position: absolute;
+    left: 20px;
+    padding: 10px;
+    color: $primary;
+    background: rgba(110, 200, 155, 0.17);
+    border-radius: 3px;
+}
+
+.submit-kitchen-button {
+    float: left;
+    background: rgb(61, 235, 82);
+    color: white;
+    padding: 12px 20px;
+    margin: 0px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/*  ********* The OrderLineWidget  ********* */
+
+.pos .order .orderline{
+    width:100%;
+    margin:0px;
+    padding: 7px 15px;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+}
+.pos .order .orderline:active{
+    background: rgba(140,143,183,0.05);
+    -webkit-transition: background 50ms ease-in-out;
+       -moz-transition: background 50ms ease-in-out;
+            transition: background 50ms ease-in-out;
+}
+.pos .order .orderline.empty:active{
+    background: transparent;
+    cursor: default;
+}
+
+.pos .order .orderline.selected{
+    background: rgba($primary, 0.2);
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+    cursor: default;
+}
+.pos .order .orderline .product-name{
+    padding:0;
+    display:inline-block;
+    font-weight: bold;
+    width:80%;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+.pos .order .orderline .price{
+    padding:0;
+    font-weight: bold;
+    float:right;
+}
+.pos .order .orderline .info-list{
+    color: $gray-700;
+    margin-left:10px;
+}
+.pos .order .orderline .info-list em{
+    color: $gray-700;
+    font-weight: bold;
+    font-style:normal;
+}
+
+.pos .order .orderline .to-refund-highlight {
+    font-weight: bold;
+    color: $primary;
+}
+
+.pos .order .orderline .refund-note {
+    margin-top: 2px;
+}
+
+.pos .order .orderline .refund-note span.order-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ------ ORDER NOTES ------- */
+
+.pos .order .orderline-note {
+    margin: 8px;
+    word-break: break-all;
+}
+.orderline-note .fa {
+    opacity: 0.5;
+    margin-right: 4px;
+}
+
+/*  ********* SplitBill ********* */
+
+.splitbill-screen .order-info {
+    text-align: center;
+    padding: 20px 0px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
+    border-bottom: solid 1px $gray-300;
+}
+.pos .splitbill-screen .order {
+    background: white;
+    padding-bottom:15px;
+    padding-top:15px;
+    margin-left:16px;
+    margin-right:16px;
+    margin-top:16px;
+    margin-bottom:16px;
+    font-size:16px;
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
+    text-align: left;
+    max-width: 500px;
+    -webkit-transform: translate3d(0,0,0);
+    height: max-content;
+    width: 100%;
+}
+.splitbill-screen .order .orderline.selected{
+    background: $primary;
+    color: white;
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+    cursor: default;
+}
+.splitbill-screen .order .orderline.partially.selected{
+    background: rgb(136, 214, 176);
+}
+.splitbill-screen .order .orderline.selected .info-list {
+    color: white;
+}
+.splitbill-screen .order .orderline.selected .info-list em{
+    color: white;
+    font-size: 24px;
+    vertical-align: top;
+}
+.paymentmethods-container {
+    overflow: scroll;
+}
+.paymentmethods .button {
+    background: #fff;
+    font-size: 16px;
+    border-bottom: solid 1px $gray-300;
+    border-top-width: 0px;
+    cursor: pointer;
+    min-height: 60px;
+}
+.paymentmethods .button:first-child {
+    border-top-width: 1px;
+}
+.paymentmethods .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+.paymentmethod .button.active {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+}
+.paymentmethod {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+.paymentmethod .payment-name {
+    flex-grow: 1;
+    padding: map-get($spacers, 3);
+}
+.paymentmethod .payment-amount {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.paymentmethod .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.paymentmethod.selected{
+  background: $gray-200;
+}
+
+@media screen and (max-width: 768px) {
+    .paymentmethods {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .paymentmethod {
+        flex-basis: 30%;
+    }
+}
+
+/*  ********* The ActionBarWidget  ********* */
+
+.pos .pos-actionbar{
+    height: 105px;
+    background: #f5f5f5;    /*#ebebeb;*/
+    border-top: solid 1px #cecece;
+    z-index:900;
+}
+
+.pos .pos-actionbar ul{
+    list-style:  none;
+}
+
+.pos .pos-actionbar-button-list{
+    height: 100%;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    overflow:hidden;
+}
+
+.pos .pos-actionbar .button{
+    width: 90px;
+    height: 90px;
+    text-align:center;
+    margin:3px;
+    margin-top:6px;
+    float:left;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    border-radius: 3px;
+
+    background: #e2e2e2;
+}
+.pos .pos-actionbar .button .label{
+    margin-top: 37px;
+}
+.pos .pos-actionbar .button .icon{
+    margin-top: 10px;
+}
+.pos .pos-actionbar .button:active{
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.pos .pos-actionbar .button.disabled{
+    opacity: 0.5;
+}
+.pos .pos-actionbar .button.disabled:active{
+    border: 1px solid #cacaca;
+    color: #555;
+    cursor: default;
+
+    background: #e2e2e2;
+}
+
+.pos .pos-actionbar .button.rightalign{
+    float:right;
+}
+/*  ********* The Debug Widget  ********* */
+
+.pos .debug-widget{
+    z-index:100000;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 200px;
+    font-size: 10px;
+
+    background: rgba(0,0,0,0.82);
+    color: white;
+    padding-bottom: 10px;
+    cursor: move;
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .debug-widget .toggle{
+    position: absolute;
+    font-size: 16px;
+    cursor:pointer;
+    top:0px;
+    right:0px;
+    padding:10px;
+    padding-right:15px;
+}
+.pos .debug-widget .content{
+    overflow: hidden;
+}
+.pos .debug-widget header {
+    position: relative;
+}
+.pos .debug-widget h1{
+    background:black;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-top:0;
+    margin-bottom:0;
+}
+.pos .debug-widget .category{
+    background: black;
+    padding-left: 10px;
+    margin: 0px;
+    font-weight: bold;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+.pos .debug-widget .button{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:pointer;
+}
+.pos .debug-widget .button:active{
+    background: rgba(96,21,177,0.45);
+}
+.pos .debug-widget input{
+    margin-left:10px;
+    margin-top:7px;
+    padding: 4px;
+    width: 180px;
+    border: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+}
+.pos .debug-widget .status{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+}
+.pos .debug-widget .status.on{
+    background-color: #6cd11d;
+}
+.pos .debug-widget .event{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+    background-color: #1E1E1E;
+}
+
+/*  ********* The PopupWidgets  ********* */
+
+.pos .modal-dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+.pos .modal-dialog header{
+    position: relative;
+}
+.pos .modal-dialog .popup{
+    position: absolute;
+    margin: auto;
+    max-width:500px;
+    width: 100%;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
+    z-index:1200;
+    font-family: 'Lato';
+    font-family: Lato;
+    /* position the popup at center and and still making it draggable*/
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pos .modal-dialog .popup-med{
+    max-width: 700px;
+    max-height: 600px;
+    height: auto;
+}
+
+.pos .popup .title {
+    background: rgba(255,255,255,0.5);
+    margin: 0;
+    padding: 20px;
+    border-radius: 3px 3px 0px 0px;
+    border-bottom: solid 1px rgba(60,60,60,0.1);
+}
+.pos .popup .body {
+    font-weight: normal;
+    font-size: 18px;
+    margin: 16px;
+    white-space: pre-line;
+}
+
+.pos .popup-med .body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.pos .popup .body.traceback {
+    height: 238px;
+    overflow: auto;
+    font-size: 14px;
+    white-space: pre-wrap;
+    text-align: left;
+    font-family: 'Inconsolata';
+    -webkit-user-select: text;
+       -moz-user-select: text;
+            user-select: text;
+}
+.pos .popup .footer{
+    width:100%;
+    height:60px;
+    border-top: solid 1px rgba(60,60,60,0.1);
+}
+.pos .popup .button{
+    float:right;
+    width: 110px;
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    margin-top:10px;
+    margin-right:10px;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+    border: 1px solid $gray-200;
+    color: $primary;
+}
+.pos .popup .button.dynamic-size {
+    width: auto; 
+    white-space: nowrap; 
+    padding: 0 15px;
+}
+
+.pos .popup-textarea textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+.pos .popup-textarea .popup-textarea-wrap {
+    padding: map-get($spacers, 2);
+}
+.pos .popup .button.dont-show-again {
+    width: 130px;
+}
+
+.pos .popup .button.icon {
+    width: 40px;
+    font-size: 20px;
+}
+.pos .popup .button:active{
+    color: white;
+    background: black;
+    border: 1px solid black;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+
+.pos .popup .button.big-left{
+    position:absolute;
+    top: 120px;
+    left:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+
+.pos .popup .button.big-right{
+    position:absolute;
+    top: 120px;
+    right:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+.pos .popup input,
+.pos .popup-input {
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    background: white;
+    min-height: 44px;
+    font-family: "Lato";
+    font-size: 20px;
+    color: #444;
+    padding: 10px;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0px 0px 0px 1px rgb(220,220,220) inset;
+    box-sizing: border-box;
+    width: 80%;
+}
+.pos .popup .list-lines{
+    overflow: auto;
+    height: 250px;
+    margin: 10px;
+}
+.pos .popup .list-line-input {
+    margin: 3px;
+}
+
+.pos .popup-number .popup-input {
+    text-align: center;
+}
+.pos .popup input:focus,
+.pos .popup-input.active {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px $primary;
+}
+.pos .popup.popup-error,
+.pos .popup.popup-error .button {
+    background-color: #F3BBBB;
+    color: rgb(168, 89, 89);
+}
+.pos .popup.popup-error {
+    box-shadow: 0px 10px 20px rgba(92,51,51,0.4);
+}
+.pos .popup.popup-error .title {
+    color: white;
+    background: rgba(255, 76, 76, 0.5);
+}
+.pos .popup.popup-selection .selection {
+    overflow-y: auto;
+    max-height: 273px;
+    font-size: 16px;
+    width: auto;
+    line-height: 50px;
+    margin-top: -1px;
+    border-top: solid 3px rgba(60,60,60,0.1);
+
+}
+.pos .popup.popup-selection .selection-item {
+    width: auto;
+    background: rgb(230,230,230);
+    cursor: pointer;
+    text-align: left;
+    padding: 0px 16px;
+}
+.pos .popup.popup-selection .selection-item:nth-child(odd) {
+    background: rgb(247,247,247);
+}
+.pos .popup.popup-selection .selection-item.selected {
+    background: $primary;
+}
+.pos .popup.popup-number {
+    width: 300px;
+    height: 450px;
+}
+.pos .footer.centered {
+    text-align: center;
+}
+.pos .footer.centered .button {
+    float: none;
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.pos .popup-numpad {
+    direction: ltr/*rtl:ignore*/; /* rtlcss forced to keep ltr */
+    margin: 12px auto;
+    text-align: center;
+    width: 254px;
+}
+.pos .popup-number .title,
+.pos .popup-textinput .title
+{
+    margin-bottom: 20px;
+}
+.pos .popup-numpad .input-button,
+.pos .popup-numpad .mode-button {
+    background: none;
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 25px;
+    margin: 4px;
+    vertical-align: top;
+    color: #444;
+}
+.pos .popup-numpad .input-button:active,
+.pos .popup-numpad .mode-button:active {
+    background: #444;
+    color: white;
+    border-color: #444;
+}
+
+.pos .popup.popup-password {
+    width: 254px;
+    height: 510px;
+}
+.pos .popup-password .mode-button.add,
+.pos .popup-password .input-button.dot {
+    display: none;
+}
+.pos .popup-password .popup-numpad {
+    width: 190px;
+}
+.pos .popup-password .popup-input {
+    width: 70%;
+ }
+.pos .popup-input.value .highlight {
+    background: lightblue;
+}
+
+.pos .popup .body ul,
+.pos .popup ul.body {
+    text-align: left;
+    margin-left: 1em;
+}
+.pos .popup .body li {
+    text-indent: 1em;
+}
+.pos .popup .body li:before {
+    content: '—';
+    position: relative;
+    font-size: 0.6em;
+    left: -1em;
+    bottom: 0.2em;
+}
+
+
+/*  ********* The Webkit Scrollbar  ********* */
+
+.pos *::-webkit-scrollbar{
+    width:  4px;
+    height: 4px;
+}
+.pos *::-webkit-scrollbar-track{
+    background: $gray-200;
+    border-left: solid 1px rgb(200,200,200);
+}
+.pos *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    background: #393939;
+    min-height: 30px;
+}
+
+.pos.big-scrollbars *::-webkit-scrollbar{
+    width:  40px;
+    height: 40px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-track{
+    background: $gray-200;
+    border-left: none;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 40px;
+    border-radius: 3px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button{
+    width:  40px;
+    height: 40px;
+    border-radius: 3px;
+    background: rgb(210,210,210);
+    background-size: cover;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:decrement{
+    background-image: url('../img/scroll-up.png');
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:increment{
+    background-image: url('../img/scroll-down.png');
+}
+
+
+/*  ********* Unsupported Browser Page ********* */
+
+.pos .not-supported-browser{
+    position: absolute;
+    z-index: 100000;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background: #2C2C2C;
+}
+.pos .not-supported-browser .message{
+    width:600px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: #d3d3d3;
+    font-size: 14px;
+}
+.pos .not-supported-browser img{
+    border-collapse: separate;
+}
+
+.o-fade {
+    transition: opacity .2s;
+}
+
+.o-fade-enter, .o-fade-leave {
+    opacity: 0;
+}
+
+.o-swing {
+    transition: opacity 0.8s;
+}
+
+.o-swing-enter, .o-swing-leave {
+    opacity: 0;
+}
+
+/*
+    We block the top-header when a temp screen is displayed.
+    Similar to blocking the whole ui when a popup is displayed.
+*/
+.pos .block-top-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+
+.drag-handle {
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+
+/* Order Management */
+
+.item .page-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: x-large;
+}
+
+.page-controls > div {
+    border: darkgray solid 1px;
+    border-radius: 2px;
+}
+
+.page-controls > div:hover {
+    color: $primary;
+}
+
+.page-controls .previous {
+    margin-right: 0.2rem;
+}
+
+.page-controls .next {
+    margin-left: 0.2rem;
+}
+
+.order-receipt {
+    color: white;
+    font-size: medium;
+    text-align: center;
+}
+
+.order-receipt .title {
+    font-size: large;
+}
+
+/* ********* Product Configurator Popup ********* */
+
+.pos .product_configurator_attributes {
+    text-align: left;
+    margin: 1em;
+}
+
+.pos .product_configurator_attributes .attribute {
+    margin-bottom: 1em;
+    padding-left: 0.5em;
+}
+
+.pos .product_configurator_attributes .attribute_name {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.pos .product_configurator_attributes input {
+    min-height: 0;
+    width: auto;
+}
+
+/** Radio attribute **/
+
+.pos .product_configurator_attributes .configurator_radio {
+    line-height: 1.5;
+}
+
+.pos .product_configurator_attributes .configurator_radio .table {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    grid-template-rows: max-content;
+}
+
+.pos .product_configurator_attributes .configurator_radio .table div {
+    margin: 5px 0;
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell {
+    grid-column: 1;
+    word-break: break-word;
+    max-width: 300px;
+}
+
+.pos .product_configurator_attributes .configurator_radio .price-extra-cell {
+    grid-column: 2;
+}
+
+.pos .product_configurator_attributes .configurator_radio input[type='radio'] {
+    box-shadow: none;
+    margin-right: 0.5em;
+}
+
+.pos .product_configurator_attributes .configurator_radio .price_extra {
+    margin-left: 0.5em;
+    padding: 0.2em 0.4em;
+    border-radius: 10rem;
+    color: #FFFFFF;
+    background-color: #6c757d;
+}
+
+.pos .product_configurator_attributes .configurator_radio .custom_value {
+    margin-left: 0.5em;
+    height: 1.3em;
+
+}
+
+/** Selector attribute **/
+
+.pos .product_configurator_attributes .configurator_select {
+    cursor: pointer;
+    background-color: transparent;
+    width: 90%;
+    padding: 0.5em;
+    color: #666666;
+    font-size: 18px;
+    margin-bottom: 0.5em;
+}
+
+/** Color attribute **/
+
+.pos .product_configurator_attributes ul.color_attribute_list {
+    margin-left: 0;
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item:before {
+    content: '';
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item {
+    margin-bottom: 0.5em;
+    text-indent: 0;
+    display: inline-block;
+}
+
+.pos .product_configurator_attributes .color_attribute_list_item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.pos .product_configurator_attributes .configurator_color {
+    display: inline-block;
+    border: 1px solid #999999;
+}
+
+.pos .product_configurator_attributes .configurator_color.active {
+    border: 3px ridge #66ee66;
+}
+
+.pos .product_configurator_attributes .configurator_color input {
+    margin: 20px;
+    opacity: 0;
+}
+
+.pos .product_configurator_attributes .configurator_color.active input {
+    margin: 18px;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product_configurator_attributes .attribute {
+        width: 95%;
+    }
+
+    .pos .product_configurator_attributes .configurator_radio .attribute-name-cell {
+        max-width: 190px;
+    }
+
+    .pos .product_configurator_attributes .configurator_radio .custom-value-cell {
+        grid-column: 1 / 3;
+        justify-self: center;
+    }
+}
+
+/* TICKET SCREEN */
+
+.pos .orders {
+    overflow-y: auto;
+    font-size: medium;
+}
+
+.pos .orders .header-row{
+    display: flex;
+    background: $gray-700;
+    color: white;
+}
+
+@media screen and (min-width: 768px) {
+    .pos .orders .order-row {
+        display: flex;
+        cursor: pointer;
+    }
+
+    .pos .orders .order-row:nth-child(odd) {
+        background: $gray-200;
+    }
+
+    .pos .orders .order-row:nth-child(even) {
+        background: white;
+    }
+}
+@media screen and (max-width: 768px) {
+    .pos .orders .order-row {
+        margin: 5px;
+        border: 1px solid #C9CCD2; /* $border-color */
+        background: white; /* $o-view-background-color */
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .ticket-screen .screen-full-width {
+        flex-direction: column;
+        height: auto;
+        min-height: 100%;
+    }
+    .ticket-screen .controls {
+        position: sticky;
+        top: 0;
+        background: $gray-300;
+    }
+    .ticket-screen .controls button.search {
+        margin: 0;
+    }
+    .ticket-screen .order,
+    .ticket-screen .leftpane {
+        max-width: inherit;
+    }
+
+    .ticket-screen .rightpane {
+        width: auto;
+    }
+}
+
+.pos .orders .order-row:hover, .pos .orders .order-row.highlight {
+    color: white;
+    background-color:  $primary;
+}
+
+.pos .orders .col {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    padding: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .pos .orders .col.end {
+        justify-content: flex-end;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .pos .orders .order-row > .col > div:first-child {
+        font-weight: bold;
+    }
+
+    .ticket-screen .order-row .delete-button {
+        margin-top: 5px;
+        justify-content: center;
+        background: #d23f3a /* o-text-color('danger') */ ;
+        color: white;
+    }
+    .ticket-screen .order-row .delete-button .fa-trash {
+        margin-right: 5px;
+    }
+}
+
+.ticket-screen .orders .col.very-narrow {
+    flex: 0.2;
+}
+
+.ticket-screen .orders .col.narrow {
+    flex: 0.5;
+}
+
+.ticket-screen .orders .col.wide {
+    flex: 1.5;
+}
+
+.ticket-screen .empty-order-list {
+    text-align: center;
+    margin: 48px;
+    color: $gray-500;
+}
+
+.ticket-screen .empty-order-list h1 {
+    font-size: 20px;
+}
+
+.ticket-screen .empty-order-list .fa {
+    font-size: 64px;
+}
+
+.ticket-screen .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+    flex: 0 0 80px;
+}
+
+.ticket-screen .controls button {
+    min-width: 45px;
+    font-size: medium;
+    padding: 12px;
+    margin-right: 10px;
+    background: #fff;
+    font-weight: bold;
+}
+
+.ticket-screen .controls button.highlight {
+    background: $primary;
+    border-color: $primary;
+    color: white;
+}
+
+.ticket-screen .pos-search-bar {
+    vertical-align: middle;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    max-width: 500px;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+    position: relative;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search input {
+    width: 0;
+    height: 40px;
+    color: #63717f;
+    padding-left: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .radius-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .radius-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .fa {
+    font-size: medium;
+}
+
+.ticket-screen .pos-search-bar .search input:focus {
+    outline: none;
+}
+
+.ticket-screen .pos-search-bar .search .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 14px;
+    z-index: 1;
+    color: #4f5b66;
+}
+
+.ticket-screen .pos-search-bar .search .fields {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 2px;
+    left: 2px;
+    box-shadow: 1px 1px 3px grey;
+    overflow: auto;
+}
+.ticket-screen .pos-search-bar .search ul {
+    background: white;
+    font-size: small;
+    display: inline-block;
+    min-width: 100%;
+}
+
+.ticket-screen .pos-search-bar .search li {
+    margin: 0.2em 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 35px;
+    text-align: left;
+}
+
+.ticket-screen .pos-search-bar .search li .term {
+    color: $primary;
+}
+
+.ticket-screen .pos-search-bar .search li:hover {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search li .field {
+    font-style: italic;
+}
+
+.ticket-screen .pos-search-bar .search li .term {
+    font-weight: bold;
+}
+
+.ticket-screen .pos-search-bar .search li.highlight {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .filter .down-icon {
+    position: absolute;
+    right: 13px;
+    top: 12px;
+}
+
+.ticket-screen .pos-search-bar .filter {
+    height: 40px;
+    background: white;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 15px;
+    padding-right: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    border-left: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 150px;
+}
+
+.ticket-screen .pos-search-bar .filter:hover {
+    color: #868686;
+}
+
+.ticket-screen .pos-search-bar .filter .options {
+    display: block;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 1;
+    box-shadow: 1px 1px 5px grey;
+    padding: 0.5em 0;
+    background: white;
+    color: $gray-700;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li {
+    padding: 0.2em 1.2em;
+    border-top: none;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.ticket-screen .filter ul.options li.indented {
+    text-indent: 1em;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li:hover {
+    background-color: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+}
+
+.ticket-screen .order-container .header-note {
+    text-align: start;
+    padding: 15px;
+    color: grey;
+    padding-bottom: 20px;
+    border-bottom: solid 1px lightgrey;
+    transition: all 300ms linear;
+}
+
+.ticket-screen .order-container .header-note.highlight {
+    color: red;
+    transition: all 300ms linear;
+}
+
+.ticket-button {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: medium;
+    color: white;
+}
+
+.ticket-button.highlight {
+    background: rgba(0, 0, 0, .08);
+}
+
+.ticket-button:hover {
+    background: rgba(0, 0, 0, .08);
+    cursor: pointer;
+}
+
+.ticket-button .with-badge {
+    margin-right: 0.7em;
+    font-size: larger;
+}
+
+[badge] {
+    position: relative;
+}
+
+[badge]:after {
+    background: $o-navbar-badge-bg;
+    border-radius: 10rem;
+    color: #fff;
+    content: attr(badge);
+    font-size: small;
+    min-width: 20px;
+    padding: 2px;
+    position: absolute;
+    text-align: center;
+    left: 0.6em;
+    bottom: 0.6em;
+}
+
+[badge^="-"]:after,
+[badge="0"]:after,
+[badge=""]:after {
+ display: none;
+}
+
+.cash-move-button {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: medium;
+    color: white;
+}
+
+.cash-move-button:hover {
+    background: rgba(0, 0, 0, .08);
+    cursor: pointer;
+}
+
+/* Search Bar (PartnerList & Product Screens*/
+
+.pos .search-bar-container {
+    display: flex;
+    align-items: center;
+}
+
+.pos .products-widget .search-bar-container {
+    position: sticky;
+    right: 0;
+}
+
+.pos .rightpane-header .pos-search-bar,
+.pos .partnerlist-screen .pos-search-bar {
+    display: flex;
+    align-items: center;
+    padding: 0px 10px;
+    background-color: $gray-100;
+    height: 100%;
+    font-size: 16px;
+    transition: all linear 150ms;
+}
+
+.pos .rightpane-header .pos-search-bar:focus-within,
+.pos .partnerlist-screen .pos-search-bar:focus-within {
+    background: $gray-200;
+}
+
+.pos .rightpane-header .pos-search-bar input,
+.pos .partnerlist-screen .pos-search-bar input {
+    flex-grow: 1;
+    padding: 0 5px;
+    height: 100%;
+    background: none;
+    border: none !important;
+    outline: none !important;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #63717f;
+}
+
+.pos .rightpane-header .pos-search-bar i,
+.pos .partnerlist-screen .pos-search-bar i {
+    cursor: pointer;
+    transition: color linear 150ms;
+}
+
+.pos .rightpane-header .pos-search-bar i:active,
+.pos .partnerlist-screen .pos-search-bar i:active {
+    color: purple;
+}
+
+/* Partner List Screen Search Bar */
+
+.pos .search-bar-container.sb-partner {
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.pos .sb-partner .pos-search-bar{
+    width: 40%;
+}
+
+/* Product Screen Search Bar */
+
+.pos .search-bar-container.sb-product {
+    width: 75%;
+    max-width: 250px;
+    justify-content: flex-start;
+    height: 100%;
+    min-height: 48px;
+}
+
+.pos .search-bar-container.sb-product .icon {
+    height: 100%;
+    border-radius: 0;
+    color: $primary;
+    margin: 0;
+    padding: 0 map-get($spacers, 3);
+    background-color: #fff;
+}
+
+.pos .search-bar-container.sb-product .icon:hover {
+    background: #fff;
+    color: darken($primary, 5%);
+}
+
+.pos .sb-product .pos-search-bar{
+    flex-grow: 1;
+}
+
+.pos .sb-product .icon {
+    color: white;
+    font-size: medium;
+    padding: 0 12px;
+    margin: 0 5px;
+    height: 80%;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.pos .sb-product .icon:hover {
+    background: rgba(0, 0, 0, .08);
+}
+
+.pos .sb-product .icon:active {
+    background: rgba(104,69,95, 0.7);
+}
+
+@media screen and (max-width: 768px) {
+    .pos .search-bar-container.sb-product {
+        max-width: none;
+        width: auto;
+        border-left: 1px solid $gray-200;
+    }
+
+    .pos .sb-partner .pos-search-bar {
+        flex-grow: 1;
+    }
+}
+
+.currencyCashBox {
+    font-size: 30px;
+}
+
+.receipt-screen .default-view {
+    display: flex;
+    overflow: hidden;
+}
+
+.receipt-screen .default-view .pos-receipt-container {
+    flex: 0 1 400px;
+    overflow: auto;
+}
+
+.receipt-screen .default-view .actions {
+    flex: 1;
+    margin: 0 1.5rem;
+}
+
+.receipt-screen .default-view .actions * {
+    font-size: 1rem;
+}
+
+.receipt-screen .default-view .actions h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.receipt-screen .default-view .actions .buttons {
+    display: flex;
+    margin: 1rem 0px;
+}
+
+.receipt-screen .default-view .actions .buttons .button {
+    flex: 1;
+    border: solid 1px rgb(209, 209, 209);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    background: $gray-200;
+}
+
+.receipt-screen .default-view .actions .send-email {
+    display: flex;
+}
+
+.receipt-screen .default-view .actions .send-email .input-email {
+    display: flex;
+    flex: 1;
+    background: white;
+    border: solid 1px rgb(209, 209, 209);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.receipt-screen .default-view .actions .send-email input {
+    flex: 1;
+    padding-left: 1rem;
+    border: none;
+    color: $gray-700;
+}
+
+.receipt-screen .default-view .actions .send-email input:focus {
+    outline: none;
+}
+
+.receipt-screen .default-view .actions .send-email button.send {
+    padding: 1rem 40px;
+    margin: 2px;
+    border: none;
+    background: $gray-200;
+    color: $gray-500;
+}
+.receipt-screen .default-view .actions .send-email button.send:not(.highlight) {
+    cursor: not-allowed;
+}
+
+.receipt-screen .default-view .actions .send-email button.send.highlight {
+    color: white;
+    background-color: $primary;
+}
+
+.receipt-screen .notice {
+    margin-top: 6px;
+    display: flex;
+}
+
+.receipt-screen .notice .failed {
+    color: rgb(168, 89, 89);
+}
+
+.receipt-screen .notice .successful {
+    color: $primary;
+}
+
+.receipt-screen .notice .send-mail-info {
+    width: 100%;
+    text-align: right;
+    font-style: italic;
+}
+
+.receipt-screen .button.validation {
+    grid-column: span 2;
+}
+
+@media screen and (max-width: 768px) {
+    .receipt-screen .default-view {
+        flex-direction: column;
+        overflow: auto;
+    }
+    .receipt-screen .default-view .actions {
+        flex: 0;
+    }
+    .receipt-screen .default-view .actions h1 {
+        margin-bottom: 1.5rem;
+    }
+    .receipt-screen .default-view .pos-receipt-container {
+        flex: 1;
+        overflow: visible;
+    }
+}
+
+/**
+ * Notification
+ */
+
+ .pos .notification {
+    width: 350px;
+    background-color: #333333AA;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: calc((100% - 350px - 32px)/2);
+    bottom: 5%;
+    font-size: 17px;
+}
+
+.pos .pos-topheader .status-buttons > div:hover {
+    background: rgba(0, 0, 0, .08);
+}
+
+@media screen and (max-width: 768px) {
+    .ticket-screen .pos-search-bar .search input {
+        padding-left: 10px;
+    }
+}
+
+/** CashMovePopup **/
+
+.cash-move-popup {
+    top: 20% !important;
+}
+
+.cash-move {
+    display: flex;
+    flex-flow: column;
+}
+
+.cash-move .input-amount {
+    display: flex;
+    flex-flow: row;
+}
+
+.cash-move .input-amount .input-type {
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    border-radius: 2px;
+    padding: 0 12px;
+    margin-right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: solid 1px rgba(60,60,60,0.1);
+    background: rgba(0,0,0,0.05);
+    white-space: nowrap;
+}
+
+.cash-move .input-amount .input-type.highlight {
+    background: $primary !important;
+    border: solid 1px #64AF8A !important;
+    color: white !important;
+}
+
+.cash-move .input-amount .red-highlight {
+    background: #bd2222 !important;
+    border: solid 1px #bd2222 !important;
+    color: white !important;
+}
+
+.cash-move .input-amount input {
+    width: 100%;
+    min-height: auto;
+    text-align: right;
+    padding-right: 30px;
+}
+
+.cash-move .input-amount .input-field {
+    position: relative;
+    flex-grow: 1;
+}
+
+.cash-move .input-amount .input-field span.currency {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.cash-move .input-amount .input-field span.left-currency {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    background-color: #fff;
+    padding-right: 8px;
+}
+
+.cash-move textarea {
+    resize: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.cash-move .error-message {
+    color: rgb(197, 52, 0);
+    text-align: left;
+    padding-left: 5px;
+}
+
+.pos .popup footer.cash-move {
+    display: block;
+    width: calc(100% - 36px);
+    padding: 10px 18px 10px 18px;
+}
+
+.pos .popup .footer.cash-move .button.confirm {
+    float: left;
+}
+
+.pos .popup .footer.cash-move .button.cancel {
+    margin-right: 0;
+}
+
+/* For LoadingScreen */
+
+.lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 60px;
+}
+.lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes lds-ellipsis3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes lds-ellipsis2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(24px, 0);
+    }
+}

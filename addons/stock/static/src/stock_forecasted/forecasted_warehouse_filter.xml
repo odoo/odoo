@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="stock.ForecastedWarehouseFilter" owl="1">
+        <Dropdown t-if="displayWarehouseFilter" menuClass="o_filter_menu"
+        class="'btn-group o_stock_report_warehouse_filter'" togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <span class="fa fa-home"/> Warehouse: <t t-esc="activeWarehouse['name']"/>
+            </t>
+            <t t-foreach="warehouses" t-as="wh" t-key='wh.id'>
+                <DropdownItem onSelected="() => this._onSelected(wh['id'])"><t t-esc="wh['name']"/></DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

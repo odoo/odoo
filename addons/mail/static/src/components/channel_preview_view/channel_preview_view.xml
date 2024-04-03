@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChannelPreviewView" owl="1">
+        <t t-if="channelPreviewView">
+            <!--
+                The preview template is used by the discuss in mobile, and by the systray
+                menu in order to show preview of threads.
+            -->
+            <div class="o_NotificationListItem o_ChannelPreviewView d-flex flex-shrink-0 align-items-center p-1 cursor-pointer"
+                t-att-class="{ 'o-muted': channelPreviewView.channel.localMessageUnreadCounter === 0 }"
+                t-attf-class="{{ className }}"
+                t-on-click="channelPreviewView.onClick"
+                t-att-data-channel-id="channelPreviewView.channel.id"
+                t-ref="root"
+            >
+                <div class="o_NotificationListItem_sidebar o_ChannelPreviewView_sidebar m-1">
+                    <div class="o_NotificationListItem_imageContainer o_ChannelPreviewView_imageContainer o_ChannelPreviewView_sidebarItem position-relative">
+                        <img class="o_NotificationListItem_image o_ChannelPreviewView_image w-100 h-100 rounded-circle" t-att-src="channelPreviewView.imageUrl" alt="Thread Image"/>
+                        <t t-if="channelPreviewView.personaImStatusIconView">
+                            <PersonaImStatusIcon
+                                className="'o_NotificationListItem_personaImStatusIcon o_ChannelPreviewView_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center'"
+                                classNameObj="{
+                                    'o-isDeviceSmall': messaging.device.isSmall,
+                                    'small': !messaging.device.isSmall,
+                                    'o-muted': channelPreviewView.channel.localMessageUnreadCounter === 0,
+                                }"
+                                record="channelPreviewView.personaImStatusIconView"
+                            />
+                        </t>
+                    </div>
+                </div>
+                <div class="o_NotificationListItem_content o_ChannelPreviewView_content d-flex flex-column flex-grow-1 align-self-start m-2">
+                    <div class="o_NotificationListItem_header o_ChannelPreviewView_header d-flex align-items-baseline">
+                        <span class="o_NotificationListItem_name o_ChannelPreviewView_name text-truncate fw-bold" t-att-class="{ 'o-isDeviceSmall fs-5': messaging.device.isSmall, 'o-muted text-600': channelPreviewView.channel.localMessageUnreadCounter === 0 }">
+                            <t t-esc="channelPreviewView.channel.displayName"/>
+                        </span>
+                        <t t-if="channelPreviewView.channel.localMessageUnreadCounter > 1">
+                            <span class="o_NotificationListItem_counter o_ChannelPreviewView_counter mx-1 fw-bold">
+                                (<t t-esc="channelPreviewView.channel.localMessageUnreadCounter"/>)
+                            </span>
+                        </t>
+                        <t t-if="channelPreviewView.thread.rtcSessions.length > 0">
+                            <span class="o_ChannelPreviewView_callIndicator fa fa-volume-up mx-2" t-att-class="{ 'o-isCalling text-danger': channelPreviewView.thread.rtc }"/>
+                        </t>
+                        <span class="flex-grow-1"/>
+                        <t t-if="channelPreviewView.thread.lastMessage and channelPreviewView.thread.lastMessage.date">
+                            <small class="o_NotificationListItem_date o_ChannelPreviewView_date flex-shrink-0 text-500" t-att-class="{ 'o-muted': channelPreviewView.channel.localMessageUnreadCounter === 0 }">
+                                <t t-esc="channelPreviewView.thread.lastMessage.date.fromNow()"/>
+                            </small>
+                        </t>
+                    </div>
+                    <div class="o_ChannelPreviewView_core d-flex align-items-baseline">
+                        <span class="o_NotificationListItem_coreItem o_NotificationListItem_inlineText o_ChannelPreviewView_coreItem o_ChannelPreviewView_inlineText me-2 text-truncate" t-att-class="{ 'o-empty': channelPreviewView.isEmpty }">
+                            <t t-if="channelPreviewView.lastTrackingValue">
+                                <TrackingValue value="channelPreviewView.lastTrackingValue"/>
+                            </t>
+                            <t t-else="">
+                                <t t-if="channelPreviewView.messageAuthorPrefixView">
+                                    <MessageAuthorPrefix record="channelPreviewView.messageAuthorPrefixView"/>
+                                </t>
+                                <span class="o_ChannelPreviewView_messageBody" t-esc="channelPreviewView.inlineLastMessageBody"/>
+                            </t>
+                        </span>
+                        <span class="flex-grow-1"/>
+                        <t t-if="channelPreviewView.channel.localMessageUnreadCounter > 0">
+                            <span class="o_NotificationListItem_coreItem o_NotificationListItem_markAsRead o_ChannelPreviewView_coreItem o_ChannelPreviewView_markAsRead fa fa-check d-flex flex-shrink-0 ms-2 text-600 opacity-50 opacity-100-hover" title="Mark as Read" t-on-click="channelPreviewView.onClickMarkAsRead" t-ref="markAsRead"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

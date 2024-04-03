@@ -1,0 +1,3455 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product
+# 
+# Translators:
+# Jan Dziurz <jan.dziurzynski@openglobe.pl>, 2022
+# Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2022
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2022
+# Zdzisław Krajewski <zdzichucb@gmail.com>, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
+# Karol Rybak <karolrybak85@gmail.com>, 2022
+# Dawid Prus, 2022
+# Natalia Gros <nag@odoo.com>, 2022
+# Tomasz Leppich <t.leppich@gmail.com>, 2022
+# Jacek Michalski <michalski.jck@gmail.com>, 2022
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
+# Paweł Wodyński <pw@myodoo.pl>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2022
+# Maja Stawicka <mjstwck@wp.pl>, 2022
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2022
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
+# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2022
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
+# Martin Trigaux, 2022
+# Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
+msgid "# Product Variants"
+msgstr "# Wariantów produktów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__product_count
+msgid "# Products"
+msgstr "# Produktów"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid ""
+"%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
+"Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
+msgstr ""
+"%(base)sz %(discount)s%% upustem i dodatkową %(surcharge)sopłatą\n"
+"Przykład: %(amount)s * %(discount_charge)s +  %(price_surcharge)s→ %(total_amount)s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "%(percentage)s %% discount and %(price)s surcharge"
+msgstr "%(percentage)s%% upust i %(price)s dopłata"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "%s %% discount"
+msgstr "%s %% upust"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopiuj)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "%s : end date (%s) should be greater than start date (%s)"
+msgstr "%s: data końcowa (%s) powinna być większa niż data początkowa (%s)"
+
+#. module: product
+#: model:ir.actions.report,print_report_name:product.report_product_template_label
+#: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
+msgid "'Products Labels - %s' % (object.name)"
+msgstr "'Etykiety produktów - %s' % (object.name)"
+
+#. module: product
+#: model:ir.actions.report,print_report_name:product.report_product_packaging
+msgid "'Products packaging - %s' % (object.name)"
+msgstr "'Opakowania produktów - %s' % (object.name)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, python-format
+msgid "- Barcode \"%s\" already assigned to product(s): %s"
+msgstr "- Kod kreskowy \"%s\" jest już przypisany do produktów: %s"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__create_variant
+msgid ""
+"- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.\n"
+"        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.\n"
+"        - Never: Variants are never created for the attribute.\n"
+"        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
+msgstr ""
+"- Natychmiast: Wszystkie możliwe warianty są tworzone natychmiast po dodaniu atrybutu i jego wartości do produktu.\n"
+"- Dynamicznie: Każdy wariant jest tworzony tylko wtedy, gdy odpowiadające mu atrybuty i wartości są dodawane do zlecenia sprzedaży.\n"
+"- Nigdy: Warianty nigdy nie są tworzone dla danego atrybutu.\n"
+"Uwaga: trybu tworzenia wariantów nie można zmienić, gdy atrybut jest używany w co najmniej jednym produkcie."
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_5
+msgid "1 year"
+msgstr "1 rok"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_4_product_template
+msgid "160x80cm, with large legs."
+msgstr "160x80cm, z dużymi nogami."
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
+msgid "2 x 7 with price"
+msgstr "2 x 7 z ceną"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_6
+msgid "2 year"
+msgstr "2 lata"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
+msgid "4 x 12"
+msgstr "4 x 12"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
+msgid "4 x 12 with price"
+msgstr "4 x 12 z ceną"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
+msgid "4 x 7 with price"
+msgstr "4 x 7 z ceną"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Extra Prices\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Extra Price\n"
+"                                    </span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"Dodatkowe ceny\n"
+"</span>\n"
+"<span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"Cena dodatkowa\n"
+"</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+msgid "<span class=\"o_stat_text\"> Products</span>"
+msgstr "<span class=\"o_stat_text\"> Produkty</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "<span class=\"o_stat_text\">Related Products</span>"
+msgstr "<span class=\"o_stat_text\">Powiązane produkty</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span>%</span>"
+msgstr "<span>%</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "<span>All general settings about this product are managed on</span>"
+msgstr ""
+"<span>Wszystkie ogólne ustawienia tego produktu są zarządzane na "
+"stronie</span>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "<strong>Qty: </strong>"
+msgstr "<strong>Ilość: </strong>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "<strong>Sales Order Line Quantities (price per unit)</strong>"
+msgstr ""
+"<strong>Ilości z linii zamówienia sprzedaży (cena za jednostkę)</strong>"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back\n"
+"                                    here to set up the feature."
+msgstr ""
+"<strong>Zapisz</strong> tę stronę i wróć\n"
+"tutaj, aby skonfigurować funkcję."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid ""
+"<strong>Warning</strong>: adding or deleting attributes\n"
+"                        will delete and recreate existing variants and lead\n"
+"                        to the loss of their possible customizations."
+msgstr ""
+"<strong>Ostrzeżenie</strong>: dodawanie lub usuwanie atrybutów\n"
+"                        usunie lub utworzy ponownie istniejące warianty i doprowadzi\n"
+"                        do utraty ich możliwych modyfikacji."
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
+msgid "A barcode can only be assigned to one packaging."
+msgstr "Kod kreskowy może być przypisany tylko do jednego opakowania."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__description_sale
+#: model:ir.model.fields,help:product.field_product_template__description_sale
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
+msgstr ""
+"Opis produktu, który chcesz przekazać swoim klientom. Ten opis będzie "
+"skopiowany do każdego Zlecenia Sprzedaży, Zlecenia Dostawy i Faktury "
+"Klienta/Noty Kredytowej"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, python-format
+msgid "A packaging already uses the barcode"
+msgstr "Opakowanie już wykorzystuje kod kreskowy"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
+"            This is the perfect tool to handle several pricings, seasonal discounts, etc."
+msgstr ""
+"Cena to zestaw cen sprzedaży lub reguł obliczania ceny linii zamówień sprzedaży w oparciu o produkty, kategorie produktów, daty i zamówione ilości.\n"
+"Jest to idealne narzędzie do obsługi kilku cen, upustów sezonowych itp."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_packaging.py:0
+#, python-format
+msgid "A product already uses the barcode"
+msgstr "Produkt korzysta już z kodu kreskowego"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__detailed_type
+#: model:ir.model.fields,help:product.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Produkt rejestrowany to produkt, którego stanem magazynowym zarządzasz. Wymaga zainstalowania aplikacji Magazynowanie.\n"
+"Produkt pomocniczy to produkt, którego stan magazynowy nie jest zarządzany.\n"
+"Usługa jest dostarczanym przez Ciebie niefizycznym produktem."
+
+#. module: product
+#: model:product.template,name:product.product_product_25_product_template
+msgid "Acoustic Bloc Screens"
+msgstr "Ekrany akustyczne"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction
+msgid "Action Needed"
+msgstr "Wymagane działanie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__active
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__active
+#: model:ir.model.fields,field_description:product.field_product_product__active
+#: model:ir.model.fields,field_description:product.field_product_template__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__active
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_active
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Active Products"
+msgstr "Aktywne produkty"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_ids
+#: model:ir.model.fields,field_description:product.field_product_template__activity_ids
+msgid "Activities"
+msgstr "Czynności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
+#: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekoracja wyjątku aktywności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_state
+#: model:ir.model.fields,field_description:product.field_product_template__activity_state
+msgid "Activity State"
+msgstr "Stan aktywności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktywności"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Add a quantity"
+msgstr "Dodaj ilość"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
+msgid "Additional Product Tag"
+msgstr "Dodatkowy tag produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
+#: model:res.groups,name:product.group_sale_pricelist
+msgid "Advanced Pricelists"
+msgstr "Zaawansowane cenniki"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
+msgid "Advanced price rules (discounts, formulas)"
+msgstr "Zaawansowane reguły cenowe (upusty, formuły)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
+msgid "All Product Tag"
+msgstr "Wszystkie tagi produktów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_ids
+msgid "All Product Variants using this Tag"
+msgstr "Wszystkie warianty produktu używające tego tagu"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
+#, python-format
+msgid "All Products"
+msgstr "Wszystkie produkty"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
+msgid "Allow users to input custom values for this attribute value"
+msgstr ""
+"Zezwalaj użytkownikom na wprowadzanie niestandardowych wartości dla tej "
+"wartości atrybutu"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
+msgid ""
+"Allows to manage different prices based on rules per category of customers.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr ""
+"Pozwala ustalać różne ceny na podstawie reguł dla poszczególnych kategorii klientów.\n"
+"Przykład: 10% dla kupców detalicznych, promocja 5 EUR na ten produkt, etc."
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_2
+msgid "Aluminium"
+msgstr "Aluminium"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Applicable On"
+msgstr "Stosowane dla"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+msgid "Applied On"
+msgstr "Zastosowano do"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
+msgid "Apply On"
+msgstr "Zastosuj do"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Archived"
+msgstr "Zarchiwizowane"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
+msgid "Assigns the priority to the list of product vendor."
+msgstr "Przypisuje priorytet do listy dostawców produktów."
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_pricelist_report.js:0
+#, python-format
+msgid ""
+"At most %d quantities can be displayed simultaneously. Remove a selected "
+"quantity to add others."
+msgstr ""
+"Jednocześnie mogą być wyświetlane maksymalnie %d ilości. Usuń wybraną ilość,"
+" aby dodać inne."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
+#: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liczba załączników"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
+msgid "Attribute"
+msgstr "Atrybut"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
+msgid "Attribute Line"
+msgstr "Linia atrybutów"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+msgid "Attribute Name"
+msgstr "Nazwa atrybutu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_value
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_product_template_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_template_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
+msgid "Attribute Value"
+msgstr "Wartość atrybutu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "Attribute Values"
+msgstr "Wartość atrybutu"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.attribute_action
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Attributes"
+msgstr "Atrybuty"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Attributes & Variants"
+msgstr "Atrybuty i warianty"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Availability"
+msgstr "Dostępność"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__barcode
+#: model:ir.model.fields,field_description:product.field_product_product__barcode
+#: model:ir.model.fields,field_description:product.field_product_template__barcode
+msgid "Barcode"
+msgstr "Kod kreskowy"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging__barcode
+msgid ""
+"Barcode used for packaging identification. Scan this packaging barcode from "
+"a transfer in the Barcode app to move all the contained units"
+msgstr ""
+"Kod kreskowy używany do identyfikacji opakowań. Zeskanuj ten kod kreskowy "
+"opakowania z transferu w aplikacji Barcode, aby przenieść wszystkie zawarte "
+"w nim jednostki"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, python-format
+msgid ""
+"Barcode(s) already assigned:\n"
+"\n"
+"%s"
+msgstr ""
+"Kody kreskowe zostały już przypisane:\n"
+"\n"
+"%s"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__base
+msgid ""
+"Base price for computation.\n"
+"Sales Price: The base price will be the Sales Price.\n"
+"Cost Price : The base price will be the cost price.\n"
+"Other Pricelist : Computation of the base price based on another Pricelist."
+msgstr ""
+"Cena bazowa do obliczeń.\n"
+"Cena sprzedaży: Ceną bazową będzie cena sprzedaży.\n"
+"Cena kosztu: Ceną bazową będzie cena kosztu.\n"
+"Inny cennik : Obliczenie ceny bazowej na podstawie innego cennika."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
+msgid "Based on"
+msgstr "Bazując na"
+
+#. module: product
+#: model:res.groups,name:product.group_product_pricelist
+msgid "Basic Pricelists"
+msgstr "Podstawowe cenniki"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_4
+msgid "Black"
+msgstr "Czarny"
+
+#. module: product
+#: model:product.template,name:product.product_product_10_product_template
+msgid "Cabinet with Doors"
+msgstr "Szafka z drzwiami"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
+#: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
+msgid "Can Image 1024 be zoomed"
+msgstr "Czy obraz 1024 można powiększyć?"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
+msgid "Can Variant Image 1024 be zoomed"
+msgstr "Czy można powiększyć wariant obrazu 1024"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Purchased"
+msgstr "Może być kupowane"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Sold"
+msgstr "Może być sprzedawane"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "Category: %s"
+msgstr "Kategoria: %s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__child_id
+msgid "Child Categories"
+msgstr "Kategorie podrzędne"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_open_label_layout
+msgid "Choose Labels Layout"
+msgstr "Wybierz Układ Etykiet"
+
+#. module: product
+#: model:ir.model,name:product.model_product_label_layout
+msgid "Choose the sheet layout to print the labels"
+msgstr "Wybierz układ arkusza do drukowania etykiet"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Codes"
+msgstr "Kody"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
+#: model:ir.model.fields,field_description:product.field_product_tag__color
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__color
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__color
+#: model:product.attribute,name:product.product_attribute_2
+msgid "Color"
+msgstr "Kolor"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__color
+#: model:ir.model.fields,field_description:product.field_product_product__color
+#: model:ir.model.fields,field_description:product.field_product_template__color
+msgid "Color Index"
+msgstr "Indeks kolorów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__columns
+msgid "Columns"
+msgstr "Kolumny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__combination_indices
+msgid "Combination Indices"
+msgstr "Wskaźniki łączone"
+
+#. module: product
+#: model:ir.model,name:product.model_res_company
+msgid "Companies"
+msgstr "Firmy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
+#: model:ir.model.fields,field_description:product.field_product_product__company_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__company_id
+#: model:ir.model.fields,field_description:product.field_product_template__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__complete_name
+msgid "Complete Name"
+msgstr "Pełna nazwa"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Computation"
+msgstr "Obliczenia"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
+msgid "Compute Price"
+msgstr "Oblicz cenę"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Conditions"
+msgstr "Warunki"
+
+#. module: product
+#: model:product.template,name:product.product_product_11_product_template
+msgid "Conference Chair"
+msgstr "Przewodniczący konferencji"
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_02_product_template
+msgid "Conference room table"
+msgstr "Stół do sali konferencyjnej"
+
+#. module: product
+#: model:ir.model,name:product.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Configuration"
+msgstr "Konfiguracja"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Configure"
+msgstr "Konfiguruj"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
+msgid "Confirm"
+msgstr "Potwierdź"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
+msgid "Consumable"
+msgstr "Pomocniczy"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"Consumables are physical products for which you don't manage the inventory "
+"level: they are always available."
+msgstr ""
+"Materiały eksploatacyjne to produkty fizyczne, dla których nie zarządza się "
+"poziomem zapasów: są one zawsze dostępne."
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid "Contact Us"
+msgstr "Skontaktuj się z nami"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__qty
+msgid "Contained Quantity"
+msgstr "Zawarta ilość"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
+msgid "Contained Quantity should be positive."
+msgstr "Zawarta ilość powinna być dodatnia."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
+msgid "Contained quantity"
+msgstr "Zawarta ilość"
+
+#. module: product
+#: model:product.template,name:product.product_product_13_product_template
+msgid "Corner Desk Left Sit"
+msgstr "Biurko narożne lewe"
+
+#. module: product
+#: model:product.template,name:product.product_product_5_product_template
+msgid "Corner Desk Right Sit"
+msgstr "Biurko narożne, siedzenie po prawej stronie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__standard_price
+#: model:ir.model.fields,field_description:product.field_product_template__standard_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
+msgid "Cost"
+msgstr "Koszt"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
+msgid "Cost Currency"
+msgstr "Waluta kosztu"
+
+#. module: product
+#: model:ir.model,name:product.model_res_country_group
+msgid "Country Group"
+msgstr "Grupa krajów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
+msgid "Country Groups"
+msgstr "Grupy krajów"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+msgid "Create a new pricelist"
+msgstr "Utwórz nowy cennik"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_template_action
+#: model_terms:ir.actions.act_window,help:product.product_template_action_all
+msgid "Create a new product"
+msgstr "Utwórz nowy produkt"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action
+#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
+#: model_terms:ir.actions.act_window,help:product.product_variant_action
+msgid "Create a new product variant"
+msgstr "Utwórz nowy wariant produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_category__create_uid
+#: model:ir.model.fields,field_description:product.field_product_label_layout__create_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_uid
+#: model:ir.model.fields,field_description:product.field_product_product__create_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_uid
+#: model:ir.model.fields,field_description:product.field_product_tag__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_category__create_date
+#: model:ir.model.fields,field_description:product.field_product_label_layout__create_date
+#: model:ir.model.fields,field_description:product.field_product_packaging__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_date
+#: model:ir.model.fields,field_description:product.field_product_product__create_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_date
+#: model:ir.model.fields,field_description:product.field_product_tag__create_date
+#: model:ir.model.fields,field_description:product.field_product_template__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
+msgid "Cubic Feet"
+msgstr "Stopy sześcienne"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
+msgid "Cubic Meters"
+msgstr "Metry sześcienne"
+
+#. module: product
+#: model:ir.model,name:product.model_res_currency
+#: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__currency_id
+#: model:ir.model.fields,field_description:product.field_product_product__currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
+msgid "Currency"
+msgstr "Waluta"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
+msgid "Custom Value"
+msgstr "Wartość niestandardowa"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__partner_ref
+msgid "Customer Ref"
+msgstr "Odn. klienta"
+
+#. module: product
+#: model:product.template,name:product.product_product_4_product_template
+msgid "Customizable Desk"
+msgstr "Biurko z możliwością dostosowania"
+
+#. module: product
+#: model:ir.model,name:product.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Dokładność po przecinku"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/res_company.py:0
+#: code:addons/product/models/res_company.py:0
+#, python-format
+msgid "Default %(currency)s pricelist"
+msgstr "Domyślny cennik %(currency)s"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
+#: model:ir.model.fields,help:product.field_product_product__uom_id
+#: model:ir.model.fields,help:product.field_product_template__uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
+"Domyślna jednostka miary stosowana dla wszystkich operacji magazynowych."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_po_id
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
+#: model:ir.model.fields,help:product.field_product_template__uom_po_id
+msgid ""
+"Default unit of measure used for purchase orders. It must be in the same "
+"category as the default unit of measure."
+msgstr ""
+"Domyślna jednostka miary używana dla zamówień zakupu. Musi należeć do tej "
+"samej kategorii co domyślna jednostka miary."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_tag_action
+msgid "Define a new tag"
+msgstr "Zdefiniuj nowy tag"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Define your volume unit of measure"
+msgstr "Zdefiniuj preferowaną jednostkę objętości"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Define your weight unit of measure"
+msgstr "Zdefiniuj preferowaną jednostkę wagi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
+msgid "Delivery Lead Time"
+msgstr "Czas dostawy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__description
+#: model:ir.model.fields,field_description:product.field_product_template__description
+msgid "Description"
+msgstr "Opis"
+
+#. module: product
+#: model:product.template,name:product.product_product_3_product_template
+msgid "Desk Combination"
+msgstr "Kombinacja biurka"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Desk Stand with Screen"
+msgstr "Podstawka na biurko z ekranem"
+
+#. module: product
+#: model:product.template,description_sale:product.product_product_3_product_template
+msgid "Desk combination, black-brown: chair + desk + drawer."
+msgstr "Zestaw biurko, czarno-brązowy: krzesło + biurko + szuflada."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__sequence
+#: model:ir.model.fields,help:product.field_product_attribute_value__sequence
+msgid "Determine the display order"
+msgstr "Określa kolejność wyświetlania"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
+msgid "Discard"
+msgstr "Odrzuć"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Discount"
+msgstr "Upust"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
+msgid "Discount Policy"
+msgstr "Zasady rabatów"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
+msgid "Discount included in the price"
+msgstr "Rabat w cenie"
+
+#. module: product
+#: model:res.groups,name:product.group_discount_per_so_line
+msgid "Discount on lines"
+msgstr "Upust na pozycjach"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Discounts"
+msgstr "Upusty"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_category__display_name
+#: model:ir.model.fields,field_description:product.field_product_label_layout__display_name
+#: model:ir.model.fields,field_description:product.field_product_packaging__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:product.field_product_product__display_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:product.field_product_tag__display_name
+#: model:ir.model.fields,field_description:product.field_product_template__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Display Pricelist"
+msgstr "Wyświetl cennik"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
+msgid "Display Type"
+msgstr "Typ wyświetlania"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+#. module: product
+#: model:product.template,name:product.product_product_27_product_template
+msgid "Drawer"
+msgstr "Szuflada"
+
+#. module: product
+#: model:product.template,name:product.product_product_16_product_template
+msgid "Drawer Black"
+msgstr "Szuflada czarna"
+
+#. module: product
+#: model_terms:product.template,description:product.product_product_27_product_template
+msgid "Drawer with two routing possiblities."
+msgstr "Szuflada z dwoma możliwościami prowadzenia."
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_3
+msgid "Duration"
+msgstr "Czas trwania"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
+msgid "Dymo"
+msgstr "Dymo"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
+msgid "Dynamically"
+msgstr "Dynamicznie"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
+msgid "Each value should be defined only once per attribute per product."
+msgstr ""
+"Każda wartość powinna być zdefiniowana tylko raz na atrybut na produkt."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
+msgid "End Date"
+msgstr "Data końcowa"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
+msgid "End date for this vendor price"
+msgstr "Data końcowa dla cennika dostawcy"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
+msgid ""
+"Ending datetime for the pricelist item validation\n"
+"The displayed value depends on the timezone set in your preferences."
+msgstr ""
+"Końcowa data walidacji pozycji cennika\n"
+"Wyświetlana wartość zależy od strefy czasowej ustawionej w preferencjach."
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid "Ergonomic"
+msgstr "Ergonomiczny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
+msgid "Exclude for"
+msgstr "Wyłączenie dla"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__name
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price
+msgid "Explicit rule name for this pricelist line."
+msgstr "Opisowa nazwa reguły dla tej pozycji cennika."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
+msgid "Extra Content"
+msgstr "Dodatkowa Zawartość"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Extra Fee"
+msgstr "Dodatkowa opłata"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
+msgid ""
+"Extra price for the variant with this attribute value on sale price. eg. 200"
+" price extra, 1000 + 200 = 1200."
+msgstr ""
+"Dodatkowa cena dla wariantu z tą wartością atrybutu w cenie sprzedaży. np. "
+"200 cena dodatkowa, 1000 + 200 = 1200."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__priority
+#: model:ir.model.fields,field_description:product.field_product_template__priority
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
+msgid "Favorite"
+msgstr "Ulubiony"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Favorites"
+msgstr "Ulubione"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
+msgid "Fixed Price"
+msgstr "Cena stała"
+
+#. module: product
+#: model:product.template,name:product.product_product_20_product_template
+msgid "Flipover"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
+msgid "Followers"
+msgstr "Obserwatorzy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Obserwatorzy (partnerzy)"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikona Font awesome np. fa-tasks"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
+msgid ""
+"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"Expressed in the default unit of measure of the product."
+msgstr ""
+"Aby reguła miała zastosowanie, kupiona/sprzedana ilość musi być większa lub równa minimalnej ilości określonej w tym polu.\n"
+"Wyrażona w domyślnej jednostce miary produktu."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
+msgid "Format"
+msgstr "Format"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
+msgid "Formula"
+msgstr "Formuła"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_03_product_template
+msgid "Four Person Desk"
+msgstr "Biurko dla czterech osób"
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_03_product_template
+msgid "Four person modern office workstation"
+msgstr "Czteroosobowe nowoczesne stanowisko pracy biurowej"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Future Activities"
+msgstr "Przyszłe czynności"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "General Information"
+msgstr "Informacje ogólne"
+
+#. module: product
+#: model:ir.actions.server,name:product.action_product_price_list_report
+msgid "Generate Pricelist"
+msgstr "Generowanie cennika"
+
+#. module: product
+#: model:ir.actions.server,name:product.action_product_template_price_list_report
+msgid "Generate Pricelist Report"
+msgstr "Generowanie raportu cennika"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Get product pictures using Barcode"
+msgstr "Uzyskaj zdjęcia produktów przy użyciu kodów kreskowych"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__packaging_ids
+#: model:ir.model.fields,help:product.field_product_template__packaging_ids
+msgid "Gives the different ways to package the same product."
+msgstr "Daje inne możliwości na zapakowanie tego samego produktu."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__sequence
+#: model:ir.model.fields,help:product.field_product_template__sequence
+msgid "Gives the sequence order when displaying a product list"
+msgstr "Określa kolejność podczas wyświetlania listy produktów."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Google Images"
+msgstr "Google Images"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Group By"
+msgstr "Grupuj wg"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
+msgid "HTML Color Index"
+msgstr "HTML indeks koloru"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__has_message
+#: model:ir.model.fields,field_description:product.field_product_template__has_message
+msgid "Has Message"
+msgstr "Ma wiadomość"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__html_color
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__html_color
+msgid ""
+"Here you can set a specific HTML color index (e.g. #ff0000) to display the "
+"color if the attribute type is 'Color'."
+msgstr ""
+"Tutaj można ustawić określony indeks koloru HTML (np. #ff0000), aby "
+"wyświetlić kolor, jeśli typ atrybutu to \"Kolor\"."
+
+#. module: product
+#: model:product.template,name:product.expense_hotel_product_template
+msgid "Hotel Accommodation"
+msgstr "Nocleg"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_category__id
+#: model:ir.model.fields,field_description:product.field_product_label_layout__id
+#: model:ir.model.fields,field_description:product.field_product_packaging__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:product.field_product_product__id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:product.field_product_tag__id
+#: model:ir.model.fields,field_description:product.field_product_template__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona wskazująca na wyjątek aktywności."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_needaction
+#: model:ir.model.fields,help:product.field_product_template__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jeśli zaznaczone, nowe wiadomości wymagają twojej uwagi."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_has_error
+#: model:ir.model.fields,help:product.field_product_template__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Jeśli zaznaczone, niektóre wiadomości napotkały błędy podczas doręczenia."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
+msgid ""
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
+"Jeśli nie zostanie ustawiona, cena sprzedawcy będzie miała zastosowanie do "
+"wszystkich wariantów tego produktu."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist__active
+#: model:ir.model.fields,help:product.field_product_pricelist_item__active
+msgid ""
+"If unchecked, it will allow you to hide the pricelist without removing it."
+msgstr ""
+"Jeśli nie ma zaznaczenia, to cennik może być ukryty bez konieczności "
+"usuwania."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__active
+#: model:ir.model.fields,help:product.field_product_template__active
+msgid ""
+"If unchecked, it will allow you to hide the product without removing it."
+msgstr "Jeśli nie zaznaczone, to można ukryć produkt bez jego usuwania."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_1920
+#: model:ir.model.fields,field_description:product.field_product_template__image_1920
+msgid "Image"
+msgstr "Obraz"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_1024
+#: model:ir.model.fields,field_description:product.field_product_template__image_1024
+msgid "Image 1024"
+msgstr "Obraz 1024"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_128
+#: model:ir.model.fields,field_description:product.field_product_template__image_128
+msgid "Image 128"
+msgstr "Obraz 128"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_256
+#: model:ir.model.fields,field_description:product.field_product_template__image_256
+msgid "Image 256"
+msgstr "Obraz 256"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_512
+#: model:ir.model.fields,field_description:product.field_product_template__image_512
+msgid "Image 512"
+msgstr "Obraz 512"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "Import Template for Pricelists"
+msgstr "Szablon importu dla cenników"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Import Template for Products"
+msgstr "Importuj szablony produktów"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_supplierinfo.py:0
+#, python-format
+msgid "Import Template for Vendor Pricelists"
+msgstr "Szablon importu cenników sprzedawców"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__standard_price
+#: model:ir.model.fields,help:product.field_product_template__standard_price
+msgid ""
+"In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
+"        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
+"        Used to compute margins on sale orders."
+msgstr ""
+"W cenie standardowej i AVCO: wartość produktu (obliczana automatycznie w AVCO).\n"
+"W FIFO: wartość następnej jednostki, która opuści magazyn (obliczana automatycznie).\n"
+"Służy do wyceny produktu, gdy koszt zakupu nie jest znany (np. korekta zapasów).\n"
+"Służy do obliczania marży na zamówieniach sprzedaży."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
+msgid "Inactive"
+msgstr "Nieaktywne"
+
+#. module: product
+#: model:product.template,name:product.product_product_24_product_template
+msgid "Individual Workplace"
+msgstr "Indywidualne miejsce pracy"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
+msgid "Instantly"
+msgstr "Natychmiast"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Internal Notes"
+msgstr "Notatki wewnętrzne"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__default_code
+#: model:ir.model.fields,field_description:product.field_product_template__default_code
+msgid "Internal Reference"
+msgstr "Odnośnik wewnętrzny"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__barcode
+msgid "International Article Number used for product identification."
+msgstr "Międzynarodowy numer artykułu stosowany do identyfikacji"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Inventory"
+msgstr "Magazynowanie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
+#: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
+msgid "Is Follower"
+msgstr "Jest obserwatorem"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
+msgid "Is Product Variant"
+msgstr "Czy wariant produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
+#: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
+msgid "Is a configurable product"
+msgstr "Jest produktem konfigurowalnym"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
+msgid "Is a product variant"
+msgstr "Jest wariantem produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
+msgid "Is custom value"
+msgstr "Jest wartością niestandardową"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
+msgid "Kilograms"
+msgstr "Kilogramy"
+
+#. module: product
+#: model:product.template,name:product.product_product_6_product_template
+msgid "Large Cabinet"
+msgstr "Duża szafka"
+
+#. module: product
+#: model:product.template,name:product.product_product_8_product_template
+msgid "Large Desk"
+msgstr "Duże biurko"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_02_product_template
+msgid "Large Meeting Table"
+msgstr "Duży stół konferencyjny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute____last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value____last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_value____last_update
+#: model:ir.model.fields,field_description:product.field_product_category____last_update
+#: model:ir.model.fields,field_description:product.field_product_label_layout____last_update
+#: model:ir.model.fields,field_description:product.field_product_packaging____last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist____last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item____last_update
+#: model:ir.model.fields,field_description:product.field_product_product____last_update
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo____last_update
+#: model:ir.model.fields,field_description:product.field_product_tag____last_update
+#: model:ir.model.fields,field_description:product.field_product_template____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line____last_update
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_category__write_uid
+#: model:ir.model.fields,field_description:product.field_product_label_layout__write_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_uid
+#: model:ir.model.fields,field_description:product.field_product_product__write_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_uid
+#: model:ir.model.fields,field_description:product.field_product_tag__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_category__write_date
+#: model:ir.model.fields,field_description:product.field_product_label_layout__write_date
+#: model:ir.model.fields,field_description:product.field_product_packaging__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_date
+#: model:ir.model.fields,field_description:product.field_product_product__write_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_date
+#: model:ir.model.fields,field_description:product.field_product_tag__write_date
+#: model:ir.model.fields,field_description:product.field_product_template__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__write_date
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Late Activities"
+msgstr "Czynności zaległe"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__delay
+msgid ""
+"Lead time in days between the confirmation of the purchase order and the "
+"receipt of the products in your warehouse. Used by the scheduler for "
+"automatic computation of the purchase order planning."
+msgstr ""
+"Czas w dniach pomiędzy potwierdzeniem zamówienia zakupu i przyjęcia do "
+"magazynu. Stosowane przez planistę do obliczeń w planowaniu zakupów."
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_1
+msgid "Legs"
+msgstr "Nogi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__pav_attribute_line_ids
+msgid "Lines"
+msgstr "Pozycje"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid "Locally handmade"
+msgstr "Lokalne rękodzieło"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Logistics"
+msgstr "Logistyka"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
+msgstr ""
+"Szukasz niestandardowej bejcy bambusowej pasującej do istniejących mebli? "
+"Skontaktuj się z nami, aby uzyskać wycenę."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
+#: model:ir.model.fields,field_description:product.field_product_template__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Główny załącznik"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
+msgid ""
+"Make this attribute value not compatible with other values of the product or"
+" some attribute values of optional and accessory products."
+msgstr ""
+"Spraw, aby ta wartość atrybutu nie była zgodna z innymi wartościami produktu"
+" lub niektórymi wartościami atrybutów produktów opcjonalnych i akcesoriów."
+
+#. module: product
+#: model:res.groups,name:product.group_stock_packaging
+msgid "Manage Product Packaging"
+msgstr "Opakowania produktu"
+
+#. module: product
+#: model:res.groups,name:product.group_product_variant
+msgid "Manage Product Variants"
+msgstr "Zarządzaj wariantami produktu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Margins"
+msgstr "Marże"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Max. Margin"
+msgstr "Marża maks."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
+msgid "Max. Price Margin"
+msgstr "Maks. marża ceny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error
+msgid "Message Delivery error"
+msgstr "Błąd doręczenia wiadomości"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_ids
+#: model:ir.model.fields,field_description:product.field_product_template__message_ids
+msgid "Messages"
+msgstr "Wiadomości"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Min. Margin"
+msgstr "Marża min."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
+msgid "Min. Price Margin"
+msgstr "Min. marża ceny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
+msgid "Min. Quantity"
+msgstr "Ilość minimalna"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
+msgid "Multiple prices per product"
+msgstr "Wiele cen na produkt"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
+msgid ""
+"Multiple prices: Pricelists with fixed price rules by product,\n"
+"Advanced rules: enables advanced price rules for pricelists."
+msgstr ""
+"Wiele cen: Cenniki ze stałymi regułami cenowymi według produktu,\n"
+"Reguły zaawansowane: włącza zaawansowane reguły cenowe dla cenników."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Ostateczny terminin moich aktywności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+#: model:ir.model.fields,field_description:product.field_product_category__name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
+#: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_template__name
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
+msgid "Never (option)"
+msgstr "Nigdy (opcja)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Następna Czynność wydarzenia w kalendarzu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Termin kolejnej czynności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_summary
+#: model:ir.model.fields,field_description:product.field_product_template__activity_summary
+msgid "Next Activity Summary"
+msgstr "Podsumowanie kolejnej czynności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
+msgid "Next Activity Type"
+msgstr "Typ następnej czynności"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Brak produktu do wydrukowania, jeśli produkt jest zarchiwizowany, należy go "
+"zarchiwizować przed wydrukowaniem etykiety."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+msgid "No vendor pricelist found"
+msgstr "Nie znaleziono cennika sprzedawcy"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
+msgid "Normal"
+msgstr "Zwykły"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Note:"
+msgstr "Notatka:"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
+msgid "Number Related Products"
+msgstr "Liczba powiązanych produktów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Liczba akcji"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
+msgid "Number of errors"
+msgstr "Liczba błędów"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
+#: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Liczba wiadomości wymagających akcji"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
+#: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Liczba wiadomości z błędami przy doręczeniu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
+#: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
+msgid "Number of price rules"
+msgstr "Liczba zasad cenowych"
+
+#. module: product
+#: model:product.template,name:product.product_delivery_01_product_template
+msgid "Office Chair"
+msgstr "Krzesło biurowe"
+
+#. module: product
+#: model:product.template,name:product.product_product_12_product_template
+msgid "Office Chair Black"
+msgstr "Krzesło biurowe czarne"
+
+#. module: product
+#: model:product.template,name:product.product_order_01_product_template
+msgid "Office Design Software"
+msgstr "Oprogramowanie do projektowania biur"
+
+#. module: product
+#: model:product.template,name:product.product_delivery_02_product_template
+msgid "Office Lamp"
+msgstr "Lampa biurowa"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"On the product %s you cannot associate the value %s with the attribute %s "
+"because they do not match."
+msgstr ""
+"W produkcie %s nie można powiązać wartości %s z atrybutem %s, ponieważ nie "
+"są one zgodne."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"On the product %s you cannot transform the attribute %s into the attribute "
+"%s."
+msgstr "W produkcie %s nie można przekształcić atrybutu %s w atrybut %s."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__pricelist
+msgid "Other Pricelist"
+msgstr "Inny cennik"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Packaging"
+msgstr "Opakowania"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__parent_id
+msgid "Parent Category"
+msgstr "Kategoria nadrzędna"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category__parent_path
+msgid "Parent Path"
+msgstr "Ścieżka rodzica"
+
+#. module: product
+#: model:product.template,name:product.product_product_9_product_template
+msgid "Pedal Bin"
+msgstr "Kosz z pedałem"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
+msgid "Percentage Price"
+msgstr "Cena procentowa"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
+msgid "Pills"
+msgstr "Pigułki"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_pricelist_report.js:0
+#, python-format
+msgid "Please enter a positive whole number"
+msgstr "Wprowadź dodatnią liczbę całkowitą"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "Please specify the category for which this rule should be applied"
+msgstr "Określ kategorię, dla której ta reguła powinna być stosowana."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "Please specify the product for which this rule should be applied"
+msgstr "Określ produkt, dla którego ta reguła powinna być stosowana."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid ""
+"Please specify the product variant for which this rule should be applied"
+msgstr "Określ wariant produktu, dla którego ta reguła powinna być stosowana."
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
+msgid "Pounds"
+msgstr "Funty"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid ""
+"Press a button and watch your desk glide effortlessly from sitting to "
+"standing height in seconds."
+msgstr ""
+"Wystarczy nacisnąć przycisk, aby w ciągu kilku sekund bez wysiłku zmienić "
+"wysokość biurka z siedzącej na stojącą."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+msgid "Price"
+msgstr "Cena"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Price Computation"
+msgstr "Obliczanie ceny"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
+msgid "Price Discount"
+msgstr "Upust cenowy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
+msgid "Price Rounding"
+msgstr "Zaokrąglenie ceny"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#: model:ir.actions.act_window,name:product.product_pricelist_item_action
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, python-format
+msgid "Price Rules"
+msgstr "Reguły cen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
+msgid "Price Surcharge"
+msgstr "Dopłata do ceny"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__list_price
+#: model:ir.model.fields,help:product.field_product_template__list_price
+msgid "Price at which the product is sold to customers."
+msgstr "Cena, po której produkt jest sprzedawany klientom."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "Price:"
+msgstr "Cena:"
+
+#. module: product
+#: model:ir.actions.report,name:product.action_report_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__pricelist_id
+#: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Pricelist"
+msgstr "Cennik"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
+msgid "Pricelist Item applicable on selected option"
+msgstr "Pozycja z cennika obowiązująca dla wybranej opcji"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__name
+msgid "Pricelist Name"
+msgstr "Nazwa cennika"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_pricelist_report.js:0
+#: model:ir.model,name:product.model_report_product_report_pricelist
+#, python-format
+msgid "Pricelist Report"
+msgstr "Raport cenowy"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Pricelist Rule"
+msgstr "Zasada cennika"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Pricelist Rules"
+msgstr "Zasady cennika"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+#, python-format
+msgid "Pricelist:"
+msgstr "Cennik:"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
+msgid "Pricelists"
+msgstr "Cenniki"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_pricelist_setting
+msgid "Pricelists Method"
+msgstr "Metoda cenników"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
+msgid "Pricelists are managed on"
+msgstr "Cenniki są zarządzane na"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Pricing"
+msgstr "Ceny"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_pricelist_report.js:0
+#, python-format
+msgid "Print"
+msgstr "Drukuj"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Print Labels"
+msgstr "Drukuj Etykiety"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_ids
+#: model:ir.model.fields,field_description:product.field_product_packaging__product_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__1_product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+msgid "Product"
+msgstr "Produkt"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
+msgid "Product Attribute"
+msgstr "Atrybut produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_attribute_custom_value
+msgid "Product Attribute Custom Value"
+msgstr "Wartość własna atrybutu Produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
+msgid "Product Attribute Values"
+msgstr "Wartości atrybutów produktu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+msgid "Product Attribute and Values"
+msgstr "Atrybuty produktu i wartości"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
+msgid "Product Attributes"
+msgstr "Atrybuty produktu"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model_terms:ir.ui.view,arch_db:product.product_category_list_view
+#: model_terms:ir.ui.view,arch_db:product.product_category_search_view
+msgid "Product Categories"
+msgstr "Kategorie produktów"
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
+#: model:ir.model.fields,field_description:product.field_product_product__categ_id
+#: model:ir.model.fields,field_description:product.field_product_template__categ_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__2_product_category
+#: model_terms:ir.ui.view,arch_db:product.product_category_list_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Product Category"
+msgstr "Kategoria produktu"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_template_label
+#: model:ir.actions.report,name:product.report_product_template_label_dymo
+msgid "Product Label (PDF)"
+msgstr "Etykieta produktu (PDF)"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
+msgid "Product Label Report"
+msgstr "Raport dotyczący etykiety produktu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Product Name"
+msgstr "Nazwa produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
+msgid "Product Packages"
+msgstr "Pakiety produktów"
+
+#. module: product
+#: model:ir.model,name:product.model_product_packaging
+#: model:ir.model.fields,field_description:product.field_product_packaging__name
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
+msgid "Product Packaging"
+msgstr "Opakowanie produktu"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_packaging
+msgid "Product Packaging (PDF)"
+msgstr "Opakowanie produktu (PDF)"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_packaging_view
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
+#: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
+msgid "Product Packagings"
+msgstr "Opakowania produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
+msgid "Product Product"
+msgstr "Produkt Produkt"
+
+#. module: product
+#: model:ir.model,name:product.model_product_tag
+#: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
+msgid "Product Tag"
+msgstr "Etykieta produktu"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_tag_action
+#: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
+#: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
+msgid "Product Tags"
+msgstr "Tagi produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
+#: model_terms:ir.ui.view,arch_db:product.product_search_form_view
+msgid "Product Template"
+msgstr "Szablon produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_exclusion
+msgid "Product Template Attribute Exclusion"
+msgstr "Wyłączenie atrybutu szablonu produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr "Linia atrybutów szablonu produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template_attribute_value
+msgid "Product Template Attribute Value"
+msgstr "Wartość atrybutu szablonu produktu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Product Template Tags"
+msgstr "Tagi szablonów produktów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
+msgid "Product Tmpl"
+msgstr "Wzór produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
+#: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
+msgid "Product Tooltip"
+msgstr "Etykieta produktu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:product.field_product_template__detailed_type
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Product Type"
+msgstr "Typ produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Jednostka miary produktu"
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
+msgid "Product Variant"
+msgstr "Wariant produktu"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "Product Variant Values"
+msgstr "Wartości wariantów produktu"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_variant_action
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
+msgid "Product Variants"
+msgstr "Warianty produktu"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/report/product_label_report.py:0
+#, python-format
+msgid "Product model not defined, Please contact your administrator."
+msgstr ""
+"Model produktu nie został zdefiniowany, skontaktuj się z administratorem."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "Product: %s"
+msgstr "Produkt: %s"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.actions.act_window,name:product.product_template_action_all
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_ids
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "Products"
+msgstr "Produkty"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+msgid "Products Price"
+msgstr "Cena produktów"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
+msgid "Products Price List"
+msgstr "Cennik produktów"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+msgid "Products Price Rules Search"
+msgstr "Wyszukiwanie reguł cen produktów"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
+msgid "Products Price Search"
+msgstr "Szukaj cen produktu"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#, python-format
+msgid "Products: %(category)s"
+msgstr "Produkty: %(category)s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
+msgid "Promotions, Coupons, Gift Card & Loyalty Program"
+msgstr "Promocje, kupony, karty podarunkowe i program lojalnościowy"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Cennik katalogowy"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Purchase"
+msgstr "Zakup"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__description_purchase
+#: model:ir.model.fields,field_description:product.field_product_template__description_purchase
+msgid "Purchase Description"
+msgstr "Opis zakupu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
+msgid "Purchase UoM"
+msgstr "JM zakupu"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Quantities:"
+msgstr "Ilości:"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
+msgid "Quantity"
+msgstr "Ilość"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/js/product_pricelist_report.js:0
+#, python-format
+msgid "Quantity already present (%d)."
+msgstr "Ilość już obecna (%d)."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging__qty
+msgid "Quantity of products contained in the packaging."
+msgstr "Ilość produktów zawartych w opakowaniu."
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
+msgid "Radio"
+msgstr "Radio"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__code
+msgid "Reference"
+msgstr "Odnośnik"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+msgid ""
+"Register the prices requested by your vendors for each product, based on the"
+" quantity and the period."
+msgstr ""
+"Zarejestruj ceny żądane przez sprzedawców dla każdego produktu, w oparciu o "
+"ilość i okres."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
+#, python-format
+msgid "Related Products"
+msgstr "Powiązane produkty"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
+msgid "Related Variants"
+msgstr "Powiązane warianty"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Remove quantity"
+msgstr "Usuń ilość"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
+msgid "Responsible User"
+msgstr "Użytkownik odpowiedzialny"
+
+#. module: product
+#: model:product.template,name:product.expense_product_product_template
+msgid "Restaurant Expenses"
+msgstr "Wydatki na restaurację"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Rounding Method"
+msgstr "Metoda zaokrąglania"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__rows
+msgid "Rows"
+msgstr "Wiersze"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
+msgid "Rule Tip"
+msgstr "Wskazówka dotycząca reguł"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Sales"
+msgstr "Sprzedaż"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__description_sale
+#: model:ir.model.fields,field_description:product.field_product_template__description_sale
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Sales Description"
+msgstr "Opis sprzedaży"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
+msgid "Sales Grid Entry"
+msgstr "Wprowadzanie do siatki sprzedaży"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__list_price
+#: model:ir.model.fields,field_description:product.field_product_template__list_price
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__list_price
+#: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Sales Price"
+msgstr "Cena sprzedaży"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__lst_price
+msgid "Sales Price"
+msgstr "Cena sprzedaży"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
+msgid "Select"
+msgstr "Wybierz"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__sequence
+#: model:ir.model.fields,field_description:product.field_product_packaging__sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist__sequence
+#: model:ir.model.fields,field_description:product.field_product_product__sequence
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
+#: model:ir.model.fields,field_description:product.field_product_template__sequence
+msgid "Sequence"
+msgstr "Sekwencja"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__service
+#: model:ir.model.fields.selection,name:product.selection__product_template__type__service
+msgid "Service"
+msgstr "Usługa"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Services"
+msgstr "Usługi"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_round
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Ustawia cenę, aby była wielokrotnością tej wartości.\n"
+"Zaokrąglenie zostanie zastosowane przed dopłatą.\n"
+"Aby mieć ceny zakończone na 9.99, ustaw zaokrąglenie na 10, dopłatę na -0.01"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Pokaż wszystkie rekordy, których data kolejnej czynności przypada przed "
+"dzisiaj"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
+msgid "Show public price & discount to the customer"
+msgstr "Pokaż klientowi cenę katalogową i upust"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
+msgid ""
+"Specify a product category if this rule only applies to products belonging "
+"to this category or its children categories. Keep empty otherwise."
+msgstr ""
+"Podaj kategorię produktu, jeśli ta reguła ma dotyczyć produktów z całej "
+"kategorii i kategorii podrzędnych. W przeciwnym przypadku pozostaw puste."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
+msgid ""
+"Specify a product if this rule only applies to one product. Keep empty "
+"otherwise."
+msgstr ""
+"Podaj produkt, jeśli ta reguła dotyczy jednego produktu. Pozostaw puste w "
+"przeciwnym przypadku."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
+msgid ""
+"Specify a template if this rule only applies to one product template. Keep "
+"empty otherwise."
+msgstr ""
+"Podaj szablon, jeśli ta reguła dotyczy tylko jednego szablonu. W przeciwnym "
+"przypadku pozostaw puste."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
+msgid ""
+"Specify the fixed amount to add or subtract (if negative) to the amount "
+"calculated with the discount."
+msgstr ""
+"Określ stałą kwotę do dodania lub odjęcia (jeśli jest ujemna) do kwoty "
+"obliczonej z upustem."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
+msgid "Specify the maximum amount of margin over the base price."
+msgstr "Określ maksymalną wartość marży ponad ceną bazową."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
+msgid "Specify the minimum amount of margin over the base price."
+msgstr "Określ minimalną marżę dla ceny bazowej."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
+msgid "Start Date"
+msgstr "Data początkowa"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
+msgid "Start date for this vendor price"
+msgstr "Data początkowa dla tej ceny dostawcy"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
+msgid ""
+"Starting datetime for the pricelist item validation\n"
+"The displayed value depends on the timezone set in your preferences."
+msgstr ""
+"Data rozpoczęcia walidacji pozycji cennika\n"
+"Wyświetlana wartość zależy od strefy czasowej ustawionej w preferencjach."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__activity_state
+#: model:ir.model.fields,help:product.field_product_template__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status na podstawie czynności\n"
+"Zaległe: Termin już minął\n"
+"Dzisiaj: Data czynności przypada na dzisiaj\n"
+"Zaplanowane: Przyszłe czynności."
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_1
+msgid "Steel"
+msgstr "Stal"
+
+#. module: product
+#: model:product.template,name:product.product_product_7_product_template
+msgid "Storage Box"
+msgstr "Schowek"
+
+#. module: product
+#: model:ir.model,name:product.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Cennik dostawcy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_tag__name
+msgid "Tag Name"
+msgstr "Nazwa tagu"
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Taki tag już istnieje!"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Tags"
+msgstr "Tagi"
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_tag_action
+msgid "Tags are used to search product for a given theme."
+msgstr "Tagi służą do wyszukiwania produktów dla danego motywu."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "The Internal Reference '%s' already exists."
+msgstr "Odniesienie wewnętrzne '%s' już istnieje."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "The Type of this product doesn't match the Detailed Type"
+msgstr "Typ tego produktu nie jest zgodny z typem szczegółowym"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "The attribute %s must have at least one value for the product %s."
+msgstr "Atrybut %s musi mieć co najmniej jedną wartość dla produktu %s."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
+msgid ""
+"The attribute cannot be changed once the value is used on at least one "
+"product."
+msgstr ""
+"Atrybutu nie można zmienić, gdy wartość jest używana w co najmniej jednym "
+"produkcie."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid ""
+"The computed price is expressed in the default Unit of Measure of the "
+"product."
+msgstr "Wyliczona cena jest wyrażona w domyślnej jednostce miary produktu."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"The default Unit of Measure and the purchase Unit of Measure must be in the "
+"same category."
+msgstr ""
+"Domyślna jednostka miary i jednostka miary zakupu muszą należeć do tej samej"
+" kategorii."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_attribute__display_type
+#: model:ir.model.fields,help:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
+msgid "The display type used in the Product Configurator."
+msgstr "Typ wyświetlania używany w konfiguratorze produktu."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_packaging__sequence
+msgid "The first in the sequence is the default one."
+msgstr "Pierwszy w kolejce jest domyślnym."
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
+msgstr ""
+"Minimalna wysokość wynosi 65 cm, a w przypadku pracy stojącej maksymalna "
+"wysokość wynosi 125 cm."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The minimum margin should be lower than the maximum margin."
+msgstr "Minimalny margines powinien być niższy niż maksymalny."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_category__product_count
+msgid ""
+"The number of products under this category (Does not consider the children "
+"categories)"
+msgstr ""
+"Liczba produktów w tej kategorii (Kategorie dziecięce nie są brane pod "
+"uwagę)"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"The number of variants to generate is too high. You should either not "
+"generate variants for each combination or generate them on demand from the "
+"sales order. To do so, open the form view of attributes and change the mode "
+"of *Create Variants*."
+msgstr ""
+"Liczba wariantów do wygenerowania jest zbyt duża. Należy albo nie generować "
+"wariantów dla każdej kombinacji, albo generować je na żądanie ze zlecenia "
+"sprzedaży. W tym celu należy otworzyć widok formularza atrybutów i zmienić "
+"tryb na *Create Variants*."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__price
+msgid "The price to purchase a product"
+msgstr "Koszt zakupu produktu"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "The product template is archived so no combination is possible."
+msgstr ""
+"Szablon produktu jest zarchiwizowany, więc jego połączenie nie jest możliwe."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
+msgid ""
+"The quantity to purchase from this vendor to benefit from the price, "
+"expressed in the vendor Product Unit of Measure if not any, in the default "
+"unit of measure of the product otherwise."
+msgstr ""
+"Ilość do zakupu od tego dostawcy, aby skorzystać z ceny, wyrażona w "
+"jednostce miary produktu dostawcy, jeśli nie istnieje, w domyślnej jednostce"
+" miary produktu w przeciwnym razie."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "Metoda zaokrąglania musi być ściśle dodatnia."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__lst_price
+msgid ""
+"The sale price is managed from the product template. Click on the 'Configure"
+" Variants' button to set the extra attribute prices."
+msgstr ""
+"Cena sprzedaży jest zarządzana z poziomu szablonu produktu. Kliknij przycisk"
+" \"Konfiguruj warianty\", aby ustawić ceny dodatkowych atrybutów."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "The value %s is not defined for the attribute %s on the product %s."
+msgstr "Wartość %s nie jest zdefiniowana dla atrybutu %s w produkcie %s."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "There are no possible combination."
+msgstr "Nie ma żadnej możliwej kombinacji."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "There are no remaining closest combination."
+msgstr "Nie ma żadnej innej najbliższej kombinacji."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "There are no remaining possible combination."
+msgstr "Nie ma innych możliwych kombinacji."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Taka konfiguracja atrybutów produktu, wartości i wykluczeń nie "
+"doprowadziłaby do żadnego możliwego wariantu. W razie potrzeby zarchiwizuj "
+"lub usuń swój produkt bezpośrednio."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__price_extra
+msgid "This is the sum of the extra price of all attributes"
+msgstr "To jest suma dodatkowych cen ze wszystkich atrybutów"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is added to sales orders and invoices."
+msgstr "Uwaga ta jest dodawana do zamówień sprzedaży i faktur."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "This note is only for internal purposes."
+msgstr "Niniejsza notatka służy wyłącznie do celów wewnętrznych."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Ten cennik będzie stosowany, zamiast domyślnego, do sprzedaży bieżącemu "
+"partnerowi"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+"Ta precyzja zaokrąglania jest wyższa niż dokładność dziesiętna (%s cyfry).\n"
+"Może to powodować niespójności w obliczeniach.\n"
+"Należy ustawić precyzję pomiędzy %s a 1."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
+msgid ""
+"This vendor's product code will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Kod dostawcy będzie stosowany przy drukowaniu zapytań ofertowych. Zostaw "
+"puste, aby stosować kod wewnętrzny."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
+msgid ""
+"This vendor's product name will be used when printing a request for "
+"quotation. Keep empty to use the internal one."
+msgstr ""
+"Nazwa produktu u dostawcy będzie stosowana przy drukowaniu zapytań "
+"ofertowych. Zostaw puste, aby stosować nazwę własną."
+
+#. module: product
+#: model:product.template,description_sale:product.consu_delivery_01_product_template
+msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
+msgstr "Sofa trzyosobowa z leżanką w kolorze stalowo-szarym"
+
+#. module: product
+#: model:product.template,name:product.consu_delivery_01_product_template
+msgid "Three-Seat Sofa"
+msgstr "Sofa trzyosobowa"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Today Activities"
+msgstr "Dzisiejsze czynności"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__type
+#: model:ir.model.fields,field_description:product.field_product_template__type
+msgid "Type"
+msgstr "Typ"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
+#: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ wyjątku działania na rekordzie."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid "Unable to find report template for %s format"
+msgstr "Nie można znaleźć szablonu raportu dla formatu %s"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Unit Price"
+msgstr "Cena jednostkowa"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
+#: model:ir.model.fields,field_description:product.field_product_product__uom_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
+#: model:ir.model.fields,field_description:product.field_product_template__uom_id
+msgid "Unit of Measure"
+msgstr "Jednostka miary"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__uom_name
+msgid "Unit of Measure Name"
+msgstr "Nazwa jednostki miary (UoM)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Units of Measure"
+msgstr "Jednostki miary"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
+msgid "UoM"
+msgstr "JM"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Upsell & Cross-Sell"
+msgstr "Sprzedaż dodatkowa i krzyżowa"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
+msgid "Used on Products"
+msgstr "Używany w produktach"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
+msgid "Valid Product Attribute Lines"
+msgstr "Prawidłowe linie atrybutów produktu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Validity"
+msgstr "Ważność"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__name
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__name
+msgid "Value"
+msgstr "Wartość"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
+msgid "Value Count"
+msgstr "Liczba wartości"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
+msgid "Value Price Extra"
+msgstr "Wartość Cena Dodatkowa"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_ids
+#: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
+msgid "Values"
+msgstr "Wartości"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+msgid "Variant"
+msgstr "Wariant"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
+msgid "Variant Count"
+msgstr "Liczba wariantów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
+msgid "Variant Image"
+msgstr "Zdjęcie wariantu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
+msgid "Variant Image 1024"
+msgstr "Obraz wariantu 1024"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
+msgid "Variant Image 128"
+msgstr "Obraz wariantu 128"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
+msgid "Variant Image 256"
+msgstr "Wariant obrazu 256"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
+msgid "Variant Image 512"
+msgstr "Wariant obrazu 512"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Variant Information"
+msgstr "Informacje o wariancie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__price_extra
+msgid "Variant Price Extra"
+msgstr "Dodatkowa cena wariantu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
+msgid "Variant Seller"
+msgstr "Sprzedawca wariantu"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
+#: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
+msgid "Variant Values"
+msgstr "Wartości wariantów"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "Variant: %s"
+msgstr "Wariant: %s"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Variants"
+msgstr "Warianty"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
+msgid "Variants Creation Mode"
+msgstr "Tryb tworzenia wariantów"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Vendor"
+msgstr "Dostawca"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Vendor Bills"
+msgstr "Faktury zakupu"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+msgid "Vendor Information"
+msgstr "Informacje o dostawcy"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
+msgid "Vendor Pricelists"
+msgstr "Cennik dostawcy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
+msgid "Vendor Product Code"
+msgstr "Kod produktu u dostawcy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
+msgid "Vendor Product Name"
+msgstr "Nazwa produktu u dostawcy"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__seller_ids
+msgid "Vendors"
+msgstr "Dostawcy"
+
+#. module: product
+#: model:product.template,name:product.product_product_2_product_template
+msgid "Virtual Home Staging"
+msgstr "Wirtualna inscenizacja domu"
+
+#. module: product
+#: model:product.template,name:product.product_product_1_product_template
+msgid "Virtual Interior Design"
+msgstr "Wirtualny projekt wnętrz"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__volume
+#: model:ir.model.fields,field_description:product.field_product_template__volume
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Volume"
+msgstr "Objętość"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
+msgid "Volume unit of measure"
+msgstr "Objętość - jednostka miary"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
+msgid "Volume unit of measure label"
+msgstr "Etykieta jednostki miary objętości"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Uwaga!"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Warnings"
+msgstr "Ostrzeżenia"
+
+#. module: product
+#: model_terms:product.template,website_description:product.product_product_4_product_template
+msgid ""
+"We pay special attention to detail, which is why our desks are of a superior"
+" quality."
+msgstr ""
+"Zwracamy szczególną uwagę na szczegóły, dlatego nasze biurka są najwyższej "
+"jakości."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight
+#: model:ir.model.fields,field_description:product.field_product_template__weight
+#: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Weight"
+msgstr "Waga"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
+msgid "Weight unit of measure"
+msgstr "Jednostka miary wagi"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr "Etykieta jednostki miary wagi"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_3
+msgid "White"
+msgstr "Biały"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
+"Ustawiona dokładność dziesiętna jest mniej dokładna niż jednostki JM:\n"
+"%s\n"
+"Może to powodować niespójności w obliczeniach.\n"
+"Zwiększ zaokrąglenie tych jednostek miary lub cyfry tej dokładności dziesiętnej."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
+msgid "You can apply a mark-up by setting a negative discount."
+msgstr "Można zastosować marżę, ustawiając ujemny upust."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
+msgstr ""
+"Możesz przypisać cenniki do swoich klientów lub wybrać jeden z nich podczas "
+"tworzenia nowej oferty sprzedaży."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid ""
+"You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
+msgstr ""
+"Nie można przypisać Głównego Cennika jako Innego Cennika w Pozycji PriceList"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
+"%s"
+msgstr ""
+"Nie można zmienić trybu tworzenia wariantów atrybutu %s, ponieważ jest on używany w następujących produktach:\n"
+"%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot change the attribute of the value %s because it is used on the "
+"following products:%s"
+msgstr ""
+"Nie można zmienić atrybutu wartości %s, ponieważ jest on używany w "
+"następujących produktach: %s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot change the product of the value %s set on product %s."
+msgstr "Nie można zmienić iloczynu wartości %s ustawionej w produkcie %s."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot change the value of the value %s set on product %s."
+msgstr "Nie można zmienić wartości %s ustawionej w produkcie %s."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_category.py:0
+#, python-format
+msgid "You cannot create recursive categories."
+msgstr "Nie można tworzyć kategorii rekurencyjnych."
+
+#. module: product
+#: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
+msgid ""
+"You cannot create two values with the same name for the same attribute."
+msgstr ""
+"Nie można utworzyć dwóch wartości o tej samej nazwie dla tego samego "
+"atrybutu."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You cannot define the decimal precision of 'Account' as greater than the "
+"rounding factor of the company's main currency"
+msgstr ""
+"Nie możesz ustawiać zaokrąglenia 'Account' jako większego niż zaokrąglenie "
+"waluty dla firmy."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_category.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "Nie można usunąć kategorii produktu %s."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot delete the attribute %s because it is used on the following products:\n"
+"%s"
+msgstr ""
+"Atrybutu %s nie można usunąć, ponieważ jest on używany w następujących produktach:\n"
+"%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot delete the value %s because it is used on the following products:\n"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+"Nie można usunąć wartości %s, ponieważ jest ona używana w następujących produktach:\n"
+"%s\n"
+"Jeśli wartość została powiązana z produktem w przeszłości, nie będzie można jej usunąć."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete this product category, it is the default generic category."
+msgstr ""
+"Nie można usunąć tej kategorii produktów, jest to domyślna kategoria ogólna."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot delete those pricelist(s):\n"
+"(%s)\n"
+", they are used in other pricelist(s):\n"
+"%s"
+msgstr ""
+"Nie można usunąć tych cenników:\n"
+"(%s)\n"
+"ponieważ są one używane w innych cennikach:\n"
+"%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Nie można usunąć wartości %s, ponieważ była ona używana w niektórych "
+"produktach."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"Nie można wyłączyć reguły cennika, zamiast tego należy ją usunąć lub "
+"zarchiwizować jej cennik."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "Nie można przenieść atrybutu %s z produktu %s do produktu %s."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot update related variants from the values. Please update related "
+"values from the variants."
+msgstr ""
+"Nie można aktualizować powiązanych wariantów z wartości. Zaktualizuj "
+"powiązane wartości z wariantów."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action
+#: model_terms:ir.actions.act_window,help:product.product_template_action
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service."
+msgstr ""
+"Musisz zdefiniować produkt dla wszystkiego, co sprzedajesz lub kupujesz,\n"
+"niezależnie od tego, czy jest to produkt do przechowywania, materiał eksploatacyjny czy usługa."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_variant_action
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service.\n"
+"                The product form contains information to simplify the sale process:\n"
+"                price, notes in the quotation, accounting data, procurement methods, etc."
+msgstr ""
+"Musisz zdefiniować produkt dla wszystkiego, co sprzedajesz lub kupujesz,\n"
+"niezależnie od tego, czy jest to produkt do przechowywania, materiał eksploatacyjny czy usługa.\n"
+"Formularz produktu zawiera informacje upraszczające proces sprzedaży:\n"
+"cenę, uwagi w ofercie, dane księgowe, metody zaopatrzenia itp."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
+msgid ""
+"You must define a product for everything you sell, whether it's a physical product,\n"
+"                a consumable or a service you offer to customers.\n"
+"                The product form contains information to simplify the sale process:\n"
+"                price, notes in the quotation, accounting data, procurement methods, etc."
+msgstr ""
+"Musisz zdefiniować produkt dla wszystkiego, co sprzedajesz, niezależnie od tego, czy jest to produkt fizyczny,\n"
+"materiał eksploatacyjny lub usługa oferowana klientom.\n"
+"Formularz produktu zawiera informacje upraszczające proces sprzedaży:\n"
+"cenę, uwagi w ofercie, dane księgowe, metody zaopatrzenia itp."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid "You need to set a positive quantity."
+msgstr "Należy ustawić wartość dodatnią."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
+msgid "days"
+msgstr "dni"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "e.g. Cheese Burger"
+msgstr "np. Cheese Burger"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_category_form_view
+msgid "e.g. Lamps"
+msgstr "np. Lampy"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "e.g. Odoo Enterprise Subscription"
+msgstr "np. Subskrybcja do Odoo Enterprise"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "e.g. USD Retailers"
+msgstr "np. kupcy detaliczni w USD"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "per"
+msgstr "za"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "product"
+msgstr "produkt"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.view_partner_property_form
+msgid "the parent company"
+msgstr "nadrzędna firma"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "the product template."
+msgstr "szablon produktu."
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "to"
+msgstr "do"

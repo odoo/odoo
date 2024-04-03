@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_view_form" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager" />
+        <field name="arch" type="xml">
+            <xpath expr="(//div[@name='duration_display']/div)[last()]" position="after">
+                <field name="overtime_deductible" invisible="1" />
+                <field name="employee_overtime" invisible="1" />
+                <div attrs="{'invisible': ['|', '|', ('employee_id', '=', False), ('overtime_deductible', '=', False), ('employee_overtime', '&lt;=', 0)]}">
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" style="width: 6rem;" /> Extra Hours Available
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_form_overtime" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="(//div[@name='duration_display']/div)[last()]" position="after">
+                <field name="overtime_deductible" invisible="1" />
+                <field name="employee_overtime" invisible="1" />
+                <div attrs="{'invisible': ['|', '|', ('employee_id', '=', False), ('overtime_deductible', '=', False), ('employee_overtime', '&lt;=', 0)]}">
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" style="max-width: 6rem;" /> Extra Hours Available
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,393 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_recycle
+# 
+# Translators:
+# Umur Akın <umura@projetgrup.com>, 2022
+# Levent Karakaş <levent@mektup.at>, 2022
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
+# Martin Trigaux, 2022
+# Ediz Duman <neps1192@gmail.com>, 2022
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
+# Murat Kaplan <muratk@projetgrup.com>, 2022
+# omerfarukcakmak <omerfarukckmk@protonmail.com>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid ""
+"' recycling rule.<br/>\n"
+"You can validate those changes"
+msgstr ""
+"' geri dönüşüm kuralı.<br/>\n"
+"Bu değişiklikleri doğrulayabilirsiniz"
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "**Record Deleted**"
+msgstr "**Kayıt Silindi**"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Her</span>"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__active
+msgid "Active"
+msgstr "Etkin"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
+msgid "Archive"
+msgstr "Arşivle"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
+msgid "Automatic"
+msgstr "Otomatik"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
+msgid "Company"
+msgstr "Şirket"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
+msgid "Configuration"
+msgstr "Yapılandırma"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Temizlenecek kayıtları tanımlamak için kuralları yapılandırma"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
+msgid "Created on"
+msgstr "Oluşturulma"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
+msgid "Data Cleaning"
+msgstr "Veri Temizleme"
+
+#. module: data_recycle
+#: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
+#: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
+#: model:ir.cron,name:data_recycle.ir_cron_clean_records
+msgid "Data Recycle: Clean Records"
+msgstr "Veri Geri Dönüşümü: Kayıtları Temizle"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
+msgid "Days"
+msgstr "Gün"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
+msgid "Delete"
+msgstr "Sil"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
+msgid "Delta"
+msgstr "Delta"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
+msgid "Delta Unit"
+msgstr "Delta Birimi"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Discard"
+msgstr "Vazgeç"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Discarded"
+msgstr "Geri çevrilen"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
+msgid "Field Recycle Records"
+msgstr "Alan Geri Dönüşüm Kayıtları"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
+msgid "Filter"
+msgstr "Filtre"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
+msgid "ID"
+msgstr "ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
+msgid "Include Archived"
+msgstr "Arşivlenenleri Dahil Et"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record____last_update
+msgid "Last Modified on"
+msgstr "Son Düzenleme"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
+msgid "Last Notification"
+msgstr "Son Bildirim"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: data_recycle
+#: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "List of users to notify when there are new records to recycle"
+msgstr ""
+"Geri dönüştürülecek yeni kayıtlar olduğunda bildirilecek kullanıcıların "
+"listesi"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
+msgid "Manual"
+msgstr "Manuel"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_name
+msgid "Model Name"
+msgstr "Model Adı"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__months
+msgid "Months"
+msgstr "Aylar"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
+msgid "Name"
+msgstr "Adı"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "No cleaning suggestions"
+msgstr "Temizlik önerisi yok"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
+msgid "Notify"
+msgstr "Bildirim"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Sıklık Dönemini Bildir"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Kullanıcıları Bilgilendirin"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
+msgid "Record ID"
+msgstr "Kayıt ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__name
+msgid "Record Name"
+msgstr "Kayıt Adı"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Records"
+msgstr "Kayıtlar"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
+msgid "Records To Recycle"
+msgstr "Geri Dönüştürülecek Kayıtlar"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
+msgid "Recycle Action"
+msgstr "Geri Dönüşüm İşlemi"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
+msgid "Recycle Mode"
+msgstr "Geri Dönüşüm Modu"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
+msgid "Recycle Model"
+msgstr "Geri Dönüşüm Modeli"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
+msgid "Recycle Record"
+msgstr "Geri Dönüşüm Kaydı"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
+msgid "Recycle Records"
+msgstr "Geri Dönüşüm Kayıtları"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Recycle Rule"
+msgstr "Geri Dönüşüm Kuralı"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Recycle Rules"
+msgstr "Geri Dönüşüm Kuralları"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_model
+msgid "Recycling Model"
+msgstr "Geri Dönüşüm Modeli"
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_record
+msgid "Recycling Record"
+msgstr "Geri Dönüşüm Kaydı"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
+msgid "Recyle Records Rules"
+msgstr "Recyle Records Kuralları"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
+msgid "Rules"
+msgstr "Kurallar"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Run Now"
+msgstr "Şimdi Çalıştır"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Select a model to configure recycling actions"
+msgstr "Geri dönüşüm işlemlerini yapılandırmak için bir model seçin"
+
+#. module: data_recycle
+#: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Bildirim sıklığı 0'dan büyük olmalıdır"
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "This model doesn't manage archived records. Only deletion is possible."
+msgstr ""
+"Bu model arşivlenmiş kayıtları yönetmez. Sadece silme işlemi mümkündür."
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
+msgid "Time Field"
+msgstr "Zaman Alanı"
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "Undefined Name"
+msgstr "Tanımsız Ad"
+
+#. module: data_recycle
+#. openerp-web
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Seçimi kaldır"
+
+#. module: data_recycle
+#. openerp-web
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+#, python-format
+msgid "Validate"
+msgstr "Doğrula"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "We've identified"
+msgstr "Tespit ettik"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__weeks
+msgid "Weeks"
+msgstr "Hafta"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__years
+msgid "Years"
+msgstr "Yıllar"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "here"
+msgstr "buraya"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "records to clean with the '"
+msgstr "ile temizlenecek kayıtlar '"

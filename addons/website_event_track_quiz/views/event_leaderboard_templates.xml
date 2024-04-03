@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+<template id="event_leaderboard" name="Leaderboard">
+    <t t-call="website_event.layout">
+        <div t-if="visitors" class="o_wevent_theme_bg_light pt32 pb32 o_wevent_quiz_leaderboard">
+            <t t-call="website_event_track_quiz.leaderboard_search_bar"/>
+            <div class="container mt32">
+                <div t-if="not search" class="row mb-3">
+                    <div class="col-md-4 d-flex flex-grow-1" t-foreach="top3_visitors" t-as="visitor">
+                        <t t-call="website_event_track_quiz.top3_visitor_card"></t>
+                    </div>
+                </div>
+                <table class="table table-sm">
+                    <tr t-foreach="visitors" t-as="visitor"
+                        t-attf-class="#{'alert-info' if visitor['visitor'] == current_visitor else 'o_wevent_theme_bg_base'} #{'o_wevent_quiz_scroll_to' if scroll_to_position and visitor['visitor'] == current_visitor else ''}">
+                        <t t-call="website_event_track_quiz.all_visitor_card"/>
+                    </tr>
+                </table>
+                <div class="d-flex justify-content-center">
+                    <t t-call="website_event_track_quiz.pager_nobox"/>
+                </div>
+            </div>
+        </div>
+        <div t-if="not visitors and search" class="container mt32">
+            <t t-call="website_event_track_quiz.leaderboard_search_bar"/>
+            <div class='alert alert-warning mt32'>No user found for <strong><t t-out="search"/></strong>. Try another search.</div>
+        </div>
+        <div t-if="not visitors and not search" class="vh-100 o_wevent_theme_bg_light d-flex justify-content-center align-items-center">
+            <h4 class="text-muted fw-bold">There is currently no leaderboard available</h4>
+        </div>
+    </t>
+</template>
+
+<template id="pager_nobox" name="Pager (not box display)">
+    <ul t-if="pager['page_count'] > 1" t-attf-class="o_wprofile_pager fw-bold pagination m-0">
+        <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
+            <a t-att-href=" pager['page_first']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-step-backward"/></a>
+        </li>
+        <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == 1 else ''}">
+            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link"><i class="fa fa-caret-left"/></a>
+        </li>
+        <t t-foreach="pager['pages']" t-as="page">
+            <li t-attf-class="page-item #{'active disabled bg-primary rounded-circle' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" class="page-link" t-out="page['num']"/></li>
+        </t>
+        <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-caret-right"/></a>
+        </li>
+        <li t-attf-class="page-item o_wprofile_pager_arrow #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
+            <a t-att-href=" pager['page_last']['url'] if pager['page']['num'] != pager['page_count'] else None" class="page-link"><i class="fa fa-step-forward"/></a>
+        </li>
+    </ul>
+</template>
+
+<template id="top3_visitor_card" name="Top 3 Visitor Card">
+    <div class="card w-100 text-center mb-2 border-bottom-0">
+        <div class="card-body">
+            <div class="d-inline-block position-relative">
+                <img class="rounded-circle img-fluid"
+                    style="width: 128px; height: 128px; object-fit: cover;"
+                    t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"/>
+                <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{visitor['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
+            </div>
+            <h3 t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].partner_id" class="mt-2 mb-0">You</h3>
+            <h3 t-else="" class="mt-2 mb-0" t-out="visitor['visitor'].display_name"/>
+        </div>
+        <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
+            <div class="col py-3"><b t-out="visitor['points']"/> <span class="text-muted">Points</span></div>
+        </div>
+    </div>
+</template>
+
+<template id="all_visitor_card" name="All VIsitor Card">
+    <td class="align-middle text-end text-muted" style="width: 0">
+        <span t-out="visitor['position']"/>
+    </td>
+    <td class="align-middle d-none d-sm-table-cell">
+        <img class="o_object_fit_cover rounded-circle o_wprofile_img_small"
+        width="30"
+        height="30"
+        t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"/>
+    </td>
+    <td class="align-middle w-md-75">
+        <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].partner_id" class="fw-bold">You</span>
+        <span t-else="" class="fw-bold" t-out="visitor['visitor'].display_name"/><br/>
+    </td>
+    <td class="align-middle fw-bold text-end text-nowrap">
+        <b t-out="visitor['points']"/> <span class="text-muted small fw-bold">Points</span>
+    </td>
+</template>
+
+<!-- Sub nav -->
+<template id="leaderboard_search_bar" name="Leaderboard search bar">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <!-- Desktop Mode -->
+            <div class="col d-none d-md-flex flex-row align-items-center justify-content-end">
+                <!-- search -->
+                <form t-attf-action="#{'/event/%s/community/leaderboard/results' % (slug(event))}" role="search" method="get">
+                    <div class="input-group ms-1 position-relative">
+                        <button class="btn btn-link text-white rounded-0 pe-1" type="submit" aria-label="Search" title="Search">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <input type="text" class="form-control rounded-0" name="search" placeholder="Search Attendees" t-att-value="searched_name or ''"/>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mobile Mode -->
+            <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
+                <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
+
+                    <div class="btn-group ms-1 position-static me-2">
+                        <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
+                            <form class="px-3" t-attf-action="#{'/event/%s/community/leaderboard' % (slug(event))}" role="search" method="get">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="search" placeholder="Search users"/>
+                                    <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+</odoo>

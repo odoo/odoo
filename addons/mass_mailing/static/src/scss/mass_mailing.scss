@@ -1,0 +1,230 @@
+.o_form_view .o_mass_mailing_mailing_form,
+.o_legacy_form_view.o_mass_mailing_mailing_form {
+    .o_notebook .tab-content .tab-pane .o_mail_body {
+        // cancel the padding of the form_sheet
+        margin-top: -$o-sheet-cancel-hpadding;
+        margin-left: -$o-sheet-cancel-hpadding;
+        margin-right: -$o-sheet-cancel-hpadding;
+        margin-bottom: -40px;
+    }
+
+    .o_notebook .o_notebook_headers .nav-link[name="mail_debug"] {
+        display: none;
+    }
+}
+
+@include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+    .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body,
+    .o_legacy_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+        // cancel the padding of the form_sheet when breakpoints are reached
+        margin-left: -$o-sheet-cancel-hpadding*2;
+        margin-right: -$o-sheet-cancel-hpadding*2;
+    }
+}
+
+.o_form_view .o_mass_mailing_mailing_form.o_mass_mailing_form_full_width,
+.o_legacy_form_view.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width {
+    .o_form_statusbar {
+        margin-bottom: 0;
+
+        .o_statusbar_buttons {
+            flex-grow: 1;
+        }
+
+        .o_statusbar_status {
+            border-left: solid $o-gray-300 1px;
+        }
+    }
+    .o_mass_mailing_mailing_group {
+        margin-top: $o-sheet-cancel-tpadding + 33px;
+    }
+    .o_FormRenderer_chatterContainer {
+        --ChatterTopbar-padding-left: 0;
+        --ChatterContainer-overflow: visible;
+        --ChatterTopbar-border: none;
+        --ActivityBox_title-margin: #{map-get($spacers, 1)};
+
+        margin: 0;
+        max-width: unset;
+        width: 100%;
+        padding: 0;
+
+        .o_MessageList_separator:first-child {
+            margin-top: -#{map-get($spacers, 3)};
+        }
+    }
+    .wysiwyg_iframe {
+        border: none;
+    }
+    .oe_button_box {
+        margin-top: unset;
+
+        > .btn.oe_stat_button {
+            max-width: 135px;
+            border-left: 1px solid $border-color;
+        }
+        > .o_dropdown_more {
+            width: 135px;
+        }
+    }
+}
+
+.o_form_view .o_mass_mailing_mailing_form,
+.o_legacy_form_view.o_mass_mailing_mailing_form {
+    &.o_form_readonly .o_mass_mailing_subject {
+        // Place the favorite button without breaking the emoji widget
+        padding-right: 50px;
+        .o_mass_mailing_favorite {
+            margin-right: -50px;
+        }
+        .o_mail_emojis_dropdown {
+            margin-left: -40px;
+            bottom: 0;
+        }
+        div.o_field_char_emojis {
+            // Override widget CSS attributes to place
+            // the favorite button next to the subject
+            margin-right: 1rem;
+            min-width: 0;
+            width: auto!important;
+            max-width: calc(100vw - 300px);
+        }
+    }
+    .o_mass_mailing_subject {
+        .fa-star {
+            color: $o-main-favorite-color;
+        }
+    }
+}
+
+.o_xxs_form_view.o_mass_mailing_mailing_form {
+    .o_mass_mailing_subject {
+        span.o_field_char {
+            max-width: 90vw!important;
+        }
+    }
+}
+
+.o_kanban_renderer, .o_legacy_kanban_view {
+    .oe_kanban_mass_mailing {
+        .o_title {
+            margin-bottom: 16px;
+        }
+        .o_kanban_primary_bottom {
+            margin-top: 16px;
+        }
+        .oe_margin_top_8 {
+            margin-top: 8px;
+        }
+        .oe_margin_bottom_8 {
+            margin-bottom: 8px;
+        }
+    }
+    &.o_kanban_mailing_list {
+        .o_kanban_group:not(.o_column_folded) {
+            flex-basis: 380px
+        }
+        &.o_kanban_ungrouped {
+            padding: 0;
+            .o_mailing_list_kanban_grouped {
+                display: none !important;
+            }
+            .o_kanban_record {
+                width: 100%;
+                margin: 0;
+            }
+        }
+        &.o_kanban_grouped .o_mailing_list_kanban_ungrouped {
+            display: none !important;
+        }
+        .o_mailing_list_kanban_ungrouped {
+            .o_mailing_list_kanban_stats > div {
+                min-width: 70px;
+            }
+            .o_mailing_list_kanban_stats > a {
+                flex-wrap: wrap;
+                &:hover {
+                    font-weight: normal;
+                }
+                @include media-breakpoint-down(sm) {
+                    font-size: 1.4rem;
+                    height: 40px;
+                    margin-bottom: 30px;
+                    min-width: 90px;
+                    width: 30%;
+                }
+            }
+            .o_mailing_list_kanban_button {
+                background: transparent;
+                border-width: 0;
+                outline: 0;
+                padding: 0;
+                font-weight: 300;
+                &:hover {
+                    font-weight: normal;
+                }
+                &.o_mailing_list_kanban_big_nb {
+                    text-align: left;
+                    font-size: 300%;
+                    @include media-breakpoint-up(sm) {
+                        text-align: right;
+                    }
+                }
+            }
+            .text-large {
+                line-height: 1.1em;
+                font-size: 120%;
+                font-weight: 300;
+            }
+        }
+    }
+}
+
+.o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group,
+.o_legacy_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
+    // Used to gain extra space in form.
+    display: block;
+}
+
+.o_mass_mailing_mailing_form:not(.o_mass_mailing_form_full_width) {
+    .alert:not(.o_invisible_modifier) + .clearfix.position-relative.o_form_sheet {
+        //hides extra space between form and alert messages
+        margin-top: -12px;
+    }
+}
+
+.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width .alert.alert-info:not(.o_invisible_modifier) {
+    margin: 0 0 0 12px;
+    flex: 1;
+    padding: unset;
+    border-left-width: 1px;
+    border-left-color: #dee2e6;
+
+    > div {
+        min-height: 100%;
+        padding: 6px;
+    }
+}
+
+.o_form_view.o_xxl_form_view .o_mass_mailing_mailing_form,
+.o_legacy_form_view.o_xxl_form_view.o_mass_mailing_mailing_form {
+    // This will hide the chatter scroll bar
+    height: initial;
+}
+
+.o_form_view,
+.o_legacy_form_view {
+    // This will display the emoji widget in the right position after a text field with sms option.
+    .o_sms_container ~ .o_mail_add_emoji{
+        bottom: 55px;
+    }
+}
+
+.o_field_mass_mailing_html {
+    display: block;
+
+    iframe {
+        width: 100%;
+        min-height: 55vh;
+    }
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2OneAvatarField" owl="1">
+        <div class="d-flex" t-att-data-tooltip="props.value[1]">
+            <span class="o_m2o_avatar">
+                <span t-if="props.value === false and !props.readonly" class="o_m2o_avatar_empty"></span>
+                <img t-if="props.value !== false" t-attf-src="/web/image/{{relation}}/{{props.value[0]}}/avatar_128" />
+            </span>
+            <Many2OneField t-props="props" canOpen="!props.readonly"/>
+        </div>
+    </t>
+
+</templates>

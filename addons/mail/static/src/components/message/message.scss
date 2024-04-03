@@ -1,0 +1,92 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Message {
+    max-width: var(--Chatter-max-width, none);
+}
+
+.o_Message_actionListContainer {
+    z-index: 10; // Place the element in front of the Composer when they overlap
+}
+
+.o_Message_authorAvatarContainer {
+    height: $o-mail-thread-avatar-size;
+    width: $o-mail-thread-avatar-size;
+}
+
+.o_Message_content {
+    *:not(li):not(li div) {
+        // Message content can contain arbitrary HTML that might overflow and break
+        // the style without this rule.
+        // Lists are ignored because otherwise bullet style become hidden from overflow.
+        // It's acceptable not to manage overflow of these tags for the moment.
+        // It also excludes all div in li because 1st leaf and div child of list overflow
+        // may impact the bullet point (at least it does on Safari).
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+        // warning table. If detected, we prevent the issue by removing flotation.
+        &table[align="left"][width="100%"] {
+            float: none;
+        }
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+.o_Message_core {
+    min-width: 0; // allows this flex child to shrink more than its content
+}
+
+.o_Message_prettyBody {
+    p:last-child,
+    > p {
+        margin-bottom: 0;
+    }
+} 
+
+.o_Message_sidebar {
+    flex-basis: $o-mail-message-sidebar-width;
+    max-width: $o-mail-message-sidebar-width;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-isReplyHighlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+    }
+}
+
+.o_Message_background {
+    &.o-isAuthorNotCurrentUserOrGuest {
+        opacity: .15;
+    }
+}
+
+.o_Message_prettyBody {
+    a.o_mail_redirect {
+        padding: map-get($spacers, 1);
+        border-radius: $border-radius;
+        background: rgba($primary, .2);
+    }
+}
+
+.o_Message_background {
+    transition: opacity .5s ease-out;
+}
+
+// Used to hide buttons on rating emails in chatter
+.o_Chatter .o_Message_content [summary~="o_mail_notification"] {
+    display: none;
+}

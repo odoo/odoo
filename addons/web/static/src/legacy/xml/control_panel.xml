@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.Legacy.FavoriteMenu" t-inherit="web.FavoriteMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-set-slot='toggler']" position="inside">
+        <Dialog t-if="state.deletedFavorite"
+            title="'Warning'"
+            size="'medium'"
+            onClosed="() => { state.deletedFavorite = false }"
+            >
+            <t t-if="state.deletedFavorite.userId">Are you sure that you want to remove this filter?</t>
+            <t t-else="">This filter is global and will be removed for everybody if you continue.</t>
+            <t t-set-slot="buttons">
+                <button type="button" class="btn btn-primary" t-on-click="_onRemoveFavorite">
+                    <t>Ok</t>
+                </button>
+                <button type="button" class="btn btn-secondary" t-on-click.stop="() => { state.deletedFavorite = false }">
+                    <t>Cancel</t>
+                </button>
+            </t>
+        </Dialog>
+    </xpath>
+</t>
+
+<t t-name="web.legacy.FilterMenu" t-inherit="web.FilterMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//CustomFilterItem" position="attributes">
+        <attribute name="fields">props.fields</attribute>
+    </xpath>
+</t>
+
+</templates>

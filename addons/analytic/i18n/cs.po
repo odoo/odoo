@@ -1,0 +1,904 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* analytic
+# 
+# Translators:
+# Michal Veselý <michal@veselyberanek.net>, 2022
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Jiří Podhorecký, 2023
+# Martin Trigaux, 2023
+# Ivana Bartonkova, 2023
+# Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopie)"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "(no accounts)"
+msgstr "(žádné účty)"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
+msgstr "<span class=\"o_stat_text\">Analytické účty</span>"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">Hrubá marže</span>"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
+msgid "Accounts"
+msgstr "Účty"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "Vyžaduje akci"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
+msgid "Active"
+msgstr "Aktivní"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Add a new analytic account"
+msgstr "Přidat nový analytický účet"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_administratif
+msgid "Administrative"
+msgstr "Administrativa"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
+msgid "All Analytic Accounts Count"
+msgstr "Počet všech analytických účtů"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Amount"
+msgstr "Částka"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
+#, python-format
+msgid "Analytic"
+msgstr "Analytický"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Analytic Account"
+msgstr "Analytický účet"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Manažérské účetnictví"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Analytic Accounts"
+msgstr "Analytické účty"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
+msgid "Analytic Accounts Count"
+msgstr "Počet analytických účtů"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_distribution_model
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+msgid "Analytic Distribution Model"
+msgstr "Model analytické distribuce"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
+msgid "Analytic Distribution Models"
+msgstr "Modely analytické distribuce"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Hledání analytické distribuce"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Analytic Distribution Template"
+msgstr "Šablona analytické distribuce"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+msgid "Analytic Item"
+msgstr "Analytická položka"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Analytic Items"
+msgstr "Hospodářské výsledky - položky"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytická řádka"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
+msgid "Analytic Lines"
+msgstr "Analytická řádky"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_analytic_mixin
+msgid "Analytic Mixin"
+msgstr "Analytický Mixin"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Analytic Plan"
+msgstr "Analytický plán"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Použitelnost analytického plánu"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
+#: model:ir.model,name:analytic.model_account_analytic_plan
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
+msgid "Analytic Plans"
+msgstr "Analytické plány"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
+msgid "Analytic Precision"
+msgstr "Analytická přesnost"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Analytic distribution to apply"
+msgstr "Analytická distribuce ke schválení"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "Analytical Accounts"
+msgstr "Analytické účty"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "Analytical Plans"
+msgstr "Analytické plány"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__applicability_ids
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "Applicability"
+msgstr "Použitelnost"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Archived"
+msgstr "Archivováno"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+msgid "Associated Partner"
+msgstr "Přidružený partner"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_asustek
+msgid "Asustek"
+msgstr "Asustek"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "Počet příloh"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Balance"
+msgstr "Zůstatek"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr "Zůstatek:"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
+msgid "Camp to Camp"
+msgstr "Camp to Camp"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_integration_c2c
+msgid "CampToCamp"
+msgstr "CampToCamp"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.action_analytic_account_form
+msgid "Chart of Analytic Accounts"
+msgstr "Rozvrh analytických účtů"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
+msgid "Children Plans Count"
+msgstr "Počet podřazených plánů"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
+msgid "Childrens"
+msgstr "Podřízené"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
+msgid "Click to add a new analytic account plan."
+msgstr "Klikněte pro přidání nového analytického plánu."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
+msgid "Color"
+msgstr "Barva"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
+msgid "Color Index"
+msgstr "Barevný index"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_commercial_marketing
+msgid "Commercial & Marketing"
+msgstr "Obchod & Marketing"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__complete_name
+msgid "Complete Name"
+msgstr "Kompletní jméno"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Převod mezi měrnými jednotkami lze uskutečnit jen když patří do stejné "
+"kategorie. Převod bude proveden na základě vzájemných poměrů."
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Costs will be created automatically when you register supplier\n"
+"                invoices, expenses or timesheets."
+msgstr ""
+"Náklady se vytvoří automaticky při registraci dodavatele\n"
+"faktur, nákladů nebo pracovních výkazů."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Credit"
+msgstr "Dal"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
+msgid "Currency"
+msgstr "Měna"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
+msgid "Customer"
+msgstr "Zákazník"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Date"
+msgstr "Datum"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__active
+msgid "Deactivate the account."
+msgstr "Deaktivovat účet."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Debit"
+msgstr "Má dáti"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Deco Addict"
+msgstr "Deco Addict"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
+msgid "Default Applicability"
+msgstr "Výchozí použitelnost"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_deltapc
+msgid "Delta PC"
+msgstr "Delta PC"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__description
+msgid "Description"
+msgstr "Popis"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
+msgid "Desertic - Hispafuentes"
+msgstr "Desertic - Hispafuentes"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Doména"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "Sledující"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sledující (partneři)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "Hrubá marže"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Group By..."
+msgstr "Seskupit podle…"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "Má zprávu"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"In Odoo, sales orders and projects are implemented using\n"
+"                analytic accounts. You can track costs and revenues to analyse\n"
+"                your margins easily."
+msgstr ""
+"V Odoo jsou realizovány analýzy zakázek a projektů prodejů\n"
+"přes analytické účty. Můžete sledovat náklady a výnosy a snadno analyzovat vaše marže."
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Invalid"
+msgstr "Neplatný"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "Je sledující"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Loading..."
+msgstr "Načítání..."
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_think_big_systems
+msgid "Lumber Inc"
+msgstr "Lumber Inc"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_luminous_technologies
+msgid "Luminous Technologies"
+msgstr "Luminous Technologies"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hlavní příloha"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
+#, python-format
+msgid "Mandatory"
+msgstr "Povinný"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr "Chyba při doručování zpráv"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "Zprávy"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_millennium_industries
+msgid "Millennium Industries"
+msgstr "Millennium Industries"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
+msgid "Miscellaneous"
+msgstr "Účetní zápisy"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Name"
+msgstr "Jméno"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_nebula
+msgid "Nebula"
+msgstr "Nebula"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "No Analytic Accounts for this plan"
+msgstr "Žádné analytické účty pro tento plán"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid "No activity yet"
+msgstr "Zatím žádná aktivita"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account"
+msgstr "Na tomto účtu zatím není žádná aktivita"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "No plans available"
+msgstr "Nejsou k dispozici žádné plány"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Počet akcí"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of errors"
+msgstr "Počet chyb"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Počet zpráv s chybou při doručení"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "OK"
+msgstr "OK"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr ""
+"Jeden nebo více řádků vyžaduje rozdělit 100 % v analytické distribuci."
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_internal
+msgid "Operating Costs"
+msgstr "Provozní náklady"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Provoz není podporován"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
+#, python-format
+msgid "Optional"
+msgstr "Volitelné"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "jiný"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_our_super_product
+msgid "Our Super Product"
+msgstr "Náš skvělý produkt"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
+msgid "Parent"
+msgstr "Nadřazený"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_path
+msgid "Parent Path"
+msgstr "Nadřazená cesta"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
+msgid "Partner Category"
+msgstr "Kategorie partnera"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__plan_id
+msgid "Plan"
+msgstr "Plán"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Quantity"
+msgstr "Množství"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Quick search: %s"
+msgstr "Rychlé hledání: %s"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
+msgid "Reference"
+msgstr "Reference"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_department
+msgid "Research & Development"
+msgstr "Výzkum & Vývoj"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+msgid ""
+"Revenues will be created automatically when you create customer\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
+"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                on expenses (e.g. reinvoicing of travel costs)."
+msgstr ""
+"Výnosy budou vytvořeny automaticky při vytvoření zákazníka\n"
+"faktur. Zákaznické faktury mohou být vytvořeny na základě prodejních objednávek\n"
+"(faktury s pevnou cenou), na časové rozvrhy (na základě provedené práce) nebo\n"
+"nákladů (např. přefakturování cestovních nákladů)."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
+msgid "Root Plan"
+msgstr "Nadřazený plán"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_seagate_p2
+msgid "Seagate P2"
+msgstr "Seagate P2"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Search Analytic Lines"
+msgstr "Hledat analytické řádky"
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Search More..."
+msgstr "Vyhledat více..."
+
+#. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+#, python-format
+msgid "Search: Analytic Account"
+msgstr "Hledat: Analytický účet"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
+msgid ""
+"Select a company for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this company, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Výběr společnosti, pro který se analytická distribuce bude používat (např. "
+"při tvorbě nových zákaznických faktur nebo prodejních objednávek, pokud "
+"vybereme tuto společnost, automaticky se aplikuje tento analytický účet)"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
+msgid ""
+"Select a partner category for which the analytic distribution will be used "
+"(e.g. create new customer invoice or Sales order if we select this partner, "
+"it will automatically take this as an analytic account)"
+msgstr ""
+"Výběr kategorie partnera, pro kterou se analytická distribuce bude používat "
+"(např. při tvorbě nových zákaznických faktur nebo prodejních objednávek, "
+"pokud vybereme tohoto partnera, automaticky se aplikuje tento analytický "
+"účet)"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
+msgid ""
+"Select a partner for which the analytic distribution will be used (e.g. "
+"create new customer invoice or Sales order if we select this partner, it "
+"will automatically take this as an analytic account)"
+msgstr ""
+"Výběr partnera, pro který se analytická distribuce bude používat (např. při "
+"tvorbě nových zákaznických faktur nebo prodejních objednávek, pokud vybereme"
+" tohoto partnera, automaticky se aplikuje tento analytický účet)"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Simultaneous conditions to meet"
+msgstr "Současné podmínky, které je třeba splnit"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_spark
+msgid "Spark Systems"
+msgstr "Spark Systems"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
+msgid "Subplans"
+msgstr "Dílčí plány"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_line.py:0
+#, python-format
+msgid ""
+"The selected account belongs to another company than the one you're trying "
+"to create an analytic item for"
+msgstr ""
+"Vybraný účet patří jiné společnosti, než pro kterou se pokoušíte vytvořit "
+"analytickou položku"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_absences
+msgid "Time Off"
+msgstr "Volné dny"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+msgid "Total"
+msgstr "Celkem"
+
+#. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__unavailable
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__unavailable
+msgid "Unavailable"
+msgstr "Nedostupný"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Měrná jednotka"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "Kategorie MJ"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
+msgid "User"
+msgstr "Uživatel"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
+msgid "View"
+msgstr "Pohled"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You can't set a different company on your analytic account since there are "
+"some analytic items linked to it."
+msgstr ""
+"Pro tento analytický účet nemůžete vybrat jinou společnost, jelikož jsou s "
+"ním svázány některé analytické položky."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_distribution_model.py:0
+#, python-format
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
+msgstr ""
+"Vytvořili jste distribuci s analytickými účty patřícími určité společnosti, "
+"ale model je sdílen mezi společnostmi nebo patří jiné společnosti."
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "e.g. Project XYZ"
+msgstr "např. Projekt XYZ"

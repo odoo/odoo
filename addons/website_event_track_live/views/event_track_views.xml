@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_track_view_form" model="ir.ui.view">
+        <field name="name">event.track.view.form.inherit.live</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="youtube_video_url" widget="url" />
+                <field name="is_youtube_replay"
+                    attrs="{'invisible': ['|', ('youtube_video_url', '=', False), ('youtube_video_url', '=', '')]}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

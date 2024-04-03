@@ -1,0 +1,19 @@
+<odoo>
+    <record id="sale_order_cancel_view_form" model="ir.ui.view">
+        <field name="name">sale.order.cancel.form.inherit</field>
+        <field name="model">sale.order.cancel</field>
+        <field name="inherit_id" ref="sale.sale_order_cancel_view_form"/>
+        <field name="arch" type="xml">
+            <field name="display_invoice_alert" position="after">
+                <field name="display_purchase_orders_alert" invisible="True" />
+            </field>
+            <span id="display_invoice_alert" position="after">
+                <span id="display_purchase_orders_alert"
+                        attrs="{'invisible': [('display_purchase_orders_alert', '=', False)]}"
+                        groups="purchase.group_purchase_user">
+                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>
+                </span>
+            </span>
+        </field>
+    </record>
+</odoo>

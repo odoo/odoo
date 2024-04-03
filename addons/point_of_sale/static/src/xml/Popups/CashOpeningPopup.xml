@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CashOpeningPopup" owl="1">
+            <div class="popup opening-cash-control">
+                <header class="title drag-handle">
+                    OPENING CASH CONTROL
+                </header>
+                <main class="body">
+                    <div class="opening-cash-section">
+                        <span class="info-title">Opening cash</span>
+                        <div class="cash-input-sub-section" t-on-input="handleInputChange">
+                            <input class="pos-input" t-ref="openingCashInput"/>
+                            <div class="button icon" t-on-click="openDetailsPopup">
+                                <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea placeholder="Add an opening note..." class="opening-cash-notes" t-model="state.notes"/>
+                </main>
+                <footer class="footer">
+                    <div class="button dynamic-size" t-on-click="confirm">
+                        Open session <span t-esc="env.pos.format_currency(state.openingCash)"/>
+                    </div>
+                </footer>
+            </div>
+            <MoneyDetailsPopup
+                t-if="state.displayMoneyDetailsPopup"
+                manualInputCashCount="manualInputCashCount"
+                onConfirm="(payload) => this.updateCashOpening(payload)"
+                onDiscard.bind="closeDetailsPopup"
+            />
+    </t>
+</templates>

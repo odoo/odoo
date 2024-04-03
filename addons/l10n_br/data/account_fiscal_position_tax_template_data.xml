@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sales within the same state -->
+    <record id="account_fiscal_position_same_state_sale1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_1"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_interno17"/>
+    </record>
+
+    <!-- Purchases within the same state -->
+    <record id="account_fiscal_position_same_state_purchase1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_1"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_interno17"/>
+    </record>
+
+    <!-- Foreign sales -->
+    <record id="account_fiscal_position_foreign_sale1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo"/>
+    </record>
+
+    <record id="account_fiscal_position_foreign_sale2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo"/>
+    </record>
+
+    <record id="account_fiscal_position_foreign_sale3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_out_ipi10"/>
+        <field name="tax_dest_id" ref="tax_template_out_ipi"/>
+    </record>
+
+    <!-- Foreign purchases -->
+    <record id="account_fiscal_position_foreign_purchase1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_interno"/>
+    </record>
+
+    <record id="account_fiscal_position_foreign_purchase2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_externo"/>
+    </record>
+
+    <record id="account_fiscal_position_foreign_purchase3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_2"/>
+        <field name="tax_src_id" ref="tax_template_in_ipi10"/>
+        <field name="tax_dest_id" ref="tax_template_in_ipi"/>
+    </record>
+
+    <!-- Interstate sales between South/Southeast and North/Northeast/Midwest-->
+    <record id="account_fiscal_position_interstate_sale1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ss_nnm"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo7"/>
+    </record>
+
+    <record id="account_fiscal_position_interstate_sale2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ss_nnm"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo7"/>
+    </record>
+
+    <!-- Interstate purchases between South/Southeast and North/Northeast/Midwest-->
+    <record id="account_fiscal_position_interstate_purchase1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ss_nnm"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_externo7"/>
+    </record>
+
+    <record id="account_fiscal_position_interstate_purchase2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_ss_nnm"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_externo7"/>
+    </record>
+
+    <!-- Interstate sales -->
+    <record id="account_fiscal_position_interstate_sale3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_interstate"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo12"/>
+    </record>
+
+    <record id="account_fiscal_position_interstate_sale4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_interstate"/>
+        <field name="tax_src_id" ref="tax_template_out_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_out_icms_externo12"/>
+    </record>
+
+    <!-- Interstate purchases -->
+    <record id="account_fiscal_position_interstate_purchase3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_interstate"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_externo17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_externo12"/>
+    </record>
+
+    <record id="account_fiscal_position_interstate_purchase4" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_interstate"/>
+        <field name="tax_src_id" ref="tax_template_in_icms_interno17"/>
+        <field name="tax_dest_id" ref="tax_template_in_icms_externo12"/>
+    </record>
+
+</odoo>

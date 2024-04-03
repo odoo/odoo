@@ -1,0 +1,48 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Activity_core {
+    min-width: 0;
+}
+
+.o_Activity_detailsUserAvatar {
+    object-fit: cover;
+    height: 18px;
+    width: 18px;
+}
+
+.o_Activity_iconContainer {
+    @include o-position-absolute($top: auto, $left: auto, $bottom: -16%, $right: -5%);
+}
+
+.o_Activity_note p {
+    margin-bottom: map-get($spacers, 0);
+}
+
+.o_Activity_sidebar {
+    width: $o-mail-thread-avatar-size;
+    min-width: $o-mail-thread-avatar-size;
+    height: $o-mail-thread-avatar-size;
+}
+
+// From python template
+.o_mail_note_title {
+    margin-top: map-get($spacers, 2);
+}
+
+.o_mail_note_title + div p {
+    margin-bottom: map-get($spacers, 0);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Activity_detailsButton {
+    @include o-hover-text-color($default-color: $o-main-color-muted);
+}
+
+.o_Activity_iconContainer {
+    box-shadow: 0 0 0 2px $o-view-background-color;
+}

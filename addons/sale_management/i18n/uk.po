@@ -1,0 +1,680 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_management
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:23+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: sale_management
+#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
+msgid "4 Person Desk"
+msgstr "4 персональні столи"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "<span>Options</span>"
+msgstr "<span>Функції</span>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span>Payment</span>"
+msgstr "<span>Платіж</span>"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span>Signature</span>"
+msgstr "<span>Підпис</span>"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a note"
+msgstr "Додати примітку"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a product"
+msgstr "Додати товар"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Add a section"
+msgstr "Додати розділ"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Add one"
+msgstr "Додати один"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Add to cart"
+msgstr "Додати до кошика"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Add to order lines"
+msgstr "Додати до рядків замовлення"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
+msgid "All Sales"
+msgstr "Усі продажі"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
+msgid "Category"
+msgstr "Категорія"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_company
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__company_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__company_id
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Company"
+msgstr "Компанія"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
+msgid "Confirmation Mail"
+msgstr "Лист підтвердження"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
+#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
+#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
+" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"здійснюватися на основі співвідношення."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
+msgid "Create standardized offers with default products"
+msgstr "Створюйте стандартизовані пропозиції з товарами за замовчуванням"
+
+#. module: sale_management
+#: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
+msgid "Create your quotation template"
+msgstr "Створіть ваш шаблон комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
+msgid "Default Sale Template"
+msgstr "Шаблон продажу за замовчуванням"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
+msgid "Default Template"
+msgstr "Шаблон за замовчуванням"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Description"
+msgstr "Опис"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
+msgid ""
+"Design your quotation templates using building blocks<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
+msgstr ""
+"Створіть шаблони комерційних пропозицій за допомогою блоків<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Попередження: ця функція встановить додаток Веб-сайт.</em>"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_digest_digest
+msgid "Digest"
+msgstr "Огляд"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Disc.%"
+msgstr "Зниж.%"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
+msgid "Discount (%)"
+msgstr "Знижка (%)"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
+msgid "Display Type"
+msgstr "Тип відображення"
+
+#. module: sale_management
+#: code:addons/sale_management/models/digest.py:0
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+"Не маєте доступу, пропустіть ці дані для електронного оглядового "
+"повідомлення користувача"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Документація"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr ""
+"Заборонений товар, кількість та одиниця вимірювання на непідзвітному рядку "
+"комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
+msgid "Gives the sequence order when displaying a list of optional products."
+msgstr ""
+"Надає послідовність замовлення під час відображення списку додаткових "
+"товарів."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+"Дає порядок послідовності при відображенні списку рядків комерційних "
+"пропозицій."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Group By"
+msgstr "Групувати за"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__active
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"Якщо цей параметр не буде позначено, він дозволить вам сховати шаблон "
+"комерційної пропозиції, не видаливши його."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
+msgid "Kpi All Sale Total Value"
+msgstr "Kpi усіх значень суми продажу"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option____last_update
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template____last_update
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line____last_update
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option____last_update
+msgid "Last Modified on"
+msgstr "Остання модифікація"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
+msgid "Line"
+msgstr "Рядок"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Lines"
+msgstr "Рядки"
+
+#. module: sale_management
+#: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr ""
+"Відсутність необхідного товару та одиниці вимірювання на підзвітному рядку "
+"пропозиції продажу."
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Note"
+msgstr "Примітка"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Кількість днів для розрахунку терміну дії пропозиції"
+
+#. module: sale_management
+#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
+msgid "Office Chair"
+msgstr "Офісний стілець"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
+msgid "Online Payment"
+msgstr "Платіж онлайн"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
+msgid "Online Signature"
+msgstr "Онлайн-підпис"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Online confirmation"
+msgstr "Online-підтвердження"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Optional Products"
+msgstr "Додаткові товари"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
+msgid "Optional Products Lines"
+msgstr "Рядки супутних товарів"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Options"
+msgstr "Опції"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
+msgid "Present on Quotation"
+msgstr "Присутній на комерційній пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_id
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Product"
+msgstr "Товар"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__quantity
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_qty
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__quantity
+msgid "Quantity"
+msgstr "Кількість"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Quantity:"
+msgstr "Кількість:"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
+msgid "Quotation Builder"
+msgstr "Конструктор комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
+msgid "Quotation Duration"
+msgstr "Термін дії комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "Шаблон комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Рядок шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Quotation Template Lines"
+msgstr "Рядки шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "Функція шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
+msgid "Quotation Template Reference"
+msgstr "Посилання шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.actions.act_window,name:sale_management.sale_order_template_action
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__group_sale_order_template
+#: model:ir.ui.menu,name:sale_management.sale_order_template_menu
+#: model:res.groups,name:sale_management.group_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
+msgid "Quotation Templates"
+msgstr "Шаблони комеційної пропозиції"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Quotation expires after"
+msgstr "Комерційна пропозиція закінчується після"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Remove"
+msgstr "Вилучити"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Remove one"
+msgstr "Вилучити один"
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Подавайте запит на онлайн-підпис клієнту у замовленні, щоби підтвердити "
+"замовлення автоматично."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Робіть запит на онлайн-платіж клієнту у замовленні, щоби підтвердити "
+"замовлення автоматично."
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_option
+msgid "Sale Options"
+msgstr "Опції продажу"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
+msgid "Sales"
+msgstr "Продажі"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order
+msgid "Sales Order"
+msgstr "Замовлення на продаж"
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Рядок замовлення"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
+msgid "Sales Order Reference"
+msgstr "Посилання на замовлення на продаж"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Sales Quotation Template Lines"
+msgstr "Рядки шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
+msgid "Search Quotation Template"
+msgstr "Пошук шаблону комерційної пропозиції"
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Section"
+msgstr "Розділ"
+
+#. module: sale_management
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Продавайте один і той же товар у різних розмірах або кольорах? Спробуйте "
+"сітку товарів і заповніть свої замовлення кількома кількостями кожного "
+"варіанту. Ця функція також існує у модулі Купівлі."
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: sale_management
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Боретеся зі складним каталогом товарів? Спробуйте Конфігуратор товару, щоб "
+"допомогти продавцям налаштувати товар з різними параметрами: кольорами, "
+"розміром, місткістю тощо. Зробіть кодування комерційних замовлень простішим "
+"та надійнішим."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Terms & Conditions"
+msgstr "Терміни та умови"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
+msgid "Terms and conditions"
+msgstr "Терміни та умови"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Адміністратор може встановити терміни та умови за замовчуванням в "
+"налаштуваннях продажів. Умови, встановлені тут, відображатимуться, якщо ви "
+"виберете цей шаблон комерційної пропозиції."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Цей шаблон електронної пошти буде надіслано на підтвердження. Залиште "
+"порожнім, щоб нічого не відправити."
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
+msgid ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
+msgstr ""
+"Це поле буде перевірено, якщо товар додаткового рядка присутній у "
+"комерційній пропозиції."
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
+msgid "Tip: Odoo supports configurable products"
+msgstr "Порада: Odoo підтримує налаштовувані товари"
+
+#. module: sale_management
+#: model:digest.tip,name:sale_management.digest_tip_sale_management_1
+#: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "Порада: продавайте чи купуйте товари групою за допомогою матриці"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
+#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "Unit Price"
+msgstr "Ціна одиниці"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "Unit Price:"
+msgstr "Ціна за одиницю:"
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+msgid "Unit of Measure"
+msgstr "Одиниця вимірювання"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
+msgid "UoM"
+msgstr "Одиниця вимірювання"
+
+#. module: sale_management
+#: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Використовуйте шаблони для створення ідеальних, професійних комерційних пропозицій за лічені хвилини.\n"
+"                Надішліть ці комерційні пропозиції електронною поштою та дайте вашим клієнтам підписати їх онлайн.\n"
+"                Використовуйте крос-продажі та знижки, щоби збільшити продажі."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_option.py:0
+#, python-format
+msgid "You cannot add options to a confirmed order."
+msgstr "Ви не можете додавати опції до підтвердженого замовлення."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template_line.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Ви не можете змінювати тип рядка комерційної пропозиції. Натомість вам "
+"необхідно видалити поточний рядок та створити новий належного типу."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order.py:0
+#, python-format
+msgid ""
+"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+msgstr ""
+"Ваша комерційна пропозиція містить товари від компанії %(product_company)s у той час, як комерційна пропозиція належить компанії %(quote_company)s. \n"
+" Змініть компанію на комерційній пропозиції або вилучіть товари з іншої компанії (%(bad_products)s)."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid "Your template cannot contain products from multiple companies."
+msgstr "Ваш шаблон не може містити товари з кількох компаній."
+
+#. module: sale_management
+#: code:addons/sale_management/models/sale_order_template.py:0
+#, python-format
+msgid ""
+"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from other companies."
+msgstr ""
+"Ваш шаблон містить товари компанії %(product_company)s у той час, як шаблон належить компанії %(template_company)s. \n"
+" Змініть компанію на шаблоні або вилучіть товари іншої компанії."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "days"
+msgstr "дні"
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "e.g. Standard Consultancy Package"
+msgstr "напр. Стандартний консультаційний пакет"

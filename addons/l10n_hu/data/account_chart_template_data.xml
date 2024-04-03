@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hungarian_chart_template" model="account.chart.template">
+        <field name="name">Hungary - National Chart of Accounts</field>
+        <field name="cash_account_code_prefix">381</field>
+        <field name="bank_account_code_prefix">384</field>
+        <field name="transfer_account_code_prefix">389</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.HUF"/>
+        <field name="country_id" ref="base.hu"/>
+        <field name="spoken_languages" eval="'hu_HU'"/>
+    </record>
+</odoo>

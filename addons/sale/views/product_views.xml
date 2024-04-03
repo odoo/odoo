@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view.inherit.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <page name="sales" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </page>
+            <field name="product_variant_count" position="after">
+                <field name="service_type" widget="radio" invisible="True"/>
+                <field name="visible_expense_policy" invisible="1"/>
+            </field>
+            <field name="detailed_type" position="after">
+                <field name="invoice_policy" required="1"/>
+                <field name="expense_policy" widget="radio" attrs="{'invisible': [('visible_expense_policy', '=', False)]}"/>
+            </field>
+            <field name="product_tooltip" position="after">
+                <label for="product_tooltip" string=""
+                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"/>
+                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'order')]}"
+                    class="fst-italic text-muted">
+                    You can invoice them before they are delivered.
+                </div>
+                <label for="product_tooltip" string=""
+                    attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"/>
+                <div attrs="{'invisible': ['|', ('type', 'not in', ('product', 'consu')), ('invoice_policy', '!=', 'delivery')]}"
+                    class="fst-italic text-muted">
+                    Invoice after delivery, based on quantities delivered, not ordered.
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <!-- TODO VFE inherit product_template_form_view and factorize both views -->
+    <record id="product_form_view_sale_order_button" model="ir.ui.view">
+        <field name="name">product.product.sale.order</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    name="action_view_sales"
+                    type="object"
+                    icon="fa-signal"
+                    help="Sold in the last 365 days"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                            <field name="uom_name"/>
+                        </span>
+                        <span class="o_stat_text">Sold</span>
+                    </div>
+                </button>
+            </div>
+            <group name="description" position="after">
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1" colspan="2"/>
+                        <field name="sale_line_warn_msg" colspan="2" nolabel="1" placeholder="Type a message..."
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </t>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_sale_order_button" model="ir.ui.view">
+        <field name="name">product.template.sale.order.button</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                    name="action_view_sales"
+                    type="object" icon="fa-signal"
+                    help="Sold in the last 365 days"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('sale_ok', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                            <field name="uom_name"/>
+                        </span>
+                        <span class="o_stat_text">Sold</span>
+                    </div>
+                </button>
+            </div>
+            <group name="description" position="after">
+                <t groups="sales_team.group_sale_salesman">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" string="Warning"/>
+                        <field name="sale_line_warn_msg" string="Message" placeholder="Type a message..."
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </t>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_template_action" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_id" ref="product.product_template_kanban_view"/>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="context">{"search_default_filter_to_sell":1, "sale_multi_pricelist_product_template": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+</odoo>
