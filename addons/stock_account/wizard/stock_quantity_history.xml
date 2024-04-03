@@ -8,7 +8,7 @@
             <!-- ensure string/description matches the model we're looking at the history of -->
             <field name="inventory_datetime" position="attributes">
                 <attribute name="invisible">
-                    context.get('active_model') != 'stock.quant'
+                    context.get('active_model') != 'product.product'
                 </attribute>
             </field>
             <field name="inventory_datetime" position="after">
