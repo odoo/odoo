@@ -17,6 +17,9 @@ const INDEXED_DB_NAME = {
     "res.partner": ["barcode"],
 };
 const LOADED_ORM_METHODS = ["read", "search_read", "create"];
+export const CONFIG = {
+    "missingModelsAllowedToLoad": ["product.product", "pos.combo", "pos.combo.line"],
+}
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -85,7 +88,8 @@ export class PosData extends Reactive {
         this.relations = response.relations;
         this.custom = response.custom;
         this.models = models;
-        this.models.loadData(response.data, this.modelToLoad);
+        const { missingRecords } = this.models.loadData(response.data, this.modelToLoad);
+        await this.loadMissingRecords(missingRecords);
 
         for (const [name, model] of Object.entries(records)) {
             this[name] = Object.values(model);
@@ -96,7 +100,9 @@ export class PosData extends Reactive {
 
     async loadMissingRecords(missingRecords) {
         for (const [model, ids] of Object.entries(missingRecords)) {
-            await this.read(model, Array.from(ids), this.fields[model], {}, false);
+            if (CONFIG.missingModelsAllowedToLoad.includes(model)) {
+                await this.read(model, Array.from(ids), this.fields[model], {}, false);
+            }
         }
     }
 
@@ -153,7 +159,8 @@ export class PosData extends Reactive {
             }
 
             if (this.models[model] && LOADED_ORM_METHODS.includes(type)) {
-                const { results } = this.models.loadData({ [model]: result });
+                const { results, missingRecords } = this.models.loadData({ [model]: result });
+                await this.loadMissingRecords(missingRecords);
                 result = results[model];
             }
 
