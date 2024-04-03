@@ -66,8 +66,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                 title: this.env._t("Payments Difference"),
                 body: sprintf(
                     this.env._t(
-                        "The maximum difference allowed is %s.\n\
-                        Please contact your manager to accept the closing difference."
+                        "The maximum difference allowed is %s.\n" +
+                            "Please contact your manager to accept the closing difference."
                     ),
                     this.env.utils.formatCurrency(this.amountAuthorizedDiff)
                 ),
