@@ -9,7 +9,8 @@ from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _name = 'stock.picking'
+    _inherit = ['stock.picking', 'pickup.location.mixin']
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -21,7 +22,8 @@ class StockPicking(models.Model):
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     allowed_carrier_ids = fields.Many2many('delivery.carrier', compute='_compute_allowed_carrier_ids')
-    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True)
+    carrier_id = fields.Many2one("delivery.carrier", string="Carrier", domain="[('id', 'in', allowed_carrier_ids)]", check_company=True, tracking=True)
+    is_pickup_carrier = fields.Boolean(related='carrier_id.is_pickup')
     weight = fields.Float(compute='_cal_weight', digits='Stock Weight', store=True, help="Total weight of the products in the picking.", compute_sudo=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
@@ -35,6 +37,10 @@ class StockPicking(models.Model):
         for picking in self:
             carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(picking.company_id))
             picking.allowed_carrier_ids = carriers.available_carriers(picking.partner_id, picking) if picking.partner_id else carriers
+
+    def _get_delivery_address_field(self):
+        """ Get the field name to store the delivery address. """
+        return 'partner_id'
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
@@ -55,6 +61,16 @@ class StockPicking(models.Model):
                 picking.return_label_ids = self.env['ir.attachment'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', picking.id), ('name', '=like', '%s%%' % picking.carrier_id.get_return_label_prefix())])
             else:
                 picking.return_label_ids = False
+
+    def action_confirm(self):
+        if any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
+            raise UserError(_("You must select a pickup address with this delivery method."))
+        return super().action_confirm()
+
+    def button_validate(self):
+        if any(picking.is_pickup_carrier and not picking.partner_id.is_pickup_location for picking in self):
+            raise UserError(_("You must select a pickup address with this delivery method."))
+        return super().button_validate()
 
     def get_multiple_carrier_tracking(self):
         self.ensure_one()
@@ -216,3 +232,12 @@ class StockPicking(models.Model):
     def _should_generate_commercial_invoice(self):
         self.ensure_one()
         return self.picking_type_id.warehouse_id.partner_id.country_id != self.partner_id.country_id
+
+    def _get_unavailable_lines(self, wh_id):
+        unavailable_moves = self.env['stock.move']
+        for sm in self.move_ids:
+            if sm.is_storable:
+                product_free_qty = sm.product_id.with_context(warehouse_id=wh_id).free_qty
+                if sm.product_uom_qty > product_free_qty:
+                    unavailable_moves |= sm
+        return unavailable_moves

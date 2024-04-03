@@ -40,10 +40,10 @@ class ProductTemplate(models.Model):
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == 'in_store'
-                and order_sudo.pickup_location_data
+                and order_sudo.partner_shipping_id.location_data
             ):  # Get stock values for the product variant in the selected store.
                 res['in_store_stock_data'] = utils.format_product_stock_values(
-                    product_or_template.sudo(), wh_id=order_sudo.pickup_location_data['id']
+                    product_or_template.sudo(), wh_id=order_sudo.partner_shipping_id.location_data['id']
                 )
             else:
                 res['in_store_stock_data'] = utils.format_product_stock_values(
