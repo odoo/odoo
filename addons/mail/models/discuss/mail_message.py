@@ -16,11 +16,11 @@ class MailMessage(models.Model):
             return guest and self.model == "discuss.channel" and self.res_id in guest.sudo().channel_ids.ids
         return super()._validate_access_for_current_persona(operation)
 
-    def _message_format_extras(self, format_reply):
+    def _message_format_basic(self, format_reply=True, msg_vals=None, scheduled_dt_by_msg_id=None):
         self.ensure_one()
-        vals = super()._message_format_extras(format_reply)
+        vals = super()._message_format_basic(format_reply, msg_vals, scheduled_dt_by_msg_id)
         if format_reply and self.model == "discuss.channel" and self.parent_id:
-            vals["parentMessage"] = self.parent_id._message_format(format_reply=False)[0]
+            vals["parentMessage"] = self.parent_id._message_format_basic(format_reply=False)
         return vals
 
     def _bus_notification_target(self):

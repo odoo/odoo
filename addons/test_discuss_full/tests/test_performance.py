@@ -1408,7 +1408,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [{"id": self.users[0].partner_id.id, "type": "partner"}],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1453,7 +1452,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1498,7 +1496,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1543,7 +1540,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_comment_id, "Discussions"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1587,7 +1583,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }
@@ -1624,7 +1619,6 @@ class TestDiscussFullPerformance(HttpCase):
                 "starredPersonas": [],
                 "subject": False,
                 "subtype_description": False,
-                "subtype_id": [mt_note_id, "Note"],
                 "trackingValues": [],
                 "write_date": write_date,
             }

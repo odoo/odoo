@@ -597,7 +597,7 @@ class Channel(models.Model):
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        message_format = message._message_format()[0]
+        message_format = message._message_format_basic()
         if "temporary_id" in self.env.context:
             message_format["temporary_id"] = self.env.context["temporary_id"]
         bus_notifications = [
