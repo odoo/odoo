@@ -10,6 +10,18 @@
                 <!-- modified through an onchange, must be present but not readonly -->
                 <field name="recompute_delivery_price" invisible="1"/>
             </header>
+            <label for='partner_shipping_id' position="attributes">
+                <attribute name="invisible" add="is_pickup_delivery" separator="or"/>
+            </label>
+            <label for='partner_shipping_id' position="after">
+                <label for="partner_shipping_id" string="Pickup Point" invisible="not is_pickup_delivery"/>
+            </label>
+            <field name='partner_shipping_id' position="attributes">
+                <attribute name="invisible" add="is_pickup_delivery" separator="or"/>
+            </field>
+            <field name='partner_shipping_id' position="after">
+                <field name="partner_shipping_id" invisible="not is_pickup_delivery" widget="pickup_location_many2one"/>
+            </field>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"

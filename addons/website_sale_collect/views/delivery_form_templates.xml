@@ -91,7 +91,7 @@
                     t-if="insufficient_stock_data"
                     t-call="website_sale_collect.unavailable_products_warning"
                 >
-                    <t t-set="wh_name" t-value="pickup_location_data.get('name')"/>
+                    <t t-set="wh_name" t-value="order.partner_shipping_id.pickup_location_data.get('name')"/>
                 </t>
             </t>
         </div>

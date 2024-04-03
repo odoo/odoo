@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -19,6 +21,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         required=True,
         domain="[('id', 'in', available_carrier_ids)]",
     )
+    is_pickup_delivery = fields.Boolean(related='carrier_id.is_pickup')
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
     display_price = fields.Float(string='Cost', readonly=True)
@@ -29,6 +32,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    partner_shipping_id = fields.Many2one('res.partner', string="Pickup Point")
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -40,6 +44,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
         else:
             self.display_price = 0
             self.delivery_price = 0
+
+        if self.partner_shipping_id.pickup_delivery_carrier_id:
+            self.partner_shipping_id = self.partner_id
 
     @api.onchange('order_id')
     def _onchange_order_id(self):
@@ -89,8 +96,35 @@ class ChooseDeliveryCarrier(models.TransientModel):
         }
 
     def button_confirm(self):
+        self.ensure_one()
+        if self.is_pickup_delivery and self.partner_shipping_id.pickup_delivery_carrier_id.id != self.carrier_id.id:
+            raise UserError(_("Please select a pickup point before adding a delivery method"))
         self.order_id.set_delivery_line(self.carrier_id, self.delivery_price)
-        self.order_id.write({
+        so_vals = {
             'recompute_delivery_price': False,
             'delivery_message': self.delivery_message,
-        })
+        }
+        if self.is_pickup_delivery:
+            so_vals.update({'partner_shipping_id': self.partner_shipping_id})
+        self.order_id.write(so_vals)
+
+    def set_pickup_location(self, pickup_location_data):
+        """Set the pickup location on the current wizard.
+
+        :param str pickup_location_data: The pickup location data in JSON format.
+        """
+        self.ensure_one()
+        if self.carrier_id.is_pickup:
+            pickup_location_data_json = json.loads(pickup_location_data)
+            address = self.env['res.partner']._address_from_json(
+                pickup_location_data_json,
+                self.partner_id,
+                pickup_delivery_carrier_id=self.carrier_id.id
+            )
+            self.partner_shipping_id = address or self.partner_id
+        # When opening a dialog from another dialog, the first one gets closed
+        # We need to return an action to open the first dialog again
+        action = self.order_id.action_open_delivery_wizard()
+        del action['context']
+        action['res_id'] = self.id
+        return action

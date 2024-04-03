@@ -17,10 +17,14 @@ class InStoreDelivery(Delivery):
             order_sudo = request.cart
             in_store_dm = request.website.sudo().in_store_dm_id
             if not order_sudo:  # Pickup location requested without a cart creation.
-                # Create a temporary order to fetch pickup locations.
-                temp_order = request.env['sale.order'].new({'carrier_id': in_store_dm.id})
-                return temp_order.sudo()._get_pickup_locations(zip_code, **kwargs)  # Skip super
-            elif order_sudo.carrier_id.delivery_type != 'in_store':
+                country = None
+                if zip_code and (country_code := request.geoip.country_code):
+                    country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+                if not country:  # Reset the zip code to skip the `assert` in the call.
+                    zip_code = None
+                # Skip super
+                return in_store_dm.sudo()._get_pickup_locations(zip_code, country, **kwargs)
+            if order_sudo.carrier_id.delivery_type != 'in_store':
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         return super().website_sale_get_pickup_locations(zip_code, **kwargs)
 
@@ -40,7 +44,7 @@ class InStoreDelivery(Delivery):
         if order_sudo.carrier_id.delivery_type != 'in_store':
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
-        order_sudo._set_pickup_location(pickup_location_data)
+        order_sudo.set_pickup_location(pickup_location_data)
 
     def _get_additional_delivery_context(self):
         """ Override of `website_sale` to include the default pickup location data for in-store

@@ -1083,6 +1083,11 @@ class ResPartner(models.Model):
             create_values['email'] = parsed_email_normalized
         return self.create(create_values)
 
+    def _is_address_usable(self):
+        """ Determine whether the address can be used for address searching."""
+        self.ensure_one()
+        return True  # Override point for other modules to restrict address usability
+
     def address_get(self, adr_pref=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
         through descendants within company boundaries (stop at entities flagged ``is_company``)
@@ -1102,7 +1107,7 @@ class ResPartner(models.Model):
                 while to_scan:
                     record = to_scan.pop(0)
                     visited.add(record)
-                    if record.type in adr_pref and not result.get(record.type):
+                    if record.type in adr_pref and not result.get(record.type) and record._is_address_usable():
                         result[record.type] = record.id
                     if len(result) == len(adr_pref):
                         return result

@@ -17,6 +17,7 @@
                         <field name="currency_id" invisible="1"/>
                         <field name="order_id" invisible="1"/>
                         <field name='delivery_price' invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
                         <label for="display_price"/>
                         <div class="o_row">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
@@ -24,6 +25,7 @@
                                 <i class="oi oi-arrow-right me-1"/>Get rate
                             </button>
                         </div>
+                        <field string="Pickup Point" invisible="not is_pickup_delivery" name="partner_shipping_id" widget="pickup_location_many2one"/>
                     </group>
                 </group>
                 <div role="alert" class="alert alert-warning" invisible="invoicing_message == ''">

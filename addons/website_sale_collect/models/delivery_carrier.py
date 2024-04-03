@@ -16,6 +16,12 @@ class DeliveryCarrier(models.Model):
     )
     warehouse_ids = fields.Many2many(string="Stores", comodel_name='stock.warehouse')
 
+    def _compute_is_pickup(self):
+        super()._compute_is_pickup()
+        for carrier in self:
+            if carrier.delivery_type == 'in_store':
+                carrier.is_pickup = True
+
     @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
         if any(self.filtered(
@@ -87,20 +93,21 @@ class DeliveryCarrier(models.Model):
         partner_address.geo_localize()  # Calculate coordinates.
 
         pickup_locations = []
-        order_sudo = request.cart
+        order_sudo = request.cart if request.is_frontend else False
         for wh in self.warehouse_ids:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
                 continue
 
             # Prepare the stock data based on either the product or the order.
+            in_store_stock_data = {}
             if product:  # Called from the product page.
                 uom = self.env['uom.uom'].browse(uom_id)
                 cart_qty = order_sudo._get_cart_qty(product.id)
                 in_store_stock_data = utils.format_product_stock_values(
                     product, wh_id=wh.id, uom=uom, cart_qty=cart_qty
                 )
-            else:  # Called from the checkout page.
+            elif order_sudo:  # Called from the checkout page.
                 in_store_stock_data = {'in_stock': order_sudo._is_in_stock(wh.id)}
 
             # Calculate the distance between the partner address and the warehouse location.
