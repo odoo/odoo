@@ -33,6 +33,7 @@ class CalendarTimeslot(models.Model):
     # Event Related Fields
         # Public fields
     is_public = fields.Boolean(related='event_id.is_public', readonly=False)
+    is_shown = fields.Boolean(related='event_id.is_shown', default=True, readonly=False)
     partner_id = fields.Many2one('res.partner', related='event_id.partner_id', string='Calendar', readonly=False, default=lambda self: self.env.user.partner_id.id)
     user_id = fields.Many2one('res.users', related='event_id.user_id', string='User')
         # Private fields

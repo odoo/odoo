@@ -32,16 +32,17 @@
                     <field name="can_read_private" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <h1><field name="name" string="Subject" decoration-bf="1" readonly="not can_write" placeholder="Subject"/></h1>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                     <group>
                         <group string="Public">
                             <field name="partner_id" required="1" domain="[('user_id', '=', uid)]" readonly="not can_write"/>
                             <field name="start" string="Start Date" required="1" readonly="not can_write"/>
                             <field name="stop" string="End Date" required="1" readonly="not can_write"/>
                             <field name="duration" string="Duration (H)" widget="float_time" readonly="not can_write"/>
-                            <field name="allday" readonly="not can_write"/>
-                            <field name="is_public" readonly="not can_write"/>
-                            <field name="is_recurring" readonly="not can_write"/>
+                            <field name="allday" widget="boolean_toggle" readonly="not can_write"/>
+                            <field name="is_shown" widget="boolean_toggle" readonly="not can_write"/>
+                            <field name="is_public" widget="boolean_toggle" readonly="not can_write" invisible="not is_shown"/>
+                            <field name="is_recurring" widget="boolean_toggle" readonly="not can_write"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
                             <field name="partner_ids" widget="many2many_tags" readonly="not can_write"/>
@@ -98,15 +99,16 @@
                     <field name="can_read_private" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <h1><field name="name" string="Subject" decoration-bf="1" readonly="not can_write" placeholder="Subject"/></h1>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                     <group>
                         <group string="Public" readonly="not can_write">
                             <field name="partner_id" required="1" domain="[('user_id', '=', uid)]"/>
+                            <field name="allday" widget="boolean_toggle"/>
                             <field name="start" string="Start Date" required="1"/>
                             <field name="stop" string="End Date" required="1"/>
-                            <field name="allday"/>
-                            <field name="duration" string="Duration (H)" widget="float_time"/>
-                            <field name="is_public"/>
+                            <field name="duration" string="Duration (H)" widget="float_time" invisible="allday"/>
+                            <field name="is_shown" widget="boolean_toggle"/>
+                            <field name="is_public" widget="boolean_toggle" invisible="not is_shown"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
                             <field name="note"/>

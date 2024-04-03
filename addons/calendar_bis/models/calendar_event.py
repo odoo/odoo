@@ -17,9 +17,11 @@ class CalendarEventPrivate(models.Model):
 
     timeslot_ids = fields.One2many('calendar.timeslot', 'event_id')
 
-    is_public = fields.Boolean(default=False, public=True)
     partner_id = fields.Many2one('res.partner', string="Calendar", public=True, default=lambda self: self.env.user.partner_id.id)
     user_id = fields.Many2one('res.users', string="User", public=True, compute='_compute_user_id', store=True, precompute=True, default=lambda self: self.env.user.id)
+
+    is_public = fields.Boolean(default=False, public=True)
+    is_shown = fields.Boolean(default=True, public=True)
 
     name = fields.Char(public_default="Busy")
     note = fields.Char()
