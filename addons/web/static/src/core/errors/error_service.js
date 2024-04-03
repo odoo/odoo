@@ -4,8 +4,7 @@ import { browser } from "../browser/browser";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
-import { isIOS } from "@web/core/browser/feature_detection";
-import { session } from "@web/session";
+import { isIOS, isBrowserSafari } from "@web/core/browser/feature_detection";
 
 /**
  * Uncaught Errors have 4 properties:
@@ -86,7 +85,7 @@ export const errorService = {
             }
             let uncaughtError;
             if (!filename && !lineno && !colno) {
-                if (isIOS() && session.is_frontend && odoo.debug !== "assets") {
+                if ((isIOS() || isBrowserSafari()) && odoo.debug !== "assets") {
                     // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
                     // when going back and forward through the browser when the
                     // cache is enabled. A feedback has been reported but in the

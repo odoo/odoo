@@ -15,6 +15,15 @@ export function isBrowserChrome() {
     return browser.navigator.userAgent.includes("Chrome");
 }
 
+/**
+ * true if the browser is based on Safari (Safari, Epiphany)
+ *
+ * @returns {boolean}
+ */
+export function isBrowserSafari() {
+    return !isBrowserChrome() && browser.navigator.userAgent.includes("Safari");
+}
+
 export function isAndroid() {
     return /Android/i.test(browser.navigator.userAgent);
 }
