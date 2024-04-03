@@ -274,6 +274,10 @@ class ReportSaleDetails(models.AbstractModel):
             })
             invoiceTotal += session._get_total_invoice()
 
+        for payment in payments:
+            if payment.get('id'):
+                payment['name'] = self.env['pos.payment.method'].browse(payment['id']).name + ' ' + self.env['pos.session'].browse(payment['session']).name
+
         return {
             'opening_note': sessions[0].opening_notes if len(sessions) == 1 else False,
             'closing_note': sessions[0].closing_notes if len(sessions) == 1 else False,
