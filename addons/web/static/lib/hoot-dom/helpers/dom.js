@@ -10,6 +10,22 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  height?: number;
  * }} Dimensions
  *
+ * @typedef {{
+ *  keepInlineTextNodes?: boolean;
+ *  tabSize?: number;
+ *  type?: "html" | "xml";
+ * }} FormatXmlOptions
+ *
+ * @typedef {{
+ *  inline: boolean;
+ *  level: number;
+ *  value: {
+ *      close?: string;
+ *      open?: string;
+ *      textContent?: string;
+ *  };
+ * }} MarkupLayer
+ *
  * @typedef {(node: Node, selector: string) => Node[]} NodeGetter
  *
  * @typedef {string | string[] | number | boolean | File[]} NodeValue
@@ -65,6 +81,7 @@ const {
     clearTimeout,
     console: { warn: $warn },
     document,
+    DOMParser,
     Map,
     Math: { floor: $floor },
     MutationObserver,
@@ -119,6 +136,40 @@ const ensureElement = (node) => {
 };
 
 /**
+ * @param {Iterable<Node>} nodes
+ * @param {number} level
+ * @param {boolean} [keepInlineTextNodes]
+ */
+const extractLayers = (nodes, level, keepInlineTextNodes) => {
+    /** @type {MarkupLayer[]} */
+    const layers = [];
+    for (const node of nodes) {
+        if (node.nodeType === Node.COMMENT_NODE) {
+            continue;
+        }
+        if (node.nodeType === Node.TEXT_NODE) {
+            const textContent = node.nodeValue.replaceAll(/\n/g, "");
+            const trimmedTextContent = textContent.trim();
+            if (trimmedTextContent) {
+                const inline = textContent === trimmedTextContent;
+                layers.push({ inline, level, value: { textContent: trimmedTextContent } });
+            }
+            continue;
+        }
+        const [open, close] = node.outerHTML.replace(`>${node.innerHTML}<`, ">\n<").split("\n");
+        const layer = { inline: false, level, value: { open, close } };
+        layers.push(layer);
+        const childLayers = extractLayers(node.childNodes, level + 1, false);
+        if (keepInlineTextNodes && childLayers.length === 1 && childLayers[0].inline) {
+            layer.value.textContent = childLayers[0].value.textContent;
+        } else {
+            layers.push(...childLayers);
+        }
+    }
+    return layers;
+};
+
+/**
  * @param {Iterable<Node>} nodesToFilter
  */
 const filterUniqueNodes = (nodesToFilter) => {
@@ -130,6 +181,51 @@ const filterUniqueNodes = (nodesToFilter) => {
         }
     }
     return nodes;
+};
+
+/**
+ * @param {MarkupLayer[]} layers
+ * @param {number} tabSize
+ */
+const generateStringFromLayers = (layers, tabSize) => {
+    const result = [];
+    let layerIndex = 0;
+    while (layers.length > 0) {
+        const layer = layers[layerIndex];
+        const { level, value } = layer;
+        const pad = " ".repeat(tabSize * level);
+        let nextLayerIndex = layerIndex + 1;
+        if (value.open) {
+            if (value.textContent) {
+                // node with inline textContent (no wrapping white-spaces)
+                result.push(`${pad}${value.open}${value.textContent}${value.close}`);
+                layers.splice(layerIndex, 1);
+                nextLayerIndex--;
+            } else {
+                result.push(`${pad}${value.open}`);
+                delete value.open;
+            }
+        } else {
+            if (value.close) {
+                result.push(`${pad}${value.close}`);
+            } else if (value.textContent) {
+                result.push(`${pad}${value.textContent}`);
+            }
+            layers.splice(layerIndex, 1);
+            nextLayerIndex--;
+        }
+        if (nextLayerIndex >= layers.length) {
+            layerIndex = nextLayerIndex - 1;
+            continue;
+        }
+        const nextLayer = layers[nextLayerIndex];
+        if (nextLayer.level > layers[nextLayerIndex - 1].level) {
+            layerIndex = nextLayerIndex;
+        } else {
+            layerIndex = nextLayerIndex - 1;
+        }
+    }
+    return result.join("\n");
 };
 
 /**
@@ -536,6 +632,23 @@ const parseSelector = (selector) => {
 };
 
 /**
+ * @param {string} xmlString
+ * @param {"html" | "xml"} type
+ */
+const parseXml = (xmlString, type) => {
+    const document = parser.parseFromString(`<templates>${xmlString}</templates>`, `text/${type}`);
+    if (document.getElementsByTagName("parsererror").length) {
+        const trimmed = xmlString.length > 80 ? xmlString.slice(0, 80) + "..." : xmlString;
+        throw new HootDomError(
+            `error while parsing ${trimmed}: ${getNodeText(
+                document.getElementsByTagName("parsererror")[0]
+            )}`
+        );
+    }
+    return document.documentElement.childNodes;
+};
+
+/**
  * Converts a CSS pixel value to a number, removing the 'px' part.
  *
  * @param {string} val
@@ -645,6 +758,8 @@ const FOCUSABLE_SELECTOR = [
 ]
     .map((sel) => `${sel}:not([tabindex="-1"])`)
     .join(",");
+
+const parser = new DOMParser();
 
 // Node getters
 
@@ -820,6 +935,17 @@ export function defineRootNode(node) {
     } else {
         getDefaultRoot = () => document;
     }
+}
+
+/**
+ * @param {string} value
+ * @param {FormatXmlOptions} [options]
+ * @returns {string}
+ */
+export function formatXml(value, options) {
+    const nodes = parseXml(value, options?.type || "xml");
+    const layers = extractLayers(nodes, 0, options?.keepInlineTextNodes ?? false);
+    return generateStringFromLayers(layers, options?.tabSize ?? 4);
 }
 
 /**
