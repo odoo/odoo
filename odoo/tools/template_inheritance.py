@@ -19,6 +19,7 @@ PYTHON_ATTRIBUTES = {'readonly', 'required', 'invisible', 'column_invisible', 't
 
 def add_stripped_items_before(node, spec, extract):
     text = spec.text or ''
+    keep_text = spec.get("replace_text") != "true"
 
     before_text = ''
     prev = node.getprevious()
@@ -27,11 +28,21 @@ def add_stripped_items_before(node, spec, extract):
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
         before_text = result.group(0) if result else ''
         fallback_text = None if spec.text is None else ''
-        parent.text = ((parent.text or '').rstrip() + text) or fallback_text
+        if keep_text:
+            parent.text = ((parent.text or '').rstrip() + text) or fallback_text
+        else:
+            parent.text = text
     else:
         result = prev.tail and RSTRIP_REGEXP.search(prev.tail)
         before_text = result.group(0) if result else ''
-        prev.tail = (prev.tail or '').rstrip() + text
+        if keep_text:
+            prev.tail = (prev.tail or '').rstrip() + text
+        else:
+            prev.tail = text
+
+    if not keep_text and spec.get("position") == "after":
+        after_text = node.tail and RSTRIP_REGEXP.search(node.tail)
+        node.tail = after_text and after_text.group(0) or ""
 
     if len(spec) > 0:
         spec[-1].tail = (spec[-1].tail or "").rstrip() + before_text
