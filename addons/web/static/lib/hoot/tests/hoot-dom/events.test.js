@@ -26,7 +26,7 @@ import {
 } from "../../../hoot-dom/hoot-dom";
 import { after, describe, expect, mountOnFixture, test } from "../../hoot";
 import { mockUserAgent } from "../../mock/navigator";
-import { animationFrame } from "../../mock/time";
+import { advanceTime, animationFrame } from "../../mock/time";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -187,6 +187,31 @@ describe(parseUrl(import.meta.url), () => {
             // Double click event
             "button.dblclick",
         ]).toVerifySteps();
+    });
+
+    test("triple click", async () => {
+        await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
+
+        const allEvents = [
+            // trigger 3 clicks
+            click("button"),
+            click("button"),
+            click("button"),
+        ].flat();
+
+        const clickEvents = allEvents.filter((ev) => ev.type === "click");
+
+        expect(clickEvents).toHaveLength(3);
+        expect(allEvents.filter((ev) => ev.type === "dblclick")).toHaveLength(1);
+        expect(clickEvents[0].detail).toBe(1);
+        expect(clickEvents[1].detail).toBe(2);
+        expect(clickEvents[2].detail).toBe(3);
+
+        await advanceTime(1_000);
+
+        const clickEvent = click("button").find((ev) => ev.type === "click");
+
+        expect(clickEvent.detail).toBe(1);
     });
 
     test("drag & drop: draggable items", async () => {
