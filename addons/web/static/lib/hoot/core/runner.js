@@ -362,7 +362,7 @@ export class TestRunner {
         // Text filter
         if (this.config.filter) {
             this.#hasIncludeFilter = true;
-            this.textFilter = parseRegExp(normalize(this.config.filter));
+            this.textFilter = parseRegExp(normalize(this.config.filter), { safe: true });
         }
 
         // Suites
