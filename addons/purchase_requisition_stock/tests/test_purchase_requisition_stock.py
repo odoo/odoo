@@ -314,3 +314,20 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         # Quantity should be reserved in the internal transfer's move
         self.assertEqual(int_move.quantity, 10, "Quantity should be reserved in the original internal move.")
         self.assertEqual(int_move.move_orig_ids.id, in_picking.move_ids.id, "Both moves should be correctly chained together.")
+
+    def test_group_id_alternative_po(self):
+        """ Check that the group_id is propagated in the alternative PO"""
+        pg1 = self.env['procurement.group'].create({})
+        orig_po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'group_id': pg1.id
+        })
+        # Creates an alternative PO
+        action = orig_po.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = self.res_partner_1
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
+        alt_po = self.env['purchase.order'].browse(alt_po_id)
+        self.assertEqual(alt_po.group_id, orig_po.group_id)
