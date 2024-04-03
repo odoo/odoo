@@ -134,8 +134,7 @@ class Meeting(models.Model):
     privacy = fields.Selection(
         [('public', 'Public'),
          ('private', 'Private'),
-         ('confidential', 'Only internal users')],
-        'Privacy', default='public', required=True,
+         ('confidential', 'Only internal users')], 'Privacy',
         help="People to whom this event will be visible.")
     show_as = fields.Selection(
         [('free', 'Available'),
@@ -608,7 +607,7 @@ class Meeting(models.Model):
         # determine private events to which the user does not participate
         current_partner_id = self.env.user.partner_id
         others_private_events = events.filtered(
-            lambda e: e.privacy == 'private' \
+            lambda e: (e.privacy == 'private' or (not e.privacy and e.user_id and e.user_id.calendar_default_privacy == 'private')) \
                   and e.user_id != self.env.user \
                   and current_partner_id not in e.partner_ids
         )
@@ -632,6 +631,9 @@ class Meeting(models.Model):
 
         if any(vals in self._get_recurrent_fields() for vals in values) and not (update_recurrence or values.get('recurrency')):
             raise UserError(_('Unable to save the recurrence with "This Event"'))
+
+        # Check the privacy permissions of the events whose organizer is different from the current user.
+        self.filtered(lambda ev: ev.user_id and self.env.user != ev.user_id)._check_calendar_privacy_write_permissions()
 
         update_alarms = False
         update_time = False
@@ -720,16 +722,28 @@ class Meeting(models.Model):
 
         return True
 
+    def _check_calendar_privacy_write_permissions(self):
+        """
+        Checks if current user can write on the events, raising UserError when the event is private.
+        We need to manually call the default Access Error because we can't add an access rule for checking
+        the calendar defaut privacy of an user from a 'calendar.event' record, since it is a res.users field.
+        Otherwise we would have to create a new computed field on that model, which we don't want.
+        """
+        for event in self:
+            if event._check_private_event_conditions():
+                raise self.env['ir.rule']._make_access_error("write", event)
+
+    def _check_private_event_conditions(self):
+        """ Checks if the event is private, returning True if the conditions match and False otherwise. """
+        self.ensure_one()
+        event_is_private = (self.privacy == 'private' or (not self.privacy and self.user_id and self.user_id.calendar_default_privacy == 'private'))
+        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
+        return event_is_private and user_is_not_partner
+
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
-        """ Hide private events' name for events which don't belong to the current user
-        """
-        hidden = self.filtered(
-            lambda evt:
-                evt.privacy == 'private' and
-                evt.user_id.id != self.env.uid and
-                self.env.user.partner_id not in evt.partner_ids
-        )
+        """ Hide private events' name for events which don't belong to the current user. """
+        hidden = self.filtered(lambda event: event._check_private_event_conditions())
         hidden.display_name = _('Busy')
         super(Meeting, self - hidden)._compute_display_name()
 
@@ -743,8 +757,11 @@ class Meeting(models.Model):
         grouped_fields = {group_field.split(':')[0] for group_field in groupby + fields_aggregates}
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            # display public and confidential events
-            domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
+            # display public, confidential events and events with default privacy when owner's default privacy is not private
+            domain = AND([domain, [
+                '|', '|', '|', ('privacy', '=', 'public'), ('privacy', '=', 'confidential'), ('user_id', '=', self.env.user.id),
+                '&', ('privacy', '=', False), ('user_id.calendar_default_privacy', '!=', 'private')
+            ]])
             return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
