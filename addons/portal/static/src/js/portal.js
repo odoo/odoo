@@ -140,18 +140,17 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      * @private
      */
     _adaptSearchLabel: function (elem) {
-        // TODO: MSH: Convert from here pending
-        var $label = $(elem).clone();
-        $label.find('span.nolabel').remove();
-        this.$('input[name="search"]').attr('placeholder', $label.text().trim());
+        const label = elem.cloneNode(true);
+        label.querySelector('span.nolabel').remove();
+        this.el.querySelector('input[name="search"]').setAttribute('placeholder', label.textContent.trim());
     },
     /**
      * @private
      */
     _search: function () {
         var search = new URL(window.location).searchParams;
-        search.set("search_in", this.$('.dropdown-item.active').attr('href')?.replace('#', '') || "");
-        search.set("search", this.$('input[name="search"]').val());
+        search.set("search_in", this.el.querySelector('.dropdown-item.active').setAttribute('href')?.replace('#', '') || "");
+        search.set("search", this.el.querySelector('input[name="search"]').value);
         window.location.search = search.toString();
     },
 
@@ -164,9 +163,9 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
      */
     _onDropdownItemClick: function (ev) {
         ev.preventDefault();
-        var $item = $(ev.currentTarget);
-        $item.closest('.dropdown-menu').find('.dropdown-item').removeClass('active');
-        $item.addClass('active');
+        const item = ev.currentTarget;
+        item.closest('.dropdown-menu').querySelector('.dropdown-item').classList.remove('active');
+        item.classList.add('active');
 
         this._adaptSearchLabel(ev.currentTarget);
     },
