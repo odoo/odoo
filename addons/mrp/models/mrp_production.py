@@ -1168,7 +1168,7 @@ class MrpProduction(models.Model):
                 ))
         return moves
 
-    def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
+    def _get_move_raw_values(self, product, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         """ Warning, any changes done to this method will need to be repeated for consistency in:
             - Manually added components, i.e. "default_" values in view
             - Moves from a copied MO, i.e. move.create
@@ -1181,7 +1181,7 @@ class MrpProduction(models.Model):
             'date_deadline': self.date_start,
             'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
-            'product_id': product_id.id,
+            'product_id': product.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
             'location_id': source_location.id,
@@ -1189,7 +1189,7 @@ class MrpProduction(models.Model):
             'raw_material_production_id': self.id,
             'company_id': self.company_id.id,
             'operation_id': operation_id,
-            'price_unit': product_id.standard_price,
+            'price_unit': product.standard_price,
             'procure_method': 'make_to_stock',
             'origin': self._get_origin(),
             'state': 'draft',
