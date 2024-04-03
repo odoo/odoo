@@ -9,10 +9,6 @@ export class ForecastKanbanRenderer extends CrmKanbanRenderer {
         ...CrmKanbanRenderer.components,
         ForecastKanbanColumnQuickCreate,
     };
-
-    setup() {
-        super.setup(...arguments);
-    }
     /**
      * @override
      *

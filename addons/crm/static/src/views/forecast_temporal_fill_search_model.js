@@ -15,7 +15,7 @@ export class ForecastTemporalFillSearchModel extends ForecastSearchModel {
      */
     updateTemporalFilter() {
         const domain = this.fillTemporalPeriod().getDomain({ domain: [] });
-        const context = this.fillTemporalPeriod().getContext({ context: {}, forceFillingTo: true });
+        const context = this.fillTemporalPeriod().getContext({ context: {} });
         this.setTemporalFilter(domain, context);
     }
 }
