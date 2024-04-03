@@ -1188,6 +1188,7 @@ const _pointerUp = (target, options) => {
     const eventInit = {
         ...runTime.currentPosition,
         button: options?.button || 0,
+        detail: runTime.currentClickCount,
     };
 
     if (runTime.isDragging) {
@@ -1213,11 +1214,12 @@ const _pointerUp = (target, options) => {
     );
 
     if (!prevented) {
+        const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
         if (target === runTime.currentPointerDownTarget) {
-            triggerClick(target, eventInit);
+            triggerClick(target, clickEventInit);
             runTime.currentClickCount++;
             if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
-                dispatch(target, "dblclick", eventInit);
+                dispatch(target, "dblclick", clickEventInit);
             }
         }
     }
