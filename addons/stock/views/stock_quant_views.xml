@@ -114,7 +114,7 @@
         <field name="arch" type="xml">
             <tree editable="bottom"
                   create="1" edit="1" js_class="inventory_report_list"
-                  sample="1">
+                  sample="1" duplicate="0">
                 <header>
                     <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
                 </header>
