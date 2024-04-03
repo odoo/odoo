@@ -119,6 +119,8 @@ class Attendee(models.Model):
                     attachment_values = [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
+                                'res_id': event_id,
+                                'res_model': 'calendar.event',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 body = mail_template._render_field(

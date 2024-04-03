@@ -5,8 +5,9 @@ import datetime
 from datetime import date, datetime, timedelta
 
 from odoo import fields
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, new_test_user
 from odoo.addons.base.tests.common import HttpCase, SavepointCaseWithUserDemo
+
 import pytz
 import re
 
@@ -330,6 +331,23 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # no more email should be sent
         _test_one_mail_per_attendee(self, partners)
+
+    def test_event_creation_internal_user_invitation_ics(self):
+        """ Check that internal user can read invitation.ics attachment """
+        internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
+
+        partner = internal_user.partner_id
+        self.event_tech_presentation.write({
+            'partner_ids': [(4, partner.id)],
+        })
+        msg = self.env['mail.message'].search([
+            ('notified_partner_ids', 'in', partner.id),
+        ])
+        msg.invalidate_cache()
+
+
+        # internal user can read the attachment without errors
+        self.assertEqual(msg.with_user(internal_user).attachment_ids.name, 'invitation.ics')
 
     def test_event_creation_sudo_other_company(self):
         """ Check Access right issue when create event with sudo
