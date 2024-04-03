@@ -569,6 +569,8 @@ export class HootSearch extends Component {
         this.state.query = ev.target.value;
         this.state.empty = !this.hasFilters();
 
+        this.env.ui.resultsPage = 0;
+
         this.updateParams(true);
         this.updateSuggestions();
     }
