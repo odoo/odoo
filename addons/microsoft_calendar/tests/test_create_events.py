@@ -489,3 +489,17 @@ class TestCreateEvents(TestCommon):
         new_records = (records - existing_records)
         self.assertEqual(len(new_records), 1)
         self.assert_odoo_event(new_records, expected_event)
+
+    def test_create_event_with_default_and_undefined_sensitivity(self):
+        """ Check if microsoft events are created in Odoo when 'None' sensitivity setting is defined and also when it is not. """
+        # Sync events from Microsoft to Odoo after adding the sensitivity (privacy) property.
+        self.simple_event_from_outlook_organizer.pop('sensitivity')
+        undefined_privacy_event = {'id': 100, 'iCalUId': 2, **self.simple_event_from_outlook_organizer}
+        default_privacy_event = {'id': 200, 'iCalUId': 4, 'sensitivity': None, **self.simple_event_from_outlook_organizer}
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent([undefined_privacy_event, default_privacy_event]))
+
+        # Ensure that synced events have the correct privacy field in Odoo.
+        undefined_privacy_odoo_event = self.env['calendar.event'].search([('microsoft_id', '=', 100)])
+        default_privacy_odoo_event = self.env['calendar.event'].search([('microsoft_id', '=', 200)])
+        self.assertFalse(undefined_privacy_odoo_event.privacy, "Event with undefined privacy must have False value in privacy field.")
+        self.assertFalse(default_privacy_odoo_event.privacy, "Event with custom privacy must have False value in privacy field.")
