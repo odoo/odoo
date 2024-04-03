@@ -195,9 +195,8 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                  $carrierBadge.html(result.new_amount_delivery);
              }
              $carrierBadge.removeClass('o_wsale_delivery_carrier_error');
-        } else {
-            $carrierBadge.addClass('o_wsale_delivery_carrier_error');
-            $carrierBadge.text(result.error_message);
+        } else if($carrierBadge[0].parentElement) {
+            $carrierBadge[0].parentElement.remove();
         }
     },
 

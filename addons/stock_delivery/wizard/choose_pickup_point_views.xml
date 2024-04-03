@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="choose_pickup_point_view_form_inherit" model="ir.ui.view">
+        <field name="name">choose.pickup.point.form.inherit</field>
+        <field name="model">choose.pickup.point</field>
+        <field name="inherit_id" ref="delivery.choose_pickup_point_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_id']" position="after">
+                <field name="picking_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

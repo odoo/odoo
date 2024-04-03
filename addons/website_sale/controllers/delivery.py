@@ -17,7 +17,7 @@ class WebsiteSaleDelivery(WebsiteSale):
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
         if not post.get('no_reset_access_point_address'):
-            order.access_point_address = {}
+            order.delivery_address_id = False
         carrier_id = int(post['carrier_id'])
         if order and carrier_id != order.carrier_id.id:
             if any(tx.sudo().state not in ('cancel', 'error', 'draft') for tx in order.transaction_ids):
@@ -120,18 +120,42 @@ class WebsiteSaleDelivery(WebsiteSale):
         if hasattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations'):
             use_location = getattr(order.carrier_id, order.carrier_id.delivery_type + '_use_locations')
             access_point = use_location and (json.loads(access_point_encoded) if access_point_encoded else False) or False
-            order.write({'access_point_address': access_point})
+            if access_point:
+                already_existing_address = order.env['res.partner'].search([
+                    ('name', '=', access_point['pick_up_point_name']),
+                    ('street', '=', access_point['pick_up_point_address']),
+                    ('zip', '=', access_point['pick_up_point_postal_code']),
+                    ('city', '=', access_point['pick_up_point_town']),
+                    ('country_id.code', '=', access_point['pick_up_point_country']),
+                    ('parent_id', '=', order.partner_id.id)
+                ], limit=1)
+                if already_existing_address:
+                    order.delivery_address_id = already_existing_address
+                else:
+                    country = order.env['res.country'].search([('code', '=', access_point['pick_up_point_country'])], limit=1)
+                    order.delivery_address_id = order.env['res.partner'].create({
+                        'parent_id': order.partner_id.id,
+                        'name': access_point['pick_up_point_name'],
+                        'street': access_point['pick_up_point_address'],
+                        'zip': access_point['pick_up_point_postal_code'],
+                        'city': access_point['pick_up_point_town'],
+                        'country_id': country.id,
+                        'external_id': access_point.get('external_id', False),
+                        'type': 'delivery',
+                    })
+            else:
+                order.delivery_address_id = False
 
     @route('/shop/access_point/get', type='json', auth='public', website=True, sitemap=False)
     def get_access_point(self):
         order = request.website.sale_get_order()
         if not order.carrier_id.delivery_type or not order.carrier_id.display_name:
             return {}
-        order_location = order.access_point_address
+        order_location = order.delivery_address_id
         if not order_location:
             return {}
-        address = order_location['address']
-        name = order_location['pick_up_point_name']
+        address = order_location.contact_address_inline
+        name = order_location.name
         return {order.carrier_id.delivery_type + '_access_point': address, 'name': name, 'delivery_name': order.carrier_id.display_name}
 
     @route('/shop/access_point/close_locations', type='json', auth='public', website=True, sitemap=False)

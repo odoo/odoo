@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_stock_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.stock_delivery</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='partner_id']" position="replace">
+                <label for="partner_id" string="Delivery Address" style="font-weight:bold;"
+                                       invisible="picking_type_code != 'outgoing' or delivery_method != 'classic'"/>
+                <label for="partner_id" string="Pickup Point" style="font-weight:bold;"
+                                        invisible="picking_type_code != 'outgoing' or delivery_method != 'pickup_point'"/>
+                <label for="partner_id" string="Delivery Store" style="font-weight:bold;"
+                                        invisible="picking_type_code != 'outgoing' or delivery_method != 'store'"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <div class="o_row" invisible="delivery_method != 'pickup_point'">
+                    <field name="partner_id" readonly="1" nolabel="1"/>
+                    <button type="object" name="action_open_pickup_point_wizard" icon="fa-pencil" title="Choose"
+                        invisible="state not in ['cancel', 'done']" class="disabled"/>
+                    <button type="object" name="action_open_pickup_point_wizard" icon="fa-pencil" title="Choose"
+                        invisible="state in ['cancel', 'done']"/>
+                </div>
+                <div class="o_row" invisible="delivery_method != 'classic'">
+                    <field name="partner_id" readonly="state in ['cancel', 'done']"/>
+                </div>
+                <div class="o_row" invisible="delivery_method != 'store'">
+                    <field name="partner_id" readonly="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

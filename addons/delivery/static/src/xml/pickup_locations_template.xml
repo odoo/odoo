@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="delivery.PickupLocations">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th/>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <t t-if="this.showDistance()">
+                        <th>Distance</th>
+                    </t>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="this.props.locations" t-as="location" t-key="location_index">
+                    <tr>
+                        <td>
+                            <input type="radio" class="form-check-input" t-att-name="'pickup-point'" t-att-value="location.id" t-on-click="onSelectLocation"/>
+                        </td>
+                        <td><t t-out="location.pick_up_point_name"/></td>
+                        <td><t t-out="location.address"/></td>
+                        <t t-if="this.showDistance()">
+                            <td><t t-out="location.distance"/> km</td>
+                        </t>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+    </t>
+</templates>

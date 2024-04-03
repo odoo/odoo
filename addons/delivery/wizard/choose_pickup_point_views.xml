@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="choose_pickup_point_view_form" model="ir.ui.view">
+        <field name="name">choose.pickup.point.form</field>
+        <field name="model">choose.pickup.point</field>
+        <field name="arch" type="xml">
+            <form js_class="choose_pickup_point_form">
+                <field name="order_id" invisible="1"/>
+                <field name="choose_delivery_carrier_id" invisible="1"/>
+            </form>
+        </field>
+    </record>
+</odoo>

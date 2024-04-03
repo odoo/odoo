@@ -224,7 +224,7 @@ class SaleOrderLine(models.Model):
             'date_deadline': date_deadline,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
-            'partner_id': self.order_id.partner_shipping_id.id,
+            'partner_id': self.order_id.delivery_address_id.id or self.order_id.partner_shipping_id.id,
             'location_final_id': self.order_id.partner_shipping_id.property_stock_customer,
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
