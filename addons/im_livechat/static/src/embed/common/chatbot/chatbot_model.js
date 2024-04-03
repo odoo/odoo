@@ -144,12 +144,18 @@ export class Chatbot extends Record {
         if (!answer.redirectLink) {
             return true;
         }
+        let isRedirecting = false;
+        if (answer.redirectLink && URL.canParse(answer.redirectLink, window.location.href)) {
+            const url = new URL(window.location.href);
+            const nextURL = new URL(answer.redirectLink, window.location.href);
+            isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
+        }
         const targetURL = new URL(answer.redirectLink, window.location.origin);
         const redirectionAlreadyDone = targetURL.href === location.href;
         if (!redirectionAlreadyDone) {
             browser.location.assign(answer.redirectLink);
         }
-        return redirectionAlreadyDone;
+        return redirectionAlreadyDone || !isRedirecting;
     }
 
     /**
