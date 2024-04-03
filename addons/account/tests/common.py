@@ -47,10 +47,6 @@ class AccountTestInvoicingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass()
-        cls.env = cls.env(context={
-            **cls.env.context,
-            'disable_abnormal_invoice_detection': True,
-        })
         cls.env.ref('base.main_company').currency_id = cls.env.ref('base.USD')
         instantiate_accountman(cls)
 
