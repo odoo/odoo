@@ -54,7 +54,6 @@ export const dryRun = runner.exportFn(runner.dryRun);
 export const getCurrent = runner.exportFn(runner.getCurrent);
 export const registerPreset = runner.exportFn(runner.registerPreset);
 export const start = runner.exportFn(runner.start);
-export { formatXML } from "./hoot_utils";
 
 export { makeExpect } from "./core/expect";
 

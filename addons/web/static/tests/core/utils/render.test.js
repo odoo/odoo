@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { patchTranslations } from "@web/../tests/web_test_helpers";
+import { expectMarkup, patchTranslations } from "@web/../tests/web_test_helpers";
 
 import { renderToElement, renderToString } from "@web/core/utils/render";
 
@@ -23,5 +23,5 @@ test("renderToElement always returns an element", () => {
     expect(compiledTemplate.nodeType).toBe(Node.ELEMENT_NODE, {
         message: "compiledTemplate must be an element",
     });
-    expect(compiledTemplate.outerHTML).toBe("<div>Ok</div>");
+    expectMarkup(compiledTemplate.outerHTML).toBe("<div>Ok</div>");
 });

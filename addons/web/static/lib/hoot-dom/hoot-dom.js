@@ -2,6 +2,7 @@
 
 /**
  * @typedef {import("./helpers/dom").Dimensions} Dimensions
+ * @typedef {import("./helpers/dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("./helpers/dom").Position} Position
  * @typedef {import("./helpers/dom").QueryOptions} QueryOptions
  * @typedef {import("./helpers/dom").QueryRectOptions} QueryRectOptions
@@ -17,6 +18,7 @@
  */
 
 export {
+    formatXml,
     getActiveElement,
     getFocusableElements,
     getNextFocusableElement,

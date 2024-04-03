@@ -1,8 +1,10 @@
 /** @odoo-module */
 
-import { getActiveElement, getParentFrame, queryAllRects } from "../../../hoot-dom/helpers/dom";
+import { getParentFrame } from "../../../hoot-dom/helpers/dom";
 import { click } from "../../../hoot-dom/helpers/events";
 import {
+    formatXml,
+    getActiveElement,
     getFocusableElements,
     getNextFocusableElement,
     getPreviousFocusableElement,
@@ -12,6 +14,7 @@ import {
     isFocusable,
     isVisible,
     queryAll,
+    queryAllRects,
     queryAllTexts,
     queryOne,
     queryRect,
@@ -130,6 +133,34 @@ const SVG_URL = "http://www.w3.org/2000/svg";
 describe.tags("ui")(parseUrl(import.meta.url), () => {
     test.todo("should crash", async () => {
         expect().toBeFalsy();
+    });
+
+    test("formatXml", () => {
+        expect(formatXml("")).toBe("");
+        expect(formatXml("<input />")).toBe("<input/>");
+        expect(
+            formatXml(/* xml */ `
+            <div>
+                A
+            </div>
+        `)
+        ).toBe(`<div>\n    A\n</div>`);
+        expect(formatXml(/* xml */ `<div>A</div>`)).toBe(`<div>\n    A\n</div>`);
+
+        // Inline
+        expect(
+            formatXml(
+                /* xml */ `
+            <div>
+                A
+            </div>
+        `,
+                { keepInlineTextNodes: true }
+            )
+        ).toBe(`<div>\n    A\n</div>`);
+        expect(formatXml(/* xml */ `<div>A</div>`, { keepInlineTextNodes: true })).toBe(
+            `<div>A</div>`
+        );
     });
 
     test("getActiveElement", async () => {
