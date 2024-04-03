@@ -116,10 +116,6 @@
                   create="1" edit="1" js_class="inventory_report_list"
                   sample="1">
                 <header>
-                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
-                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
-                            class="btn-primary ms-1"
-                            display="always"/>
                     <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
@@ -189,14 +185,6 @@
                 <attribute name="js_class">inventory_report_list</attribute>
                 <attribute name="create">0</attribute>
                 <attribute name="delete">0</attribute>
-            </xpath>
-            <xpath expr="//field[@name='product_id']" position="before">
-                <header>
-                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
-                        invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
-                        class="btn-primary ms-1"
-                        display="always"/>
-                </header>
             </xpath>
         </field>
     </record>
@@ -452,10 +440,6 @@ in this location. That leads to a negative stock.
                             invisible="not context.get('inventory_mode') or context.get('inventory_report_mode')"
                             display="always"
                         />
-                    <button name="action_inventory_at_date" string="Inventory at Date" type="object"
-                            invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
-                            class="btn-primary ms-1"
-                            display="always"/>
                     <button name="stock.action_stock_inventory_adjustement_name" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>

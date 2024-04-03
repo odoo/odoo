@@ -505,6 +505,13 @@
             </field>
         </record>
 
+        <record id="action_inventory_at_date" model="ir.actions.act_window">
+            <field name="name">Inventory at Date</field>
+            <field name="res_model">stock.quantity.history</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
         <!-- Stock Report View -->
         <record model="ir.ui.view" id="product_product_stock_tree">
             <field name="name">product.product.stock.tree</field>
@@ -512,6 +519,9 @@
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
                 <tree sample="1" js_class="stock_report_list_view">
+                    <header>
+                        <button name="%(action_inventory_at_date)d" invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))" string="Inventory at Date" type="action" class="btn-primary ms-1" display="always"/>
+                    </header>
                     <field name="id" column_invisible="True"/>
                     <field name="display_name" string="Product"/>
                     <field name="categ_id" optional="hide"/>
