@@ -303,6 +303,18 @@ export class FormController extends Component {
                 () => [this.model.root.isInEdition]
             );
         }
+
+        useEffect(
+            () => {
+                const listener = document.addEventListener("visibilitychange", () => {
+                    if (document.visibilityState === "hidden") {
+                        this.model.root.save();
+                    }
+                });
+                return () => document.removeEventListener("visibilitychange", listener);
+            },
+            () => []
+        );
     }
 
     get modelParams() {
