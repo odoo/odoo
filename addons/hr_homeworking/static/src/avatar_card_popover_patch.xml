@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
+        <xpath expr="//span[@name='icon']" position="inside">
+            <i t-elif="user.im_status === 'presence_home_online'" class="fa fa-fw fa-home text-success" title="At Home - Online" role="img" aria-label="At Home - Online"/>
+            <i t-elif="user.im_status === 'presence_home_away'" class="fa fa-fw fa-home text-warning" title="At Home - Idle" role="img" aria-label="At Home - Idle"/>
+            <i t-elif="user.im_status === 'presence_home_offline'" class="fa fa-fw fa-home text-700" title="At Home - Offline" role="img" aria-label="At Home - Offline"/>
+            <i t-elif="user.im_status === 'presence_office_online'" class="fa fa-fw fa-building text-success" title="At Office - Online" role="img" aria-label="At Office - Online"/>
+            <i t-elif="user.im_status === 'presence_office_away'" class="fa fa-fw fa-building text-warning" title="At Office - Idle" role="img" aria-label="At Office - Idle"/>
+            <i t-elif="user.im_status === 'presence_office_offline'" class="fa fa-fw fa-building text-700" title="At Office - Offline" role="img" aria-label="At Office - Offline"/>
+            <i t-elif="user.im_status === 'presence_other_online'" class="fa fa-fw fa-map-marker text-success" title="At Other - Online" role="img" aria-label="At Other - Online"/>
+            <i t-elif="user.im_status === 'presence_other_away'" class="fa fa-fw fa-map-marker text-warning" title="At Other - Idle" role="img" aria-label="At Other - Idle"/>
+            <i t-elif="user.im_status === 'presence_other_offline'" class="fa fa-fw fa-map-marker text-700" title="At Other - Offline" role="img" aria-label="At Other - Offline"/>
+        </xpath>
+    </t>
+</templates>
