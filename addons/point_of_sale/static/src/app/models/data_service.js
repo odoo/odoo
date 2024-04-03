@@ -8,8 +8,37 @@ import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
 
+<<<<<<< HEAD
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
+||||||| parent of 6c31f33d31ac (temp)
+// All records are automatically indexed by id
+const INDEXED_DB_NAME = {
+    "product.product": ["barcode", "pos_categ_ids", "write_date"],
+    "account.fiscal.position": ["tax_ids"],
+    "account.fiscal.position.tax": ["tax_src_id"],
+    "product.packaging": ["barcode"],
+    "loyalty.program": ["trigger_product_ids"],
+    "calendar.event": ["appointment_resource_ids"],
+    "res.partner": ["barcode"],
+};
+const LOADED_ORM_METHODS = ["read", "search_read", "create"];
+=======
+// All records are automatically indexed by id
+const INDEXED_DB_NAME = {
+    "product.product": ["barcode", "pos_categ_ids", "write_date"],
+    "account.fiscal.position": ["tax_ids"],
+    "account.fiscal.position.tax": ["tax_src_id"],
+    "product.packaging": ["barcode"],
+    "loyalty.program": ["trigger_product_ids"],
+    "calendar.event": ["appointment_resource_ids"],
+    "res.partner": ["barcode"],
+};
+const LOADED_ORM_METHODS = ["read", "search_read", "create"];
+export const CONFIG = {
+    missingModelsAllowedToLoad: ["product.product", "pos.combo", "pos.combo.line"],
+};
+>>>>>>> 6c31f33d31ac (temp)
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -219,6 +248,13 @@ export class PosData extends Reactive {
         this.fields = fields;
         this.relations = relations;
         this.models = models;
+<<<<<<< HEAD
+||||||| parent of 6c31f33d31ac (temp)
+        this.models.loadData(response.data, this.modelToLoad);
+=======
+        const { missingRecords } = this.models.loadData(response.data, this.modelToLoad);
+        await this.loadMissingRecords(missingRecords);
+>>>>>>> 6c31f33d31ac (temp)
 
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
@@ -233,6 +269,24 @@ export class PosData extends Reactive {
         this.network.loading = false;
     }
 
+<<<<<<< HEAD
+||||||| parent of 6c31f33d31ac (temp)
+    async loadMissingRecords(missingRecords) {
+        for (const [model, ids] of Object.entries(missingRecords)) {
+            await this.read(model, Array.from(ids), this.fields[model], {}, false);
+        }
+    }
+
+=======
+    async loadMissingRecords(missingRecords) {
+        for (const [model, ids] of Object.entries(missingRecords)) {
+            if (CONFIG.missingModelsAllowedToLoad.includes(model)) {
+                await this.read(model, Array.from(ids), this.fields[model], {}, false);
+            }
+        }
+    }
+
+>>>>>>> 6c31f33d31ac (temp)
     async execute({
         type,
         model,
@@ -286,9 +340,18 @@ export class PosData extends Reactive {
                 result = values;
             }
 
+<<<<<<< HEAD
             if (this.models[model] && this.opts.autoLoadedOrmMethods.includes(type)) {
                 const data = await this.missingRecursive({ [model]: result });
                 const results = this.models.loadData(data);
+||||||| parent of 6c31f33d31ac (temp)
+            if (this.models[model] && LOADED_ORM_METHODS.includes(type)) {
+                const { results } = this.models.loadData({ [model]: result });
+=======
+            if (this.models[model] && LOADED_ORM_METHODS.includes(type)) {
+                const { results, missingRecords } = this.models.loadData({ [model]: result });
+                await this.loadMissingRecords(missingRecords);
+>>>>>>> 6c31f33d31ac (temp)
                 result = results[model];
             }
 
