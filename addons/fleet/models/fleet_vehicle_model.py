@@ -45,6 +45,7 @@ class FleetVehicleModel(models.Model):
     horsepower_tax = fields.Float('Horsepower Taxation', tracking=True)
     electric_assistance = fields.Boolean(default=False, tracking=True)
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
+    vehicle_range = fields.Integer(string="Range")
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

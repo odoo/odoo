@@ -48,6 +48,10 @@
                             <group string="Engine" invisible="vehicle_type != 'car'">
                                 <group>
                                     <field name="default_fuel_type" required="1"/>
+                                    <label for="vehicle_range"/>
+                                    <div class="o_row" name="vehicle_range">
+                                        <field name="vehicle_range"/><span>km</span>
+                                    </div>
                                     <label for="default_co2"/>
                                     <div class="o_row" name="default_co2">
                                         <field name="default_co2"/><span>g/km</span>
