@@ -66,7 +66,7 @@ class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ['portal.mixin', 'mail.thread.main.attachment', 'mail.activity.mixin', 'sequence.mixin', 'product.catalog.mixin']
     _description = "Journal Entry"
-    _order = 'date desc, name desc, invoice_date desc, id desc'
+    _order = 'date desc nulls last, name desc, invoice_date desc, id desc'
     _mail_post_access = 'read'
     _check_company_auto = True
     _sequence_index = "journal_id"
