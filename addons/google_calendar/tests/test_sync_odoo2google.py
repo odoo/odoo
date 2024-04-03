@@ -190,7 +190,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'summary': 'Event',
             'description': '',
             'location': '',
-            'visibility': 'public',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
@@ -251,7 +250,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'summary': 'Event',
             'description': '',
             'location': '',
-            'visibility': 'public',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
@@ -286,7 +284,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'summary': 'Event',
             'description': '',
             'location': '',
-            'visibility': 'public',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
@@ -339,7 +336,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.recurrence_id.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=1;BYDAY=WE']
         }, timeout=3)
 
@@ -385,7 +381,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'summary': 'Event',
             'description': '',
             'location': '',
-            'visibility': 'public',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
             'organizer': {'email': 'jean-luc@opoo.com', 'self': True},
@@ -428,7 +423,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
         }, timeout=3)
 
     @patch_api
@@ -557,7 +551,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
         })
 
 
@@ -595,7 +588,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
         }, timeout=3)
 
     @patch.object(GoogleService, '_do_request')
@@ -667,7 +659,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event_1.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
             'status': 'cancelled'
         }, timeout=3)
         # Assert that deleted event is not active anymore and the recurrence updated its calendar_event_ids.

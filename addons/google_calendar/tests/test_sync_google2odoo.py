@@ -282,7 +282,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "updated": self.now,
             'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
             'summary': 'coucou',
-            'visibility': 'public',
             'attendees': [],  # <= attendee removed in Google
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO'],
             'reminders': {'useDefault': True},
@@ -306,7 +305,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'description': 'Small mini desc',
             'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
             'summary': 'Pricing new update',
-            'visibility': 'public',
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
             'reminders': {'useDefault': True},
             'start': {'date': '2020-01-6'},
@@ -999,7 +997,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             "updated": self.now,
             'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
             'summary': """I don't want to be with me anymore""",
-            'visibility': 'public',
             'attendees': [{
                 'displayName': 'calendar-user (base.group_user)',
                 'email': 'c.c@example.com',
@@ -1050,7 +1047,6 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id,
                                               '%s_owner_id' % self.env.cr.dbname: other_user.id}},
             'reminders': {'overrides': [], 'useDefault': False},
-            'visibility': 'public',
         }, timeout=3)
 
     @patch_api
@@ -1872,3 +1868,26 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
         self.assertEqual(events[0].attendee_ids[0].state, 'accepted', 'after google sync, organizer should have accepted status still')
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_create_event_with_default_and_undefined_privacy(self):
+        """ Check if google events are created in Odoo when 'default' privacy setting is defined and also when it is not. """
+        # Sync events from Google to Odoo after adding the privacy property.
+        sample_event_values = {
+            'summary': 'Test',
+            'start': {'dateTime': '2020-01-06T10:00:00+01:00'},
+            'end': {'dateTime': '2020-01-06T11:00:00+01:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': self.env.user.email},
+            'attendees': [{'email': self.env.user.email, 'responseStatus': 'accepted'}],
+            'updated': self.now,
+        }
+        undefined_privacy_event = {'id': 100, **sample_event_values}
+        default_privacy_event = {'id': 200, 'privacy': 'default', **sample_event_values}
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([undefined_privacy_event, default_privacy_event]))
+
+        # Ensure that synced events have the correct privacy field in Odoo.
+        undefined_privacy_odoo_event = self.env['calendar.event'].search([('google_id', '=', 1)])
+        default_privacy_odoo_event = self.env['calendar.event'].search([('google_id', '=', 2)])
+        self.assertFalse(undefined_privacy_odoo_event.privacy, "Event with undefined privacy must have False value in privacy field.")
+        self.assertFalse(default_privacy_odoo_event.privacy, "Event with default privacy must have False value in privacy field.")
