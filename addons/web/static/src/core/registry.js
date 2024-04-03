@@ -1,4 +1,4 @@
-import { EventBus } from "@odoo/owl";
+import { EventBus, validate } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -6,6 +6,21 @@ import { EventBus } from "@odoo/owl";
 export class KeyNotFoundError extends Error {}
 
 export class DuplicatedKeyError extends Error {}
+
+// -----------------------------------------------------------------------------
+// Validation
+// -----------------------------------------------------------------------------
+
+const validateSchema = (value, schema) => {
+    if (!odoo.debug) {
+        return;
+    }
+    validate(value, schema);
+}
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
 
 /**
  * @template S
@@ -57,6 +72,7 @@ export class Registry extends EventBus {
         /** @type {[string, GetRegistryItemShape<T>][]}*/
         this.entries = null;
         this.name = name;
+        this.validationSchema = null;
 
         this.addEventListener("UPDATE", () => {
             this.elements = null;
@@ -77,6 +93,9 @@ export class Registry extends EventBus {
      * @returns {Registry<T>}
      */
     add(key, value, { force, sequence } = {}) {
+        if (this.validationSchema) {
+            validateSchema(value, this.validationSchema);
+        }
         if (!force && key in this.content) {
             throw new DuplicatedKeyError(
                 `Cannot add key "${key}" in the "${this.name}" registry: it already exists`
@@ -169,6 +188,16 @@ export class Registry extends EventBus {
             this.subRegistries[subcategory] = new Registry(subcategory);
         }
         return this.subRegistries[subcategory];
+    }
+
+    addValidation(schema) {
+        if (this.validationSchema) {
+            throw new Error("Validation schema already set on this registry");
+        }
+        this.validationSchema = schema;
+        for (const value of this.getAll()) {
+            validateSchema(value, schema);
+        }
     }
 }
 
