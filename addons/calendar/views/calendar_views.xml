@@ -206,7 +206,7 @@
                             <label for="privacy"/>
                                     <div class="o_row">
                                         <field name="show_as" readonly="not user_can_edit" nolabel="1"/>
-                                        <field name="privacy" readonly="not user_can_edit" nolabel="1"/>
+                                        <field name="privacy" readonly="not user_can_edit" nolabel="1" placeholder="Default"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
                                     <field name="description" options="{'height': 100}" placeholder="Add description"/>
@@ -392,6 +392,7 @@
                 <filter string="Busy" name="busy" domain="[('show_as', '=', 'busy')]"/>
                 <filter string="Free" name="free" domain="[('show_as', '=', 'free')]"/>
                 <separator/>
+                <filter string="Default Privacy" name="default" domain="[('privacy', '=', False)]"/>
                 <filter string="Public" name="public" domain="[('privacy', '=', 'public')]"/>
                 <filter string="Private" name="private" domain="[('privacy', '=', 'private')]"/>
                 <filter string="Only Internal Users" name="confidential" domain="[('privacy', '=', 'confidential')]"/>

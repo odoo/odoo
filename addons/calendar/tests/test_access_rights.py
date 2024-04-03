@@ -158,3 +158,56 @@ class TestAccessRights(TransactionCase):
             'start': datetime.now() + timedelta(days=2),
             'stop': datetime.now() + timedelta(days=2, hours=2),
         })
+
+    def test_event_default_privacy_as_private(self):
+        """ Check the privacy of events with owner's event default privacy as 'private'. """
+        # Set organizer default privacy as 'private' and create event privacies default, public, private and confidential.
+        self.george.calendar_default_privacy = 'private'
+        default_event = self.create_event(self.george)
+        public_event = self.create_event(self.george, privacy='public')
+        private_event = self.create_event(self.george, privacy='private')
+        confidential_event = self.create_event(self.george, privacy='confidential')
+
+        # With another user who is not an event attendee, try accessing the events.
+        query_default_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', default_event.id)], fields=['name'], groupby='name')
+        query_public_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', public_event.id)], fields=['name'], groupby='name')
+        query_private_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', private_event.id)], fields=['name'], groupby='name')
+        query_confidential_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', confidential_event.id)], fields=['name'], groupby='name')
+
+        # Ensure that each event is accessible or not according to its privacy.
+        self.assertFalse(query_default_event, "Event must be inaccessible because the user has default privacy as 'private'.")
+        self.assertTrue(query_public_event, "Public event must be accessible to other users.")
+        self.assertFalse(query_private_event, "Private event must be inaccessible to other users.")
+        self.assertTrue(query_confidential_event, "Confidential event must be accessible to other internal users.")
+
+    def test_edit_private_event_of_other_user(self):
+        """
+        Ensure that it is not possible editing the private event of another user when the current user is not an
+        attendee/organizer of that event. Attendees should be able to edit it, others will receive AccessError on write.
+        """
+        def ensure_user_can_update_event(self, event, user):
+            event.with_user(user).write({'name': user.name})
+            self.assertEqual(event.name, user.name, 'Event name should be updated by user %s' % user.name)
+
+        # Prepare events attendees/partners including organizer (john) and another user (raoul).
+        events_attendees = [
+            (0, 0, {'partner_id': self.john.partner_id.id, 'state': 'accepted'}),
+            (0, 0, {'partner_id': self.raoul.partner_id.id, 'state': 'accepted'})
+        ]
+        events_partners = [self.john.partner_id.id, self.raoul.partner_id.id]
+
+        # Set calendar default privacy as private and create a normal event, only attendees/organizer can edit it.
+        self.john.res_users_settings_id.calendar_default_privacy = 'private'
+        johns_default_privacy_event = self.create_event(self.john, name='my event with default privacy', attendee_ids=events_attendees, partner_ids=events_partners)
+        ensure_user_can_update_event(self, johns_default_privacy_event, self.john)
+        ensure_user_can_update_event(self, johns_default_privacy_event, self.raoul)
+        with self.assertRaises(AccessError):
+            johns_default_privacy_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})
+
+        # Set calendar default privacy as public and create a private event, only attendees/organizer can edit it.
+        self.john.res_users_settings_id.calendar_default_privacy = 'public'
+        johns_private_event = self.create_event(self.john, name='my private event', privacy='private', attendee_ids=events_attendees, partner_ids=events_partners)
+        ensure_user_can_update_event(self, johns_private_event, self.john)
+        ensure_user_can_update_event(self, johns_private_event, self.raoul)
+        with self.assertRaises(AccessError):
+            johns_private_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})

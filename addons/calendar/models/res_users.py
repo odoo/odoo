@@ -10,6 +10,12 @@ from pytz import timezone, UTC
 class Users(models.Model):
     _inherit = 'res.users'
 
+    calendar_default_privacy = fields.Selection(related='res_users_settings_id.calendar_default_privacy', readonly=False, required=True)
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['calendar_default_privacy']
+
     def _systray_get_calendar_event_domain(self):
         # Determine the domain for which the users should be notified. This method sends notification to
         # events occurring between now and the end of the day. Note that "now" needs to be computed in the
