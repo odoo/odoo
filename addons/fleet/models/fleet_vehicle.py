@@ -15,6 +15,7 @@ MODEL_FIELDS_TO_VEHICLE = {
     'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook',
     'default_co2': 'co2', 'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type',
     'power': 'power', 'horsepower': 'horsepower', 'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id',
+    'vehicle_range': 'vehicle_range'
 }
 
 class FleetVehicle(models.Model):
@@ -116,6 +117,7 @@ class FleetVehicle(models.Model):
         ('today', 'Today'),
     ], compute='_compute_service_activity')
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
+    vehicle_range = fields.Integer(string="Range")
 
     @api.depends('log_services')
     def _compute_service_activity(self):
