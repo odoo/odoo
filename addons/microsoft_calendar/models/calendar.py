@@ -312,7 +312,7 @@ class Meeting(models.Model):
             'description': microsoft_event.body and microsoft_event.body['content'],
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
             'user_id': microsoft_event.owner_id(self.env),
-            'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
+            'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, False),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
             'start': start,
@@ -538,6 +538,11 @@ class Meeting(models.Model):
                 'private': 'private',
                 'confidential': 'confidential',
             }
+            # Set default privacy in event according to the organizer's calendar default privacy if defined.
+            if self.user_id:
+                sensitivity_o2m[False] = sensitivity_o2m.get(self.user_id.calendar_default_privacy)
+            else:
+                sensitivity_o2m[False] = 'normal'
             values['sensitivity'] = sensitivity_o2m.get(self.privacy)
 
         if 'active' in fields_to_sync and not self.active:
