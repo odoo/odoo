@@ -71,7 +71,7 @@
         >
             <t
                 t-set="pickup_location_data"
-                t-value="(is_selected and order.pickup_location_data) or {}"
+                t-value="(is_selected and order.delivery_address_id.location_data) or {}"
             />
             <div
                 name="o_pickup_location_details"
