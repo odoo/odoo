@@ -1,6 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { Component } from "@odoo/owl";
 
 import { Registry } from "@web/core/registry";
+import { patchWithCleanup } from "../web_test_helpers";
 
 describe.current.tags("headless");
 
@@ -159,4 +161,47 @@ test("can recursively open sub registry", () => {
 
     registry.category("sub").add("a", "b");
     expect(registry.category("sub").get("a")).toBe("b");
+});
+
+test("can validate the values from a schema", () => {
+    patchWithCleanup(odoo, { debug: true });
+    const schema = { name: String, age: { type: Number, optional: true } };
+    const friendsRegistry = new Registry();
+    friendsRegistry.addValidation(schema);
+    expect(() => friendsRegistry.add("jean", { name: "Jean" })).not.toThrow();
+    expect(friendsRegistry.get("jean")).toEqual({ name: "Jean" });
+    expect(() => friendsRegistry.add("luc", { name: "Luc", age: 32 })).not.toThrow();
+    expect(friendsRegistry.get("luc")).toEqual({ name: "Luc", age: 32 });
+    expect(() => friendsRegistry.add("adrien", { name: 23 })).toThrow();
+    expect(() => friendsRegistry.add("hubert", { age: 54 })).toThrow();
+    expect(() => friendsRegistry.add("christophe", { name: "christophe", city: "Namur" })).toThrow();
+    expect(() => friendsRegistry.addValidation({ something: Number })).toThrow();
+});
+
+test("can validate by adding a schema after the registry is filled", async () => {
+    patchWithCleanup(odoo, { debug: true });
+    const schema = { name: String };
+    const friendsRegistry = new Registry();
+    expect(() => friendsRegistry.add("jean", { name: 999 })).not.toThrow();
+    expect(() => friendsRegistry.addValidation(schema)).toThrow();
+});
+
+test("can validate subclassess", async () => {
+    patchWithCleanup(odoo, { debug: true });
+    const schema = { component: { validate: (c) => c.prototype instanceof Component } };
+    const widgetRegistry = new Registry();
+    widgetRegistry.addValidation(schema);
+    class Widget extends Component {} // eslint-disable-line
+    expect(() => widgetRegistry.add("calculator", { component: Widget })).not.toThrow({
+        message: "Support subclasses",
+    });
+});
+
+test("only validate in debug", async () => {
+    const schema = { name: String };
+    const registry = new Registry();
+    registry.addValidation(schema);
+    expect(() => registry.add("jean", { name: 50 })).not.toThrow({
+        message: "There is no validation if not in debug mode",
+    });
 });
