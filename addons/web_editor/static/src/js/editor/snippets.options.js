@@ -6026,7 +6026,6 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             url = 'http://' + url;
         }
         linkEl.setAttribute('href', url);
-        this.rerender = true;
         this.$target.trigger('href_changed');
     },
     /**
