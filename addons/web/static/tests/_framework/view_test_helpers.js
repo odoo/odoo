@@ -1,4 +1,5 @@
-import { waitFor } from "@odoo/hoot-dom";
+import { expect } from "@odoo/hoot";
+import { formatXml, waitFor } from "@odoo/hoot-dom";
 import { Component, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -29,44 +30,13 @@ import { MockServer } from "./mock_server/mock_server";
  *  text?: string;
  * }} SelectorOptions
  *
+ * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("./mock_server/mock_model").ViewType} ViewType
  */
 
 //-----------------------------------------------------------------------------
 // Internals
 //-----------------------------------------------------------------------------
-
-/**
- * @param {MountViewParams} params
- * @returns {typeof View.props}
- */
-export const parseViewProps = (params) => {
-    const viewProps = { ...params };
-
-    // View & search view arch
-    if (
-        "arch" in params ||
-        "searchViewArch" in params ||
-        "searchViewId" in params ||
-        "viewId" in params
-    ) {
-        viewProps.viewId ||= 123_456_789;
-        viewProps.searchViewId ||= 987_654_321;
-        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
-        registerDefaultView(
-            viewProps.resModel,
-            viewProps.searchViewId,
-            "search",
-            viewProps.searchViewArch
-        );
-    }
-
-    delete viewProps.arch;
-    delete viewProps.config;
-    delete viewProps.searchViewArch;
-
-    return viewProps;
-};
 
 /**
  *
@@ -170,6 +140,21 @@ export async function clickViewButton(options) {
 }
 
 /**
+ * @param {string} value
+ */
+export function expectMarkup(value) {
+    return {
+        /**
+         * @param {string} expected
+         * @param {FormatXmlOptions} [options]
+         */
+        toBe(expected, options) {
+            expect(formatXml(value, options)).toBe(formatXml(expected, options));
+        },
+    };
+}
+
+/**
  * @param {string} name
  * @param {SelectorOptions} options
  */
@@ -207,4 +192,36 @@ export async function mountView(params, target = null) {
         props: parseViewProps(params),
         target,
     });
+}
+
+/**
+ * @param {MountViewParams} params
+ * @returns {typeof View.props}
+ */
+export function parseViewProps(params) {
+    const viewProps = { ...params };
+
+    // View & search view arch
+    if (
+        "arch" in params ||
+        "searchViewArch" in params ||
+        "searchViewId" in params ||
+        "viewId" in params
+    ) {
+        viewProps.viewId ||= 123_456_789;
+        viewProps.searchViewId ||= 987_654_321;
+        registerDefaultView(viewProps.resModel, viewProps.viewId, viewProps.type, viewProps.arch);
+        registerDefaultView(
+            viewProps.resModel,
+            viewProps.searchViewId,
+            "search",
+            viewProps.searchViewArch
+        );
+    }
+
+    delete viewProps.arch;
+    delete viewProps.config;
+    delete viewProps.searchViewArch;
+
+    return viewProps;
 }

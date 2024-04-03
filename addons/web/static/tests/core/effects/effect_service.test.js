@@ -1,10 +1,10 @@
-import { Component, markup, xml } from "@odoo/owl";
-import { animationFrame } from "@odoo/hoot-mock";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
-import { test, expect, beforeEach } from "@odoo/hoot";
-import { user } from "@web/core/user";
-import { patchWithCleanup, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Component, markup, xml } from "@odoo/owl";
+import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { user } from "@web/core/user";
 
 let effectParams;
 
@@ -39,7 +39,7 @@ test("rendering a rainbowman destroy after animation", async () => {
 
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward_rainbow").toHaveCount(1);
-    expect(queryOne(".o_reward_msg_content").innerHTML).toBe("<div>Congrats!</div>");
+    expect(".o_reward_msg_content").toHaveInnerHTML("<div>Congrats!</div>");
 
     const ev = new AnimationEvent("animationend", { animationName: "reward-fading-reverse" });
     queryOne(".o_reward").dispatchEvent(ev);
@@ -83,7 +83,5 @@ test("rendering a rainbowman with a custom component", async () => {
     getService("effect").add({ Component: Custom, props });
     await animationFrame();
 
-    expect(queryOne(".o_reward_msg_content").innerHTML).toBe(
-        `<div class="custom">foo is bar</div>`
-    );
+    expect(".o_reward_msg_content").toHaveInnerHTML(`<div class="custom">foo is bar</div>`);
 });

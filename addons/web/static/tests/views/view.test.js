@@ -1,15 +1,10 @@
-import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
-import { CallbackRecorder } from "@web/webclient/actions/action_hook";
-import { OnboardingBanner } from "@web/views/onboarding_banner";
-import { pick } from "@web/core/utils/objects";
-import { registry } from "@web/core/registry";
-import { View } from "@web/views/view";
-
 import { expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
 import {
     defineModels,
+    expectMarkup,
     fields,
     makeMockEnv,
     mockService,
@@ -18,6 +13,12 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+
+import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/objects";
+import { OnboardingBanner } from "@web/views/onboarding_banner";
+import { View } from "@web/views/view";
+import { CallbackRecorder } from "@web/webclient/actions/action_hook";
 
 const viewRegistry = registry.category("views");
 
@@ -96,7 +97,7 @@ test("simple rendering", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(false);
@@ -113,7 +114,7 @@ test("simple rendering", async function () {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
 });
 
 test("rendering with given viewId", async function () {
@@ -122,7 +123,7 @@ test("rendering with given viewId", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(1);
@@ -138,7 +139,7 @@ test("rendering with given viewId", async function () {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
 
 test("rendering with given 'views' param", async function () {
@@ -147,7 +148,7 @@ test("rendering with given 'views' param", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(1);
@@ -164,7 +165,7 @@ test("rendering with given 'views' param", async function () {
     const env = await makeMockEnv({ config: { views: [[1, "toy"]] } });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" }, env });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
 
 test("rendering with given 'views' param not containing view id", async function () {
@@ -173,7 +174,7 @@ test("rendering with given 'views' param not containing view id", async function
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(false);
@@ -193,7 +194,7 @@ test("rendering with given 'views' param not containing view id", async function
     const env = await makeMockEnv({ config: { views: [[false, "other"]] } });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy" }, env });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
 });
 
 test("viewId defined as prop and in 'views' prop", async function () {
@@ -202,7 +203,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(1);
@@ -229,7 +230,7 @@ test("viewId defined as prop and in 'views' prop", async function () {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 }, env });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=1)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=1)</toy>`);
 });
 
 test("rendering with given arch and fields", async function () {
@@ -238,7 +239,7 @@ test("rendering with given arch and fields", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toBe(undefined);
             expect(this.env.config.viewId).toBe(undefined);
@@ -256,7 +257,7 @@ test("rendering with given arch and fields", async function () {
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with loadActionMenus='true'", async function () {
@@ -265,7 +266,7 @@ test("rendering with loadActionMenus='true'", async function () {
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toEqual({});
             expect(this.env.config.viewId).toBe(false);
@@ -283,7 +284,7 @@ test("rendering with loadActionMenus='true'", async function () {
         props: { resModel: "animal", type: "toy", loadActionMenus: true },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
 });
 
 test("rendering with given arch, fields, and loadActionMenus='true'", async function () {
@@ -292,7 +293,7 @@ test("rendering with given arch, fields, and loadActionMenus='true'", async func
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toEqual({});
             expect(this.env.config.viewId).toBe(false);
@@ -316,7 +317,7 @@ test("rendering with given arch, fields, and loadActionMenus='true'", async func
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with given arch, fields, actionMenus, and loadActionMenus='true'", async function () {
@@ -325,7 +326,7 @@ test("rendering with given arch, fields, actionMenus, and loadActionMenus='true'
         setup() {
             super.setup();
             const { arch, fields, info } = this.props;
-            expect(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
+            expectMarkup(arch.outerHTML).toBe(`<toy>Specific arch content</toy>`);
             expect(fields).toEqual({});
             expect(info.actionMenus).toEqual({});
             expect(this.env.config.viewId).toBe(undefined);
@@ -345,7 +346,7 @@ test("rendering with given arch, fields, actionMenus, and loadActionMenus='true'
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with given searchViewId", async function () {
@@ -450,7 +451,7 @@ test("rendering with given searchViewId", async function () {
         props: { resModel: "animal", type: "toy", searchViewId: false },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Arch content (id=false)</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Arch content (id=false)</toy>`);
 });
 
 test("rendering with given arch, fields, searchViewId, searchViewArch, and searchViewFields", async function () {
@@ -480,7 +481,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, and searc
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with given arch, fields, searchViewArch, and searchViewFields", async function () {
@@ -509,7 +510,7 @@ test("rendering with given arch, fields, searchViewArch, and searchViewFields", 
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with given arch, fields, searchViewId, searchViewArch, searchViewFields, and loadIrFilters='true'", async function () {
@@ -558,7 +559,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("rendering with given arch, fields, searchViewId, searchViewArch, searchViewFields, irFilters, and loadIrFilters='true'", async function () {
@@ -605,7 +606,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
         },
     });
     expect(".o_toy_view.o_view_controller").toHaveCount(1);
-    expect(queryOne(".o_toy_view.toy").innerHTML).toBe(`<toy>Specific arch content</toy>`);
+    expect(".o_toy_view.toy").toHaveInnerHTML(`<toy>Specific arch content</toy>`);
 });
 
 test("can click on action-bound links -- 1", async () => {
