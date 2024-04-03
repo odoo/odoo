@@ -941,7 +941,7 @@ export class Matchers {
      * Received value can be a string, an iterable or an object.
      *
      * @param {number} length
-     * @param {ExpectOptions} options
+     * @param {ExpectOptions} [options]
      * @example
      *  expect("foo").toHaveLength(3);
      * @example
@@ -985,7 +985,7 @@ export class Matchers {
      * equality against each item of the iterable.
      *
      * @param {keyof R | R[number]} item
-     * @param {ExpectOptions} options
+     * @param {ExpectOptions} [options]
      * @example
      *  expect([1, 2, 3]).toInclude(2);
      * @example
@@ -1625,7 +1625,7 @@ export class Matchers {
      * If the resulting `rect` value is a node, then both nodes' rects will be compared.
      *
      * @param {Partial<DOMRect> | Target} rect
-     * @param {ExpectOptions & QueryRectOptions} options
+     * @param {ExpectOptions & QueryRectOptions} [options]
      * @example
      *  expect("button").toHaveRect({ x: 20, width: 100, height: 50 });
      * @example
