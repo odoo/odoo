@@ -130,6 +130,8 @@ class Attendee(models.Model):
                         'datas': base64.b64encode(ics_file),
                         'description': 'invitation.ics',
                         'mimetype': 'text/calendar',
+                        'res_id': event_id,
+                        'res_model': 'calendar.event',
                         'name': 'invitation.ics',
                     }).ids
 
