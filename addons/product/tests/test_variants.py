@@ -42,12 +42,29 @@ class TestVariantsSearch(ProductVariantsCommon):
     def test_name_search(self):
         self.product_slip_template = self.env['product.template'].create({
             'name': 'Slip',
+            'default_code': 'ABC',
         })
         res = self.env['product.product'].name_search('Shirt', [], 'not ilike', None)
         res_ids = [r[0] for r in res]
         self.assertIn(self.product_slip_template.product_variant_ids.id, res_ids,
                       'Slip should be found searching \'not ilike\'')
 
+        templates = self.product_slip_template.name_search(
+            "ABC",
+            [['id', '!=', -1]],
+        )
+        self.assertFalse(templates, "Should not return template when searching on code")
+        templates = self.product_slip_template.with_context(search_product_product=True).name_search(
+            "ABC",
+            [['id', '!=', -1]],
+        )
+        self.assertTrue(templates, "Should return template when searching on code")
+
+        templates = self.product_slip_template.with_context(search_product_product=True).name_search(
+            "ABC",
+            [['id', '!=', self.product_slip_template.id]],
+        )
+        self.assertFalse(templates, "Should not return template.")
 
 @tagged('post_install', '-at_install')
 class TestVariants(ProductVariantsCommon):
