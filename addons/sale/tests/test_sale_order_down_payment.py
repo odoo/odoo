@@ -803,3 +803,44 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.receivable_account.id, [],           5550.0,   0.0          ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_so_with_multiple_line_rounding(self):
+        """Test downpayment fixed amount rounding when the sale order has
+           multiple lines that would create a sensible difference in rounding.
+        """
+        tax_20 = self.create_tax(20)
+
+        for i, price_unit in enumerate((10000, 10000, 10000, 50)):
+            self.sale_order.order_line[i].product_id = self.company_data['product_delivery_no'].id
+            self.sale_order.order_line[i].product_uom_qty = 1
+            self.sale_order.order_line[i].qty_delivered = 1
+            self.sale_order.order_line[i].tax_id = tax_20
+            self.sale_order.order_line[i].price_unit = price_unit
+
+        self.sale_order.order_line.qty_delivered_method = 'manual'
+        self.sale_order.action_confirm()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.sale_order.id],
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        payment_params = {
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 840.0,  # with 20% tax applied, amount tax excluded is 700.0
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
+        action = downpayment.create_invoices()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        expected = [
+            # keys
+            ['account_id',              'tax_ids',   'balance', 'price_total'],
+            # base lines
+            [self.revenue_account.id,    tax_20.ids, -700,      840.0],
+            # taxes
+            [self.tax_account.id,        [],         -140,      0.0],
+            # receivable
+            [self.receivable_account.id, [],         840.0,     0.0],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
