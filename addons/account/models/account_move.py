@@ -3509,7 +3509,7 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
-    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None):
+    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None, distribute_total_on_line=True):
         self.ensure_one()
         company = self.company_id
         invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
@@ -3596,6 +3596,7 @@ class AccountMove(models.Model):
             company,
             filter_tax_values_to_apply=filter_tax_values_to_apply,
             grouping_key_generator=grouping_key_generator,
+            distribute_total_on_line=distribute_total_on_line,
         )
 
     def _get_invoice_counterpart_amls_for_early_payment_discount_per_payment_term_line(self):
