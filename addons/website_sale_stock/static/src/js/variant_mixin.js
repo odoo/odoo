@@ -3,6 +3,7 @@
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToFragment } from "@web/core/utils/render";
+import { formatFloat } from "@web/core/utils/numbers";
 
 import "@website_sale/js/website_sale";
 
@@ -58,6 +59,19 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         if (combination.free_qty < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
+    // needed xml-side for formatting of remaining qty
+    combination.formatQuantity = (qty) => {
+        if (Number.isInteger(qty)) {
+            return qty;
+        } else {
+            const decimals = Math.max(
+                0,
+                Math.ceil(-Math.log10(combination.uom_rounding))
+            );
+            return formatFloat(qty, {digits: [false, decimals]});
         }
     }
 
