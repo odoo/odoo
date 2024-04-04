@@ -52,3 +52,10 @@ export function waitForLoading() {
         },
     ];
 }
+
+export function selectButton(name) {
+    return {
+        content: `Select button ${name}`,
+        trigger: `button:contains("${name}")`,
+    };
+}
