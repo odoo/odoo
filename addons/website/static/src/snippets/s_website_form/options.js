@@ -1429,7 +1429,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const inputEl = this.$target[0].querySelector('input');
         const dataFillWith = inputEl ? inputEl.dataset.fillWith : undefined;
         const hasConditionalVisibility = this.$target[0].classList.contains('s_website_form_field_hidden_if');
-        const previousName = this.$target[0].querySelector('.s_website_form_input').name;
+        const previousInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const previousName = previousInputEl.name;
+        const previousType = previousInputEl.type;
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
@@ -1438,8 +1440,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.$target[0].classList.add('s_website_form_field_hidden_if', 'd-none');
         }
         const dependentFieldEls = this.formEl.querySelectorAll(`.s_website_form_field[data-visibility-dependency="${previousName}"]`);
-        const newName = this.$target[0].querySelector('.s_website_form_input').name;
-        if (previousName !== newName && dependentFieldEls) {
+        const newFormInputEl = this.$target[0].querySelector('.s_website_form_input');
+        const newName = newFormInputEl.name;
+        const newType = newFormInputEl.type;
+        if ((previousName !== newName || previousType !== newType) && dependentFieldEls) {
             // In order to keep the visibility conditions consistent,
             // when the name has changed, it means that the type has changed so
             // all fields whose visibility depends on this field must be updated so that
@@ -1461,10 +1465,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      _setVisibilityDependency(value) {
         delete this.$target[0].dataset.visibilityCondition;
         delete this.$target[0].dataset.visibilityComparator;
-        const previousDependency = this._getDependencyEl();
-        if (this.formEl.querySelector(`.s_website_form_input[name="${value}"]`).type !== (previousDependency && previousDependency.type)) {
-            this.rerender = true;
-        }
+        this.rerender = true;
         this.$target[0].dataset.visibilityDependency = value;
     },
     /**
