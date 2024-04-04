@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: ".history-container .tab-pane",
         run: function () {
             const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
-            const correctHtml = `<p><removed>${baseDescriptionContent} 3</removed><added>${baseDescriptionContent} 1</added></p>`;
+            const correctHtml = `<p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
