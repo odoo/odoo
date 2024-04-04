@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import Form, TransactionCase, users
 
 from datetime import datetime, time
@@ -187,3 +187,96 @@ class TestProjectRecurrence(TransactionCase):
         self.assertEqual(len(task.recurrence_id.task_ids), 1, "recurrence should have a single task")
         task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "a new occurrence should have been created")
+
+    def test_recurrence_copy_task_dependency(self):
+        self.project_recurring.allow_task_dependencies = True
+        parent_task = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Recurring Parent Task',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'repeat_interval': 2,
+            'repeat_unit': 'month',
+            'repeat_type': 'forever',
+            'child_ids': [
+                Command.create({
+                    'name': 'Node 1',
+                    'project_id': self.project_recurring.id,
+                }),
+                Command.create({
+                    'name': 'SuperNode 2',
+                    'project_id': self.project_recurring.id,
+                    'child_ids': [
+                        Command.create({
+                            'name': 'Node 2',
+                            'project_id': self.project_recurring.id,
+                        })
+                    ],
+                }),
+                Command.create({
+                    'name': 'Node 3',
+                    'project_id': self.project_recurring.id,
+                }),
+            ],
+        })
+
+        side_task1, side_task2 = self.env['project.task'].with_context({'mail_create_nolog': True}).create([{
+            'name': f"Side Task {i + 1}",
+            'project_id': self.project_recurring.id,
+        } for i in range(2)])
+
+        node1 = parent_task.child_ids[0]
+        node2 = parent_task.child_ids[1].child_ids
+        node3 = parent_task.child_ids[2]
+
+        # Dependencies
+        node1.dependent_ids = node2
+        node2.dependent_ids = node3
+        side_task1.dependent_ids = node2
+        node3.dependent_ids = side_task2
+
+        # Task recurrence trigger
+        parent_task.state = '1_done'
+        parent_task_copy = self.env['project.task'].browse(parent_task.recurrence_id._get_last_task_id_per_recurrence_id().get(parent_task.recurrence_id.id))
+        self.assertNotEqual(parent_task.id, parent_task_copy.id, 'The generated recurring task should be different than the original one')
+
+        # Newly created nodes from recurrence
+        parent_copy_node1 = parent_task_copy.child_ids[0]
+        parent_copy_node2 = parent_task_copy.child_ids[1].child_ids
+        parent_copy_node3 = parent_task_copy.child_ids[2]
+
+        # The nodes and dependencies ids of the orginal and newly created nodes should be different
+        self.assertNotEqual(node1.id, parent_copy_node1.id, 'The original and copied node1 should be different')
+        self.assertNotEqual(node2.id, parent_copy_node2.id, 'The original and copied node2 should be different')
+        self.assertNotEqual(node3.id, parent_copy_node3.id, 'The original and copied node3 should be different')
+
+        self.assertNotEqual(node1.dependent_ids.ids, parent_copy_node1.dependent_ids.ids, 'The dependencies of the original and copied node1 should be different')
+        self.assertEqual(node1.depend_on_ids.ids, parent_copy_node1.depend_on_ids.ids, 'The dependencies of the original and copied node1 should be different')
+        self.assertNotEqual(node2.dependent_ids.ids, parent_copy_node2.dependent_ids.ids, 'The dependencies of the original and copied node2 should be different')
+        self.assertNotEqual(node2.depend_on_ids.ids, parent_copy_node2.depend_on_ids.ids, 'The dependencies of the original and copied node2 should be different')
+        self.assertEqual(node3.dependent_ids.ids, parent_copy_node3.dependent_ids.ids, 'The dependencies of the original and copied node3 should be different')
+        self.assertNotEqual(node3.depend_on_ids.ids, parent_copy_node3.depend_on_ids.ids, 'The dependencies of the original and copied node3 should be different')
+
+        # However, the dependency structure of the orginal and newly created nodes should be the same
+        self.assertEqual(parent_copy_node1.dependent_ids.ids, parent_copy_node2.ids, 'Node1copy - Node2copy relation should be present')
+        self.assertEqual(parent_copy_node2.dependent_ids.ids, parent_copy_node3.ids, 'Node2copy - Node3copy relation should be present')
+        self.assertEqual(parent_copy_node3.dependent_ids.ids, side_task2.ids, 'Node3 - SideTask2 relation should be present')
+
+        self.assertEqual(len(parent_copy_node1.depend_on_ids), 0)
+        self.assertCountEqual(parent_copy_node2.depend_on_ids.ids, [parent_copy_node1.id, side_task1.id], 'Node2copy - Node1copy and Node2copy - SideTask1 relations should be present')
+        self.assertEqual(parent_copy_node3.depend_on_ids.ids, parent_copy_node2.ids, 'Node3copy - Node2copy relation should be present')
+
+        # The original nodes dependencies should remain untouched by the creation of the new nodes
+        self.assertEqual(node1.dependent_ids.ids, node2.ids, 'Node1 - Node2 relation should be present')
+        self.assertEqual(node2.dependent_ids.ids, node3.ids, 'Node2 - Node3 relation should be present')
+        self.assertEqual(node3.dependent_ids.ids, side_task2.ids, 'Node3 - SideTask2 relation should be present')
+
+        self.assertEqual(len(node1.depend_on_ids), 0)
+        self.assertCountEqual(node2.depend_on_ids.ids, [node1.id, side_task1.id], 'Node2 - Node1 and Node2 - SideTask1 relations should be present')
+        self.assertEqual(node3.depend_on_ids.ids, node2.ids, 'Node3 - Node2 relation should be present')
+
+        # The side tasks should now have dependencies from both the original and copied tasks
+        self.assertCountEqual(side_task1.dependent_ids.ids, [node2.id, parent_copy_node2.id], 'SideTask1 - Node2 and SideTask1 - Node2copy relations should be present')
+        self.assertEqual(len(side_task2.dependent_ids), 0)
+
+        self.assertEqual(len(side_task1.depend_on_ids), 0)
+        self.assertCountEqual(side_task2.depend_on_ids.ids, [node3.id, parent_copy_node3.id], 'SideTask2 - Node3 and SideTask2 - Node3copy relations should be present')

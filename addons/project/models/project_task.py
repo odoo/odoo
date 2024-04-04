@@ -749,13 +749,14 @@ class Task(models.Model):
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
 
-            vals['stage_id'] = task.stage_id.id
+            if not default.get('stage_id'):
+                vals['stage_id'] = task.stage_id.id
             vals['name'] = task.name if self.env.context.get('copy_project') else _("%s (copy)", task.name)
-            if task.recurrence_id:
+            if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
-            if task.child_ids:
+            if task.child_ids and not default.get('child_ids'):
                 default = {
                     'depend_on_ids': False,
                     'dependent_ids': False,
