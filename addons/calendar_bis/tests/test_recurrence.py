@@ -140,7 +140,7 @@ class TestCalendarRecurrence(TestCalendarCommon):
             "User C should see all events as busy"
         )
 
-        self.assertEqual(event_ts.event_id.timeslot_ids[-1].with_user(self.calendar_user_C).start, datetime(2023, 1, 2, 10, 0), "User C can read public fields")
+        self.assertEqual(event_ts.event_id.timeslot_ids[0].with_user(self.calendar_user_C).start, datetime(2023, 1, 1, 10, 0), "User C can read public fields")
 
     def test_break_recurrence_once(self):
         event_ts = self.create_event({
