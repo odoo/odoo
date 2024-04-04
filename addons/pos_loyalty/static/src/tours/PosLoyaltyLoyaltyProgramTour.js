@@ -180,7 +180,6 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 
-// Generates 10.2 points and use points to get the reward product with zero sale price
 ProductScreen.exec.addOrderline('Desk Organizer', '3');
 PosLoyalty.exec.finalizeOrder('Cash', '15.3');
 
