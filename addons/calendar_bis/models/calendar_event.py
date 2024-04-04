@@ -20,15 +20,15 @@ class CalendarEventPrivate(models.Model):
     partner_id = fields.Many2one('res.partner', string="Calendar", public=True, default=lambda self: self.env.user.partner_id.id)
     user_id = fields.Many2one('res.users', string="User", public=True, compute='_compute_user_id', store=True, precompute=True, default=lambda self: self.env.user.id)
 
-    is_public = fields.Boolean(default=False, public=True)
-    is_shown = fields.Boolean(default=True, public=True)
+    is_public = fields.Boolean('Public', default=False, public=True)
+    is_shown = fields.Boolean('Shown', default=True, public=True)
 
     name = fields.Char(public_default="Busy")
     note = fields.Char()
     tag_ids = fields.Many2many('calendar.event_bis.tag', string="Tags")
 
     # Recurrence
-    is_recurring = fields.Boolean(default=False, public=True)
+    is_recurring = fields.Boolean('Recurrent', default=False, public=True)
     mon = fields.Boolean('Monday')
     tue = fields.Boolean('Tuesday')
     wed = fields.Boolean('Wednesday')
@@ -45,7 +45,7 @@ class CalendarEventPrivate(models.Model):
     monthweekday_n = fields.Integer('Weekday of the month')     # 1st Monday of the month
     monthweekday_day = fields.Selection([
         ('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),
-        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')],
+        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')], string='Weekday of the month'
     )
     exdated = fields.Char('Excluded Dates', help="List of dates to exclude from the recurrence rule", default='')
 

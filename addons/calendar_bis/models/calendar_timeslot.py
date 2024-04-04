@@ -44,7 +44,7 @@ class CalendarTimeslot(models.Model):
     # Recurrence Related Fields
     # /!\ These fields must be computed and inverse in the same method,
     # DO NOT separate them, DO NOT add fields to their compute or inverse method
-    is_recurring = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
+    is_recurring = fields.Boolean('Recurrent', compute="_compute_recurring", inverse="_inverse_recurring")
     mon = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
     tue = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
     wed = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
@@ -54,13 +54,14 @@ class CalendarTimeslot(models.Model):
     sun = fields.Boolean(compute="_compute_recurring", inverse="_inverse_recurring")
     freq = fields.Selection([('daily', 'Daily'), ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly')],
                             string='Frequency', default='weekly', compute="_compute_recurring", inverse="_inverse_recurring")
-    until = fields.Datetime(compute="_compute_recurring", inverse="_inverse_recurring") # TODO Move to Date instead of datetime ?
+    until = fields.Datetime('End Date', compute="_compute_recurring", inverse="_inverse_recurring") # TODO Move to Date instead of datetime ?
     count = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")
     interval = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")
-    monthday = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")               # 3rd of the month
-    monthweekday_n = fields.Integer(compute="_compute_recurring", inverse="_inverse_recurring")         # "1ST" Monday of the month
-    monthweekday_day = fields.Selection([('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),      # 1st "MONDAY" of the month
-        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')], compute="_compute_recurring", inverse="_inverse_recurring")
+    monthday = fields.Integer('Nth of the month', compute="_compute_recurring", inverse="_inverse_recurring")               # 3rd of the month
+    monthweekday_n = fields.Integer('Weekday of the month', compute="_compute_recurring", inverse="_inverse_recurring")     # "1ST" Monday of the month
+    monthweekday_day = fields.Selection([('mon', 'Monday'), ('tue', 'Tuesday'), ('wed', 'Wednesday'),                       # 1st "MONDAY" of the month
+        ('thu', 'Thursday'), ('fri', 'Friday'), ('sat', 'Saturday'), ('sun', 'Sunday')], string='Weekday of the month',
+                                        compute="_compute_recurring", inverse="_inverse_recurring")
 
     def write(self, values):
         # If event_id is in values:

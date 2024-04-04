@@ -22,7 +22,7 @@
         <field name="name">calendar_bis.calendar.timeslot.form</field>
         <field name="model">calendar.timeslot</field>
         <field name="arch" type="xml">
-            <form string="Meetings">
+            <form string="Meetings" js_class="calendar_form">
                 <div invisible="not id or not is_recurring" class="alert alert-info oe_edit_only" role="status">
                     <p>Edit recurring event</p>
                     <field name="edit" widget="radio"/>
@@ -52,20 +52,14 @@
                     <notebook invisible="not can_read_private">
                         <page string="Recurrence" invisible="not is_recurring">
                             <group>
-                                <group string="Settings">
-                                    <field name="freq" readonly="not can_write"/>
-                                    <field name="until" readonly="not can_write"/>
-                                    <field name="count" readonly="not can_write"/>
-                                    <field name="interval" readonly="not can_write"/>
-                                </group>
-                                <group string="Weekly" invisible="freq != 'weekly'">
-                                    <widget name="calendar_week_days"/>
-                                </group>
-                                <group string="Monthly" invisible="freq != 'monthly'">
-                                    <field name="monthday" readonly="not can_write"/>
-                                    <field name="monthweekday_n" readonly="not can_write"/>
-                                    <field name="monthweekday_day" readonly="not can_write"/>
-                                </group>
+                                <field name="freq" readonly="not can_write" required="not is_recurring"/>
+                                <label string="Repeat on" for="freq" invisible="freq != 'weekly'"/><widget name="calendar_week_days" invisible="freq != 'weekly'"/>
+                                <field name="monthday" readonly="not can_write" invisible="freq != 'monthly'"/>
+                                <field name="monthweekday_n" readonly="not can_write" invisible="freq != 'monthly'"/>
+                                <field name="monthweekday_day" readonly="not can_write" invisible="freq != 'monthly'"/>
+                                <field name="until" readonly="not can_write"/>
+                                <field name="count" readonly="not can_write"/>
+                                <field name="interval" readonly="not can_write"/>
                             </group>
                         </page>
                         <page string="Attendees Status">
