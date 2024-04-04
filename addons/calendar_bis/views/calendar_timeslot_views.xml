@@ -102,6 +102,7 @@
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
                             <field name="note"/>
                             <field name="partner_ids" widget="many2many_tags"/>
+                            <field name="location"/>
                         </group>
                     </group>
                 </sheet>
@@ -119,6 +120,7 @@
                       color="partner_id" all_day="allday"
                       quick_create="1" quick_create_view_id="%(calendar_bis_timeslot_form_quick_create)d">
                     <field name="name" string="Subject" decoration-bf="1" readonly="1"/>
+                    <field name="location" invisible="not location" options="{'icon': 'fa fa-map-marker'}"/>
                     <field name="partner_id" widget="many2one_avatar_user" readonly="1"/>
                     <field name="attendee_ids" widget="many2many_tags" readonly="1"/>
                     <field name="tag_ids" invisible="not tag_ids" options="{'icon': 'fa fa-tag', 'color_field': 'color'}"/>
