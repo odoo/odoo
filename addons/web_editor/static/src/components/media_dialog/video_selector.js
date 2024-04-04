@@ -256,7 +256,7 @@ export class VideoSelector extends Component {
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
             `;
             div.querySelector('iframe').src = video.src;
             return div;
