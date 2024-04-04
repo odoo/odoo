@@ -40,11 +40,11 @@ class HolidaysAllocation(models.Model):
     name = fields.Char(
         string='Description',
         compute='_compute_description',
-        inverse='_inverse_description',
-        search='_search_description',
+        store=True,
+        readonly=False,
         compute_sudo=False)
+    is_name_custom = fields.Boolean(readonly=True, store=False)
     name_validity = fields.Char('Description with validity', compute='_compute_description_validity')
-    private_name = fields.Char('Allocation Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -154,46 +154,42 @@ class HolidaysAllocation(models.Model):
     def _compute_is_officer(self):
         self.is_officer = self.env.user.has_group("hr_holidays.group_hr_holidays_user")
 
+    def _get_title(self):
+        self.ensure_one()
+        if not self.holiday_status_id:
+            return _("Allocation Request")
+        if self.type_request_unit == 'hour':
+            return _(
+                '%(name)s (%(duration)s hour(s))',
+                name=self.holiday_status_id.name,
+                duration=self.number_of_days * (
+                    self.employee_id.sudo().resource_calendar_id.hours_per_day
+                    or self.holiday_status_id.company_id.resource_calendar_id.hours_per_day
+                    or HOURS_PER_DAY
+                ),
+            )
+        return _(
+            '%(name)s (%(duration)s day(s))',
+            name=self.holiday_status_id.name,
+            duration=self.number_of_days,
+        )
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        if not self.name:
+            self.is_name_custom = False
+        elif self.name != self._get_title():
+            self.is_name_custom = True
+
     # Useless depends, so that name is computed on new, before saving the record
     @api.depends_context('uid')
     @api.depends('holiday_status_id')
     def _compute_description(self):
         self.check_access_rights('read')
         self.check_access_rule('read')
-
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                title = allocation.sudo().private_name
-                if allocation.env.context.get('is_employee_allocation'):
-                    if allocation.holiday_status_id:
-                        allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                        title = _("%(status)s allocation request (%(duration)s %(unit)s)",
-                            status=allocation.holiday_status_id.name,
-                            duration=allocation_duration,
-                            unit=allocation.type_request_unit)
-                    else:
-                        title = _("Allocation Request")
-                allocation.name = title
-            else:
-                allocation.name = '*****'
-
-    def _inverse_description(self):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                allocation.sudo().private_name = allocation.name
-
-    def _search_description(self, operator, value):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        domain = [('private_name', operator, value)]
-
-        if not is_officer:
-            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
-
-        allocations = self.sudo().search(domain)
-        return [('id', 'in', allocations.ids)]
+            if not allocation.is_name_custom:
+                allocation.name = allocation._get_title()
 
     @api.depends('accrual_plan_id')
     def _compute_has_accrual_plan(self):
