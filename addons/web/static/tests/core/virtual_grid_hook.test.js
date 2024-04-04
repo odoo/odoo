@@ -2,6 +2,8 @@ import { beforeEach, expect, mountOnFixture, test } from "@odoo/hoot";
 import { resize, scroll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 import { useVirtualGrid } from "@web/core/virtual_grid_hook";
 
 function objectToStyle(obj) {
@@ -57,7 +59,7 @@ function getTestComponent(virtualGridParams) {
         static props = [];
         static components = { Item };
         static template = xml`
-            <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}">
+            <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
                 <div class="inner" t-att-style="innerStyle">
                     <t t-foreach="virtualRows" t-as="row" t-key="row.id">
                         <t t-foreach="virtualColumns" t-as="col" t-key="col.id">
@@ -300,4 +302,23 @@ test("when scrolling to the bottom right then updating to smaller rows and colum
     comp.virtualGrid.setColumnsWidths([1, 2, 3]);
     expect(comp.virtualGrid.rowsIndexes).toEqual([0, 2]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 2]);
+});
+
+test("horizontal scroll in RTL", async () => {
+    // Please note that if you debug this test, the applied style of elements
+    // is not adapted to RTL. The test is still valid because we only want to
+    // assert the returned indexes of the virtual grid.
+    patchWithCleanup(localization, { direction: "rtl" });
+    const comp = await mountOnFixture(getTestComponent());
+    expect(comp.virtualGrid.columnsIndexes).toEqual([0, 19]);
+
+    // scroll to the middle
+    scroll(".scrollable", { left: -MAX_SCROLL_LEFT / 2 });
+    await animationFrame();
+    expect(comp.virtualGrid.columnsIndexes).toEqual([85, 114]);
+
+    // scroll to left
+    scroll(".scrollable", { left: -MAX_SCROLL_LEFT });
+    await animationFrame();
+    expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
 });
