@@ -30,6 +30,10 @@ class CalendarTimeslot(models.Model):
     attendee_ids = fields.One2many('calendar.attendee_bis', 'timeslot_id', compute='_compute_attendee_ids', store=True, copy=True)
     partner_ids = fields.Many2many('res.partner', string="Attendees")
 
+    # Computed Fields
+    is_current_partner = fields.Boolean(compute='_compute_is_current_partner')
+    is_organizer_alone = fields.Boolean(compute='_compute_is_organizer_alone')
+
     # Event Related Fields
         # Public fields
     is_public = fields.Boolean(related='event_id.is_public', readonly=False)
@@ -245,6 +249,22 @@ class CalendarTimeslot(models.Model):
     def _inverse_tag_ids(self):
         for slot in self:
             slot.event_id.tag_ids = slot.tag_ids
+
+    def _compute_is_current_partner(self):
+        self.is_current_partner = False
+        partner_id = self.env.context.get('active_model') == 'res.partner' and self.env.context.get('active_id')
+        if partner_id:
+            self.filtered(lambda ts: partner_id in ts.partner_ids.mapped('ids')).is_current_partner = True
+
+    @api.depends('partner_id', 'attendee_ids')
+    def _compute_is_organizer_alone(self):
+        """ Check if there are other attendees who all have declined the event"""
+        for ts in self:
+            other_attendees_reply = ts.attendee_ids.filtered(lambda a: a.partner_id != ts.partner_id).mapped('state')
+            if other_attendees_reply and all([reply == 'no' for reply in other_attendees_reply]):
+                ts.is_organizer_alone = True
+            else:
+                ts.is_organizer_alone = False
 
     def mass_delete(self, update_policy):
         self.ensure_one()
