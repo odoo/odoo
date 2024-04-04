@@ -9,7 +9,7 @@ class AccountAnalyticLine(models.Model):
 
     # [XBO] TODO: remove me in master
     allowed_so_line_ids = fields.Many2many('sale.order.line', compute='_compute_allowed_so_line_ids')
-    so_line = fields.Many2one('sale.order.line', string='Sales Order Item', domain=[('qty_delivered_method', '=', 'analytic')])
+    so_line = fields.Many2one('sale.order.line', string='Sales Order Item', domain=[('qty_delivered_method', '=', 'analytic')], index='btree_not_null')
 
     def _default_sale_line_domain(self):
         """ This is only used for delivered quantity of SO line based on analytic line, and timesheet
