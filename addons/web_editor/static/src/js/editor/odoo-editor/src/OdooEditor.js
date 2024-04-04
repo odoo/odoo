@@ -4305,7 +4305,11 @@ export class OdooEditor extends EventTarget {
             selection.anchorNode === container &&
             selection.focusNode === container &&
             selection.anchorOffset === 0 &&
-            selection.focusOffset === [...container.childNodes].length
+            selection.focusOffset === [...container.childNodes].length &&
+            // Checks that the container is not an empty editable structure to
+            // avoid calling "getDeepRange" if it is, otherwise it will be
+            // selected again, creating an infine loop.
+            container.childNodes.length
         ) {
             getDeepRange(container, {select: true});
             // The selection is changed in `getDeepRange` and will therefore
