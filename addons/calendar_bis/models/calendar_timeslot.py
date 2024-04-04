@@ -5,6 +5,9 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+EVENT_FIELDS = {'name', 'note', 'tag_ids', 'is_recurring', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat',
+                'sun', 'freq', 'until', 'count', 'interval', 'monthday', 'monthweekday_n', 'monthweekday_day'}
+REC_BREAKING_FIELDS = {'start', 'stop', 'duration', 'allday', 'partner_ids', 'attendee_ids'}.union(EVENT_FIELDS)
 
 class CalendarTimeslot(models.Model):
     _name = "calendar.timeslot"
@@ -74,8 +77,19 @@ class CalendarTimeslot(models.Model):
             return super().write(values)
 
         # If event_id is not in values, we are editing a timeslot
-        edit = values.pop('edit', 'all')
-        batch = self.env['calendar.timeslot']
+        edit = values.pop('edit', 'one')
+        # If none of the fields changed are recurrence breaking
+        if not set(values.keys()).union(REC_BREAKING_FIELDS):
+            if edit == 'one':
+                records = self
+            elif edit == 'all':
+                records = self.event_id.timeslot_ids
+            else:
+                records = self
+                for ts in self:
+                    records += ts.event_id.timeslot_ids.filtered(lambda slot: slot.start > ts.start)
+            return super(CalendarTimeslot, records).write(values)
+
         if 'start' in values and isinstance(values['start'], str):
             values['start'] = datetime.fromisoformat(values['start'])
         if 'stop' in values and isinstance(values['stop'], str):
@@ -85,6 +99,7 @@ class CalendarTimeslot(models.Model):
         # If you modify one event: remove it from the recurrence and write on it
         # If you modify part events: remove part events from the recurrence, if start/stop is modified also apply each change individually
         # If you modify all events: if start/stop is modified also apply each change individually
+        batch = self.env['calendar.timeslot']
         for slot in self:
             if not slot.is_recurring:
                 batch += slot
