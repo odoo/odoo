@@ -32,7 +32,6 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Pekka Ikonen, 2022
 # Kimmo Lehtonen <leban@netzionale.com>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
@@ -42,6 +41,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
 # Konsta Aavaranta, 2024
+# Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Konsta Aavaranta, 2024\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -881,7 +881,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr "<span class=\"o_form_label\">Oletus Incoterm</span>"
+msgstr "<span class=\"o_form_label\">Oletustoimituslauseke</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1278,7 +1278,7 @@ msgstr "<strong>Loppusaldo</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr "<strong>Incoterm: </strong>"
+msgstr "<strong>Toimituslauseke: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3518,22 +3518,22 @@ msgstr "CAMT-tuonti"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "KULJETUS- JA VAKUUTUSMAKSUT"
+msgstr "Kuljetus ja vakuutus maksettuina"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "MAKSETTU KULJETUS"
+msgstr "Kuljetus maksettuna"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr "KUSTANNUKSET JA RAHTI"
+msgstr "Kuljetus ja rahti maksettuina"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr "KUSTANNUKSET, VAKUUTUS JA RAHTI"
+msgstr "Kuljetus, vakuutus ja rahti maksettuina"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4592,7 +4592,7 @@ msgstr "Luo uusi finanssipolitiikka"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid "Create a new incoterm"
-msgstr "Luo uusi incoterm"
+msgstr "Luo uusi toimituslauseke"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -5171,7 +5171,7 @@ msgstr "Katkopäivä"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "TOIMITETTU PAIKASSA"
+msgstr "Toimitettuna määräpaikalle"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -5181,7 +5181,7 @@ msgstr "Toimitettuna ajoneuvosta purettuna"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "TOIMITETTU TULLI MAKSETTU"
+msgstr "Toimitettuna tullattuna"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -5390,7 +5390,7 @@ msgstr "Oletustulotili"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "Yrityksen oletus toimituslauseke"
+msgstr "Yrityksen oletustoimituslauseke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__default_opening_date_filter
@@ -5439,7 +5439,7 @@ msgstr "Oletusehdot verkkosivuna"
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
-msgstr "Oletus toimituslauseke"
+msgstr "Oletustoimituslauseke"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6108,7 +6108,7 @@ msgstr "EU:n sisäinen etämyynti"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr "EX WORKS"
+msgstr "Noudettuna"
 
 #. module: account
 #. odoo-python
@@ -6461,17 +6461,17 @@ msgstr "Ulkoinen arvo"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "ILMAINEN ALUKSEN RINNALLA"
+msgstr "Vapaasti aluksen sivulla"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "ILMAINEN KULJETTAJA"
+msgstr "Vapaasti rahdinkuljettajalla"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "VAPAASTI VARASTOSTA"
+msgstr "Vapaasti aluksessa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -7709,12 +7709,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_incoterm_id
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr "Toimituslauseke"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
 msgid "Incoterm Standard Code"
-msgstr "Incoterm standardikoodi"
+msgstr "Toimituslausekkeen koodi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_incoterms_tree
@@ -7724,7 +7724,7 @@ msgstr "Incoterm standardikoodi"
 #: model_terms:ir.ui.view,arch_db:account.account_incoterms_view_search
 #: model_terms:ir.ui.view,arch_db:account.view_incoterms_tree
 msgid "Incoterms"
-msgstr "Incoterms"
+msgstr "Toimituslausekkeet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__name
@@ -7733,9 +7733,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
-"Incotermit ovat joukko myyntitermejä. Niiden tarkoitus on jakaa "
-"toimituskustannukset ja vastuut ostajan ja myyjän kesken sekä vastata "
-"nykyaikaisia kuljetuskäytäntö."
+"Toimituslausekkeet ovat osa kauppasopimusta. Toimituslauseke määrittelee "
+"tavaran toimittamiseen sisältyvien velvollisuuksien jakautumisen myyjän ja "
+"ostajan välillä."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -11206,6 +11206,15 @@ msgstr "Luo uudet tilit tilikartta-valikosta."
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Määrittele maksutaparivi maksussasi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16770,6 +16779,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16803,6 +16819,24 @@ msgid ""
 msgstr ""
 "Et voi poistaa tätä merkintää, koska se on jo kuluttanut järjestysnumeron "
 "eikä ole ketjun viimeinen. Todennäköisimmin sinun tulisi palauttaa se."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python

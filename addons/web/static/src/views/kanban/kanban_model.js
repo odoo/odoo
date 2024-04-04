@@ -401,7 +401,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                         g.valueEquals(groupState.value)
                     );
                     if (!groupState.deleted && groupDisapeared) {
-                        const { value, displayName, __rawValue, isFolded, groupDomain } =
+                        const { value, displayName, __rawValue, isFolded, groupDomain, range } =
                             groupState;
                         const group = this.model.createDataPoint("group", {
                             ...this.commonGroupParams,
@@ -413,6 +413,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                             groupByField: this.groupByField,
                             groupDomain,
                             isFolded,
+                            range,
                             rawContext: this.rawContext,
                         });
                         this.groups.splice(index, 0, group);

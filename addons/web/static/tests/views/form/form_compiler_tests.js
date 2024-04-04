@@ -37,7 +37,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("properly compile simple div", async (assert) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
@@ -51,7 +51,7 @@ QUnit.module("Form Compiler", (hooks) => {
         async (assert) => {
             const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
             const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" readonly="props.archInfo.activeActions?.edit === false and !props.record.isNew" setDirty.alike="props.setFieldAsDirty"/>
                     <FormLabel id="'test'" fieldName="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" className="&quot;&quot;" string="\`\`" />
@@ -64,7 +64,7 @@ QUnit.module("Form Compiler", (hooks) => {
     QUnit.test("properly compile simple div with field", async (assert) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
@@ -119,7 +119,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 </group>
             </form>`;
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <OuterGroup>
                         <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
@@ -182,7 +182,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                 <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                 <div>someDiv</div>
@@ -204,7 +204,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <t>
+            <t t-translation="off">
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
                     <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
@@ -444,7 +444,7 @@ QUnit.module("Form Renderer", (hooks) => {
 
         const arch = `<myNode modifiers="{&quot;invisible&quot;: [[&quot;field&quot;, &quot;=&quot;, &quot;value&quot;]]}" />`;
 
-        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !evalDomainFromRecord(props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
+        const expected = `<t t-translation="off"><div class="myNode" t-if="( myCondition or myOtherCondition ) and !evalDomainFromRecord(props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 });

@@ -898,6 +898,10 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         this.$iframe = this.$bgVideoContainer.find('.o_bg_video_iframe');
         this.$iframe.one('load', () => {
             this.$bgVideoContainer.find('.o_bg_video_loading').remove();
+            // When there is a "slide in (left or right) animation" element, we
+            // need to adjust the iframe size once it has been loaded, otherwise
+            // an horizontal scrollbar may appear.
+            this._adjustIframe();
         });
         this.$bgVideoContainer.prependTo(this.$target);
         $oldContainer.remove();
@@ -953,8 +957,11 @@ registry.socialShare = publicWidget.Widget.extend({
     _renderSocial: function (social) {
         var url = this.$el.data('urlshare') || document.URL.split(/[?#]/)[0];
         url = encodeURIComponent(url);
-        var title = document.title.split(" | ")[0];  // get the page title without the company name
-        var hashtags = ' #' + document.title.split(" | ")[1].replace(' ', '') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
+        const titleParts = document.title.split(" | ");
+        const title = titleParts[0]; // Get the page title without the company name
+        const hashtags = titleParts.length === 1
+            ? ` ${this.hashtags}`
+            : ` #${titleParts[1].replace(" ", "")} ${this.hashtags}`; // Company name without spaces (for hashtag)
         var socialNetworks = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,

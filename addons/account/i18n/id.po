@@ -11211,6 +11211,17 @@ msgstr "Silakan tetapkan baris metode pembayaran pada pembayaran Anda."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Metode pembayaran yang dipilih tidak tersedia untuk pembayaran ini, silakan "
+"pilih metode pembayaran yang lain."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16814,6 +16825,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Anda tidak dapat membuat kelompok rekursif."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16850,6 +16868,26 @@ msgstr ""
 "Anda tidak dapat menghapus entri ini, karena sudah menggunakan nomor "
 "sequence dan bukan merupakan yang terakhir di rantai. Anda sebaiknya "
 "mengembalikkan hal tersebut terlebih dahulu."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Anda tidak dapat menghapus laporan ini (%s), karena digunakan oleh engine "
+"pembuat PDF akuntansi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python

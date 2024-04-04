@@ -7,10 +7,10 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # Martin Trigaux, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "Startdatum"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__default_level
 msgid "Default Level"
-msgstr ""
+msgstr "Standardnivå"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__department_id
@@ -161,17 +161,17 @@ msgstr "Anställds färdigheter"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill_report
 msgid "Employee Skills Report"
-msgstr ""
+msgstr "Rapport om anställdas färdigheter"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees with Skills"
-msgstr ""
+msgstr "Anställda med kompetens"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employees without Skills"
-msgstr ""
+msgstr "Anställda utan kompetens"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
@@ -201,6 +201,8 @@ msgid ""
 "If checked, this level will be the default one selected when choosing this "
 "skill."
 msgstr ""
+"Om markerat kommer denna nivå att vara den standardnivå som väljs när du "
+"väljer denna färdighet."
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
@@ -238,7 +240,7 @@ msgstr "Senast uppdaterad på"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__level_progress
 msgid "Level Progress"
-msgstr ""
+msgstr "Nivå Framsteg"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
@@ -249,7 +251,7 @@ msgstr "Nivåer"
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.hr_resume_line_type_menu
 msgid "Line Types"
-msgstr ""
+msgstr "Linjetyper"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -297,7 +299,7 @@ msgstr ""
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_skill_level_check_level_progress
 msgid "Progress should be a number between 0 and 100."
-msgstr ""
+msgstr "Framsteg ska vara ett tal mellan 0 och 100."
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
@@ -318,29 +320,29 @@ msgstr "Återuppta"
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_resume_type_action
 msgid "Resume Line Types"
-msgstr ""
+msgstr "Typer av CV-linjer"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resume line of an employee"
-msgstr ""
+msgstr "Meritförteckning för en anställd"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resume lines"
-msgstr ""
+msgstr "CV-linjer"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_search
 msgid "Search Logs"
-msgstr ""
+msgstr "Sök i loggar"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_view_search
 msgid "Search Skill"
-msgstr ""
+msgstr "Sök färdigheter"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__sequence
@@ -371,7 +373,7 @@ msgstr "Färdighet"
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_department
 #: model:ir.actions.server,name:hr_skills.action_open_skills_log_employee
 msgid "Skill History Report"
-msgstr ""
+msgstr "Historikrapport för färdigheter"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_level
@@ -437,7 +439,7 @@ msgstr "Kompetens"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_graph_employee
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_log_view_tree
 msgid "Skills History"
-msgstr ""
+msgstr "Färdigheter Historia"
 
 #. module: hr_skills
 #. odoo-python
@@ -472,7 +474,7 @@ msgstr "Det är inte tillåtet att ha två nivåer för samma färdighet"
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
-msgstr ""
+msgstr "Två nivåer för samma färdighet på samma dag är inte tillåtet"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__line_type_id
@@ -482,7 +484,7 @@ msgstr "Typ"
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line_type
 msgid "Type of a resume line"
-msgstr ""
+msgstr "Typ av CV-rad"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_res_users

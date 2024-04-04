@@ -264,7 +264,7 @@ class FSWatcherWatchdog(FSWatcherBase):
     def dispatch(self, event):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
-                path = getattr(event, 'dest_path', event.src_path)
+                path = getattr(event, 'dest_path', '') or event.src_path
                 self.handle_file(path)
 
     def start(self):

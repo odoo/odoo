@@ -170,7 +170,7 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 return create_dict(tax_category_code='S')  # standard VAT
 
-        if supplier.country_id.code in european_economic_area:
+        if supplier.country_id.code in european_economic_area and supplier.vat:
             if tax.amount != 0:
                 # otherwise, the validator will complain because G and K code should be used with 0% tax
                 return create_dict(tax_category_code='S')

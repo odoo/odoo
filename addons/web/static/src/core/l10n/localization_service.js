@@ -25,9 +25,10 @@ const NUMBERING_SYSTEMS = [
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
+        const locale = document.documentElement.getAttribute("lang") || "";
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
-        const lang = user.lang || null;
+        const lang = user.lang || locale.replace(/-/g, "_");
         const translationURL = session.translationURL || "/web/webclient/translations";
         let url = `${translationURL}/${translationsHash}`;
         if (lang) {

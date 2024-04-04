@@ -891,3 +891,54 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         line2_values = report_values['lines']['components'][1]
         self.assertEqual(line1_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
         self.assertEqual(line2_values['availability_state'], 'expected', 'The second component should be expected as there is an incoming PO.')
+
+    def test_valuation_with_backorder(self):
+        fifo_category = self.env['product.category'].create({
+            'name': 'FIFO',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time'
+        })
+        kit, cmp1, cmp2 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': 0,
+            'type': 'product',
+            'categ_id': fifo_category.id,
+        } for name in ['Kit', 'Cmp1', 'Cmp2']])
+        kit.uom_id = self.uom_gm.id
+        cmp1.uom_id = self.uom_gm.id
+        cmp2.uom_id = self.uom_kg.id
+
+        self.env['mrp.bom'].create({
+            'product_uom_id': self.uom_kg.id,
+            'product_qty': 3,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cmp1.id, 'product_qty': 2, 'product_uom_id': self.uom_kg.id}),
+                (0, 0, {'product_id': cmp2.id, 'product_qty': 1, 'product_uom_id': self.uom_gm.id})]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit
+            pol_form.product_qty = 30
+            pol_form.product_uom = self.uom_kg
+            pol_form.price_unit = 90000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids[0].qty_done = 4
+        receipt.move_line_ids[1].qty_done = 2
+        action = receipt.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        # Price Unit for 1 gm of the kit = 90000/1000 = 90
+        # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
+        # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000
+        svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
+        self.assertEqual(svl[0].unit_cost, 67.5)
+        self.assertEqual(svl[1].unit_cost, 135000000)

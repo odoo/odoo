@@ -563,6 +563,22 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("list view with button with invisible: true attrs", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <button name="a" type="object" icon="fa-car" attrs="{'invisible': true}"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, "th", 3);
+        assert.containsNone(target, "td.o_list_button button");
+    });
+
     QUnit.test("list view with adjacent buttons and optional field", async function (assert) {
         await makeView({
             type: "list",

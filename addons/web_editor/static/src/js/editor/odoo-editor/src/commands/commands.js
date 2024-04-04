@@ -781,6 +781,11 @@ export const editorCommands = {
         const cells = [...closestElement(cell, 'tr').querySelectorAll('th, td')];
         const index = cells.findIndex(td => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
+        if (table.style.width) {
+            const tableRect = table.getBoundingClientRect();
+            const cellRect = cell.getBoundingClientRect();
+            table.style.width = tableRect.width - cellRect.width + 'px';
+        }
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach(td => td.remove());
         siblingCell ? setSelection(...startPos(siblingCell)) : editorCommands.deleteTable(editor, table);
     },

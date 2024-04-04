@@ -6,7 +6,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests.common import TransactionCase, RecordCapturer
+from odoo.tests.common import TransactionCase, RecordCapturer, get_db_name
 
 
 class CronMixinCase:
@@ -121,3 +121,10 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertIn(self.cron.id, [job['id'] for job in ready_jobs],
             "cron should be ready")
         self.assertTrue(capture.records, "trigger should has been kept")
+
+    def test_cron_null_interval(self):
+        self.cron.interval_number = 0
+        with self.assertLogs('odoo.addons.base.models.ir_cron', 'ERROR'):
+            self.cron._process_job(get_db_name(), self.env.cr, self.cron.read(load=False)[0])
+        self.cron.invalidate_recordset(['active'])
+        self.assertFalse(self.cron.active)

@@ -38,8 +38,8 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Janusz Harkot <jh@trilab.pl>, 2023
 # Jolien De Paepe, 2023
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2024
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -47,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2024\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1822,6 +1822,11 @@ msgstr ""
 "jednostkami z tej samej kategorii. Do konwersji jest stosowany przelicznik."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Korytarz (X)"
@@ -2996,6 +3001,13 @@ msgid "First SN"
 msgstr "Pierwszy SN"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Stała"
@@ -4065,6 +4077,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -5457,7 +5470,7 @@ msgstr "Pochodzenie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr "Przesunięcia źródła"
+msgstr "Pierwotne przesunięcia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
@@ -8990,7 +9003,7 @@ msgstr "Pozycja śledząca"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr "Przekaz"
+msgstr "Pobranie"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__picking_quantity__picking
@@ -9011,7 +9024,7 @@ msgstr "Transfer do"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Transfers"
-msgstr "Przekazy"
+msgstr "Pobrania"
 
 #. module: stock
 #. odoo-python
@@ -9962,7 +9975,7 @@ msgid ""
 "in order to reverse the moves which took place."
 msgstr ""
 "Nie można anulować przesunięcia zapasów, które zostało ustawione jako "
-"\"Gotowe\". Utwórz zwrot, aby odwrócić ruchy, które miały miejsce."
+"\"Wykonano\". Utwórz zwrot, aby odwrócić ruchy, które miały miejsce."
 
 #. module: stock
 #. odoo-python
@@ -10053,6 +10066,24 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -10118,7 +10149,7 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Nie można anulować rezerwacji przesunięcia magazynowego, które zostało "
-"ustawione na „Gotowe”."
+"ustawione na 'Wykonane'."
 
 #. module: stock
 #. odoo-python

@@ -36,7 +36,7 @@ TRANSACTION_STATUS_MAPPING = {
     'pending': ('pending', 'in_process', 'in_mediation', 'authorized'),
     'done': ('approved', 'refunded'),
     'canceled': ('cancelled', 'null'),
-    'error': ('rejected'),
+    'error': ('rejected',),
 }
 
 # Mapping of error states to Mercado Pago error messages.

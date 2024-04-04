@@ -161,7 +161,7 @@ class TestUi(odoo.tests.HttpCase):
 
         tr_vintage = table.xpath('tbody/tr')[0]
         text_vintage = etree.tostring(tr_vintage, encoding='unicode', method='text')
-        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018201720162015")
+        self.assertEqual(text_vintage.replace(' ', '').replace('\n', ''), "Vintage2018,2017,2016,20152018,2017,2016,20152018,2017,2016,20152018,2017,2016,2015")
 
         tr_varieties = table.xpath('tbody/tr')[1]
         text_varieties = etree.tostring(tr_varieties, encoding='unicode', method='text')
@@ -191,12 +191,12 @@ class TestUi(odoo.tests.HttpCase):
         self.assertEqual(prep_categories, OrderedDict([
             (category_varieties, OrderedDict([
                 (self.attribute_varieties, OrderedDict([
-                    (self.template_margaux.product_variant_id, self.attribute_line_varieties.product_template_value_ids)
+                    (self.template_margaux.product_variant_id, self.attribute_line_varieties.value_ids)
                 ]))
             ])),
             (category_vintage, OrderedDict([
                 (self.attribute_vintage, OrderedDict([
-                    (self.template_margaux.product_variant_id, self.attribute_line_vintage.product_template_value_ids[0])
+                    (self.template_margaux.product_variant_id, self.attribute_line_vintage.value_ids)
                 ]))
             ])),
         ]))

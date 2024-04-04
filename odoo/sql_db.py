@@ -44,8 +44,8 @@ _logger_conn = _logger.getChild("connection")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
+re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
+re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 
 sql_counter = 0
 

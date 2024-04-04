@@ -625,6 +625,37 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("empty group when grouped by date", async (assert) => {
+        serverData.models.partner.records[0].date = "2017-01-08";
+        serverData.models.partner.records[1].date = "2017-02-09";
+        serverData.models.partner.records[2].date = "2017-02-08";
+        serverData.models.partner.records[3].date = "2017-02-10";
+
+        const kanban = await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                <field name="bar"/>
+                <field name="date" allow_group_range_value="true"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+            groupBy: ["date:month"],
+        });
+
+        serverData.models.partner.records.shift(); // remove only record of the first group
+        await reload(kanban, { groupBy: ["date:month"] });
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsNone(getColumn(0), ".o_kanban_record");
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
+
     QUnit.test(
         "Ensure float fields are formatted properly without using a widget",
         async (assert) => {

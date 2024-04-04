@@ -7,11 +7,11 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Aimée Mendoza Sánchez, 2024
 # Iran Villalobos López, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Lucia Pacheco, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22890,7 +22890,7 @@ msgstr "Importar estado de cuenta bancario QIF"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Import Template for Customers"
-msgstr "Importar plantillas para clientes"
+msgstr "Plantilla de importación para clientes"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
@@ -32511,15 +32511,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_industry_fsm_sale
 msgid "Schedule and track onsite operations, invoice time and material"
 msgstr ""
-"Programar y dar seguimiento a operaciones in situ, facturar tiempo y "
-"materiales"
+"Programe y monitoree operaciones presenciales, facture tiempo y materiales"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm
 msgid "Schedule and track onsite operations, time and material"
-msgstr ""
-"Programa y da seguimiento a operaciones in situ, tiempo y materiales de "
-"facturación"
+msgstr "Programe y monitoree operaciones presenciales, tiempo y materiales"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
@@ -32557,6 +32554,12 @@ msgstr "Acciones planificadas"
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
 msgstr "Activadores de tareas programadas"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "Acción programada deshabilitada"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -35934,6 +35937,16 @@ msgid "Those modules cannot be uninstalled: %s"
 msgstr "Esos módulos no se pueden desinstalar: %s"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+"Esta acción programada ha sido desactivada. Su número de intervalo no es un "
+"valor estrictamente positivo."
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Separador de millares"
@@ -38375,6 +38388,17 @@ msgstr "No puede eliminar el registro %s."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"No puede eliminar al usuario administrador, pues se usa en muchos lugares "
+"(como en configuraciones de seguridad). Mejor archívelo."
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -38454,7 +38478,7 @@ msgstr "Tiene que especificar un filtro para su selección."
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "You should try other search criteria."
-msgstr "Debería probar otro criterio de búsqueda."
+msgstr "Intente usar otro criterio de búsqueda."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company

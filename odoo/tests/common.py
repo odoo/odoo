@@ -830,6 +830,22 @@ def fchain(future, next_callback):
 
     return new_future
 
+
+def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f"):
+    assert re.fullmatch(r'\w*_', prefix)
+    assert re.fullmatch(r'[a-z]+', extension)
+    assert re.fullmatch(r'\w+', test_name)
+    now = datetime.now().strftime(date_format)
+    screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
+    screenshots_dir.mkdir(parents=True, exist_ok=True)
+    fname = f'{prefix}{now}_{test_name}.{extension}'
+    full_path = screenshots_dir / fname
+
+    with full_path.open('wb') as f:
+        f.write(content)
+    logger.runbot(f'{document_type} in: {full_path}')
+
+
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file

@@ -374,15 +374,15 @@ msgstr ""
 "       <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
 "        Уважаемый <t t-out=\"object.partner_id.name or ''\">пользователь</t>,\n"
 "       <br><br>\n"
-"        Сообщаем Вам, что Ваше\n"
+"        Сообщаем вам, что \n"
 "       <t t-out=\"doc_name or ''\">предложение</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "       <t t-if=\"object.origin\">\n"
-"            (со ссылкой: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (со ссылкой: <t t-out=\"object.origin or ''\">S00052</t>)\n"
 "       </t>\n"
-"        было отменено. Поэтому с вас не должны взиматься дополнительные платежи за этот заказ.\n"
+"        было отменено. Поэтому с вас не должны взиматься дальнейшие платежи за этот заказ.\n"
 "        Если потребуется возврат средств, он будет осуществлен в удобное для вас время.\n"
 "       <br><br>\n"
-"        Не стесняйтесь обращаться к нам, если у вас возникнут какие-либо вопросы.\n"
+"        Обращайтесь к нам, если у вас возникнут какие-либо вопросы.\n"
 "       <br>\n"
 "    </p>\n"
 "</div>\n"
@@ -426,6 +426,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/><b>оплатить</b></i>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -561,6 +566,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Вы уверены, что хотите отменить этот заказ? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                            Черновики актов по этому заказу будут аннулированы. <br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -590,7 +599,7 @@ msgstr "<span>В сумме:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Payment</span>"
-msgstr ""
+msgstr "<span>Платеж</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1725,7 +1734,7 @@ msgstr "Ожидаемая дата"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr "Ожидается:"
+msgstr "Ожидаемое:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1844,7 +1853,7 @@ msgstr "Ссылка для оплаты продаж"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr "Создайте ссылку для оплаты"
+msgstr "Создать ссылку для оплаты"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1955,7 +1964,7 @@ msgstr "Если true, упаковка может быть использова
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
-"Если вы измените прейскурант, это коснется только новых добавленных строк."
+"Если вы измените прайс-лист, это коснется только новых добавленных строк."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2120,6 +2129,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
+"Акты будут созданы в виде черновиков, чтобы вы могли просмотреть\n"
+"                    их перед проверкой."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -2148,7 +2159,7 @@ msgstr "Цель актирования"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "Выставление актов и платежи"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2633,7 +2644,7 @@ msgstr "Онлайн-подпись"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "Онлайн-подтверждение"
 
 #. module: sale
 #. odoo-python

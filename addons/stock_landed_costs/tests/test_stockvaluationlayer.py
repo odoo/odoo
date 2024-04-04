@@ -195,12 +195,12 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         move3 = self._make_out_move(self.product1, 5)
         lc = self._make_lc(move1, 100)
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
-
         out_svl = self.product1.stock_valuation_layer_ids.sorted()[-2]
         in_svl = self.product1.stock_valuation_layer_ids.sorted()[-1]
 
         self.assertEqual(out_svl.value, -250)
-        self.assertEqual(in_svl.value, 225)
+        # 15 * 16.67
+        self.assertAlmostEqual(in_svl.value, 250.05)
 
     def test_rounding_1(self):
         """3@100, out 1, out 1, out 1"""

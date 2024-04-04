@@ -12,6 +12,7 @@
 # Manuela Silva <mmsrs@sky.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Martin Trigaux, 2022
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Rita Bastos, 2024
 # 
 msgid ""
@@ -347,7 +348,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Tipo de falha"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized
@@ -468,7 +469,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
 msgid "In Queue"
-msgstr ""
+msgstr "Em Fila"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__mobile_blacklisted
@@ -598,8 +599,8 @@ msgid ""
 "comment for other messages such as user replies"
 msgstr ""
 "Tipo de mensagem: e-mail para mensagens de e-mail, notificação para "
-"mensagens do sistema e comentário para outros tipos como respostas de "
-"usuário."
+"mensagens do sistema e comentário para outras mensagens do tipo respostas de"
+" utilizador."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
@@ -635,7 +636,7 @@ msgstr "Notificação"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Tipo de Notificação"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
@@ -687,6 +688,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Idioma de tradução (ISO code) opcional para selecionar no envio de um "
+"e-mail. Se não atribuído, a versão inglesa será utilizada. Deverá usualmente"
+" ser uma expressão substituta que providencie o idioma apropriado, ex. {{ "
+"object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -814,7 +819,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Modelo de Renderização"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
@@ -856,7 +861,7 @@ msgstr "Tentar Novamente"
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, python-format
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: sms
 #. odoo-javascript
@@ -966,7 +971,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_tree
 msgid "SMS Templates"
-msgstr ""
+msgstr "Templates de SMS"
 
 #. module: sms
 #. odoo-python

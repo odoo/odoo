@@ -53,7 +53,11 @@ export class ExpenseListController extends ListController {
         const records = this.model.root.selection;
         const recordIds = records.map((a) => a.resId);
         const model = this.model.rootParams.resModel;
-        await this.orm.call(model, action, [recordIds]);
+        const context = {};
+        if (action === 'approve_expense_sheets') {
+            context['validate_analytic'] = true;
+        }
+        await this.orm.call(model, action, [recordIds], {context: context});
         // sgv note: we tried this.model.notify(); and does not work
         await this.model.root.load();
         this.render(true);

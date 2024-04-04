@@ -14,8 +14,8 @@ class Twitter(http.Controller):
 
     @http.route(['/website_twitter/get_favorites'], type='json', auth="public", website=True)
     def get_tweets(self, limit=20):
-        key = request.website.twitter_api_key
-        secret = request.website.twitter_api_secret
+        key = request.website.sudo().twitter_api_key
+        secret = request.website.sudo().twitter_api_secret
         screen_name = request.website.twitter_screen_name
         debug = request.env['res.users'].has_group('website.group_website_restricted_editor')
         if not key or not secret:

@@ -3503,7 +3503,7 @@ msgstr "刪除頁面"
 msgid ""
 "Delete the above image or replace it with a picture that illustrates your "
 "message. Click on the picture to change its <em>rounded corner</em> style."
-msgstr "刪除上圖或將其替換為說明消息的圖片.按一下圖片可更改圓<em>角</em>樣式."
+msgstr "刪除上方圖片，或以一張能夠表達你的訊息的圖片取代。在圖片上按一下，可修改它的<u>圓角樣式</u>。"
 
 #. module: website
 #. odoo-javascript
@@ -3797,7 +3797,7 @@ msgstr "當使用者連至此網域時顯示這個網站"
 msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
-msgstr ""
+msgstr "不要複製貼上你不理解的程式碼，這可能會使您的數據處於危險之中."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4871,7 +4871,7 @@ msgstr "Google Search Console"
 msgid ""
 "Google doesn't need to be pinged anymore. It will automatically fetch your "
 "/sitemap.xml."
-msgstr ""
+msgstr "不需要再通知（ping）Google 了，它會自動獲取你的 /sitemap.xml。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -9379,6 +9379,17 @@ msgid "The chosen name already exists"
 msgstr "所選名稱已存在"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+"公司 %(company_name)r 不可封存，因為它有一個已連結的網站：%(website_name)r。\n"
+"請先更改該網站的公司。"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "這個網站的所屬公司"
@@ -9993,7 +10004,7 @@ msgstr "讓每一個功能變成對你的讀者有利."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Twitter"
-msgstr "推特"
+msgstr "Twitter"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
@@ -11113,6 +11124,14 @@ msgid ""
 msgstr "不可刪除預設網站 %s。請嘗試更改其設定"
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
@@ -11188,7 +11207,7 @@ msgstr "您的電子信件"
 msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
-msgstr ""
+msgstr "你的嵌入程式碼片段，沒有任何內容可顯示。請按「編輯」以修改它。"
 
 #. module: website
 #. odoo-javascript
@@ -11202,7 +11221,7 @@ msgstr "您的姓名"
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Question"
-msgstr ""
+msgstr "你的問題"
 
 #. module: website
 #. odoo-javascript

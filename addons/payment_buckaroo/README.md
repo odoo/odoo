@@ -20,7 +20,6 @@ submission provided by the `payment` module.
 
 - `15.2`
   - The support for webhook notifications is added. odoo/odoo#82922
-  - The signature of synchronous notifications (redirect payloads) is verified. odoo/odoo#81607
 
 ## Testing instructions
 

@@ -1833,6 +1833,11 @@ msgstr ""
 "proporzioni."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr "Correggi incongruenze per la prenotazione"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Corridoio (X)"
@@ -3005,6 +3010,13 @@ msgid "First SN"
 msgstr "Primo S/N"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr "Sistema discrepanze"
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "Fisso"
@@ -4086,6 +4098,7 @@ msgstr ""
 "Se l'errore persiste o se vedi questo messaggio, invia un ticket di supporto tramite la pagina https://www.odoo.com/help"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -10095,6 +10108,28 @@ msgid ""
 msgstr ""
 "Impossibile movimentare più di una volta il contenuto del collo nello stesso"
 " trasferimento o suddividere il collo in due ubicazioni."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+"Non è possibile confezionare i prodotti nello stesso pacco se provengono sia"
+" da trasferimenti immediati che pianificati."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Non è possibile confezionare prodotti nello stesso pacco se provengono da "
+"trasferimenti differenti con diversi tipi di operazione."
 
 #. module: stock
 #. odoo-python

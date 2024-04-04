@@ -33,8 +33,6 @@ passed to the Accept.js SDK, the solution qualifies for SAQ A-EP.
   - Archiving a token no longer deactivates the related payment method on Authorize. odoo/odoo#93774
 - `15.4`
   - The support for full refunds is added. odoo/odoo#92279
-- `15.2`
-  - The signature of synchronous notifications (redirect payloads) is verified. odoo/odoo#81607
 - `15.0`
   - Support for ACH payments is added. odoo/odoo#75289
 - `14.3`

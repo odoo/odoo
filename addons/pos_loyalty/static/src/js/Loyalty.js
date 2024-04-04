@@ -1447,8 +1447,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         for (const line of this.get_orderlines()) {
             if (line.get_product().id === product.id) {
                 available += line.get_quantity();
-            } else if (line.reward_product_id === product.id) {
+            } else if (reward.reward_product_ids.includes(line.reward_product_id)) {
                 if (line.reward_id == reward.id ) {
+                    remainingPoints += line.points_cost;
                     claimed += line.get_quantity();
                 } else {
                     shouldCorrectRemainingPoints = true;

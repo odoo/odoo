@@ -98,8 +98,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li>First</li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li>First</li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('First');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('First');
                 },
             });
             await testEditor(BasicEditor, {
@@ -108,8 +108,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('List');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li>List</li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li>List</li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('List');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('List');
                 },
             });
             await testEditor(BasicEditor, {
@@ -118,8 +118,8 @@ describe('Copy', () => {
                     const clipboardData = new DataTransfer();
                     triggerEvent(editor.editable, 'copy', { clipboardData });
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First');
-                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span></li>');
-                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span></li>');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
                 },
             });
         })
@@ -237,20 +237,13 @@ describe('Paste', () => {
 
             });
             it('should keep whitelisted Tags tag (2)', async () => {
-                const tagsToKeep = [
-                    'a<img src="http://www.imgurl.com/img.jpg">d', // img tag
-                    'a<br>b' // br tags
-                ];
-
-                for (const tagToKeep of tagsToKeep) {
-                    await testEditor(BasicEditor, {
-                        contentBefore: '<p>123[]</p>',
-                        stepFunction: async editor => {
-                            await pasteHtml(editor, tagToKeep);
-                        },
-                        contentAfter: '<p>123' + tagToKeep + '[]</p>',
-                    });
-                }
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>123[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, 'a<img src="http://www.imgurl.com/img.jpg">d');
+                    },
+                    contentAfter: '<p>123a<img src="http://www.imgurl.com/img.jpg">d[]</p>',
+                });
             });
             it('should keep tables Tags tag and add classes', async () => {
                 await testEditor(BasicEditor, {
@@ -764,6 +757,141 @@ describe('Paste', () => {
                         await pasteHtml(editor, simpleHtmlCharX);
                     },
                     contentAfter: '<div>3a<p>bx[]e</p>f</div>',
+                });
+            });
+        });
+    });
+    describe('Simple html elements containing <br>', () => {
+        describe('breaking <br> elements', () => {
+            it('should split h1 with <br> into seperate h1 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h1>abc<br>def<br>ghi<br>jkl</h1>');
+                    },
+                    contentAfter: '<p>abc</p><h1>def</h1><h1>ghi</h1><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h2 with <br> into seperate h2 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h2>abc<br>def<br>ghi<br>jkl</h2>');
+                    },
+                    contentAfter: '<p>abc</p><h2>def</h2><h2>ghi</h2><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h3 with <br> into seperate h3 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h3>abc<br>def<br>ghi<br>jkl</h3>');
+                    },
+                    contentAfter: '<p>abc</p><h3>def</h3><h3>ghi</h3><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h4 with <br> into seperate h4 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h4>abc<br>def<br>ghi<br>jkl</h4>');
+                    },
+                    contentAfter: '<p>abc</p><h4>def</h4><h4>ghi</h4><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h5 with <br> into seperate h5 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h5>abc<br>def<br>ghi<br>jkl</h5>');
+                    },
+                    contentAfter: '<p>abc</p><h5>def</h5><h5>ghi</h5><p>jkl[]<br></p>',
+                });
+            });
+            it('should split h6 with <br> into seperate h6 elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<h6>abc<br>def<br>ghi<br>jkl</h6>');
+                    },
+                    contentAfter: '<p>abc</p><h6>def</h6><h6>ghi</h6><p>jkl[]<br></p>',
+                });
+            });
+            it('should split p with <br> into seperate p elements', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p>mno</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br>ghi<br>jkl</p><p><br></p><p>mno</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p><br></p><p>mno[]<br></p>',
+                });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def<br><br><br>ghi</p>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><p><br></p><p><br></p><p>ghi[]<br></p>',
+                });
+            });
+            it('should split multiple elements with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc<br>def</p><h1>ghi<br>jkl</h1><h2><br></h2><h3>mno<br>pqr</h3>');
+                    },
+                    contentAfter: '<p>abc</p><p>def</p><h1>ghi</h1><h1>jkl</h1><h2><br></h2><h3>mno</h3><p>pqr[]<br></p>',
+                });
+            });
+            it('should split div with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<div>abc<br>def</div>');
+                    },
+                    contentAfter: '<p>abc</p><p>def[]<br></p>',
+                });
+            });
+        });
+        describe('not breaking <br> elements', async () => {
+            it('should not split li with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<ul><li>abc<br>def</li></ul>');
+                    },
+                    contentAfter: '<ul><li>abc<br>def</li></ul><p>[]<br></p>',
+                });
+            });
+            it('should not split blockquote with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<blockquote>abc<br>def</blockquote>');
+                    },
+                    contentAfter: '<blockquote>abc<br>def</blockquote><p>[]<br></p>',
+                });
+            });
+            it('should not split pre with <br>', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<pre>abc<br>def</pre>');
+                    },
+                    contentAfter: '<pre>abc<br>def</pre><p>[]<br></p>',
                 });
             });
         });
@@ -1599,7 +1727,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
                     },
-                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
             it('should paste and transform URL among text', async () => {
@@ -1836,7 +1964,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteHtml(editor, '<a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>');
                     },
-                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a><br><a href="www.google.com">google.com</a>[]</p>',
+                    contentAfter: '<p><a href="www.odoo.com">odoo.com</a></p><p><a href="www.google.com">google.com</a>[]</p>',
                 });
             });
         });

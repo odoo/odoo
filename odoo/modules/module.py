@@ -47,7 +47,7 @@ _DEFAULT_MANIFEST = {
     'live_test_url': '',  # website themes
     #name, mandatory
     'post_init_hook': '',
-    'post_load': None,
+    'post_load': '',
     'pre_init_hook': '',
     'sequence': 100,
     'snippet_lists': {},  # website themes

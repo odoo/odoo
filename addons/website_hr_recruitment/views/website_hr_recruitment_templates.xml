@@ -282,12 +282,15 @@
                             <span class="text-muted small">Job</span>
                             <h6 t-field="job.name"/>
                         </div>
-                        <div t-if="job.address_id" class="d-flex flex-column align-items-baseline">
+                        <div class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Location</span>
-                            <h6 t-field="job.address_id" t-options='{
+                            <h6 t-if="job.address_id" t-field="job.address_id" t-options='{
+                                "widget": "contact",
                                 "fields": ["city"],
-                                "no_tag_br": True
+                                "no_tag_br": True,
+                                "no_marker": True
                             }'/>
+                            <h6 t-else="">Remote</h6>
                         </div>
                         <div t-if="job.department_id" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Department</span>

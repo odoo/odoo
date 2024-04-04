@@ -11270,6 +11270,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Die ausgewählte Zahlungsmethode ist für diese Zahlung nicht verfügbar. Bitte"
+" wählen Sie eine andere Zahlungsmethode."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16944,6 +16955,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Sie können keine rekursiven Gruppen erstellen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16982,6 +17000,28 @@ msgstr ""
 "Sie können diesen Eintrag nicht löschen, da er bereits eine Folgenummer "
 "erhalten hat und nicht der letzte Eintrag in der Kette ist. Vermutlich "
 "sollten Sie ihn stattdessen rückgängig machen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Sie können diesen Bericht nicht löschen (%s), er wird von der PDF-"
+"Generierungsmaschine der Buchhaltung verwendet."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Sie können dieses Konto-Stichwort (%s) nicht löschen, sie wird für die "
+"Definition des Kontenplans verwendet."
 
 #. module: account
 #. odoo-python

@@ -45,7 +45,7 @@
                             <t t-if="is_external_embed">
                                 <t t-call="website_slides.slide_share_modal">
                                     <t t-set="record" t-value="slide"/>
-                                    <t t-set="website_share_url" t-value="slide.channel_id.website_share_url"/>
+                                    <t t-set="website_share_url" t-value="slide.website_share_url"/>
                                     <t t-set="include_embed" t-value="True"/>
                                     <t t-set="embed_hide_starting_page" t-value="True"/>
                                 </t>

@@ -5925,17 +5925,20 @@
     });
 
     function interactiveRenameSheet(env, sheetId, errorText) {
+        if (env.model.getters.isReadonly()) {
+            return;
+        }
         const placeholder = env.model.getters.getSheetName(sheetId);
         const title = _lt("Rename Sheet");
         const callback = (name) => {
             if (name === null || name === placeholder) {
                 return;
             }
-            if (name === "") {
-                interactiveRenameSheet(env, sheetId, _lt("The sheet name cannot be empty."));
-            }
             const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
             if (!result.isSuccessful) {
+                if (result.reasons.includes(10 /* CommandResult.MissingSheetName */)) {
+                    interactiveRenameSheet(env, sheetId, _lt("The sheet name cannot be empty."));
+                }
                 if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("A sheet with the name %s already exists. Please select another name.", name));
                 }
@@ -20431,6 +20434,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (!this.isKeyStillDown) {
                     this.processContent();
                 }
+                // Required because typing '=SUM' and double-clicking another cell leaves ShowProvider and ShowDescription true
+                if (this.env.model.getters.getEditionMode() === "inactive") {
+                    this.processTokenAtCursor();
+                }
             });
         }
         // ---------------------------------------------------------------------------
@@ -21143,6 +21150,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
                 }
             }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
+            owl.onWillUnmount(() => {
+                this.props.onFigureDeleted();
+            });
         }
         clickAnchor(dirX, dirY, ev) {
             this.props.onClickAnchor(dirX, dirY, ev);
@@ -21160,6 +21170,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     });
                     this.props.onFigureDeleted();
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
                 case "ArrowDown":
                 case "ArrowLeft":
@@ -21179,6 +21190,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         y: figure.y + delta[1],
                     });
                     ev.preventDefault();
+                    ev.stopPropagation();
                     break;
             }
         }
@@ -21403,6 +21415,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
             const { x: dndInitialX, y: dndInitialY } = this.internalToScreenCoordinates(figure);
             this.dnd.x = dndInitialX;
             this.dnd.y = dndInitialY;
@@ -21421,13 +21434,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (dirY < 0) {
                     this.dnd.y = dndInitialY - deltaY;
                 }
-                if (this.dnd.x < 0) {
-                    this.dnd.width += this.dnd.x;
-                    this.dnd.x = 0;
+                // Adjusts figure dimensions to ensure it remains within header boundaries and viewport during resizing.
+                if (this.dnd.x + scrollX <= 0) {
+                    this.dnd.width = this.dnd.width + this.dnd.x + scrollX;
+                    this.dnd.x = -scrollX;
                 }
-                if (this.dnd.y < 0) {
-                    this.dnd.height += this.dnd.y;
-                    this.dnd.y = 0;
+                if (this.dnd.y + scrollY <= 0) {
+                    this.dnd.height = this.dnd.height + this.dnd.y + scrollY;
+                    this.dnd.y = -scrollY;
                 }
             };
             const onMouseUp = (ev) => {
@@ -28797,6 +28811,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return 0 /* CommandResult.Success */;
             }
         }
+        beforeHandle(cmd) {
+            switch (cmd.type) {
+                case "DELETE_SHEET":
+                    this.getters.getFigures(cmd.sheetId).forEach((figure) => {
+                        this.dispatch("DELETE_FIGURE", { id: figure.id, sheetId: cmd.sheetId });
+                    });
+                    break;
+            }
+        }
         handle(cmd) {
             switch (cmd.type) {
                 case "CREATE_SHEET":
@@ -34945,6 +34968,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.gridSelection.zones = this.gridSelection.zones.map((z) => this.getters.expandZone(sheetId, z));
                     this.gridSelection.anchor.zone = this.getters.expandZone(sheetId, this.gridSelection.anchor.zone);
                     this.setSelectionMixin(this.gridSelection.anchor, this.gridSelection.zones);
+                    this.selectedFigureId = null;
                     break;
             }
             /** Any change to the selection has to be  reflected in the selection processor. */
@@ -43270,9 +43294,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.33';
-    __info__.date = '2024-02-16T14:59:44.946Z';
-    __info__.hash = 'c0cefe8';
+    __info__.version = '16.0.36';
+    __info__.date = '2024-03-25T10:54:14.110Z';
+    __info__.hash = '2c2117b';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

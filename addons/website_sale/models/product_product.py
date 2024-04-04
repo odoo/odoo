@@ -70,22 +70,13 @@ class Product(models.Model):
         This returns a list and not a recordset because the records might be
         from different models (template, variant and image).
 
-        It contains in this order: the main image of the variant (if set), the
-        Variant Extra Images, and the Template Extra Images.
+        It contains in this order: the main image of the variant (which will fall back on the main
+        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
         """
         self.ensure_one()
         variant_images = list(self.product_variant_image_ids)
-        if self.image_variant_1920:
-            # if the main variant image is set, display it first
-            variant_images = [self] + variant_images
-        else:
-            # If the main variant image is empty, it will fallback to template
-            # image, in this case insert it after the other variant images, so
-            # that all variant images are first and all template images last.
-            variant_images = variant_images + [self]
-        # [1:] to remove the main image from the template, we only display
-        # the template extra images here
-        return variant_images + self.product_tmpl_id._get_images()[1:]
+        template_images = list(self.product_tmpl_id.product_template_image_ids)
+        return [self] + variant_images + template_images
 
 
     def _website_show_quick_add(self):
@@ -98,16 +89,15 @@ class Product(models.Model):
 
     def _get_contextual_price_tax_selection(self):
         self.ensure_one()
-        price = self._get_contextual_price()
-        line_tax_type = self.env['ir.config_parameter'].sudo().get_param('account.show_line_subtotals_tax_selection')
         fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(self.env.user.partner_id)
-        fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
+        fiscal_position_sudo = self.env['account.fiscal.position'].sudo().browse(fpos_id)
         product_taxes = self.sudo().taxes_id.filtered(lambda x: x.company_id == self.env.company)
-        if product_taxes:
-            taxes = fiscal_position.map_tax(product_taxes)
-            price = self.env['account.tax']._fix_tax_included_price_company(
-                price, product_taxes, taxes, self.env.company,
-            )
-            tax_display = "total_included" if line_tax_type == "tax_included" else "total_excluded"
-            price = taxes.compute_all(price, product=self, partner=self.env['res.partner'])[tax_display]
-        return price
+        return self.env['product.template']._price_with_tax_computed(
+            self._get_contextual_price(),
+            product_taxes,
+            fiscal_position_sudo.map_tax(product_taxes),
+            self.env.company.id,
+            self.env['product.template']._get_contextual_pricelist(),
+            self,
+            self.env.user.partner_id,
+        )

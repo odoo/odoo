@@ -138,6 +138,11 @@ class Web_Editor(http.Controller):
 
             :returns PNG image converted from given font
         """
+        # For custom icons, use the corresponding custom font
+        if icon.isdigit():
+            if int(icon) == 57467:
+                font = "/web/static/fonts/tiktok_only.woff"
+
         size = max(width, height, 1) if width else size
         width = width or size
         height = height or size

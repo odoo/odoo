@@ -30,8 +30,8 @@
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Juan Carlos Bravo, 2023
 # Lucia Pacheco, 2023
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
@@ -11280,6 +11280,17 @@ msgstr "Por favor, defina un método de pago en su pago. "
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"El método de pago seleccionado no está disponible para este pago. Seleccione"
+" por favor otro método de pago."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16933,6 +16944,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "No es posible crear grupos recursivos."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16968,6 +16986,28 @@ msgid ""
 msgstr ""
 "No puede eliminar este asiento ya que ya consumió un número de secuencia y "
 "no es el último de la cadena. Debe revertirlo en su lugar."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"No puede eliminar este informe (%s). El motor de generación de PDF de "
+"contabilidad lo utiliza."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"No puede eliminar esta etiqueta de cuenta (%s), ya que se utiliza en la "
+"definición del plan de cuentas."
 
 #. module: account
 #. odoo-python

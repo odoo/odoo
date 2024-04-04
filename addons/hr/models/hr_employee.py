@@ -242,6 +242,14 @@ class HrEmployeePrivate(models.Model):
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
+    def get_views(self, views, options):
+        if self.check_access_rights('read', raise_exception=False):
+            return super().get_views(views, options)
+        res = self.env['hr.employee.public'].get_views(views, options)
+        res['models'].update({'hr.employee': res['models']['hr.employee.public']})
+        return res
+
+    @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """
             We override the _search because it is the method that checks the access rights

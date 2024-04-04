@@ -62,7 +62,7 @@ options.registry.WebsiteEvent = options.Class.extend({
      * @private
      */
     _getEventObjectId() {
-        const objectIds = this.currentWebsiteUrl.match(/-\d+(?![-\w\d])/);
-        return parseInt(objectIds[0].replace('-', '')) | 0;
+        const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
+        return parseInt(objectIds[0]) | 0;
     },
 });

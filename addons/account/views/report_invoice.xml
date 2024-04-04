@@ -125,8 +125,9 @@
                                             <td t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                                 <span class="text-nowrap" t-field="line.discount"/>
                                             </td>
-                                            <td t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))" id="line_tax_ids"/>
+                                            <t t-set="taxes" t-value="', '.join([(tax.description or tax.name) for tax in line.tax_ids])"/>
+                                            <td name="td_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                                <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                             </td>
                                             <td class="text-end o_price_total">
                                                 <span class="text-nowrap" t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>

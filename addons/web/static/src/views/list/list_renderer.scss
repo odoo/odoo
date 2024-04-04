@@ -22,7 +22,7 @@
                 padding-left: var(--ListRenderer-table-padding-h);
             }
 
-            > tr > :last-child, .o_optional_columns_dropdown {
+            > tr > :last-child {
                 padding-right: var(--ListRenderer-table-padding-h);
             }
 
@@ -32,7 +32,7 @@
         }
 
         :not(.o_field_x2many_list) > & thead, tfoot {
-            tr > :not(:empty), .o_optional_columns_dropdown {
+            tr > :not(:empty) {
                 padding-top: var(--ListRenderer-thead-padding-v);
                 padding-bottom: var(--ListRenderer-thead-padding-v);
             }
@@ -253,15 +253,10 @@
             cursor: col-resize;
         }
 
-        .o_list_actions_header, .o_optional_columns_dropdown {
+        .o_list_actions_header {
             width: 32px;
             background-color: var(--ListRenderer-thead-bg-color);
             z-index: 100;
-        }
-
-        .o_optional_columns_dropdown {
-            height: var(--body-line-height);
-            padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
         }
 
         .o_data_row.o_list_no_open {

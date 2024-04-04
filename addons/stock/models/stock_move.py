@@ -657,6 +657,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         for vals in vals_list:
             if vals.get('quantity_done') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
+            if 'picking_id' in vals and 'group_id' not in vals:
+                picking = self.env['stock.picking'].browse(vals['picking_id'])
+                if picking.group_id:
+                    vals['group_id'] = picking.group_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -688,6 +692,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             self._propagate_product_packaging(vals['product_packaging_id'])
         if 'date_deadline' in vals:
             self._set_date_deadline(vals.get('date_deadline'))
+        if 'picking_id' in vals and 'group_id' not in vals:
+            picking = self.env['stock.picking'].browse(vals['picking_id'])
+            if picking.group_id:
+                vals['group_id'] = picking.group_id.id
         res = super(StockMove, self).write(vals)
         if move_to_recompute_state:
             move_to_recompute_state._recompute_state()
@@ -1015,9 +1023,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                     pos_move.product_uom_qty = 0
                     moves_to_cancel |= pos_move
 
+        # We are using propagate to False in order to not cancel destination moves merged in moves[0]
+        (moves_to_unlink | moves_to_cancel)._clean_merged()
+
         if moves_to_unlink:
-            # We are using propagate to False in order to not cancel destination moves merged in moves[0]
-            moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
 
@@ -1697,8 +1706,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                     if not available_move_lines:
                         continue
                     for move_line in move.move_line_ids.filtered(lambda m: m.reserved_qty):
-                        if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)):
-                            available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.reserved_qty
+                        if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)):
+                            available_move_lines[(move_line.location_id, move_line.lot_id, move_line.package_id, move_line.owner_id)] -= move_line.reserved_qty
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('reserved_qty'))
                         # `quantity` is what is brought by chained done move lines. We double check

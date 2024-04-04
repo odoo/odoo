@@ -244,6 +244,7 @@
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
                                   <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
+                                  <span t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success"><i class="fa fa-fw fa-check"/> <b>Reversed</b></span>
                                   <span t-else="" class="small badge text-bg-info"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
                               </div>
                           </t>

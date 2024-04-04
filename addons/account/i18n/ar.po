@@ -13,6 +13,7 @@
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
 # Wil Odoo, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
@@ -6037,7 +6038,7 @@ msgstr "تقارير ديناميكية"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr "النطاق المستخدم للعلامة التي يمكن تعيينها على الضريبة"
+msgstr "نطاق ديناميكي يُستخدم للعلامة التي يمكن تعيينها على الضريبة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -7104,7 +7105,7 @@ msgstr "يحتوي على ثغرات في التسلسل "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr "يحتوي على سطور البيان"
+msgstr "يحتوي على بنود كشف الحساب البنكي "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -11105,6 +11106,17 @@ msgstr "الرجاء تحديد بند لطريقة الدفع في دفعتك. 
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"طريقة الدفع المختارة غير متاحة لهذه الدفعة، الرجاء اختر طريقة الدفع مرة "
+"أخرى."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -11678,7 +11690,7 @@ msgstr "الرقم المرجعي. "
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #, python-format
 msgid "Reference"
-msgstr "الرقم المرجعي "
+msgstr "المرجع "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
@@ -16596,6 +16608,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "لا يمكنك إنشاء مجموعات متداخلة."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16627,6 +16646,27 @@ msgid ""
 msgstr ""
 "لا يمكنك حذف هذا القيد، حيث أنه استهلك رقم تسلسل بالفعل وليس الأخير في "
 "السلسلة. من الأفضل التراجع عوضاً عن ذلك. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"لا يمكنك حذف هذا التقرير (%s)، لأنه مستخدَم من قِبَل محرّك إنشاء ملفات PDF "
+"للمحاسبة. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"لا يمكنك حذف علامة التصنيف هذه (%s)، لأنها مستخدمة في تعريف شجرة الحسابات. "
 
 #. module: account
 #. odoo-python

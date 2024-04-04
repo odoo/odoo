@@ -211,7 +211,7 @@ class AccountMove(models.Model):
                 'no_match': no result found
             * recordset of matched 'purchase.order.line' (could come from more than one purchase.order)
         """
-        common_domain = [('company_id', '=', self.company_id.id), ('state', '=', 'purchase'), ('invoice_status', 'in', ('to invoice', 'no'))]
+        common_domain = [('company_id', '=', self.company_id.id), ('state', 'in', ('purchase', 'done')), ('invoice_status', 'in', ('to invoice', 'no'))]
 
         matching_pos = self.env['purchase.order']
         if po_references and amount_total:

@@ -29,7 +29,7 @@
     <record id="crm_lead_company_rule" model="ir.rule">
         <field name="name">CRM Lead Multi-Company</field>
         <field name="model_id" ref="model_crm_lead"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="crm_rule_all_lead" model="ir.rule">
@@ -56,7 +56,7 @@
     <record id="crm_activity_report_rule_multi_company" model="ir.rule">
         <field name="name">CRM Lead Multi-Company</field>
         <field name="model_id" ref="model_crm_activity_report"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
 </data>

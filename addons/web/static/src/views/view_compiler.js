@@ -253,6 +253,7 @@ export class ViewCompiler {
     compile(key, params = {}) {
         const child = this.compileNode(this.templates[key], params);
         const newRoot = createElement("t", [child]);
+        newRoot.setAttribute("t-translation", "off");
         return newRoot;
     }
 

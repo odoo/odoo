@@ -367,10 +367,13 @@ class StockQuant(models.Model):
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
             ('lot_id', '=', self.lot_id.id),
-            '|',
-                ('package_id', '=', self.package_id.id),
-                ('result_package_id', '=', self.package_id.id),
         ]
+        if self.package_id:
+            action['domain'] += [
+                '|',
+                    ('package_id', '=', self.package_id.id),
+                    ('result_package_id', '=', self.package_id.id),
+            ]
         action['context'] = literal_eval(action.get('context'))
         action['context']['search_default_product_id'] = self.product_id.id
         return action

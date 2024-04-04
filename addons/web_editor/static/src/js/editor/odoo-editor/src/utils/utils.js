@@ -923,7 +923,7 @@ export function getOffsetAndCharSize(nodeValue, offset, direction) {
 // Format utils
 //------------------------------------------------------------------------------
 
-const formatsSpecs = {
+export const formatsSpecs = {
     italic: {
         tagName: 'em',
         isFormatted: isItalic,
@@ -1067,7 +1067,11 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
         // Remove the format on all inline ancestors until a block or an element
         // with a class (in case the formating comes from the class).
-        while (parentNode && (!isBlock(parentNode) && !(parentNode.classList && parentNode.classList.length))) {
+        while (
+            parentNode && !isBlock(parentNode) &&
+            !(parentNode.classList && parentNode.classList.length) &&
+            !isUnbreakable(parentNode) && !isUnbreakable(currentNode)
+        ) {
             const isUselessZws = parentNode.tagName === 'SPAN' &&
                 parentNode.hasAttribute('data-oe-zws-empty-inline') &&
                 parentNode.getAttributeNames().length === 1;
@@ -1930,6 +1934,9 @@ export function splitAroundUntil(elements, limitAncestor) {
 }
 
 export function insertText(sel, content) {
+    if (!content) {
+        return;
+    }
     if (sel.anchorNode.nodeType === Node.TEXT_NODE) {
         const pos = [sel.anchorNode.parentElement, splitTextNode(sel.anchorNode, sel.anchorOffset)];
         setSelection(...pos, ...pos, false);
@@ -2689,6 +2696,7 @@ export function getRangePosition(el, document, options = {}) {
     const selection = document.getSelection();
     if (!selection.rangeCount) return;
     const range = selection.getRangeAt(0);
+    const isRtl = options.direction === 'rtl';
 
     const marginRight = options.marginRight || 20;
     const marginBottom = options.marginBottom || 20;
@@ -2716,6 +2724,18 @@ export function getRangePosition(el, document, options = {}) {
         clonedRange.detach();
     }
 
+    if (isRtl) {
+        // To handle the RTL case we shift the elelement to the left by its size
+        // and handle it the same as left.
+        offset.right = offset.left - el.offsetWidth;
+        const leftMove = Math.max(0, offset.right + el.offsetWidth + marginLeft - window.innerWidth);
+        if (leftMove && offset.right - leftMove > marginRight) {
+            offset.right -= leftMove;
+        } else if (offset.right - leftMove < marginRight) {
+            offset.right = marginRight;
+        }
+    }
+
     const leftMove = Math.max(0, offset.left + el.offsetWidth + marginRight - window.innerWidth);
     if (leftMove && offset.left - leftMove > marginLeft) {
         offset.left -= leftMove;
@@ -2726,6 +2746,9 @@ export function getRangePosition(el, document, options = {}) {
     if (options.parentContextRect) {
         offset.left += options.parentContextRect.left;
         offset.top += options.parentContextRect.top;
+        if (isRtl) {
+            offset.right += options.parentContextRect.left;
+        }
     }
 
     if (
@@ -2740,6 +2763,13 @@ export function getRangePosition(el, document, options = {}) {
     if (offset) {
         offset.top += window.scrollY;
         offset.left += window.scrollX;
+        if (isRtl) {
+            offset.right += window.scrollX;
+        }
+    }
+    if (isRtl) {
+        // Get the actual right value.
+        offset.right = window.innerWidth - offset.right - el.offsetWidth;
     }
 
     return offset;

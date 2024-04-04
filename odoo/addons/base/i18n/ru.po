@@ -23,7 +23,6 @@
 # 6da4f49c4b78e697e34b24b2a66289f5, 2024
 # Ꚁemetron <d.v.selitsky@gmail.com>, 2024
 # valmasone, 2024
-# Collex100, 2024
 # Yuriy Ney <k_wizard@mail.ru>, 2024
 # alenafairy, 2024
 # Viktor Pogrebniak <vp@aifil.ru>, 2024
@@ -41,6 +40,8 @@
 # Wil Odoo, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Смородин Даниил, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Смородин Даниил, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17157,7 +17158,7 @@ msgstr "Эквадор"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports_ats
 msgid "Ecuador - ATS Report"
-msgstr ""
+msgstr "Ecuador - ATS Report"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -18154,7 +18155,7 @@ msgstr "Фарерские острова"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_it_edi_website_sale
 msgid "Features for Italian eCommerce eInvoicing"
-msgstr ""
+msgstr "Features for Italian eCommerce eInvoicing"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -21093,7 +21094,7 @@ msgstr ""
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Invalid domain: %s"
-msgstr ""
+msgstr "Неверный домен: %s"
 
 #. module: base
 #. odoo-python
@@ -21425,7 +21426,7 @@ msgstr "Италия - Электронное выставление счето�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
 msgid "Italy eCommerce eInvoicing"
-msgstr ""
+msgstr "Italy eCommerce eInvoicing"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -22237,7 +22238,7 @@ msgstr "Модуль связи между pos_hr и pos_restaurant"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
-msgstr ""
+msgstr "Модуль связи между pos_sale и l10n_be"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -22279,7 +22280,7 @@ msgstr "Литва - Бухгалтерские отчеты"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_intrastat
 msgid "Lithuanian Intrastat Declaration"
-msgstr ""
+msgstr "Lithuanian Intrastat Declaration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -29231,6 +29232,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "Триггеры запланированных действий"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "Запланированное действие отключено"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "планируемый пользователь"
@@ -30466,7 +30473,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_spreadsheet
 #: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_spreadsheet
 msgid "Spreadsheet document for GSTR1 Report"
-msgstr ""
+msgstr "Документ электронной таблицы для отчета GSTR1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -32562,6 +32569,16 @@ msgstr ""
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
 msgstr "Эти модули не могут быть удалены: %s"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+"Это запланированное действие было отключено, поскольку номер интервала не "
+"является строго положительным значением."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -34976,6 +34993,15 @@ msgstr "Удалить запись %s невозможно."
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -35539,7 +35565,7 @@ msgstr "json"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt

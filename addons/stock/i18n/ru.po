@@ -21,7 +21,6 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2022
 # Viktor Pogrebniak <vp@aifil.ru>, 2022
 # Irina Fedulova <istartlin@gmail.com>, 2022
-# Collex100, 2022
 # Martin Trigaux, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2022
@@ -32,6 +31,7 @@
 # Walid Hanniche, 2023
 # Wil Odoo, 2024
 # Смородин Даниил, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Смородин Даниил, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1852,6 +1852,11 @@ msgstr ""
 "одной категории. Преобразование будет сделано на основе коэффициентов."
 
 #. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
 msgstr "Ряд (X)"
@@ -2096,8 +2101,7 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
-"При создании нового склада автоматически активизируется настройка Места "
-"хранения"
+"Создание нового склада автоматически активирует настройку Места хранения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
@@ -3026,6 +3030,13 @@ msgstr "Фильтры"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
 msgstr "Первый SN"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -4104,6 +4115,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -7235,7 +7247,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Правило %s принадлежит %s, а маршрут - %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -9823,8 +9835,8 @@ msgid ""
 msgstr ""
 "При подтверждении перемещения:\n"
 " * Спрашивать: пользователям предлагается выбрать, хотят ли они сделать отложенный заказ на оставшиеся продукты\n"
-" * Всегда: автоматически создается отложенный заказ на оставшиеся товары\n"
-" * Никогда: оставшиеся товары аннулируются"
+" * Всегда: автоматически создается отложенный заказ на оставшиеся продукты\n"
+" * Никогда: оставшиеся продукты аннулируются"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -10122,6 +10134,26 @@ msgid ""
 msgstr ""
 "Вы не можете переместить одно и то же содержимое пакета более одного раза в "
 "одном перемещении или разделите этот пакет на два места хранения."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Нельзя упаковывать продукты в одну упаковку, если они получены из разных "
+"пересылок с разными типами операций."
 
 #. module: stock
 #. odoo-python

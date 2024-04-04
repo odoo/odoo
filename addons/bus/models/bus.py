@@ -3,6 +3,7 @@ import contextlib
 import datetime
 import json
 import logging
+import math
 import os
 import random
 import selectors
@@ -24,6 +25,21 @@ TIMEOUT = 50
 # custom function to call instead of NOTIFY postgresql command (opt-in)
 ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
+
+def get_notify_payload_max_length(default=8000):
+    try:
+        length = int(os.environ.get('ODOO_NOTIFY_PAYLOAD_MAX_LENGTH', default))
+    except ValueError:
+        _logger.warning("ODOO_NOTIFY_PAYLOAD_MAX_LENGTH has to be an integer, "
+                        "defaulting to %d bytes", default)
+        length = default
+    return length
+
+
+# max length in bytes for the NOTIFY query payload
+NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
+
+
 #----------------------------------------------------------
 # Bus
 #----------------------------------------------------------
@@ -42,6 +58,26 @@ def channel_with_db(dbname, channel):
     if isinstance(channel, str):
         return (dbname, channel)
     return channel
+
+
+def get_notify_payloads(channels):
+    """
+    Generates the json payloads for the imbus NOTIFY.
+    Splits recursively payloads that are too large.
+
+    :param list channels:
+    :return: list of payloads of json dumps
+    :rtype: list[str]
+    """
+    if not channels:
+        return []
+    payload = json_dump(channels)
+    if len(channels) == 1 or len(payload.encode()) < NOTIFY_PAYLOAD_MAX_LENGTH:
+        return [payload]
+    else:
+        pivot = math.ceil(len(channels) / 2)
+        return (get_notify_payloads(channels[:pivot]) +
+                get_notify_payloads(channels[pivot:]))
 
 
 class ImBus(models.Model):
@@ -85,7 +121,12 @@ class ImBus(models.Model):
                         query = sql.SQL("SELECT {}('imbus', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
                     else:
                         query = "NOTIFY imbus, %s"
-                    cr.execute(query, (json_dump(list(channels)), ))
+                    payloads = get_notify_payloads(list(channels))
+                    if len(payloads) > 1:
+                        _logger.info("The imbus notification payload was too large, "
+                                     "it's been split into %d payloads.", len(payloads))
+                    for payload in payloads:
+                        cr.execute(query, (payload,))
 
     @api.model
     def _sendone(self, channel, notification_type, message):

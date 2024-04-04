@@ -380,3 +380,79 @@ class TestAccountAccount(AccountTestInvoicingCommon):
             move_type="out_invoice"
         )
         self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
+
+    @freeze_time('2017-01-01')
+    def test_account_opening_balance(self):
+        company = self.env.company
+        account = self.company_data['default_account_revenue']
+        balancing_account = company.get_unaffected_earnings_account()
+
+        self.assertFalse(company.account_opening_move_id)
+
+        account.opening_debit = 300
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 300.0},
+            {'account_id': balancing_account.id,    'balance': -300.0},
+        ])
+
+        account.opening_credit = 500
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 300.0},
+            {'account_id': balancing_account.id,    'balance': 200.0},
+            {'account_id': account.id,              'balance': -500.0},
+        ])
+
+        account.opening_balance = 0
+        self.cr.precommit.run()
+        self.assertFalse(company.account_opening_move_id.line_ids)
+
+        account.currency_id = self.currency_data['currency']
+        account.opening_debit = 100
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+        ])
+
+        company.account_opening_move_id.write({'line_ids': [
+            Command.create({
+                'account_id': account.id,
+                'balance': 100.0,
+                'amount_currency': 200.0,
+                'currency_id': account.currency_id.id,
+            }),
+            Command.create({
+                'account_id': balancing_account.id,
+                'balance': -100.0,
+            }),
+        ]})
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+        ])
+
+        account.opening_credit = 1000
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': 800.0,   'amount_currency': 800.0},
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
+        ])
+
+        account.opening_debit = 1000
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
+            {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
+        ])

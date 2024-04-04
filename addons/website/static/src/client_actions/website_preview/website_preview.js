@@ -531,6 +531,10 @@ export class WebsitePreview extends Component {
         if (hotkey !== 'control+r' && hotkey !== 'f5') {
             return;
         }
+        // The iframe isn't loaded yet: fallback to default refresh.
+        if (this.websiteService.contentWindow === undefined) {
+            return;
+        }
         ev.preventDefault();
         const path = this.websiteService.contentWindow.location;
         const debugMode = this.env.debug ? `?debug=${odoo.debug}` : "";

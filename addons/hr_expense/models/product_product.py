@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
         mapp = {row['product_id'][0]: row['unit_amount'] for row in undone_expenses}
         for product in self:
             product.standard_price_update_warning = False
-            if undone_expenses:
+            if product._origin.id in mapp:
                 # The following list is composed of all the unit_amounts of expenses that use this product and should NOT trigger a warning.
                 # Those are the amounts of any undone expense using this product and 0.0 which is the default unit_amount.
                 unit_amounts_no_warning = {float(unit_amount) for unit_amount in mapp[product._origin.id]}

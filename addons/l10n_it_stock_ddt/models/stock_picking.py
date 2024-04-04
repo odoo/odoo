@@ -12,7 +12,7 @@ class StockPicking(models.Model):
                                                  ('evaluation', 'Evaluation'),
                                                  ('gift', 'Gift'),
                                                  ('transfer', 'Transfer'),
-                                                 ('substitution', 'Substitution'),
+                                                 ('substitution', 'Returned goods'),
                                                  ('attemped_sale', 'Attempted Sale'),
                                                  ('loaned_use', 'Loaned for Use'),
                                                  ('repair', 'Repair')], default="sale", tracking=True, string='Transport Reason')

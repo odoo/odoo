@@ -17,9 +17,9 @@
 # Aimée Mendoza Sánchez, 2023
 # Pablo Calvo, 2023
 # Ana Sanjuán, 2023
-# Larissa Manderfeld, 2023
 # César J. Santacruz, 2023
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # 
 msgid ""
@@ -9570,6 +9570,17 @@ msgid "The chosen name already exists"
 msgstr "El nombre elegido ya existe"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+"La compañia %(company_name)r no puede archivarse porque tiene un sitio web vinculada %(website_name)r.\n"
+"Cambie primero la compañia de ese sitio web."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "La compañía a la que pertenece este sitio web"
@@ -11400,6 +11411,17 @@ msgid ""
 msgstr ""
 "No puede eliminar el sitio web predeterminado %s. En su lugar, intente "
 "cambiar sus ajustes."
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"No puede eliminar este menú del sitio web, ya que se utiliza como menú "
+"principal predeterminado para nuevos sitios web (por ejemplo, /shop, "
+"/event...)."
 
 #. module: website
 #. odoo-python

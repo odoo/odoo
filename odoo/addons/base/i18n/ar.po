@@ -19324,7 +19324,7 @@ msgstr "الإكوادور"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports_ats
 msgid "Ecuador - ATS Report"
-msgstr ""
+msgstr "Ecuador - ATS Report"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -20337,7 +20337,7 @@ msgstr "جزر فارو"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_it_edi_website_sale
 msgid "Features for Italian eCommerce eInvoicing"
-msgstr ""
+msgstr "Features for Italian eCommerce eInvoicing"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -23272,7 +23272,7 @@ msgstr "صيغة النطاق غير صالحة %(expr)s في %(use)s "
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Invalid domain: %s"
-msgstr ""
+msgstr "النطاق غير صالح: %s "
 
 #. module: base
 #. odoo-python
@@ -23606,7 +23606,7 @@ msgstr "Italy - E-invoicing (Withholding)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
 msgid "Italy eCommerce eInvoicing"
-msgstr ""
+msgstr "Italy eCommerce eInvoicing"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -24417,7 +24417,7 @@ msgstr "تطبيق يربط بين pos_hr و pos_restaurant "
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
-msgstr ""
+msgstr "تطبيق يربط بين pos_sale و l10n_be "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -24459,7 +24459,7 @@ msgstr "Lithuania - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_intrastat
 msgid "Lithuanian Intrastat Declaration"
-msgstr ""
+msgstr "Lithuanian Intrastat Declaration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -32322,6 +32322,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "مشغلات الإجراءات المجدولة "
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "تم تعطيل الإجراء المجدول "
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "المستخدم المُجدوِل "
@@ -33548,7 +33554,7 @@ msgstr "لوحة بيانات جداول البيانات للجداول الز�
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_spreadsheet
 #: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_spreadsheet
 msgid "Spreadsheet document for GSTR1 Report"
-msgstr ""
+msgstr "مستند جدول البيانات لتقرير GSTR1 "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -35634,6 +35640,16 @@ msgstr ""
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
 msgstr "لا يمكن تثبيت تلك التطبيقات: %s "
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+"لقد تم تعطيل هذا الإجراء المجدول نظراً لأن قيمة الفترة الزمنية به ليست قيمة "
+"موجبة فقط. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -38038,6 +38054,17 @@ msgstr "لا يمكنك حذف سجل %s. "
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+"لا يمكنك حذف المستخدم المدير لأنه مستخدَم في عدة أماكن مختلفة (كتهيئات "
+"الأمان، ...). قم بأرشفته عوضاً عن ذلك. "
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -38599,7 +38626,7 @@ msgstr "json"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt

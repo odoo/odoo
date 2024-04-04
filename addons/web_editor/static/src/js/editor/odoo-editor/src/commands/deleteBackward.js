@@ -184,13 +184,16 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          */
         if (
             !this.previousElementSibling &&
-            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            paragraphRelatedElements.includes(this.nodeName) &&
+            this.nodeName !== 'P' &&
             !closestLi
         ) {
-            const p = document.createElement('p');
-            p.replaceChildren(...this.childNodes);
-            this.replaceWith(p);
-            setSelection(p, offset);
+            if (!this.textContent) {
+                const p = document.createElement('p');
+                p.replaceChildren(...this.childNodes);
+                this.replaceWith(p);
+                setSelection(p, offset);
+            }
             return;
         } else {
             moveDest = leftPos(this);

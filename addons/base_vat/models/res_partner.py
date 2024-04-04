@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
 import string
 import re
@@ -27,29 +24,29 @@ _eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
     'al': 'ALJ91402501L',
-    'ar': 'AR200-5536168-2 or 20055361682',
+    'ar': _('AR200-5536168-2 or 20055361682'),
     'at': 'ATU12345675',
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': 'either 11 digits for CPF or 14 digits for CNPJ',
-    'ch': 'CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA',  # Swiss by Yannick Vaucher @ Camptocamp
+    'br': _('either 11 digits for CPF or 14 digits for CNPJ'),
+    'ch': _('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': 'CL76086428-5',
-    'co': 'CO213123432-1 or CO213.123.432-1',
+    'co': _('CO213123432-1 or CO213.123.432-1'),
     'cy': 'CY10259033P',
     'cz': 'CZ12345679',
     'de': 'DE123456788',
     'dk': 'DK12345674',
-    'do': 'DO1-01-85004-3 or 101850043',
-    'ec': '1792060346001 or 1792060346',
+    'do': _('DO1-01-85004-3 or 101850043'),
+    'ec': _('1792060346001 or 1792060346'),
     'ee': 'EE123456780',
     'el': 'EL12345670',
     'es': 'ESA12345674',
     'fi': 'FI12345671',
     'fr': 'FR23334175221',
-    'gb': 'GB123456782 or XI123456782',
+    'gb': _('GB123456782 or XI123456782'),
     'gr': 'GR12345670',
-    'hu': 'HU12345676 or 12345678-1-11 or 8071592153',
+    'hu': _('HU12345676 or 12345678-1-11 or 8071592153'),
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'in': "12AAAAA1234AAZA",
@@ -60,11 +57,11 @@ _ref_vat = {
     'lv': 'LV41234567891',
     'mc': 'FR53000004605',
     'mt': 'MT12345634',
-    'mx': 'MXGODE561231GR8 or GODE561231GR8',
+    'mx': _('MXGODE561231GR8 or GODE561231GR8'),
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
-    'nz': '49-098-576 or 49098576',
-    'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
+    'nz': _('49-098-576 or 49098576'),
+    'pe': _('10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY'),
     'ph': '123-456-789-123',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
@@ -75,10 +72,10 @@ _ref_vat = {
     'si': 'SI12345679',
     'sk': 'SK2022749619',
     'sm': 'SM24165',
-    'tr': 'TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)',  # Levent Karakas @ Eska Yazilim A.S.
+    'tr': _('TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)'),  # Levent Karakas @ Eska Yazilim A.S.
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
-    'sa': '310175397400003 [Fifteen digits, first and last digits should be "3"]'
+    'sa': _('310175397400003 [Fifteen digits, first and last digits should be "3"]')
 }
 
 _region_specific_vat_codes = {

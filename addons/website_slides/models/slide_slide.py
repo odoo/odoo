@@ -1052,7 +1052,7 @@ class Slide(models.Model):
           (e.g: 'Video could not be found') """
 
         self.ensure_one()
-        google_app_key = self.env['website'].get_current_website().website_slide_google_app_key
+        google_app_key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         error_message = False
         try:
             response = requests.get(
@@ -1143,7 +1143,7 @@ class Slide(models.Model):
                 params['access_token'] = access_token
 
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         error_message = False
         try:
@@ -1381,3 +1381,9 @@ class Slide(models.Model):
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_url
         return results_data
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/slide/{slug(self)}')

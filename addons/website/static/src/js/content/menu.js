@@ -44,7 +44,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
         // While scrolling through navbar menus on medium devices, body should not be scrolled with it
         this.$navbarCollapses.on('show.bs.collapse.BaseAnimatedHeader', function () {
-            if (config.device.size_class <= config.device.SIZES.SM) {
+            if (config.device.size_class < config.device.SIZES.LG) {
                 $(document.body).addClass('overflow-hidden');
             }
         }).on('hide.bs.collapse.BaseAnimatedHeader', function () {
@@ -243,7 +243,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
     _updateHeaderOnResize: function () {
         this._adaptFixedHeaderPosition();
         if (document.body.classList.contains('overflow-hidden')
-                && config.device.size_class > config.device.SIZES.SM) {
+                && config.device.size_class >= config.device.SIZES.LG) {
             document.body.classList.remove('overflow-hidden');
             this.$el.find('.navbar-collapse').removeClass('show');
         }
@@ -608,7 +608,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _dropdownHover: function () {
         this.$dropdownMenus.attr('data-bs-popper', 'none');
-        if (config.device.size_class > config.device.SIZES.SM) {
+        if (config.device.size_class >= config.device.SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
             this.$dropdownMenus.css('top', 'unset');
         } else {
@@ -633,7 +633,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      */
     _updateDropdownVisibility: function (ev, method) {
         const { currentTarget } = ev;
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class < config.device.SIZES.LG) {
             return;
         }
         if (currentTarget.classList.contains('o_extra_menu_items')) {

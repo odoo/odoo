@@ -1,4 +1,4 @@
-// This is a patch of the font awesome library to add the TikTok icon.
+// This is a patch of the font awesome library to add TikTok & Twitter icons.
 @font-face {
     font-family: 'FontAwesome-tiktok-only';
     src: url('../../../fonts/tiktok_only.woff');
@@ -6,11 +6,39 @@
     font-style: normal;
     font-display: block;
 }
+
+@font-face {
+    font-family: 'FontAwesome-twitter-x-only';
+    src: url('../../../fonts/twitter_x_only.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
 .fa.fa-tiktok {
     font-family: 'FontAwesome-tiktok-only' !important;
 
     &:before {
         content: '\e07b';
+    }
+}
+
+// Don't write `.fa.fa-twitter` or this will be considered like a new icon in
+// the media dialog. The css here is just about overriding the existing twitter
+// icon and should not be considered as a new icon, otherwise those icons will
+// be shown twice in the media dialog. Grep: `iconsParser` and `fontIcons`.
+.fa-twitter.fa {
+    font-family: 'FontAwesome-twitter-x-only' !important;
+
+    &:before {
+        content: '\e800';
+    }
+}
+.fa-twitter-square.fa {
+    font-family: 'FontAwesome-twitter-x-only' !important;
+
+    &:before {
+        content: '\e803';
     }
 }
 

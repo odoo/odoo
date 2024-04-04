@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
+
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
@@ -190,6 +192,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         })
         cls.move_2.action_post()
 
+    @freeze_time('2024-03-13')
     def test_transfer_default_tax(self):
         """ Make sure default taxes on accounts are not computed on transfer moves
         """

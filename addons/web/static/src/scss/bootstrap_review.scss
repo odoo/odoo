@@ -331,3 +331,10 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
         @include border-radius($input-border-radius, 0);
     }
 }
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}

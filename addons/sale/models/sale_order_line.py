@@ -440,15 +440,15 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
-                price = line.with_company(line.company_id)._get_display_price()
-                line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id,
-                    line.order_id.currency_id,
-                    line.order_id.date_order,
-                    'sale',
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(
+                        lambda tax: tax.company_id == line.env.company
+                    ),
                     fiscal_position=line.order_id.fiscal_position_id,
-                    product_price_unit=price,
-                    product_currency=line.currency_id
                 )
 
     def _get_display_price(self):

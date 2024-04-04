@@ -9,9 +9,9 @@
 # Andy Yiu, 2024
 # Noma Yuki, 2024
 # Martin Trigaux, 2024
-# Junko Augias, 2024
 # Wil Odoo, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18377,7 +18377,7 @@ msgstr "エクアドル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_reports_ats
 msgid "Ecuador - ATS Report"
-msgstr ""
+msgstr "エクアドル - ATSレポート"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -19368,7 +19368,7 @@ msgstr "フェロー諸島"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_it_edi_website_sale
 msgid "Features for Italian eCommerce eInvoicing"
-msgstr ""
+msgstr "イタリアeコマース請求用機能"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -22225,7 +22225,7 @@ msgstr "無効なドメインフォーマット%(expr)s  (%(use)s内)"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Invalid domain: %s"
-msgstr ""
+msgstr "無効なドメイン: %s"
 
 #. module: base
 #. odoo-python
@@ -22550,7 +22550,7 @@ msgstr "イタリア - 電子請求(源泉徴収)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
 msgid "Italy eCommerce eInvoicing"
-msgstr ""
+msgstr "イタリアeコマース電子請求"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -23359,7 +23359,7 @@ msgstr "pos_hrとpos_restaurantの間のリンクモジュール"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
 msgid "Link module between pos_sale and l10n_be"
-msgstr ""
+msgstr "pos_sale と l10n_beのブリッジモジュール"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -23401,7 +23401,7 @@ msgstr "リトアニア - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_intrastat
 msgid "Lithuanian Intrastat Declaration"
-msgstr ""
+msgstr "リトアニアイントラスタット申告"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
@@ -30880,6 +30880,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "スケジュールされたアクションのトリガー"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr "予定されたアクションは無効になりました"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "スケジューラユーザ"
@@ -32092,7 +32098,7 @@ msgstr "スプレッドシートダッシュボード タイムシート用"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_spreadsheet
 #: model:ir.module.module,summary:base.module_l10n_in_reports_gstr_spreadsheet
 msgid "Spreadsheet document for GSTR1 Report"
-msgstr ""
+msgstr "GSTR1レポート用スプレッドシート"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql
@@ -34087,6 +34093,14 @@ msgstr "この技術モジュールにより、プロダクトテンプレート
 #, python-format
 msgid "Those modules cannot be uninstalled: %s"
 msgstr "これらのモジュールはアンインストールできません:%s"
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr "間隔番号が厳密に正の値ではないため、この予定されたアクションは無効になっています。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -36442,6 +36456,15 @@ msgstr "%sレコードを削除することはできません。"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""
@@ -36996,7 +37019,7 @@ msgstr "Json"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt

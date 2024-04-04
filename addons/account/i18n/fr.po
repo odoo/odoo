@@ -18,6 +18,7 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Wil Odoo, 2024
 # Jolien De Paepe, 2024
+# Yassine KHATTABI, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Yassine KHATTABI, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11292,6 +11293,17 @@ msgstr "Veuillez définir un mode de paiement sur votre paiement "
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Le mode de paiement sélectionné n'est pas disponible pour ce paiement. "
+"Veuillez à nouveau sélectionner le mode de paiement."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -16942,6 +16954,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Vous ne pouvez pas créer de groupes récursifs."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16978,6 +16997,24 @@ msgstr ""
 "Vous ne pouvez pas supprimer cette écriture, car elle a déjà consommé un "
 "numéro de séquence et n'est pas la dernière de la chaîne. Vous devriez "
 "probablement le rétablir à la place."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
 
 #. module: account
 #. odoo-python
