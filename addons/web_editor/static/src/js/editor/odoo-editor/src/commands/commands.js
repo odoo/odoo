@@ -209,7 +209,8 @@ export const editorCommands = {
                 (
                     (shouldUnwrapBlock(container.firstChild) && !isSelectionAtStart) ||
                     !isBlockElement(block)
-                )
+                ) &&
+                !isEmptyBlock(container.firstChild)
             ) {
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
@@ -220,7 +221,8 @@ export const editorCommands = {
                 (
                     (shouldUnwrapBlock(container.lastChild) && !isSelectionAtEnd) ||
                     !isBlockElement(block)
-                )
+                ) &&
+                !isEmptyBlock(container.lastChild)
             ) {
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
