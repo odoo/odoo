@@ -186,6 +186,7 @@ class ThemeWebsitePage(models.Model):
     # Page options
     header_overlay = fields.Boolean()
     header_color = fields.Char()
+    header_text_color = fields.Char()
     header_visible = fields.Boolean(default=True)
     footer_visible = fields.Boolean(default=True)
 
@@ -206,6 +207,7 @@ class ThemeWebsitePage(models.Model):
             'is_new_page_template': self.is_new_page_template,
             'header_overlay': self.header_overlay,
             'header_color': self.header_color,
+            'header_text_color': self.header_text_color,
             'header_visible': self.header_visible,
             'footer_visible': self.footer_visible,
             'theme_template_id': self.id,
