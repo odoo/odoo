@@ -116,6 +116,7 @@ export class CalendarCommonRenderer extends Component {
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
             viewDidMount: this.viewDidMount,
             moreLinkDidMount: this.wrapMoreLink,
+            eventClassNames: this.getEventClassNames,
         };
     }
 
@@ -231,9 +232,38 @@ export class CalendarCommonRenderer extends Component {
         }
         return true;
     }
+    getEventClassNames({ event }) {
+        let classNames = ["o_event"];
+        const record = this.props.model.records[event.id];
+        if (record) {
+            const color = getColor(record.colorIndex);
+            if (typeof color === "number") {
+                classNames.push(`o_calendar_color_${color}`);
+            } else if (typeof color !== "string"){
+                classNames.push("o_calendar_color_0");
+            }
+            if (record.isHatched) {
+                classNames.push("o_event_hatched");
+            }
+            if (record.isStriked) {
+                classNames.push("o_event_striked");
+            }
+            if (record.duration <= 0.25) {
+                classNames.push("o_event_oneliner");
+            }
+            if (DateTime.now() >= record.end) {
+                classNames.push("o_past_event");
+            }
+            if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
+                classNames.push("o_event_dot");
+            } else if (record.isAllDay) {
+                classNames.push("o_event_allday");
+            }
+        }
+        return classNames;
+    }
     onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;
-        el.classList.add("o_event");
         const record = this.props.model.records[event.id];
 
         if (record) {
@@ -247,31 +277,7 @@ export class CalendarCommonRenderer extends Component {
             const color = getColor(record.colorIndex);
             if (typeof color === "string") {
                 el.style.backgroundColor = color;
-            } else if (typeof color === "number") {
-                el.classList.add(`o_calendar_color_${color}`);
-            } else {
-                el.classList.add("o_calendar_color_0");
             }
-
-            if (record.isHatched) {
-                el.classList.add("o_event_hatched");
-            }
-            if (record.isStriked) {
-                el.classList.add("o_event_striked");
-            }
-            if (record.duration <= 0.25) {
-                el.classList.add("o_event_oneliner");
-            }
-            if (DateTime.now() >= record.end) {
-                el.classList.add("o_past_event");
-            }
-
-            if (!record.isAllDay && !record.isTimeHidden && record.isMonth) {
-                el.classList.add("o_event_dot");
-            } else if (record.isAllDay) {
-                el.classList.add("o_event_allday");
-            }
-
             if (!el.classList.contains("fc-bg")) {
                 const bg = document.createElement("div");
                 bg.classList.add("fc-bg");

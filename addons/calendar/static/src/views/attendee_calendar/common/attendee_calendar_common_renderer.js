@@ -29,22 +29,35 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
     /**
      * @override
      */
+    getEventClassNames(info) {
+        let classNames = super.getEventClassNames(...arguments);
+        const { event } = info;
+        const record = this.props.model.records[event.id];
+
+        if (record) {
+            if (record.rawRecord.is_highlighted) {
+                classNames.push("o_event_highlight");
+            }
+            if (record.isAlone) {
+                classNames.push("o_attendee_status_alone");
+            } else {
+                classNames.push(`o_attendee_status_${record.attendeeStatus}`);
+            }
+        }
+        return classNames;
+    }
+
+    /**
+     * @override
+     */
     onEventDidMount(info) {
         super.onEventDidMount(...arguments);
-        const { el, event } = info;
+        const { event } = info;
         const record = this.props.model.records[event.id];
 
         if (record) {
             if (this.env.searchModel?.context?.default_calendar_event_id === parseInt(event.id)) {
                 this.openPopover(info.el, record);
-            }
-            if (record.rawRecord.is_highlighted) {
-                el.classList.add("o_event_highlight");
-            }
-            if (record.isAlone) {
-                el.classList.add("o_attendee_status_alone");
-            } else {
-                el.classList.add(`o_attendee_status_${record.attendeeStatus}`);
             }
         }
     }
