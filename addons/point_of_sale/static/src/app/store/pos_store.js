@@ -836,7 +836,9 @@ export class PosStore extends Reactive {
                 !this.pendingOrder.write.has(order.id)
         );
         const orderToCreate = this.models["pos.order"].filter(
-            (order) => this.pendingOrder.create.has(order.id) && order.lines.length > 0
+            (order) =>
+                this.pendingOrder.create.has(order.id) &&
+                (order.finalized || order.lines.length > 0)
         );
         const orderToUpdate = this.models["pos.order"].filter((order) =>
             this.pendingOrder.write.has(order.id)

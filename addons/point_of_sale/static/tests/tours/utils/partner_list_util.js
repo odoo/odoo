@@ -7,3 +7,9 @@ export function clickPartner(name = "") {
         in_modal: true,
     };
 }
+export function clickPartnerOptions(name) {
+    return {
+        content: `click partner from partner list screen`,
+        trigger: `.partner-list tr:contains("${name}") button.dropdown`,
+    };
+}
