@@ -84,7 +84,7 @@ function patchBrowserWithCleanup() {
     const animationFrameHandles = new Set();
     const mockLocation = makeMockLocation();
     let historyStack = [[null, mockLocation.href]];
-    let currentHistoryStack = 1;
+    let currentHistoryStack = 0;
     patchWithCleanup(browser, {
         // patch addEventListner to automatically remove listeners bound (via
         // browser.addEventListener) during a test (e.g. during the deployment of a service)
@@ -127,19 +127,18 @@ function patchBrowserWithCleanup() {
         location: mockLocation,
         history: {
             pushState(state, title, url) {
-                historyStack = historyStack.slice(0, currentHistoryStack);
+                historyStack = historyStack.slice(0, currentHistoryStack + 1);
                 historyStack.push([state, url]);
                 currentHistoryStack++;
                 mockLocation.assign(url);
             },
             replaceState(state, title, url) {
-                historyStack = historyStack.slice(0, currentHistoryStack);
                 historyStack[currentHistoryStack] = [state, url];
                 mockLocation.assign(url);
             },
             back() {
                 currentHistoryStack--;
-                const [state, url] = historyStack[currentHistoryStack - 1];
+                const [state, url] = historyStack[currentHistoryStack];
                 if (!url) {
                     throw new Error("there is no history");
                 }
@@ -148,7 +147,7 @@ function patchBrowserWithCleanup() {
             },
             forward() {
                 currentHistoryStack++;
-                const [state, url] = historyStack[currentHistoryStack - 1];
+                const [state, url] = historyStack[currentHistoryStack];
                 if (!url) {
                     throw new Error("No more history");
                 }

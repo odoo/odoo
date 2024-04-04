@@ -1,10 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { scrollTo } from "@web/core/utils/scrolling";
+import { WebClient } from "@web/webclient/webclient";
+import { registry } from "@web/core/registry";
 
 test("Ignore empty hrefs", async () => {
     class MyComponent extends Component {
@@ -83,6 +85,61 @@ test("Simple rendering with a scroll", async () => {
     click(".btn.btn-primary");
     await animationFrame();
     expect(queryOne("#scroller").scrollTop).toBeGreaterThan(0);
+});
+
+test("clicking to scroll on a web client shouldn't open the default app", async (assert) => {
+    expect.assertions(2);
+
+    class MyComponent extends Component {
+        static template = xml/* xml */ `
+            <div class="o_content" style="overflow:scroll;height:150px;width:400px">
+                <a href="#scrollToHere"  class="alert-link" role="button">sroll to ...</a>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+                    Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed,
+                    dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper
+                    congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est
+                    eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu
+                    massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut
+                    in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent
+                    egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue
+                    blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                    posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque
+                    fermentum. Maecenas adipiscing ante non diam sodales hendrerit.
+                </p>
+                <p>
+                    Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa
+                    suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc
+                    turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus
+                    nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis
+                    metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing
+                    elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor
+                    tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis
+                    vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus,
+                    et tristique ligula justo vitae magna.
+                </p>
+                <p>
+                    Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                    ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                    augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+                </p>
+                <div id="scrollToHere">sroll here!</div>
+            </div>
+        `;
+        static props = ["*"];
+        static path = "my_component";
+    }
+    registry.category("actions").add("my_component", MyComponent);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction("my_component");
+
+    const scrollableParent = document.querySelector(".o_content");
+    expect(scrollableParent.scrollTop).toBe(0);
+    await click(".alert-link");
+    expect(scrollableParent.scrollTop).not.toBe(0);
 });
 
 test("Rendering with multiple anchors and scrolls", async () => {

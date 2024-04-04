@@ -359,10 +359,15 @@ test("test reload client action", async () => {
     redirect("/odoo?test=42");
     browser.location.search = "?test=42";
 
-    patchWithCleanup(browser.location, {
-        assign: (url) => {
-            expect.step(url.replace(browser.location.origin, ""));
+    patchWithCleanup(browser.history, {
+        pushState: (_state, _unused, url) => {
+            expect.step(`pushState ${url.replace(browser.location.origin, "")}`);
         },
+        replaceState: (_state, _unused, url) => {
+            expect.step(`replaceState ${url.replace(browser.location.origin, "")}`);
+        },
+    });
+    patchWithCleanup(browser.location, {
         reload: function () {
             expect.step("window_reload");
         },
@@ -402,13 +407,13 @@ test("test reload client action", async () => {
     });
     await runAllTimers();
     expect([
-        // "/odoo?test=42", // This one was not push to the history because it's the current url (see router.js)
+        "replaceState /odoo?test=42",
         "window_reload",
-        "/odoo/action-2",
+        "pushState /odoo/action-2",
         "window_reload",
-        "/odoo?menu_id=1",
+        "pushState /odoo?menu_id=1",
         "window_reload",
-        "/odoo/action-1?menu_id=2",
+        "pushState /odoo/action-1?menu_id=2",
         "window_reload",
     ]).toVerifySteps();
 });
