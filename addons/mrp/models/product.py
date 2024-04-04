@@ -229,7 +229,7 @@ class ProductProduct(models.Model):
                         # to avoid a division by zero. The same logic is applied to non-storable products as those
                         # products have 0 qty available.
                         continue
-                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    uom_qty_per_kit = bom_line_data['qty']
                     qty_per_kit += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue

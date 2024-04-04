@@ -87,7 +87,7 @@ class StockWarehouseOrderpoint(models.Model):
                 component = bom_line.product_id
                 if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     continue
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                uom_qty_per_kit = bom_line_data['qty']
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue

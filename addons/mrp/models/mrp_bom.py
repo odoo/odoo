@@ -370,9 +370,8 @@ class MrpBom(models.Model):
             # Set missing keys to default value
             for product in products:
                 product_boms.setdefault(product, self.env['mrp.bom'])
-        original_qty = quantity
         quantity = quantity / self.product_qty
-        boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': original_qty, 'parent_line': False})]
+        boms_done = [(self, {'qty': quantity, 'product': product, 'parent_line': False})]
         lines_done = []
 
         bom_lines = []
@@ -400,13 +399,13 @@ class MrpBom(models.Model):
                 for bom_line in bom.bom_line_ids:
                     if not bom_line.product_id in product_boms:
                         product_ids.add(bom_line.product_id.id)
-                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': original_qty, 'parent_line': current_line}))
+                boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'parent_line': current_line}))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
                 # should be consumed.
                 rounding = current_line.product_uom_id.rounding
                 line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
-                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': original_qty, 'parent_line': parent_line}))
+                lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'parent_line': parent_line}))
 
         return boms_done, lines_done
 
