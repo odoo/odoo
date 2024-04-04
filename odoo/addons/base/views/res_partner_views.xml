@@ -347,6 +347,14 @@
                                         <field name="lang" invisible="True"/>
                                         <field name="user_id" invisible="True"/>
                                     </sheet>
+                                    <footer>
+                                        <button string="Save &amp; Close" type="object" special="save" class="btn btn-primary" data-hotkey="q" close="1" invisible="id"/>
+                                        <button string="Save &amp; New" type="object" name="action_save_new" class="btn btn-primary" data-hotkey="n" close="1" invisible="id"/>
+                                        <button string="Save" special="save" data-hotkey="s" class="btn btn-primary" close="1" invisible="not id"/>
+                                        <button string="Discard" special="cancel" data-hotkey="j" class="btn-secondary" close="1"/>
+                                        <button string="Delete" name="unlink" type="object" data-hotkey="x" class="btn btn-secondary o_form_button_remove" close="1" invisible="not id"/>
+                                        <button string="More Options" name="action_more_options" type="object" class="btn btn-link ms-auto" close="1"/>
+                                    </footer>
                                 </form>
                             </field>
                         </page>
