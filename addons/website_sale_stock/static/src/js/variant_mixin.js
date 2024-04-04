@@ -4,6 +4,7 @@ import {Markup} from "web.utils";
 import VariantMixin from "website_sale.SaleVariantMixin";
 import publicWidget from "web.public.widget";
 import core from "web.core";
+import field_utils from "web.field_utils";
 var QWeb = core.qweb;
 
 import "website_sale.website_sale";
@@ -58,6 +59,19 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         if (combination.free_qty < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
+    // needed xml-side for formatting of remaining qty
+    combination.formatQuantity = (qty) => {
+        if (Number.isInteger(qty)) {
+            return qty;
+        } else {
+            const decimals = Math.max(
+                0,
+                Math.ceil(-Math.log10(combination.uom_rounding))
+            );
+            return field_utils.format.float(qty, {digits: [false, decimals]});
         }
     }
 
