@@ -299,8 +299,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_uom_qty': 0.0,
                 'price_unit': 0.0,
             })
-            downpayment_line_map[grouping_key]['price_unit'] += \
-                order.currency_id.round(price_subtotal * ratio)
+            downpayment_line_map[grouping_key]['price_unit'] += price_subtotal
+        for key in downpayment_line_map:
+            downpayment_line_map[key]['price_unit'] = \
+                order.currency_id.round(downpayment_line_map[key]['price_unit'] * ratio)
 
         return list(downpayment_line_map.values()), [key['account_id'] for key in downpayment_line_map]
 
