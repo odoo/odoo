@@ -9,7 +9,7 @@ class Ewaybill(models.Model):
     def _compute_document_partners_details(self):
         super()._compute_document_partners_details()
         for ewaybill in self:
-            purchase_id = ewaybill.picking_id.purchase_id
             if ewaybill.picking_id.is_dropship:
+                purchase_id = ewaybill.picking_id.purchase_id
                 ewaybill.partner_ship_to_id = purchase_id.dest_address_id
                 ewaybill.partner_ship_from_id = purchase_id.partner_id

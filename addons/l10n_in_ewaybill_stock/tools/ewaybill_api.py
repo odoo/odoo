@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import contextlib
 
 from datetime import timedelta
 from markupsafe import Markup
@@ -19,7 +20,7 @@ class EWayBillError(Exception):
 
     def __init__(self, response):
         self.error_json = self._set_missing_error_message(response)
-        self.error_json.setdefault('odoo_warnings', [])
+        self.error_json.setdefault('odoo_warning', [])
         self.error_codes = self.get_error_codes()
         super().__init__(response)
 
@@ -46,7 +47,7 @@ class EWayBillError(Exception):
 class EWayBillApi:
 
     DEFAULT_HELP_MESSAGE = _(
-        "Somehow this E-waybill has been canceled in the government portal before. "
+        "Somehow this E-waybill has been %s in the government portal before. "
         "You can verify by checking the details into the government "
         "(https://ewaybillgst.gov.in/Others/EBPrintnew.asp)"
     )
@@ -109,7 +110,7 @@ class EWayBillApi:
         """
         :params operation_type: operation_type must be strictly `generate` or `cancel`
         :params json_payload: to be sent as params
-        This method handles the common errors in generating/canceling the ewaybill
+        This method handles the common errors in generating and canceling the ewaybill
         """
         if not self._ewaybill_check_authentication():
             return self._ewaybill_no_config_response()
@@ -122,51 +123,48 @@ class EWayBillApi:
             )
             return response
         except EWayBillError as e:
+            if "no-credit" in e.error_codes:
+                e.error_json.get('odoo_warning').append({
+                    'message': self.env['account.edi.format']._l10n_in_edi_get_iap_buy_credits_message(self.company)
+                })
+                return e
+
             if '238' in e.error_codes:
                 # Invalid token eror then create new token and send generate request again.
                 # This happens when authenticate called from another odoo instance with same credentials
                 # (like. Demo/Test)
-                try:
+                with contextlib.suppress(EWayBillError):
                     self._ewaybill_authenticate()
-                    try:
-                        return self._ewaybill_connect_to_server(
-                            url_path=url_path,
-                            params=params,
-                        )
-                    except EWayBillError as sub_e:
-                        e = sub_e
-                except EWayBillError:
-                    pass
+                try:
+                    return self._ewaybill_connect_to_server(
+                        url_path=url_path,
+                        params=params,
+                    )
+                except EWayBillError as sub_e:
+                    e = sub_e
 
             if operation_type == "cancel" and "312" in e.error_codes:
                 # E-waybill is already canceled
                 # this happens when timeout from the Government portal but IRN is generated
                 e.error_json.get('odoo_warning').append({
                     'message': Markup("%s<br/>%s:<br/>%s") % (
-                        self.DEFAULT_HELP_MESSAGE,
+                        self.DEFAULT_HELP_MESSAGE % 'cancelled',
                         _("Error"),
                         e.get_all_error_message()
                     ),
                     'message_post': True
                 })
+                return e
+
             if operation_type == "generate" and "604" in e.error_codes:
                 # Get E-waybill by details in case of E-waybill is already generated
                 # this happens when timeout from the Government portal but E-waybill is generated
-                try:
-                    response = self._ewaybill_get_by_consigner(json_payload.get("docType"), json_payload.get("docNo"))
-                    response.update({
-                        'odoo_warning': [{
-                            'message': self.DEFAULT_HELP_MESSAGE,
-                            'message_post': True
-                        }]
-                    })
-                    return response
-                except EWayBillError as sub_e:
-                    e = sub_e
-            if "no-credit" in e.error_codes:
-                e.error_json.get('odoo_warning').append({
-                    'message': self.env['account.edi.format']._l10n_in_edi_get_iap_buy_credits_message(self.company)
-                })
+                response = self._ewaybill_get_by_consigner(
+                    document_type=json_payload.get("docType"),
+                    document_number=json_payload.get("docNo"),
+                    add_warning=True,
+                )
+                return response
             return e
 
     def _ewaybill_generate(self, json_payload):
@@ -175,14 +173,26 @@ class EWayBillApi:
     def _ewaybill_cancel(self, json_payload):
         return self._ewaybill_make_transaction("cancel", json_payload)
 
-    def _ewaybill_get_by_consigner(self, document_type, document_number):
+    def _ewaybill_get_by_consigner(self, document_type, document_number, add_warning=False):
         if not self._ewaybill_check_authentication():
             return self._ewaybill_no_config_response()
         params = {"document_type": document_type, "document_number": document_number}
-        return self._ewaybill_connect_to_server(
-            url_path="/iap/l10n_in_edi_ewaybill/1/getewaybillgeneratedbyconsigner",
-            params=params
-        )
+        try:
+            response = self._ewaybill_connect_to_server(
+                url_path="/iap/l10n_in_edi_ewaybill/1/getewaybillgeneratedbyconsigner",
+                params=params
+            )
+            if add_warning:
+                # Add warning that ewaybill was already generated
+                response.update({
+                    'odoo_warning': [{
+                        'message': self.DEFAULT_HELP_MESSAGE % 'generated',
+                        'message_post': True
+                    }]
+                })
+            return response
+        except EWayBillError as e:
+            return e
 
     @staticmethod
     def _ewaybill_no_config_response():

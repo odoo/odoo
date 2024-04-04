@@ -13,12 +13,13 @@ class EwaybillCancel(models.TransientModel):
         ("2", "Data Entry Mistake"),
         ("3", "Order Cancelled"),
         ("4", "Others"),
-        ], string="Cancel reason", required=True)
-    cancel_remarks = fields.Char("Cancel remarks")
+        ], string="Cancel Reason", required=True
+    )
+    cancel_remarks = fields.Char("Cancel Remarks")
 
     def cancel_ewaybill(self):
         self.ewaybill_id.write({
-                'cancel_reason': self.cancel_reason,
-                'cancel_remarks': self.cancel_remarks,
-            })
+            'cancel_reason': self.cancel_reason,
+            'cancel_remarks': self.cancel_remarks,
+        })
         self.ewaybill_id._ewaybill_cancel()

@@ -1,15 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-import re
 import base64
+import json
 import pytz
+import re
 from datetime import datetime
 from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import html_escape
 
 from odoo.addons.l10n_in_ewaybill_stock.tools.ewaybill_api import EWayBillApi, EWayBillError
 
@@ -235,7 +234,7 @@ class Ewaybill(models.Model):
             'state': 'pending',
             'cancel_reason': False,
             'cancel_remarks': False,
-            })
+        })
 
     def _is_overseas(self):
         self.ensure_one()
@@ -297,8 +296,7 @@ class Ewaybill(models.Model):
         error_message = []
         AccountEDI = self.env['account.edi.format']
         for line in self.move_ids:
-            hsn_code = AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
-            if not hsn_code:
+            if not (hsn_code := AccountEDI._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)):
                 error_message.append(_("HSN code is not set in product %s", line.product_id.name))
             elif not re.match("^[0-9]+$", hsn_code):
                 error_message.append(_(
@@ -370,7 +368,7 @@ class Ewaybill(models.Model):
         generate_json = self._ewaybill_generate_direct_json()
         response = ewb_api._ewaybill_generate(generate_json)
         if not self.handle_error_if_present(response):
-            self._handle_internal_warning_if_present(response)
+            self._handle_internal_warning_if_present(response)  # In case of error 604
             self.state = 'generated'
             response_data = response.get("data")
             time_format = '%d/%m/%Y %I:%M:%S %p'
@@ -524,7 +522,9 @@ class Ewaybill(models.Model):
         }
 
     def _prepare_ewaybill_transportation_json_payload(self):
-        transportations_details = {
+        # only pass transporter details when value is exist
+        return dict(
+            filter(lambda kv: kv[1], {
                 "transporterId": self.transporter_id.vat,
                 "transporterName": self.transporter_id.name,
                 "transMode": self.mode,
@@ -532,10 +532,7 @@ class Ewaybill(models.Model):
                 "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
                 "vehicleNo": self.vehicle_no,
                 "vehicleType": self.vehicle_type,
-            }
-        # only pass transporter details when value is exist
-        return dict(
-            filter(lambda kv: kv[1], transportations_details.items())
+            }.items())
         )
 
     def _prepare_ewaybill_tax_details_json_payload(self):
@@ -565,6 +562,5 @@ class Ewaybill(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_prevent(self):
-        for ewaybill in self:
-            if ewaybill.state != 'pending':
-                raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))
+        if self.filtered(lambda ewaybill: ewaybill.state != 'pending'):
+            raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))

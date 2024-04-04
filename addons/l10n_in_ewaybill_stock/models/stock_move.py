@@ -11,40 +11,47 @@ class StockMove(models.Model):
     _description = "Stock Move Ewaybill"
 
     ewaybill_id = fields.Many2one(
-        comodel_name='l10n.in.ewaybill')
+        comodel_name='l10n.in.ewaybill'
+    )
 
     ewaybill_company_currency_id = fields.Many2one(
         comodel_name='res.currency',
-        related='company_id.currency_id')
+        related='company_id.currency_id'
+    )
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Monetary(
         compute='_compute_ewaybill_price_unit',
         currency_field='ewaybill_company_currency_id',
-        store=True)
+        store=True
+    )
     ewaybill_tax_ids = fields.Many2many(
         comodel_name='account.tax',
         string="Taxes",
         compute='_compute_tax_ids',
-        store=True)
+        store=True
+    )
 
     @api.depends('product_id.uom_id', 'product_id.standard_price', 'ewaybill_id')
     def _compute_ewaybill_price_unit(self):
         for line in self:
             if line.ewaybill_id:
                 if line.ewaybill_id.state == 'pending':
-                    line.ewaybill_price_unit = line.product_id.uom_id._compute_price(line.product_id.with_company(line.company_id).standard_price, line.product_uom)
+                    line.ewaybill_price_unit = line.product_id.uom_id._compute_price(
+                        line.product_id.with_company(line.company_id).standard_price, line.product_uom
+                    )
 
     @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'ewaybill_id')
     def _compute_tax_ids(self):
         for line in self:
-            if line.ewaybill_id:
-                if line.ewaybill_id.state == 'pending':
-                    company_domain = self.env['account.tax']._check_company_domain(self.company_id)
-                    if line.picking_code == "incoming":
-                        line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.supplier_taxes_id.filtered_domain(company_domain))
-                    else:
-                        line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(line.product_id.taxes_id.filtered_domain(company_domain))
+            if line.ewaybill_id.state == 'pending':
+                taxes = (
+                    line.picking_code == "incoming" and
+                    line.product_id.supplier_taxes_id or line.product_id.taxes_id
+                )
+                line.ewaybill_tax_ids = line._get_l10n_in_fiscal_position(
+                    taxes.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
+                )
 
     def _get_l10n_in_fiscal_position(self, taxes):
         fiscal_position = self.env['account.chart.template'].ref('fiscal_position_in_inter_state', raise_if_not_found=False)
