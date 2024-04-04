@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div id="threshold_message" t-elif="show_availability and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template} text-warning fw-bold">
-                Only <t t-esc='free_qty'/> <t t-esc="uom_name" /> left in stock.
+                Only <t t-esc="formatQuantity(free_qty)"/> <t t-esc="uom_name" /> left in stock.
             </div>
 
             <div id="already_in_cart_message" t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
