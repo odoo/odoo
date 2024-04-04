@@ -831,6 +831,13 @@ class Partner(models.Model):
                 'target': 'current',
                 }
 
+    def action_partner_more_options(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_partner_form")
+        action["views"] = [(False, 'form')]
+        action["res_id"] = self.id
+        return action
+
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
     def _compute_display_name(self):
