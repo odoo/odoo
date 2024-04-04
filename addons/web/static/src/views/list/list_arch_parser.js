@@ -112,9 +112,7 @@ export class ListArchParser {
                     className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                     optional: node.getAttribute("optional") || false,
                     type: "field",
-                    hasLabel: !(
-                        archParseBoolean(fieldInfo.attrs.nolabel) || fieldInfo.field.noLabel
-                    ),
+                    hasLabel: !(fieldInfo.field.label === false || archParseBoolean(fieldInfo.attrs.nolabel) === true),                    
                     label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                 });
                 return false;

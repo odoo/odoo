@@ -174,7 +174,7 @@ test("can validate the values from a schema", () => {
     expect(friendsRegistry.get("luc")).toEqual({ name: "Luc", age: 32 });
     expect(() => friendsRegistry.add("adrien", { name: 23 })).toThrow();
     expect(() => friendsRegistry.add("hubert", { age: 54 })).toThrow();
-    expect(() => friendsRegistry.add("christophe", { name: "christophe", city: "Namur" })).toThrow();
+    expect(() => friendsRegistry.add("chris", { name: "chris", city: "Namur" })).toThrow();
     expect(() => friendsRegistry.addValidation({ something: Number })).toThrow();
 });
 
