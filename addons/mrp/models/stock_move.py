@@ -400,10 +400,10 @@ class StockMove(models.Model):
                 moves_ids_to_return.add(move.id)
                 continue
             if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
+                product_qty = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id)
             else:
-                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
-            boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
+                product_qty = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id)
+            boms, lines = bom.sudo().explode(move.product_id, product_qty, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
@@ -575,7 +575,7 @@ class StockMove(models.Model):
             # Now that we have every ratio by components, we keep the lowest one to know how many kits we can produce
             # with the quantities delivered of each component. We use the floor division here because a 'partial kit'
             # doesn't make sense.
-            return kit_bom.product_qty * min(qty_ratios) // 1
+            return min(qty_ratios) // 1
         else:
             return 0.0
 

@@ -582,7 +582,7 @@ class MrpProduction(models.Model):
                 # keep manual entries
                 workorders_values = []
                 product_qty = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
-                exploded_boms, dummy = production.bom_id.explode(production.product_id, product_qty / production.bom_id.product_qty, picking_type=production.bom_id.picking_type_id)
+                exploded_boms, dummy = production.bom_id.explode(production.product_id, product_qty, picking_type=production.bom_id.picking_type_id)
 
                 for bom, bom_data in exploded_boms:
                     # If the operations of the parent BoM and phantom BoM are the same, don't recreate work orders.
@@ -1154,8 +1154,8 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.bom_id:
                 continue
-            factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
-            boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
+            product_qty = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+            boms, lines = production.bom_id.explode(production.product_id, product_qty, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
                 if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
                         bom_line.product_id.type not in ['product', 'consu']:

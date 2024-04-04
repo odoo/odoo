@@ -246,8 +246,8 @@ class MrpUnbuild(models.Model):
                 for raw_move in raw_moves:
                     moves += unbuild._generate_move_from_existing_move(raw_move, factor, raw_move.location_dest_id, self.location_dest_id)
             else:
-                factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
-                boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
+                product_qty = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id)
+                boms, lines = unbuild.bom_id.explode(unbuild.product_id, product_qty, picking_type=unbuild.bom_id.picking_type_id)
                 for line, line_data in lines:
                     moves += unbuild._generate_move_from_bom_line(line.product_id, line.product_uom_id, line_data['qty'], bom_line_id=line.id)
         return moves

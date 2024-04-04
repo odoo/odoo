@@ -19,8 +19,7 @@ class AccountMoveLine(models.Model):
             bom_kit = bom_kits[product]
             if bom_kit:
                 invoiced_qty = product.uom_id._compute_quantity(qty, bom_kit.product_uom_id, round=False)
-                factor = invoiced_qty / bom_kit.product_qty
-                dummy, bom_sub_lines = bom_kit.explode(product, factor)
+                dummy, bom_sub_lines = bom_kit.explode(product, invoiced_qty)
                 for bom_line, bom_line_data in bom_sub_lines:
                     qties[bom_line.product_id] += bom_line.product_uom_id._compute_quantity(bom_line_data['qty'], bom_line.product_id.uom_id)
             else:
