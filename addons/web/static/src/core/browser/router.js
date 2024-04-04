@@ -243,7 +243,13 @@ export function startRouter() {
  */
 browser.addEventListener("popstate", (ev) => {
     browser.clearTimeout(pushTimeout);
-    state = ev.state?.nextState || {};
+    if (!ev.state) {
+        // We are coming from a click on an anchor.
+        // Add the current state to the history entry so that a future loadstate behaves as expected.
+        browser.history.replaceState({ nextState: state }, "", browser.location.href);
+        return;
+    }
+    state = ev.state?.nextState || urlToState(new URL(browser.location));
     // Some client actions want to handle loading their own state. This is a ugly hack to allow not
     // reloading the webclient's state when they manipulate history.
     if (!ev.state?.skipRouteChange && !router.skipLoad) {
@@ -261,21 +267,22 @@ browser.addEventListener("click", (ev) => {
         return;
     }
     const href = ev.target.closest("a")?.getAttribute("href");
-    if (href && href !== "#") {
+    if (href && !href.startsWith("#")) {
         let url;
         try {
-            url = new URL(href, browser.location.origin);
+            // ev.target.href is the full url including current path
+            url = new URL(ev.target.href);
         } catch {
             return;
         }
         if (
             browser.location.origin === url.origin &&
             browser.location.pathname.startsWith("/odoo") &&
-            (["/web", "/odoo"].includes(url.pathname) || url.pathname.startsWith("/odoo/"))
+            (["/web", "/odoo"].includes(url.pathname) || url.pathname.startsWith("/odoo/")) &&
+            ev.target.target !== "_blank"
         ) {
             ev.preventDefault();
-            const state = urlToState(url);
-            router.pushState(state, { replace: true });
+            state = urlToState(url);
             new Promise((res) => setTimeout(res, 0)).then(() => routerBus.trigger("ROUTE_CHANGE"));
         }
     }
@@ -289,7 +296,7 @@ function makeDebouncedPush(mode) {
         // Calculates new route based on aggregated search and options
         const nextState = computeNextState(pushArgs.state, pushArgs.replace);
         const url = browser.location.origin + stateToUrl(nextState);
-        if (url !== browser.location.href) {
+        if (url + browser.location.hash !== browser.location.href) {
             // If the route changed: pushes or replaces browser state
             if (mode === "push") {
                 // Because doPush is delayed, the history entry will have the wrong name.
@@ -303,8 +310,11 @@ function makeDebouncedPush(mode) {
             } else {
                 browser.history.replaceState({ nextState }, "", url);
             }
-            state = nextState;
+        } else {
+            // URL didn't change but state might have, update it in place
+            browser.history.replaceState({ nextState }, "", browser.location.href);
         }
+        state = nextState;
         if (pushArgs.reload) {
             browser.location.reload();
         }

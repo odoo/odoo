@@ -358,10 +358,15 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("test reload client action", async function (assert) {
-        patchWithCleanup(browser.location, {
-            assign: (url) => {
-                assert.step(url.replace(browser.location.origin, ""));
+        patchWithCleanup(browser.history, {
+            pushState: (_state, _unused, url) => {
+                assert.step(`pushState ${url.replace(browser.location.origin, "")}`);
             },
+            replaceState: (_state, _unused, url) => {
+                assert.step(`replaceState ${url.replace(browser.location.origin, "")}`);
+            },
+        });
+        patchWithCleanup(browser.location, {
             reload: function () {
                 assert.step("window_reload");
             },
@@ -400,13 +405,13 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await nextTick(); // wait for reload to be done
         assert.verifySteps([
-            // "/odoo?test=42", // This one was not push to the history because it's the current url (see router.js)
+            "replaceState /odoo?test=42",
             "window_reload",
-            "/odoo/action-2",
+            "pushState /odoo/action-2",
             "window_reload",
-            "/odoo?menu_id=1",
+            "pushState /odoo?menu_id=1",
             "window_reload",
-            "/odoo/action-1?menu_id=2",
+            "pushState /odoo/action-1?menu_id=2",
             "window_reload",
         ]);
     });
