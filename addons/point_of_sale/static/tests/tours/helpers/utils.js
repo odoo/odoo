@@ -39,3 +39,10 @@ export function scan_barcode(barcode) {
         },
     ];
 }
+
+export function selectButton(name){
+    return {
+        content: `Select button ${name}`,
+        trigger: `button:contains("${name}")`,
+    }
+}
