@@ -5,25 +5,22 @@
     <t t-set="o" t-value="o.with_context(lang=o.vendor_id.lang)"/>
     <t t-call="web.external_layout">
         <t t-set="address">
-            <span t-field="o.vendor_id"
-                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["name","address"], "no_marker": True}'/>
+            <br/>
+            <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["phone"], "phone_icons": True}'/>
             <p t-if="o.vendor_id.vat"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="o.vendor_id.vat"/></p>
         </t>
         <div class="page">
             <div class="oe_structure"/>
             <h2><span t-out="dict(o._fields['requisition_type'].selection).get(o.requisition_type)">Purchase Agreement:</span> <span t-field="o.name">BO00004</span></h2>
             <div class="row my-2">
-                <div class="col-3">
-                    <strong><span t-out="dict(o._fields['requisition_type'].selection).get(o.requisition_type)">Purchase Agreement:</span></strong><br/>
-                    <span t-field="o.name">BO00004</span>
-                </div>
-                <div t-if="o.date_start" class="col-3">
-                    <strong t-if="o.requisition_type == 'blanket_order'">Agreement Start Date:</strong><br/>
-                    <span t-if="o.requisition_type == 'blanket_order'" t-field="o.date_start">2023-08-20</span>
-                </div>
                 <div t-if="o.date_end" class="col-3">
-                    <strong t-if="o.requisition_type == 'blanket_order'">Agreement End Date:</strong><br/>
+                    <strong t-if="o.requisition_type == 'blanket_order'">Agreement Validity:</strong><br/>
                     <span t-if="o.requisition_type == 'blanket_order'" t-field="o.date_end">2023-09-15</span>
+                </div>
+                <div t-if="o.user_id" class="col-3">
+                    <strong>Contact:</strong><br/>
+                    <span t-field="o.user_id.name">Mitchell Admin</span>
                 </div>
                 <div t-if="o.reference" class="col-3">
                     <strong>Reference:</strong><br/>
@@ -35,35 +32,41 @@
                 <h3>Products</h3>
                 <div class="oe_structure"></div>
                 <table class="table table-sm">
+                <t t-set="has_ordered_quantity" t-value="any(line.qty_ordered != 0 for line in o.line_ids)"/>
                     <thead>
                         <tr>
-                            <th><strong>Product</strong></th>
-                            <th><strong>Description</strong></th>
-                            <th class="text-end"><strong>Qty</strong></th>
-                            <th class="text-center" groups="uom.group_uom">
-                                <strong>Product UoM</strong>
+                            <th class="text-start"><strong>Product</strong></th>
+                            <th class="text-end"><strong>Quantity</strong></th>
+                            <th t-if="has_ordered_quantity" class="text-end"><strong>Ordered</strong></th>
+                            <th class="text-start" groups="uom.group_uom">
+                                <strong>Unit</strong>
                             </th>
-                            <th>Unit Price</th>
+                            <th class="text-end">Unit Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr t-foreach="o.line_ids" t-as="line_ids">
                             <td>
-                                <span t-if="line_ids.product_id.code"><!--internal reference exists-->
-                                    [ <span t-field="line_ids.product_id.code">Code</span> ]
-                                </span>
-                                <span t-field="line_ids.product_id.name">Product</span>
-                            </td>
-                            <td>
-                                <span t-if="line_ids.product_description_variants" t-field="line_ids.product_description_variants">Product description</span>
+                                <t t-if="line_ids.product_description_variants">
+                                    <span t-field="line_ids.product_description_variants"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-if="line_ids.product_id.code"><!--internal reference exists-->
+                                        [ <span t-field="line_ids.product_id.code">Code</span> ]
+                                    </span>
+                                    <span t-field="line_ids.product_id.name">Product</span>
+                                </t>
                             </td>
                             <td class="text-end">
                                 <span t-field="line_ids.product_qty">5</span>
                             </td>
-                            <td class="text-center" groups="uom.group_uom">
+                            <td class="text-end" t-if="has_ordered_quantity">
+                                <span t-field="line_ids.qty_ordered">5</span>
+                            </td>
+                            <td class="text-start" groups="uom.group_uom">
                                 <span t-field="line_ids.product_uom_id.name">Unit</span>
                             </td>
-                            <td>
+                            <td class="text-end">
                                 <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'>$50</span>
                             </td>
                         </tr>
@@ -71,25 +74,37 @@
                 </table>
             </t>
             <t t-if="o.purchase_ids">
-                <h3>Requests for Quotation Details</h3>
+                <h3>Orders</h3>
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th><strong>Vendor </strong></th>
-                            <th class="text-end"><strong>Date</strong></th>
-                            <th class="text-end"><strong>Reference </strong></th>
+                            <th class="text-start"><strong>Reference</strong></th>
+                            <th class="text-start"><strong>Date</strong></th>
+                            <th class="text-start"><strong>Buyer</strong></th>
+                            <th class="text-start"><strong>Expected on</strong></th>
+                            <th class="text-end"><strong>Total</strong></th>
+                            <th class="text-start"><strong>Status</strong></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr t-foreach="o.purchase_ids" t-as="purchase_ids">
                             <td>
-                                <span t-field="purchase_ids.partner_id.name">Vendor Name</span>
+                                <span t-field="purchase_ids.name">Purchase Reference</span>
+                            </td>
+                            <td>
+                                <span t-field="purchase_ids.date_order" t-options='{"widget": "date"}'>02/16/2024</span>
+                            </td>
+                            <td>
+                                <span t-field="purchase_ids.user_id.name">Mitchell Admin</span>
+                            </td>
+                            <td>
+                                <span t-field="purchase_ids.date_planned" t-options='{"widget": "date"}'>12/25/2024</span>
                             </td>
                             <td class="text-end">
-                                <span t-field="purchase_ids.date_order">2023-08-15</span>
+                                <span t-field="purchase_ids.amount_total">$500</span>
                             </td>
-                            <td class="text-end">
-                                <span t-field="purchase_ids.name">PO000042</span>
+                            <td>
+                                <span t-field="purchase_ids.state">RFQ</span>
                             </td>
                         </tr>
                     </tbody>
