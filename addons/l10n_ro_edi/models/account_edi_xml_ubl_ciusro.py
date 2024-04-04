@@ -97,11 +97,11 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 f"ciusro_{partner_type}_state_id_required": self._check_required_fields(partner, 'state_id'),
             })
 
-            if not partner.vat and not partner.company_registry:
+            if not partner.commercial_partner_id.vat and not partner.commercial_partner_id.company_registry:
                 constraints[f"ciusro_{partner_type}_tax_identifier_required"] = _(
                     "The following partner doesn't have a VAT nor Company ID: %s. "
                     "At least one of them is required. ",
-                    partner.name)
+                    partner.display_name)
 
             if (partner.country_code == 'RO'
                     and partner.state_id
@@ -111,6 +111,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                     "The following partner's city name is invalid: %s. "
                     "If partner's state is București, the city name must be 'SECTORX', "
                     "where X is a number between 1-6.",
-                    partner.name)
+                    partner.display_name)
 
         return constraints
