@@ -204,6 +204,19 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosLoyaltyNextOrderCouponExpirationDate", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
     test: true,
     url: "/pos/web",
