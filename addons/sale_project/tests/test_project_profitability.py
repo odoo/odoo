@@ -593,7 +593,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         })
         # When a down payment is created, the default 15% tax is included. The SOL associated it then created by removing the taxed amount.
         # Therefore, the amount of the dp is higher than the amount of the sol created.
-        down_payment_invoiced = 100.01
+        down_payment_invoiced = 100.00
         downpayment.create_invoices()
         self.sale_order.invoice_ids[2].action_post()
         # Ensures the down payment is correctly computed for the project profitability.
