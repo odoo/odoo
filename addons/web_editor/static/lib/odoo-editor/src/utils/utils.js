@@ -1103,6 +1103,13 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+export const isLinkEligibleForZwnbsp = link => {
+    return !(
+        link.textContent.trim() === '' ||
+        [link, ...link.querySelectorAll('*')].some(isBlock) ||
+        link.matches('nav a, a.nav-link')
+    )
+}
 /**
  * Take a link and pad it with non-break zero-width spaces to ensure that it is
  * always possible to place the cursor at its inner and outer edges.
@@ -1111,6 +1118,11 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
  * @param {HTMLAnchorElement} link
  */
 export const padLinkWithZws = (editable, link) => {
+    if (!isLinkEligibleForZwnbsp(link)) {
+        // Only add the ZWNBSP for simple (possibly styled) text links, and
+        // never in a nav.
+        return;
+    }
     if (!link.textContent.startsWith('\uFEFF')) {
         link.prepend(document.createTextNode('\uFEFF'));
     }

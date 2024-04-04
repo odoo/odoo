@@ -44,6 +44,7 @@ import {
     unwrapContents,
     getCursorDirection,
     padLinkWithZws,
+    isLinkEligibleForZwnbsp,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -200,7 +201,7 @@ function insert(editor, data, isText = true) {
     selection.removeAllRanges();
     const newRange = new Range();
     let lastPosition;
-    if (currentNode.nodeName === 'A') {
+    if (currentNode.nodeName === 'A' && isLinkEligibleForZwnbsp(currentNode)) {
         padLinkWithZws(editor.editable, currentNode);
         currentNode = currentNode.nextSibling;
         lastPosition = getDeepestPosition(...rightPos(currentNode));
