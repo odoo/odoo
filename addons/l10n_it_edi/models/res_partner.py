@@ -69,6 +69,7 @@ class ResPartner(models.Model):
 
         europe = self.env.ref('base.europe', raise_if_not_found=False)
         in_eu = not europe or not self.country_id or self.country_id in europe.country_ids
+        is_sm = self.country_id and self.country_id.code == "SM"
 
         # VAT number and country code
         normalized_vat = self.vat
@@ -83,7 +84,10 @@ class ResPartner(models.Model):
                 else:
                     normalized_country = normalized_vat[:2].upper()
                     normalized_vat = normalized_vat[2:]
-
+            # If customer is from San Marino
+            elif is_sm:
+                normalized_country = 'SM'
+                normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
             # The Tax Agency arbitrarily decided that non-EU VAT are not interesting,
             # so this default code is used instead
             # Detect the country code from the partner country instead
@@ -106,7 +110,10 @@ class ResPartner(models.Model):
             zipcode = self.zip
             state_code = self.state_id and self.state_id.code
         else:
-            pa_index = 'XXXXXXX'
+            # San Marino is externally integrated with the SdI.
+            # The country as a whole has a single fixed Destination Code.
+            # https://www.agenziaentrate.gov.it/portale/documents/20143/3788702/Modifiche+ProvvedimentonSanMarino+0248717-2021.pdf/429b5571-17b9-0cce-7f62-f79cf53086d7
+            pa_index = '2R4GTO8' if is_sm else 'XXXXXXX'
             zipcode = '00000'
             state_code = False
 
