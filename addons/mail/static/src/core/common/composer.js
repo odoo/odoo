@@ -321,8 +321,8 @@ export class Composer extends Component {
             return props;
         }
         const suggestions = Array(
-            ...this.suggestion.state.items.mainSuggestions,
-            ...this.suggestion.state.items.extraSuggestions
+            ...(this.suggestion.state.items.mainSuggestions ?? []),
+            ...(this.suggestion.state.items.extraSuggestions ?? [])
         );
         switch (this.suggestion.state.items.type) {
             case "Partner":

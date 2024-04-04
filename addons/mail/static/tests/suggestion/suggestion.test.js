@@ -191,7 +191,7 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     await tick();
     insertText(".o-mail-Composer-input", "f");
     await deferred;
-    await assertSteps(["get_mention_suggestions"]);
+    await assertSteps(["get_mention_suggestions", "get_mention_suggestions"]);
 });
 
 test("Suggestions are shown after delimiter was used in text (@)", async () => {

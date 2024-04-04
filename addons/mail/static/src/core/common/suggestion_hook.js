@@ -1,5 +1,6 @@
 import { useSequential } from "@mail/utils/common/hooks";
-import { status, useComponent, useEffect, useState } from "@odoo/owl";
+import { onChange } from "@mail/utils/common/misc";
+import { reactive, status, useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -21,7 +22,7 @@ export function useSuggestion() {
                 position: undefined,
                 term: "",
             });
-            self.state.items = undefined;
+            self.clearItems();
         },
         detect() {
             const selectionEnd = comp.props.composer.selection.end;
@@ -115,15 +116,26 @@ export function useSuggestion() {
             comp.props.composer.selection.end = textLeft.length + recordReplacement.length + 1;
             comp.props.composer.forceCursorMove = true;
         },
-        search: {
+        search: reactive({
             delimiter: undefined,
             position: undefined,
             term: "",
-        },
+        }),
         state: useState({
             count: 0,
-            items: undefined,
+            items: {
+                mainSuggestions: undefined,
+                extraSuggestions: undefined,
+                type: undefined,
+            },
         }),
+        clearItems() {
+            Object.assign(self.state.items, {
+                mainSuggestions: undefined,
+                extraSuggestions: undefined,
+                type: undefined,
+            });
+        },
         update() {
             if (!self.search.delimiter) {
                 return;
@@ -134,7 +146,7 @@ export function useSuggestion() {
             });
             const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             if (!mainSuggestions.length && !extraSuggestions.length) {
-                self.state.items = undefined;
+                self.clearItems();
                 return;
             }
             // arbitrary limit to avoid displaying too many elements at once
@@ -145,15 +157,14 @@ export function useSuggestion() {
                 extraSuggestions.length,
                 limit - mainSuggestions.length
             );
-            self.state.items = { type, mainSuggestions, extraSuggestions };
+            Object.assign(self.state.items, { type, mainSuggestions, extraSuggestions });
         },
-    };
-    useEffect(
-        (delimiter, position, term) => {
+        async onChangeSearch() {
             self.update();
             if (self.search.position === undefined || !self.search.delimiter) {
                 return; // nothing else to fetch
             }
+            const { delimiter, position, term } = self.search;
             sequential(async () => {
                 if (
                     self.search.delimiter !== delimiter ||
@@ -173,17 +184,15 @@ export function useSuggestion() {
                     self.search.delimiter === delimiter &&
                     self.search.position === position &&
                     self.search.term === term &&
-                    !self.state.items?.mainSuggestions.length &&
-                    !self.state.items?.extraSuggestions.length
+                    !self.state.items.mainSuggestions?.length &&
+                    !self.state.items.extraSuggestions?.length
                 ) {
                     self.clearSearch();
                 }
             });
         },
-        () => {
-            return [self.search.delimiter, self.search.position, self.search.term];
-        }
-    );
+    };
+    onChange(self.search, ["delimiter", "position", "term"], () => self.onChangeSearch());
     useEffect(
         () => {
             self.detect();
