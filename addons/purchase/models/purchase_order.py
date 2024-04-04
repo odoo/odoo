@@ -1085,3 +1085,6 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         return self.state == 'cancel'
+
+    def _get_edi_builders(self):
+        return []
