@@ -234,7 +234,7 @@
                                             <span t-if="record.address_id.value" t-out="record.address_id.value" class="ms-1"/>
                                             <span t-else="" class="ms-1">Online Event</span>
                                         </div>
-                                        <div class="d-flex ps-1">
+                                        <div t-if="record.seats_taken.raw_value" class="d-flex ps-1">
                                             <i class="fa fa-group mt-1 me-2 text-center" title="Attendees"/>
                                             <span t-out="record.seats_taken.raw_value" class="me-1"/> Attendees
                                         </div>
