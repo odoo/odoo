@@ -1666,7 +1666,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _aggregate_taxes(self, to_process, company, filter_tax_values_to_apply=None, grouping_key_generator=None):
+    def _aggregate_taxes(self, to_process, company, filter_tax_values_to_apply=None, grouping_key_generator=None, distribute_total_on_line=True):
 
         def default_grouping_key_generator(base_line, tax_values):
             return {'tax': tax_values['tax_repartition_line'].tax_id}
@@ -1714,8 +1714,52 @@ class AccountTax(models.Model):
         if not grouping_key_generator:
             grouping_key_generator = default_grouping_key_generator
 
-        currency = None
         comp_currency = company.currency_id
+        round_tax = company.tax_calculation_rounding_method != 'round_globally'
+        if company.tax_calculation_rounding_method == 'round_globally' and distribute_total_on_line:
+            # Aggregate all amounts according the tax lines grouping key.
+            amount_per_tax_repartition_line_id = defaultdict(lambda: {
+                'tax_amount': 0.0,
+                'tax_amount_currency': 0.0,
+                'taxes_data': [],
+            })
+            for base_line, tax_details_results in to_process:
+                currency = base_line['currency'] or comp_currency
+                for tax_data in tax_details_results['taxes_data']:
+                    grouping_key = frozendict(self._get_generation_dict_from_base_line(base_line, tax_data))
+                    total_amounts = amount_per_tax_repartition_line_id[grouping_key]
+                    total_amounts['tax_amount_currency'] += tax_data['tax_amount_currency']
+                    total_amounts['tax_amount'] += tax_data['tax_amount']
+                    total_amounts['taxes_data'].append(tax_data)
+            # Round them like what the creation of tax lines would do.
+            for key, values in amount_per_tax_repartition_line_id.items():
+                currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
+                values['tax_amount_rounded'] = comp_currency.round(values['tax_amount'])
+                values['tax_amount_currency_rounded'] = currency.round(values['tax_amount_currency'])
+            # Dispatch the amount accross the tax values.
+            for key, values in amount_per_tax_repartition_line_id.items():
+                foreign_currency = self.env['res.currency'].browse(key['currency_id']) or comp_currency
+                for currency, amount_field in ((comp_currency, 'tax_amount'), (foreign_currency, 'tax_amount_currency')):
+                    raw_value = values[amount_field]
+                    rounded_value = values[f'{amount_field}_rounded']
+                    diff = rounded_value - raw_value
+                    abs_diff = abs(diff)
+                    diff_sign = -1 if diff < 0 else 1
+                    taxes_data = values['taxes_data']
+                    nb_error = math.ceil(abs_diff / currency.rounding)
+                    nb_cents_per_tax_values = math.floor(nb_error / len(taxes_data))
+                    nb_extra_cent = nb_error % len(taxes_data)
+                    for tax_data in taxes_data:
+                        if not abs_diff:
+                            break
+                        nb_amount_curr_cent = nb_cents_per_tax_values
+                        if nb_extra_cent:
+                            nb_amount_curr_cent += 1
+                            nb_extra_cent -= 1
+                        # We can have more than one cent to distribute on a single tax_values.
+                        abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
+                        tax_data[amount_field] += diff_sign * abs_delta_to_add
+                        abs_diff -= abs_delta_to_add
 
         for base_line, tax_details_results in to_process:
             record = base_line['record']
@@ -1731,10 +1775,16 @@ class AccountTax(models.Model):
 
                 grouping_key = frozendict(grouping_key_generator(base_line, tax_data))
                 accounting_grouping_key = frozendict(accounting_grouping_key_generator(base_line, tax_data))
-                base_amount_currency = currency.round(tax_data['base_amount_currency'])
-                base_amount = comp_currency.round(tax_data['base_amount'])
-                display_base_amount_currency = currency.round(tax_data['display_base_amount_currency'])
-                display_base_amount = comp_currency.round(tax_data['display_base_amount'])
+                base_amount_currency = tax_data['base_amount_currency']
+                base_amount = tax_data['base_amount']
+                display_base_amount_currency = tax_data['display_base_amount_currency']
+                display_base_amount = tax_data['display_base_amount']
+
+                if round_tax:
+                    tax_data['base_amount_currency'] = currency.round(tax_data['base_amount_currency'])
+                    tax_data['base_amount'] = comp_currency.round(tax_data['base_amount'])
+                    tax_data['display_base_amount_currency'] = currency.round(tax_data['display_base_amount_currency'])
+                    tax_data['display_base_amount'] = comp_currency.round(tax_data['display_base_amount'])
 
                 # 'global' base.
                 if not base_added:
@@ -1744,6 +1794,7 @@ class AccountTax(models.Model):
                         sub_results['base_amount'] += base_amount
                         sub_results['display_base_amount_currency'] += display_base_amount_currency
                         sub_results['display_base_amount'] += display_base_amount
+                        sub_results['currency'] = currency
 
                 # 'local' base.
                 global_local_results = results['tax_details'][grouping_key]
@@ -1756,6 +1807,7 @@ class AccountTax(models.Model):
                         sub_results['base_amount'] += base_amount
                         sub_results['display_base_amount_currency'] += display_base_amount_currency
                         sub_results['display_base_amount'] += display_base_amount
+                        sub_results['currency'] = currency
                         sub_results['records'].add(record)
                         sub_results['group_tax_details'].append(tax_data)
 
@@ -1763,11 +1815,12 @@ class AccountTax(models.Model):
                 for sub_results in (results, record_results, global_local_results, record_local_results):
                     sub_results['tax_amount_currency'][accounting_grouping_key] += tax_data['tax_amount_currency']
                     sub_results['tax_amount'][accounting_grouping_key] += tax_data['tax_amount']
+                    sub_results['currency'] = currency
 
             # Rounding of tax amounts for the line.
-            if currency:
-                for sub_results in [record_results] + list(record_results['tax_details'].values()):
-                    for key in ('tax_amount_currency', 'tax_amount'):
+            for sub_results in [record_results] + list(record_results['tax_details'].values()):
+                for currency, key in ((sub_results.get('currency'), 'tax_amount_currency'), (comp_currency, 'tax_amount')):
+                    if currency and round_tax:
                         for grouping_key, amount in sub_results[key].items():
                             sub_results[key][grouping_key] = currency.round(amount)
 
@@ -1776,9 +1829,9 @@ class AccountTax(models.Model):
                     sub_results[key] = sum(sub_results[key].values())
 
         # Rounding of tax amounts.
-        if currency:
-            for sub_results in [results] + list(results['tax_details'].values()):
-                for key in ('tax_amount_currency', 'tax_amount'):
+        for sub_results in [results] + list(results['tax_details'].values()):
+            for currency, key in ((sub_results.get('currency'), 'tax_amount_currency'), (comp_currency, 'tax_amount')):
+                if currency and round_tax:
                     for grouping_key, amount in sub_results[key].items():
                         sub_results[key][grouping_key] = currency.round(amount)
 
