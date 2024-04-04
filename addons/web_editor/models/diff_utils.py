@@ -101,6 +101,11 @@ ADDITION_COMPARISON_REGEX = r"\1<added>\2</added>"
 ADDITION_1ST_REPLACE_COMPARISON_REGEX = r"added>\2</added>"
 DELETION_COMPARISON_REGEX = r"\1<removed>\2</removed>"
 EMPTY_OPERATION_TAG = r"<(added|removed)><\/(added|removed)>"
+SAME_TAG_REPLACE_FIXER = r"<\/added><(?:[^\/>]|(?:><))+><removed>"
+UNNECESSARY_REPLACE_FIXER = (
+    r"<added>([^<](?!<\/added>)*)<\/added>"
+    r"<removed>([^<](?!<\/removed>)*)<\/removed>"
+)
 
 
 def generate_comparison(new_content, old_content):
@@ -131,63 +136,101 @@ def generate_comparison(new_content, old_content):
         metadata_split = metadata.split(PATCH_OPERATION_LINE_AT)
         operation_type = metadata_split[0]
         lines_index_range = metadata_split[1] if len(metadata_split) > 1 else ""
-        # We need to remove PATCH_OPERATION_CONTENT char from lines_index_range.
         lines_index_range = lines_index_range.split(PATCH_OPERATION_CONTENT)[0]
         indexes = lines_index_range.split(",")
         start_index = int(indexes[0])
         end_index = int(indexes[1]) if len(indexes) > 1 else start_index
 
+        # If the operation is a replace, we need to flag the changes that
+        # will generate ghost opening tags if we don't ignore
+        # them.
+        # this can append when:
+        # * A change concerning only html parameters.
+        #   <p class="x">a</p> => <p class="y">a</p>
+        # * An addition in a previously empty element opening tag
+        #   <p></p> => <p>a</p>
+        if operation_type == PATCH_OPERATION_REPLACE:
+            for i, line in enumerate(patch_content_line):
+                current_index = start_index + i
+                if current_index > end_index:
+                    break
+
+                current_line = comparison[current_index]
+                current_line_tag = current_line.split(">")[0]
+                line_tag = line.split(">")[0]
+                if current_line[-1] == ">" and (
+                    current_line_tag == line_tag
+                    or current_line_tag.split(" ")[0] == line_tag.split(" ")[0]
+                ):
+                    comparison[start_index + i] = "delete_me>"
+
         # We need to insert lines from last to the first
         # to preserve the indexes integrity.
         patch_content_line.reverse()
 
-        if end_index > start_index:
-            for index in range(end_index, start_index, -1):
-                if operation_type in [
-                    PATCH_OPERATION_REMOVE,
-                    PATCH_OPERATION_REPLACE,
-                ]:
-                    comparison[index] = re.sub(
-                        HTML_TAG_ISOLATION_REGEX,
-                        DELETION_COMPARISON_REGEX,
-                        comparison[index],
-                    )
+        for index in range(end_index, start_index - 1, -1):
+            if operation_type in [
+                PATCH_OPERATION_REMOVE,
+                PATCH_OPERATION_REPLACE,
+            ]:
+                deletion_flagged_comparison = re.sub(
+                    HTML_TAG_ISOLATION_REGEX,
+                    DELETION_COMPARISON_REGEX,
+                    comparison[index],
+                )
+                # Only use this line if it doesn't generate an empty
+                # <removed> tag
+                if not re.search(
+                    EMPTY_OPERATION_TAG, deletion_flagged_comparison
+                ):
+                    comparison[index] = deletion_flagged_comparison
 
         if operation_type == PATCH_OPERATION_ADD:
             for line in patch_content_line:
-                comparison.insert(
-                    start_index + 1,
-                    re.sub(
-                        HTML_TAG_ISOLATION_REGEX,
-                        ADDITION_COMPARISON_REGEX,
-                        line,
-                    ),
+                addition_flagged_line = re.sub(
+                    HTML_TAG_ISOLATION_REGEX, ADDITION_COMPARISON_REGEX, line
                 )
+
+                if not re.search(EMPTY_OPERATION_TAG, addition_flagged_line):
+                    comparison.insert(start_index + 1, addition_flagged_line)
+                else:
+                    comparison.insert(start_index + 1, line)
 
         if operation_type == PATCH_OPERATION_REPLACE:
             for i, line in enumerate(patch_content_line):
-                # We need to remove the first tag of a replace operation
-                # to avoid having a duplicate opening tag in the middle of a
-                # line.
-                replace_regex = (
-                    ADDITION_1ST_REPLACE_COMPARISON_REGEX
-                    if i == len(patch_content_line) - 1
-                    else ADDITION_COMPARISON_REGEX
+                addition_flagged_line = re.sub(
+                    HTML_TAG_ISOLATION_REGEX, ADDITION_COMPARISON_REGEX, line
                 )
-                comparison.insert(
-                    start_index + 1,
-                    re.sub(HTML_TAG_ISOLATION_REGEX, replace_regex, line),
-                )
+                if not re.search(EMPTY_OPERATION_TAG, addition_flagged_line):
+                    comparison.insert(start_index, addition_flagged_line)
+                elif (
+                    line.split(">")[0] != comparison[start_index].split(">")[0]
+                ):
+                    comparison.insert(start_index, line)
 
-        if operation_type in [PATCH_OPERATION_REMOVE, PATCH_OPERATION_REPLACE]:
-            comparison[start_index] = re.sub(
-                HTML_TAG_ISOLATION_REGEX,
-                DELETION_COMPARISON_REGEX,
-                comparison[start_index],
+    final_comparison = LINE_SEPARATOR.join(comparison)
+    # We can remove all the opening tags which are located between the end of an
+    # added tag and the start of a removed tag, because this should never happen
+    # as the added and removed tags should always be near each other.
+    # This can happen when the new container tag had a parameter change.
+    final_comparison = re.sub(
+        SAME_TAG_REPLACE_FIXER, "</added><removed>", final_comparison
+    )
+
+    # Remove al the <delete_me> tags
+    final_comparison = final_comparison.replace(r"<delete_me>", "")
+
+    # This fix the issue of unnecessary replace tags.
+    # ex: <added>abc</added><removed>abc</removed> -> abc
+    # This can occur when the new content is the same as the old content and
+    # their container tags are the same but the tags parameters are different
+    for match in re.finditer(UNNECESSARY_REPLACE_FIXER, final_comparison):
+        if match.group(1) == match.group(2):
+            final_comparison = final_comparison.replace(
+                match.group(0), match.group(1)
             )
 
-    comparison = [re.sub(EMPTY_OPERATION_TAG, "", line) for line in comparison]
-    return LINE_SEPARATOR.join(comparison)
+    return final_comparison
 
 
 def _format_line_index(start, end):
