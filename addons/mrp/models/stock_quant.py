@@ -14,3 +14,4 @@ class StockQuant(models.Model):
                     self.env.ref('stock.action_view_inventory_tree').id,
                     _("Return to Inventory"),
                 )
+        return super().action_apply_inventory()
