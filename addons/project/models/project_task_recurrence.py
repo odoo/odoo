@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models, Command
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from dateutil.relativedelta import relativedelta
@@ -39,23 +39,7 @@ class ProjectTaskRecurrence(models.Model):
     @api.model
     def _get_recurring_fields_to_copy(self):
         return [
-            'analytic_account_id',
-            'company_id',
-            'description',
-            'displayed_image_id',
-            'email_cc',
-            'message_partner_ids',
-            'name',
-            'parent_id',
-            'partner_id',
-            'allocated_hours',
-            'project_id',
-            'project_privacy_visibility',
             'recurrence_id',
-            'recurring_task',
-            'sequence',
-            'tag_ids',
-            'user_ids',
         ]
 
     @api.model
@@ -83,11 +67,7 @@ class ProjectTaskRecurrence(models.Model):
         self.ensure_one()
         if self.repeat_type == 'until' and fields.Date.today() > self.repeat_until:
             return
-        # Prevent double mail_followers creation
-        self = self.with_context(mail_create_nosubscribe=True)
-        self.env['project.task'].sudo().create(
-            self._create_next_occurrence_values(occurrence_from)
-        )
+        occurrence_from.with_context(copy_project=True).sudo().copy(self._create_next_occurrence_values(occurrence_from))
 
     def _create_next_occurrence_values(self, occurrence_from):
         self.ensure_one()
@@ -104,8 +84,9 @@ class ProjectTaskRecurrence(models.Model):
             for field, value in fields_to_postpone.items()
         })
 
+        create_values['priority'] = '0'
         create_values['stage_id'] = occurrence_from.project_id.type_ids[0].id if occurrence_from.project_id.type_ids else occurrence_from.stage_id.id
         create_values['child_ids'] = [
-            Command.create(self._create_next_occurrence_values(child)) for child in occurrence_from.with_context(active_test=False).child_ids
+            child.with_context(copy_project=True).sudo().copy(self._create_next_occurrence_values(child)).id for child in occurrence_from.with_context(active_test=False).child_ids
         ]
         return create_values
