@@ -11,7 +11,7 @@ import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
-import { FloatField } from "@web/views/fields/float/float_field";
+import { floatField } from "@web/views/fields/float/float_field";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { textField } from "@web/views/fields/text/text_field";
@@ -1342,7 +1342,7 @@ QUnit.module("Views", (hooks) => {
         fieldRegistry.add("nolabel_char", {
             ...charField,
             component: NoLabelCharField,
-            noLabel: true,
+            label: false,
         });
 
         class LabelCharField extends charField.component {}
@@ -3981,7 +3981,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("aggregates are formatted correctly in grouped lists", async function (assert) {
         // in this scenario, there is a widget on an aggregated field, and this widget has no
         // associated formatter, so we fallback on the formatter corresponding to the field type
-        fieldRegistry.add("my_float", FloatField);
+        fieldRegistry.add("my_float", floatField);
         serverData.models.foo.records[0].qux = 5.1654846456;
         await makeView({
             type: "list",
