@@ -3,7 +3,7 @@
 import logging
 
 from odoo import models, fields, api, Command, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -59,14 +59,14 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
         if operator not in ('=', '!='):
             raise UserError(_('Operation not supported'))
 
-        sql_operator = 'is' if operator == '=' else  'is not'
+        sql_operator = 'is' if operator == '=' else 'is not'
         sql_value = "NULL"
 
         if value == 'voided':
-            sql_operator = 'in' if operator == '=' else  'not in'
+            sql_operator = 'in' if operator == '=' else 'not in'
             sql_value = "('liability_payable', 'assets_receivable')"
         elif value == 'debited':
-            sql_operator = 'in' if operator == '=' else  'not in'
+            sql_operator = 'in' if operator == '=' else 'not in'
             sql_value = "('asset_cash')"
 
         self.env.cr.execute("""
@@ -131,7 +131,8 @@ class l10nLatamAccountPaymentCheck(models.TransientModel):
     @api.depends('state', 'l10n_latam_check_operation_ids.state')
     def _compute_check_info(self):
         for rec in self:
-            last_operation = (rec.payment_id + rec.l10n_latam_check_operation_ids).filtered(lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
+            last_operation = (rec.payment_id + rec.l10n_latam_check_operation_ids).filtered(
+                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment.id))[-1:]
             if not last_operation:
                 rec.l10n_latam_check_current_journal_id = False
                 continue

@@ -1,7 +1,5 @@
-import stdnum
-
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
 
@@ -103,8 +101,7 @@ class AccountPayment(models.Model):
     def _get_blocking_l10n_latam_warning_msg(self):
         msgs = []
         for rec in self.filtered('l10n_latam_check_ids'):
-
-            if any([rec.currency_id != x.currency_id for x in rec.l10n_latam_check_ids]):
+            if any(rec.currency_id != check.currency_id for check in rec.l10n_latam_check_ids):
                 msgs.append(_(
                     'The currency of the payment and the currency of the check must be the same.'))
             if not rec.currency_id.is_zero(sum(rec.l10n_latam_check_ids.mapped('amount')) - rec.amount):
@@ -112,13 +109,13 @@ class AccountPayment(models.Model):
                     'The amount of the payment  does not match the amount of the selected check. '
                     'Please try to deselect and select the check again.'))
             if rec.payment_method_line_id.code in ['in_third_party_checks', 'out_third_party_checks']:
-                if any([check.state != 'posted' for check in rec.l10n_latam_check_ids]):
-                    msgs.append(_('Selected check "%s" is not posted', rec.l10n_latam_check_ids.filtered(lambda x: state != 'posted' ).mapped('display_name')))
-
+                if any(check.state != 'posted' for check in rec.l10n_latam_check_ids):
+                    msgs.append(_('Selected check "%s" is not posted',
+                                  rec.l10n_latam_check_ids.filtered(lambda x: x.state != 'posted').mapped('display_name')))
                 elif (rec.payment_type == 'outbound' and
-                        any([check.l10n_latam_check_current_journal_id != rec.journal_id for check in rec.l10n_latam_check_ids])) or (
+                        any(check.l10n_latam_check_current_journal_id != rec.journal_id for check in rec.l10n_latam_check_ids)) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
-                        any([check.l10n_latam_check_current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_check_ids])):
+                        any(check.l10n_latam_check_current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_check_ids)):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
                         'Check is not anymore in journal, it seems it has been moved by another payment.'
@@ -145,7 +142,7 @@ class AccountPayment(models.Model):
                         format_date(self.env, date), last_operation.display_name, last_operation.display_name))
 
         for rec in self.filtered('l10n_latam_new_check_ids'):
-            if any([rec.currency_id != x.currency_id for x in rec.l10n_latam_new_check_ids]):
+            if any(rec.currency_id != x.currency_id for x in rec.l10n_latam_new_check_ids):
                 msgs.append(_(
                     'The currency of the payment and the currency of the check must be the same.'))
             if not rec.currency_id.is_zero(sum(rec.l10n_latam_new_check_ids.mapped('amount')) - rec.amount):
@@ -160,18 +157,18 @@ class AccountPayment(models.Model):
         """ Add is_internal_transfer as a trigger to re-compute """
         return super()._compute_payment_method_line_fields()
 
-    # @api.constrains('state','amount', 'l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids')
-    # def _constrains_check_amount(self):
-    #     if self.state == 'post' and self.l10n_latam_check_ids and \
-    #         float_compare(self.amount, sum(self.l10n_latam_check_ids.mapped('amount')), precision_rounding=self.currency_id.rounding):
-    #         raise ValidationError(_(
-    #             "The amount of the payment must be equal to the sum of the check amounts"
-    #         ))
-    #     if self.l10n_latam_new_check_ids and \
-    #         float_compare(self.amount, sum(self.l10n_latam_new_check_ids.mapped('amount')), precision_rounding=self.currency_id.rounding):
-    #         raise ValidationError(_(
-    #             "The amount of the payment must be equal to the sum of the check amounts"
-    #         ))
+    @api.constrains('state', 'amount', 'l10n_latam_check_ids.amount', 'l10n_latam_new_check_ids')
+    def _constrains_check_amount(self):
+        if self.state == 'post' and self.l10n_latam_check_ids and \
+            float_compare(self.amount, sum(self.l10n_latam_check_ids.mapped('amount')), precision_rounding=self.currency_id.rounding):
+            raise ValidationError(_(
+                "The amount of the payment must be equal to the sum of the check amounts"
+            ))
+        if self.l10n_latam_new_check_ids and \
+            float_compare(self.amount, sum(self.l10n_latam_new_check_ids.mapped('amount')), precision_rounding=self.currency_id.rounding):
+            raise ValidationError(_(
+                "The amount of the payment must be equal to the sum of the check amounts"
+            ))
 
     # @api.depends('l10n_latam_manual_checks')
     # def _compute_show_check_number(self):

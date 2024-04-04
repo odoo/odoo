@@ -33,7 +33,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
         compute="_compute_journal_company"
     )
     check_ids = fields.Many2many('l10n_latam.account.payment.check', 'latam_tranfer_check_rel'
-        'transfer_id' , 'check_id',check_company=True,
+        'transfer_id', 'check_id', check_company=True,
     )
 
     @api.depends('check_ids')
@@ -58,8 +58,8 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
                 raise 'You have select some payments that are not checks. Please call this action from the Third Party Checks menu'
             elif not all(check.state == 'posted' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
-            currency_ids = checks.mapped(currency_id)
-            if [currency_ids[0]]*len(currency_ids) != currency_ids:
+            currency_ids = checks.mapped('currency_id')
+            if [currency_ids[0]] * len(currency_ids) != currency_ids:
                 raise UserError(_("All the selected checks must use the same currency"))
             res['check_ids'] = checks.ids
         return res
