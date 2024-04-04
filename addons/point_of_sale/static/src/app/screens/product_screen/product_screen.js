@@ -377,16 +377,18 @@ export class ProductScreen extends Component {
         const products = this.pos.selectedCategoryId
             ? this.getProductsByCategory(this.pos.selectedCategoryId)
             : this.pos.models["product.product"].getAll();
+    
+        const exactMatches = products.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0 && searchWord.length > 5) {
+            return exactMatches;
+        }
 
         const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
             unaccent(product.searchString, false)
         );
 
-        const barcodeMatches = products.filter(
-            (product) => product.barcode && product.barcode.includes(searchWord)
-        );
-
-        return Array.from(new Set([...barcodeMatches, ...fuzzyMatches]));
+        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
     }
 
     getProductsByCategory(categoryId) {
