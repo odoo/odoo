@@ -224,6 +224,23 @@
             trigger: ":iframe .s_website_form_field:contains('Test conditional visibility') .s_website_form_field_description",
             isCheck: true,
         },
+        // Check that visibility condition is deleted on dependency type change.
+        ...addCustomField("char", "text", "dependent", false, {visibility: CONDITIONALVISIBILITY}),
+        ...addCustomField("selection", "radio", "dependency", false),
+        ...selectFieldByLabel("dependent"),
+        ...selectButtonByData('data-set-visibility-dependency="dependency"'),
+        ...selectFieldByLabel("dependency"),
+        ...selectButtonByData('data-custom-field="char"'),
+        ...selectFieldByLabel("dependent"),
+        {
+            content: "Open the select",
+            trigger: 'we-select:has(we-button[data-set-visibility="visible"]) we-toggler',
+        },
+        {
+            content: "Check that the field no longer has conditional visibility",
+            trigger: "we-select we-button[data-set-visibility='visible'].active",
+            isCheck: true,
+        },
 
         ...addExistingField('date', 'text', 'Test Date', true),
 
@@ -495,6 +512,16 @@
         ...addCustomField("char", "text", "field C", false),
         ...selectFieldByLabel("field B"),
         ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        {
+            content: "Check that there is a comparator after two clicks on 'Visible only if'",
+            trigger: "[data-attribute-name='visibilityComparator']",
+            run: function () {
+                if (!this.anchor.querySelector("we-button.active")) {
+                    console.error("A default comparator should be set");
+                }
+            },
+        },
         ...selectButtonByData('data-set-visibility-dependency="field C"'),
         ...selectButtonByData('data-select-data-attribute="set"'),
         ...wTourUtils.clickOnSave(),
