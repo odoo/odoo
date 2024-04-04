@@ -21,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.payment.method.line',
         related='company_id.company_expense_allowed_payment_method_line_ids',
         readonly=False,
+        check_company=True,
     )
 
     @api.model
