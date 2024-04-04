@@ -176,7 +176,14 @@ const Wysiwyg = Widget.extend({
             this._currentClientId = this._generateClientId();
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
             // Wait until editor is focused to join the peer to peer network.
-            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+//            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            // Add for MultiEditor Knowledge
+            if (this.options.collaborativeTrigger === 'start') {
+                this._joinPeerToPeer();
+            } else if (this.options.collaborativeTrigger === 'focus') {
+                // Wait until editor is focused to join the peer to peer network.
+                this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            }
         }
 
         const getYoutubeVideoElement = async (url) => {
@@ -611,6 +618,9 @@ const Wysiwyg = Widget.extend({
                 this._processMissingSteps(Array.isArray(missingSteps) ? missingSteps.concat(step) : missingSteps);
             },
         };
+        if (this.options.postProcessExternalSteps) {
+            editorCollaborationOptions.postProcessExternalSteps = this.options.postProcessExternalSteps;
+        }
         return editorCollaborationOptions;
     },
     /**
@@ -2945,7 +2955,14 @@ const Wysiwyg = Widget.extend({
         this.resetValue(value);
         this.setupCollaboration(collaborationChannel);
         // Wait until editor is focused to join the peer to peer network.
-        this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+//        this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        // Add for MultiEditor Knowledge
+        if (this.options.collaborativeTrigger === 'start') {
+            this._joinPeerToPeer();
+        } else if (this.options.collaborativeTrigger === 'focus') {
+            // Wait until editor is focused to join the peer to peer network.
+            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        }
 
         await this._peerToPeerLoading;
     },

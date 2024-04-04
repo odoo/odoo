@@ -322,6 +322,12 @@ export class HtmlField extends Component {
         this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
             this.props.setDirty(this._isDirty())
         );
+        // Add for MultiEditor Knowledge
+        if (this.props.isCollaborative) {
+            this.wysiwyg.odooEditor.addEventListener("onExternalHistorySteps", () =>
+                this.props.setDirty(this._isDirty())
+            );
+        }
 
         this.isRendered = true;
     }
@@ -704,6 +710,8 @@ HtmlField.extractProps = ({ attrs, field }) => {
     };
     if ('collaborative' in attrs.options) {
         wysiwygOptions.collaborative = attrs.options.collaborative;
+        // Add for MultiEditor Knowledge
+        wysiwygOptions.collaborativeTrigger = attrs.options.collaborative_trigger || 'focus';
     }
     if ('style-inline' in attrs.options) {
         wysiwygOptions.inlineStyle = Boolean(attrs.options['style-inline']);
