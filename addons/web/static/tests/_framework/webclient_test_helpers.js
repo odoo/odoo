@@ -1,4 +1,3 @@
-import { after } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
@@ -13,9 +12,6 @@ class TestClientAction extends Component {
 export function useTestClientAction() {
     const tag = "__test__client__action__";
     registry.category("actions").add(tag, TestClientAction);
-    after(() => {
-        registry.category("actions").remove(tag);
-    });
     return {
         tag,
         target: "main",
