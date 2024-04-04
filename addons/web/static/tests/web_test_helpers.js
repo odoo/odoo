@@ -12,9 +12,6 @@ import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
 import { defineModels } from "./_framework/mock_server/mock_server";
-import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
-
-translatedTerms[translationLoaded] = true;
 
 /**
  * @typedef {import("./_framework/mock_server/mock_fields").FieldType} FieldType

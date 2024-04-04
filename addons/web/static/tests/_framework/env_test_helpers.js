@@ -1,6 +1,7 @@
 import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
+import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
@@ -93,7 +94,18 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     startRouter();
     await startServices(currentEnv);
 
-    after(() => (currentEnv = null));
+    after(() => {
+        currentEnv = null;
+
+        // Ideally: should be done in a patch of the localization service, but this
+        // is less intrusive for now.
+        if (translatedTerms[translationLoaded]) {
+            for (const key in translatedTerms) {
+                delete translatedTerms[key];
+            }
+            translatedTerms[translationLoaded] = false;
+        }
+    });
 
     return currentEnv;
 }
