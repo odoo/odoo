@@ -941,6 +941,13 @@ describe('Paste', () => {
                     },
                     contentAfter: '<h3>abc[]</h3><p><br></p>',
                 });
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p>abc</p><p><br></p><p><br></p>');
+                    },
+                    contentAfter: '<p>abc</p><p><br></p><p><br>[]</p>',
+                });
             });
             it('should not unwrap a node when pasting in between different node', async () => {
                 await testEditor(BasicEditor, {
@@ -1145,6 +1152,15 @@ describe('Paste', () => {
                         await pasteHtml(editor, '<h1>abc</h1><h2>def</h2><h3>ghi</h3>');
                     },
                     contentAfter: '<pre>xabc</pre><pre>def</pre><pre>ghi[]y</pre>',
+                });
+            });
+            it('should not unwrap empty block nodes even when pasting on same node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>a[]</p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, '<p><br></p><p><br></p><p><br></p>');
+                    },
+                    contentAfter: '<p>a</p><p><br></p><p><br></p><p><br>[]</p>',
                 });
             });
         });
