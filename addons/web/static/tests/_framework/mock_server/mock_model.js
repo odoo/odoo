@@ -2835,7 +2835,7 @@ export class Model extends Array {
                         ids.push(newId);
                     } else if (command[0] === 1) {
                         // UPDATE
-                        MockServer.env[field].write([command[1]], command[2]);
+                        coModel.write([command[1]], command[2]);
                     } else if (command[0] === 2 || command[0] === 3) {
                         // DELETE or FORGET
                         ids.splice(ids.indexOf(command[1]), 1);
