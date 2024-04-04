@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from lxml import etree
 
-from odoo import fields
-from odoo.osv import expression
+from odoo import Command, fields
 from odoo.tests import Form, users
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
@@ -478,3 +475,34 @@ class TestProjectBase(TestProjectCommon):
         } for x in range(10)])
         projects._create_analytic_account()
         self.assertEqual(projects.mapped("name"), projects.analytic_account_id.mapped("name"), "The analytic accounts names should match with the projects.")
+
+    def test_task_count(self):
+        project1, project2 = self.env['project.project'].create([
+            {'name': 'project1'},
+            {'name': 'project2'},
+        ])
+        self.env['project.task'].with_context(default_project_id=project1.id).create([
+            {'name': 'task1'},
+            {'name': 'task2', 'state': '1_done'},
+            {'name': 'task3', 'child_ids': [
+                Command.create({'name': 'subtask1', 'project_id': project1.id}),
+                Command.create({'name': 'subtask2', 'project_id': project1.id, 'state': '1_canceled'}),
+                Command.create({'name': 'subtask3', 'project_id': project2.id}),
+                Command.create({'name': 'subtask4', 'project_id': project1.id, 'display_in_project': True}),
+                Command.create({'name': 'subtask5', 'project_id': project1.id, 'state': '1_canceled', 'display_in_project': True}),
+                Command.create({'name': 'subtask6', 'project_id': project1.id, 'child_ids': [
+                    Command.create({'name': 'subsubtask1', 'project_id': project2.id}),
+                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'display_in_project': True})
+                ]}),
+                Command.create({'name': 'subtask7', 'state': '1_done', 'project_id': project1.id, 'child_ids': [
+                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'state': '1_done'}),
+                    Command.create({'name': 'subsubtask1', 'project_id': project1.id, 'display_in_project': True, 'state': '1_done'}),
+                ]}),
+            ]}
+        ])
+        self.assertEqual(project1.task_count, 7)
+        self.assertEqual(project1.open_task_count, 4)
+        self.assertEqual(project1.closed_task_count, 3)
+        self.assertEqual(project2.task_count, 2)
+        self.assertEqual(project2.open_task_count, 2)
+        self.assertEqual(project2.closed_task_count, 0)
