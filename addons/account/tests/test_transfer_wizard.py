@@ -192,6 +192,23 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         })
         cls.move_2.action_post()
 
+        analytic_plan_1, analytic_plan_2 = cls.env['account.analytic.plan'].create([
+            {'name': 'Plan Test 1', 'company_id': False},
+            {'name': 'Plan Test 2', 'company_id': False},
+        ])
+        cls.analytic_account_1, cls.analytic_account_2 = cls.env['account.analytic.account'].create([
+            {
+                'name': 'test_analytic_account_1',
+                'plan_id': analytic_plan_1.id,
+                'code': 'TESTEUH1'
+            },
+            {
+                'name': 'test_analytic_account_2',
+                'plan_id': analytic_plan_2.id,
+                'code': 'TESTEUH2'
+            },
+        ])
+
     @freeze_time('2024-03-13')
     def test_transfer_default_tax(self):
         """ Make sure default taxes on accounts are not computed on transfer moves
@@ -437,4 +454,54 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         ])
         self.assertRecordValues(destination_line, [
               {'account_id': self.accounts[0].id, 'amount_currency': 0.0, 'currency_id': self.test_currency_1.id, 'balance': -1000}
+        ])
+
+    def test_transfer_wizard_analytic(self):
+        """ Tests that the analytic distribution is transmitted when doing a transfer with the wizard """
+        invoice = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2017-01-01',
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 1000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': {self.analytic_account_1.id: 100},
+                    }),
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 2000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': {self.analytic_account_1.id: 50, self.analytic_account_2.id: 50},
+                    }),
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 1000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': False,
+                    }),
+                ],
+            }
+        ])
+        invoice.action_post()
+        wizard = self.env['account.automatic.entry.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=invoice.invoice_line_ids.ids
+        ).create({
+            'action': 'change_account',
+            'date': '2018-01-01',
+            'journal_id': self.journal.id,
+            'destination_account_id': self.receivable_account.id,
+        })
+
+        transfer_move = self.env['account.move'].browse(wizard.do_action()['res_id'])
+
+        self.assertRecordValues(transfer_move.line_ids, [
+            {'balance': -4000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 25}},
+            {'balance': 1000, 'analytic_distribution': {str(self.analytic_account_1.id): 100}},
+            {'balance': 2000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 50}},
+            {'balance': 1000, 'analytic_distribution': False},
         ])
