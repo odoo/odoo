@@ -3,11 +3,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { ListRenderer } from '@web/views/list/list_renderer';
+import { NotebookTaskListRenderer } from '../notebook_task_one2many_field/notebook_task_list_renderer';
 
 import { useEffect } from "@odoo/owl";
 
-export class SubtaskListRenderer extends ListRenderer {
+export class SubtaskListRenderer extends NotebookTaskListRenderer {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
