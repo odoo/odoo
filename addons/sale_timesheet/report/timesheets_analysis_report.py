@@ -3,7 +3,7 @@
 
 from odoo import fields, models, api
 
-from odoo.addons.sale_timesheet.models.account import TIMESHEET_INVOICE_TYPES
+from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYPES
 
 
 class TimesheetsAnalysisReport(models.Model):

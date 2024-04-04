@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
@@ -135,7 +134,7 @@ class AccountAnalyticLine(models.Model):
             since in ordered quantity, the timesheet quantity is not invoiced,
             thus there is no meaning of showing invoice with ordered quantity.
         """
-        domain = super(AccountAnalyticLine, self)._timesheet_get_portal_domain()
+        domain = super()._timesheet_get_portal_domain()
         return expression.AND([domain, [('timesheet_invoice_type', 'in', ['billable_time', 'non_billable', 'billable_fixed'])]])
 
     @api.model
@@ -155,7 +154,7 @@ class AccountAnalyticLine(models.Model):
         ]
 
     def _get_timesheets_to_merge(self):
-        res = super(AccountAnalyticLine, self)._get_timesheets_to_merge()
+        res = super()._get_timesheets_to_merge()
         return res.filtered(lambda l: not l.timesheet_invoice_id or l.timesheet_invoice_id.state != 'posted')
 
     @api.ondelete(at_uninstall=False)
