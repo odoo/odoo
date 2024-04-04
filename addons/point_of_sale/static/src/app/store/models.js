@@ -449,11 +449,11 @@ export class Orderline extends PosModel {
     }
     /**
      * Return the full product name with variant details.
-     * 
+     *
      * e.g. Desk Organiser product with variant:
      * - Size: S
      * - Fabric: Plastic
-     * 
+     *
      * -> "Desk Organiser (S, Plastic)"
      * @returns {string}
      */
@@ -490,9 +490,17 @@ export class Orderline extends PosModel {
             this.pos.currency.decimal_places
         );
         // only orderlines of the same product can be merged
-        let hasSameAttributes = Object.keys(Object(orderline.attribute_value_ids)).length === Object.keys(Object(this.attribute_value_ids)).length;
-        if(hasSameAttributes && Object(orderline.attribute_value_ids)?.length && Object(this.attribute_value_ids)?.length) {
-            hasSameAttributes = orderline.attribute_value_ids.every((value, index) => value === this.attribute_value_ids[index]);
+        let hasSameAttributes =
+            Object.keys(Object(orderline.attribute_value_ids)).length ===
+            Object.keys(Object(this.attribute_value_ids)).length;
+        if (
+            hasSameAttributes &&
+            Object(orderline.attribute_value_ids)?.length &&
+            Object(this.attribute_value_ids)?.length
+        ) {
+            hasSameAttributes = orderline.attribute_value_ids.every(
+                (value, index) => value === this.attribute_value_ids[index]
+            );
         }
         return (
             !this.skipChange &&
@@ -851,33 +859,36 @@ export class Orderline extends PosModel {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
     findAttribute(values, customAttributes) {
-        const listOfAttributes = [];
-        Object.values(this.pos.models['product.template.attribute.line'].getAll()).filter(
-            (attribute) => {
-                const attFound = attribute.product_template_value_ids.filter((target) => {
-                    return Object.values(values).includes(target.id);
-                }).map(att => ({...att})); // make a copy
-                attFound.forEach((att) => {
-                    if (att.is_custom) {
-                        customAttributes.forEach((customAttribute) => {
-                            if (att.id === customAttribute.custom_product_template_attribute_value_id) {
-                                att.name = customAttribute.value;
-                            }
-                        });
+        const listOfAttributes = {};
+
+        for (const value of values) {
+            const customValue = {};
+            const attributeValue = this.pos.models["product.template.attribute.value"].get(value);
+            const attributeLine = attributeValue.attribute_line_id;
+
+            if (attributeValue.is_custom) {
+                for (const cusAtt of customAttributes) {
+                    if (attributeValue.id === cusAtt.custom_product_template_attribute_value_id) {
+                        customValue[attributeValue.id] = cusAtt.value;
                     }
-                });
-                if (attFound.length > 0) {
-                    const modifiedAttribute = {
-                        ...attribute,
-                        valuesForOrderLine: attFound,
-                    };
-                    listOfAttributes.push(modifiedAttribute);
-                    return true;
                 }
-                return false;
             }
-        );
-        return listOfAttributes;
+
+            if (listOfAttributes[attributeLine.id]) {
+                listOfAttributes[attributeLine.id].valuesForOrderLine.push(attributeValue);
+                continue;
+            }
+
+            const modifiedAttribute = {
+                ...attributeLine,
+                valuesForOrderLine: [attributeValue],
+                customValueForOrderLine: customValue,
+            };
+
+            listOfAttributes[attributeLine.id] = modifiedAttribute;
+        }
+
+        return Object.values(listOfAttributes);
     }
     getDisplayData() {
         return {
@@ -900,7 +911,9 @@ export class Orderline extends PosModel {
             price_without_discount: this.env.utils.formatCurrency(
                 this.getUnitDisplayPriceBeforeDiscount()
             ),
-            attributes: this.attribute_value_ids ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids) : false
+            attributes: this.attribute_value_ids
+                ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids)
+                : false,
         };
     }
 }
@@ -1361,7 +1374,8 @@ export class Order extends PosModel {
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
+            ticket_code:
+                this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
             base_url: this.pos.base_url,

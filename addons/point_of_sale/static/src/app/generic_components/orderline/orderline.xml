@@ -40,7 +40,8 @@
                         <t t-esc="attribute.attribute_id.name"/>:
                         <t t-foreach="attribute.valuesForOrderLine" t-as="value" t-key="value.id">
                             <t t-if="value_index !== 0" t-esc="' | '"/>
-                            <t t-esc="value.name"/>
+                            <t t-if="!value.is_custom" t-esc="value.name"/>
+                            <t t-else="" t-esc="attribute.customValueForOrderLine[value.id]" />
                             <t t-if="value.price_extra">
                                 (<t t-esc='env.utils.formatCurrency(value.price_extra)'/>)
                             </t>
