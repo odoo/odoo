@@ -30,7 +30,7 @@ class ChatRoom(models.Model):
         'Jitsi Server Domain', compute='_compute_jitsi_server_domain',
         help='The Jitsi server domain can be customized through the settings to use a different server than the default "meet.jit.si"')
     lang_id = fields.Many2one(
-        "res.lang", "Language",
+        "res.lang", "Language", domain=lambda self: [('code', 'in', self.env['res.lang']._get_enabled_lang_code())],
         default=lambda self: self.env["res.lang"].search([("code", "=", self.env.user.lang)], limit=1))
     max_capacity = fields.Selection(
         [("4", "4"), ("8", "8"), ("12", "12"), ("16", "16"),

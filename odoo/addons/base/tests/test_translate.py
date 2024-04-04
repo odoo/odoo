@@ -392,13 +392,10 @@ class TestTranslation(TransactionCase):
         self.assertEqual(category.with_context(lang='fr_FR').name, 'Clients')
 
         with self.assertRaises(UserError):
-            # inactive language
-            category.with_context(lang='nl_NL').name
-        with self.assertRaises(UserError):
             # non-existing language
             category.with_context(lang='Dummy').name
         with self.assertRaises(UserError):
-            # technical langauge starts with '_'
+            # technical language starts with '_'
             category.with_context(lang='_en_US').name
         with self.assertRaises(UserError):
             # SQL injection language
@@ -517,7 +514,7 @@ class TestTranslation(TransactionCase):
     def test_110_search_es(self):
         self.env['res.lang']._activate_lang('es_ES')
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')],
+        self.assertEqual([('en_US', 'English'), ('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')],
                          langs, "Test did not start with the expected languages")
         CategoryEs = self.env['res.partner.category'].with_context(lang='es_ES')
         category_equal = CategoryEs.search([('name', '=', 'Customers')])
@@ -581,7 +578,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English'), ('fr_FR', 'French / Français')], langs,
                          "Test did not started with expected languages")
 
         category = self.env['res.partner.category'].with_context(lang='en_US').create({'name': 'English'})
@@ -612,11 +609,15 @@ class TestTranslationWrite(TransactionCase):
 
     def test_01_invalid_lang(self):
         self.env['res.lang']._activate_lang('nl_NL')
+        self.category.with_context(lang='en_US').name = 'Reblochon en_US'
         self.category.with_context(lang='nl_NL').name = 'Reblochon nl_NL'
         self.env.ref('base.lang_nl').active = False
 
-        # [inactive_lang, non_existing_lang, technical_lang, sql_injection_lang]
-        langs = ['nl_NL', 'Dummy', '_en_US', "'', NOW("]
+        # [non_existing_lang, technical_lang, sql_injection_lang]
+        langs = ['Dummy', '_en_US', "'', NOW("]
+
+        self.category.with_context(lang='nl_NL').name = 'new value'  # fallback on first installed language (en_US)
+        self.assertEqual(self.category.with_context(lang='en_US').name, 'new value')
 
         for lang in langs:
             with self.assertRaises(UserError):
@@ -648,7 +649,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English'), ('fr_FR', 'French / Français')], langs,
             "Test did not started with expected languages")
 
         po_string = '''
@@ -713,7 +714,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English'), ('fr_FR', 'French / Français')], langs,
             "Test did not started with expected languages")
 
         belgium = self.env.ref('base.be')
@@ -766,7 +767,7 @@ class TestTranslationWrite(TransactionCase):
         self.env['res.lang']._activate_lang('nl_NL')
 
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('nl_NL', 'Dutch / Nederlands'), ('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('nl_NL', 'Dutch / Nederlands'), ('en_US', 'English'), ('fr_FR', 'French / Français')], langs,
                          "Test did not started with expected languages")
 
         belgium = self.env.ref('base.be')
@@ -797,7 +798,7 @@ class TestTranslationWrite(TransactionCase):
     def _test_create_empty(self, empty_value):
         self.env['res.lang']._activate_lang('fr_FR')
         langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs,
+        self.assertEqual([('en_US', 'English'), ('fr_FR', 'French / Français')], langs,
                          "Test did not started with expected languages")
 
         group = self.env['res.groups'].create({'name': 'test_group', 'comment': empty_value})

@@ -30,6 +30,7 @@ class Partner(models.Model):
                     state_id=lead.state_id.id,
                     country_id=lead.country_id.id,
                     zip=lead.zip,
+                    lang=lead.lang_code,
                 )
         return rec
 

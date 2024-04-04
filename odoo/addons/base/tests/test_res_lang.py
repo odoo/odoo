@@ -117,3 +117,17 @@ class test_res_lang(TransactionCase):
         with self.assertRaises(AttributeError):
             # raise error for querying a not cached field of the dummy language
             ResLang._get_data(code='dummy').flag_image
+
+    def test_available_lang(self):
+        available_langs_code = self.env["res.lang"]._get_enabled_lang_code()
+        installed_langs_code = [lang[0] for lang in self.env["res.lang"].get_installed()]
+        self.assertTrue(len(available_langs_code) >= len(installed_langs_code))
+
+        for lang in installed_langs_code:
+            # Check that all installed languages are in the enabled languages
+            self.assertIn(lang, available_langs_code)
+            available_langs_code.remove(lang)
+
+        default_langs = self.env["res.lang"].search([("code", "in", available_langs_code)])
+
+        self.assertTrue(all(not lang.active for lang in default_langs))

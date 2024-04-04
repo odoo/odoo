@@ -169,8 +169,7 @@ class NewLeadNotification(TestCrmCommon):
     @users('user_sales_manager')
     def test_lead_message_get_suggested_recipients_langs(self):
         """This test checks that creating a contact from a lead with an inactive
-        language will ignore the language while creating a contact from a lead
-        with an active language will take it into account """
+        or active language will take it into account """
         leads = self.env['crm.lead'].create([
             {
                 'email_from': self.test_email,
@@ -188,7 +187,7 @@ class NewLeadNotification(TestCrmCommon):
                 'email': 'test.email@example.com',
                 'lang': None,
                 'reason': 'Customer Email',
-                'create_values': {'lang': None},
+                'create_values': {'lang': 'fr_FR'},
             }, {
                 'name': 'Test Email',
                 'email': 'test.email@example.com',

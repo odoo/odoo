@@ -23,7 +23,8 @@
                     <group>
                         <group>
                             <field name="is_full"/>
-                            <field name="lang_id" options="{'no_create': True}"/>
+                            <field name="lang_id" options="{'no_create': True}"
+                                context="{'active_test': False, 'lang_installed': True}"/>
                             <field name="participant_count"/>
                             <field name="max_capacity"/>
                         </group>
