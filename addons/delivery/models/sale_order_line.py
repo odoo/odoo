@@ -21,8 +21,9 @@ class SaleOrderLine(models.Model):
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 line.product_qty = 0.0
                 continue
+            # Temporary Fix: Added raise_if_failure=False for FIXING Error occurring while importing Sale Orders to PoS terminal
             line.product_qty = line.product_uom._compute_quantity(
-                line.product_uom_qty, line.product_id.uom_id
+                line.product_uom_qty, line.product_id.uom_id, raise_if_failure=False
             )
 
     def unlink(self):
