@@ -701,13 +701,19 @@ test("chat window should open when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
+    await assertSteps(["init_messaging"]);
     rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
@@ -729,7 +735,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],
