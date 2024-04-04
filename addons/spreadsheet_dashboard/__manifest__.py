@@ -37,5 +37,9 @@
             "spreadsheet_dashboard/static/tests/utils/**/*.js",
             ("include", "spreadsheet.o_spreadsheet"),
         ],
+        'web.assets_tests': [
+            'spreadsheet_dashboard/static/tests/tours/*',
+        ],
+
     },
 }
