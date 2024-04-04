@@ -6,6 +6,7 @@ from odoo.addons.spreadsheet.utils.formatting import (
     strftime_format_to_spreadsheet_date_format,
     strftime_format_to_spreadsheet_time_format,
 )
+from odoo.tools import get_lang
 
 
 class Lang(models.Model):
@@ -22,7 +23,7 @@ class Lang(models.Model):
     @api.model
     def _get_user_spreadsheet_locale(self):
         """Convert the odoo lang to a spreadsheet locale."""
-        lang = self._lang_get(self.env.user.lang)
+        lang = self._lang_get(get_lang(self.env, lang_code=self.env.user.lang).get('code'))
         return lang._odoo_lang_to_spreadsheet_locale()
 
     def _odoo_lang_to_spreadsheet_locale(self):

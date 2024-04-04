@@ -12,6 +12,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError
 
 from odoo.addons.spreadsheet.utils.validate_data import fields_in_spreadsheet, menus_xml_ids_in_spreadsheet
+from odoo.tools import get_lang
+
 
 class SpreadsheetMixin(models.AbstractModel):
     _name = "spreadsheet.mixin"
@@ -111,7 +113,7 @@ class SpreadsheetMixin(models.AbstractModel):
         The sheet name should be the same for all users to allow consistent references
         in formulas. It is translated for the user creating the spreadsheet.
         """
-        lang = self.env["res.lang"]._lang_get(self.env.user.lang)
+        lang = self.env["res.lang"]._lang_get(get_lang(self.env, lang_code=self.env.user.lang).get('code'))
         locale = lang._odoo_lang_to_spreadsheet_locale()
         return {
             "version": 1,
