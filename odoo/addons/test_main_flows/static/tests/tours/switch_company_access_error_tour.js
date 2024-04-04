@@ -58,7 +58,6 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
                     "model_multicompany_menu"
                 );
                 assertEqual("action" in router.current, true);
-                assertEqual("_company_switching" in router.current, false);
             },
             isCheck: true,
         },

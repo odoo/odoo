@@ -125,7 +125,7 @@ test("companies can be toggled: toggle a second company", async () => {
         "false",
     ]);
     await prom;
-    expect(["cids=3-2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=3-2"]).toVerifySteps();
 });
 
 test("can toggle multiple companies at once", async () => {
@@ -166,7 +166,7 @@ test("can toggle multiple companies at once", async () => {
 
     expect([]).toVerifySteps();
     await prom;
-    expect(["cids=2-1-4-5&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2-1-4-5"]).toVerifySteps();
 });
 
 test("single company selected: toggling it off will keep it", async () => {
@@ -200,7 +200,6 @@ test("single company selected: toggling it off will keep it", async () => {
 
     expect(router.current).toEqual({
         cids: 3,
-        _company_switching: 1,
     });
     expect(getService("company").activeCompanyIds).toEqual([3]);
     expect(getService("company").currentCompany.id).toBe(3);
@@ -238,7 +237,7 @@ test("single company mode: companies can be logged in", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });
 
 test("multi company mode: log into a non selected company", async () => {
@@ -271,7 +270,7 @@ test("multi company mode: log into a non selected company", async () => {
      */
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -304,7 +303,7 @@ test("multi company mode: log into an already selected company", async () => {
      */
     await contains(".log_into:eq(2)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=1-4-5&_company_switching=1"]).toVerifySteps();
+    expect(["cids=1-4-5"]).toVerifySteps();
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
@@ -338,5 +337,5 @@ test("companies can be logged in even if some toggled within delay", async () =>
     await contains(".toggle_company:eq(0)").click();
     await contains(".log_into:eq(1)").click();
     expect(".dropdown-menu").toHaveCount(0, { message: "dropdown is directly closed" });
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });

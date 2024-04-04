@@ -94,7 +94,7 @@ test("companies can be toggled: toggle a second company", async () => {
     expect("[data-company-id] .fa-check-square").toHaveCount(2);
     expect("[data-company-id] .fa-square-o").toHaveCount(1);
     await prom;
-    expect(["cids=1-2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=1-2"]).toVerifySteps();
 });
 
 test("can toggle multiple companies at once", async () => {
@@ -129,7 +129,7 @@ test("can toggle multiple companies at once", async () => {
 
     expect([]).toVerifySteps();
     await prom; // await toggle promise
-    expect(["cids=2-3&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2-3"]).toVerifySteps();
 });
 
 test("single company selected: toggling it off will keep it", async () => {
@@ -158,7 +158,6 @@ test("single company selected: toggling it off will keep it", async () => {
 
     expect(router.current).toEqual({
         cids: 1,
-        _company_switching: 1,
     });
     expect(getService("company").activeCompanyIds).toEqual([1]);
     expect(getService("company").currentCompany.id).toBe(1);
@@ -189,7 +188,7 @@ test("single company mode: companies can be logged in", async () => {
      *   [ ] Company 3
      */
     await contains(".log_into:eq(1)").click();
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });
 
 test("multi company mode: log into a non selected company", async () => {
@@ -216,7 +215,7 @@ test("multi company mode: log into a non selected company", async () => {
      *   [x] **Company 3**
      */
     await contains(".log_into:eq(1)").click();
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });
 
 test("multi company mode: log into an already selected company", async () => {
@@ -243,7 +242,7 @@ test("multi company mode: log into an already selected company", async () => {
      *   [x] Company 3      -> log into
      */
     await contains(".log_into:eq(2)").click();
-    expect(["cids=3&_company_switching=1"]).toVerifySteps();
+    expect(["cids=3"]).toVerifySteps();
 });
 
 test("companies can be logged in even if some toggled within delay", async () => {
@@ -271,5 +270,5 @@ test("companies can be logged in even if some toggled within delay", async () =>
     await contains(".toggle_company:eq(2)").click();
     await contains(".toggle_company:eq(0)").click();
     await contains(".log_into:eq(1)").click();
-    expect(["cids=2&_company_switching=1"]).toVerifySteps();
+    expect(["cids=2"]).toVerifySteps();
 });
