@@ -162,7 +162,7 @@ class AccountMove(models.Model):
         for (product, company), dummy in groupby(stock_valuation_layers, key=lambda svl: (svl.product_id, svl.company_id)):
             product = product.with_company(company.id)
             if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+                product._update_fifo_vacuum_values()
 
         posted = super(AccountMove, self.with_context(skip_cogs_reconciliation=True))._post(soft)
 
