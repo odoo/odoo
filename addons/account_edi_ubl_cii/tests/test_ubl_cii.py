@@ -120,3 +120,15 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
                 .with_context(default_journal_id=self.company_data["default_journal_purchase"].id)\
                 ._create_document_from_attachment(xml_attachment.id)
         self.assertEqual(bill.invoice_line_ids.tax_ids, new_tax_2)
+
+    def test_get_norway_partner_party_vals_with_no_tax(self):
+        norway = self.env["res.country"].search([("code", "=", "NO")])
+        partner = self.env["res.partner"].create({
+            "name": "Test partner",
+            "country_id": norway.id,
+            "country_code": norway.code,
+            "vat": False,
+        })
+
+        partner_party_vals = self.env["account.edi.xml.ubl_bis3"]._get_partner_party_vals(partner, role='customer')
+        self.assertEqual(partner_party_vals['endpoint_id'], partner.vat)
