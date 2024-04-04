@@ -38,6 +38,7 @@ class ProductTemplate(models.Model):
                 'available_threshold': self.available_threshold,
                 'cart_qty': product._get_cart_qty(website),
                 'uom_name': product.uom_id.name,
+                'uom_rounding': product.uom_id.rounding,
                 'allow_out_of_stock_order': self.allow_out_of_stock_order,
                 'show_availability': self.show_availability,
                 'out_of_stock_message': self.out_of_stock_message,
