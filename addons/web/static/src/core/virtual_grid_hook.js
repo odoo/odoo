@@ -113,7 +113,7 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
     const computeColumnsIndexes = () => {
         return getIndexes({
             sizes: current.summedColumnsWidths,
-            start: current.scroll.left,
+            start: Math.abs(current.scroll.left),
             span: window.innerWidth,
             prevStartIndex: current.columnsIndexes?.[0],
             bufferCoef,
