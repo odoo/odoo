@@ -17,8 +17,8 @@ class CalendarTimeslot(models.Model):
     can_write = fields.Boolean(compute='_compute_access', default=True)
     active = fields.Boolean(default=True)
     edit = fields.Selection([('one', 'This event only'),            # This field is used to determine the edit policy
-                             ('all', 'All events in the series'),   # when editing a recurring event
-                             ('post', 'All event after this one')], default='all', store=False)
+                             ('post', 'All event after this one'),  # when editing a recurring event
+                             ('all', 'All events in the series')], default='all', store=False)
 
     # Time Related Fields
     start = fields.Datetime(default=fields.Datetime.now, required=True)
@@ -45,6 +45,7 @@ class CalendarTimeslot(models.Model):
     note = fields.Char('Note', compute='_compute_note', inverse='_inverse_note')
     tag_ids = fields.Many2many('calendar.event_bis.tag', compute='_compute_tag_ids', inverse='_inverse_tag_ids', string="Tags")
     location = fields.Char('Location', compute='_compute_location', inverse='_inverse_location', tracking=True)
+    alarm_ids = fields.Many2many('calendar.alarm_ids', compute='_compute_alarm_ids', inverse='_inverse_alarm_ids', string="Alerts")
 
     # Recurrence Related Fields
     # /!\ These fields must be computed and inverse in the same method,
@@ -250,6 +251,16 @@ class CalendarTimeslot(models.Model):
     def _inverse_tag_ids(self):
         for slot in self:
             slot.event_id.tag_ids = slot.tag_ids
+
+    @api.depends('event_id.alarm_ids')
+    @api.depends_context('uid')
+    def _compute_alarm_ids(self):
+        for slot in self.filtered('can_read_private'):
+            slot.alarm_ids = slot.event_id.alarm_ids
+
+    def _inverse_alarm_ids(self):
+        for slot in self:
+            slot.event_id.alarm_ids = slot.alarm_ids
 
     @api.depends('event_id.location')
     @api.depends_context('uid')

@@ -45,9 +45,10 @@
                             <field name="is_recurring" widget="boolean_toggle" readonly="not can_write"/>
                         </group>
                         <group string="Private" readonly="not can_write" invisible="not can_read_private">
+                            <field name="alarm_ids" widget="many2many_tags" readonly="not can_write"/>
                             <field name="partner_ids" widget="many2many_tags" readonly="not can_write"/>
                             <field name="note" readonly="not can_write"/>
-                            <field name="location"/>
+                            <field name="location" readonly="not can_write"/>
                         </group>
                     </group>
                     <notebook invisible="not can_read_private">

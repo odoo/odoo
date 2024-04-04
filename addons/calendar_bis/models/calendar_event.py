@@ -1,10 +1,10 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, Command
 from dateutil.relativedelta import relativedelta
 
 from ..util import RRULE
 
-recurring_fields = ['is_recurring', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'freq', 'until', 'count', 'interval',
-                    'monthday', 'monthweekday_n', 'monthweekday_day']
+recurring_fields = {'is_recurring', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'freq', 'until', 'count', 'interval',
+                    'monthday', 'monthweekday_n', 'monthweekday_day'}
 
 
 class CalendarEventPrivate(models.Model):
@@ -27,6 +27,9 @@ class CalendarEventPrivate(models.Model):
     note = fields.Char()
     tag_ids = fields.Many2many('calendar.event_bis.tag', string="Tags")
     location = fields.Char('Location')
+
+    alarm_ids = fields.Many2many('calendar.alarm_bis', string="Alarms")
+    alarm_notification_ids = fields.One2many('calendar.alarm_bis_notification', 'event_id', compute='_compute_alarm_notifications')
 
     # Recurrence
     is_recurring = fields.Boolean('Recurrent', default=False, public=True)
@@ -77,6 +80,29 @@ class CalendarEventPrivate(models.Model):
     def _compute_user_id(self):
         for event in self:
             event.user_id = event.partner_id.user_id
+
+    @api.depends('alarm_ids')
+    def _compute_alarm_notifications(self):
+        for event in self:
+            event.alarm_notification_ids.filtered(lambda notif: notif.alarm_id not in event.alarm_ids).unlink()
+            alarm_to_notify = event.alarm_ids - event.alarm_notification_ids.alarm_id
+            event._create_alarm_notification(alarm_to_notify)
+
+    def _create_alarm_notification(self, alarm_ids):
+        self.ensure_one()
+        event_dt = self.next_timeslot_date(fields.Datetime.now())
+        self.alarm_notification_ids.create([{
+            'alarm_ids': alarm_id,
+            'event_id': self.id,
+            'event_dt': event_dt,
+            'notification_dt': event_dt - alarm_id.time_delta
+        } for alarm_id in alarm_ids])
+        # TODO check trigger
+
+    def next_timeslot_date(self, time=None):
+        self.ensure_one()
+        times = [ts.start for ts in self.timeslot_ids if ts.start > time]
+        return times and min(times) or None
 
     def unlink(self):
         self.timeslot_ids.unlink()
