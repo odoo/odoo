@@ -13,14 +13,10 @@ export class UrlField extends Component {
     }
 
     get formattedHref() {
-        let value = "";
-        if (typeof this.props.value === "string") {
-            const shouldaddPrefix = !(
-                this.props.websitePath ||
-                this.props.value.includes("://") ||
-                /^\//.test(this.props.value)
-            );
-            value = shouldaddPrefix ? `http://${this.props.value}` : this.props.value;
+        let value = this.props.value;
+        if (value && !this.props.websitePath) {
+            const regex = /^((ftp|http)s?:\/)?\//i; // http(s)://... ftp(s)://... /...
+            value = !regex.test(value) ? `http://${value}` : value;
         }
         return value;
     }
