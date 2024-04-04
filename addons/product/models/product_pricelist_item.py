@@ -52,7 +52,7 @@ class PricelistItem(models.Model):
             ('0_product_variant', "Product Variant"),
         ],
         string="Apply On",
-        default='1_product',
+        default='3_global',
         required=True,
         help="Pricelist Item applicable on selected option")
 
@@ -61,14 +61,13 @@ class PricelistItem(models.Model):
             ('1_product', "Product"),
             ('2_product_category', "Category"),
         ],
-        string="Apply On",
         default='1_product',
         required=True,
         help="Pricelist Item applicable on selected option")
 
     categ_id = fields.Many2one(
         comodel_name='product.category',
-        string="Product Category",
+        string="Category",
         ondelete='cascade',
         help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
     product_tmpl_id = fields.Many2one(
@@ -78,9 +77,12 @@ class PricelistItem(models.Model):
         help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
     product_id = fields.Many2one(
         comodel_name='product.product',
-        string="Product Variant",
+        string="Variant",
         ondelete='cascade', check_company=True,
+        domain="[('product_tmpl_id', '=', product_tmpl_id)]",
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
+    product_uom = fields.Char(related='product_tmpl_id.uom_name')
+    product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
 
     base = fields.Selection(
         selection=[
@@ -122,9 +124,15 @@ class PricelistItem(models.Model):
              "Rounding is applied after the discount and before the surcharge.\n"
              "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
     price_surcharge = fields.Float(
-        string="Price Surcharge",
+        string="Extra Fee",
         digits='Product Price',
         help="Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount.")
+
+    price_discount_surcharge = fields.Float(
+        string="Surcharge",
+        default=0,
+        digits=(16, 2),
+        help="You can apply a mark-up on the cost")
 
     price_min_margin = fields.Float(
         string="Min. Price Margin",
@@ -155,7 +163,7 @@ class PricelistItem(models.Model):
             if item.categ_id and item.applied_on == '2_product_category':
                 item.name = _("Category: %s", item.categ_id.display_name)
             elif item.product_tmpl_id and item.applied_on == '1_product':
-                item.name = _("Product: %s", item.product_tmpl_id.display_name)
+                item.name = item.product_tmpl_id.display_name
             elif item.product_id and item.applied_on == '0_product_variant':
                 item.name = _("Variant: %s", item.product_id.display_name)
             else:
@@ -234,6 +242,14 @@ class PricelistItem(models.Model):
                 raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
 
     #=== ONCHANGE METHODS ===#
+    @api.onchange('base')
+    def _onchange_base(self):
+        for item in self:
+            item.update({
+                'price_discount': 0.0,
+                'price_discount_surcharge': 0.0,
+            })
+            
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
@@ -246,6 +262,7 @@ class PricelistItem(models.Model):
                 'base': 'list_price',
                 'price_discount': 0.0,
                 'price_surcharge': 0.0,
+                'price_discount_surcharge': 0.0,
                 'price_round': 0.0,
                 'price_min_margin': 0.0,
                 'price_max_margin': 0.0,
@@ -255,12 +272,24 @@ class PricelistItem(models.Model):
     def _onchange_display_applied_on(self):
         for item in self:
             if item.display_applied_on == '1_product':
-                item.applied_on = '1_product'
-                item.compute_price = 'fixed'
+                item.update(dict(
+                    applied_on='1_product',
+                    compute_price='fixed',
+                    categ_id=None,
+                ))
             if item.display_applied_on == '2_product_category':
-                item.applied_on = '2_product_category'
-                item.compute_price = 'percentage'
+                item.update(dict(
+                    product_id=None,
+                    product_tmpl_id=None,
+                    applied_on='2_product_category',
+                    compute_price='percentage',
+                    product_uom=None,
+                ))
 
+    @api.onchange('price_discount_surcharge')
+    def _onchange_price_discount_surcharge(self):
+        for item in self:
+            item.price_discount = -item.price_discount_surcharge
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -286,9 +315,11 @@ class PricelistItem(models.Model):
             # If we aren't coming from a specific product template/variant.
             variants_rules = self.filtered('product_id')
             template_rules = (self-variants_rules).filtered('product_tmpl_id')
+            category_rules = self.filtered(lambda cat: cat.categ_id and cat.categ_id.name != 'All')
             variants_rules.update({'applied_on': '0_product_variant'})
             template_rules.update({'applied_on': '1_product'})
-            (self-variants_rules-template_rules).update({'applied_on': '3_global'})
+            category_rules.update({'applied_on': '2_product_category'})
+            (self-variants_rules-template_rules-category_rules).update({'applied_on': '3_global'})
 
     @api.onchange('price_round')
     def _onchange_price_round(self):
@@ -328,13 +359,6 @@ class PricelistItem(models.Model):
         return super().write(values)
 
     #=== BUSINESS METHODS ===#
-
-    def _is_product_variant_invisibile(self):
-        return (
-            not self.product_tmpl_id and
-            self.product_tmpl_id.product_variant_count <= 0 and
-            self.display_applied_on == '1_product'
-        )
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
