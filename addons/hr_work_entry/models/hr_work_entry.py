@@ -6,6 +6,7 @@ from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
 import itertools
 from psycopg2 import OperationalError
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, tools, _
 from odoo.osv import expression
@@ -186,6 +187,11 @@ class HrWorkEntry(models.Model):
             employee_ids += [vals['employee_id']]
         with self._error_checking(skip=skip_check, employee_ids=employee_ids):
             return super(HrWorkEntry, self).write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_validated_work_entries(self):
+        if any(w.state == 'validated' for w in self):
+            raise UserError(_("This work entry is validated. You can't delete it."))
 
     def unlink(self):
         employee_ids = self.employee_id.ids
