@@ -293,6 +293,20 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
 
+    def _prepare_question_template_vals(self, forum, post, question):
+        values = self._prepare_user_values(forum=forum, searches=post)
+        values.update({
+            'main_object': question,
+            'edit_in_backend': True,
+            'question': question,
+            'seo_microdata': question._get_microdata(),
+            'header': {'question_data': True},
+            'filters': 'question',
+            'reversed': reversed,
+            'related_posts': question._get_related_posts(),
+        })
+        return values
+
     @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post"):question>'''],
                 type='http', auth="public", website=True, sitemap=sitemap_forum_post)
     def question(self, forum, question, **post):
@@ -311,19 +325,7 @@ class WebsiteForum(WebsiteProfile):
         if question.parent_id:
             redirect_url = "/forum/%s/%s" % (slug(forum), slug(question.parent_id))
             return request.redirect(redirect_url, 301)
-        filters = 'question'
-        values = self._prepare_user_values(forum=forum, searches=post)
-        values.update({
-            'main_object': question,
-            'edit_in_backend': True,
-            'question': question,
-            'seo_microdata': question._get_microdata(),
-            'header': {'question_data': True},
-            'filters': filters,
-            'reversed': reversed,
-            'related_posts': question._get_related_posts()
-        })
-
+        values = self._prepare_question_template_vals(forum, post, question)
         # increment view counter
         question.sudo()._set_viewed()
 
