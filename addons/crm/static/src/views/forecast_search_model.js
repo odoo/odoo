@@ -14,18 +14,52 @@ export class ForecastSearchModel extends SearchModel {
         super.setup(...arguments);
         this.fillTemporalService = useService("fillTemporalService");
         this.hideTemporalFilter = false;
+        this._dynamicTemporalEnd = false;
     }
     async load() {
         await super.load(...arguments);
         this.updateTemporalFilter();
     }
-    updateTemporalFilter() {
+    /**
+     * Force the end of the period to some date
+     * updates _dynamicTemporalEnd
+     * @param {DateTime} end
+     */
+    setTemporalEnd(end) {
+        const temporal = this.fillTemporalService();
+        if (end != temporal.end) {
+            this._dynamicTemporalEnd = end;
+            temporal.setEnd(end);
+        }
+    }
+    unsetTemporalEnd() {
+        const temporal = this.fillTemporalPeriod();
+        if (!temporal.computedEnd) {
+            temporal._computeEnd();
+            this._dynamicTemporalEnd = false;
+        }
+    }
+    expandTemporalFilter() {
+        this.fillTemporalPeriod().expand();
+        this.updateTemporalFilter();
+    }
+    _updateTemporalFilterPreHook() {
+        if (this._dynamicTemporalEnd) {
+            this.setTemporalEnd(this._dynamicTemporalEnd);
+        }
+    }
+    updateTemporalFilter(forceFillingTo = undefined) {
+        this._updateTemporalFilterPreHook();
         const domain = this.fillTemporalPeriod().getDomain({ domain: [] });
-        this.setTemporalFilter(domain, {});
+        const context = this.fillTemporalPeriod().getContext({
+            context: {},
+            forceFillingTo: forceFillingTo,
+        });
+        this.setTemporalFilter(domain, context);
     }
     setTemporalFilter(domain, context) {
         this.disableTemporalFilters();
-        const filters = this._getTemporalFilter();
+        const filters = this._getTemporalFilters();
         if (filters.length) {
             filters[0].crmTemporalFilter = true;
             filters[0].domain = domain;
@@ -43,29 +77,33 @@ export class ForecastSearchModel extends SearchModel {
             ]);
         }
     }
-    _getTemporalFilter() {
+    _getTemporalFilters() {
         return Object.values(this.searchItems).filter(
             (searchItem) =>
                 searchItem.crmTemporalFilter ||
                 ("context" in searchItem && searchItem.context.includes("forecast_filter")),
         );
     }
+    _getActiveTemporalFilters() {
+        const filters = this._getTemporalFilters();
+        return filters
+            .filter((filter) => {
+                return this.query?.some((queryElem) => queryElem.searchItemId === filter.id);
+            })
+            .map((filter) => filter.id);
+    }
+    isTemporalFilterEnabled() {
+        return !!this._getActiveTemporalFilters();
+    }
     /**
      * Disable the filter(s).
      * Intended to be used when removing grouping or switching views.
      */
     disableTemporalFilters() {
-        const filters = this._getTemporalFilter();
-        const activeFilters = filters
-            .filter((filter) => {
-                return this.query?.some((queryElem) => queryElem.searchItemId === filter.id);
-            })
-            .map((filter) => filter.id);
-        for (const filterId of activeFilters) {
+        for (const filterId of this._getActiveTemporalFilters()) {
             this.toggleSearchItem(filterId);
         }
     }
-
     /**
      * @override
      */
@@ -73,7 +111,7 @@ export class ForecastSearchModel extends SearchModel {
         this.disableTemporalFilters();
         const state = super.exportState();
         state.forecast = {
-            forecastStart: this.forecastStart,
+            forecastEnd: this.forecastStart,
         };
         return state;
     }
@@ -84,7 +122,7 @@ export class ForecastSearchModel extends SearchModel {
     _importState(state) {
         super._importState(...arguments);
         if (state.forecast) {
-            this.forecastStart = state.forecast.forecastStart;
+            this._dynamicTemporalEnd = state.forecast.forecastStart;
         }
     }
 

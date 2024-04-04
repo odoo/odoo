@@ -1,21 +1,20 @@
 import { ForecastSearchModel } from "./forecast_search_model";
 
 /**
- * Same as forecast search model but with the option to expand the search.
+ * Same as forecast search model but forces filled computed end
  */
 
 export class ForecastTemporalFillSearchModel extends ForecastSearchModel {
-    expandTemporalFilter() {
-        this.fillTemporalPeriod().expand();
-        this.updateTemporalFilter();
+    /**
+     * @override
+     */
+    _updateTemporalFilterPreHook() {
+        this.unsetTemporalEnd();
     }
-
     /**
      * @override
      */
     updateTemporalFilter() {
-        const domain = this.fillTemporalPeriod().getDomain({ domain: [] });
-        const context = this.fillTemporalPeriod().getContext({ context: {} });
-        this.setTemporalFilter(domain, context);
+        return super.updateTemporalFilter(true);
     }
 }
