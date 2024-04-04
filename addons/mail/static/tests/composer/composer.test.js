@@ -869,9 +869,9 @@ test('display canned response suggestions on typing ":"', async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-suggestionList", { count: 0 });
     await insertText(".o-mail-Composer-input", ":");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
 });
 
@@ -891,8 +891,6 @@ test("select a canned response suggestion", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");
@@ -915,7 +913,6 @@ test("select a canned response suggestion with some text", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     await contains(".o-mail-Composer-input", { value: "bluhbluh " });
@@ -940,7 +937,6 @@ test("add an emoji after a canned response", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", ":");
     await click(".o-mail-Composer-suggestion");

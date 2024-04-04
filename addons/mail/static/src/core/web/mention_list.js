@@ -2,13 +2,13 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useEffect, useState } from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 
-import { NavigableList } from "@mail/core/common/navigable_list";
+import { UseNavigableList } from "@mail/core/common/use_navigable_list";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
-    static components = { NavigableList };
+    static components = { UseNavigableList };
     static props = {
         onSelect: { type: Function },
         close: { type: Function, optional: true },

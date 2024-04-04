@@ -158,10 +158,8 @@ test('display channel mention suggestions on typing "#"', async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-Composer-suggestionList");
 });
 
 test("mention a channel", async () => {
@@ -172,8 +170,6 @@ test("mention a channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");

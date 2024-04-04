@@ -1,4 +1,4 @@
-import { NavigableList } from "@mail/core/common/navigable_list";
+import { UseNavigableList } from "@mail/core/common/use_navigable_list";
 import { cleanTerm } from "@mail/utils/common/format";
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
@@ -11,7 +11,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useSequential } from "@mail/utils/common/hooks";
 
 export class ChannelSelector extends Component {
-    static components = { TagsList, NavigableList };
+    static components = { TagsList, UseNavigableList };
     static props = ["category", "onValidate?", "autofocus?", "multiple?", "close?"];
     static defaultProps = { multiple: true };
     static template = "discuss.ChannelSelector";

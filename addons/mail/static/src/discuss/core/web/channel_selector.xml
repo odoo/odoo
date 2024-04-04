@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="discuss.ChannelSelector">
+    <UseNavigableList class="'o-discuss-ChannelSelector-list z-index-1'" t-props="state.navigableListProps"/>
     <div class="o-discuss-ChannelSelector d-flex flex-wrap form-control rounded p-1" t-att-class="props.class" t-ref="root">
         <TagsList t-if="props.multiple" tags="tagsList"/>
         <input
@@ -15,7 +16,6 @@
             maxlength="100"
         />
     </div>
-    <NavigableList class="'o-discuss-ChannelSelector-list z-index-1'" t-props="state.navigableListProps"/>
 </t>
 
 <t t-name="discuss.ChannelSelector.channel">

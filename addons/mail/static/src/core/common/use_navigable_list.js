@@ -8,9 +8,9 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
-export class NavigableList extends Component {
+export class UseNavigableList extends Component {
     static components = { ImStatus };
-    static template = "mail.NavigableList";
+    static template = "mail.UseNavigableList";
     static props = {
         anchorRef: { optional: true },
         class: { type: String, optional: true },

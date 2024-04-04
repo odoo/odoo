@@ -33,10 +33,8 @@ test('display command suggestions on typing "/"', async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await insertText(".o-mail-Composer-input", "/");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-Composer-suggestionList");
 });
 
 test("use a command for a specific channel type", async () => {
@@ -44,8 +42,6 @@ test("use a command for a specific channel type", async () => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
     await click(".o-mail-Composer-suggestion strong", { text: "who" });
@@ -60,14 +56,12 @@ test("command suggestion should only open if command is the first character", as
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-suggestionList");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     await contains(".o-mail-Composer-input", { value: "bluhbluh " });
     await insertText(".o-mail-Composer-input", "/");
     // weak test, no guarantee that we waited long enough for the potential list to open
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-suggestionList", { count: 0 });
 });
 
 test("Sort partner suggestions by recent chats", async () => {

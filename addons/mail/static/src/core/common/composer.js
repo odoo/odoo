@@ -3,7 +3,7 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Picker, usePicker } from "@mail/core/common/picker";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
-import { NavigableList } from "@mail/core/common/navigable_list";
+import { UseNavigableList } from "@mail/core/common/use_navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
@@ -57,7 +57,7 @@ export class Composer extends Component {
         AttachmentList,
         Picker,
         FileUploader,
-        NavigableList,
+        UseNavigableList,
     };
     static defaultProps = {
         mode: "normal",
@@ -664,6 +664,7 @@ export class Composer extends Component {
 
     onFocusin() {
         const composer = toRaw(this.props.composer);
+        this.ref.el.dataset.focusCount = parseInt(this.ref.el.dataset.focusCount) + 1;
         composer.isFocused = true;
         if (composer.thread) {
             this.threadService.markAsRead(composer.thread);
