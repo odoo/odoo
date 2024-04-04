@@ -1163,7 +1163,7 @@ class AccountTax(models.Model):
         return to_update_vals, tax_values_list
 
     @api.model
-    def _aggregate_taxes(self, to_process, filter_tax_values_to_apply=None, grouping_key_generator=None):
+    def _aggregate_taxes(self, to_process, filter_tax_values_to_apply=None, grouping_key_generator=None, distribute_total_on_line=True):
 
         def default_grouping_key_generator(base_line, tax_values):
             return {'tax': tax_values['tax_repartition_line'].tax_id}
@@ -1220,7 +1220,7 @@ class AccountTax(models.Model):
             tax_details['tax_amount'] += tax_values['tax_amount']
             tax_details['group_tax_details'].append(tax_values)
 
-        if self.env.company.tax_calculation_rounding_method == 'round_globally':
+        if self.env.company.tax_calculation_rounding_method == 'round_globally' and distribute_total_on_line:
             # Aggregate all amounts according the tax lines grouping key.
             comp_currency = self.env.company.currency_id
             amount_per_tax_repartition_line_id = defaultdict(lambda: {
