@@ -12,6 +12,7 @@ export const livechatRoutingMap = registry.category("discuss.routing_map");
 
 livechatRoutingMap
     .add("/discuss/channel/messages", "/im_livechat/cors/channel/messages")
+    .add("/discuss/channel/notify_typing", "/im_livechat/cors/channel/notify_typing")
     .add(
         "/discuss/channel/set_last_seen_message",
         "/im_livechat/cors/channel/set_last_seen_message"
