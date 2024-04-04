@@ -37,8 +37,3 @@ def uninstall_hook(cr, registry):
             ]).unlink()
 
     cr.postcommit.add(partial(rem_website_id_null, cr.dbname))
-
-
-def post_init_hook(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    env['ir.module.module'].update_theme_images()
