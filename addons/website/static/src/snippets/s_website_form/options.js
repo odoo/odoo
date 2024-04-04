@@ -300,7 +300,9 @@ const FieldEditor = FormEditor.extend({
      */
     _getLabelPosition: function () {
         const label = this.$target[0].querySelector('.s_website_form_label');
-        if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
+        if (this.$target[0].querySelector(":scope .form-floating")) {
+            return "floating";
+        } else if (this.$target[0].querySelector('.row:not(.s_website_form_multiple)')) {
             return label.classList.contains('text-end') ? 'right' : 'left';
         } else {
             return label.classList.contains('d-none') ? 'none' : 'top';
@@ -1228,6 +1230,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return fieldEl.classList.contains("s_website_form_custom") ||
                     ["one2many", "many2many"].includes(fieldEl.dataset.type);
             }
+            case "input_label_position_floating_opt":
+                return !["boolean", "one2many", "selection", "date", "datetime", "binary"].includes(
+                    this.$target[0].dataset.type
+                );
         }
         return this._super(...arguments);
     },
