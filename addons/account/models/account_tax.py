@@ -57,6 +57,7 @@ class AccountTaxGroup(models.Model):
         string="Preceding Subtotal",
         help="If set, this value will be used on documents as the label of a subtotal excluding this tax group before displaying it. " \
              "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
+        translate=True,
     )
 
     @api.depends('company_id')
