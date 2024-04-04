@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="calendar_timeslot_read" model="ir.rule">
-            <field name="name">TS: All events</field>
+        <record id="calendar_timeslot_read_my" model="ir.rule">
+            <field name="name">TS: My Event</field>
             <field ref="model_calendar_timeslot" name="model_id"/>
-            <field name="domain_force">[(1, "=", 1)]</field>
+            <field name="domain_force">['|',
+                ('attendee_ids.partner_id.user_id', 'in', user.ids),
+                ('attendee_ids.partner_id', 'in', user.partner_id.ids)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="calendar_timeslot_read_shown" model="ir.rule">
+            <field name="name">TS: Shown Event</field>
+            <field ref="model_calendar_timeslot" name="model_id"/>
+            <field name="domain_force">[('event_id.is_shown', '=', True)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
