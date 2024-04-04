@@ -172,5 +172,10 @@ export class ProductProduct extends Base {
             .filter(Boolean)
             .join(" ");
     }
+
+    exactMatch(searchWord) {
+        const fields = ["barcode", "default_code"];
+        return fields.some((field) => this[field] && this[field].includes(searchWord));
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
