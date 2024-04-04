@@ -247,7 +247,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @users('user_sales_manager')
     def test_lead_convert_no_lang(self):
-        """ Ensure converting a lead with an archived language correctly falls back on the default partner language. """
+        """ Ensure converting a lead with a disable language is correctly propagated """
         inactive_lang = self.env["res.lang"].sudo().create({
             'code': 'en_ZZ',
             'name': 'Inactive Lang',
@@ -264,7 +264,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         }).create({'action': 'create'})
         convert.action_apply()
         self.assertTrue(lead.partner_id)
-        self.assertEqual(lead.partner_id.lang, 'en_US')
+        self.assertEqual(lead.partner_id.lang, 'en_ZZ')
 
     @users('user_sales_manager')
     def test_lead_convert_internals(self):

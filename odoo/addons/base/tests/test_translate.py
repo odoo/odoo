@@ -392,13 +392,10 @@ class TestTranslation(TransactionCase):
         self.assertEqual(category.with_context(lang='fr_FR').name, 'Clients')
 
         with self.assertRaises(UserError):
-            # inactive language
-            category.with_context(lang='nl_NL').name
-        with self.assertRaises(UserError):
             # non-existing language
             category.with_context(lang='Dummy').name
         with self.assertRaises(UserError):
-            # technical langauge starts with '_'
+            # technical language starts with '_'
             category.with_context(lang='_en_US').name
         with self.assertRaises(UserError):
             # SQL injection language
@@ -612,11 +609,15 @@ class TestTranslationWrite(TransactionCase):
 
     def test_01_invalid_lang(self):
         self.env['res.lang']._activate_lang('nl_NL')
+        self.category.with_context(lang='en_US').name = 'Reblochon en_US'
         self.category.with_context(lang='nl_NL').name = 'Reblochon nl_NL'
         self.env.ref('base.lang_nl').active = False
 
-        # [inactive_lang, non_existing_lang, technical_lang, sql_injection_lang]
-        langs = ['nl_NL', 'Dummy', '_en_US', "'', NOW("]
+        # [non_existing_lang, technical_lang, sql_injection_lang]
+        langs = ['Dummy', '_en_US', "'', NOW("]
+
+        self.category.with_context(lang='nl_NL').name = 'new value'  # fallback on first installed language (en_US)
+        self.assertEqual(self.category.with_context(lang='en_US').name, 'new value')
 
         for lang in langs:
             with self.assertRaises(UserError):
