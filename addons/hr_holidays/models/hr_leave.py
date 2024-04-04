@@ -768,7 +768,7 @@ class HolidaysRequest(models.Model):
         that happens it's possible we need to adjust one of the dates. This function adjust the
         date, so that it can be passed to datetime().
 
-        E.g. a leave in US/Pacific for one day:
+        E.g. a leave in America/Los_Angeles for one day:
         - request_date_from: 1st of Jan
         - request_date_to:   1st of Jan
         - hour_from:         15:00 (7:00 local)

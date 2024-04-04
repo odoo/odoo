@@ -185,7 +185,12 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
                 'message_type': 'auto_comment',
                 'subtype': 'mail.mt_note',
             }):
+                self.event.user_id = self.user
+                old_messages = self.event.message_ids
                 self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder()
+                new_messages = self.event.message_ids - old_messages
+                user_message = new_messages.filtered(lambda x: self.event.user_id.partner_id in x.partner_ids)
+                self.assertTrue(user_message.notification_ids, "Organizer must receive a reminder")
 
     def test_notification_event_timezone(self):
         """
