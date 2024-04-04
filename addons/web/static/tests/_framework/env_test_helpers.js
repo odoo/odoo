@@ -121,12 +121,7 @@ export async function makeDialogMockEnv(partialEnv) {
  * @param {(env: OdooEnv, dependencies: Record<keyof Services, any>) => Services[T]} serviceFactory
  */
 export function mockService(name, serviceFactory) {
-    const serviceRegistry = registry.category("services");
-    const originalService = serviceRegistry.get(name, null);
-    serviceRegistry.add(name, { start: serviceFactory }, { force: true });
-    if (originalService) {
-        after(() => serviceRegistry.add(name, originalService, { force: true }));
-    }
+    registry.category("services").add(name, { start: serviceFactory }, { force: true });
 }
 
 /**
