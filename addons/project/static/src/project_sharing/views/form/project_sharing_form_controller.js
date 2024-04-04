@@ -7,6 +7,8 @@ import { useViewCompiler } from '@web/views/view_compiler';
 import { ProjectSharingChatterCompiler } from './project_sharing_form_compiler';
 import { ChatterContainer } from '../../components/chatter/chatter_container';
 
+const { useExternalListener } = owl;
+
 export class ProjectSharingFormController extends FormController {
     setup() {
         super.setup();
@@ -19,6 +21,8 @@ export class ProjectSharingFormController extends FormController {
         }
         const mailTemplates = useViewCompiler(ProjectSharingChatterCompiler, arch, { Mail: template }, {});
         this.mailTemplate = mailTemplates.Mail;
+        useExternalListener(window, "paste", this.onGlobalPaste, { capture: true });
+        useExternalListener(window, "drop", this.onGlobalDrop, { capture: true });
     }
 
     get actionMenuItems() {
@@ -27,6 +31,30 @@ export class ProjectSharingFormController extends FormController {
 
     get translateAlert() {
         return null;
+    }
+
+    onGlobalPaste(ev) {
+        // prevent pasting an image on Description field as Portal users don't have access to ir.attachment
+        ev.preventDefault();
+        if (ev.target.closest('.o_field_widget[name="description"]')) {
+            const items = ev.clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    ev.stopImmediatePropagation();
+                    return;
+                }
+            }
+        }
+    }
+
+    onGlobalDrop(ev) {
+        // prevent dropping an image on Description field as Portal users don't have access to ir.attachment
+        ev.preventDefault();
+        if (ev.target.closest('.o_field_widget[name="description"]')) {
+            if(ev.dataTransfer.files.length > 0){
+                ev.stopImmediatePropagation();
+            }
+        }
     }
 }
 
