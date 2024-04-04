@@ -707,7 +707,13 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.init_messaging) {
+            step("init_messaging");
+        }
+    });
     const env = await start();
+    await assertSteps(["init_messaging"]);
     rpc = rpcWithEnv(env);
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
