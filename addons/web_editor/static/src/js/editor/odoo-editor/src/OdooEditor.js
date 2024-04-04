@@ -241,6 +241,8 @@ export class OdooEditor extends EventTarget {
                 preHistoryUndo: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                // Add for MultiEditor Knowledge
+                postProcessExternalSteps: () => null,
                 onPostSanitize: () => {},
                 direction: 'ltr',
                 _t: string => string,
@@ -335,6 +337,12 @@ export class OdooEditor extends EventTarget {
         this._collabSelectionsContainer = this.document.createElement('div');
         this._collabSelectionsContainer.classList.add('oe-collaboration-selections-container');
         this.editable.before(this._collabSelectionsContainer);
+
+        // Add for MultiEditor Knowledge
+        // Promise for extra rendering, collaborative external steps will be
+        // buffered (delayed) until it is resolved.
+        this._postProcessExternalStepsPromise = null;
+        this._externalStepsBuffer = [];
 
         this.idSet(editable);
         this._historyStepsActive = true;
@@ -1107,6 +1115,9 @@ export class OdooEditor extends EventTarget {
         this._historySnapshots = [{ step: steps[0] }];
         this._historySteps = steps;
 
+        // Add for MultiEditor Knowledge
+        this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+
         this._handleCommandHint();
         this.multiselectionRefresh();
         this.observerActive();
@@ -1587,11 +1598,28 @@ export class OdooEditor extends EventTarget {
     }
 
     onExternalHistorySteps(newSteps) {
+        // Add for MultiEditor Knowledge
+        if (this._postProcessExternalStepsPromise) {
+            this._externalStepsBuffer.push(...newSteps);
+        }
         this.observerUnactive();
         this._computeHistorySelection();
 
+        // Add for MultiEditor Knowledge
+        let stepIndex = 0;
         for (const newStep of newSteps) {
             this._historyAddExternalStep(newStep);
+            // Add for MultiEditor Knowledge
+            stepIndex++;
+            this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+            if (this._postProcessExternalStepsPromise) {
+                this._postProcessExternalStepsPromise.then(() => {
+                    this._postProcessExternalStepsPromise = undefined;
+                    this.onExternalHistorySteps(this._externalStepsBuffer);
+                });
+                this._externalStepsBuffer = newSteps.slice(stepIndex);
+                break;
+            }
         }
 
         this.observerActive();
