@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { markup } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
@@ -22,6 +22,7 @@ import {
 describe.current.tags("headless");
 
 beforeEach(() => {
+    patchTranslations();
     patchWithCleanup(localization, {
         decimalPoint: ".",
         thousandsSep: ",",
@@ -35,7 +36,7 @@ test("formatFloat", () => {
 
 test("formatFloatFactor", () => {
     expect(formatFloatFactor(false)).toBe("");
-    expect(formatFloatFactor(6000), "6,000.00");
+    expect(formatFloatFactor(6000)).toBe("6,000.00");
     expect(formatFloatFactor(6000, { factor: 3 })).toBe("18,000.00");
     expect(formatFloatFactor(6000, { factor: 0.5 })).toBe("3,000.00");
 });
