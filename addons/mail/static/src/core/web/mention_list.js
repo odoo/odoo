@@ -69,7 +69,6 @@ export class MentionList extends Component {
         const props = {
             anchorRef: this.ref.el,
             position: "bottom-fit",
-            placeholder: _t("Loading"),
             onSelect: this.props.onSelect,
             options: [],
         };

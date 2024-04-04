@@ -17,7 +17,6 @@ export class NavigableList extends Component {
         onSelect: { type: Function },
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
         position: { type: String, optional: true },
         isLoading: { type: Boolean, optional: true },
     };

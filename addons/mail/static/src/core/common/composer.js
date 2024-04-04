@@ -311,7 +311,6 @@ export class Composer extends Component {
         const props = {
             anchorRef: this.ref.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
-            placeholder: _t("Loading"),
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
