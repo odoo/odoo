@@ -1,4 +1,4 @@
-import { after, describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, getFixture, test } from "@odoo/hoot";
 
 import { browser } from "@web/core/browser/browser";
 import {
@@ -13,7 +13,7 @@ import {
 import { redirect } from "@web/core/utils/urls";
 import { tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "../web_test_helpers";
-import { on } from "@odoo/hoot-dom";
+import { click, on } from "@odoo/hoot-dom";
 
 const _urlToState = (url) => urlToState(new URL(url));
 
@@ -1618,5 +1618,76 @@ describe("Retrocompatibility", () => {
         expect(browser.location.hash).toBe("#anchor");
         expect(router.current).toEqual({ a: 114, g: "c.e", f: 1 });
         expect(browser.location.pathname).toBe("/odoo");
+    });
+});
+
+describe("internal links", () => {
+    test.todo("click on internal link does a loadState instead of a full reload", async () => {
+        redirect("/odoo");
+        await createRouter({ onPushState: () => expect.step("pushState") });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "/odoo/some-action/2";
+        fixture.appendChild(link);
+        patchWithCleanup(HTMLAnchorElement.prototype, {
+            get href() {
+                return new URL(this.getAttribute("href"), browser.location.origin).href;
+            },
+        });
+
+        expect(router.current).toEqual({});
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        await click("a");
+        await tick();
+        expect(["click"]).toVerifySteps();
+        expect(router.current).toEqual({
+            action: "some-action",
+            actionStack: [
+                {
+                    action: "some-action",
+                },
+                {
+                    action: "some-action",
+                    resId: 2,
+                },
+            ],
+            resId: 2,
+        });
+        expect(defaultPrevented).toBe(true);
+    });
+
+    test.todo("click on internal link with target _blank doesn't do a loadState", async () => {
+        redirect("/odoo");
+        await createRouter({ onPushState: () => expect.step("pushState") });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "/odoo/some-action/2";
+        link.target = "_blank";
+        fixture.appendChild(link);
+        patchWithCleanup(HTMLAnchorElement.prototype, {
+            get href() {
+                return new URL(this.getAttribute("href"), browser.location.origin).href;
+            },
+        });
+
+        expect(router.current).toEqual({});
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        await click("a");
+        await tick();
+        expect(["click"]).toVerifySteps();
+        expect(router.current).toEqual({});
+        expect(defaultPrevented).toBe(false);
     });
 });
