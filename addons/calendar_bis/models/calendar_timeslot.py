@@ -44,9 +44,10 @@ class CalendarTimeslot(models.Model):
     partner_id = fields.Many2one('res.partner', related='event_id.partner_id', string='Calendar', readonly=False, default=lambda self: self.env.user.partner_id.id)
     user_id = fields.Many2one('res.users', related='event_id.user_id', string='User')
         # Private fields
-    name = fields.Char(compute='_compute_name', inverse='_inverse_name', required=True)
-    note = fields.Char(compute='_compute_note', inverse='_inverse_note')
+    name = fields.Char('Title', compute='_compute_name', inverse='_inverse_name', required=True)
+    note = fields.Char('Note', compute='_compute_note', inverse='_inverse_note')
     tag_ids = fields.Many2many('calendar.event_bis.tag', compute='_compute_tag_ids', inverse='_inverse_tag_ids', string="Tags")
+    location = fields.Char('Location', compute='_compute_location', inverse='_inverse_location', tracking=True)
 
     # Recurrence Related Fields
     # /!\ These fields must be computed and inverse in the same method,
@@ -264,6 +265,16 @@ class CalendarTimeslot(models.Model):
     def _inverse_tag_ids(self):
         for slot in self:
             slot.event_id.tag_ids = slot.tag_ids
+
+    @api.depends('event_id.location')
+    @api.depends_context('uid')
+    def _compute_location(self):
+        for slot in self.filtered('can_read_private'):
+            slot.location = slot.event_id.location
+
+    def _inverse_location(self):
+        for slot in self:
+            slot.event_id.location = slot.location
 
     def _compute_is_current_partner(self):
         self.is_current_partner = False
