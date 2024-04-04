@@ -25,6 +25,7 @@ sent mails with personal token for the invitation of the survey.
     'data': [
         'report/survey_templates.xml',
         'report/survey_reports.xml',
+        'data/ir_actions_server_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'security/survey_security.xml',
