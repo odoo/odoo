@@ -64,6 +64,7 @@ import {
     ZERO_WIDTH_CHARS,
     ZERO_WIDTH_CHARS_REGEX,
     getAdjacentCharacter,
+    isLinkEligibleForZwnbsp,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2768,7 +2769,7 @@ export class OdooEditor extends EventTarget {
         const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
             .map(node => closestElement(node, 'a:not(.btn)'));
         const singleLinkInSelection = anchorLink === focusLink && anchorLink;
-        if (singleLinkInSelection) {
+        if (singleLinkInSelection && isLinkEligibleForZwnbsp(singleLinkInSelection)) {
             singleLinkInSelection.classList.add('o_link_in_selection');
         }
         for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
