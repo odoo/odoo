@@ -188,7 +188,7 @@ export const editorCommands = {
         startNode = startNode || editor.document.getSelection().anchorNode;
         const shouldUnwrap = (node) => (
             [...paragraphRelatedElements, 'LI'].includes(node.nodeName) &&
-            block.textContent !== "" &&
+            block.textContent !== "" && node.textContent !== "" &&
             (
                 block.nodeName === node.nodeName ||
                 ['BLOCKQUOTE', 'PRE', 'DIV'].includes(block.nodeName)
