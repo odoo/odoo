@@ -270,12 +270,19 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         constraints = super()._export_invoice_constraints(invoice, vals)
 
-        constraints.update({
-            'peppol_eas_is_set_supplier': self._check_required_fields(vals['supplier'], 'peppol_eas'),
-            'peppol_eas_is_set_customer': self._check_required_fields(vals['customer'], 'peppol_eas'),
-            'peppol_endpoint_is_set_supplier':  self._check_required_fields(vals['supplier'], 'peppol_endpoint'),
-            'peppol_endpoint_is_set_customer':  self._check_required_fields(vals['customer'], 'peppol_endpoint'),
-        })
+        for partner in ('supplier', 'customer'):
+            constraints.update({
+                f'peppol_eas_is_set_{partner}': self._check_required_fields(
+                    vals['vals'][f'accounting_{partner}_party_vals']['party_vals']['endpoint_id_attrs'],
+                    'schemeID',
+                    _("The %s must have a valid Peppol e-address (eas).", partner)
+                ),
+                f'peppol_endpoint_is_set_{partner}': self._check_required_fields(
+                    vals['vals'][f'accounting_{partner}_party_vals']['party_vals'],
+                    'endpoint_id',
+                    _("The %s must have a valid Peppol endpoint.", partner)
+                ),
+            })
 
         constraints.update(
             self._invoice_constraints_peppol_en16931_ubl(invoice, vals)
@@ -342,7 +349,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         for role in ('supplier', 'customer'):
-            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(vals[role], 'country_id')
+            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(
+                vals['vals'][f'accounting_{role}_party_vals']['party_vals']['postal_address_vals']['country_vals'],
+                'identification_code',
+                _("The country is required for the %s.", role)
+            )
             scheme_vals = vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_tax_scheme_vals'][-1:]
             if (
                 not (scheme_vals and scheme_vals[0]['company_id'] and scheme_vals[0]['company_id'][:2].isalpha())
@@ -412,7 +423,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'nl_r_005': _(
                         "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
                         vals['customer'].display_name
-                    ) if vals['customer'].peppol_eas not in ('0106', '0190') else '',
+                    ) if vals['customer'].commercial_partner_id.peppol_eas not in ('0106', '0190') else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':
