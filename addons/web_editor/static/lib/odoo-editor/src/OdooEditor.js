@@ -2974,7 +2974,7 @@ export class OdooEditor extends EventTarget {
         }
         // Remove now empty links
         for (const link of element.querySelectorAll('a')) {
-            if (!link.textContent) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
                 link.remove();
             }
         }
