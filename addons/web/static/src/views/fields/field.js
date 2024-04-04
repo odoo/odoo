@@ -13,6 +13,58 @@ const isSmall = utils.isSmall;
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
+fieldRegistry.addValidation({
+    component: { validate: (c) => c.prototype instanceof Component },
+    displayName: { type: String, optional: true },
+    supportedOptions: {
+        type: Array,
+        element: Object,
+        shape: {
+            label: String,
+            name: String,
+            type: String,
+            availableTypes: { type: Array, element: String, optional: true },
+            default: { type: String, optional: true },
+            help: { type: String, optional: true },
+            choices: /* choices if type == selection */ {
+                type: Array,
+                element: Object,
+                shape: { label: String, value: String },
+                optional: true,
+            },
+        },
+        optional: true,
+    },
+    supportedTypes: { type: Array, element: String, optional: true },
+    extractProps: { type: Function, optional: true },
+    isEmpty: { type: Function, optional: true },
+    isValid: { type: Function, optional: true }, // Override the validation for the validation visual feedbacks
+    additionalClasses: { type: Array, element: String, optional: true },
+    fieldDependencies: {
+        type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
+        optional: true,
+    },
+    relatedFields: {
+        type: [
+            Function,
+            {
+                type: Array,
+                element: Object,
+                shape: {
+                    name: String,
+                    type: String,
+                    readonly: { type: Boolean, optional: true },
+                    selection: { type: Array, element: { type: Array, element: String } },
+                    optional: true,
+                },
+            },
+        ],
+        optional: true,
+    },
+    useSubView: { type: Boolean, optional: true },
+    label: { type: [String, { value: false }], optional: true },
+});
+
 class DefaultField extends Component {
     static template = xml``;
     static props = ["*"];
