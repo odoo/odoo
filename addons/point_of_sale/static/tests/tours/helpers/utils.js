@@ -42,3 +42,10 @@ export function elementDoesNotExist(selector) {
         isCheck: true,
     };
 }
+
+export function selectButton(name) {
+    return {
+        content: `Select button ${name}`,
+        trigger: `button:contains("${name}")`,
+    };
+}
