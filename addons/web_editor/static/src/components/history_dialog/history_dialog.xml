@@ -15,7 +15,7 @@
                         </a>
                     </t>
                 </div>
-                <div class="history-container d-flex flex-grow-1 min-w-0 p-3">
+                <div class="history-container d-flex flex-grow-1 min-w-0 p-3" t-ref="history-container">
                     <Notebook defaultPage="'history'">
                         <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
                             <t t-if="state.revisionContent?.length" t-out="state.revisionContent"/>
