@@ -35,3 +35,5 @@ from . import website_controller_page
 from . import website_design
 from . import website_design_option
 from . import website_design_font
+from . import website_design_palette
+from . import website_design_color

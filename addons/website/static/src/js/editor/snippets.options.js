@@ -365,7 +365,7 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
-
+// TODO: put cache function names at the plural form
 const DESIGN_DATA_CACHE = {
     /**
      * Fetches the website.design.option records, store them in a cache and
@@ -429,8 +429,48 @@ const DESIGN_DATA_CACHE = {
         await this._designFontsPromise;
         this._designFontsPromise = null;
         return this.fonts;
-    }
-};
+    },
+    async getDesignPalettes(orm) {
+        if (this.palettes) {
+            return this.palettes;
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designPalettesPromise) {
+            console.log("Fetching design palettes");
+            this._designPalettesPromise = orm.searchRead(
+                "website.design.palette",
+                [],
+                ["name", "colors"],
+            );
+            this._designPalettesPromise.then(palettes => {
+                this.palettes = palettes;
+            });
+        }
+        await this._designPalettesPromise;
+        this._designPalettesPromise = null;
+        return this.palettes;
+    },
+    async getDesignColors(orm) {
+        if (this.colors) {
+            return this.colors;
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designColorsPromise) {
+            console.log("Fetching design colors");
+            this._designColorsPromise = orm.searchRead(
+                "website.design.color",
+                [],
+                ["name", "hex_value"],
+            );
+            this._designColorsPromise.then(colors => {
+                this.colors = colors;
+            });
+        }
+        await this._designColorsPromise;
+        this._designColorsPromise = null;
+        return this.colors;
+    },
+ };
 
 const DesignOptionSelector = SelectUserValueWidget.extend({
     /**
@@ -640,10 +680,49 @@ const DesignFontSelector = SelectUserValueWidget.extend({
     },
 });
 
+const DesignPaletteSelector = SelectUserValueWidget.extend({
+    /**
+     * @override
+     */
+    init() {
+        this.orm = this.bindService("orm");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super.bind(this)(...arguments);
+        const palettes = await DESIGN_DATA_CACHE.getDesignPalettes(
+            this.orm,
+        );
+        const colors = await DESIGN_DATA_CACHE.getDesignColors(
+            this.orm,
+        );
+        for (const palette of palettes) {
+            const buttonEl = document.createElement("we-button");
+            buttonEl.classList.add("o_palette_color_preview_button");
+            buttonEl.dataset.customizeWebsiteVariable = `'${palette.name}'`;
+            // TODO: make the click on button work.
+            [1, 3, 2].forEach(n => {
+                const colorPreviewEl = document.createElement("span");
+                colorPreviewEl.classList.add("o_palette_color_preview");
+                const color = colors.find(c =>
+                    c.name === `o-color-${n}` && palette.colors.includes(c.id)
+                )["hex_value"];
+                colorPreviewEl.style.backgroundColor = color;
+                buttonEl.appendChild(colorPreviewEl);
+            });
+            this.menuEl.appendChild(buttonEl);
+        }
+    },
+});
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 options.userValueWidgetsRegistry['we-designoptionselector'] = DesignOptionSelector;
 options.userValueWidgetsRegistry['we-designfontselector'] = DesignFontSelector;
+options.userValueWidgetsRegistry['we-designpaletteselector'] = DesignPaletteSelector;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -1570,7 +1649,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         }
         for (const widget of widgets) {
             if (widget.getMethodsNames().includes('customizeWebsiteVariable')
-                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-name') {
+                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color__palettes__name') {
                 const hasCustomizedColors = weUtils.getCSSVariableValue('has-customized-colors');
                 if (hasCustomizedColors && hasCustomizedColors !== 'false') {
                     return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
@@ -1655,24 +1734,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-name"]');
-        const style = window.getComputedStyle(document.documentElement);
-        const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(', ').map((name) => {
-            return name.replace(/'/g, "");
-        });
-        for (const paletteName of allPaletteNames) {
-            const btnEl = document.createElement('we-button');
-            btnEl.classList.add('o_palette_color_preview_button');
-            btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
-            [1, 3, 2].forEach(c => {
-                const colorPreviewEl = document.createElement('span');
-                colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
-                colorPreviewEl.style.backgroundColor = color;
-                btnEl.appendChild(colorPreviewEl);
-            });
-            paletteSelectorEl.appendChild(btnEl);
-        }
+        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color__palettes__name"]');
 
         const presetCollapseEl = uiFragment.querySelector('we-collapse.o_we_theme_presets_collapse');
         let ccPreviewEls = [];

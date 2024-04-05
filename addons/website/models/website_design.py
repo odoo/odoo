@@ -29,6 +29,10 @@ class WebsiteDesign(models.Model):
     navbar__font = fields.Many2one('website.design.font', string='Navbar Font')
     buttons__font = fields.Many2one('website.design.font', string='Buttons Font')
 
+    # Colors
+    # This should be a Many2one field to website.design.palette
+    color__palettes__name = fields.Char(string='Color Palettes Name', default='base-1')
+
     paragraph__margin__top = fields.Char(string='Paragraph Margin Top', default='0')
     paragraph__margin__bottom = fields.Char(string='Paragraph Margin Bottom', default='16px')
 

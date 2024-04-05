@@ -449,6 +449,7 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
 // Given a primary color (and eventually a secondary one), the function returns
 // a basic odoo palette in sass-map format. The palette will be generated using
 // the safest readability values possible.
+// This scss function could probably be removed after palette in DB.
 @function o-make-palette($-primary, $-secondary: null, $-overrides-map: null) {
     $-o-color-2: $-secondary or increase-contrast(desaturate(mix(complement($-primary), #FFFFFF, 80%), 20%), $-primary);
 
