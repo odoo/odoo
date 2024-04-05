@@ -11,10 +11,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, SUPERUSER_ID, _
 from odoo.exceptions import UserError
-from odoo.http import request, content_disposition
+from odoo.http import request, content_disposition, Stream
 from odoo.osv import expression
-from odoo.tools import format_datetime, format_date, is_html_empty
+from odoo.tools import binary_to_image, format_datetime, format_date, format_decimalized_number, image_apply_opt, is_html_empty
 from odoo.addons.base.models.ir_qweb import keep_query
+from odoo.addons.survey.tools.preview_image import generate_survey_preview_image, get_image
 
 _logger = logging.getLogger(__name__)
 
@@ -454,6 +455,38 @@ class Survey(http.Controller):
             suggested_answer, 'value_image'
         ).get_response()
 
+    @http.route('/survey/<string:survey_token>/preview_picture', type='http', auth='public')
+    def survey_get_preview_picture(self, survey_token, results=False):
+        """ Route used by meta tags for the link preview picture. """
+        survey_sudo, __ = self._fetch_from_access_token(survey_token, False)
+        if not survey_sudo:
+            raise werkzeug.exceptions.NotFound()
+
+        if survey_sudo.certification:
+            tag_description = _("Certification results") if results else _("Certification")
+            tag_name = "trophy"
+        else:
+            tag_description = _("Survey results") if results else _("Survey")
+            tag_name = "survey"
+
+        background_image = get_image(survey_sudo.background_image) or False
+
+        preview_image = generate_survey_preview_image(
+            background_image=background_image,
+            kpis=(
+                (_("Registered"), format_decimalized_number(survey_sudo.answer_count)),
+                (_("Completed"), format_decimalized_number(survey_sudo.answer_done_count)),
+                (_("Success Rate"), f"{survey_sudo.success_ratio}%"),
+            ),
+            secondary_image=(get_image(survey_sudo.user_id.image_128)
+                             or binary_to_image(request.env['avatar.mixin']._avatar_get_placeholder())),
+            secondary_text=f"{survey_sudo.user_id.name} - {survey_sudo.create_date.strftime('%b %Y')}",
+            tag_description=tag_description,
+            tag_path=f"survey/static/src/img/{tag_name}-{'light' if background_image else 'brand'}.png",
+            title=survey_sudo.title,
+        )
+        return Stream(type="data", data=image_apply_opt(preview_image, "png"), mimetype='image/png').get_response()
+
     # ----------------------------------------------------------------
     # JSON ROUTES to begin / continue survey (ajax navigation) + Tools
     # ----------------------------------------------------------------
@@ -641,7 +674,7 @@ class Survey(http.Controller):
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
         return request.render('survey.survey_page_print', {
             'is_html_empty': is_html_empty,
-            'review': review,
+            'review': review and (not answer_sudo.partner_id or answer_sudo.partner_id == request.env.user.partner_id),
             'survey': survey_sudo,
             'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'questions_to_display': answer_sudo._get_print_questions(),
@@ -697,12 +730,16 @@ class Survey(http.Controller):
     # REPORTING SURVEY ROUTES AND TOOLS
     # ------------------------------------------------------------
 
-    @http.route('/survey/results/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_report(self, survey, answer_token=None, **post):
-        """ Display survey Results & Statistics for given survey.
-
+    @http.route([
+        '/survey/results/<model("survey.survey"):survey>',
+        '/survey/results/<string:results_token>'],
+        type='http', auth='public', website=True, sitemap=False
+    )
+    def survey_report(self, survey=None, results_token=None, answer_token=None, **post):
+        """
         New structure: {
-            'survey': current survey browse record,
+            'survey': sudo-ed browse record of survey related to given results token (to avoid
+                access rights issues),
             'question_and_page_data': see ``SurveyQuestion._prepare_statistics()``,
             'survey_data'= see ``SurveySurvey._prepare_statistics()``
             'search_filters': [],
@@ -711,6 +748,11 @@ class Survey(http.Controller):
             'search_failed': either filter on failed inputs only or not,
         }
         """
+        if results_token:
+            survey = request.env['survey.survey'].sudo().search([('results_token', '=', results_token)])
+        if not survey:
+            raise request.not_found()
+
         user_input_lines, search_filters = self._extract_filters_data(survey, post)
         survey_data = survey._prepare_statistics(user_input_lines)
         question_and_page_data = survey.question_and_page_ids._prepare_statistics(user_input_lines)
@@ -725,6 +767,8 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
             'search_failed': post.get('failed') == 'true',
             'search_passed': post.get('passed') == 'true',
+            # survey right
+            'user_can_manage': request.env.user.has_group('survey.group_survey_manager') or request.env.user == survey.user_id
         }
 
         if survey.session_show_leaderboard:
@@ -820,7 +864,7 @@ class Survey(http.Controller):
 
         # Get the matching user input lines
         user_inputs_query = request.env['survey.user_input'].sudo()._search(user_input_domain)
-        user_input_lines = request.env['survey.user_input.line'].search([('user_input_id', 'in', user_inputs_query)])
+        user_input_lines = request.env['survey.user_input.line'].sudo().search([('user_input_id', 'in', user_inputs_query)])
 
         return user_input_lines, search_filters
 

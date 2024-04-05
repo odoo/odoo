@@ -132,6 +132,7 @@ class SurveyQuestion(models.Model):
         help="Currently only supported for live sessions.")
     is_time_customized = fields.Boolean("Customized speed rewards")
     time_limit = fields.Integer("Time limit (seconds)")
+    hide_result = fields.Boolean("Hide from results", help="Do not show this question's answer in the results page when it is shared")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True)

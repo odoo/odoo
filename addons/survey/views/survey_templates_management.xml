@@ -24,9 +24,9 @@
     <template id="survey_void_content" name="Survey: void content">
         <t t-call="survey.layout">
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
-            <div class="wrap">
-                <div class="container">
-                    <div class="jumbotron mt32">
+            <div class="container h-100">
+                <div class="row align-items-center h-100">
+                    <div class="col-12 mx-auto">
                         <h1><span t-field="survey.title"/> survey is empty</h1>
                         <p t-if="env.user.has_group('survey.group_survey_user')">
                             Please make sure you have at least one question in your survey. You also need at least one section if you chose the "Page per section" layout.<br />

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo.addons.survey.tests import common
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
@@ -80,6 +82,15 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         self.assertTrue(answer_token)
         self.assertAnswer(answers, 'new', self.env['survey.question'])
 
+        # -> check if the meta data for link previews have been correctly set
+        for method in ('og', 'twitter'):  # Opengraph and twitter cards
+            title_re = re.compile(f'(?<="{method}:title" content=")(.*)(?=")')
+            self.assertEqual(title_re.search(r.text).group(), survey.title)
+            image_re = re.compile(f'(?<="{method}:image" content=")(.*)(?=")')
+            # check that preview image url returns an image
+            r_image = self.url_open(image_re.search(r.text).group())
+            self.assertEqual(r_image.headers['Content-Type'], "image/png")
+
         # Customer begins survey with first page
         r = self._access_page(survey, answer_token)
         self.assertResponse(r, 200)
@@ -120,3 +131,16 @@ class TestSurveyFlow(common.TestSurveyCommon, HttpCase):
         # -> this should have generated answer lines and closed the answer
         self.assertAnswer(answers, 'done', page_1)
         self.assertAnswerLines(page_1, answers, answer_data)
+
+        # Step: survey manager shares results with customer
+        # --------------------------------------------------
+        with self.with_user('survey_manager'):
+            results_url = survey.action_result_survey()['url']
+            # hide the first question's answers
+            page0_q0.hide_result = True
+        r = self.url_open(results_url)
+        self.assertTrue(r)
+        # first question's answers should be hidden to the customer
+        self.assertFalse(page0_q0.title in r.text)
+        # second question's answers should be visible to the customer
+        self.assertTrue(page0_q1.title in r.text)

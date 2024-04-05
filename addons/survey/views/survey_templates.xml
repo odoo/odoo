@@ -3,6 +3,22 @@
 <data>
     <!-- Main survey layout -->
     <template id="survey.layout" name="Survey Layout" inherit_id="web.frontend_layout" primary="True">
+        <xpath expr="//head/meta[last()]" position="after">
+            <t t-if="survey">
+                <!-- Remove seo_object to not define og and twitter tags twice when wesbite is installed -->
+                <t t-set="seo_object" t-value="False"/>
+                <meta property="og:title" t-att-content="survey.title"/>
+                <meta property="og:description" t-att-content="survey.description.striptags() if survey.description else ''"/>
+                <meta property="og:site_name" t-att-content="request.env.company.name"/>
+                <meta property="og:image" t-attf-content="#{request.httprequest.host_url}survey/#{survey.access_token}/preview_picture#{'?results=1' if statistics_page else ''"/>
+                <meta property="og:image:width" content="1200"/>
+                <meta property="og:image:height" content="630"/>
+                <meta name="twitter:card" content="summary_large_image"/>
+                <meta name="twitter:title" t-att-content="survey.title"/>
+                <meta name="twitter:description" t-att-content="survey.description.striptags() if survey.description else ''"/>
+                <meta name="twitter:image" t-attf-content="#{request.httprequest.host_url}survey/#{survey.access_token}/preview_picture#{'?results=1' if statistics_page else ''"/>
+            </t>
+        </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
             <!--TODO DBE Fix me : If one day, there is a survey_livechat bridge module, put this in that module-->
             <t t-set="no_livechat" t-value="True"/>
@@ -78,8 +94,7 @@
             <div class="container m-0 p-0">
                 <div class="row">
                     <div  class="col-lg-10">
-                        <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'"
-                            t-esc="survey.title" class="o_survey_main_title pt-4"></h1>
+                        <h1 t-if="answer.state == 'new' or survey.questions_layout != 'page_per_question'" t-out="survey.title" class="o_survey_main_title pt-4 opacity-0"/>
                     </div>
                     <div class="o_survey_timer col-lg-2 pt-4">
                         <h1 class="o_survey_timer_container timer text-end">
@@ -146,9 +161,10 @@
     </template>
 
     <template id="survey_fill_form_start" name="Survey: start form content">
-        <div class="wrap o_survey_start">
+        <div class="wrap o_survey_start pb-5 pb-sm-0">
             <div class='mb32'>
-                <div t-field='survey.description' class="oe_no_empty pb-5 text-break"/>
+                <h1 t-out="survey.title"/>
+                <div t-field='survey.description' class="oe_no_empty fst-italic pb-5 pb-sm-0 text-break"/>
                 <t t-if="answer.is_session_answer">
                     <div class="fw-bold">
                         The session will begin automatically when the host starts.

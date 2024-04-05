@@ -453,11 +453,17 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
         'click a.filter-passed-and-failed': '_onFilterPassedAndFailedClick',
         'click .o_survey_answer_image': '_onAnswerImgClick',
         "click .o_survey_results_print": "_onPrintResultsClick",
+        'click .o_survey_toggle_question_visibility': '_onToggleQuestionVisibilityClick',
     },
 
     //--------------------------------------------------------------------------
     // Widget
     //--------------------------------------------------------------------------
+
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
 
     /**
     * @override
@@ -637,7 +643,25 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             throw new Error('`operation` parameter for `_prepareAnswersFilters` must be either "add" or "remove".')
         }
         return filters;
-    }
+    },
+
+    /**
+     * If the user can manage the survey, hiding a question should hide it for the other
+     * users.
+     * @private
+     * @param {Event} ev
+     */
+    _onToggleQuestionVisibilityClick: function (ev) {
+        const { dataset } = ev.currentTarget;
+        if (dataset.userCanManage) {
+            const isHidden = !dataset.isHidden;
+            dataset.isHidden = isHidden || "";
+            this.orm.call("survey.question", "write", [
+                [parseInt(dataset.bsTarget.split("_").at(-1))],
+                { hide_result: isHidden },
+            ]);
+        }
+    },
 });
 
 export default {
