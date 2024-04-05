@@ -523,7 +523,7 @@
         }
         // Generate new Id if the item didn't exist in the dictionary
         const ids = Object.keys(itemsDic);
-        const maxId = ids.length === 0 ? 0 : Math.max(...ids.map((id) => parseInt(id, 10)));
+        const maxId = ids.length === 0 ? 0 : largeMax(ids.map((id) => parseInt(id, 10)));
         itemsDic[maxId + 1] = item;
         return maxId + 1;
     }
@@ -739,6 +739,34 @@
         const newArray = [...array];
         newArray.splice(index, 0, ...items);
         return newArray;
+    }
+    /**
+     * Alternative to Math.max that works with large arrays.
+     * Typically useful for arrays bigger than 100k elements.
+     */
+    function largeMax(array) {
+        let len = array.length;
+        if (len < 100000)
+            return Math.max(...array);
+        let max = -Infinity;
+        while (len--) {
+            max = array[len] > max ? array[len] : max;
+        }
+        return max;
+    }
+    /**
+     * Alternative to Math.min that works with large arrays.
+     * Typically useful for arrays bigger than 100k elements.
+     */
+    function largeMin(array) {
+        let len = array.length;
+        if (len < 100000)
+            return Math.min(...array);
+        let min = +Infinity;
+        while (len--) {
+            min = array[len] < min ? array[len] : min;
+        }
+        return min;
     }
 
     const RBA_REGEX = /rgba?\(|\s+|\)/gi;
@@ -16335,10 +16363,10 @@
             }
         }
         return {
-            labels: Object.keys(labelMap),
+            labels: Array.from(labelSet),
             dataSetsValues: datasets.map((dataset, indexOfDataset) => ({
                 ...dataset,
-                data: Object.values(labelMap).map((dataOfLabel) => dataOfLabel[indexOfDataset]),
+                data: Array.from(labelSet).map((label) => labelMap[label][indexOfDataset]),
             })),
         };
     }
@@ -17059,7 +17087,7 @@
             return undefined;
         }
         const labelsTimestamps = labelDates.map((date) => date.getTime());
-        const period = Math.max(...labelsTimestamps) - Math.min(...labelsTimestamps);
+        const period = largeMax(labelsTimestamps) - largeMin(labelsTimestamps);
         const minUnit = getFormatMinDisplayUnit(format);
         if (UNIT_LENGTH.second >= UNIT_LENGTH[minUnit] && Milliseconds.inSeconds(period) < 180) {
             return "second";
@@ -17501,7 +17529,7 @@
     }
     function getPieColors(colors, dataSetsValues) {
         const pieColors = [];
-        const maxLength = Math.max(...dataSetsValues.map((ds) => ds.data.length));
+        const maxLength = largeMax(dataSetsValues.map((ds) => ds.data.length));
         for (let i = 0; i <= maxLength; i++) {
             pieColors.push(colors.next());
         }
@@ -18318,8 +18346,8 @@
         let last;
         const activesRows = env.model.getters.getActiveRows();
         if (activesRows.size !== 0) {
-            first = Math.min(...activesRows);
-            last = Math.max(...activesRows);
+            first = largeMin([...activesRows]);
+            last = largeMax([...activesRows]);
         }
         else {
             const zone = env.model.getters.getSelectedZones()[0];
@@ -18347,8 +18375,8 @@
         let last;
         const activeCols = env.model.getters.getActiveCols();
         if (activeCols.size !== 0) {
-            first = Math.min(...activeCols);
-            last = Math.max(...activeCols);
+            first = largeMin([...activeCols]);
+            last = largeMax([...activeCols]);
         }
         else {
             const zone = env.model.getters.getSelectedZones()[0];
@@ -18376,8 +18404,8 @@
         let last;
         const activesRows = env.model.getters.getActiveRows();
         if (activesRows.size !== 0) {
-            first = Math.min(...activesRows);
-            last = Math.max(...activesRows);
+            first = largeMin([...activesRows]);
+            last = largeMax([...activesRows]);
         }
         else {
             const zone = env.model.getters.getSelectedZones()[0];
@@ -18418,8 +18446,8 @@
         let last;
         const activeCols = env.model.getters.getActiveCols();
         if (activeCols.size !== 0) {
-            first = Math.min(...activeCols);
-            last = Math.max(...activeCols);
+            first = largeMin([...activeCols]);
+            last = largeMax([...activeCols]);
         }
         else {
             const zone = env.model.getters.getSelectedZones()[0];
@@ -18460,7 +18488,7 @@
         let row;
         let quantity;
         if (activeRows.size) {
-            row = Math.min(...activeRows);
+            row = largeMin([...activeRows]);
             quantity = activeRows.size;
         }
         else {
@@ -18481,7 +18509,7 @@
         let row;
         let quantity;
         if (activeRows.size) {
-            row = Math.max(...activeRows);
+            row = largeMax([...activeRows]);
             quantity = activeRows.size;
         }
         else {
@@ -18502,7 +18530,7 @@
         let column;
         let quantity;
         if (activeCols.size) {
-            column = Math.min(...activeCols);
+            column = largeMin([...activeCols]);
             quantity = activeCols.size;
         }
         else {
@@ -18523,7 +18551,7 @@
         let column;
         let quantity;
         if (activeCols.size) {
-            column = Math.max(...activeCols);
+            column = largeMax([...activeCols]);
             quantity = activeCols.size;
         }
         else {
@@ -29037,7 +29065,7 @@
     function getSheetDims(sheet) {
         const dims = [0, 0];
         for (let row of sheet.rows) {
-            dims[0] = Math.max(dims[0], ...row.cells.map((cell) => toCartesian(cell.xc).col));
+            dims[0] = Math.max(dims[0], largeMax(row.cells.map((cell) => toCartesian(cell.xc).col)));
             dims[1] = Math.max(dims[1], row.index);
         }
         dims[0] = Math.max(dims[0], EXCEL_IMPORT_DEFAULT_NUMBER_OF_COLS);
@@ -33534,7 +33562,7 @@
                     if (hiddenElements.size >= elements) {
                         return 69 /* CommandResult.TooManyHiddenElements */;
                     }
-                    else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                    else if (largeMin(cmd.elements) < 0 || largeMax(cmd.elements) > elements) {
                         return 89 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else {
@@ -34328,8 +34356,8 @@
                         let newRange = range;
                         let changeType = "NONE";
                         for (let group of groups) {
-                            const min = Math.min(...group);
-                            const max = Math.max(...group);
+                            const min = largeMin(group);
+                            const max = largeMax(group);
                             if (range.zone[start] <= min && min <= range.zone[end]) {
                                 const toRemove = Math.min(range.zone[end], max) - min + 1;
                                 changeType = "RESIZE";
@@ -34756,7 +34784,7 @@
                     const elements = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
-                    if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                    if (largeMin(cmd.elements) < 0 || largeMax(cmd.elements) > elements) {
                         return 89 /* CommandResult.InvalidHeaderIndex */;
                     }
                     else if (this.checkElementsIncludeAllNonFrozenHeaders(cmd.sheetId, cmd.dimension, cmd.elements)) {
@@ -37632,13 +37660,13 @@
                 .map((cell) => cell.value);
             switch (threshold.type) {
                 case "value":
-                    const result = functionName === "max" ? Math.max(...rangeValues) : Math.min(...rangeValues);
+                    const result = functionName === "max" ? largeMax(rangeValues) : largeMin(rangeValues);
                     return result;
                 case "number":
                     return Number(threshold.value);
                 case "percentage":
-                    const min = Math.min(...rangeValues);
-                    const max = Math.max(...rangeValues);
+                    const min = largeMin(rangeValues);
+                    const max = largeMax(rangeValues);
                     const delta = max - min;
                     return min + (delta * Number(threshold.value)) / 100;
                 case "percentile":
@@ -38521,13 +38549,13 @@
             const cells = this.getters.getEvaluatedCellsInZone(sheet.id, zone);
             const cellPositions = range(end, -1, -1);
             const invalidCells = cellPositions.filter((position) => cells[position] && !cells[position].isAutoSummable);
-            const maxValidPosition = Math.max(...invalidCells);
+            const maxValidPosition = largeMax(invalidCells);
             const numberSequences = groupConsecutive(cellPositions.filter((position) => this.isNumber(cells[position])));
             const firstSequence = numberSequences[0] || [];
-            if (Math.max(...firstSequence) < maxValidPosition) {
+            if (largeMax(firstSequence) < maxValidPosition) {
                 return Infinity;
             }
-            return Math.min(...firstSequence);
+            return largeMin(firstSequence);
         }
         shouldFindData(sheetId, zone) {
             return this.getters.isEmpty(sheetId, zone) || this.getters.isSingleCellOrMerge(sheetId, zone);
@@ -40116,7 +40144,7 @@
          * column of the current viewport
          */
         getColDimensionsInViewport(sheetId, col) {
-            const left = Math.min(...this.getters.getSheetViewVisibleCols());
+            const left = largeMin(this.getters.getSheetViewVisibleCols());
             const start = this.getters.getColRowOffsetInViewport("COL", left, col);
             const size = this.getters.getColSize(sheetId, col);
             const isColHidden = this.getters.isColHidden(sheetId, col);
@@ -40131,7 +40159,7 @@
          * of the current viewport
          */
         getRowDimensionsInViewport(sheetId, row) {
-            const top = Math.min(...this.getters.getSheetViewVisibleRows());
+            const top = largeMin(this.getters.getSheetViewVisibleRows());
             const start = this.getters.getColRowOffsetInViewport("ROW", top, row);
             const size = this.getters.getRowSize(sheetId, row);
             const isRowHidden = this.getters.isRowHidden(sheetId, row);
@@ -41628,7 +41656,7 @@
         getColMaxWidth(sheetId, index) {
             const cellsPositions = positions(this.getters.getColsZone(sheetId, index, index));
             const sizes = cellsPositions.map((position) => this.getCellWidth({ sheetId, ...position }));
-            return Math.max(0, ...sizes);
+            return Math.max(0, largeMax(sizes));
         }
         /**
          * Check that any "sheetId" in the command matches an existing
@@ -42930,7 +42958,7 @@
         }
         getPasteZone(target) {
             const height = this.values.length;
-            const width = Math.max(...this.values.map((a) => a.length));
+            const width = largeMax(this.values.map((a) => a.length));
             const { left: activeCol, top: activeRow } = target[0];
             return {
                 top: activeRow,
@@ -46151,12 +46179,14 @@
             this.editionState = "initializing";
         }
         stopEdition() {
-            if (!this.state.isEditing)
+            const input = this.sheetNameRef.el;
+            if (!this.state.isEditing || !input)
                 return;
             this.state.isEditing = false;
             this.editionState = "initializing";
-            this.sheetNameRef.el?.blur();
+            input.blur();
             const inputValue = this.getInputContent() || "";
+            input.innerText = inputValue;
             interactiveRenameSheet(this.env, this.props.sheetId, inputValue, () => this.startEdition());
         }
         cancelEdition() {
@@ -46618,7 +46648,7 @@
             this.sheetListRef.el.scrollTo({ top: 0, left: scroll, behavior: "smooth" });
         }
         onSheetMouseDown(sheetId, event) {
-            if (event.button !== 0)
+            if (event.button !== 0 || this.env.model.getters.isReadonly())
                 return;
             this.closeMenu();
             const mouseX = event.clientX;
@@ -49822,7 +49852,7 @@
     }
     function addDoughnutChart(chart, chartSheetIndex, data, { holeSize } = { holeSize: 50 }) {
         const colors = new ChartColors();
-        const maxLength = Math.max(...chart.dataSets.map((ds) => getRangeSize(ds.range, chartSheetIndex, data)));
+        const maxLength = largeMax(chart.dataSets.map((ds) => getRangeSize(ds.range, chartSheetIndex, data)));
         const doughnutColors = range(0, maxLength).map(() => toXlsxHexColor(colors.next()));
         const dataSetsNodes = [];
         for (const [dsIndex, dataset] of Object.entries(chart.dataSets).reverse()) {
@@ -51753,9 +51783,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.27';
-    __info__.date = '2024-03-25T11:03:54.655Z';
-    __info__.hash = '42e4252';
+    __info__.version = '16.4.28';
+    __info__.date = '2024-04-05T14:13:12.726Z';
+    __info__.hash = '7127826';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
