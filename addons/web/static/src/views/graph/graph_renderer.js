@@ -312,7 +312,11 @@ export class GraphRenderer extends Component {
                             label === NO_DATA
                                 ? DEFAULT_BG
                                 : getColor(index, cookie.get("color_scheme"));
-                        return { text, fullText, fillStyle, hidden, index };
+                        const fontColor =
+                            cookie.get("color_scheme") === "dark"
+                                ? getColor(15, cookie.get("color_scheme"))
+                                : null;
+                        return { text, fullText, fillStyle, hidden, index, fontColor };
                     });
                 },
             };
@@ -335,6 +339,10 @@ export class GraphRenderer extends Component {
                             strokeStyle: dataset[referenceColor],
                             pointStyle: dataset.pointStyle,
                             datasetIndex: index,
+                            fontColor:
+                                cookie.get("color_scheme") === "dark"
+                                    ? getColor(15, cookie.get("color_scheme"))
+                                    : null,
                         };
                     });
                     return labels;
@@ -460,21 +468,37 @@ export class GraphRenderer extends Component {
             title: {
                 display: Boolean(groupBy.length),
                 text: groupBy.length ? fields[groupBy[0].fieldName].string : "",
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             ticks: {
                 callback: (val, index) => {
                     const value = labels[index];
                     return shortenLabel(value);
                 },
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
         };
         const yAxe = {
             type: "linear",
             title: {
                 text: measures[measure].string,
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             ticks: {
                 callback: (value) => this.formatValue(value, allIntegers),
+                color:
+                    cookie.get("color_scheme") === "dark"
+                        ? getColor(15, cookie.get("color_scheme"))
+                        : null,
             },
             suggestedMax: 0,
             suggestedMin: 0,
