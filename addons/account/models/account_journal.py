@@ -102,8 +102,8 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
     )
-    restrict_mode_hash_table = fields.Boolean(string="Lock Sent Entries with Hash",
-        help="If ticked, the accounting entry or invoice receives a hash as soon as it is sent and cannot be modified anymore.")
+    restrict_mode_hash_table = fields.Boolean(string="Lock Sent Invoices with Hash",
+        help="If ticked, when the invoice is sent, the hash chain will be computed from the last move hashed to the new move to be hashed. The hash can also be performed on demand.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Open'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
@@ -539,7 +539,7 @@ class AccountJournal(models.Model):
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
             if 'restrict_mode_hash_table' in vals and not vals.get('restrict_mode_hash_table'):
                 domain = self.env['account.move']._get_move_hash_domain(
-                    common_domain=[('journal_id', '=', self.id), ('secure_sequence_number', '!=', 0)]
+                    common_domain=[('journal_id', '=', self.id), ('inalterable_hash', '!=', False)]
                 )
                 journal_entry = self.env['account.move'].sudo().search_count(domain, limit=1)
                 if journal_entry:
@@ -566,9 +566,6 @@ class AccountJournal(models.Model):
         if 'bank_acc_number' in vals:
             for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
-        for record in self:
-            if record.restrict_mode_hash_table and not record.secure_sequence_id:
-                record._create_secure_sequence(['secure_sequence_id'])
 
         return result
 
@@ -712,10 +709,6 @@ class AccountJournal(models.Model):
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
-            # Create the secure_sequence_id if necessary
-            if journal.restrict_mode_hash_table and not journal.secure_sequence_id:
-                journal._create_secure_sequence(['secure_sequence_id'])
-
         return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
@@ -826,28 +819,6 @@ class AccountJournal(models.Model):
                 'view_mode': 'list, kanban, form',
             })
         return action_vals
-
-    def _create_secure_sequence(self, sequence_fields):
-        """This function creates a no_gap sequence on each journal in self that will ensure
-        a unique number is given to all posted account.move in such a way that we can always
-        find the previous move of a journal entry on a specific journal.
-        """
-        for journal in self:
-            vals_write = {}
-            for seq_field in sequence_fields:
-                if not journal[seq_field]:
-                    vals = {
-                        'name': _('Securisation of %s - %s', seq_field, journal.name),
-                        'code': 'SECUR%s-%s' % (journal.id, seq_field),
-                        'implementation': 'no_gap',
-                        'prefix': '',
-                        'suffix': '',
-                        'padding': 0,
-                        'company_id': journal.company_id.id}
-                    seq = self.env['ir.sequence'].create(vals)
-                    vals_write[seq_field] = seq.id
-            if vals_write:
-                journal.write(vals_write)
 
     # -------------------------------------------------------------------------
     # REPORTING METHODS

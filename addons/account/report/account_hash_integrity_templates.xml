@@ -9,7 +9,7 @@
                             <div class="row" id="hash_header">
                                 <div class="col-12">
                                     <br/>
-                                    <h2>Hash Integrity Result - <span t-out="data['printing_date']"/></h2>
+                                    <h2>Data Inalterability Check Report - <span t-out="data['printing_date']"/></h2>
                                     <br/>
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                             <t t-foreach="data['results']" t-as="result">
                                                 <tr>
                                                     <td>
-                                                        [<span t-out="result['journal_code']"/>] <span t-out="result['journal_name']"/>
+                                                        <span t-out="result['journal_name']"/>
                                                     </td>
                                                     <td class="text-center"><span t-out="result['restricted_by_hash_table']"/></td>
                                                     <td><span t-out="result['msg_cover']"/></td>
@@ -44,7 +44,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <t t-if="any(result['first_hash'] != 'None' for result in data['results'])">
+                            <t t-if="any(result['status'] == 'verified' for result in data['results'])">
                                 <div class="row" style="page-break-before:always;">
                                     <div class="col-12" id="hash_data_consistency">
                                         <br/>
@@ -66,9 +66,9 @@
                                             </thead>
                                             <tbody>
                                                 <t t-foreach="data['results']" t-as="result">
-                                                    <t t-if="result['first_hash'] != 'None'">
+                                                    <t t-if="result['status'] == 'verified'">
                                                         <tr>
-                                                            <td><span t-out="result['journal_code']"/></td>
+                                                            <td><span t-out="result['journal_name']"/></td>
                                                             <td><span t-out="result['first_hash']"/></td>
                                                             <td>
                                                                 <span t-out="result['first_move_name']"/> <br/>

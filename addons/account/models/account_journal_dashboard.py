@@ -32,6 +32,7 @@ class account_journal(models.Model):
     has_statement_lines = fields.Boolean(compute='_compute_current_statement_balance') # technical field used to avoid computing the value multiple times
     entries_count = fields.Integer(compute='_compute_entries_count')
     has_sequence_holes = fields.Boolean(compute='_compute_has_sequence_holes')
+    has_unhashed_entries = fields.Boolean(string='Unhashed Entries', compute='_compute_has_unhashed_entries')
     last_statement_id = fields.Many2one(comodel_name='account.bank.statement', compute='_compute_last_bank_statement')
 
     def _compute_current_statement_balance(self):
@@ -144,10 +145,31 @@ class account_journal(models.Model):
         })
         return self.env.cr.fetchall()
 
+    def _get_moves_to_hash(self, include_pre_last_hash, early_stop):
+        """
+        If we have INV/1, INV/2 not hashed, then INV/3, INV/4 hashed, then INV/5 and INV/6 not hashed
+        :param include_pre_last_hash: if True, this will include INV/1 and INV/2. Otherwise not.
+        :param early_stop: if True, stop searching when we found at least one record
+        :return:
+        """
+        return self.env['account.move'].search([
+            ('restrict_mode_hash_table', '=', True),
+            ('inalterable_hash', '=', False),
+            ('journal_id', '=', self.id),
+            ('date', '>', self.company_id._get_user_fiscal_lock_date()),
+        ])._get_chains_to_hash(force_hash=True, raise_if_gap=False, raise_if_no_document=False, early_stop=early_stop, include_pre_last_hash=include_pre_last_hash)
+
     def _compute_has_sequence_holes(self):
         has_sequence_holes = set(journal_id for journal_id, _prefix in self._query_has_sequence_holes())
         for journal in self:
             journal.has_sequence_holes = journal.id in has_sequence_holes
+
+    def _compute_has_unhashed_entries(self):
+        for journal in self:
+            if journal.restrict_mode_hash_table:
+                journal.has_unhashed_entries = journal._get_moves_to_hash(include_pre_last_hash=False, early_stop=True)
+            else:
+                journal.has_unhashed_entries = False
 
     def _compute_entries_count(self):
         res = {
@@ -534,6 +556,7 @@ class account_journal(models.Model):
                 'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
                 'title_has_sequence_holes': title_has_sequence_holes,
+                'has_unhashed_entries': journal.has_unhashed_entries,
                 'is_sample_data': dashboard_data[journal.id]['entries_count'],
             })
 
@@ -883,6 +906,24 @@ class account_journal(models.Model):
                 'expand': 1,
             }
         }
+
+    def show_unhashed_entries(self):
+        self.ensure_one()
+        chains_to_hash = self._get_moves_to_hash(include_pre_last_hash=True, early_stop=False)
+        moves = self.env['account.move'].concat(*[chain_moves['moves'] for chain_moves in chains_to_hash])
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': _('Journal Entries to Hash'),
+            'res_model': 'account.move',
+            'domain': [('id', 'in', moves.ids)],
+            'views': [(False, 'tree'), (False, 'form')],
+        }
+        if len(moves.ids) == 1:
+            action.update({
+                'res_id': moves[0].id,
+                'views': [(False, 'form')],
+            })
+        return action
 
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""

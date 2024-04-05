@@ -36,7 +36,7 @@ from odoo.tools import (
 _logger = logging.getLogger(__name__)
 
 
-MAX_HASH_VERSION = 3
+MAX_HASH_VERSION = 4
 
 PAYMENT_STATE_SELECTION = [
         ('not_paid', 'Not Paid'),
@@ -259,8 +259,8 @@ class AccountMove(models.Model):
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
-    secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False, index=True)
-    inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
+    secure_sequence_number = fields.Integer(string="Inalterability No Gap Sequence #", readonly=True, copy=False, index=True)
+    inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False, index='btree_not_null')
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
 
     # ==============================================================================================
@@ -2711,10 +2711,13 @@ class AccountMove(models.Model):
             return True
         self._sanitize_vals(vals)
         for move in self:
-            if (self._is_move_restricted(move) and set(vals).intersection(move._get_integrity_hash_fields())):
-                raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.", ', '.join(move._get_integrity_hash_fields())))
-            if (move.restrict_mode_hash_table and move.inalterable_hash and 'inalterable_hash' in vals) or (move.secure_sequence_number and 'secure_sequence_number' in vals):
-                raise UserError(_('You cannot overwrite the values ensuring the inalterability of the accounting.'))
+            violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
+            if move.inalterable_hash and violated_fields:
+                raise UserError(_(
+                    "This document is protected by a hash. "
+                    "Therefore, you cannot edit the following fields: %s.",
+                    ', '.join(f['string'] for f in self.fields_get(violated_fields).values())
+                ))
             if (move.posted_before and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
                 raise UserError(_('You cannot edit the journal of an account move if it has been posted once.'))
             if (move.name and move.name != '/' and move.sequence_number not in (0, 1) and 'journal_id' in vals and move.journal_id.id != vals['journal_id']):
@@ -2765,16 +2768,11 @@ class AccountMove(models.Model):
                     posted_move._check_fiscalyear_lock_date()
                     posted_move.line_ids._check_tax_lock_date()
 
-                # Hash the moves that fit the move hash domain
-                if vals.get('is_move_sent') or vals.get('state') == 'posted':
-                    self.flush_recordset()  # Ensure that the name is correctly computed before it is used to generate the hash
-                    filter_domain = self._get_move_hash_domain(common_domain=[('inalterable_hash', '=', False)])
-                    for move in self.filtered_domain(filter_domain).sorted(lambda m: (m.date, m.ref or '', m.id)):
-                        new_number = move.journal_id.secure_sequence_id.next_by_id()
-                        res |= super(AccountMove, move).write({
-                            'secure_sequence_number': new_number,
-                            'inalterable_hash': move._get_new_hash(new_number),
-                        })
+                if vals.get('state') == 'posted':
+                    self.flush_recordset()  # Ensure that the name is correctly computed
+
+                if vals.get('is_move_sent'):
+                    self._hash_moves()
 
             self._synchronize_business_models(set(vals.keys()))
 
@@ -3210,78 +3208,135 @@ class AccountMove(models.Model):
         hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['date', 'journal_id', 'company_id']
-        elif hash_version in (2, 3):
+        elif hash_version in (2, 3, 4):
             return ['name', 'date', 'journal_id', 'company_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
     def _get_integrity_hash_fields_and_subfields(self):
         return self._get_integrity_hash_fields() + [f'line_ids.{subfield}' for subfield in self.line_ids._get_integrity_hash_fields()]
 
-    def _get_new_hash(self, secure_seq_number):
-        """ Returns the hash to write on journal entries when they get posted"""
-        self.ensure_one()
-        #get the only one exact previous move in the securisation sequence
-        prev_move = self.sudo().search([('state', '=', 'posted'),
-                                 ('company_id', '=', self.company_id.id),
-                                 ('journal_id', '=', self.journal_id.id),
-                                 ('secure_sequence_number', '!=', 0),
-                                 ('secure_sequence_number', '=', int(secure_seq_number) - 1)])
-        if prev_move and len(prev_move) != 1:
-            raise UserError(
-               _('An error occurred when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
-
-        #build and return the hash
-        return self._compute_hash(prev_move.inalterable_hash if prev_move else u'')
+    @api.model
+    def _get_move_hash_domain(self, common_domain=False, force_hash=False):
+        common_domain = expression.AND([
+            common_domain or [],
+            [('restrict_mode_hash_table', '=', True)]
+        ])
+        if force_hash:
+            return expression.AND([common_domain, [('state', '=', 'posted')]])
+        return expression.AND([
+            common_domain,
+            [('move_type', 'in', self.get_sale_types(include_receipts=True)), ('is_move_sent', '=', True)]
+        ])
 
     @api.model
-    def _get_move_hash_domain(self, common_domain=False):
-        # hash customer invoices/refunds on send, the rest on post
-        out_types = self.get_sale_types(include_receipts=True)
-        common_domain = (common_domain or []) + [('restrict_mode_hash_table', '=', True)]
-        return expression.AND(
-            [common_domain, expression.OR([
-                [('move_type', 'in', out_types), ('is_move_sent', '=', True)],
-                [('move_type', 'not in', out_types), ('state', '=', 'posted')],
-            ])]
-        )
+    def _is_move_restricted(self, move, force_hash=False):
+        return move.filtered_domain(self._get_move_hash_domain(force_hash=force_hash))
 
-    @api.model
-    def _is_move_restricted(self, move):
-        return move.filtered_domain(self._get_move_hash_domain())
+    def _hash_moves(self, force_hash=False):
+        chains_to_hash = self._get_chains_to_hash(force_hash=force_hash)
+        for chain in chains_to_hash:
+            move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
+            for move, move_hash in move_hashes.items():
+                move.inalterable_hash = move_hash
+            chain['moves']._message_log_batch(bodies={m.id: _("This move has been locked.") for m in chain['moves']})
 
-    def _compute_hash(self, previous_hash):
-        """ Computes the hash of the browse_record given as self, based on the hash
-        of the previous record in the company's securisation sequence given as parameter"""
-        self.ensure_one()
-        hash_string = sha256((previous_hash + self.string_to_hash).encode('utf-8'))
-        return hash_string.hexdigest()
+    def _get_chains_to_hash(self, force_hash=False, raise_if_gap=True, raise_if_no_document=True, include_pre_last_hash=False, early_stop=False):
+        """
+        From a recordset of moves, retrieve the chains of moves that need to be hashed by taking
+        into account the last move of each chain of the recordset.
+        So if we have INV/1, INV/2, INV/3, INV4 that are not hashed yet in the database
+        but self contains INV/2, INV/3, we will return INV/1, INV/2 and INV/3. Not INV/4.
+        :param force_hash: if True, we'll check all moves posted, independently of whether they were sent or not
+        :param raise_if_gap: if True, we'll raise an error if a gap is detected in the sequence
+        :param raise_if_no_document: if True, we'll raise an error if no document needs to be hashed
+        :param include_pre_last_hash: if True, we'll include the moves not hashed that are previous to the last hashed move
+        :param early_stop: if True, we'll stop the computation as soon as we find at least one document to hash
+        """
+        res = []  # List of dict {'previous_hash': str, 'moves': recordset}
+        for journal, journal_moves in self.grouped('journal_id').items():
+            for chain_moves in journal_moves.grouped('sequence_prefix').values():
+                last_move_in_chain = chain_moves.sorted('sequence_number')[-1]
+                if not self._is_move_restricted(last_move_in_chain, force_hash=force_hash):
+                    continue
 
-    @api.depends(lambda self: self._get_integrity_hash_fields_and_subfields())
-    @api.depends_context('hash_version')
-    def _compute_string_to_hash(self):
-        def _getattrstring(obj, field_str):
-            hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
-            field_value = obj[field_str]
-            if obj._fields[field_str].type == 'many2one':
+                common_domain = [
+                    ('journal_id', '=', journal.id),
+                    ('sequence_prefix', '=', last_move_in_chain.sequence_prefix),
+                ]
+                last_move_hashed = self.env['account.move'].search([
+                    *common_domain,
+                    ('inalterable_hash', '!=', False),
+                ], order='sequence_number desc', limit=1)
+
+                domain = self.env['account.move']._get_move_hash_domain([
+                    *common_domain,
+                    ('sequence_number', '<=', last_move_in_chain.sequence_number),
+                    ('inalterable_hash', '=', False),
+                    ('date', '>', last_move_in_chain.company_id._get_user_fiscal_lock_date()),
+                ], force_hash=True)
+                if last_move_hashed and not include_pre_last_hash:
+                    # Hash moves only after the last hashed move, not the ones that may have been posted before the journal was set on restrict mode
+                    domain.extend([('sequence_number', '>', last_move_hashed.sequence_number)])
+
+                # On the accounting dashboard, we are only interested on whether there are documents to hash or not
+                # so we can stop the computation early if we find at least one document to hash
+                if early_stop:
+                    if self.env['account.move'].sudo().search_count(domain, limit=1):
+                        return True
+                    continue
+                moves_to_hash = self.env['account.move'].sudo().search(domain, order='sequence_number')
+                if not moves_to_hash and force_hash and raise_if_no_document:
+                    raise UserError(_(
+                        "This move could not be locked either because:\n"
+                        "- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
+                        "- the move's date is anterior to the lock date"
+                    ))
+                if raise_if_gap and moves_to_hash and moves_to_hash[0].sequence_number + len(moves_to_hash) - 1 != moves_to_hash[-1].sequence_number:
+                    raise UserError(_(
+                        "An error occurred when computing the inalterability. A gap has been detected in the sequence."
+                    ))
+
+                res.append({
+                    'previous_hash': last_move_hashed.inalterable_hash,
+                    'moves': moves_to_hash.sudo(False),
+                })
+        if early_stop:
+            return False
+        return res
+
+    def _calculate_hashes(self, previous_hash):
+        """
+        :return: dict of move_id: hash
+        """
+        hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
+
+        def _getattrstring(obj, field_name):
+            field_value = obj[field_name]
+            if obj._fields[field_name].type == 'many2one':
                 field_value = field_value.id
-            if obj._fields[field_str].type == 'monetary' and hash_version >= 3:
+            if obj._fields[field_name].type == 'monetary' and hash_version >= 3:
                 return float_repr(field_value, obj.currency_id.decimal_places)
             return str(field_value)
 
+        move2hash = {}
+        previous_hash = previous_hash or ''
+
         for move in self:
+            if previous_hash and previous_hash.startswith("$"):
+                previous_hash = previous_hash.split("$")[2]  # The hash version is not used for the computation of the next hash
             values = {}
-            for field in move._get_integrity_hash_fields():
-                values[field] = _getattrstring(move, field)
+            for fname in move._get_integrity_hash_fields():
+                values[fname] = _getattrstring(move, fname)
 
             for line in move.line_ids:
-                for field in line._get_integrity_hash_fields():
-                    k = 'line_%d_%s' % (line.id, field)
-                    values[k] = _getattrstring(line, field)
-            #make the json serialization canonical
-            #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
-            move.string_to_hash = dumps(values, sort_keys=True,
-                                                ensure_ascii=True, indent=None,
-                                                separators=(',', ':'))
+                for fname in line._get_integrity_hash_fields():
+                    k = 'line_%d_%s' % (line.id, fname)
+                    values[k] = _getattrstring(line, fname)
+            current_record = dumps(values, sort_keys=True, ensure_ascii=True, indent=None, separators=(',', ':'))
+            hash_string = sha256((previous_hash + current_record).encode('utf-8')).hexdigest()
+            move2hash[move] = f"${hash_version}${hash_string}" if hash_version >= 4 else hash_string
+            previous_hash = move2hash[move]
+        return move2hash
 
     # -------------------------------------------------------------------------
     # RECURRING ENTRIES
@@ -4426,13 +4481,16 @@ class AccountMove(models.Model):
                 # so we also check tax_cash_basis_origin_move_id, which stays unchanged
                 # (we need both, as tax_cash_basis_origin_move_id did not exist in older versions).
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
-            if self._is_move_restricted(move):
+            if move.inalterable_hash:
                 raise UserError(_('You cannot modify a sent entry of this journal because it is in strict mode.'))
             # We remove all the analytics entries for this journal
             move.mapped('line_ids.analytic_line_ids').unlink()
 
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft', 'is_move_sent': False})
+
+    def button_hash(self):
+        self._hash_moves(force_hash=True)
 
     def button_request_cancel(self):
         """ Hook allowing the localizations to request a cancellation from the government before cancelling the invoice. """

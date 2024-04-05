@@ -140,7 +140,11 @@
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="account_control_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
-                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type in ['bank', 'cash']"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type != 'sale'"/>
+                                        <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['purchase', 'general']"
+                                               string="Lock Entries Manually"
+                                               help="If ticked, the hash chain will be computed from the last move hashed to the new move to be hashed. The hash is performed on demand."
+                                        />
                                     </group>
                                     <!-- email alias -->
                                     <group class="oe_read_only" name="group_alias_ro"
