@@ -1,12 +1,9 @@
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} TenorCategory
@@ -54,7 +51,6 @@ export class GifPicker extends Component {
 
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.sequential = useSequential();
@@ -146,7 +142,7 @@ export class GifPicker extends Component {
 
     async loadCategories() {
         try {
-            const { tags } = await rpc(
+            const { tags } = await this.store.rpc(
                 "/discuss/gif/categories",
                 {
                     country: user.lang.slice(3, 5),
@@ -188,7 +184,7 @@ export class GifPicker extends Component {
             }
             const res = await this.sequential(() => {
                 this.state.loadingGif = true;
-                const res = rpc("/discuss/gif/search", params, {
+                const res = this.store.rpc("/discuss/gif/search", params, {
                     silent: true,
                 });
                 this.state.loadingGif = false;
@@ -256,14 +252,18 @@ export class GifPicker extends Component {
             if (index >= 0) {
                 this.state.favorites.gifs.splice(index, 1);
             }
-            await rpc("/discuss/gif/remove_favorite", { tenor_gif_id: gif.id }, { silent: true });
+            await this.store.rpc(
+                "/discuss/gif/remove_favorite",
+                { tenor_gif_id: gif.id },
+                { silent: true }
+            );
         }
     }
 
     async loadFavorites() {
         this.state.loadingGif = true;
         try {
-            const [results] = await rpc(
+            const [results] = await this.store.rpc(
                 "/discuss/gif/favorites",
                 { offset: this.offset },
                 { silent: true }

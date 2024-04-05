@@ -27,7 +27,6 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.activityService = useService("mail.activity");
-        this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -76,9 +75,9 @@ export class Activity extends Component {
     async onFileUploaded(data) {
         const thread = this.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.activityService.markAsDone(this.props.activity, [attachmentId]);
+        await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged(thread);
-        await this.threadService.fetchNewMessages(thread);
+        await thread.fetchNewMessages();
     }
 
     onClickAvatar(ev) {
@@ -92,14 +91,13 @@ export class Activity extends Component {
 
     async edit() {
         const thread = this.thread;
-        const id = this.props.activity.id;
-        await this.env.services["mail.activity"].edit(id);
+        this.props.activity.edit();
         this.props.onActivityChanged(thread);
     }
 
     async unlink() {
         const thread = this.thread;
-        this.activityService.delete(this.props.activity);
+        this.props.activity.delete();
         await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
         this.props.onActivityChanged(thread);
     }

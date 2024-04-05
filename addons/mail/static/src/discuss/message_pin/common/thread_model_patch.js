@@ -2,14 +2,9 @@ import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
-import { rpcWithEnv } from "@mail/utils/common/misc";
-let rpc;
-
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
-
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
         this.pinnedMessages = Record.many("Message", {
@@ -37,10 +32,10 @@ patch(Thread.prototype, {
         }
         this.pinnedMessagesState = "loading";
         try {
-            const messagesData = await rpc("/discuss/channel/pinned_messages", {
+            const messagesData = await this.rpc("/discuss/channel/pinned_messages", {
                 channel_id: this.id,
             });
-            this._store.Message.insert(messagesData, { html: true });
+            this.store.Message.insert(messagesData, { html: true });
             this.pinnedMessagesState = "loaded";
         } catch (e) {
             this.pinnedMessagesState = "error";

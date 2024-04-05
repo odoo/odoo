@@ -48,7 +48,7 @@ patch(Thread.prototype, {
         super.incrementUnreadCounter();
         if (this.model === "discuss.channel") {
             // initChannelsUnreadCounter becomes unreliable
-            this._store.channels.fetch();
+            this.store.channels.fetch();
         }
     },
 });

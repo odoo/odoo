@@ -7,16 +7,12 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 import { tick, mockDate } from "@odoo/hoot-mock";
 import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -83,8 +79,7 @@ test("Do not show channel when visitor is typing", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel", {
@@ -93,7 +88,7 @@ test("Do not show channel when visitor is typing", async () => {
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await withGuest(guestId, () =>
-        rpc("/discuss/channel/notify_typing", {
+        getService("mail.rpc")("/discuss/channel/notify_typing", {
             is_typing: true,
             channel_id: channel.id,
         })
@@ -346,11 +341,10 @@ test("Message unread counter", async () => {
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss();
     withGuest(guestId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: {
                 body: "hu",
                 message_type: "comment",

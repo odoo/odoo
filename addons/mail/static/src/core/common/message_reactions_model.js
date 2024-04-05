@@ -17,6 +17,18 @@ export class MessageReactions extends Record {
     count;
     personas = Record.many("Persona");
     message = Record.one("Message");
+
+    async remove() {
+        await this.rpc(
+            "/mail/message/reaction",
+            {
+                action: "remove",
+                content: this.content,
+                message_id: this.message.id,
+            },
+            { silent: true }
+        );
+    }
 }
 
 MessageReactions.register();

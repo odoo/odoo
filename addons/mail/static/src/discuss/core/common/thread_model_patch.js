@@ -1,12 +1,12 @@
 import { Thread } from "@mail/core/common/thread_model";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Mutex } from "@web/core/utils/concurrency";
+import { registry } from "@web/core/registry";
+
+const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -79,10 +79,10 @@ const threadPatch = {
     },
     async fetchChannelInfo() {
         return this.fetchChannelMutex.exec(async () => {
-            if (!(this.localId in this._store.Thread.records)) {
+            if (!(this.localId in this.store.Thread.records)) {
                 return; // channel was deleted in-between two calls
             }
-            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
+            const data = await this.rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
                 this.update(data);
             } else {
@@ -94,11 +94,20 @@ const threadPatch = {
     incrementUnreadCounter() {
         this.message_unread_counter++;
     },
-};
-patch(Thread, {
-    new(...args) {
-        rpc = rpcWithEnv(this.env);
-        return super.new(...args);
+    /** @param {string} body */
+    async post(body) {
+        if (this.model === "discuss.channel" && body.startsWith("/")) {
+            const [firstWord] = body.substring(1).split(/\s/);
+            const command = commandRegistry.get(firstWord, false);
+            if (
+                command &&
+                (!command.channel_types || command.channel_types.includes(this.channel_type))
+            ) {
+                await this.executeCommand(command, body);
+                return;
+            }
+        }
+        return super.post(...arguments);
     },
-});
+};
 patch(Thread.prototype, threadPatch);

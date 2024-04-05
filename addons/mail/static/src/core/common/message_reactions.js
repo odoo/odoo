@@ -11,7 +11,6 @@ export class MessageReactions extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
-        this.messageService = useState(useService("mail.message"));
     }
 
     /** @param {import("models").MessageReactions} reaction */
@@ -63,9 +62,9 @@ export class MessageReactions extends Component {
 
     onClickReaction(reaction) {
         if (this.hasSelfReacted(reaction)) {
-            this.messageService.removeReaction(reaction);
+            reaction.remove();
         } else {
-            this.messageService.react(this.props.message, reaction.content);
+            this.props.message.react(reaction.content);
         }
     }
 

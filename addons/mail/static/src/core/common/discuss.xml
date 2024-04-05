@@ -24,7 +24,7 @@
                     <AutoresizeInput
                         className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
                         enabled="thread.is_editable or thread.channel_type === 'chat'"
-                        onValidate.bind="renameThread"
+                        onValidate.bind="(name) => this.thread.rename(name)"
                         value="thread.displayName"
                     />
                     <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
@@ -94,7 +94,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': mailbox.eq(store.discuss.thread),
-        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
+        }" t-on-click="() => mailbox.setAsDiscussThread()" t-esc="mailbox.name"
     />
 </t>
 

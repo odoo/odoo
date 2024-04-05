@@ -23,7 +23,19 @@ export class Follower extends Record {
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
-        return this.partner.eq(this._store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+        return this.partner.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+    }
+
+    async remove() {
+        await this.store.env.services.orm.call(this.thread.model, "message_unsubscribe", [
+            [this.thread.id],
+            [this.partner.id],
+        ]);
+        this.delete();
+    }
+
+    removeRecipient() {
+        this.thread.recipients.delete(this);
     }
 }
 

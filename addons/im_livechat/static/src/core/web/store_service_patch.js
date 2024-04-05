@@ -1,4 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -8,18 +9,37 @@ patch(Store.prototype, {
         this.livechatChannels = this.makeCachedFetchData({ livechat_channels: true });
         this.has_access_livechat = false;
     },
-    /**
-     * @override
-     */
+    /** @returns {boolean} Whether the livechat thread changed. */
+    goToOldestUnreadLivechatThread() {
+        const oldestUnreadThread = this.discuss.livechats
+            .filter((thread) => thread.isUnread)
+            .sort(
+                (t1, t2) => compareDatetime(t1.lastInterestDt, t2.lastInterestDt) || t1.id - t2.id
+            )[0];
+        if (!oldestUnreadThread) {
+            return false;
+        }
+        if (this.discuss.isActive) {
+            oldestUnreadThread.setAsDiscussThread();
+            return true;
+        }
+        const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
+        if (chatWindow.hidden) {
+            chatWindow.makeVisible();
+        } else if (chatWindow.folded) {
+            chatWindow.toggleFold();
+        }
+        chatWindow.focus();
+        return true;
+    },
+    /** @override */
     onStarted() {
         super.onStarted(...arguments);
         if (this.discuss.isActive && this.has_access_livechat) {
             this.livechatChannels.fetch();
         }
     },
-    /**
-     * @override
-     */
+    /** @override */
     tabToThreadType(tab) {
         const threadTypes = super.tabToThreadType(tab);
         if (tab === "chat" && !this.env.services.ui.isSmall) {

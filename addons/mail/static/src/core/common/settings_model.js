@@ -101,7 +101,7 @@ export class Settings extends Record {
      * @param {number} param0.volume
      */
     async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (this._store.self.type !== "partner") {
+        if (this.store.self.type !== "partner") {
             return;
         }
         const key = `${partnerId}_${guestId}`;
@@ -210,7 +210,7 @@ export class Settings extends Record {
      */
     async _onSaveGlobalSettingsTimeout() {
         this.globalSettingsTimeout = undefined;
-        await this._store.env.services.orm.call(
+        await this.store.env.services.orm.call(
             "res.users.settings",
             "set_res_users_settings",
             [[this.id]],
@@ -231,20 +231,18 @@ export class Settings extends Record {
      */
     async _onSaveVolumeSettingTimeout({ key, partnerId, guestId, volume }) {
         this.volumeSettingsTimeouts.delete(key);
-        await this._store.env.services.orm.call(
+        await this.store.env.services.orm.call(
             "res.users.settings",
             "set_volume_setting",
             [[this.id], partnerId, volume],
-            {
-                guest_id: guestId,
-            }
+            { guest_id: guestId }
         );
     }
     /**
      * @private
      */
     async _saveSettings() {
-        if (this._store.self.type !== "partner") {
+        if (this.store.self.type !== "partner") {
             return;
         }
         browser.clearTimeout(this.globalSettingsTimeout);

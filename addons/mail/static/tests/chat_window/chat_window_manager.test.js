@@ -1,11 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
 import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/core/common/chat_window_service";
-import {
     assertSteps,
     click,
     contains,
@@ -16,7 +11,7 @@ import {
     startServer,
     step,
 } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -60,15 +55,20 @@ test("chat window does not fetch messages if hidden", async () => {
             model: "discuss.channel",
         },
     ]);
+    onRpcBefore("/discuss/channel/messages", () => step("fetch_messages"));
     patchUiSize({ width: 900 });
+    await start();
+    const store = getService("mail.store");
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 2 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH
     ).toBeLessThan(900);
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 3 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    onRpcBefore("/discuss/channel/messages", () => step("fetch_messages"));
-    await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     await contains(".o-mail-Message-content", { text: "Orange" });
@@ -116,15 +116,20 @@ test("click on hidden chat window should fetch its messages", async () => {
             model: "discuss.channel",
         },
     ]);
+    onRpcBefore("/discuss/channel/messages", () => step("fetch_messages"));
     patchUiSize({ width: 900 });
+    await start();
+    const store = getService("mail.store");
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 2 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH
     ).toBeLessThan(900);
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 3 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    onRpcBefore("/discuss/channel/messages", () => step("fetch_messages"));
-    await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     // FIXME: expected ordering: Apple, Banana, Orange
@@ -149,13 +154,18 @@ test("closing the last visible chat window should unhide the first hidden one", 
         { name: "channel-D" },
     ]);
     patchUiSize({ width: 900 });
+    await start();
+    const store = getService("mail.store");
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 2 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH
     ).toBeLessThan(900);
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 3 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeGreaterThan(900);
-    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "channel-A" });
     await contains(".o-mail-ChatWindow");

@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
         {
             trigger: ".o-livechat-LivechatButton",
             async run() {
-                await odoo.__WOWL_DEBUG__.root.env.services["mail.messaging"].isReady;
+                await odoo.__WOWL_DEBUG__.root.env.services["mail.store"].isReady;
                 if (odoo.__WOWL_DEBUG__.root.env.services.bus_service.isActive) {
                     throw new Error("Bus service should not start when loading the page");
                 }

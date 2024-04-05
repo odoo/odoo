@@ -1,8 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import { config as transitionConfig } from "@web/core/transition";
 import {
     assertSteps,
@@ -22,10 +19,15 @@ import {
     step,
     triggerEvents,
 } from "../mail_test_helpers";
-import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    getService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -294,8 +296,7 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
         expect(args[0][0]).toBe(channelId);
         step("rpc:channel_fetch");
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
@@ -307,7 +308,7 @@ test("mark channel as fetched when a new message is loaded and as seen when focu
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -343,13 +344,12 @@ test("mark channel as fetched and seen when a new message is loaded if composer 
             );
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await focus(".o-mail-Composer-input");
     // simulate receiving a message
     await withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "<p>Some new message</p>", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -376,15 +376,14 @@ test("should scroll to bottom on receiving new message if the list is initially 
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -411,8 +410,7 @@ test("should not scroll on receiving new message if the list is initially scroll
             res_id: channelId,
         });
     }
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
@@ -420,7 +418,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     await scroll(".o-mail-Thread", 0);
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -528,15 +526,14 @@ test("new messages separator on receiving new message [REQUIRE FOCUS]", async ()
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 0, text: "New messages" });
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -765,8 +762,7 @@ test("first unseen message should be directly preceded by the new message separa
             Command.create({ partner_id: serverState.partnerId }),
         ],
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "not empty");
     await click(".o-mail-Composer-send:enabled");
@@ -779,7 +775,7 @@ test("first unseen message should be directly preceded by the new message separa
     $(".o-mail-Composer-input")[0].blur();
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "test", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -933,11 +929,10 @@ test("[technical] Opening thread without needaction messages should not mark all
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     onRpc("mail.message", "mark_all_as_read", () => step("mark-all-messages-as-read"));
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await openDiscuss(channelId);
     await click("button", { text: "Inbox" });
-    await rpc("/mail/message/post", {
+    await getService("mail.rpc")("/mail/message/post", {
         post_data: {
             body: "Hello world!",
             attachment_ids: [],

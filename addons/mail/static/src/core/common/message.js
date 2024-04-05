@@ -1,4 +1,3 @@
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -31,14 +30,11 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -96,7 +92,6 @@ export class Message extends Component {
 
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
@@ -114,9 +109,6 @@ export class Message extends Component {
         this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
-        this.threadService = useState(useService("mail.thread"));
-        this.messageService = useState(useService("mail.message"));
-        this.attachmentService = useService("mail.attachment");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
@@ -240,7 +232,7 @@ export class Message extends Component {
             return this.message.author.avatarUrl;
         }
 
-        return DEFAULT_AVATAR;
+        return this.store.DEFAULT_AVATAR;
     }
 
     get expandText() {
@@ -382,7 +374,7 @@ export class Message extends Component {
                 message,
                 messageComponent: Message,
                 prompt: _t("Are you sure you want to delete this message?"),
-                onConfirm: () => this.messageService.delete(message),
+                onConfirm: () => message.remove(),
             },
             { context: this }
         );
@@ -394,8 +386,9 @@ export class Message extends Component {
         this.props.messageToReplyTo.toggle(thread, message);
     }
 
+    /** @param {import("models").Attachment} attachment */
     async onClickAttachmentUnlink(attachment) {
-        await this.attachmentService.delete(toRaw(attachment));
+        await toRaw(attachment).fullyRemove();
     }
 
     onClickMarkAsUnread() {
@@ -409,7 +402,7 @@ export class Message extends Component {
         ) {
             return;
         }
-        return rpc("/discuss/channel/set_last_seen_message", {
+        return this.store.rpc("/discuss/channel/set_last_seen_message", {
             channel_id: message.thread.id,
             last_message_id: previousMessage ? previousMessage.id : false,
             allow_older: true,
@@ -426,14 +419,14 @@ export class Message extends Component {
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
             const thread = store.Thread.insert({ model, id });
-            this.threadService.open(thread);
+            thread.open();
             return;
         }
         if (ev.target.closest(".o_mail_redirect")) {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
             if (user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
+                this.store.openChat({ partnerId });
             }
             return;
         }
@@ -526,7 +519,7 @@ export class Message extends Component {
     async onClickToggleTranslation() {
         const message = toRaw(this.message);
         if (!message.translationValue) {
-            const { error, lang_name, body } = await rpc("/mail/message/translate", {
+            const { error, lang_name, body } = await this.store.rpc("/mail/message/translate", {
                 message_id: message.id,
             });
             message.translationValue = body && markup(body);

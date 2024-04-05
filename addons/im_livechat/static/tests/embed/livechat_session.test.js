@@ -15,12 +15,8 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { getService, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -79,7 +75,6 @@ test("Seen message is saved on the server", async () => {
     const userId = serverState.userId;
     const env = await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
-    rpc = rpcWithEnv(env);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
     await insertText(".o-mail-Composer-input", "Hello, I need help!");
@@ -90,7 +85,7 @@ test("Seen message is saved on the server", async () => {
         env.services["im_livechat.livechat"].thread.selfMember.seen_message_id?.id;
     $(".o-mail-Composer-input").blur();
     await withUser(userId, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: {
                 body: "Hello World!",
                 message_type: "comment",

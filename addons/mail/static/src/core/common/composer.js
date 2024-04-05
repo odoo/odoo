@@ -7,7 +7,7 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
-import { rpcWithEnv, isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
@@ -27,8 +27,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
-/** @type {import("@web/core/network/rpc").rpc} */
-let rpc;
 import { escape, sprintf } from "@web/core/utils/strings";
 
 const EDIT_CLICK_TYPE = {
@@ -87,7 +85,6 @@ export class Composer extends Component {
 
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
         this.SEND_KEYBIND_TO_SEND = markup(
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
@@ -96,8 +93,6 @@ export class Composer extends Component {
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
         );
-        this.messageService = useState(useService("mail.message"));
-        this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
@@ -463,7 +458,7 @@ export class Composer extends Component {
                     recipientEmails.push(recipient.email);
                     recipientAdditionalValues[recipient.email] = recipient.create_values || {};
                 });
-                const partners = await rpc("/mail/partner/from_email", {
+                const partners = await this.store.rpc("/mail/partner/from_email", {
                     emails: recipientEmails,
                     additional_values: recipientAdditionalValues,
                 });
@@ -482,7 +477,7 @@ export class Composer extends Component {
         const body = this.props.composer.textInputContent;
         const validMentions =
             this.store.self.type === "partner"
-                ? this.messageService.getMentionsFromText(body, {
+                ? this.store.getMentionsFromText(body, {
                       mentionedChannels: this.props.composer.mentionedChannels,
                       mentionedPartners: this.props.composer.mentionedPartners,
                   })
@@ -531,9 +526,7 @@ export class Composer extends Component {
                     this.clear();
                 }
                 this.props.messageToReplyTo?.cancel();
-                if (this.thread) {
-                    this.threadService.fetchNewMessages(this.thread);
-                }
+                this.thread?.fetchNewMessages();
             },
         };
         await this.env.services.action.doAction(action, options);
@@ -619,7 +612,7 @@ export class Composer extends Component {
      */
     async _sendMessage(value, postData) {
         const thread = toRaw(this.props.composer.thread);
-        await this.threadService.post(toRaw(this.thread), value, postData);
+        await toRaw(this.thread).post(value, postData);
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
@@ -632,7 +625,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         if (composer.textInputContent || composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.edit(composer.message, value, composer.attachments, {
+                composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
                     mentionedPartners: composer.mentionedPartners,
                 })
@@ -641,7 +634,7 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
                 messageComponent: this.props.messageComponent,
-                onConfirm: () => this.messageService.delete(this.message),
+                onConfirm: () => this.message.remove(),
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
@@ -663,9 +656,7 @@ export class Composer extends Component {
     onFocusin() {
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
-        if (composer.thread) {
-            this.threadService.markAsRead(composer.thread);
-        }
+        composer.thread?.markAsRead();
     }
 
     saveContent() {

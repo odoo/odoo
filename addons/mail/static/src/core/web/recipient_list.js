@@ -1,6 +1,5 @@
 import { useVisible } from "@mail/utils/common/hooks";
-import { Component, useState } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
@@ -16,10 +15,9 @@ export class RecipientList extends Component {
 
     setup() {
         super.setup();
-        this.threadService = useState(useService("mail.thread"));
         this.loadMoreState = useVisible("load-more", () => {
             if (this.loadMoreState.isVisible) {
-                this.threadService.loadMoreRecipients(this.props.thread);
+                this.props.thread.loadMoreRecipients();
             }
         });
     }

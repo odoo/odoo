@@ -1,4 +1,4 @@
-import { Command } from "@web/../tests/web_test_helpers";
+import { Command, getService } from "@web/../tests/web_test_helpers";
 import {
     click,
     contains,
@@ -11,13 +11,9 @@ import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_help
 import { tick } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { describe, test } from "@odoo/hoot";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 describe.current.tags("desktop");
 defineMailModels();
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 
 test("bus subscription updated when joining/leaving thread as non member", async () => {
     const pyEnv = await startServer();
@@ -57,11 +53,10 @@ test.skip("bus subscription kept after receiving a message as non member", async
         channel_member_ids: [Command.create({ partner_id: johnPartner })],
         name: "General",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
     await Promise.all([openDiscuss(channelId), waitUntilSubscribe(`discuss.channel_${channelId}`)]);
     await withUser(johnUser, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -70,7 +65,7 @@ test.skip("bus subscription kept after receiving a message as non member", async
     await contains(".o-mail-Message", { text: "Hello!" });
     await tick();
     await withUser(johnUser, () =>
-        rpc("/mail/message/post", {
+        getService("mail.rpc")("/mail/message/post", {
             post_data: { body: "Goodbye!", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

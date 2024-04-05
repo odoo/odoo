@@ -14,14 +14,11 @@ export class DiscussCoreCommon {
         this.notificationService = services.notification;
         this.orm = services.orm;
         this.presence = services.presence;
-        this.messageService = services["mail.message"];
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
-        this.threadService = services["mail.thread"];
     }
 
     setup() {
-        this.messagingService.isReady.then(() => {
+        this.store.isReady.then(() => {
             this.busService.subscribe("discuss.channel/joined", async (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert(channel);
@@ -63,9 +60,9 @@ export class DiscussCoreCommon {
                 this.store.discuss.history.messages = this.store.discuss.history.messages.filter(
                     (msg) => !msg.thread?.eq(thread)
                 );
-                this.threadService.closeChatWindow?.(thread);
+                thread.closeChatWindow();
                 if (thread.eq(this.store.discuss.thread)) {
-                    this.threadService.setDiscussThread(this.store.discuss.inbox);
+                    this.store.discuss.inbox.setAsDiscussThread();
                 }
                 thread.messages.splice(0, thread.messages.length);
                 thread.delete();
@@ -75,7 +72,7 @@ export class DiscussCoreCommon {
             );
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const { body, thread } = payload;
-                const lastMessageId = this.messageService.getLastMessageId();
+                const lastMessageId = this.store.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
                         author: this.store.odoobot,
@@ -118,8 +115,7 @@ export class DiscussCoreCommon {
                     thread: { id: channel_id, model: "discuss.channel" },
                 });
                 if (member?.persona.eq(this.store.self)) {
-                    this.threadService.updateSeen(
-                        member.thread,
+                    member.thread.updateSeen(
                         last_message_id ? this.store.Message.get(last_message_id) : null
                     );
                 }
@@ -159,7 +155,7 @@ export class DiscussCoreCommon {
             partners_to,
         });
         const channel = this.createChannelThread(data);
-        this.threadService.open(channel);
+        channel.open();
         return channel;
     }
 
@@ -170,14 +166,14 @@ export class DiscussCoreCommon {
     async startChat(partnerIds, inChatWindow) {
         const partners_to = [...new Set([this.store.self.id, ...partnerIds])];
         if (partners_to.length === 1) {
-            const chat = await this.threadService.joinChat(partners_to[0], inChatWindow);
-            this.threadService.open(chat, inChatWindow);
+            const chat = await this.store.joinChat(partners_to[0], inChatWindow);
+            chat.open(inChatWindow);
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self.id
             );
-            const chat = await this.threadService.joinChat(correspondentId, inChatWindow);
-            this.threadService.open(chat, inChatWindow);
+            const chat = await this.store.joinChat(correspondentId, inChatWindow);
+            chat.open(inChatWindow);
         } else {
             await this.createGroupChat({ partners_to });
         }
@@ -233,7 +229,7 @@ export class DiscussCoreCommon {
         ) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
-            this.threadService.markAsFetched(channel);
+            channel.markAsFetched();
         }
         if (
             !channel.loadNewer &&
@@ -242,7 +238,7 @@ export class DiscussCoreCommon {
             this.store.self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
-            this.threadService.markAsRead(channel);
+            channel.markAsRead();
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message });
         const authorMember = channel.channelMembers.find(({ persona }) =>
@@ -252,7 +248,7 @@ export class DiscussCoreCommon {
             authorMember.seen_message_id = message;
         }
         if (authorMember?.eq(channel.selfMember)) {
-            this.threadService.updateSeen(authorMember.thread, message.id);
+            authorMember.thread.updateSeen(message.id);
         }
     }
 }
@@ -260,11 +256,8 @@ export class DiscussCoreCommon {
 export const discussCoreCommon = {
     dependencies: [
         "bus_service",
-        "mail.message",
-        "mail.messaging",
         "mail.out_of_focus",
         "mail.store",
-        "mail.thread",
         "notification",
         "orm",
         "presence",

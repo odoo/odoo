@@ -10,15 +10,14 @@ export class DiscussCorePublic {
     constructor(env, services) {
         this.env = env;
         this.busService = services["bus_service"];
-        this.messagingService = services["mail.messaging"];
     }
 
     setup() {
-        this.messagingService.isReady.then(() => this.busService.start());
+        this.store.isReady.then(() => this.busService.start());
     }
 }
 export const discussCorePublic = {
-    dependencies: ["bus_service", "mail.messaging"],
+    dependencies: ["bus_service"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

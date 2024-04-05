@@ -1,20 +1,24 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { ThreadService } from "@mail/core/common/thread_service";
+import { StoreService } from "@mail/core/common/store_service";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("@mail/core/common/thread_service").ThreadService} */
-const threadServicePatch = {
+const storeServicePatch = {
+    setup() {
+        super.setup();
+        this.employee = {};
+    },
     async getChat(person) {
         const { employeeId } = person;
         if (!employeeId) {
             return super.getChat(person);
         }
-        let employee = this.store.employees[employeeId];
+        let employee = this.employees[employeeId];
         if (!employee) {
-            this.store.employees[employeeId] = { id: employeeId };
-            employee = this.store.employees[employeeId];
+            this.employees[employeeId] = { id: employeeId };
+            employee = this.employees[employeeId];
         }
         if (!employee.user_id && !employee.hasCheckedUser) {
             employee.hasCheckedUser = true;
@@ -30,11 +34,11 @@ const threadServicePatch = {
                 employee.user_id = employeeData.user_id[0];
                 let user = this.store.users[employee.user_id];
                 if (!user) {
-                    this.store.users[employee.user_id] = { id: employee.user_id };
-                    user = this.store.users[employee.user_id];
+                    this.users[employee.user_id] = { id: employee.user_id };
+                    user = this.users[employee.user_id];
                 }
                 user.partner_id = employeeData.user_partner_id[0];
-                this.store.Persona.insert({
+                this.Persona.insert({
                     displayName: employeeData.user_partner_id[1],
                     id: employeeData.user_partner_id[0],
                     type: "partner",
@@ -52,4 +56,4 @@ const threadServicePatch = {
     },
 };
 
-patch(ThreadService.prototype, threadServicePatch);
+patch(StoreService.prototype, storeServicePatch);

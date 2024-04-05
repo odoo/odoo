@@ -15,8 +15,6 @@ export class AttachmentUploadService {
         /** @type {import("@mail/core/common/store_service").Store} */
         this.store = services["mail.store"];
         this.notificationService = services["notification"];
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
-        this.attachmentService = services["mail.attachment"];
 
         this.abortByAttachmentId = new Map();
         this.deferredByAttachmentId = new Map();
@@ -126,6 +124,7 @@ export class AttachmentUploadService {
         return "/mail/attachment/upload";
     }
 
+    /** @param {import("models").Attachment} attachment */
     async unlink(attachment) {
         const abort = this.abortByAttachmentId.get(attachment.id);
         const def = this.deferredByAttachmentId.get(attachment.id);
@@ -135,7 +134,7 @@ export class AttachmentUploadService {
         }
         this.abortByAttachmentId.delete(attachment.id);
         this.deferredByAttachmentId.delete(attachment.id);
-        await this.attachmentService.delete(attachment);
+        await attachment.fullyRemove();
     }
 
     async uploadFile(hooker, file, options) {
@@ -183,7 +182,7 @@ export class AttachmentUploadService {
 }
 
 export const attachmentUploadService = {
-    dependencies: ["file_upload", "mail.attachment", "mail.store", "notification"],
+    dependencies: ["file_upload", "mail.store", "notification"],
     start(env, services) {
         return new AttachmentUploadService(env, services);
     },

@@ -26,12 +26,12 @@ threadActionsRegistry
             return component.thread.isEmpty;
         },
         open(component) {
-            component.messageService.unstarAll();
+            component.store.unstarAll();
         },
         sequence: 2,
         setup() {
             const component = useComponent();
-            component.messageService = useState(useService("mail.message"));
+            component.store = useState(useService("mail.store"));
         },
         text: _t("Unstar all"),
     })
@@ -52,7 +52,7 @@ threadActionsRegistry
                 res_model: component.thread.model,
                 views: [[false, "form"]],
             });
-            component.chatWindowService.close(component.props.chatWindow);
+            component.props.chatWindow.close();
         },
         sequence: 50,
     });

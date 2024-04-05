@@ -7,7 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 export class DiscussChannelListController extends ListController {
     setup() {
         super.setup(...arguments);
-        this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
     }
@@ -19,15 +18,15 @@ export class DiscussChannelListController extends ListController {
                 additionalContext: { active_id: record.resId },
             });
         }
-        let thread = this.store.Thread.get({
+        const thread = this.store.Thread.get({
             model: "discuss.channel",
             id: record.resId,
         });
         if (!thread?.channel_type) {
-            thread = await this.threadService.fetchChannel(record.resId);
+            await thread.fetchChannelInfo();
         }
         if (thread) {
-            return this.threadService.open(thread);
+            return thread.open();
         }
         return super.openRecord(record);
     }

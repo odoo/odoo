@@ -9,7 +9,7 @@ patch(Persona.prototype, {
         const params = assignDefined(
             {},
             {
-                guest_token: this._store.env.services["im_livechat.livechat"].guestToken,
+                guest_token: this.store.env.services["im_livechat.livechat"].guestToken,
                 unique: this.write_date,
             }
         );

@@ -44,7 +44,7 @@ export class DiscussAppCategory extends Record {
     canAdd = false;
     app = Record.one("DiscussApp", {
         compute() {
-            return this._store.discuss;
+            return this.store.discuss;
         },
     });
     _openLocally = false;
@@ -67,16 +67,16 @@ export class DiscussAppCategory extends Record {
     sequence;
 
     get open() {
-        return this.serverStateKey ? this._store.settings[this.serverStateKey] : this._openLocally;
+        return this.serverStateKey ? this.store.settings[this.serverStateKey] : this._openLocally;
     }
 
     set open(value) {
         if (this.serverStateKey) {
-            this._store.settings[this.serverStateKey] = value;
-            this._store.env.services.orm.call(
+            this.store.settings[this.serverStateKey] = value;
+            this.store.env.services.orm.call(
                 "res.users.settings",
                 "set_res_users_settings",
-                [[this._store.settings.id]],
+                [[this.store.settings.id]],
                 {
                     new_settings: {
                         [this.serverStateKey]: value,

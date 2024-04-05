@@ -1,8 +1,14 @@
 import { Record } from "@mail/core/common/record";
-import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
+import {
+    EMOJI_REGEX,
+    convertBrToLineBreak,
+    htmlToTextContentInline,
+    prettifyMessageContent,
+} from "@mail/utils/common/format";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 
@@ -125,6 +131,11 @@ export class Message extends Record {
     threadAsNewest = Record.one("Thread");
     /** @type {DateTime} */
     scheduledDatetime = Record.attr(undefined, { type: "datetime" });
+    get scheduledDateSimple() {
+        return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
+            locale: user.lang?.replace("_", "-"),
+        });
+    }
     starredPersonas = Record.many("Persona");
     onlyEmojis = Record.attr(false, {
         compute() {
@@ -165,7 +176,7 @@ export class Message extends Record {
     now = DateTime.now().set({ milliseconds: 0 });
 
     get editable() {
-        if (!this._store.self.isAdmin && !this.isSelfAuthored) {
+        if (!this.store.self.isAdmin && !this.isSelfAuthored) {
             return false;
         }
         return this.message_type === "comment";
@@ -179,6 +190,12 @@ export class Message extends Record {
         return dateDay;
     }
 
+    get dateSimple() {
+        return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
+            locale: user.lang?.replace("_", "-"),
+        });
+    }
+
     get datetime() {
         return this.date || DateTime.now();
     }
@@ -188,7 +205,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this._store.self.in(this.recipients);
+        return this.store.self.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -199,17 +216,17 @@ export class Message extends Record {
         if (!this.author) {
             return false;
         }
-        return this.author.eq(this._store.self);
+        return this.author.eq(this.store.self);
     }
 
     get isStarred() {
-        return this._store.self.in(this.starredPersonas);
+        return this.store.self.in(this.starredPersonas);
     }
 
     get isNeedaction() {
         return (
-            this._store.self.type === "partner" &&
-            this.needaction_partner_ids.includes(this._store.self.id)
+            this.store.self.type === "partner" &&
+            this.needaction_partner_ids.includes(this.store.self.id)
         );
     }
 
@@ -219,8 +236,8 @@ export class Message extends Record {
 
     get isHistory() {
         return (
-            this._store.self.type === "partner" &&
-            this.history_partner_ids.includes(this._store.self.id)
+            this.store.self.type === "partner" &&
+            this.history_partner_ids.includes(this.store.self.id)
         );
     }
 
@@ -270,8 +287,8 @@ export class Message extends Record {
         /** @this {import("models").Message} */
         onUpdate() {
             if (this.isEmpty && this.isStarred) {
-                this.starredPersonas.delete(this._store.self);
-                const starred = this._store.discuss.starred;
+                this.starredPersonas.delete(this.store.self);
+                const starred = this.store.discuss.starred;
                 starred.counter--;
                 starred.messages.delete(this);
             }
@@ -293,7 +310,7 @@ export class Message extends Record {
      */
     get linkPreviewSquash() {
         return (
-            this._store.hasLinkPreviewFeature &&
+            this.store.hasLinkPreviewFeature &&
             this.body &&
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&
@@ -325,6 +342,80 @@ export class Message extends Record {
     get editDatetimeHuge() {
         return deserializeDateTime(this.editDate).toLocaleString(
             omit(DateTime.DATETIME_HUGE, "timeZoneName")
+        );
+    }
+
+    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+            return;
+        }
+        const validMentions = this.store.getMentionsFromText(body, {
+            mentionedChannels,
+            mentionedPartners,
+        });
+        const messageData = await this.rpc("/mail/message/update_content", {
+            attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
+            attachment_tokens: attachments
+                .concat(this.attachments)
+                .map((attachment) => attachment.accessToken),
+            body: await prettifyMessageContent(body, validMentions),
+            message_id: this.id,
+            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+        });
+        this.store.Message.insert(messageData, { html: true });
+        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+            this.rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
+        }
+    }
+
+    async react(content) {
+        await this.rpc(
+            "/mail/message/reaction",
+            {
+                action: "add",
+                content,
+                message_id: this.id,
+            },
+            { silent: true }
+        );
+    }
+
+    async remove() {
+        if (this.isStarred) {
+            this.store.discuss.starred.counter--;
+            this.store.discuss.starred.messages.delete(this);
+        }
+        this.body = "";
+        this.attachments = [];
+        await this.rpc("/mail/message/update_content", {
+            attachment_ids: [],
+            attachment_tokens: [],
+            body: "",
+            message_id: this.id,
+        });
+    }
+
+    async setDone() {
+        await this.store.env.services.orm.silent.call("mail.message", "set_message_done", [
+            [this.id],
+        ]);
+    }
+
+    async toggleStar() {
+        await this.store.env.services.orm.silent.call("mail.message", "toggle_message_starred", [
+            [this.id],
+        ]);
+    }
+
+    async unfollow() {
+        if (this.isNeedaction) {
+            await this.setDone();
+        }
+        const thread = this.thread;
+        await thread.selfFollower.remove();
+        this.store.env.services.notification.add(
+            _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
+            { type: "success" }
         );
     }
 }

@@ -327,7 +327,7 @@ export class Record {
     }
 
     /** @returns {import("models").Store} */
-    get _store() {
+    get store() {
         return toRaw(this)._raw.Model._rawStore._proxy;
     }
     /** @returns {import("models").Store} */
@@ -362,6 +362,10 @@ export class Record {
 
     constructor() {
         this.setup();
+    }
+
+    rpc() {
+        return this.store.env.services["mail.rpc"](...arguments);
     }
 
     setup() {}

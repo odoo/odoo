@@ -21,11 +21,10 @@ export class FollowerList extends Component {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.messaging = useState(useService("mail.messaging"));
-        this.threadService = useState(useService("mail.thread"));
+        this.store = useState(useService("mail.store"));
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
-                this.threadService.loadMoreFollowers(this.props.thread);
+                this.props.thread.loadMoreFollowers();
             }
         });
     }
@@ -55,7 +54,7 @@ export class FollowerList extends Component {
      * @param {import("models").Follower} follower
      */
     onClickDetails(ev, follower) {
-        this.messaging.openDocument({ id: follower.partner.id, model: "res.partner" });
+        this.store.openDocument({ id: follower.partner.id, model: "res.partner" });
         this.props.dropdown.close();
     }
 
@@ -77,7 +76,7 @@ export class FollowerList extends Component {
      */
     async onClickRemove(ev, follower) {
         const thread = this.props.thread;
-        await this.threadService.removeFollower(follower);
+        await follower.remove();
         this.props.onFollowerChanged?.(thread);
     }
 }

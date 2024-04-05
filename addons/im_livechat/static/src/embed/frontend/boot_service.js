@@ -10,11 +10,9 @@ import { session } from "@web/session";
 registry.category("main_components").remove("mail.ChatWindowContainer");
 
 export const livechatBootService = {
-    dependencies: ["mail.messaging"],
+    dependencies: ["mail.store"],
 
-    /**
-     * To be overriden in tests.
-     */
+    /** To be overriden in tests. */
     getTarget() {
         return document.body;
     },

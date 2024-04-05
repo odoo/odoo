@@ -1,4 +1,5 @@
 import { Record } from "@mail/core/common/record";
+import { assignDefined } from "@mail/utils/common/misc";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 
@@ -40,6 +41,28 @@ export class Attachment extends FileModelMixin(Record) {
             return undefined;
         }
         return `${this.create_date.monthLong}, ${this.create_date.year}`;
+    }
+
+    /**
+     * Delete the given attachment on the server as well as removing it
+     * globally.
+     */
+    async fullyRemove() {
+        this.remove();
+        if (this.id > 0) {
+            await this.rpc(
+                "/mail/attachment/delete",
+                assignDefined({ attachment_id: this.id }, { access_token: this.accessToken })
+            );
+        }
+    }
+
+    /** Remove the given attachment globally. */
+    remove() {
+        if (this.tmpUrl) {
+            URL.revokeObjectURL(this.tmpUrl);
+        }
+        this.delete();
     }
 }
 

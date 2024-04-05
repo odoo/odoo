@@ -23,7 +23,7 @@ export class Failure extends Record {
             if (this.notifications.length === 0) {
                 this.delete();
             } else {
-                this._store.failures.add(this);
+                this.store.failures.add(this);
             }
         },
     });

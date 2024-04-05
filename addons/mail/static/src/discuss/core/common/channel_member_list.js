@@ -14,16 +14,14 @@ export class ChannelMemberList extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.channelMemberService = useService("discuss.channel.member");
-        this.threadService = useState(useService("mail.thread"));
         onWillStart(() => {
             if (this.props.thread.fetchMembersState === "not_fetched") {
-                this.threadService.fetchChannelMembers(this.props.thread);
+                this.props.thread.fetchChannelMembers();
             }
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.fetchMembersState === "not_fetched") {
-                this.threadService.fetchChannelMembers(nextProps.thread);
+                nextProps.thread.fetchChannelMembers();
             }
         });
     }
@@ -45,7 +43,7 @@ export class ChannelMemberList extends Component {
         if (!this.canOpenChatWith(member)) {
             return;
         }
-        this.threadService.openChat({ partnerId: member.persona.id });
+        this.store.openChat({ partnerId: member.persona.id });
     }
 
     get title() {

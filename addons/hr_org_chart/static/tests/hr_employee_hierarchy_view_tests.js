@@ -1,16 +1,12 @@
 /** @odoo-module */
 
-import { registry } from "@web/core/registry";
 import { click, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData, target;
 
-const serviceRegistry = registry.category("services");
-
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
-        serviceRegistry.add("mail.thread", { start() {} });
         serverData = {
             models: {
                 "hr.employee": {

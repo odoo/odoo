@@ -8,7 +8,7 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.appAsLivechats = Record.one("DiscussApp", {
             compute() {
-                return this.channel_type === "livechat" ? this._store.discuss : null;
+                return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
         this.livechatChannel = Record.one("LivechatChannel");
@@ -82,5 +82,13 @@ patch(Thread.prototype, {
             return persona.user_livechat_username;
         }
         return super.getMemberName(persona);
+    },
+
+    /** @param {boolean} pushState */
+    setAsDiscussThread(pushState) {
+        super.setAsDiscussThread(pushState);
+        if (this.ui.isSmall && this.channel_type === "livechat") {
+            this.store.discuss.activeTab = "livechat";
+        }
     },
 });

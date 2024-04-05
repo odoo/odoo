@@ -16,7 +16,6 @@ export class AttachmentView extends Component {
 
     setup() {
         super.setup();
-        this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
@@ -33,22 +32,22 @@ export class AttachmentView extends Component {
     }
 
     onClickNext() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.mainAttachment)
+        const thread = this.state.thread;
+        const index = thread.attachmentsInWebClientView.findIndex((attachment) =>
+            attachment.eq(thread.mainAttachment)
         );
-        this.threadService.setMainAttachmentFromIndex(
-            this.state.thread,
-            index === this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+        thread.setMainAttachmentFromIndex(
+            index === thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
     }
 
     onClickPrevious() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.mainAttachment)
+        const thread = this.state.thread;
+        const index = thread.attachmentsInWebClientView.findIndex((attachment) =>
+            attachment.eq(thread.mainAttachment)
         );
-        this.threadService.setMainAttachmentFromIndex(
-            this.state.thread,
-            index === 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
+        thread.setMainAttachmentFromIndex(
+            index === 0 ? thread.attachmentsInWebClientView.length - 1 : index - 1
         );
     }
 

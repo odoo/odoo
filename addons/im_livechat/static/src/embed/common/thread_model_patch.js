@@ -16,7 +16,7 @@ patch(Thread.prototype, {
         this.livechatWelcomeMessage = Record.one("Message", {
             compute() {
                 if (this.hasWelcomeMessage) {
-                    const livechatService = this._store.env.services["im_livechat.livechat"];
+                    const livechatService = this.store.env.services["im_livechat.livechat"];
                     return {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
@@ -46,5 +46,22 @@ patch(Thread.prototype, {
 
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
+    },
+
+    /** @returns {Promise<import("models").Message} */
+    async post(body, params) {
+        if (this.channel_type === "livechat") {
+            const thread = await this.store.env.services["im_livechat.livechat"].persist();
+            if (!thread) {
+                return;
+            }
+            if (this.notEq(thread)) {
+                thread.post(...arguments);
+                return;
+            }
+        }
+        const message = await super.post(body, params);
+        this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
+        return message;
     },
 });

@@ -63,14 +63,12 @@ export class LivechatService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
-     * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService>,
      * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
      */
     setup(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.chatWindowService = services["mail.chat_window"];
         this.notificationService = services.notification;
         this.store = services["mail.store"];
     }
@@ -109,7 +107,7 @@ export class LivechatService {
         if (!this.thread) {
             return;
         }
-        this.env.services["mail.chat_window"].open(this.thread);
+        this.thread.openChatWindow();
     }
 
     /**
@@ -129,14 +127,14 @@ export class LivechatService {
                 (c) => c.thread?.id === temporaryThread.id
             );
             temporaryThread.delete();
-            this.env.services["mail.chat_window"].close(chatWindow);
+            chatWindow.close();
         }
         if (!this.thread) {
             return;
         }
         this.store.ChatWindow.insert({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await this.env.services["mail.messaging"].initialize();
+        await this.store.initialize();
         return this.thread;
     }
 
@@ -254,7 +252,7 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: ["bus_service", "mail.chat_window", "mail.store", "notification"],
+    dependencies: ["bus_service", "mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         (async () => {

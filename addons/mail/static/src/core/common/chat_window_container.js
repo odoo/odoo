@@ -1,9 +1,4 @@
 import { ChatWindow } from "@mail/core/common/chat_window";
-import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/core/common/chat_window_service";
 
 import { Component, useExternalListener, useState, onMounted, useRef, useEffect } from "@odoo/owl";
 
@@ -18,28 +13,14 @@ export class ChatWindowContainer extends Component {
     static props = [];
     static template = "mail.ChatWindowContainer";
 
-    get CHAT_WINDOW_END_GAP_WIDTH() {
-        return CHAT_WINDOW_END_GAP_WIDTH;
-    }
-
-    get CHAT_WINDOW_INBETWEEN_WIDTH() {
-        return CHAT_WINDOW_INBETWEEN_WIDTH;
-    }
-
-    get CHAT_WINDOW_WIDTH() {
-        return CHAT_WINDOW_WIDTH;
-    }
-
     setup() {
         super.setup();
-        this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
-        this.chatWindowService = useState(useService("mail.chat_window"));
         this.ui = useState(useService("ui"));
         this.hiddenMenuRef = useRef("hiddenMenu");
         useEffect(
             () => this.setHiddenMenuOffset(),
-            () => [this.chatWindowService.hidden]
+            () => [this.store.hiddenChatWindows]
         );
         onMounted(() => this.setHiddenMenuOffset());
 
@@ -54,30 +35,29 @@ export class ChatWindowContainer extends Component {
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset =
-            CHAT_WINDOW_END_GAP_WIDTH +
-            this.chatWindowService.maxVisible * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_END_GAP_WIDTH);
+            this.store.CHAT_WINDOW_END_GAP_WIDTH +
+            this.store.maxVisibleChatWindows *
+                (this.store.CHAT_WINDOW_WIDTH + this.store.CHAT_WINDOW_END_GAP_WIDTH);
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         this.hiddenMenuRef.el.style = `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto`;
     }
 
     onResize() {
-        while (this.chatWindowService.visible.length > this.chatWindowService.maxVisible) {
-            this.chatWindowService.hide(
-                this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
-            );
+        while (this.store.visibleChatWindows.length > this.store.maxVisibleChatWindows) {
+            this.store.visibleChatWindows.at(-1).hide();
         }
         while (
-            this.chatWindowService.visible.length < this.chatWindowService.maxVisible &&
-            this.chatWindowService.hidden.length > 0
+            this.store.visibleChatWindows.length < this.store.maxVisibleChatWindows &&
+            this.store.hiddenChatWindows.length > 0
         ) {
-            this.chatWindowService.show(this.chatWindowService.hidden[0]);
+            this.store.hiddenChatWindows[0].show();
         }
         this.setHiddenMenuOffset();
     }
 
     get unread() {
         let unreadCounter = 0;
-        for (const chatWindow of this.chatWindowService.hidden) {
+        for (const chatWindow of this.store.hiddenChatWindows) {
             unreadCounter += chatWindow.thread.message_unread_counter;
         }
         return unreadCounter;

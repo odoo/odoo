@@ -30,12 +30,12 @@ export class LivechatChannel extends Record {
     async join({ notify = true } = {}) {
         this.hasSelfAsMember = true;
         if (notify) {
-            this._store.env.services.notification.add(_t("You joined %s.", this.name), {
+            this.store.env.services.notification.add(_t("You joined %s.", this.name), {
                 type: "info",
             });
         }
         await sequential(() =>
-            this._store.env.services.orm.call("im_livechat.channel", "action_join", [this.id])
+            this.store.env.services.orm.call("im_livechat.channel", "action_join", [this.id])
         );
     }
 
@@ -46,12 +46,12 @@ export class LivechatChannel extends Record {
     async leave({ notify = true } = {}) {
         this.hasSelfAsMember = false;
         if (notify) {
-            this._store.env.services.notification.add(_t("You left %s.", this.name), {
+            this.store.env.services.notification.add(_t("You left %s.", this.name), {
                 type: "info",
             });
         }
         await sequential(() =>
-            this._store.env.services.orm.call("im_livechat.channel", "action_quit", [this.id])
+            this.store.env.services.orm.call("im_livechat.channel", "action_quit", [this.id])
         );
     }
 

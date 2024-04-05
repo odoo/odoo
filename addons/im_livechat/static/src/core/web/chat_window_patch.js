@@ -9,7 +9,7 @@ patch(ChatWindow.prototype, {
         if (thread?.channel_type === "livechat") {
             await thread?.isLoadedDeferred;
             if (thread.messages.length === 0) {
-                this.threadService.unpin(thread);
+                thread.unpin();
             }
         }
     },

@@ -40,10 +40,7 @@ export class Discuss extends Component {
 
     setup() {
         super.setup();
-        this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
-        this.threadService = useState(useService("mail.thread"));
-        this.personaService = useService("mail.persona");
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -98,12 +95,8 @@ export class Discuss extends Component {
     }
 
     async onFileUploaded(file) {
-        await this.threadService.notifyThreadAvatarToServer(this.thread.id, file.data);
+        await this.thread.notifyAvatarToServer(file.data);
         this.notification.add(_t("The avatar has been updated!"), { type: "success" });
-    }
-
-    async renameThread(name) {
-        await this.threadService.renameThread(this.thread, name);
     }
 
     async updateThreadDescription(description) {
@@ -112,14 +105,14 @@ export class Discuss extends Component {
             return;
         }
         if (newDescription !== this.thread.description) {
-            await this.threadService.notifyThreadDescriptionToServer(this.thread, newDescription);
+            await this.thread.notifyDescriptionToServer(newDescription);
         }
     }
 
     async renameGuest(name) {
         const newName = name.trim();
         if (this.store.self.name !== newName) {
-            await this.personaService.updateGuestName(this.store.self, newName);
+            await this.store.self.updateGuestName(newName);
         }
     }
 }

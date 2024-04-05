@@ -1,6 +1,5 @@
 import { Component, useState } from "@odoo/owl";
 
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
@@ -11,7 +10,6 @@ export class MessageInReply extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.threadService = useService("mail.thread");
     }
 
     get authorAvatarUrl() {
@@ -27,6 +25,6 @@ export class MessageInReply extends Component {
             return this.props.message.parentMessage.author.avatarUrl;
         }
 
-        return DEFAULT_AVATAR;
+        return this.store.DEFAULT_AVATAR;
     }
 }

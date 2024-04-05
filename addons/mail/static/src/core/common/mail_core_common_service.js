@@ -10,14 +10,11 @@ export class MailCoreCommon {
     constructor(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.attachmentService = services["mail.attachment"];
-        this.messageService = services["mail.message"];
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
 
     setup() {
-        this.messagingService.isReady.then(() => {
+        this.store.isReady.then(() => {
             this.busService.subscribe("ir.attachment/delete", (payload) => {
                 const { id: attachmentId, message: messageData } = payload;
                 if (messageData) {
@@ -25,7 +22,7 @@ export class MailCoreCommon {
                 }
                 const attachment = this.store.Attachment.get(attachmentId);
                 if (attachment) {
-                    this.attachmentService.remove(attachment);
+                    attachment.remove();
                 }
             });
             this.busService.subscribe("mail.message/delete", (payload) => {
@@ -79,13 +76,7 @@ export class MailCoreCommon {
 }
 
 export const mailCoreCommon = {
-    dependencies: [
-        "bus_service",
-        "mail.attachment",
-        "mail.message",
-        "mail.messaging",
-        "mail.store",
-    ],
+    dependencies: ["bus_service", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
