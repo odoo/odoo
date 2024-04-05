@@ -25,7 +25,7 @@ from markupsafe import Markup
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
-    is_odoo_module, SourceMapGenerator, profiler)
+    is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
 from odoo.tools.json import scriptsafe
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, file_path
@@ -337,7 +337,7 @@ class AssetsBundle(object):
 
                     odoo.define("{self.name}.bundle.xml", ["@web/core/templates"], function(require) {{
                         "use strict";
-                        const {{ registerTemplate, registerTemplateExtension }} = require("@web/core/templates");
+                        const {{ checkPrimaryTemplateParents, registerTemplate, registerTemplateExtension }} = require("@web/core/templates");
                         /* {self.name} */
                         {templates}
                     }});
@@ -407,17 +407,31 @@ class AssetsBundle(object):
             string = etree.tostring(element, encoding='unicode')
             return string.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
 
+        names = OrderedSet()
+        primary_parents = OrderedSet()
+        extension_parents = OrderedSet()
         for block in blocks:
             if block["type"] == "templates":
-                for (element, url) in block["templates"]:
+                for (element, url, inherit_from) in block["templates"]:
+                    if inherit_from:
+                        primary_parents.add(inherit_from)
                     name = element.get("t-name")
+                    names.add(name)
                     template = get_template(element)
                     content.append(f'registerTemplate("{name}", `{url}`, `{template}`);')
             else:
                 for inherit_from, elements in block["extensions"].items():
+                    extension_parents.add(inherit_from)
                     for (element, url) in elements:
                         template = get_template(element)
                         content.append(f'registerTemplateExtension("{inherit_from}", `{url}`, `{template}`);')
+
+        missing_names_for_primary = primary_parents - names
+        if missing_names_for_primary:
+            content.append(f'checkPrimaryTemplateParents({json.dumps(list(missing_names_for_primary))});')
+        missing_names_for_extension = extension_parents - names
+        if missing_names_for_extension:
+            content.append(f'console.error("Missing (extension) parent templates: {", ".join(missing_names_for_extension)}");')
 
         return '\n'.join(content)
 
@@ -467,7 +481,7 @@ class AssetsBundle(object):
                     if block is None or block["type"] != "templates":
                         block = {"type": "templates", "templates": []}
                         blocks.append(block)
-                    block["templates"].append((template_tree, asset.url))
+                    block["templates"].append((template_tree, asset.url, inherit_from))
                 else:
                     return asset.generate_error(_("Template name is missing."))
         return blocks

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="website_slides.slide.slide.quiz.validation" t-inherit-mode="extension">
+    <t t-inherit="slide.slide.quiz.validation" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o_wslides_quiz_join_course_message')]" position="inside">
             <span t-if="widget.channel.channelEnroll == 'payment'">
                 <t t-if="widget.publicUser">

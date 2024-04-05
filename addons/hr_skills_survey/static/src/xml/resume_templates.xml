@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-inherit="hr_skills.hr_resume_data_row" t-inherit-mode="extension">
+<t t-inherit="hr_resume_data_row" t-inherit-mode="extension">
     <xpath expr="//tr[hasclass('o_data_row')]" position="inside">
         <t t-if="data.display_type === 'certification'">
             <td class="o_data_cell container" colspan="2">
