@@ -144,3 +144,10 @@ export function getTemplate(name) {
 export function clearProcessedTemplates() {
     processedTemplates = {};
 }
+
+export function checkPrimaryTemplateParents(namesToCheck) {
+    const missing = new Set(namesToCheck.filter((name) => !(name in templates)));
+    if (missing.size) {
+        console.error(`Missing (primary) parent templates: ${[...missing].join(", ")}`);
+    }
+}
