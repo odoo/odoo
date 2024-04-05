@@ -32,6 +32,35 @@ tour.register('link_tools', {
         run: 'text odoo.com'
     },
     clickOnImgStep,
+    // Remove the link.
+    {
+        content: "Click on the newly created link",
+        trigger: '.s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+    },
+    {
+        content: "Remove the link.",
+        trigger: '.popover:contains("http://odoo.com") a .fa-chain-broken',
+    },
+    {
+        content: "Check that the link was removed",
+        trigger: '#wrap .s_text_image p:contains("Go to odoo:"):not(:has(a))',
+        run: () => {}, // It's a check.
+    },
+    // Recreate the link.
+    {
+        content: "Select first paragraph, to insert a new link",
+        trigger: '#wrap .s_text_image p',
+    },
+    {
+        content: "Open link tools",
+        trigger: "#toolbar #create-link",
+    },
+    {
+        content: "Type the link URL odoo.com",
+        trigger: '#o_link_dialog_url_input',
+        run: 'text odoo.com'
+    },
+    clickOnImgStep,
     // 2. Edit the link with the link tools.
     {
         content: "Click on the newly created link, change content to odoo website",
