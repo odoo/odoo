@@ -4,8 +4,9 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
@@ -319,6 +320,58 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
                 'email_from': self.user_eventmanager.company_id.email_formatted,
                 'subject': f"Reminder for {test_event.name}: today",
             })
+
+    @mute_logger('odoo.addons.event.models.event_mail')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_global_composer(self):
+        """ Simulate a fail during composer usage e.g. invalid field path, template
+        / model change, ... to check defensive behavior """
+        cron = self.env.ref("event.event_mail_scheduler").sudo()
+        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
+        self._create_registrations(self.test_event, 2)
+
+        def _patched_send_mail(self, *args, **kwargs):
+            raise exceptions.ValidationError('Some error')
+
+        with patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail):
+            with self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
+                 self.mock_mail_gateway():
+                cron.method_direct_trigger()
+        self.assertFalse(before_scheduler.mail_done)
+
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_global_no_registrations(self):
+        """ Be sure no registrations = no crash in wa composer """
+        cron = self.env.ref("event.event_mail_scheduler").sudo()
+        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
+
+        self.test_event.registration_ids.unlink()
+        with self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
+             self.mock_mail_gateway():
+            cron.method_direct_trigger()
+        self.assertTrue(before_scheduler.mail_done)
+
+    @mute_logger('odoo.addons.event.models.event_mail', 'odoo.addons.whatsapp_event.models.event_mail_registration')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_registration_composer(self):
+        """ Simulate a fail during composer usage e.g. invalid field path, template
+        / model change, ... to check defensive behavior """
+        onsub_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "after_sub" and s.interval_unit == "now")
+
+        def _patched_send_mail(self, *args, **kwargs):
+            raise exceptions.ValidationError('Some error')
+
+        with patch.object(type(self.env["mail.template"]), "send_mail_batch", _patched_send_mail):
+            with self.mock_mail_gateway():
+                registration = self.env['event.registration'].create({
+                    "email": "test@email.com",
+                    "event_id": self.test_event.id,
+                    "name": "Mitchell Admin",
+                    "phone": "(255)-595-8393",
+                })
+        self.assertTrue(registration.exists(), "Registration record should exist after creation.")
+        self.assertEqual(onsub_scheduler.mail_count_done, 1, 'Marked as done even if failed, not sure if wanted')
+        self.assertTrue(onsub_scheduler.mail_done, 'Marked as done even if failed, not sure if wanted')
 
     @mute_logger('odoo.addons.event.models.event_mail')
     @users('user_eventmanager')
