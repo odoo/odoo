@@ -134,7 +134,7 @@
                             </div>
 
                             <!-- ==== Header Right ==== -->
-                            <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+                            <div class="col-12 col-md d-flex flex-column ps-lg-5">
                                 <div class="d-flex flex-column">
                                     <h1 t-field="channel.name"/>
                                     <div class="mb-0 mb-xl-3" t-field="channel.description"/>
@@ -172,7 +172,7 @@
                         <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                             <t t-call="website_slides.course_sidebar"/>
                         </div>
-                        <div class="col-12 col-md-8 col-lg-9 position-relative">
+                        <div class="col-12 col-md position-relative ps-lg-5">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                                 <li class="nav-item" role="presentation">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"

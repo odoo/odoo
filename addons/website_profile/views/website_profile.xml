@@ -201,7 +201,7 @@
                     </div>
 
                     <!-- ==== Header Right ==== -->
-                    <div class="col-12 col-md-8 col-lg-9 d-flex flex-column">
+                    <div class="col-12 col-md d-flex flex-column ps-lg-5">
                         <div class="d-flex justify-content-between align-items-start">
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
@@ -235,7 +235,7 @@
 
                 <!-- ========== SIDEBAR ========== -->
                 <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
-                    <div class="o_wprofile_sidebar px-3 py-2 py-md-3 mb-3 mb-md-5">
+                    <div class="o_wprofile_sidebar px-3 py-2 py-md-3 mb-3 mb-md-5 ps-lg-5">
                         <div class="o_wprofile_sidebar_top d-flex justify-content-between">
                             <div t-if="user.rank_id" class="d-flex align-items-center">
                                 <small class="fw-bold me-2">Current rank:</small>
@@ -268,7 +268,7 @@
                 </div>
 
                 <!-- ========== PROFILE CONTENT ========== -->
-                <div class="col-12 col-md-8 col-lg-9 position-relative">
+                <div class="col-12 col-md position-relative ps-lg-5">
                     <ul class="nav nav-tabs o_wprofile_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                         <li class="nav-item">
                             <a role="tab" aria-controls="about" href="#profile_tab_content_about" t-attf-class="nav-link #{'active' if not active_tab or active_tab == 'about' else ''}" data-bs-toggle="tab">About</a>
