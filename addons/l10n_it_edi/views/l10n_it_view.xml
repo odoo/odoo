@@ -144,7 +144,23 @@
                         <group>
                             <group>
                                 <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
-                                <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
+                                <label
+                                    for="l10n_it_edi_attachment_id"
+                                    class="oe_inline"
+                                    invisible="not l10n_it_edi_attachment_id"
+                                />
+                                <div class="o_row" invisible="not l10n_it_edi_attachment_id">
+                                    <field
+                                        name="l10n_it_edi_attachment_id"
+                                        groups="account.group_account_invoice"
+                                        readonly="1"
+                                    />
+                                    <button
+                                        name="action_l10n_it_edi_attachment_preview"
+                                        type="object"
+                                        string="Preview FPA"
+                                    />
+                                </div>
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                             </group>
