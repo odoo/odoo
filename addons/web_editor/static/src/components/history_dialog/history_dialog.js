@@ -55,13 +55,11 @@ class HistoryDialog extends Component {
         if (this.state.revisionId === revisionId) {
             return;
         }
-        this.env.services.ui.block();
         this.state.revisionId = revisionId;
         this.state.revisionContent = await this.getRevisionContent(revisionId);
         this.state.revisionComparison = await this.getRevisionComparison(
             revisionId
         );
-        this.env.services.ui.unblock();
     }
 
     getRevisionComparison = memoize(
@@ -87,12 +85,10 @@ class HistoryDialog extends Component {
     );
 
     async _onRestoreRevisionClick() {
-        this.env.services.ui.block();
         const restoredContent = await this.getRevisionContent(
             this.state.revisionId
         );
         this.props.restoreRequested(restoredContent, this.props.close);
-        this.env.services.ui.unblock();
     }
 
     /**

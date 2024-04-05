@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="web_editor.HistoryDialog">
-        <Dialog size="size" title="title" contentClass="'h-100'">
-            <div class="dialog-container html-history-dialog">
-                <div class="revision-list d-flex flex-column align-content-stretch">
-                    <t t-if="!state.revisionsData.length">
-                        <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
-                    </t>
-
-                    <t t-foreach="state.revisionsData" t-as="rev"
-                       t-key="rev.revision_id">
+        <Dialog size="size" title="title" bodyClass="'html-history-dialog p-0'">
+            <div class="d-sm-flex">
+                <div class="revision-list d-flex flex-column flex-shrink-0 gap-2 p-3">
+                    <div t-if="!state.revisionsData.length" class="text-center fw-bolder">No history</div>
+                    <t t-foreach="state.revisionsData" t-as="rev" t-key="rev.revision_id">
                         <a type="object" href="#" role="button"
-                           t-attf-class="btn btn-outline-primary #{state.revisionId === rev.revision_id ? 'active' : ''}"
-                           t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
-                            <strong><t t-esc="this.getRevisionDate(rev)" /></strong>
+                           t-attf-class="btn btn-outline-primary text-start #{state.revisionId === rev.revision_id ? 'active' : ''}"
+                           t-on-click="() => this.updateCurrentRevision(rev.revision_id)">
+                            <strong t-esc="this.getRevisionDate(rev)"/>
                             <br/>
-                            <small><t t-esc="rev.create_user_name" /></small>
+                            <small><t t-esc="rev.create_user_name"/></small>
                         </a>
                     </t>
                 </div>
-                <div class="history-container">
+                <div class="history-container d-flex flex-grow-1 min-w-0 p-3">
                     <Notebook defaultPage="'history'">
                         <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
                             <t t-if="state.revisionContent?.length" t-out="state.revisionContent"/>
