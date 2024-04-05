@@ -932,8 +932,16 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
-function getNextVisibleNode(node) {
-    while (node && !isVisible(node)) {
+function isZwnbsp(node) {
+    return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
+}
+
+function isTangible(node) {
+    return isVisible(node) || isZwnbsp(node);
+}
+
+function getNextTangibleNode(node) {
+    while (node && !isTangible(node)) {
         node = node.nextSibling;
     }
     return node;
@@ -944,7 +952,7 @@ export function getDeepestPosition(node, offset) {
     while (node.hasChildNodes()) {
         let newNode = node.childNodes[offset];
         if (newNode) {
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             found = true;
             node = newNode;
@@ -956,7 +964,7 @@ export function getDeepestPosition(node, offset) {
     if (!found) {
         while (node.hasChildNodes()) {
             let newNode = node.childNodes[offset - 1];
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             node = newNode;
             offset = nodeSize(node);
@@ -964,13 +972,13 @@ export function getDeepestPosition(node, offset) {
     }
     let didMove = false;
     let reversed = false;
-    while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
+    while (!isTangible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
         offset = reversed ? nodeSize(node) : 0;
         didMove = true;
     }
-    return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
+    return didMove && isTangible(node) ? getDeepestPosition(node, offset) : [node, offset];
 }
 
 export function getCursors(document) {
