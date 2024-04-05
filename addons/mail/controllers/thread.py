@@ -72,14 +72,14 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def mail_message_post(self, thread_model, thread_id, post_data, context=None):
+    def mail_message_post(self, thread_model, thread_id, post_data, context=None, **kwargs):
         guest = request.env["mail.guest"]._get_guest_from_context()
         guest.env["ir.attachment"].browse(post_data.get("attachment_ids", []))._check_attachments_access(
-            post_data.get("attachment_tokens")
+            kwargs.get("attachment_tokens")
         )
         if context:
             request.update_context(**context)
-        canned_response_ids = tuple(cid for cid in post_data.pop('canned_response_ids', []) if isinstance(cid, int))
+        canned_response_ids = tuple(cid for cid in kwargs.get('canned_response_ids', []) if isinstance(cid, int))
         if canned_response_ids:
             # Avoid serialization errors since last used update is not
             # essential and should not block message post.
@@ -100,9 +100,9 @@ class ThreadController(http.Controller):
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         new_partners = []
-        if "partner_emails" in post_data:
+        if "partner_emails" in kwargs:
             new_partners = [record.id for record in request.env["res.partner"]._find_or_create_from_emails(
-                post_data["partner_emails"], post_data.get("partner_additional_values", {})
+                kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
             )]
         post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
         message_data = thread.message_post(

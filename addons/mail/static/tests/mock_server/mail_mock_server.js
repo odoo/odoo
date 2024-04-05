@@ -450,7 +450,9 @@ async function discuss_history_messages(request) {
 
     return {
         ...res,
-        messages: MailMessage._message_format(messagesWithNotification.map((message) => message.id)),
+        messages: MailMessage._message_format(
+            messagesWithNotification.map((message) => message.id)
+        ),
     };
 }
 
@@ -534,8 +536,39 @@ export async function mail_message_post(request) {
     const DiscussChannel = this.env["discuss.channel"];
     /** @type {import("mock_models").MailThread} */
     const MailThread = this.env["mail.thread"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
 
-    const { context, post_data, thread_id, thread_model } = await parseRequestParams(request);
+    const {
+        context,
+        post_data,
+        thread_id,
+        thread_model,
+        partner_emails,
+        partner_additional_values,
+        canned_response_ids,
+    } = await parseRequestParams(request);
+    if (canned_response_ids) {
+        for (const cannedResponseId of canned_response_ids) {
+            this.env["mail.canned.response"].write([cannedResponseId], {
+                last_used: serializeDateTime(DateTime.now()),
+            });
+        }
+    }
+    if (partner_emails) {
+        post_data.partner_ids = post_data.partner_ids || [];
+        for (const email of partner_emails) {
+            const partner = ResPartner._filter([["email", "=", email]]);
+            if (partner.length !== 0) {
+                post_data.partner_ids.push(partner[0].id);
+            } else {
+                const partner_id = ResPartner.create(
+                    Object.assign({ email }, partner_additional_values[email] || {})
+                );
+                post_data.partner_ids.push(partner_id);
+            }
+        }
+    }
     const finalData = {};
     for (const allowedField of [
         "attachment_ids",
@@ -544,8 +577,6 @@ export async function mail_message_post(request) {
         "partner_ids",
         "subtype_xmlid",
         "parent_id",
-        "partner_emails",
-        "partner_additional_values",
     ]) {
         if (post_data[allowedField] !== undefined) {
             finalData[allowedField] = post_data[allowedField];
