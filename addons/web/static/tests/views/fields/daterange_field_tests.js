@@ -377,8 +377,7 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, args) {
                     if (args.method === "web_save") {
                         assert.deepEqual(args.args[1], {
-                            datetime: "2017-02-08 06:00:00",
-                            datetime_end: "2017-03-13 00:00:00",
+                            datetime: "2017-02-08 06:00:00"
                         });
                     }
                 },
