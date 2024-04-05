@@ -620,7 +620,7 @@ export class TicketScreen extends Component {
     _getSearchFields() {
         const fields = {
             TRACKING_NUMBER: {
-                repr: (order) => order.trackingNumber,
+                repr: (order) => order.tracking_number,
                 displayName: _t("Order Number"),
                 modelField: "tracking_number",
             },
