@@ -75,6 +75,7 @@ patch(MockServer.prototype, {
             });
         }
         if (args.systray_get_activities && this.pyEnv.currentPartnerId) {
+            const bus_last_id = this.lastBusNotificationId;
             const groups = this._mockResUsers_getActivityGroups();
             this._addToRes(res, {
                 Store: {
@@ -82,6 +83,7 @@ patch(MockServer.prototype, {
                         (counter, group) => counter + (group.total_count || 0),
                         0
                     ),
+                    activity_counter_bus_id: bus_last_id,
                     activityGroups: groups,
                 },
             });

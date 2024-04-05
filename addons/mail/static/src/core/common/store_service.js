@@ -64,6 +64,8 @@ export class Store extends BaseStore {
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
+     * @deprecated last id should be checked per field
+     *
      * The last id of bus notification at the time for fetch init_messaging.
      * When receiving a notification:
      * - if id greater than this value: the notification is newer than init_messaging state.

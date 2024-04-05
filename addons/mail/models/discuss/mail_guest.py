@@ -129,10 +129,11 @@ class MailGuest(models.Model):
 
     def _init_messaging(self, store):
         self.ensure_one()
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         store.add({
             "Store": {
-                # sudo: bus.bus: reading non-sensitive last id
-                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
+                "initBusId": bus_last_id,  # deprecated, last id should be checked per field
             },
         })
 

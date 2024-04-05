@@ -22,7 +22,9 @@ class TestDiscussFullPerformance(HttpCase):
     #     1: has_access_livechat
     _query_count_init_store = 17
     _query_count = 48 + 1  # +1 is necessary to fix nondeterministic issue on runbot
-    _query_count_discuss_channels = 68
+    # Queries for _query_count_discuss_channels:
+    #     1: bus last id
+    _query_count_discuss_channels = 69
 
     def setUp(self):
         super().setUp()
@@ -223,13 +225,26 @@ class TestDiscussFullPerformance(HttpCase):
         """Returns the result of a call to init_messaging.
         The point of having a separate getter is to allow it to be overriden.
         """
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
             "Store": {
                 "discuss": {
-                    "inbox": {"counter": 1, "id": "inbox", "model": "mail.box"},
-                    "starred": {"counter": 1, "id": "starred", "model": "mail.box"},
+                    "inbox": {
+                        "counter": 1,
+                        "counter_bus_id": bus_last_id,
+                        "id": "inbox",
+                        "model": "mail.box",
+                    },
+                    "starred":
+                    {
+                        "counter": 1,
+                        "counter_bus_id": bus_last_id,
+                        "id": "starred",
+                        "model": "mail.box",
+                    },
                 },
-                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
+                "initBusId": bus_last_id,
                 "initChannelsUnreadCounter": 1,
                 "odoobotOnboarding": False,
             },
@@ -283,6 +298,8 @@ class TestDiscussFullPerformance(HttpCase):
         }
 
     def _expected_result_for_channel(self, channel):
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         members = channel.channel_member_ids
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
@@ -345,6 +362,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": len(self.group_user.users),
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.user_root.id,
                 "defaultDisplayMode": False,
@@ -355,6 +373,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "general",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -410,6 +429,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -420,6 +440,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 1,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "public channel 1",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -475,6 +496,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -485,6 +507,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "public channel 2",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -540,6 +563,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -569,6 +593,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "group restricted channel 1",
                 "rtcInvitingSession": {
                     "id": self.channel_channel_group_1_inviting_session.id,
@@ -666,6 +691,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 5,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -676,6 +702,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": last_interest_dt,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "group restricted channel 2",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -753,6 +780,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -763,6 +791,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -840,6 +869,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -850,6 +880,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "Ernest Employee, test14",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -927,6 +958,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -937,6 +969,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "Ernest Employee, test15",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -1014,6 +1047,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -1024,6 +1058,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "Ernest Employee, test2",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -1103,6 +1138,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.user.id,
                 "defaultDisplayMode": False,
@@ -1113,6 +1149,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "is_pinned": True,
                 "last_interest_dt": False,
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "Ernest Employee, test3",
                 "rtcSessions": [["ADD", []]],
                 "custom_notifications": False,
@@ -1190,6 +1227,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 0,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.users[1].id,
                 "defaultDisplayMode": False,
@@ -1201,6 +1239,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "test1 Ernest Employee",
                 "custom_notifications": False,
                 "mute_until_dt": False,
@@ -1275,6 +1314,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "id": channel.id,
                 "memberCount": 2,
                 "message_unread_counter": 1,
+                "message_unread_counter_bus_id": bus_last_id,
                 "model": "discuss.channel",
                 "create_uid": self.env.ref("base.public_user").id,
                 "defaultDisplayMode": False,
@@ -1286,6 +1326,7 @@ class TestDiscussFullPerformance(HttpCase):
                 "last_interest_dt": last_interest_dt,
                 "livechatChannel": {"id": self.im_livechat_channel.id, "name": "support"},
                 "message_needaction_counter": 0,
+                "message_needaction_counter_bus_id": bus_last_id,
                 "name": "anon 2 Ernest Employee",
                 "custom_notifications": False,
                 "mute_until_dt": False,

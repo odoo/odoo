@@ -802,6 +802,7 @@ async function processRequest(request) {
         });
     }
     if (args.systray_get_activities && this.env.user?.partner_id) {
+        const bus_last_id = this.lastBusNotificationId;
         const groups = ResUsers._get_activity_groups();
         addToRes(res, {
             Store: {
@@ -809,6 +810,7 @@ async function processRequest(request) {
                     (counter, group) => counter + (group.total_count || 0),
                     0
                 ),
+                activity_counter_bus_id: bus_last_id,
                 activityGroups: groups,
             },
         });

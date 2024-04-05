@@ -8,6 +8,7 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         this.activityCounter = 0;
+        this.activity_counter_bus_id = 0;
         this.activityGroups = Record.attr([], {
             onUpdate() {
                 this.onUpdateActivityGroups();

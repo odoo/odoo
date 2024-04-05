@@ -11,7 +11,7 @@ patch(MockServer.prototype, {
     _mockMailGuest__initMessaging(context) {
         return {
             Store: {
-                initBusId: this.lastBusNotificationId,
+                initBusId: this.lastBusNotificationId, // deprecated, last id should be checked per field
             },
         };
     },
