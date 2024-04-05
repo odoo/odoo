@@ -35,14 +35,14 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @override
      */
     start: function () {
-        var self = this;
+        const self = this;
 
         self._loadProducts(this.comparelist_product_ids).then(function () {
             self._updateContent('hide');
         });
         self._updateComparelistView();
 
-        $('#comparelist .o_product_panel_header').popover({
+        new Popover(this.el.querySelector('#comparelist .o_product_header'), {
             trigger: 'manual',
             animation: true,
             html: true,
@@ -53,18 +53,18 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             placement: 'top',
             template: renderToString('popover'),
             content: function () {
-                return $('#comparelist .o_product_panel_content').html();
+                return this.el.querySelector('#comparelist .o_product_panel_content').innerHTML;
             }
         });
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
-        $(window).trigger('resize');
+        window.dispatchEvent(new Event('resize'));
 
-        $(document.body).on('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
+        document.body.addEventListener('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
             ev.preventDefault();
             self._removeFromComparelist(ev);
         });
-        $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
+        document.body.addEventListener('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
                 const newLink = '/shop/compare?products=' + encodeURIComponent(self.comparelist_product_ids);
@@ -79,7 +79,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(document.body).off('.product_comparaison_widget');
+        document.body.removeEventListener('click.product_comparaison_widget');
     },
 
     //--------------------------------------------------------------------------
@@ -87,42 +87,42 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * @param {jQuery} $elem
+     * @param {Element} elem
      */
-    handleCompareAddition: function ($elem) {
-        var self = this;
+    handleCompareAddition: function (elem) {
+        const self = this;
         if (this.comparelist_product_ids.length < this.product_compare_limit) {
-            var productId = $elem.data('product-product-id');
-            if ($elem.hasClass('o_add_compare_dyn')) {
-                productId = $elem.parent().find('.product_id').val();
+            let productId = elem.dataset.productProductId;
+            if (elem.classList.contains('o_add_compare_dyn')) {
+                productId = elem.parentElement.querySelector('.product_id').value;
                 if (!productId) { // case List View Variants
-                    productId = $elem.parent().find('input:checked').first().val();
+                    productId = elem.parentElement.querySelector('input:checked').value;
                 }
             }
 
-            let $form = $elem.closest('form');
-            $form = $form.length ? $form : $('#product_details > form');
+            let form = elem.closest('form');
+            form = form.length ? form : this.el.querySelector('#product_details > form');
             this.selectOrCreateProduct(
-                $form,
+                form,
                 productId,
-                $form.find('.product_template_id').val(),
+                form.querySelector('.product_template_id').value,
             ).then(function (productId) {
-                productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
+                productId = parseInt(productId, 10) || parseInt(elem.dataset.productProductId, 10);
                 if (!productId) {
                     return;
                 }
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
-                        $('#comparelist .o_product_panel_header'),
-                        $elem.closest('form'),
+                        this.el.querySelector('#comparelist .o_product_panel_header'),
+                        elem.closest('form'),
                         -50,
                         10
                     );
                 });
             });
         } else {
-            this.$('.o_comparelist_limit_warning').show();
-            $('#comparelist .o_product_panel_header').popover('show');
+            this.el.querySelector('.o_comparelist_limit_warning').style.display = '';
+            new Popover(this.el.querySelector('#comparelist .o_product_panel_header')).show();
         }
     },
 
@@ -134,7 +134,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _loadProducts: function (product_ids) {
-        var self = this;
+        const self = this;
         const cookies = JSON.parse(cookie.get('comparelist_product_ids') || '[]');
         if (product_ids.length == 0 && cookies.length == 0) {
             return Promise.resolve(true);
@@ -161,7 +161,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _togglePanel: function () {
-        $('#comparelist .o_product_panel_header').popover('toggle');
+        new Popover(this.el.querySelector('#comparelist .o_product_panel_header')).toggle();
     },
     /**
      * @private
@@ -170,8 +170,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         return this.guard.exec(this._addNewProductsImpl.bind(this, product_id));
     },
     _addNewProductsImpl: function (product_id) {
-        var self = this;
-        $('.o_product_feature_panel').addClass('d-md-block');
+        const self = this;
+        this.el.querySelectorAll('.o_product_feature_panel').forEach((elem) => elem.classList.add('d-md-block'));
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
@@ -189,21 +189,21 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateContent: function (force) {
-        var self = this;
-        this.$('.o_comparelist_products .o_product_row').remove();
+        const self = this;
+        this.el.querySelectorAll('.o_comparelist_products .o_product_row').forEach((elem) => elem.remove());
         this.comparelist_product_ids.forEach((res) => {
             if (self.product_data.hasOwnProperty(res)) {
                 // It is possible that we do not have the required product_data for all IDs in
                 // comparelist_product_ids
-                var $template = self.product_data[res].render;
-                self.$('.o_comparelist_products').append($template);
+                const template = self.product_data[res].render;
+                self.el.querySelector('.o_comparelist_products').append(template);
             }
         });
         if (force !== 'hide' && (this.comparelist_product_ids.length > 1 || force === 'show')) {
-            $('#comparelist .o_product_panel_header').popover('show');
+           new Popover(this.el.querySelector('#comparelist .o_product_panel_header')).show();
         }
         else {
-            $('#comparelist .o_product_panel_header').popover('hide');
+            new Popover(this.el.querySelector('#comparelist .o_product_panel_header')).hide();
         }
     },
     /**
@@ -213,13 +213,14 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
     },
     _removeFromComparelistImpl: function (e) {
-        var target = $(e.target.closest('.o_comparelist_remove, .o_remove'));
+        const target = e.target.closest('.o_comparelist_remove, .o_remove');
         this.comparelist_product_ids = this.comparelist_product_ids.filter(
-            (comp) => comp !== target.data("product_product_id")
+            (comp) => comp !== target.dataset.productProductId
         );
-        target.parents('.o_product_row').remove();
+        // TODO: WAITING FOR MSH PR
+        target.parents('.o_product_row').forEach(el => el.remove());
         this._updateCookie();
-        $('.o_comparelist_limit_warning').hide();
+        this.el.querySelector('.o_comparelist_limit_warning').style.display = 'none';
         this._updateContent('show');
     },
     /**
@@ -233,17 +234,17 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateComparelistView: function () {
-        this.$('.o_product_circle').text(this.comparelist_product_ids.length);
-        this.$('.o_comparelist_button').removeClass('d-md-block');
+        this.el.querySelector('.o_product_circle').textContent = this.comparelist_product_ids.length;
+        this.el.querySelector('.o_comparelist_button').classList.remove('d-md-block');
         if (Object.keys(this.comparelist_product_ids || {}).length === 0) {
-            $('.o_product_feature_panel').removeClass('d-md-block');
+            this.el.querySelectorAll('.o_product_feature_panel').forEach(el => el.classList.remove('d-md-block'));
         } else {
-            $('.o_product_feature_panel').addClass('d-md-block');
-            this.$('.o_comparelist_products').addClass('d-md-block');
+            this.el.querySelectorAll('.o_product_feature_panel').forEach(elem => elem.classList.add('d-md-block'));
+            this.el.querySelectorAll('.o_comparelist_products').forEach(elem => elem.classList.add('d-md-block'));
             if (this.comparelist_product_ids.length >=2) {
-                this.$('.o_comparelist_button').addClass('d-md-block');
-                this.$('.o_comparelist_button a').attr('href',
-                    '/shop/compare?products=' + encodeURIComponent(this.comparelist_product_ids));
+                this.el.querySelector('.o_comparelist_button').classList.add('d-md-block');
+                this.el.querySelector('.o_comparelist_button a').
+                    setAttribute('href', '/shop/compare?products=' + encodeURIComponent(this.comparelist_product_ids));
             }
         }
     },
@@ -272,10 +273,10 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      * @override
      */
     start: function () {
-        var def = this._super.apply(this, arguments);
+        const def = this._super.apply(this, arguments);
         this.productComparison = new ProductComparison(this);
         this.getRedirectOption();
-        return Promise.all([def, this.productComparison.appendTo(this.$el)]);
+        return Promise.all([def, this.productComparison.appendTo(this.el)]);
     },
 
     //--------------------------------------------------------------------------
@@ -287,16 +288,19 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      * @param {Event} ev
      */
     _onClickAddCompare: function (ev) {
-        this.productComparison.handleCompareAddition($(ev.currentTarget));
+        this.productComparison.handleCompareAddition(ev.currentTarget);
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onClickComparelistTr: function (ev) {
-        var $target = $(ev.currentTarget);
+        const target = ev.currentTarget;
+        // TODO MSH
         $($target.data('target')).children().slideToggle(100);
-        $target.find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
+        target.querySelector('.fa-chevron-circle-down, .fa-chevron-circle-right').forEach(el => {
+            el.classList.toggle('fa-chevron-circle-down fa-chevron-circle-right');
+        });
     },
     /**
      * @private
@@ -304,30 +308,30 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      */
     _onFormSubmit(ev) {
         ev.preventDefault();
-        const $form = $(ev.currentTarget);
-        const cellIndex = $(ev.currentTarget).closest('td')[0].cellIndex;
+        const form = ev.currentTarget;
+        const cellIndex = ev.currentTarget.closest('td').cellIndex;
         this.getCartHandlerOptions(ev);
         // Override product image container for animation.
-        this.$itemImgContainer = this.$('#o_comparelist_table tr').first().find('td').eq(cellIndex);
-        const $inputProduct = $form.find('input[type="hidden"][name="product_id"]').first();
-        const productId = parseInt($inputProduct.val());
+        this.itemImgContainer = this.el.querySelector('#o_comparelist_table tr').children[cellIndex];
+        const inputProduct = form.querySelector('input[type="hidden"][name="product_id"]');
+        const productId = parseInt(inputProduct.value);
         if (productId) {
-            const productTrackingInfo = $inputProduct.data('product-tracking-info');
+            const productTrackingInfo = inputProduct.dataset.productTrackingInfo;
             if (productTrackingInfo) {
                 productTrackingInfo.quantity = 1;
-                $inputProduct.trigger('add_to_cart_event', [productTrackingInfo]);
+                inputProduct.dispatchEvent(new CustomEvent('add_to_cart_event', { detail: [productTrackingInfo] }));
             }
-            return this.addToCart(this._getAddToCartParams(productId, $form));
+            return this.addToCart(this._getAddToCartParams(productId, form));
         }
     },
     /**
      * Get the addToCart Params
      *
      * @param {number} productId
-     * @param {JQuery} $form
+     * @param {Element} form
      * @override
      */
-    _getAddToCartParams(productId, $form) {
+    _getAddToCartParams(productId, form) {
         return {
             product_id: productId,
             add_qty: 1,

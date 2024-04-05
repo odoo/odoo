@@ -37,21 +37,23 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
-        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
-        $old.find('.btn-addr').toggle();
-        $old.addClass(cardClass);
-        $old.removeClass('bg-primary border border-primary');
+        const old = document.querySelector(`.${rowAddrClass}`).querySelector('.card.border.border-primary');
+        let btnAddr = old.querySelector('.btn-addr');
+        btnAddr.style.display = btnAddr.style.display === 'none' ? '' : 'none';
+        old.classList.add(cardClass);
+        old.classList.remove('bg-primary border border-primary');
 
-        var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
-        $new.find('.btn-addr').toggle();
-        $new.removeClass(cardClass);
-        $new.addClass('bg-primary border border-primary');
+        const newCardEl = ev.currentTarget.closest('div.one_kanban').querySelector('.card');
+        const newBtnAddr = newCardEl.querySelector('.btn-addr');
+        newBtnAddr.style.display = btnAddr.style.display === 'none' ? '' : 'none';
+        newCardEl.classList.remove(cardClass);
+        newCardEl.classList.add('bg-primary border border-primary');
 
         rpc(
             '/shop/cart/update_address',
             {
-                mode: $new.attr('mode'),
-                partner_id: $new.attr('partner_id'),
+                mode: newCardEl.getAttribute('mode'),
+                partner_id: newCardEl.getAttribute('partner_id'),
             }
         )
     },

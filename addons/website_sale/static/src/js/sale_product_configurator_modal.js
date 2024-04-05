@@ -16,7 +16,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * Initializes the optional products modal
      *
      * @override
-     * @param {$.Element} parent The parent container
+     * @param {Element} parent The parent container
      * @param {Object} params
      * @param {integer} params.pricelistId
      * @param {boolean} params.isWebsite If we're on a web shop page, we need some
@@ -36,9 +36,9 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @param {Array} params.rootProduct.no_variant_attribute_values
      */
     init: function (parent, params) {
-        var self = this;
+        const self = this;
 
-        var options = Object.assign({
+        let options = Object.assign({
             size: 'large',
             buttons: [{
                 text: params.okButtonText,
@@ -69,7 +69,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
 
         this._opened.then(function () {
             if (self.previousModalHeight) {
-                self.$el.closest('.modal-content').css('min-height', self.previousModalHeight + 'px');
+                self.el.closest('.modal-content').style.minHeight = self.previousModalHeight + 'px';
             }
         });
     },
@@ -77,9 +77,9 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @override
      */
     willStart: function () {
-        var self = this;
+        const self = this;
 
-        var getModalContent = rpc("/sale_product_configurator/show_advanced_configurator", {
+        const getModalContent = rpc("/sale_product_configurator/show_advanced_configurator", {
             mode: self.mode,
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
@@ -93,9 +93,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         })
         .then(function (modalContent) {
             if (modalContent) {
-                var $modalContent = $(modalContent);
-                $modalContent = self._postProcessContent($modalContent);
-                self.$content = $modalContent;
+                modalContent = self._postProcessContent(modalContent);
+                self.content = modalContent;
             } else {
                 self.trigger('options_empty');
                 self.preventOpening = true;
@@ -114,15 +113,18 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @override
      */
     open: function (options) {
-        $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.remove();// remove open tooltip if any to prevent them staying when modal is opened
+        })
 
-        var self = this;
-        this.appendTo($('<div/>')).then(function () {
+        const self = this;
+        let div = document.createElement('div');
+        this.append(div).then(function () {
             if (!self.preventOpening) {
-                self.$modal.find(".modal-body").replaceWith(self.$el);
-                self.$modal.attr('open', true);
-                self.$modal.appendTo(self.container);
-                const modal = new Modal(self.$modal[0], {
+                self.modal.querySelector(".modal-body").replaceWith(self.el);
+                self.modal.setAttribute('open', true);
+                self.container.append(self.modal);
+                const modal = new Modal(self.modal, {
                     focus: true,
                 });
                 modal.show();
@@ -141,18 +143,17 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @override
      */
     start: function () {
-        var def = this._super.apply(this, arguments);
-        var self = this;
+        const def = this._super.apply(this, arguments);
+        const self = this;
 
-        this.$el.find('input[name="add_qty"]').val(this.rootProduct.quantity);
+        this.el.querySelector('input[name="add_qty"]').value = this.rootProduct.quantity;
 
         // set a unique id to each row for options hierarchy
-        var $products = this.$el.find('tr.js_product').toArray();
-        $products.forEach((el) => {
-            var $el = $(el);
-            var uniqueId = self._getUniqueId(el);
+        const products = this.el.querySelectorAll('tr.js_product');
+        products.forEach((el) => {
+            const uniqueId = self._getUniqueId(el);
 
-            var productId = parseInt($el.find('input.product_id').val(), 10);
+            var productId = parseInt(el.querySelector('input.product_id').value, 10);
             if (productId === self.rootProduct.product_id) {
                 self.rootProduct.unique_id = uniqueId;
             } else {
@@ -163,7 +164,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         return def.then(function () {
             // This has to be triggered to compute the "out of stock" feature
             self._opened.then(function () {
-                self.triggerVariantChange(self.$el);
+                self.triggerVariantChange(self.el);
             });
         });
     },
@@ -184,26 +185,26 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @public
      */
     getAndCreateSelectedProducts: async function () {
-        var self = this;
+        const self = this;
         const products = [];
         let productCustomVariantValues;
         let noVariantAttributeValues;
-        for (const product of self.$modal.find('.js_product.in_cart')) {
-            var $item = $(product);
-            var quantity = parseFloat($item.find('input[name="add_qty"]').val().replace(',', '.') || 1);
-            var parentUniqueId = product.dataset.parentUniqueId;
-            var uniqueId = product.dataset.uniqueId;
-            productCustomVariantValues = $item.find('.custom-attribute-info').data("attribute-value") || self.getCustomVariantValues($item);
-            noVariantAttributeValues = $item.find('.no-attribute-info').data("attribute-value") || self.getNoVariantAttributeValues($item);
+        for (const product of self.modal.querySelectorAll('.js_product.in_cart')) {
+            const item = product;
+            const quantity = parseFloat(item.querySelector('input[name="add_qty"]').value.replace(',', '.') || 1);
+            const parentUniqueId = product.dataset.parentUniqueId;
+            const uniqueId = product.dataset.uniqueId;
+            productCustomVariantValues = [...item.querySelectorAll('.custom-attribute-info')].map(el => el.dataset.attributeValue) || self.getCustomVariantValues(item);
+            noVariantAttributeValues = [...item.querySelectorAll('.no-attribute-info')].map(el => el.dataset.attributeValue) || self.getNoVariantAttributeValues(item);
 
             const productID = await self.selectOrCreateProduct(
-                $item,
-                parseInt($item.find('input.product_id').val(), 10),
-                parseInt($item.find('input.product_template_id').val(), 10),
+                item,
+                parseInt(item.querySelector('input.product_id').value, 10),
+                parseInt(item.querySelector('input.product_template_id').value, 10),
             );
             products.push({
                 'product_id': productID,
-                'product_template_id': parseInt($item.find('input.product_template_id').val(), 10),
+                'product_template_id': parseInt(item.querySelector('input.product_template_id').value, 10),
                 'quantity': quantity,
                 'parent_unique_id': parentUniqueId,
                 'unique_id': uniqueId,
@@ -224,50 +225,45 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      *
      * @private
      */
-    _postProcessContent: function ($modalContent) {
-        var productId = this.rootProduct.product_id;
-        $modalContent
-            .find('img:first')
-            .attr("src", "/web/image/product.product/" + productId + "/image_128");
+    _postProcessContent: function (modalContent) {
+        const productId = this.rootProduct.product_id;
+        let firstImg = modalContent.querySelector('img:first');
+        firstImg.src = "/web/image/product.product/" + productId + "/image_128";
 
         if (this.rootProduct &&
                 (this.rootProduct.product_custom_attribute_values ||
                  this.rootProduct.no_variant_attribute_values)) {
-            var $productDescription = $modalContent
-                .find('.main_product')
-                .find('td.td-product_name div.text-muted.small > div:first');
-            var $updatedDescription = $('<div/>');
-            $updatedDescription.append($('<p>', {
-                text: $productDescription.text()
-            }));
-            $.each(this.rootProduct.product_custom_attribute_values, function () {
+            const productDescription = modalContent.querySelector('.main_product td.td-product_name div.text-muted.small > div:first-child');
+            let updatedDescription = document.createElement('div');
+            let p = document.createElement('p');
+            p.textContent = productDescription.textContent;
+            updatedDescription.append(p);
+            this.rootProduct.product_custom_attribute_values.forEach(() => {
                 if (this.custom_value) {
-                    const $customInput = $modalContent
-                        .find(".main_product [data-is_custom='True']")
-                        .closest(`[data-value_id='${this.custom_product_template_attribute_value_id.res_id}']`);
-                    $customInput.attr('previous_custom_value', this.custom_value);
-                    VariantMixin.handleCustomValues($customInput);
+                    const customInput = modalContent.querySelector(".main_product [data-is_custom='True']")
+                                        .closest(`[data-value_id='${this.custom_product_template_attribute_value_id.res_id}']`);
+                    customInput.setAttribute('previous_custom_value', this.custom_value);
+                    VariantMixin.handleCustomValues(customInput);
                 }
             });
 
-            $.each(this.rootProduct.no_variant_attribute_values, function () {
+            this.rootProduct.no_variant_attribute_values.forEach( () => {
                 if (this.is_custom !== 'True') {
-                    var $currentDescription = $updatedDescription.find(`div[name=ptal-${this.id}]`);
-                    if ($currentDescription?.length > 0) { // one row per multicheckbox
-                        $currentDescription.text($currentDescription.text() + ', ' + this.attribute_value_name);
+                    let currentDescription = updatedDescription.querySelector(`div[name=ptal-${this.id}]`);
+                    if (currentDescription?.length > 0) { // one row per multicheckbox
+                        currentDescription.textContent += ', ' + this.attribute_value_name;
                     } else {
-                        $updatedDescription.append($('<div>', {
-                            text: this.attribute_name + ': ' + this.attribute_value_name,
-                            name: `ptal-${this.id}`,
-                        }));
+                        let newDiv = document.createElement('div');
+                        newDiv.textContent = this.attribute_name + ': ' + this.attribute_value_name;
+                        newDiv.setAttribute('name', `ptal-${this.id}`);
+                        updatedDescription.appendChild(newDiv);
                     }
                 }
             });
-
-            $productDescription.replaceWith($updatedDescription);
+            productDescription.parentNode.replaceChild(updatedDescription, productDescription);
         }
 
-        return $modalContent;
+        return modalContent;
     },
 
     /**
@@ -301,18 +297,17 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      */
     _onAddOrRemoveOption: function (ev) {
         ev.preventDefault();
-        var self = this;
-        var $target = $(ev.currentTarget);
-        var $modal = $target.parents('.oe_advanced_configurator_modal');
-        var $parent = $target.parents('.js_product:first');
-        $parent.find("a.js_add, span.js_remove").toggleClass('d-none');
-        $parent.find(".js_remove");
+        const self = this;
+        const target = ev.currentTarget;
+        const modal = target.closest('.oe_advanced_configurator_modal');
+        const parent = target.closest('.js_product:first');
+        parent.querySelectorAll("a.js_add, span.js_remove").forEach(el => el.classList.toggle('d-none'));
 
-        var productTemplateId = $parent.find(".product_template_id").val();
-        if ($target.hasClass('js_add')) {
-            self._onAddOption($modal, $parent, productTemplateId);
+        const productTemplateId = parent.querySelector(".product_template_id").value;
+        if (target.classList.contains('js_add')) {
+            self._onAddOption(modal, parent, productTemplateId);
         } else {
-            self._onRemoveOption($modal, $parent);
+            self._onRemoveOption(modal, parent);
         }
 
         self._computePriceTotal();
@@ -321,97 +316,101 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     /**
      * @private
      * @see _onAddOrRemoveOption
-     * @param {$.Element} $modal
-     * @param {$.Element} $parent
+     * @param {Element} modal
+     * @param {Element} parent
      * @param {integer} productTemplateId
      */
-    _onAddOption: function ($modal, $parent, productTemplateId) {
-        var self = this;
-        var $selectOptionsText = $modal.find('.o_select_options');
+    _onAddOption: function (modal, parent, productTemplateId) {
+        const self = this;
+        const selectOptionsText = modal.querySelector('.o_select_options');
 
-        var parentUniqueId = $parent[0].dataset.parentUniqueId;
-        var $optionParent = $modal.find('tr.js_product[data-unique-id="' + parentUniqueId + '"]');
+        let parentUniqueId = parent.dataset.parentUniqueId;
+        let optionParent = modal.querySelector('tr.js_product[data-unique-id="' + parentUniqueId + '"]');
 
         // remove attribute values selection and update + show quantity input
-        $parent.find('.td-product_name').removeAttr("colspan");
-        $parent.find('.td-qty').removeClass('d-none');
-
-        var productCustomVariantValues = self.getCustomVariantValues($parent);
-        var noVariantAttributeValues = self.getNoVariantAttributeValues($parent);
+        parent.querySelectorAll('.td-product_name').forEach(prodName => {
+            prodName.removeAttribute("colspan");
+        });
+        parent.querySelectorAll('.td-qty').forEach(prodQty => {
+            prodQty.classList.remove('d-none');
+        });
+        const productCustomVariantValues = self.getCustomVariantValues(parent);
+        const noVariantAttributeValues = self.getNoVariantAttributeValues(parent);
         if (productCustomVariantValues || noVariantAttributeValues) {
-            var $productDescription = $parent
-                .find('td.td-product_name div.float-start');
+            const productDescription = parent
+                .querySelector('td.td-product_name div.float-start');
 
-            var $customAttributeValuesDescription = $('<div>', {
-                class: 'custom_attribute_values_description text-muted small'
-            });
+            let customAttributeValuesDescription = document.createElement('div');
+            customAttributeValuesDescription.className = 'custom_attribute_values_description text-muted small';
             if (productCustomVariantValues.length !== 0 || noVariantAttributeValues.length !== 0) {
-                $customAttributeValuesDescription.append($('<br/>'));
+                const br = document.createElement('br');
+                customAttributeValuesDescription.appendChild(br);;
             }
 
-            $.each(productCustomVariantValues, function (){
-                $customAttributeValuesDescription.append($('<div>', {
-                    text: this.attribute_value_name + ': ' + this.custom_value
-                }));
+            productCustomVariantValues.forEach(() => {
+                const newDiv = document.createElement('div');
+                newDiv.textContent = this.attribute_value_name + ': ' + this.custom_value;
+                customAttributeValuesDescription.appendChild(newDiv);
             });
 
-            $.each(noVariantAttributeValues, function (){
+            noVariantAttributeValues.forEach(() => {
                 if (this.is_custom !== 'True'){
-                    var $currentDescription = $customAttributeValuesDescription.find(`div[name=ptal-${this.id}]`);
-                    if ($currentDescription?.length > 0) { // one row per multicheckbox
-                        $currentDescription.text($currentDescription.text() + ', ' + this.attribute_value_name);
+                    let currentDescription = customAttributeValuesDescription.querySelector(`div[name=ptal-${this.id}]`);
+                    if (currentDescription?.length > 0) { // one row per multicheckbox
+                        currentDescription.textContent += ', ' + this.attribute_value_name;
                     } else {
-                        $customAttributeValuesDescription.append($('<div>', {
-                            text: this.attribute_name + ': ' + this.attribute_value_name,
-                            name: `ptal-${this.id}`,
-                        }));
+                        const newDiv = document.createElement('div');
+                        newDiv.textContent = this.attribute_name + ': ' + this.attribute_value_name;
+                        newDiv.setAttribute('name', `ptal-${this.id}`);
+                        customAttributeValuesDescription.appendChild(newDiv);
                     }
                 }
             });
 
-            $productDescription.append($customAttributeValuesDescription);
+            productDescription.append(customAttributeValuesDescription);
         }
 
         // place it after its parent and its parent options
-        var $tmpOptionParent = $optionParent;
-        while ($tmpOptionParent.length) {
-            $optionParent = $tmpOptionParent;
-            $tmpOptionParent = $modal.find('tr.js_product.in_cart[data-parent-unique-id="' + $optionParent[0].dataset.uniqueId + '"]').last();
+        let tmpOptionParent = optionParent;
+        while (tmpOptionParent.length) {
+            optionParent = tmpOptionParent;
+            tmpOptionParent = [...modal.querySelectorAll('tr.js_product.in_cart')].filter(el => el.dataset.uniqueId === optionParent.dataset.uniqueId).slice(-1)[0];
         }
-        $optionParent.after($parent);
-        $parent.addClass('in_cart');
+        optionParent.after(parent);
+        parent.classList.add('in_cart');
 
         this.selectOrCreateProduct(
-            $parent,
-            $parent.find('.product_id').val(),
+            parent,
+            parent.querySelector('.product_id').value,
             productTemplateId,
         ).then(function (productId) {
-            $parent.find('.product_id').val(productId);
+            parent.querySelector('.product_id').value = productId;
 
             rpc("/sale_product_configurator/optional_product_items", {
                 'product_id': productId,
                 'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {
-                var $addedItem = $(addedItem);
-                $modal.find('tr:last').after($addedItem);
+                const lastTr = modal.querySelector('tr:last-child');
+                lastTr.parentNode.insertBefore(addedItem, lastTr.nextSibling);
 
-                self.$el.find('input[name="add_qty"]').trigger('change');
-                self.triggerVariantChange($addedItem);
+                const inputElement = self.el.querySelector('input[name="add_qty"]');
+                const event = new Event('change');
+                inputElement.dispatchEvent(event);
+                self.triggerVariantChange(addedItem);
 
                 // add a unique id to the new products
-                var parentUniqueId = $parent[0].dataset.uniqueId;
-                var parentQty = $parent.find('input[name="add_qty"]').val();
-                $addedItem.filter('.js_product').each(function () {
-                    var $el = $(this);
-                    var uniqueId = self._getUniqueId(this);
-                    this.dataset.uniqueId = uniqueId;
-                    this.dataset.parentUniqueId = parentUniqueId;
-                    $el.find('input[name="add_qty"]').val(parentQty);
+                const parentUniqueId = parent.dataset.uniqueId;
+                const parentQty = parent.querySelector('input[name="add_qty"]').value;
+                addedItem.querySelectorAll('.js_product').each(function (item) {
+                    var uniqueId = self._getUniqueId(item);
+                    item.dataset.uniqueId = uniqueId;
+                    item.dataset.parentUniqueId = parentUniqueId;
+                    item.querySelector('input[name="add_qty"]').value = parentQty;
                 });
 
-                if ($selectOptionsText.nextAll('.js_product').length === 0) {
+                if ([...selectOptionsText.nextElementSibling].filter(el => el.classList.contains('js_product')).length === 0) {
                     // no more optional products to select -> hide the header
-                    $selectOptionsText.hide();
+                    selectOptionsText.style.display = 'none !important';
                 }
             });
         });
@@ -420,50 +419,51 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     /**
      * @private
      * @see _onAddOrRemoveOption
-     * @param {$.Element} $modal
-     * @param {$.Element} $parent
+     * @param {Element} modal
+     * @param {Element} parent
      */
-    _onRemoveOption: function ($modal, $parent) {
+    _onRemoveOption: function (modal, parent) {
         // restore attribute values selection
-        var uniqueId = $parent[0].dataset.parentUniqueId;
-        var qty = $modal.find('tr.js_product.in_cart[data-unique-id="' + uniqueId + '"]').find('input[name="add_qty"]').val();
-        $parent.removeClass('in_cart');
-        $parent.find('.td-product_name').attr("colspan", 2);
-        $parent.find('.td-qty').addClass('d-none');
-        $parent.find('input[name="add_qty"]').val(qty);
-        $parent.find('.custom_attribute_values_description').remove();
+        const uniqueId = parent.dataset.parentUniqueId;
+        const qty = modal.querySelector(`tr.js_product.in_cart[data-unique-id="${uniqueId}"]`).querySelector('input[name="add_qty"]').value;
+        parent.classList.remove('in_cart');
+        parent.querySelectorAll('.td-product_name').forEach(el => {
+            el.setAttribute("colspan", 2);
+        });
+        parent.querySelectorAll('.td-qty').forEach(el => {
+            el.classList.add('d-none');
+        });
+        parent.querySelector('input[name="add_qty"]').value = qty;
+        parent.querySelector('.custom_attribute_values_description').remove();
+        modal.querySelector('.o_select_options').style.display = '';
 
-        $modal.find('.o_select_options').show();
+        const productUniqueId = parent.dataset.uniqueId;
+        this._removeOptionOption(modal, productUniqueId);
 
-        var productUniqueId = $parent[0].dataset.uniqueId;
-        this._removeOptionOption($modal, productUniqueId);
-
-        $modal.find('tr:last').after($parent);
+        const lastTr = modal.querySelector('tr:last-child');
+        lastTr.parentNode.insertBefore(parent, lastTr.nextSibling);
     },
 
     /**
      * If the removed product had optional products, remove them as well
      *
      * @private
-     * @param {$.Element} $modal
+     * @param {Element} modal
      * @param {integer} optionUniqueId The removed optional product id
      */
-    _removeOptionOption: function ($modal, optionUniqueId) {
-        var self = this;
-        $modal.find('tr.js_product[data-parent-unique-id="' + optionUniqueId + '"]').each(function () {
-            var uniqueId = this.dataset.uniqueId;
-            $(this).remove();
-            self._removeOptionOption($modal, uniqueId);
+    _removeOptionOption: function (modal, optionUniqueId) {
+        const self = this;
+        modal.querySelectorAll('tr.js_product[data-parent-unique-id="' + optionUniqueId + '"]').forEach(() => {
+            const uniqueId = this.dataset.uniqueId;
+            this.remove();
+            self._removeOptionOption(modal, uniqueId);
         });
     },
     /**
      * @override
      */
-    _onChangeCombination: function (ev, $parent, combination) {
-        $parent
-            .find('.td-product_name .product-name')
-            .first()
-            .text(combination.display_name);
+    _onChangeCombination: function (ev, parent, combination) {
+        parent.querySelectorAll('.td-product_name .product-name')[0].textContent = combination.display_name;
 
         VariantMixin._onChangeCombination.apply(this, arguments);
 
@@ -476,18 +476,18 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * @param {MouseEvent} ev
      */
     _onChangeQuantity: function (ev) {
-        var $product = $(ev.target.closest('tr.js_product'));
-        var qty = parseFloat($(ev.currentTarget).val());
+        const product = ev.target.closest('tr.js_product');
+        const qty = parseFloat(ev.currentTarget.value);
 
-        var uniqueId = $product[0].dataset.uniqueId;
-        this.$el.find('tr.js_product:not(.in_cart)[data-parent-unique-id="' + uniqueId + '"] input[name="add_qty"]').each(function () {
-            $(this).val(qty);
+        const uniqueId = product.dataset.uniqueId;
+        this.el.querySelectorAll('tr.js_product:not(.in_cart)[data-parent-unique-id="' + uniqueId + '"] input[name="add_qty"]').forEach(() => {
+            this.value = qty;
         });
 
         if (this._triggerPriceUpdateOnChangeQuantity()) {
             this.onChangeAddQuantity(ev);
         }
-        if ($product.hasClass('main_product')) {
+        if (product.classList.contains('main_product')) {
             this.rootProduct.quantity = qty;
         }
         this.trigger('update_quantity', this.rootProduct.quantity);
@@ -499,16 +499,14 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      * we need to refresh the total price row
      */
     _computePriceTotal: function () {
-        if (this.$modal.find('.js_price_total').length) {
-            var price = 0;
-            this.$modal.find('.js_product.in_cart').each(function () {
-                var quantity = parseFloat($(this).find('input[name="add_qty"]').first().val().replace(',', '.') || 1);
-                price += parseFloat($(this).find('.js_raw_price').html()) * quantity;
+        if (this.modal.querySelector('.js_price_total').length) {
+            let price = 0;
+            this.modal.querySelectorAll('.js_product.in_cart').forEach(() => {
+                const quantity = parseFloat(this.el.querySelectorAll('input[name="add_qty"]')[0].value.replace(',', '.') || 1);
+                price += parseFloat(this.querySelector('.js_raw_price').innerHTML) * quantity;
             });
 
-            this.$modal.find('.js_price_total .oe_currency_value').text(
-                this._priceToStr(parseFloat(price))
-            );
+            this.modal.querySelector('.js_price_total .oe_currency_value').textContent = this._priceToStr(parseFloat(price));
         }
     },
 
@@ -521,7 +519,7 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         return !this.isWebsite;
     },
     /**
-     * Returns a unique id for `$el`.
+     * Returns a unique id for `el`.
      *
      * @private
      * @param {Element} el

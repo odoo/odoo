@@ -192,7 +192,7 @@ export class Multirange {
             this.rightInput.addEventListener("focus", this.selectAllFocus.bind(this));
         }
         this.update();
-        $(this.rangeDiv).addClass('visible');
+        this.rangeDiv.classList.add('visible');
 
     }
 
