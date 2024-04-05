@@ -310,27 +310,3 @@ registry
             return getSteps() 
         }
     });
-
-registry
-    .category("web_tour.tours")
-    .add("PaymentScreenRoundingDownMultiplePayment", {
-        test: true, steps: () => {
-            startSteps();
-            ProductScreen.do.clickHomeCategory();
-            ProductScreen.exec.addOrderline('Product Test', '1');
-            ProductScreen.do.clickPayButton();
-
-            PaymentScreen.do.clickPaymentMethod('Bank');
-            PaymentScreen.do.pressNumpad('5 5');
-
-            PaymentScreen.do.clickPaymentMethod('Cash');
-
-            PaymentScreen.check.remainingIs('0.0');
-            PaymentScreen.check.changeIs('0.0');
-
-            PaymentScreen.do.clickValidate();
-            ReceiptScreen.check.receiptIsThere();
-
-            return getSteps();
-        }
-    });

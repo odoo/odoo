@@ -507,8 +507,7 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        amount_total = -self.refunded_order_ids.amount_paid or self.amount_total
-        return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount, force_round=False):
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
