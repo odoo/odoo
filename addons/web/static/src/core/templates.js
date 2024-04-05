@@ -83,6 +83,11 @@ function _getTemplate(name, blockId = null) {
     const inheritFrom = processedTemplate.getAttribute("t-inherit");
     if (inheritFrom) {
         const parentTemplate = _getTemplate(inheritFrom, blockId || info[name].blockId);
+        if (!parentTemplate) {
+            throw new Error(
+                `Constructing template ${name}: template parent ${inheritFrom} not found`
+            );
+        }
         const element = getClone(processedTemplate);
         processedTemplate = applyInheritance(getClone(parentTemplate), element, info[name].url);
         if (processedTemplate.tagName !== element.tagName) {
@@ -143,4 +148,11 @@ export function getTemplate(name) {
 
 export function clearProcessedTemplates() {
     processedTemplates = {};
+}
+
+export function checkPrimaryTemplateParents(namesToCheck) {
+    const missing = new Set(namesToCheck.filter((name) => !(name in templates)));
+    if (missing.size) {
+        console.error(`Missing (primary) parent templates: ${[...missing].join(", ")}`);
+    }
 }
