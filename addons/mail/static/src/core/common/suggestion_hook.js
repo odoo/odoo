@@ -128,24 +128,19 @@ export function useSuggestion() {
             if (!self.search.delimiter) {
                 return;
             }
-            const suggestions = suggestionService.searchSuggestions(self.search, {
+            const { type, suggestions } = suggestionService.searchSuggestions(self.search, {
                 thread: self.thread,
                 sort: true,
             });
-            const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
-            if (!mainSuggestions.length && !extraSuggestions.length) {
+            if (!suggestions.length) {
                 self.state.items = undefined;
                 return;
             }
             // arbitrary limit to avoid displaying too many elements at once
             // ideally a load more mechanism should be introduced
             const limit = 8;
-            mainSuggestions.length = Math.min(mainSuggestions.length, limit);
-            extraSuggestions.length = Math.min(
-                extraSuggestions.length,
-                limit - mainSuggestions.length
-            );
-            self.state.items = { type, mainSuggestions, extraSuggestions };
+            suggestions.length = Math.min(suggestions.length, limit);
+            self.state.items = { type, suggestions };
         },
     };
     useEffect(
@@ -173,8 +168,7 @@ export function useSuggestion() {
                     self.search.delimiter === delimiter &&
                     self.search.position === position &&
                     self.search.term === term &&
-                    !self.state.items?.mainSuggestions.length &&
-                    !self.state.items?.extraSuggestions.length
+                    !self.state.items?.suggestions.length
                 ) {
                     self.clearSearch();
                 }

@@ -99,7 +99,7 @@ export class SuggestionService {
         };
         return {
             type: "CannedResponse",
-            mainSuggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
+            suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
         };
     }
 
@@ -112,7 +112,7 @@ export class SuggestionService {
      * @param {Object} [options={}]
      * @param {Integer} [options.thread] prioritize and/or restrict
      *  result in the context of given thread
-     * @returns {{ type: String, mainSuggestions: Array, extraSuggestions: Array }}
+     * @returns {{ type: String, suggestions: Array }}
      */
     searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
@@ -127,8 +127,7 @@ export class SuggestionService {
         }
         return {
             type: undefined,
-            mainSuggestions: [],
-            extraSuggestions: [],
+            suggestions: [],
         };
     }
 
@@ -156,8 +155,7 @@ export class SuggestionService {
                 return persona.type === "partner";
             });
         }
-        const mainSuggestionList = [];
-        const extraSuggestionList = [];
+        const suggestions = [];
         for (const partner of partners) {
             if (!partner.name) {
                 continue;
@@ -166,21 +164,14 @@ export class SuggestionService {
                 cleanTerm(partner.name).includes(cleanedSearchTerm) ||
                 (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
             ) {
-                if (partner.user) {
-                    mainSuggestionList.push(partner);
-                } else {
-                    extraSuggestionList.push(partner);
-                }
+                suggestions.push(partner);
             }
         }
         return {
             type: "Partner",
-            mainSuggestions: sort
-                ? this.sortPartnerSuggestions(mainSuggestionList, cleanedSearchTerm, thread)
-                : mainSuggestionList,
-            extraSuggestions: sort
-                ? this.sortPartnerSuggestions(extraSuggestionList, cleanedSearchTerm, thread)
-                : extraSuggestionList,
+            suggestions: sort
+                ? [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)]
+                : suggestions,
         };
     }
 
@@ -255,8 +246,7 @@ export class SuggestionService {
         };
         return {
             type: "Thread",
-            mainSuggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
-            extraSuggestions: [],
+            suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
         };
     }
 }

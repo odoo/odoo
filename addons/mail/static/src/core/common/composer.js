@@ -321,10 +321,7 @@ export class Composer extends Component {
         if (!this.hasSuggestions) {
             return props;
         }
-        const suggestions = Array(
-            ...this.suggestion.state.items.mainSuggestions,
-            ...this.suggestion.state.items.extraSuggestions
-        );
+        const suggestions = this.suggestion.state.items.suggestions;
         switch (this.suggestion.state.items.type) {
             case "Partner":
                 return {
