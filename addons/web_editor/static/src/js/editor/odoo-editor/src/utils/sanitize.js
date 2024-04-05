@@ -23,6 +23,7 @@ import {
     padLinkWithZws,
     getTraversedNodes,
     ZERO_WIDTH_CHARS_REGEX,
+    setSelection,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -203,7 +204,7 @@ class Sanitize {
             const anchor = selection && selection.anchorNode;
             const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
-            // content and the selection is not next to it.
+            // content.
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
@@ -220,15 +221,22 @@ class Sanitize {
                             sibling.length > 0
                     )
                 ) &&
-                !isBlock(node.parentElement) &&
-                anchor !== node
+                !isBlock(node.parentElement)
             ) {
                 const restoreCursor = shouldPreserveCursor(node, this.root) &&
                     preserveCursor(this.root.ownerDocument);
+                const shouldAdaptAnchor = anchor === node && selection.anchorOffset > node.textContent.indexOf('\u200B');
+                const shouldAdaptFocus = selection.focusNode === node && selection.focusOffset > node.textContent.indexOf('\u200B');
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("data-oe-zws-empty-inline");
                 if (restoreCursor) {
                     restoreCursor();
+                }
+                if (shouldAdaptAnchor || shouldAdaptFocus) {
+                    setSelection(
+                        selection.anchorNode, shouldAdaptAnchor ? selection.anchorOffset - 1 : selection.anchorOffset,
+                        selection.focusNode, shouldAdaptFocus ? selection.focusOffset - 1 : selection.focusOffset,
+                    );
                 }
             }
 
