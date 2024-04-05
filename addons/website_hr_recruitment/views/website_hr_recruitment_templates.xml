@@ -134,7 +134,7 @@
                     <div class="container">
                         <div class="mt32">
                             <div class="float-end">
-                                <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
+                                <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg float-end">Apply Now!</a>
                             </div>
                             <h1 t-field="job.name"/>
                             <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
@@ -151,7 +151,7 @@
                 <div class="oe_structure">
                     <section class="o_job_bottom_bar mt24 mb48">
                         <div class="text-center">
-                            <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                            <a role="button" t-attf-href="/jobs/apply/#{slug(job)}" class="btn btn-primary btn-lg">Apply Now!</a>
                         </div>
                     </section>
                 </div>
