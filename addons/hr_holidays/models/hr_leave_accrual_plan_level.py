@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -133,6 +134,12 @@ class AccrualPlanLevel(models.Model):
         ('start_count_check', "CHECK( start_count >= 0 )", "You can not start an accrual in the past."),
         ('added_value_greater_than_zero', 'CHECK(added_value > 0)', 'You must give a rate greater than 0 in accrual plan levels.')
     ]
+
+    @api.constrains('maximum_leave')
+    def _check_maximum_leave(self):
+        for level in self:
+            if level.cap_accrued_time and level.maximum_leave < 1:
+                raise UserError(_("You cannot have a cap on accrued time without setting a maximum amount."))
 
     @api.depends('start_count', 'start_type')
     def _compute_sequence(self):
