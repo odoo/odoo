@@ -467,8 +467,8 @@ class AccountChartTemplate(models.AbstractModel):
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
         """
-        def deref(values, model):
-            """Replace xml_id references by database ids.
+        def deref_values(values, model):
+            """Replace xml_id references by database ids in all provided values.
 
             This allows to define all the data before the records even exist in the database.
             """
@@ -492,7 +492,7 @@ class AccountChartTemplate(models.AbstractModel):
                             last_part = last_part[0]
                         # (0, 0, {'test': 'account.ref_name'}) -> Command.Create({'test': 13})
                         if command in (Command.CREATE, Command.UPDATE):
-                            deref(last_part, self.env[field.comodel_name])
+                            deref_values(last_part, self.env[field.comodel_name])
                         # (6, 0, ['account.ref_name']) -> Command.Set([13])
                         elif command == Command.SET:
                             for subvalue_idx, subvalue in enumerate(last_part):
@@ -510,10 +510,10 @@ class AccountChartTemplate(models.AbstractModel):
                 del values[fname]
             return values
 
-        def defer(all_data):
+        def delay(all_data):
             """Defer writing some relations if the related records don't exist yet."""
 
-            def should_defer(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
+            def should_delay(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
                 parent_models = (parent_models or []) + [model]
                 field = self.env[model]._fields.get(field_name)
                 if not field or not field.relational or field.comodel_name in created_models:
@@ -526,7 +526,7 @@ class AccountChartTemplate(models.AbstractModel):
                     match element:
                         case Command.CREATE, _, dict() as values:
                             for subkey, subvalue in values.items():
-                                if should_defer(created_models, yet_to_be_created_models, field.comodel_name, subkey, subvalue, parent_models):
+                                if should_delay(created_models, yet_to_be_created_models, field.comodel_name, subkey, subvalue, parent_models):
                                     return True
                         case int() as command, *_ if command in tuple(Command):
                             if field_yet_to_be_created:
@@ -541,7 +541,7 @@ class AccountChartTemplate(models.AbstractModel):
                 for xml_id, vals in data.items():
                     to_be_removed = []
                     for field_name, field_val in vals.items():
-                        if should_defer(created_models, yet_to_be_created_models, model, field_name, field_val):
+                        if should_delay(created_models, yet_to_be_created_models, model, field_name, field_val):
                             to_be_removed.append(field_name)
                             to_delay[xml_id][field_name] = field_val
                     for field_name in to_be_removed:
@@ -551,29 +551,29 @@ class AccountChartTemplate(models.AbstractModel):
                 yield model, data
                 created_models.add(model)
 
-        created_vals = {}
-        for model, data in defer(list(deepcopy(data).items())):
-            create_vals = []
-            for xml_id, record in data.items():
+        created_records = {}
+        for model, model_data in delay(list(deepcopy(data).items())):
+            all_records_vals = []
+            for xml_id, record_vals in model_data.items():
                 # Extract the translations from the values
-                for key in list(record):
+                for key in list(record_vals):
                     if '@' in key or key == '__translation_module__':
-                        del record[key]
+                        del record_vals[key]
 
                 # Manage ids given as database id or xml_id
                 if isinstance(xml_id, int):
-                    record['id'] = xml_id
+                    record_vals['id'] = xml_id
                     xml_id = False
                 else:
                     xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
 
-                create_vals.append({
+                all_records_vals.append({
                     'xml_id': xml_id,
-                    'values': deref(record, self.env[model]),
+                    'values': deref_values(record_vals, self.env[model]),
                     'noupdate': True,
                 })
-            created_vals[model] = self.with_context(lang='en_US').env[model]._load_records(create_vals)
-        return created_vals
+            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
+        return created_records
 
     def _post_load_data(self, template_code, company, template_data):
         company = (company or self.env.company)
