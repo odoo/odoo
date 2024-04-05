@@ -1035,3 +1035,25 @@ test("Canned response can be deleted from the bus", async () => {
     await contains(".o-mail-Composer-input", { value: ":" });
     await contains(".o-mail-NavigableList-item", { count: 1 });
 });
+
+test("Canned response last used changes on posting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Expelliarmus" });
+    const cannedResponseId = pyEnv["mail.canned.response"].create({
+        source: "test",
+        substitution: "Test a canned response?",
+    });
+    let cannedResponse = pyEnv["mail.canned.response"].search_read([
+        ["id", "=", cannedResponseId],
+    ])[0];
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", ":");
+    await click(".o-mail-NavigableList-item", { text: "testTest a canned response?" });
+    await contains(".o-mail-Composer-input", { value: "Test a canned response? " });
+    expect(cannedResponse.last_used).toBeEmpty();
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message");
+    cannedResponse = pyEnv["mail.canned.response"].search_read([["id", "=", cannedResponseId]])[0];
+    expect(cannedResponse.last_used).not.toBeEmpty();
+});
