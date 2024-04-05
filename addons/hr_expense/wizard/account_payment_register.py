@@ -11,15 +11,16 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_line_batch_key(self, line):
+    def _get_batch_available_partner_banks(self, batch_result, journal):
         # OVERRIDE to set the bank account defined on the employee
-        res = super()._get_line_batch_key(line)
-        expense_sheet = line.move_id.expense_sheet_id.filtered(lambda sheet: sheet and sheet.payment_mode == 'own_account')
-        if expense_sheet and not line.move_id.partner_bank_id:
-            res['partner_bank_id'] = expense_sheet.employee_id.sudo().bank_account_id.id \
-                                     or line.partner_id.bank_ids  \
-                                     and line.partner_id.bank_ids.ids[0]
-        return res
+        expense_sheet = batch_result['lines'].move_id.expense_sheet_id.filtered(lambda sheet: sheet and sheet.payment_mode == 'own_account')
+        if expense_sheet and batch_result['payment_values']['payment_type'] == 'outbound':
+            # We use sudo since we may not have access to the employee_id record. If the env wasn't already in sudo,
+            # we should un-sudo the record before returning it.
+            sudo_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id
+            return sudo_bank_account_id.sudo(self.env.su)
+        else:
+            return super()._get_batch_available_partner_banks(batch_result, journal)
 
     def _init_payments(self, to_process, edit_mode=False):
         # OVERRIDE
