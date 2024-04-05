@@ -9,6 +9,18 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="disable_autofocus">true</attribute>
             </xpath>
+            <xpath expr="//form//group" position="before">
+                <field name="has_timer_running" invisible="1"/>
+                <div role="alert" class="alert alert-warning text-center" invisible="advance_payment_method != 'delivered' or not has_timer_running">
+                    <p class="align-middle"
+                        style="margin-bottom: 4.5px; margin-top: 5px">
+                        <span>
+                            Some employees currently have active timers for the timesheets you are trying to invoice.
+                            Creating the invoice will automatically stop these timers.
+                        </span>
+                    </p>
+                </div>
+            </xpath>
             <group name="down_payment_specification" position="after">
                 <field name="invoicing_timesheet_enabled" invisible="1"/>
                 <group

@@ -14,6 +14,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         string="End Date",
         help="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
     invoicing_timesheet_enabled = fields.Boolean(compute='_compute_invoicing_timesheet_enabled', store=True)
+    has_timer_running = fields.Boolean(compute='_compute_has_timer_running')
 
     #=== COMPUTE METHODS ===#
 
@@ -28,6 +29,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 )
             )
 
+    @api.depends('sale_order_ids.tasks_ids.timesheet_ids')
+    def _compute_has_timer_running(self):
+        for inv in self:
+            timesheets = inv.sale_order_ids._origin.tasks_ids.timesheet_ids.filtered(lambda l: not l.validated)
+            inv.has_timer_running = self.env['timer.timer'].sudo().search_count([('res_id', 'in', timesheets.ids), ('res_model', '=', timesheets._name)], limit=1) > 0
+
     #=== BUSINESS METHODS ===#
 
     def _create_invoices(self, sale_orders):
@@ -38,6 +45,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             qty_to_invoice for each product_id in sale.order.line,
             before creating the invoice.
         """
+        self.sale_order_ids.tasks_ids.timesheet_ids.filtered(lambda l: not l.validated)._stop_all_users_timer()
+
         if self.advance_payment_method == 'delivered' and self.invoicing_timesheet_enabled:
             if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
                 sale_orders.order_line._recompute_qty_to_invoice(

@@ -969,6 +969,43 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 product_form.detailed_type = 'consu'
                 self.assertEqual(product_form.uom_id.id, uom_kg.id)
 
+    def test_invoice_creation_running_timer(self):
+        """ Test that the creation of invoice stop and take into account the running timers. """
+        self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
+        Timesheet = self.env['account.analytic.line']
+        Task = self.env['project.task']
+        today = Date.context_today(self.env.user)
+
+        task = Task.with_context(default_project_id=self.project_template.id).create({
+            'name': 'first task',
+            'partner_id': self.partner_b.id,
+            'allocated_hours': 48,
+            'sale_line_id': self.so.order_line[0].id
+        })
+
+        timesheet = Timesheet.create({
+            'project_id': self.project_template.id,
+            'task_id': task.id,
+            'name': 'my first timesheet',
+            'unit_amount': 30,
+        })
+        timesheet.action_timer_start()
+        timesheet.user_timer_id.timer_start = today - timedelta(days=1)
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.so.id],
+            'active_id': self.so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+        })
+        wizard.create_invoices()
+
+        self.assertGreater(timesheet.unit_amount, 30)
+
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
         """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
