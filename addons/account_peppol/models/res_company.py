@@ -109,7 +109,7 @@ class ResCompany(models.Model):
             return True
 
         if endpoint_rule[0] == 'regex':
-            return bool(re.match(endpoint_rule[1], self.peppol_endpoint))
+            return bool(re.match(endpoint_rule[1], self.peppol_endpoint or ''))
 
         if endpoint_rule[0] == 'ean':
             check_module = ean
