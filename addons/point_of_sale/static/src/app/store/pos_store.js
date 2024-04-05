@@ -1881,13 +1881,13 @@ export class PosStore extends Reactive {
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this || this.db.get_orders().length === 0) {
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
+            this.redirectToBackend();
         }
 
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.push_orders_with_closing_popup();
         if (syncSuccess) {
-            window.location = '/web#action=point_of_sale.action_client_pos_menu';
+            this.redirectToBackend();
         }
     }
     async selectPartner() {
@@ -2043,6 +2043,10 @@ export class PosStore extends Reactive {
 
     isChildPartner(partner) {
         return partner.parent_name;
+    }
+
+    redirectToBackend() {
+        window.location = "/web#action=point_of_sale.action_client_pos_menu";
     }
 }
 
