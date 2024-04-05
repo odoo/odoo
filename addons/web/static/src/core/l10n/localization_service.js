@@ -48,7 +48,27 @@ export const localizationService = {
         const terms = {};
         for (const addon of Object.keys(modules)) {
             for (const message of modules[addon].messages) {
-                terms[message.id] = message.string;
+                if (Array.isArray(message.id) && message.id.length === 2) {
+                    // Contextual translation
+                    const [context, term] = message.id;
+                    if (terms[term] && typeof terms[term] !== "object") {
+                        // Existing contextless translation
+                        terms[term] = {
+                            "": terms[term],
+                        };
+                    } else if (!terms[term]) {
+                        // No translation yet
+                        terms[term] = {};
+                    }
+                    terms[term][context] = message.string;
+                } else if (typeof message.id === "string") {
+                    // Non-contextual translation
+                    if (terms[message.id] && typeof terms[message.id] === "object") {
+                        terms[message.id][""] = message.string;
+                    } else {
+                        terms[message.id] = message.string;
+                    }
+                }
             }
         }
 

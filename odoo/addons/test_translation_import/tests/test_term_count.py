@@ -21,6 +21,15 @@ class TestImport(common.TransactionCase):
             'Code, Français'
         )
 
+    def test_import_code_translation_with_context(self):
+        self.env["res.lang"]._activate_lang("fr_FR")
+
+        model = self.env["test.translation.import.model1"]
+        self.assertEqual(
+            model.with_context(lang="fr_FR").get_code_context_translation(),
+            "Context Code, Français"
+        )
+
     def test_import_model_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
@@ -70,6 +79,10 @@ class TestImport(common.TransactionCase):
             'Code, Français, Belgium'
         )
         self.assertEqual(
+            record.with_context(lang='fr_BE').get_code_context_translation(),
+            'Context Code, Français, Belgium'
+        )
+        self.assertEqual(
             record.with_context(lang='fr_BE').name,
             'Vaisselle, Belgium'
         )
@@ -82,6 +95,10 @@ class TestImport(common.TransactionCase):
         self.assertEqual(
             record.with_context(lang='fr_CA').get_code_translation(),
             'Code, Français'
+        )
+        self.assertEqual(
+            record.with_context(lang='fr_CA').get_code_context_translation(),
+            'Context Code, Français'
         )
         self.assertEqual(
             record.with_context(lang='fr_CA').name,
@@ -107,12 +124,16 @@ class TestImport(common.TransactionCase):
             import_tlh.import_lang()
 
         tlh_lang = self.env['res.lang']._lang_get('tlh')
-        self.assertTrue(tlh_lang, "The imported language was not creates")
+        self.assertTrue(tlh_lang, "The imported language was not created")
 
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
         self.assertEqual(
             record.with_context(lang='tlh').get_code_translation(),
             'Code, Klingon'
+        )
+        self.assertEqual(
+            record.with_context(lang='tlh').get_code_context_translation(),
+            'Context Code, Klingon'
         )
         self.assertEqual(
             record.with_context(lang='tlh').name,
@@ -135,11 +156,17 @@ class TestImport(common.TransactionCase):
 
         model = self.env['test.translation.import.model1']
         TRANSLATED_TERM = model.get_code_lazy_translation()
+        TRANSLATED_CONTEXT_TERM = model.get_code_lazy_context_translation()
 
         self.assertEqual(
             model.with_context(lang='tlh').get_code_translation(),
             "Code, Klingon",
             "The direct code translation was not applied"
+        )
+        self.assertEqual(
+            model.with_context(lang="tlh").get_code_context_translation(),
+            "Context Code, Klingon",
+            "The direct code translation was not applied",
         )
         context = None
 
@@ -147,13 +174,44 @@ class TestImport(common.TransactionCase):
         with self.assertRaises(NotImplementedError):
             TRANSLATED_TERM == "Code, English"
         self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, English", "The translation should not be applied yet")
+        self.assertEqual(
+            str(TRANSLATED_CONTEXT_TERM), "Code Lazy, English", "The translation should not be applied yet"
+        )
 
         context = {'lang': "tlh"}
         self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, Klingon", "The lazy code translation was not applied")
+        self.assertEqual(
+            str(TRANSLATED_CONTEXT_TERM), "Context Code Lazy, Klingon", "The lazy code translation was not applied"
+        )
 
         self.assertEqual("Do you speak " + TRANSLATED_TERM, "Do you speak Code Lazy, Klingon", "str + _lt concatenation failed")
+        self.assertEqual(
+            "Do you speak " + TRANSLATED_CONTEXT_TERM,
+            "Do you speak Context Code Lazy, Klingon",
+            "str + _lct concatenation failed",
+        )
         self.assertEqual(TRANSLATED_TERM + ", I speak it", "Code Lazy, Klingon, I speak it", "_lt + str concatenation failed")
+        self.assertEqual(
+            TRANSLATED_CONTEXT_TERM + ", I speak it",
+            "Context Code Lazy, Klingon, I speak it",
+            "_lct + str concatenation failed",
+        )
         self.assertEqual(TRANSLATED_TERM + TRANSLATED_TERM, "Code Lazy, KlingonCode Lazy, Klingon", "_lt + _lt concatenation failed")
+        self.assertEqual(
+            TRANSLATED_CONTEXT_TERM + TRANSLATED_CONTEXT_TERM,
+            "Context Code Lazy, KlingonContext Code Lazy, Klingon",
+            "_lct + _lct concatenation failed",
+        )
+        self.assertEqual(
+            TRANSLATED_TERM + TRANSLATED_CONTEXT_TERM,
+            "Code Lazy, KlingonContext Code Lazy, Klingon",
+            "_lt + _lct concatenation failed",
+        )
+        self.assertEqual(
+            TRANSLATED_CONTEXT_TERM + TRANSLATED_TERM,
+            "Context Code Lazy, KlingonCode Lazy, Klingon",
+            "_lt + _lct concatenation failed",
+        )
 
         # test lazy translation in another module
         self.env['res.lang']._activate_lang('fr_FR')
@@ -191,7 +249,7 @@ class TestImport(common.TransactionCase):
         )
 
     def test_translation_placeholder(self):
-        """Verify placeholder use in _()"""
+        """Verify placeholder use in _() and _ct()"""
         self.env['res.lang']._activate_lang('fr_BE')
 
         model_fr_BE = self.env['test.translation.import.model1'].with_context(lang='fr_BE')
@@ -202,10 +260,17 @@ class TestImport(common.TransactionCase):
             "Code, 1, Français, Belgium",
             "Translation placeholders were not applied"
         )
+        self.assertEqual(
+            model_fr_BE.get_code_context_placeholder_translation(1),
+            "Context Code, 1, Français, Belgium",
+            "Translation placeholders were not applied",
+        )
 
         # source error: wrong arguments
         with self.assertRaises(TypeError):
             model_fr_BE.get_code_placeholder_translation(1, "🧀")
+        with self.assertRaises(TypeError):
+            model_fr_BE.get_code_context_placeholder_translation(1, "🧀")
 
         # correctly translate
         self.assertEqual(
@@ -213,16 +278,28 @@ class TestImport(common.TransactionCase):
             "Code, 2, 🧀, Français, Belgium",
             "Translation placeholders were not applied"
         )
+        self.assertEqual(
+            model_fr_BE.get_code_context_named_placeholder_translation(num=2, symbol="🧀"),
+            "Context Code, 2, 🧀, Français, Belgium",
+            "Translation placeholders were not applied",
+        )
 
         # source error: wrong arguments
         with self.assertRaises(KeyError):
-            model_fr_BE.get_code_named_placeholder_translation(symbol="🧀"),
+            model_fr_BE.get_code_named_placeholder_translation(symbol="🧀")
+        with self.assertRaises(KeyError):
+            model_fr_BE.get_code_context_named_placeholder_translation(symbol="🧀")
 
         # correctly translate markup
         self.assertEqual(
             model_fr_BE.get_code_named_placeholder_translation(num=Markup(2), symbol="<🧀>"),
             Markup("Code, 2, &lt;🧀&gt;, Français, Belgium"),
             "Translation placeholders were not applied when using Markup"
+        )
+        self.assertEqual(
+            model_fr_BE.get_code_context_named_placeholder_translation(num=Markup(2), symbol="<🧀>"),
+            Markup("Context Code, 2, &lt;🧀&gt;, Français, Belgium"),
+            "Translation placeholders were not applied when using Markup",
         )
 
 
@@ -372,7 +449,7 @@ class TestTranslationFlow(common.TransactionCase):
         trans_static = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            module, ttype, name, res_id, source, value, comments = line
+            _module, _ttype, name, _res_id, source, _value, _comments, _context = line
             if name == "addons/test_translation_import/static/src/xml/js_templates.xml":
                 trans_static.append(source)
 
@@ -386,7 +463,7 @@ class TestTranslationFlow(common.TransactionCase):
         terms = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            _module, _ttype, name, _res_id, source, _value, _comments = line
+            _module, _ttype, name, _res_id, source, _value, _comments, _context = line
             if name == "addons/test_translation_import/data/files/test_spreadsheet_dashboard.json":
                 terms.append(source)
         self.assertEqual(set(terms), {

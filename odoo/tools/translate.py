@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import codecs
 import fnmatch
 import functools
@@ -428,8 +426,12 @@ def translate_sql_constraint(cr, key, lang):
         """, (lang, key))
     return cr.fetchone()[0]
 
-class GettextAlias(object):
 
+class GettextAlias:
+    """This class implements the Python translation mechanism in Odoo.
+
+    The methods are based on the GNU `gettext` API.
+    """
     def _get_db(self):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.current_thread(), 'dbname', None)
@@ -504,88 +506,123 @@ class GettextAlias(object):
                     lang = env['res.users'].context_get()['lang']
         return lang
 
-    def __call__(self, source, *args, **kwargs):
-        translation = self._get_translation(source)
+    def _apply_placeholders(self, msgid, msgstr, *args, **kwargs):
+        """Fill the placeholders in `msgstr` with the arguments in `args` or `kwargs`.
+
+        Placeholders like `%s` or `%(name)s` will be replaced by the right arguments.
+        When correct placeholders are not found in the `msgstr`, we fall back on the
+        original `msgid` string and log a message.
+
+        :param msgid: the original untranslated string
+        :param msgstr: the translated string
+        :return: the translation with all placeholders filled in
+        """
         assert not (args and kwargs)
         if args or kwargs:
             if any(isinstance(a, Markup) for a in itertools.chain(args, kwargs.values())):
-                translation = escape(translation)
+                msgstr = escape(msgstr)
             try:
-                return translation % (args or kwargs)
+                return msgstr % (args or kwargs)
             except (TypeError, ValueError, KeyError):
-                bad = translation
+                bad = msgstr
                 # fallback: apply to source before logging exception (in case source fails)
-                translation = source % (args or kwargs)
-                _logger.exception('Bad translation %r for string %r', bad, source)
-        return translation
+                msgstr = msgid % (args or kwargs)
+                _logger.exception('Bad translation %r for string %r', bad, msgid)
+        return msgstr
 
-    def _get_translation(self, source, module=None):
+    def gettext(self, msgid, *args, **kwargs):
+        """Translate the `msgid` in the current language.
+
+        It can contain placeholders like `%s` or `%(name)s` that will be
+        replaced by the arguments provided as `args` or `kwargs`.
+
+        :param msgid: the source string to translate
+        :return: the translated string
+        """
+        return self.pgettext(None, msgid, *args, **kwargs)
+
+    def pgettext(self, msgctxt, msgid, *args, **kwargs):
+        """Translate the `msgid` given the `msgctxt` in the current language.
+
+        It can contain placeholders like `%s` or `%(name)s` that will be
+        replaced by the arguments provided as `args` or `kwargs`.
+
+        :param msgctxt: the translation context key to identify the `msgid`
+        :param msgid: the source string to translate
+        :return: the translated string
+        """
+        msgstr = self._get_translation(msgid, msgctxt)
+        return self._apply_placeholders(msgid, msgstr, *args, **kwargs)
+
+    def _get_translation(self, msgid, msgctxt=None, module=None):
         try:
-            frame = inspect.currentframe().f_back.f_back
+            frame = inspect.currentframe()
+            translate_file = inspect.getfile(frame)
+            while inspect.getfile(frame) == translate_file:
+                frame = frame.f_back
             lang = self._get_lang(frame)
             if lang and lang != 'en_US':
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
                     module = path_info[0] if path_info else 'base'
-                return code_translations.get_python_translations(module, lang).get(source, source)
+                key = (msgctxt, msgid) if msgctxt else msgid
+                return code_translations.get_python_translations(module, lang).get(key, msgid)
             else:
-                _logger.debug('no translation language detected, skipping translation for "%r" ', source)
+                _logger.debug('no translation language detected, skipping translation for "%r" ', msgid)
         except Exception:
-            _logger.debug('translation went wrong for "%r", skipped', source)
-                # if so, double-check the root/base translations filenames
-        return source
+            _logger.debug('translation went wrong for "%r", skipped', msgid)
+            # if so, double-check the root/base translations filenames
+        return msgid
 
 
 @functools.total_ordering
-class _lt:
-    """ Lazy code translation
+class _lct:
+    """Lazy code translation with context
 
-    Similar to GettextAlias but the translation lookup will be done only at
-    __str__ execution.
+    Similar to `_ct` but the translation lookup will be done only at
+    `__str__` execution.
 
     A code using translated global variables such as:
-
-    LABEL = _lt("User")
+    ```
+    LABEL = _lct("country", "State")
 
     def _compute_label(self):
         context = {'lang': self.partner_id.lang}
-        self.user_label = LABEL
-
-    works as expected (unlike the classic GettextAlias implementation).
+        self.state_label = LABEL
+    ```
+    works as expected (unlike the classic `GettextAlias` implementation).
     """
 
-    __slots__ = ['_source', '_args', '_module']
+    __slots__ = ['_args', '_kwargs', '_module', '_msgctxt', '_msgid']
 
-    def __init__(self, source, *args, **kwargs):
-        self._source = source
+    def __init__(self, msgctxt, msgid, *args, **kwargs):
+        self._msgctxt = msgctxt
+        self._msgid = msgid
         assert not (args and kwargs)
-        self._args = args or kwargs
+        self._args = args
+        self._kwargs = kwargs
 
-        frame = inspect.currentframe().f_back
+        frame = inspect.currentframe()
+        translate_file = inspect.getfile(frame)
+        while inspect.getfile(frame) == translate_file:
+            frame = frame.f_back
         path = inspect.getfile(frame)
         path_info = odoo.modules.get_resource_from_path(path)
         self._module = path_info[0] if path_info else 'base'
 
     def __str__(self):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
-        translation = _._get_translation(self._source, self._module)
-        if self._args:
-            try:
-                return translation % self._args
-            except (TypeError, ValueError, KeyError):
-                bad = translation
-                # fallback: apply to source before logging exception (in case source fails)
-                translation = self._source % self._args
-                _logger.exception('Bad translation %r for string %r', bad, self._source)
-        return translation
+        msgstr = _gettext._get_translation(self._msgid, self._msgctxt, module=self._module)
+        return _gettext._apply_placeholders(self._msgid, msgstr, *self._args, **self._kwargs)
+
+    def __hash__(self):
+        return hash((self._msgctxt, self._msgid, self._args or self._kwargs))
 
     def __eq__(self, other):
-        """ Prevent using equal operators
+        """Prevent using equal operators
 
         Prevent direct comparisons with ``self``.
-        One should compare the translation of ``self._source`` as ``str(self) == X``.
+        One should compare the translation of ``self._msgid`` as ``str(self) == X``.
         """
         raise NotImplementedError()
 
@@ -593,22 +630,41 @@ class _lt:
         raise NotImplementedError()
 
     def __add__(self, other):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
         if isinstance(other, str):
-            return _._get_translation(self._source) + other
-        elif isinstance(other, _lt):
-            return _._get_translation(self._source) + _._get_translation(other._source)
+            return str(self) + other
+        elif isinstance(other, _lct):
+            return str(self) + str(other)
         return NotImplemented
 
     def __radd__(self, other):
-        # Call _._get_translation() like _() does, so that we have the same number
-        # of stack frames calling _get_translation()
         if isinstance(other, str):
-            return other + _._get_translation(self._source)
+            return other + str(self)
         return NotImplemented
 
-_ = GettextAlias()
+
+class _lt(_lct):
+    """ Lazy code translation
+
+    Similar to `_` but the translation lookup will be done only at
+    `__str__` execution.
+
+    A code using translated global variables such as:
+    ```
+    LABEL = _lt("State")
+
+    def _compute_label(self):
+        context = {'lang': self.partner_id.lang}
+        self.state_label = LABEL
+    ```
+    works as expected (unlike the classic `GettextAlias` implementation).
+    """
+    def __init__(self, msgid, *args, **kwargs):
+        super().__init__(None, msgid, *args, **kwargs)
+
+
+_gettext = GettextAlias()
+_ = _gettext.gettext
+_ct = _gettext.pgettext
 
 
 def quote(s):
@@ -706,6 +762,7 @@ class PoFileReader:
             match = re.match(r"(module[s]?): (\w+)", entry.comment)
             _, module = match.groups()
             comments = "\n".join([c for c in entry.comment.split('\n') if not c.startswith('module:')])
+            context = entry.msgctxt
             source = entry.msgid
             translation = entry.msgstr
             found_code_occurrence = False
@@ -736,6 +793,7 @@ class PoFileReader:
                     yield {
                         'type': type,
                         'name': name,
+                        'context': context,
                         'src': source,
                         'value': translation,
                         'comments': comments,
@@ -774,13 +832,12 @@ class CSVFileWriter:
     def __init__(self, target):
         self.writer = pycompat.csv_writer(target, dialect='UNIX')
         # write header first
-        self.writer.writerow(("module","type","name","res_id","src","value","comments"))
-
+        self.writer.writerow(("module", "type", "name", "res_id", "src", "value", "comments", "context"))
 
     def write_rows(self, rows):
-        for module, type, name, res_id, src, trad, comments in rows:
+        for module, ttype, name, res_id, src, trad, context, comments in rows:
             comments = '\n'.join(comments)
-            self.writer.writerow((module, type, name, res_id, src, trad, comments))
+            self.writer.writerow((module, ttype, name, res_id, src, trad, comments, context))
 
 
 class PoFileWriter:
@@ -792,25 +849,32 @@ class PoFileWriter:
         self.po = polib.POFile()
 
     def write_rows(self, rows):
-        # we now group the translations by source. That means one translation per source.
+        # We group the translations by source and context. That means one translation per source and context.
         grouped_rows = {}
         modules = set()
-        for module, type, name, res_id, src, trad, comments in rows:
-            row = grouped_rows.setdefault(src, {})
+        for module, ttype, name, res_id, src, trad, context, comments in rows:
+            row = grouped_rows.setdefault((src, context or ''), {})
             row.setdefault('modules', set()).add(module)
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
-            row.setdefault('tnrs', []).append((type, name, res_id))
+            row.setdefault('tnrs', []).append((ttype, name, res_id))
             row.setdefault('comments', set()).update(comments)
             modules.add(module)
 
-        for src, row in sorted(grouped_rows.items()):
+        for (src, context), row in sorted(grouped_rows.items()):
             if not self.lang:
                 # translation template, so no translation value
                 row['translation'] = ''
             elif not row.get('translation'):
                 row['translation'] = ''
-            self.add_entry(sorted(row['modules']), sorted(row['tnrs']), src, row['translation'], sorted(row['comments']))
+            self.add_entry(
+                sorted(row["modules"]),
+                sorted(row["tnrs"]),
+                src,
+                row["translation"],
+                context or None,
+                sorted(row["comments"]),
+            )
 
         import odoo.release as release
         self.po.header = "Translation of %s.\n" \
@@ -833,10 +897,11 @@ class PoFileWriter:
         # buffer expects bytes
         self.buffer.write(str(self.po).encode())
 
-    def add_entry(self, modules, tnrs, source, trad, comments=None):
+    def add_entry(self, modules, tnrs, source, translation, context=None, comments=None):
         entry = polib.POEntry(
             msgid=source,
-            msgstr=trad,
+            msgstr=translation,
+            msgctxt=context,
         )
         plural = len(modules) > 1 and 's' or ''
         entry.comment = "module%s: %s" % (plural, ', '.join(modules))
@@ -1035,14 +1100,15 @@ class TranslationReader:
         self._to_translate = []
 
     def __iter__(self):
-        for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
-            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
+        for module, source, name, res_id, ttype, context, comments, _record_id, value in self._to_translate:
+            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), context, comments)
 
-    def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
+    def _push_translation(self, module, ttype, name, res_id, source, context=None, comments=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation
         In po file will create an entry
         #: <ttype>:<name>:<res_id>
         #, <comment>
+        msgctxt "<context>"
         msgid "<source>"
         record_id is the database id of the record being translated
         """
@@ -1053,7 +1119,7 @@ class TranslationReader:
         sanitized_term = re.sub(r'\W+', '', sanitized_term)
         if not sanitized_term or len(sanitized_term) <= 1:
             return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        self._to_translate.append((module, source, name, res_id, ttype, context, tuple(comments or ()), record_id, value))
 
     def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
         records = self._get_translatable_records(imd_per_id.values())
@@ -1284,10 +1350,11 @@ class TranslationModuleReader(TranslationReader):
             for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords, options=options):
                 # Babel 0.9.6 yields lineno, message, comments
                 # Babel 1.3 yields lineno, message, comments, context
-                lineno, message, comments = extracted[:3]
-                value = translations.get(message, '')
+                lineno, message, comments, context = extracted
+                key = (context, message) if context else message
+                value = translations.get(key, '')
                 self._push_translation(module, trans_type, display_path, lineno,
-                                 encode(message), comments + extra_comments, value=value)
+                                 encode(message), context, comments + extra_comments, value=value)
         except Exception:
             _logger.exception("Failed to extract terms from %s", fabsolutepath)
         finally:
@@ -1297,8 +1364,8 @@ class TranslationModuleReader(TranslationReader):
         """ Export translations for static terms
 
         This will include:
-        - the python strings marked with _() or _lt()
-        - the javascript strings marked with _t() inside static/src/js/
+        - the python strings marked with _(), _ct(), _lt() or _lct()
+        - the javascript strings marked with _t() or _ct() inside static/src/js/
         - the strings inside Qweb files inside static/src/xml/
         - the spreadsheet data files
         """
@@ -1315,15 +1382,19 @@ class TranslationModuleReader(TranslationReader):
             _logger.debug("Scanning files of modules at %s", path)
             for root, dummy, files in os.walk(path, followlinks=True):
                 for fname in fnmatch.filter(files, '*.py'):
-                    self._babel_extract_terms(fname, path, root, 'python',
-                                              extra_comments=[PYTHON_TRANSLATION_COMMENT],
-                                              extract_keywords={'_': None, '_lt': None})
+                    self._babel_extract_terms(
+                        fname, path, root, "python",
+                        extra_comments=[PYTHON_TRANSLATION_COMMENT],
+                        extract_keywords={"_": None, "_lt": None, "_ct": ((1, "c"), 2), "_lct": ((1, "c"), 2)},
+                    )
                 if fnmatch.fnmatch(root, '*/static/src*'):
                     # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
-                        self._babel_extract_terms(fname, path, root, 'javascript',
-                                                  extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT],
-                                                  extract_keywords={'_t': None})
+                        self._babel_extract_terms(
+                            fname, path, root, "javascript",
+                            extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT],
+                            extract_keywords={"_t": None, "_ct": ((1, "c"), 2)},
+                        )
                     # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
@@ -1629,9 +1700,9 @@ def get_po_paths(module_name: str, lang: str):
 
 class CodeTranslations:
     def __init__(self):
-        # {(module_name, lang): {src: value}}
+        # {(module_name, lang): {src|(context, src): value}}
         self.python_translations = {}
-        # {(module_name, lang): {'message': [{'id': src, 'string': value}]}
+        # {(module_name, lang): {'messages': [{'id': src|(context, src), 'string': value}]}
         self.web_translations = {}
 
     @staticmethod
@@ -1647,7 +1718,8 @@ class CodeTranslations:
         reader = TranslationFileReader(fileobj, fileformat='po')
         for row in reader:
             if row.get('type') == 'code' and row.get('src') and filter_func(row):
-                translations[row['src']] = row['value']
+                key = (row['context'], row['src']) if row.get('context') else row['src']
+                translations[key] = row['value']
         return translations
 
     @staticmethod
