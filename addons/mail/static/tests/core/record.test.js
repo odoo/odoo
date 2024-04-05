@@ -786,3 +786,21 @@ test("datetime type record", async () => {
     await assertSteps(["DATE_UPDATED"]);
     expect(general.date.day).toBe(22);
 });
+
+test("attr that are default [] should be isolated per record", async () => {
+    // If the default value is stored and reused for all records,
+    // this could lead to mistakenly sharing the default value among records
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = Record.attr([]);
+    }).register(localRegistry);
+    const store = await start();
+    const p1 = store.Person.insert({ id: 1 });
+    const p2 = store.Person.insert({ id: 2 });
+    expect(p1.names).toEqual([]);
+    expect(p2.names).toEqual([]);
+    p1.names.push("John");
+    expect(p1.names).toEqual(["John"]);
+    expect(p2.names).toEqual([]);
+});

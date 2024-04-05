@@ -3,10 +3,6 @@ import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
 export class ModelInternal {
     /** @type {Map<string, boolean>} */
     fields = new Map();
-    /** @type {Map<string, any>} */
-    fieldsDefault = new Map();
-    /** @type {Map<string, boolean>} */
-    fieldsDefaultAsInit = new Map();
     /** @type {Map<string, boolean>} */
     fieldsAttr = new Map();
     /** @type {Map<string, boolean>} */
@@ -53,20 +49,6 @@ export class ModelInternal {
                         break;
                     }
                     this.fieldsHtml.set(fieldName, value);
-                    break;
-                }
-                case "default": {
-                    if (value === undefined) {
-                        break;
-                    }
-                    this.fieldsDefault.set(fieldName, value);
-                    break;
-                }
-                case "defaultAsInit": {
-                    // Fields made without Record.attr() might contain arrow functions.
-                    // To bind it to current record, tricks is to store default on record
-                    // using its initial value
-                    this.fieldsDefaultAsInit.set(fieldName, true);
                     break;
                 }
                 case "targetModel": {
