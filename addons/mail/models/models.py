@@ -184,15 +184,17 @@ class BaseModel(models.AbstractModel):
         encoding and quoting would be error prone.
         """
         length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
-
-        # address itself is too long: return only email
-        if len(record_email) >= length_limit:
-            return record_email
-
         company_name = company.name if company else self.env.company.name
-
         # try company_name + record_name, or record_name alone (or company_name alone)
         name = f"{company_name} {record_name}" if record_name else company_name
+
+        # address itself is too long: force a RFC-2047 encoding
+        if len(record_email) >= length_limit:
+            name = (
+                name.replace(" ", "\N{No-Break Space}")
+                if " " in name else
+                (f"{name} via\N{No-Break Space}Odoo")
+            )
 
         formatted_email = tools.formataddr((name, record_email), 'ascii')
         if formatted_email.startswith('=?utf-8?b?'):
