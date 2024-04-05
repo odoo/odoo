@@ -1495,13 +1495,7 @@ class IrModelConstraint(models.Model):
          'Constraints with the same name are unique per module.'),
     ]
 
-    def _module_data_uninstall(self):
-        """
-        Delete PostgreSQL foreign keys and constraints tracked by this model.
-        """
-        if not self.env.is_system():
-            raise AccessError(_('Administrator access is required to uninstall a module'))
-
+    def unlink(self):
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
@@ -1545,7 +1539,7 @@ class IrModelConstraint(models.Model):
                         sql.Identifier(table), sql.Identifier(name[:63])))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
-        self.unlink()
+        return super().unlink()
 
     def copy(self, default=None):
         default = dict(default or {})
@@ -2211,7 +2205,6 @@ class IrModelData(models.Model):
 
         # remove constraints
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
-        constraints._module_data_uninstall()
         delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
 
         # If we delete a selection field, and some of its values have ondelete='cascade',
