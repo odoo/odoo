@@ -9,7 +9,7 @@ import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
-import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 export function useCashierSelector(
     { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }
@@ -74,6 +74,13 @@ export function useCashierSelector(
                 };
             });
         if (!employeesList.length) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("No Cashiers"),
+                body: _t("There are no employees to select as cashier. Please create one."),
+            });
+            if (confirmed) {
+                this.pos.redirectToBackend();
+            }
             return;
         }
         const employee = await makeAwaitable(dialog, SelectionPopup, {
