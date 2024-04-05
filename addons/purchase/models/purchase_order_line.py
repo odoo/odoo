@@ -37,7 +37,7 @@ class PurchaseOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(
-        string='Unit Price', required=True, digits='Product Price', aggregator=None,
+        string='Unit Price', required=True, digits='Product Price', aggregator='avg',
         compute="_compute_price_unit_and_date_planned_and_name", readonly=False, store=True)
     price_unit_discounted = fields.Float('Unit Price (Discounted)', compute='_compute_price_unit_discounted')
 
@@ -671,3 +671,12 @@ class PurchaseOrderLine(models.Model):
                 business_domain='purchase_order',
                 company_id=line.company_id.id,
             )
+
+    def action_open_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.order_id.id,
+            'view_mode': 'form',
+        }

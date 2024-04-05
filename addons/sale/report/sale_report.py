@@ -50,7 +50,11 @@ class SaleReport(models.Model):
     state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
 
     # sale.order.line fields
-    order_reference = fields.Reference(string='Related Order', selection=[('sale.order', 'Sales Order')], aggregator="count_distinct")
+    order_reference = fields.Reference(
+        string='Order',
+        selection=[('sale.order', 'Sales Order')],
+        aggregator="count_distinct",
+    )
 
     categ_id = fields.Many2one(
         comodel_name='product.category', string="Product Category", readonly=True)
@@ -78,7 +82,7 @@ class SaleReport(models.Model):
 
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
-
+    price_unit = fields.Float(string="Unit Price", aggregator='avg', readonly=True)
     discount = fields.Float(string="Discount %", readonly=True, aggregator='avg')
     discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
 
@@ -104,6 +108,11 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END AS qty_to_deliver,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END AS qty_invoiced,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END AS qty_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit
+                / {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS price_unit,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
                 / {self._case_value_or_one('s.currency_rate')}
                 * {self._case_value_or_one('currency_table.rate')}
@@ -196,6 +205,7 @@ class SaleReport(models.Model):
         return """
             l.product_id,
             l.order_id,
+            l.price_unit,
             l.invoice_status,
             t.uom_id,
             t.categ_id,
@@ -236,3 +246,12 @@ class SaleReport(models.Model):
     @property
     def _table_query(self):
         return self._query()
+
+    def action_open_order(self):
+        self.ensure_one()
+        return {
+            'res_model': self.order_reference._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, 'form']],
+            'res_id': self.order_reference.id,
+        }

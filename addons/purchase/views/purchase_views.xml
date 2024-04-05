@@ -800,11 +800,19 @@
                     <field name="product_id"/>
                     <field name="partner_id" string="Vendor"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
+                    <filter string="Status" name="purchase_state" domain="[('state', '=', 'purchase')]"/>
+                    <separator/>
+                    <filter name="filter_date_order" date="date_order" default_period="month"/>
+                    <filter name="order_date_last_year" string="Order Date: Last 365 Days"
+                        domain="[
+                            ('date_order', '>', ((context_today() - relativedelta(years=1)).strftime('%Y-%m-%d')))
+                        ]" invisible="1"/>
                     <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by' : 'state'}" />
+                        <separator/>
+                        <filter string="Order Date" name="group_by_date_order" context="{'group_by': 'date_order'}"/>
                     </group>
                 </search>
             </field>
@@ -814,21 +822,51 @@
         <field name="name">purchase.history.tree</field>
         <field name="model">purchase.order.line</field>
         <field name="arch" type="xml">
-            <tree create="false" default_order="order_id asc">
+            <tree create="false" default_order="order_id asc" action="action_open_order" type="object">
+                <field name="currency_id" column_invisible="True"/>
                 <field name="order_id" widget="many2one"/>
                 <field name="date_approve"/>
-                <field name="partner_id"/>
-                <field name="product_uom_qty"/>
-                <field name="price_unit"/>
+                <field name="partner_id" string="Vendor"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="product_uom_qty" string="Quantity"/>
+                <field name="price_unit" widget="monetary"/>
+                <field name="price_subtotal" widget="monetary" string="Total Untaxed"/>
+                <field name="state" optional="hide"/>
             </tree>
         </field>
     </record>
 
+    <record id="purchase_history_pivot" model="ir.ui.view">
+         <field name="name">purchase.history.pivot</field>
+         <field name="model">purchase.order.line</field>
+         <field name="arch" type="xml">
+             <pivot>
+                <field name="price_total" string="Total purchased amount" type="measure"/>
+                <field name="product_uom_qty" string="Total Qty purchased" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+     <record id="purchase_history_graph" model="ir.ui.view">
+         <field name="name">purchase.history.graph</field>
+         <field name="model">purchase.order.line</field>
+         <field name="arch" type="xml">
+             <graph type="line">
+                <field name="date_order" interval="month"/>
+                <field name="product_uom_qty" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
     <record id="action_purchase_history" model="ir.actions.act_window">
         <field name="res_model">purchase.order.line</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,pivot,graph</field>
         <field name="view_id" ref="purchase.purchase_history_tree"/>
-        <field name="context">{}</field>
+        <field name="context">{
+                'search_default_purchase_state': 1,
+                'search_default_order_date_last_year': 1,
+                'search_default_groupby_supplier': 1,
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No purchase order were made for this product yet!
