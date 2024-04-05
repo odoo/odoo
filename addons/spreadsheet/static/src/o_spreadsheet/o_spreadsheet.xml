@@ -192,6 +192,7 @@
         t-on-paste="onPaste"
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
+        t-on-contextmenu="onContextMenu"
       />
 
       <div
@@ -588,7 +589,6 @@
       t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
-      t-on-contextmenu="onInputContextMenu"
       t-ref="grid">
       <GridOverlay
         onCellClicked.bind="onCellClicked"
@@ -606,6 +606,7 @@
         onComposerContentFocused="props.onComposerContentFocused"
         onComposerCellFocused="props.onGridComposerCellFocused"
         focus="props.focusComposer"
+        onInputContextMenu.bind="onInputContextMenu"
       />
       <canvas t-ref="canvas"/>
       <t
@@ -3238,7 +3239,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.36';
-  __info__.date = '2024-03-25T10:54:16.032Z';
-  __info__.hash = '2c2117b';
+  __info__.version = '16.0.37';
+  __info__.date = '2024-04-05T14:11:34.497Z';
+  __info__.hash = 'e95827b';
 -->
