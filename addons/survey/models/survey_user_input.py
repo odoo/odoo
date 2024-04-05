@@ -230,6 +230,8 @@ class SurveyUserInput(models.Model):
 
     def get_start_url(self):
         self.ensure_one()
+        if self.survey_id.access_mode == 'public' and not self.survey_id.users_login_required:
+            return self.survey_id.get_start_url()
         return '%s?answer_token=%s' % (self.survey_id.get_start_url(), self.access_token)
 
     def get_print_url(self):

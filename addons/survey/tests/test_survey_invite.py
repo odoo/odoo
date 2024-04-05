@@ -247,3 +247,23 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         answers = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         self.assertEqual(len(answers), 1)
         self.assertEqual(answers.partner_id.display_name, first_partner.display_name)
+
+    @users('survey_manager')
+    def test_survey_invite_public_start_survey_button_link(self):
+        self.survey.write({'access_mode': 'public', 'users_login_required': False})
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+
+        invite_form.partner_ids.add(self.customer)
+        invite_form.emails = 'test1@example.com, Raoulette Vignolette <test2@example.com>'
+
+        invite = invite_form.save()
+        invite.action_invite()
+
+        mail_message = self.env['mail.mail'].sudo().search([
+            ('email_to', 'in', ['test1@example.com', 'test2@example.com'])
+        ], limit=1)
+
+        if mail_message:
+            start_survey_link = mail_message.body_html.split('href="')[1].split('"')[0]
+            self.assertNotIn('answer_token', start_survey_link, "We should send a public link available for everyone.")
