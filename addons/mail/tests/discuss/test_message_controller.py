@@ -62,9 +62,9 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "post_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[0].id],
-                            "attachment_tokens": ["wrong token"],
                         },
                     },
+                    "attachment_tokens": ["wrong token"],
                 }
             ),
             headers={"Content-Type": "application/json"},
@@ -86,9 +86,9 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "post_data": {
                             "body": "test",
                             "attachment_ids": [self.attachments[0].id],
-                            "attachment_tokens": [self.attachments[0].access_token],
                             "message_type": "comment",
                         },
+                        "attachment_tokens": [self.attachments[0].access_token],
                     },
                 }
             ),
@@ -243,8 +243,8 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "thread_id": self.channel.id,
                         "post_data": {
                             "body": "test",
-                            "partner_emails": ["john@test.be"],
                         },
+                        "partner_emails": ["john@test.be"],
                     },
                 }
             ),
@@ -309,9 +309,9 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "thread_id": self.channel.id,
                         "post_data": {
                             "body": "test",
-                            "partner_emails": ["john2@test.be"],
-                            "partner_additional_values": {"john2@test.be": {'phone': '123456789'}},
                         },
+                        "partner_emails": ["john2@test.be"],
+                        "partner_additional_values": {"john2@test.be": {'phone': '123456789'}},
                     },
                 }
             ),
@@ -333,8 +333,8 @@ class TestMessageController(HttpCaseWithUserDemo):
                         "thread_id": self.channel.id,
                         "post_data": {
                             "body": "test",
-                            "partner_emails": ["john2@test.be"],
                         },
+                        "partner_emails": ["john2@test.be"],
                     },
                 }
             ),

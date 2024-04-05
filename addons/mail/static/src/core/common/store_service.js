@@ -483,14 +483,14 @@ export class Store extends BaseStore {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
-                attachment_tokens: attachments.map((attachment) => attachment.accessToken),
-                canned_response_ids: cannedResponseIds,
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,
-                partner_emails: recipientEmails,
-                partner_additional_values: recipientAdditionalValues,
             },
+            attachment_tokens: attachments.map((attachment) => attachment.accessToken),
+            canned_response_ids: cannedResponseIds,
+            partner_emails: recipientEmails,
+            partner_additional_values: recipientAdditionalValues,
             thread_id: thread.id,
             thread_model: thread.model,
         };

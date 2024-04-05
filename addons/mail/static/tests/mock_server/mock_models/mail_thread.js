@@ -58,28 +58,10 @@ export class MailThread extends models.ServerModel {
         const MailNotification = this.env["mail.notification"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
 
         const id = ids[0]; // ensure_one
-        if (kwargs.partner_emails) {
-            kwargs.partner_ids = kwargs.partner_ids || [];
-            for (const email of kwargs.partner_emails) {
-                const partner = ResPartner._filter([["email", "=", email]]);
-                if (partner.length !== 0) {
-                    kwargs.partner_ids.push(partner[0].id);
-                } else {
-                    const partner_id = ResPartner.create(
-                        Object.assign({ email }, kwargs.partner_additional_values[email] || {})
-                    );
-                    kwargs.partner_ids.push(partner_id);
-                }
-            }
-        }
-        delete kwargs.partner_emails;
-        delete kwargs.partner_additional_values;
         if (kwargs.context?.mail_post_autofollow && kwargs.partner_ids?.length) {
             MailThread.message_subscribe.call(this, ids, kwargs.partner_ids, []);
         }
