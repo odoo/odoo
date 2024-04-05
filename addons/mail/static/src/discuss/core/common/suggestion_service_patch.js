@@ -75,7 +75,7 @@ patch(SuggestionService.prototype, {
         };
         return {
             type: "ChannelCommand",
-            mainSuggestions: sort ? commands.sort(sortFunc) : commands,
+            suggestions: sort ? commands.sort(sortFunc) : commands,
         };
     },
 });
