@@ -4512,7 +4512,7 @@ const defaultOptions = {
     kind: OptionKind.WORKER
   },
   workerSrc: {
-    value: "../build/pdf.worker.mjs",
+    value: "../build/pdf.worker.js",
     kind: OptionKind.WORKER
   }
 };
@@ -14877,7 +14877,7 @@ function getViewerConfiguration() {
     },
     printContainer: document.getElementById("printContainer"),
     openFileInput: document.getElementById("fileInput"),
-    debuggerScriptPath: "./debugger.mjs"
+    debuggerScriptPath: "./debugger.js"
   };
 }
 function webViewerLoad() {
