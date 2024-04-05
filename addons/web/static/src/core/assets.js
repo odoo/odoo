@@ -31,7 +31,7 @@ assets.loadJS = async function loadJS(url) {
         return cacheMap.get(url);
     }
     const scriptEl = document.createElement("script");
-    scriptEl.type = url.endsWith(".mjs") ? "module" : "text/javascript";
+    scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
     scriptEl.src = url;
     const promise = new Promise((resolve, reject) => {
         scriptEl.onload = () => resolve(true);
