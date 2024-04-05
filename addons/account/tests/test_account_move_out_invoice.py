@@ -4052,7 +4052,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # The integrity check should work
         integrity_check = invoice.company_id._check_hash_integrity()['results'][0]
-        self.assertEqual(integrity_check['msg_cover'], 'All entries are hashed.')
+        self.assertEqual(integrity_check['msg_cover'], 'Entries are correctly hashed')
 
     def test_out_invoice_create_cross_branch_refund(self):
         """You should not be able to reverse moves from different branches."""
