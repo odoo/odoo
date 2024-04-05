@@ -26,6 +26,9 @@
                                     <t t-if="journal_type == 'general'" t-call="JournalMiscelaneous"/>
                                     <div class="col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left"/>
                                     <div class="col-12 col-sm-7 o_kanban_primary_right">
+                                        <t t-call="HasUnhashedEntries"/>
+                                    </div>
+                                    <div class="col-12 col-sm-7 o_kanban_primary_right">
                                         <t t-call="HasSequenceHoles"/>
                                     </div>
                                 </div>
@@ -59,6 +62,16 @@
                            class="text-warning"
                            t-att-title="dashboard.title_has_sequence_holes">
                             Irregular Sequences
+                        </a>
+                    </t>
+
+                    <t t-name="HasUnhashedEntries">
+                        <a t-if="dashboard.has_unhashed_entries"
+                           name="show_unhashed_entries"
+                           type="object"
+                           class="text-warning"
+                        >
+                           Unhashed entries
                         </a>
                     </t>
 
