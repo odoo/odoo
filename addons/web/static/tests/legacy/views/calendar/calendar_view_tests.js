@@ -5519,4 +5519,54 @@ QUnit.module("Views", ({ beforeEach }) => {
             assert.containsOnce(target, ".o_view_sample_data", "should have sample data");
         }
     );
+
+    QUnit.test("Retaining the 'all' filter value on re-rendering", async (assert) => {
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partners",
+                res_model: "event",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "calendar"],
+                    [false, "list"],
+                ],
+            },
+        };
+
+        serverData.views = {
+            "event,false,calendar": `<calendar date_start="start" date_stop="stop" all_day="allday" mode="week" event_open_popup="1" attendee="partner_ids" color="partner_id">
+                <filter name="user_id" avatar_field="image" />
+                <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                <field name="partner_id" filters="1" invisible="1" />
+            </calendar>`,
+            "event,false,list": `<tree sample="1">
+                <field name="start"/>
+                <field name="stop"/>
+            </tree>`,
+            "event,false,search": `<search />`,
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            async mockRPC(route, args) {
+                if (args.method === "check_access_rights") {
+                    return true;
+                }
+                if (route.endsWith("/has_group")) {
+                    return true;
+                }
+            },
+        });
+
+        await doAction(webClient, 1);
+
+        await click(target, ".o_calendar_filter_item[data-value='all'] input");
+        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "Check if the value of the 'all' filter is set to true")
+
+        await click(target, ".o_cp_switch_buttons .o_list");
+        await click(target, ".o_cp_switch_buttons .o_calendar");
+
+        assert.ok(document.querySelector(".o_calendar_filter_item[data-value='all'] input").checked, "The value of the 'all' filter should remain the same as it was before re-rendering")
+    });
 });
