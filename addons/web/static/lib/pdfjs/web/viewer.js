@@ -2867,7 +2867,8 @@ const PDFViewerApplication = {
     });
     pagesPromise.then(() => {
       this._unblockDocumentLoadEvent();
-      this._initializeAutoPrint(pdfDocument, openActionPromise);
+      // Odoo: don't support scripting (#115302)
+      // this._initializeAutoPrint(pdfDocument, openActionPromise);
     }, reason => {
       this.l10n.get("pdfjs-loading-error").then(msg => {
         this._documentError(msg, {
