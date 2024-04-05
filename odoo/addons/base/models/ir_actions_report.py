@@ -756,7 +756,7 @@ class IrActionsReport(models.Model):
                     attachment_writer.addPage(reader.getPage(i))
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
-                    collected_streams[res_ids[i]]['stream'] = stream
+                    collected_streams[res_ids_wo_stream[i]]['stream'] = stream
                 return collected_streams
 
             # In cases where the number of res_ids != the number of pages,
@@ -784,7 +784,7 @@ class IrActionsReport(models.Model):
                 outlines_pages = sorted(set(outlines_pages))
 
                 # The number of outlines must be equal to the number of records to be able to split the document.
-                has_same_number_of_outlines = len(outlines_pages) == len(res_ids)
+                has_same_number_of_outlines = len(outlines_pages) == len(res_ids_wo_stream)
 
                 # There should be a top-level heading on first page
                 has_top_level_heading = outlines_pages[0] == 0
@@ -798,7 +798,7 @@ class IrActionsReport(models.Model):
                             attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
-                        collected_streams[res_ids[i]]['stream'] = stream
+                        collected_streams[res_ids_wo_stream[i]]['stream'] = stream
 
                     return collected_streams
 
