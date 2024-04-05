@@ -456,6 +456,15 @@ class StockRoute(models.Model):
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
         'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+    is_global_route = fields.Boolean(string='Global Route', compute='_compute_is_global', copy=False)
+
+    def _get_global_routes(self):
+        return [self.env.ref('stock.route_warehouse0_mto', raise_if_not_found=False)]
+
+    @api.depends()
+    def _compute_is_global(self):
+        for route in self:
+            route.is_global_route = (route in route._get_global_routes())
 
     @api.depends('company_id')
     def _compute_warehouses(self):
@@ -487,3 +496,10 @@ class StockRoute(models.Model):
             for rule in route.rule_ids:
                 if route.company_id.id != rule.company_id.id:
                     raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
+
+    @api.constrains('company_id')
+    def _forbid_company_on_global(self):
+        for route in self:
+            if route.is_global_route and route.company_id:
+                raise ValidationError(_("Global routes cannot have a company"))
+
