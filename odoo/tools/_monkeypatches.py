@@ -9,9 +9,9 @@ _logger = logging.getLogger(__name__)
 
 try:
     import num2words
-    from .num2words_patch import Num2Word_AR_Fixed
+    from .num2words_patch import Num2Word_AR_Fixed, NumberToWords_BG
 except ImportError:
-    _logger.warning("num2words is not available, Arabic number to words conversion will not work")
+    _logger.warning("num2words is not available, Arabic/Bulgarian number to words conversion will not work")
     num2words = None
 
 from werkzeug.datastructures import FileStorage
@@ -79,3 +79,4 @@ if MIN_PY_VERSION >= (3, 12):
 
 if num2words:
     num2words.CONVERTER_CLASSES["ar"] = Num2Word_AR_Fixed()
+    num2words.CONVERTER_CLASSES["bg"] = NumberToWords_BG()
