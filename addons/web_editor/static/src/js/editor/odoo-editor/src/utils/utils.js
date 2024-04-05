@@ -1332,17 +1332,52 @@ export const padLinkWithZws = (editable, link) => {
         // never in a nav.
         return;
     }
+    const selection = editable.ownerDocument.getSelection() || {};
+    const { anchorOffset, focusOffset } = selection;
+    let extraAnchorOffset = 0;
+    let extraFocusOffset = 0;
     if (!link.textContent.startsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset) {
+            extraFocusOffset += 1;
+        }
         link.prepend(document.createTextNode('\uFEFF'));
     }
     if (!link.textContent.endsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset + extraAnchorOffset === nodeSize(link)) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset + extraFocusOffset === nodeSize(link)) {
+            extraFocusOffset += 1;
+        }
         link.append(document.createTextNode('\uFEFF'));
     }
+    const linkIndex = childNodeIndex(link);
     if (!(link.previousSibling && link.previousSibling.textContent.endsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex) {
+            extraFocusOffset += 1;
+        }
         link.before(document.createTextNode('\uFEFF'));
     }
     if (!(link.nextSibling && link.nextSibling.textContent.startsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex + 1) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex + 1) {
+            extraFocusOffset += 1;
+        }
         link.after(document.createTextNode('\uFEFF'));
+    }
+    if (extraAnchorOffset || extraFocusOffset) {
+        setSelection(
+            selection.anchorNode, anchorOffset + extraAnchorOffset,
+            selection.focusNode, focusOffset + extraFocusOffset,
+        );
     }
 }
 
