@@ -2,11 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
+from datetime import datetime
 import json
 import logging
 import os
 import subprocess
+from socket import gethostname
 import time
+from werkzeug.exceptions import InternalServerError
 from zlib import adler32
 
 from odoo import http, tools
@@ -80,18 +83,24 @@ class DriverController(http.Controller):
         Downloads the log file
         """
         log_path = tools.config['logfile']
-        if log_path:
-            check = adler32(log_path.encode())
+        if not log_path:
+            raise InternalServerError("Log file configuration is not set")
+        try:
             stat = os.stat(log_path)
-            # intentionally don't use Stream.from_path as the path used is not in the addons path
-            # for instance, for the iot-box it will be in /var/log/odoo
-            return http.Stream(
-                    type='path',
-                    path=log_path,
-                    download_name=os.path.basename(log_path),
-                    etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
-                    last_modified=stat.st_mtime,
-                    size=stat.st_size,
-                ).get_response(
-                mimetype='text/plain', as_attachment=True
-            )
+        except FileNotFoundError:
+            raise InternalServerError("Log file has not been found")
+        check = adler32(log_path.encode())
+        log_file_name = f"iot-odoo-{gethostname()}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+        # intentionally don't use Stream.from_path as the path used is not in the addons path
+        # for instance, for the iot-box it will be in /var/log/odoo
+        return http.Stream(
+                type='path',
+                path=log_path,
+                download_name=log_file_name,
+                etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
+                last_modified=stat.st_mtime,
+                size=stat.st_size,
+                mimetype='text/plain',
+            ).get_response(
+            mimetype='text/plain', as_attachment=True
+        )
