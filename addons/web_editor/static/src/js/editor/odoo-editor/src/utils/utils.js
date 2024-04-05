@@ -937,11 +937,19 @@ export function getAdjacentCharacter(editable, side) {
     return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
 }
 
+function isZwnbsp(node) {
+    return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
+}
+
+function isTangible(node) {
+    return isVisible(node) || isZwnbsp(node);
+}
+
 export function getDeepestPosition(node, offset) {
     let direction = DIRECTIONS.RIGHT;
     let next = node;
     while (next) {
-        if (isVisible(next) || isZWS(next)) {
+        if (isTangible(next) || isZWS(next)) {
             // Valid node: update position then try to go deeper.
             if (next !== node) {
                 [node, offset] = [next, direction ? 0 : nodeSize(next)];
