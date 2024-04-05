@@ -96,7 +96,7 @@ export class RecordInternal {
             recordList.store = record._store;
             record._fieldsValue.set(fieldName, recordList);
         } else {
-            record[fieldName] = Model._.fieldsDefault.get(fieldName);
+            record[fieldName] = record[fieldName].default;
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
