@@ -169,7 +169,7 @@ class MrpProduction(models.Model):
         'stock.move', 'production_id', 'Finished Products', readonly=False,
         compute='_compute_move_finished_ids', store=True, copy=False,
         domain=[('scrapped', '=', False)])
-    move_byproduct_ids = fields.One2many('stock.move', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids')
+    move_byproduct_ids = fields.One2many('stock.move', 'production_id', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids', store=True)
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
         )
@@ -741,7 +741,7 @@ class MrpProduction(models.Model):
     @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
     def _compute_move_finished_ids(self):
         for production in self:
-            if production.state != 'draft':
+            if production.product_id:
                 updated_values = {}
                 if production.date_finished:
                     updated_values['date'] = production.date_finished
@@ -751,16 +751,13 @@ class MrpProduction(models.Model):
                     production.move_finished_ids = [
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                     ]
-                continue
-            # delete to remove existing moves from database and clear to remove new records
-            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
-            production.move_finished_ids = [Command.clear()]
-            if production.product_id:
-                production._create_update_move_finished()
+                if production.state == 'done':
+                    continue
             else:
                 production.move_finished_ids = [
                     Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
                 ]
+            production._create_update_move_finished()
 
     @api.depends('state', 'product_qty', 'qty_producing')
     def _compute_show_produce(self):
@@ -1143,8 +1140,8 @@ class MrpProduction(models.Model):
                 list_move_finished += [Command.update(moves_byproduct_dict[move_finished_values['byproduct_id']].id, move_finished_values)]
             elif move_finished_values.get('product_id') == self.product_id.id and move_finished:
                 list_move_finished += [Command.update(move_finished.id, move_finished_values)]
-            else:
-                # add new entries
+            elif move_finished_values.get('product_id'):
+                # create new entries
                 list_move_finished += [Command.create(move_finished_values)]
         self.move_finished_ids = list_move_finished
 
