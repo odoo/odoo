@@ -227,7 +227,6 @@ test("Datetime field manually input value should send utc value to server", asyn
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({
             datetime: "2017-02-08 06:00:00",
-            datetime_end: "2017-03-13 00:00:00",
         });
     });
 
