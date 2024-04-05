@@ -662,7 +662,8 @@ class SaleOrderLine(models.Model):
                 packaging_uom_qty = line.product_uom._compute_quantity(line.product_uom_qty, packaging_uom)
                 line.product_packaging_qty = float_round(
                     packaging_uom_qty / line.product_packaging_id.qty,
-                    precision_rounding=packaging_uom.rounding)
+                    precision_rounding=packaging_uom.rounding,
+                    rounding_method='UP') or 1.0
 
     # This computed default is necessary to have a clean computation inheritance
     # (cf sale_stock) instead of simply removing the default and specifying
