@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
@@ -757,6 +759,52 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'credit': 0.0,
             'amount_currency': 50.0,
             'currency_id': self.company_data['currency'].id,
+            'account_id': self.company_data['company'].transfer_account_id.id,
+        }
+
+        self.assertRecordValues(paired_payment, [expected_payment_values])
+        self.assertRecordValues(paired_payment.move_id, [expected_move_values])
+        self.assertRecordValues(paired_payment.line_ids.sorted('balance'), [
+            expected_liquidity_line,
+            expected_counterpart_line,
+        ])
+
+    def test_internal_transfer_multicurrency(self):
+        # ==== Check creation of paired internal transfer payment with journals with diff currency ====
+        foreign_currency = self.env.ref('base.EUR')
+        dest_journal = self.company_data['default_journal_bank'].copy({"currency_id": foreign_currency.id})
+        payment = self.env['account.payment'].create({
+            'amount': 50.0,
+            'is_internal_transfer': True,
+            'payment_type': 'inbound',
+            'destination_journal_id': dest_journal.id,
+        })
+        payment.action_post()
+        paired_payment = self.env['account.payment'].search([('payment_type', '=', 'outbound')])
+        converted_amount = self.company_data['currency']._convert(50.0, dest_journal.currency_id, self.company_data['company'], datetime.date.today())
+        expected_payment_values = {
+            'amount': converted_amount,
+            'payment_type': 'outbound',
+            'currency_id': dest_journal.currency_id.id,
+            'partner_id': self.company_data['company'].partner_id.id,
+            'destination_account_id': self.company_data['company'].transfer_account_id.id,
+        }
+        expected_move_values = {
+            'currency_id': dest_journal.currency_id.id,
+            'partner_id': self.company_data['company'].partner_id.id,
+        }
+        expected_liquidity_line = {
+            'debit': 0.0,
+            'credit': converted_amount,
+            'amount_currency': -converted_amount,
+            'currency_id': dest_journal.currency_id.id,
+            'account_id': self.company_data['default_journal_cash'].company_id.account_journal_payment_credit_account_id.id,
+        }
+        expected_counterpart_line = {
+            'debit': converted_amount,
+            'credit': 0.0,
+            'amount_currency': converted_amount,
+            'currency_id': dest_journal.currency_id.id,
             'account_id': self.company_data['company'].transfer_account_id.id,
         }
 

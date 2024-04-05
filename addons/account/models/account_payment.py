@@ -889,6 +889,15 @@ class AccountPayment(models.Model):
         '''
         for payment in self:
 
+            payment_currency = payment.currency_id
+            paired_payment_currency = payment.destination_journal_id.currency_id or payment.company_id.currency_id
+            amount_currency = payment_currency._convert(
+                payment.amount,
+                paired_payment_currency,
+                payment.company_id,
+                payment.date,
+            )
+
             paired_payment = payment.copy({
                 'journal_id': payment.destination_journal_id.id,
                 'destination_journal_id': payment.journal_id.id,
@@ -897,7 +906,19 @@ class AccountPayment(models.Model):
                 'ref': payment.ref,
                 'paired_internal_transfer_payment_id': payment.id,
                 'date': payment.date,
+                'currency_id': paired_payment_currency.id,
+                'amount': amount_currency,
             })
+
+            if paired_payment_currency != payment.company_id.currency_id:
+                for line in paired_payment.move_id.line_ids:
+                    credit = debit = 0.0
+                    if line.credit:
+                        credit = payment.amount
+                    if line.debit:
+                        debit = payment.amount
+                    line.with_context(check_move_validity=False).write({'credit': credit, 'debit': debit})
+
             paired_payment.move_id._post(soft=False)
             payment.paired_internal_transfer_payment_id = paired_payment
 
