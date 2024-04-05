@@ -317,6 +317,9 @@ export class GraphRenderer extends Component {
                 },
             };
         }
+        if (this.cookies.current.color_scheme === "dark") {
+            legendOptions.labels.fontColor = getColor(15, this.cookies.current.color_scheme);
+        }
         return legendOptions;
     }
 
@@ -444,16 +447,34 @@ export class GraphRenderer extends Component {
             scaleLabel: {
                 display: Boolean(groupBy.length),
                 labelString: groupBy.length ? fields[groupBy[0].fieldName].string : "",
+                fontColor:
+                    this.cookies.current.color_scheme === "dark"
+                        ? getColor(15, this.cookies.current.color_scheme)
+                        : null,
             },
-            ticks: { callback: (value) => shortenLabel(value) },
+            ticks: {
+                callback: (value) => shortenLabel(value),
+                fontColor:
+                    this.cookies.current.color_scheme === "dark"
+                        ? getColor(15, this.cookies.current.color_scheme)
+                        : null,
+            },
         };
         const yAxe = {
             type: "linear",
             scaleLabel: {
                 labelString: measures[measure].string,
+                fontColor:
+                    this.cookies.current.color_scheme === "dark"
+                        ? getColor(15, this.cookies.current.color_scheme)
+                        : null,
             },
             ticks: {
                 callback: (value) => this.formatValue(value, allIntegers),
+                fontColor:
+                    this.cookies.current.color_scheme === "dark"
+                        ? getColor(15, this.cookies.current.color_scheme)
+                        : null,
                 suggestedMax: 0,
                 suggestedMin: 0,
             },
