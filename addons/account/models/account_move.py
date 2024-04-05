@@ -1755,7 +1755,7 @@ class AccountMove(models.Model):
                 not move.partner_id.ignore_abnormal_invoice_amount
                 and not (amount_mean - wiggle_room_amount <= move.amount_total <= amount_mean + wiggle_room_amount)
             ) and _(
-                "The amount for %(partner_name)s appears unusual. Based your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
+                "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
                 "Please verify if this amount is accurate.",
                 partner_name=move.partner_id.display_name,
                 mean=move.currency_id.format(amount_mean),
