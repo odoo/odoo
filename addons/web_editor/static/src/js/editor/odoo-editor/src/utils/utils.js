@@ -826,8 +826,74 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
     return range;
 }
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js
 function getNextVisibleNode(node) {
     while (node && !isVisible(node)) {
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
+export function getAdjacentCharacter(editable, side) {
+    let { focusNode, focusOffset } = editable.ownerDocument.getSelection();
+    const originalBlock = closestBlock(focusNode);
+    let adjacentCharacter;
+    while (!adjacentCharacter && focusNode) {
+        if (side === 'previous') {
+            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+        } else {
+            adjacentCharacter = focusNode.textContent[focusOffset];
+        }
+        if (!adjacentCharacter) {
+            if (side === 'previous') {
+                focusNode = previousLeaf(focusNode, editable);
+                focusOffset = focusNode && nodeSize(focusNode);
+            } else {
+                focusNode = nextLeaf(focusNode, editable);
+                focusOffset = 0;
+            }
+            const characterIndex = side === 'previous' ? focusOffset - 1 : focusOffset;
+            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+        }
+    }
+    return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
+}
+
+function getNextVisibleNode(node) {
+    while (node && !isVisible(node)) {
+=======
+export function getAdjacentCharacter(editable, side) {
+    let { focusNode, focusOffset } = editable.ownerDocument.getSelection();
+    const originalBlock = closestBlock(focusNode);
+    let adjacentCharacter;
+    while (!adjacentCharacter && focusNode) {
+        if (side === 'previous') {
+            adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
+        } else {
+            adjacentCharacter = focusNode.textContent[focusOffset];
+        }
+        if (!adjacentCharacter) {
+            if (side === 'previous') {
+                focusNode = previousLeaf(focusNode, editable);
+                focusOffset = focusNode && nodeSize(focusNode);
+            } else {
+                focusNode = nextLeaf(focusNode, editable);
+                focusOffset = 0;
+            }
+            const characterIndex = side === 'previous' ? focusOffset - 1 : focusOffset;
+            adjacentCharacter = focusNode && focusNode.textContent[characterIndex];
+        }
+    }
+    return closestBlock(focusNode) === originalBlock ? adjacentCharacter : undefined;
+}
+
+function isZwnbsp(node) {
+    return node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff';
+}
+
+function isTangible(node) {
+    return isVisible(node) || isZwnbsp(node);
+}
+
+function getNextTangibleNode(node) {
+    while (node && !isTangible(node)) {
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
         node = node.nextSibling;
     }
     return node;
@@ -838,7 +904,7 @@ export function getDeepestPosition(node, offset) {
     while (node.hasChildNodes()) {
         let newNode = node.childNodes[offset];
         if (newNode) {
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             found = true;
             node = newNode;
@@ -850,7 +916,7 @@ export function getDeepestPosition(node, offset) {
     if (!found) {
         while (node.hasChildNodes()) {
             let newNode = node.childNodes[offset - 1];
-            newNode = getNextVisibleNode(newNode);
+            newNode = getNextTangibleNode(newNode);
             if (!newNode || isVisibleEmpty(newNode)) break;
             node = newNode;
             offset = nodeSize(node);
@@ -858,13 +924,13 @@ export function getDeepestPosition(node, offset) {
     }
     let didMove = false;
     let reversed = false;
-    while (!isVisible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
+    while (!isTangible(node) && (node.previousSibling || (!reversed && node.nextSibling))) {
         reversed = reversed || !node.nextSibling;
         node = reversed ? node.previousSibling : node.nextSibling;
         offset = reversed ? nodeSize(node) : 0;
         didMove = true;
     }
-    return didMove && isVisible(node) ? getDeepestPosition(node, offset) : [node, offset];
+    return didMove && isTangible(node) ? getDeepestPosition(node, offset) : [node, offset];
 }
 
 export function getCursors(document) {
@@ -1138,6 +1204,99 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         }
     }
 }
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
+/**
+ * Take a link and pad it with non-break zero-width spaces to ensure that it is
+ * always possible to place the cursor at its inner and outer edges.
+ *
+ * @param {HTMLElement} editable
+ * @param {HTMLAnchorElement} link
+ */
+export const padLinkWithZws = (editable, link) => {
+    if (!link.textContent.startsWith('\uFEFF')) {
+        link.prepend(document.createTextNode('\uFEFF'));
+    }
+    if (!link.textContent.endsWith('\uFEFF')) {
+        link.append(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.previousSibling && link.previousSibling.textContent.endsWith('\uFEFF'))) {
+        link.before(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.nextSibling && link.nextSibling.textContent.startsWith('\uFEFF'))) {
+        link.after(document.createTextNode('\uFEFF'));
+    }
+}
+=======
+export const isLinkEligibleForZwnbsp = link => {
+    return !(
+        link.textContent.trim() === '' ||
+        [link, ...link.querySelectorAll('*')].some(isBlock) ||
+        link.matches('nav a, a.nav-link')
+    )
+}
+/**
+ * Take a link and pad it with non-break zero-width spaces to ensure that it is
+ * always possible to place the cursor at its inner and outer edges.
+ *
+ * @param {HTMLElement} editable
+ * @param {HTMLAnchorElement} link
+ */
+export const padLinkWithZws = (editable, link) => {
+    if (!isLinkEligibleForZwnbsp(link)) {
+        // Only add the ZWNBSP for simple (possibly styled) text links, and
+        // never in a nav.
+        return;
+    }
+    const selection = editable.ownerDocument.getSelection();
+    const { anchorOffset, focusOffset } = selection;
+    let extraAnchorOffset = 0;
+    let extraFocusOffset = 0;
+    if (!link.textContent.startsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset) {
+            extraFocusOffset += 1;
+        }
+        link.prepend(document.createTextNode('\uFEFF'));
+    }
+    if (!link.textContent.endsWith('\uFEFF')) {
+        if (selection.anchorNode === link && anchorOffset + extraAnchorOffset === nodeSize(link)) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link && focusOffset + extraFocusOffset === nodeSize(link)) {
+            extraFocusOffset += 1;
+        }
+        link.append(document.createTextNode('\uFEFF'));
+    }
+    const linkIndex = childNodeIndex(link);
+    if (!(link.previousSibling && link.previousSibling.textContent.endsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex) {
+            extraFocusOffset += 1;
+        }
+        link.before(document.createTextNode('\uFEFF'));
+    }
+    if (!(link.nextSibling && link.nextSibling.textContent.startsWith('\uFEFF'))) {
+        if (selection.anchorNode === link.parentElement && anchorOffset + extraAnchorOffset > linkIndex + 1) {
+            extraAnchorOffset += 1;
+        }
+        if (selection.focusNode === link.parentElement && focusOffset + extraFocusOffset > linkIndex + 1) {
+            extraFocusOffset += 1;
+        }
+        link.after(document.createTextNode('\uFEFF'));
+    }
+    if (extraAnchorOffset || extraFocusOffset) {
+        setSelection(
+            selection.anchorNode, anchorOffset + extraAnchorOffset,
+            selection.focusNode, focusOffset + extraFocusOffset,
+        );
+    }
+}
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/utils.js
 
 //------------------------------------------------------------------------------
 // DOM Info utils

@@ -81,8 +81,21 @@ import {
     boundariesOut,
     rightLeafOnlyNotBlockPath,
     lastLeaf,
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
     isUnbreakable,
     splitAroundUntil,
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+    descendants,
+    ZERO_WIDTH_CHARS,
+    ZERO_WIDTH_CHARS_REGEX,
+    getAdjacentCharacter,
+=======
+    descendants,
+    ZERO_WIDTH_CHARS,
+    ZERO_WIDTH_CHARS_REGEX,
+    getAdjacentCharacter,
+    isLinkEligibleForZwnbsp,
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -4029,7 +4042,40 @@ export class OdooEditor extends EventTarget {
             // re-trigger the _onSelectionChange.
             return;
         }
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
 
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        // Apply the o_link_in_selection class if the selection is in a single
+        // link, remove it otherwise.
+        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+            .map(node => closestElement(node, 'a:not(.btn)'));
+        const singleLinkInSelection = anchorLink === focusLink && anchorLink;
+        if (singleLinkInSelection) {
+            singleLinkInSelection.classList.add('o_link_in_selection');
+        }
+        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
+            if (link !== singleLinkInSelection) {
+                link.classList.remove('o_link_in_selection');
+                if (!link.classList.length) {
+                    link.removeAttribute('class');
+                }
+            }
+        };
+=======
+        // Apply the o_link_in_selection class if the selection is in a single
+        // link, remove it otherwise.
+        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+            .map(node => closestElement(node, 'a:not(.btn)'));
+        const singleLinkInSelection = anchorLink === focusLink && anchorLink;
+        if (singleLinkInSelection && isLinkEligibleForZwnbsp(singleLinkInSelection)) {
+            singleLinkInSelection.classList.add('o_link_in_selection');
+        }
+        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
+            if (link !== singleLinkInSelection) {
+                link.classList.remove('o_link_in_selection');
+            }
+        };
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
@@ -4222,6 +4268,55 @@ export class OdooEditor extends EventTarget {
 
         sanitize(element);
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        // Remove o_link_in_selection class
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            link.classList.remove('o_link_in_selection');
+            if (!link.classList.length) {
+                link.removeAttribute('class');
+            }
+        }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+        // Remove now empty links
+        for (const link of element.querySelectorAll('a')) {
+            if (!link.textContent) {
+                link.remove();
+            }
+        }
+
+=======
+        // Remove o_link_in_selection class
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            link.classList.remove('o_link_in_selection');
+        }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+        // Remove now empty links
+        for (const link of element.querySelectorAll('a')) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
+                link.remove();
+            }
+        }
+
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('data-oe-keep-contenteditable')) {
@@ -4238,10 +4333,18 @@ export class OdooEditor extends EventTarget {
             cleanZWS(el);
         }
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
         // Clean custom selections
         if (this.deselectTable() && hasValidSelection(this.editable)) {
             this.document.getSelection().collapseToStart();
         }
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+=======
+        // Remove empty class attributes
+        for (const el of element.querySelectorAll('*[class=""]')) {
+            el.removeAttribute('class');
+        }
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
     }
     /**
      * Handle the hint preview for the Powerbox.

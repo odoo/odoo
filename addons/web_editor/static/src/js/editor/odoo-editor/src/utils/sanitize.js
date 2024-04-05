@@ -19,6 +19,17 @@ import {
     EMAIL_REGEX,
     URL_REGEX_WITH_INFOS,
     unwrapContents,
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/sanitize.js
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+=======
+    padLinkWithZws,
+    getTraversedNodes,
+    ZERO_WIDTH_CHARS_REGEX,
+    setSelection,
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/sanitize.js
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -186,6 +197,7 @@ class Sanitize {
                 node = nodeP;
             }
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js
             // Remove comment nodes to avoid issues with mso comments.
             if (node.nodeType === Node.COMMENT_NODE) {
                 node.remove();
@@ -193,9 +205,16 @@ class Sanitize {
 
             const selection = this.root.ownerDocument.getSelection();
             const anchor = selection && selection.anchorNode;
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/sanitize.js
+            const sel = this.root.ownerDocument.getSelection();
+            const anchor = sel && this.root.ownerDocument.getSelection().anchorNode;
+=======
+            const sel = this.root.ownerDocument.getSelection();
+            const anchor = sel && sel.anchorNode;
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/src/utils/sanitize.js
             const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
-            // content and the selection is not next to it.
+            // content.
             if (
                 node.nodeType === Node.TEXT_NODE &&
                 node.textContent.includes('\u200B') &&
@@ -212,14 +231,21 @@ class Sanitize {
                             sibling.length > 0
                     )
                 ) &&
-                !isBlock(node.parentElement) &&
-                anchor !== node
+                !isBlock(node.parentElement)
             ) {
                 const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
+                const shouldAdaptAnchor = anchor === node && sel.anchorOffset > node.textContent.indexOf('\u200B');
+                const shouldAdaptFocus = sel.focusNode === node && sel.focusOffset > node.textContent.indexOf('\u200B');
                 node.textContent = node.textContent.replace('\u200B', '');
                 node.parentElement.removeAttribute("data-oe-zws-empty-inline");
                 if (restoreCursor) {
                     restoreCursor();
+                }
+                if (shouldAdaptAnchor || shouldAdaptFocus) {
+                    setSelection(
+                        sel.anchorNode, shouldAdaptAnchor ? sel.anchorOffset - 1 : sel.anchorOffset,
+                        sel.focusNode, shouldAdaptFocus ? sel.focusOffset - 1 : sel.focusOffset,
+                    );
                 }
             }
 

@@ -6505,8 +6505,18 @@ X[]
                         }, editor.document);
                     },
                     contentAfterEdit: '<p>ab' +
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/editor.test.js
                         '<a href="#" class="">' +
                             '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
+                        '\ufeff' + // before zwnbsp
+                        '<a href="#">' +
+                            '\ufeff' + // start zwnbsp
+=======
+                        '\ufeff' + // before zwnbsp
+                        '<a href="#" class="">' +
+                            '\ufeff' + // start zwnbsp
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
                             'cd' + // content
                             // end zws is only there if the selection is in the link
                         '</a>' +
@@ -6678,8 +6688,18 @@ X[]
                         }, editor.document);
                     },
                     contentAfterEdit: '<p>ab[]' +
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/editor.test.js
                         '<a href="#" class="">' +
                             '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
+||||||| parent of ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
+                        '\ufeff' + // before zwnbsp
+                        '<a href="#">' +
+                            '\ufeff' + // start zwnbsp
+=======
+                        '\ufeff' + // before zwnbsp
+                        '<a href="#" class="">' +
+                            '\ufeff' + // start zwnbsp
+>>>>>>> ad75c55e23a4 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/editor.test.js
                             'cd' + // content
                             // end zws is only there if the selection is in the link
                         '</a>' +
