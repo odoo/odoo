@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -40,6 +41,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                        SET create_date = '%s'
                        WHERE id = %s
                        """ % (date, allocation_id))
+
+    def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'hourly',
+                'cap_accrued_time': True,
+                'maximum_leave': 10000
+            })],
+        })
+        level = accrual_plan.level_ids
+        level.maximum_leave = 10
+        self.assertEqual(accrual_plan.level_ids.maximum_leave, 10)
+
+        with self.assertRaises(UserError):
+            level.maximum_leave = 0
+
+        level.cap_accrued_time = False
+        self.assertEqual(accrual_plan.level_ids.maximum_leave, 0)
 
     def test_frequency_hourly_calendar(self):
         with freeze_time("2017-12-5"):
