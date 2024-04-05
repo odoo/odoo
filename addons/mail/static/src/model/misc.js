@@ -25,6 +25,7 @@ export const IS_FIELD_SYM = Symbol("isField");
 export const IS_DELETING_SYM = Symbol("isDeleting");
 export const IS_DELETED_SYM = Symbol("isDeleted");
 export const STORE_SYM = Symbol("store");
+export const INTERNAL_SYM = Symbol("isInternalProp");
 
 export function AND(...args) {
     return [AND_SYM, ...args];
@@ -67,4 +68,20 @@ export function isRelation(Model, fieldName) {
 }
 export function isFieldDefinition(val) {
     return val?.[FIELD_DEFINITION_SYM];
+}
+
+/**
+ * Function to assign on class instance attributes that should not be treated as fields
+ * but instead internal values. These are usually technical attributes used for the
+ * internal working of fields, including updating them.
+ *
+ * These attributes are automatically registered in @see Record.INTERNAL_PROPS that enumerates
+ * the attributes that are considered as internal. All these props are not considered as fields.
+ *
+ * @template T
+ * @param {T} def
+ * @returns {T}
+ */
+export function recordInternal(def) {
+    return { [INTERNAL_SYM]: true, default: def };
 }

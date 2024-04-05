@@ -1,16 +1,16 @@
 import { Record } from "./record";
-import { IS_DELETED_SYM, STORE_SYM } from "./misc";
+import { IS_DELETED_SYM, STORE_SYM, recordInternal } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export class Store extends Record {
     /** @type {import("./store_internal").StoreInternal} */
-    _;
-    [STORE_SYM] = true;
+    _ = recordInternal();
+    [STORE_SYM] = recordInternal(true);
     /** @type {Map<string, Record>} */
-    recordByLocalId;
-    storeReady = false;
+    recordByLocalId = recordInternal();
+    storeReady = recordInternal(false);
     /**
      * @param {string} localId
      * @returns {Record}

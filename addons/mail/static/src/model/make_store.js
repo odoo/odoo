@@ -1,6 +1,14 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { Store } from "./store";
-import { STORE_SYM, isFieldDefinition, isMany, isRelation, modelRegistry } from "./misc";
+import {
+    ATTR_SYM,
+    INTERNAL_SYM,
+    STORE_SYM,
+    isFieldDefinition,
+    isMany,
+    isRelation,
+    modelRegistry,
+} from "./misc";
 import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
@@ -54,7 +62,11 @@ export function makeStore(env, { localRegistry } = {}) {
                          */
                         get(record, name, recordFullProxy) {
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
-                            if (record._.gettingField || !Model._.fields.get(name)) {
+                            if (
+                                Model.INTERNAL_PROPS[name] ||
+                                record._.gettingField ||
+                                !Model._.fields.get(name)
+                            ) {
                                 return Reflect.get(...arguments);
                             }
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
@@ -101,7 +113,7 @@ export function makeStore(env, { localRegistry } = {}) {
                          */
                         set(record, name, val, receiver) {
                             // ensure each field write goes through the updatingAttrs method exactly once
-                            if (record._.updatingAttrs.has(name)) {
+                            if (Model.INTERNAL_PROPS[name] || record._.updatingAttrs.has(name)) {
                                 record[name] = val;
                                 return true;
                             }
@@ -147,6 +159,11 @@ export function makeStore(env, { localRegistry } = {}) {
         for (const [name, val] of Object.entries(obj)) {
             if (isFieldDefinition(val)) {
                 Model._.prepareField(name, val);
+            } else if (val?.[INTERNAL_SYM]) {
+                Model.INTERNAL_PROPS[name] = true;
+            } else {
+                // dynamically add attr field definition on the fly
+                Model._.prepareField(name, { [ATTR_SYM]: true });
             }
         }
     }

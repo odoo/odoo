@@ -1,6 +1,8 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { IS_RECORD_LIST_SYM, isRecord } from "./misc";
 
+/** @typedef {import("./record").Record} Record */
+
 /** @param {RecordList} reclist */
 function getInverse(reclist) {
     return reclist._.owner.Model._.fieldsInverse.get(reclist._.name);

@@ -804,3 +804,19 @@ test("attr that are default [] should be isolated per record", async () => {
     expect(p1.names).toEqual(["John"]);
     expect(p2.names).toEqual([]);
 });
+
+test("[technical] record props without explicit Record.attr() definition are fully considered as Record.attr()", async () => {
+    // This gives high consistency of all props on records being fields, i.e. if it works for fields it works for everything.
+    (class Person extends Record {
+        static id = "id";
+        id;
+        name = Record.attr();
+    }).register(localRegistry);
+    const store = await start();
+    /** @type {import("models").Record} */
+    const person = store.Person.insert({ id: 1 });
+    expect(person.Model._.fields.get("name")).toBe(true);
+    expect(person.Model._.fields.get("extra")).toBe(undefined);
+    person.extra = true; // add prop "extra"
+    expect(person.Model._.fields.get("extra")).toBe(true);
+});

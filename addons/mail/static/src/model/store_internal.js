@@ -4,7 +4,7 @@
 import { markup, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { IS_DELETING_SYM, Markup, isCommand, isMany } from "./misc";
+import { ATTR_SYM, IS_DELETING_SYM, Markup, isCommand, isMany } from "./misc";
 
 export class StoreInternal extends RecordInternal {
     /**
@@ -187,8 +187,14 @@ export class StoreInternal extends RecordInternal {
      * @param {Object} vals
      */
     updateFields(record, vals) {
+        const Model = record.Model;
         for (const [fieldName, value] of Object.entries(vals)) {
-            if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
+            if (!Model._.fields.get(fieldName)) {
+                // dynamically add attr field definition on the fly
+                Model._.prepareField(fieldName, { [ATTR_SYM]: true });
+                record._.prepareField(record, fieldName);
+            }
+            if (Model._.fieldsAttr.get(fieldName)) {
                 this.updateAttr(record, fieldName, value);
             } else {
                 this.updateRelation(record, fieldName, value);
