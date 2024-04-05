@@ -320,6 +320,13 @@ class PurchaseOrderLine(models.Model):
         # This way, we shoud not lose any valuable information.
         if line_description and product_id.name != line_description:
             res['name'] += '\n' + line_description
+
+        if values.get('move_dest_ids', False):
+            for m in values['move_dest_ids']:
+                if m.procure_method == 'make_to_stock' and m.group_id:
+                    po.group_id = m.group_id
+                    break
+
         res.update({
             'date_planned': values.get('date_planned'),
             'move_dest_ids': 'move_dest_ids' in values and [(4, x.id) for x in values['move_dest_ids'].filtered(lambda m: m.procure_method != 'make_to_stock')] or False,

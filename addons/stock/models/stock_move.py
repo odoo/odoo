@@ -503,7 +503,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         already_propagate_ids.update(self.ids)
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
-            moves_to_update = (move.move_dest_ids | move.move_orig_ids)
+            moves_to_update = (move.move_dest_ids | move.move_orig_ids | move.group_id.stock_move_ids.filtered(lambda m: m.rule_id.procure_method == 'mts_else_mto'))
             if move.date_deadline:
                 delta = move.date_deadline - fields.Datetime.to_datetime(new_deadline)
             else:
@@ -687,7 +687,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # propagate product_packaging_id changes in the stock move chain
         if 'product_packaging_id' in vals:
             self._propagate_product_packaging(vals['product_packaging_id'])
-        if 'date_deadline' in vals:
+        if 'date_deadline' in vals and self.rule_id.procure_method != 'mts_else_mto':
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
@@ -1447,7 +1447,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move_to_confirm.add(move.id)
                 continue
             elif float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) > 0 and float_compare(quantity, move.product_qty, precision_rounding=move.product_uom.rounding) < 0:
-                move._action_assign(force_qty=move.product_qty - quantity)  # Can't batch on whole procurements' moves as we need the force_qty arg
+                move._action_assign(force_qty=move.product_qty - quantity)  # FIXME : see arm comments
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
@@ -1455,6 +1455,9 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+
+        # TODO: if move_dest_ids with procure_method = make_to stock in procurement_requests.values, set the pg id on current move (if possible)
+        # for procurement in procurement_requests:
 
         move_to_confirm = self.browse(move_to_confirm)
         move_create_proc -= move_to_confirm
@@ -1533,18 +1536,18 @@ Please change the quantity done or the rounding precision of your unit of measur
         forecasted_qties_by_loc = {}
         for location, product_ids in mtso_products_by_locations.items():
             products = self.env['product.product'].browse(product_ids).with_context(location=location.id)
-            forecasted_qties_by_loc[location] = {product.id: product.free_qty for product in products}  # virtual_available
+            forecasted_qties_by_loc[location] = {product.id: max(product.virtual_available, product.free_qty) for product in products}
 
         for move in self:
             if move not in mtso_moves or (float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0):  # and float_compare(move.product_id.free_qty, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0):
                 quantities.append(move.product_uom_qty)
                 continue
-            free_qty = forecasted_qties_by_loc[move.location_id][move.product_id.id]
-            if float_compare(free_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+            available_qty = forecasted_qties_by_loc[move.location_id][move.product_id.id]
+            if float_compare(available_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
                 quantity = 0
                 forecasted_qties_by_loc[move.location_id][move.product_id.id] -= move.product_qty
             else:
-                quantity = move.product_qty - free_qty
+                quantity = move.product_qty - available_qty
                 forecasted_qties_by_loc[move.location_id][move.product_id.id] = 0
             product_uom_qty = move.product_uom._compute_quantity(quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             quantities.append(product_uom_qty)

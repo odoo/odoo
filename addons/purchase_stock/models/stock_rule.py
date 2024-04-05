@@ -305,10 +305,8 @@ class StockRule(models.Model):
         return group
 
     def _make_po_get_domain(self, company_id, values, partner):
-        if self.procure_method != 'mts_else_mto':
-            gpo = self.group_propagation_option
-            group = (gpo == 'fixed' and self.group_id) or \
-                    (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
+        # if values.get(group_id).procure_method != 'mts_else_mto':
+        group = self._prepare_purchase_order_group(values)
 
         domain = (
             ('partner_id', '=', partner.id),

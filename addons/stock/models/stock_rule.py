@@ -303,6 +303,11 @@ class StockRule(models.Model):
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
 
+        # if not group_id and not values.get('orderpoint_id') and self.procure_method == 'mts_else_mto':
+            # group_id = self.env['procurement.group'].create({
+                # 'name': self.name,
+            # }).id
+
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
@@ -319,12 +324,20 @@ class StockRule(models.Model):
 
         procure_method = self.procure_method if self.procure_method != 'mts_else_mto' else 'make_to_stock'
         move_dest_ids = []
+        mts_move_dest_ids = self.env['stock.move']
         if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():
             # make_to_stock moves MAY have dest moves but SHOULD NOT have orig moves, in other words, a make_to_stock move CAN NOT be a destination move
-            move_dest_ids = [(4, m.id) for m in values['move_dest_ids'] if m.procure_method != 'make_to_stock']
+            for m in values['move_dest_ids']:
+                if m.procure_method == 'make_to_stock' and not m.group_id:
+                    mts_move_dest_ids |= m
+                else:
+                    move_dest_ids.append((4, m.id))
+
+        if group_id and mts_move_dest_ids:
+            mts_move_dest_ids.group_id = group_id
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
-        if not partner and move_dest_ids:
+        if not partner and values.get('move_dest_ids'):
             move_dest = values['move_dest_ids']
             if location_dest_id == company_id.internal_transit_location_id:
                 partners = move_dest.location_dest_id.warehouse_id.partner_id
@@ -435,6 +448,14 @@ class ProcurementGroup(models.Model):
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
+    # required_by_group_ids
+    group_orig_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_dest_ids', 'group_orig_ids', 'Origin Procurement Groups'
+                                      copy=False,
+                                      help="The procurement groups that relies on the fulfillment of the current procurement group.")
+    # fulfilled_by_group_ids
+    group_dest_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_orig_ids', 'group_dest_ids', 'Destination Procurement Groups'
+                                      copy=False,
+                                      help="The procurement groups on which the current procurement group relies.")
 
     @api.model
     def _skip_procurement(self, procurement):
@@ -519,7 +540,7 @@ class ProcurementGroup(models.Model):
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
-            warehouse_routes = warehouse_id.route_ids
+            warehouse_routes = warehouse_id.route_ids  # _get_all_routes()  # route_ids
             if warehouse_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         return res
@@ -620,3 +641,8 @@ class ProcurementGroup(models.Model):
         if company_id:
             domain += [('company_id', '=', company_id)]
         return domain
+
+    @api.constrains('group_dest_ids')
+    def _check_no_cyclic_dependencies(self):
+        if not self._check_m2m_recursion('group_dest_ids'):
+            raise ValidationError(_("You cannot create cyclic dependency."))

@@ -528,6 +528,7 @@ class TestProcurement(TestMrpCommon):
 
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
 
+    # TODO : Redefine test in sale_mrp
     def test_check_update_qty_mto_chain(self):
         """ Simulate a mto chain with a manufacturing order. Updating the
         initial demand should also impact the initial move but not the
@@ -552,12 +553,7 @@ class TestProcurement(TestMrpCommon):
             'name': 'Roger'
         })
         # This needs to be tried with MTO route activated
-        mto_route = self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))
-        mto_route.action_unarchive()
-        # Setup for the secondary test
-        routes_count = self.env['stock.route'].search_count([])
-        mto_route.rule_ids.search([('company_id', 'not in', (False, self.env.company.id))]).unlink()
-        mto_route.company_id = self.env.company
+        # self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto'))  # Now unarchived by default
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
@@ -606,7 +602,7 @@ class TestProcurement(TestMrpCommon):
 
         # Create procurement to increase initial move quantity under the MO product_qty, should use the existing MO for the missing qty.
         create_run_procurement(product, 3.00)
-        self.assertEqual(customer_move.product_uom_qty, 8, 'The demand on the initial move should have been increased.')
+        self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have changed since it should be a new move.')
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
         current_demand = sum(self.env['stock.move'].search([('group_id', '=', procurement_group.id)]).mapped('product_uom_qty'))
         self.assertEqual(float_compare(current_demand, manufacturing_order.product_uom_qty, precision_rounding=product.uom_id.rounding), -1, 'The current demand should be less than the original MO production')
@@ -936,6 +932,7 @@ class TestProcurement(TestMrpCommon):
                 raw_line.product_id = self.product_2
                 raw_line.product_uom_qty = 2.0
 
+        # FIXME : Trough Command.Create, move is added to procurement but not to picking
         move_vals = mo._get_move_raw_values(self.product_3, 0, self.product_3.uom_id)
         mo.move_raw_ids = [(0, 0, move_vals)]
         mo.move_raw_ids[-1].product_uom_qty = 3.0
