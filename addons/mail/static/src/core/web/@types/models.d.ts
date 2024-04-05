@@ -4,6 +4,7 @@ declare module "models" {
     export interface Activity extends ActivityClass {}
     export interface Store {
         activityCounter: number,
+        activity_counter_bus_id: number,
         activityGroups: Object[],
     }
     export interface Thread {

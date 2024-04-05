@@ -21,7 +21,6 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.messagingService.isReady.then(() => this.busService.start());
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message } }) => {
@@ -78,6 +77,7 @@ export class DiscussCoreWeb {
                 this.store.channels.fetch();
             }
         });
+        this.busService.start();
     }
 }
 

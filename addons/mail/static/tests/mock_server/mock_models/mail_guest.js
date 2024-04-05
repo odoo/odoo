@@ -11,7 +11,7 @@ export class MailGuest extends models.ServerModel {
     _init_messaging() {
         return {
             Store: {
-                initBusId: this.lastBusNotificationId,
+                initBusId: this.lastBusNotificationId, // deprecated, last id should be checked per field
             },
         };
     }
