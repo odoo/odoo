@@ -337,7 +337,7 @@ class AssetsBundle(object):
 
                     odoo.define("{self.name}.bundle.xml", ["@web/core/templates"], function(require) {{
                         "use strict";
-                        const {{ registerTemplate, registerTemplateExtension }} = require("@web/core/templates");
+                        const {{ checkPrimaryTemplateParents, registerTemplate, registerTemplateExtension }} = require("@web/core/templates");
                         /* {self.name} */
                         {templates}
                     }});
@@ -407,18 +407,58 @@ class AssetsBundle(object):
             string = etree.tostring(element, encoding='unicode')
             return string.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
 
+<<<<<<< HEAD
+||||||| parent of e3f39b022fd0 (temp)
+        names = OrderedSet()
+        inherit_froms = OrderedSet()
+=======
+        names = OrderedSet()
+        primary_parents = OrderedSet()
+        extension_parents = OrderedSet()
+>>>>>>> e3f39b022fd0 (temp)
         for block in blocks:
             if block["type"] == "templates":
+<<<<<<< HEAD
                 for (element, url) in block["templates"]:
+||||||| parent of e3f39b022fd0 (temp)
+                for (element, url, inherit_from) in block["templates"]:
+                    if inherit_from:
+                        inherit_froms.add(inherit_from)
+=======
+                for (element, url, inherit_from) in block["templates"]:
+                    if inherit_from:
+                        primary_parents.add(inherit_from)
+>>>>>>> e3f39b022fd0 (temp)
                     name = element.get("t-name")
                     template = get_template(element)
                     content.append(f'registerTemplate("{name}", `{url}`, `{template}`);')
             else:
                 for inherit_from, elements in block["extensions"].items():
+<<<<<<< HEAD
+||||||| parent of e3f39b022fd0 (temp)
+                    inherit_froms.add(inherit_from)
+=======
+                    extension_parents.add(inherit_from)
+>>>>>>> e3f39b022fd0 (temp)
                     for (element, url) in elements:
                         template = get_template(element)
                         content.append(f'registerTemplateExtension("{inherit_from}", `{url}`, `{template}`);')
 
+<<<<<<< HEAD
+||||||| parent of e3f39b022fd0 (temp)
+        missing = inherit_froms - names
+        if missing:
+            _logger.error('Missing parent templates: %s', ", ".join(missing))
+
+=======
+        missing_names_for_primary = primary_parents - names
+        if missing_names_for_primary:
+            content.append(f'checkPrimaryTemplateParents({json.dumps(list(missing_names_for_primary))});')
+        missing_names_for_extension = extension_parents - names
+        if missing_names_for_extension:
+            content.append(f'console.error("Missing (extension) parent templates: {", ".join(missing_names_for_extension)}");')
+
+>>>>>>> e3f39b022fd0 (temp)
         return '\n'.join(content)
 
     def xml(self):
