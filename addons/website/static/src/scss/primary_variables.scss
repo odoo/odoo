@@ -51,7 +51,7 @@ $o-social-colors: (
 );
 
 $o-theme-figcaption-opacity: 0.6;
-
+// TODO: those palette should be written by the Python code.
 $o-color-palettes: map-merge($o-color-palettes,
     (
         'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
@@ -1990,7 +1990,6 @@ $o-base-website-values-palette: (
     'body-image': null,
     'body-image-type': 'image', // 'image' or 'pattern'
 
-    'color-palettes-name': null, // Default to the individual variables for each color palette type
 
     // Gradients
     'menu-gradient': null,

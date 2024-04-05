@@ -33,6 +33,8 @@
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
         'data/website_design_font.xml',
+        'data/website_design_color.xml',
+        'data/website_design_palette.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_title.xml',
