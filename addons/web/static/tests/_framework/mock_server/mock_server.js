@@ -875,13 +875,30 @@ export class MockServer {
     /** @type {RouteCallback} */
     async mockActionLoad(request) {
         const { params } = await request.json();
-        const action = this.actions[params.action_id];
+        const action =
+            this.actions[params.action_id] ||
+            Object.values(this.actions).find((action) => {
+                return action.xml_id === params.action_id || action.path === params.action_id;
+            });
         if (!action) {
-            // when the action doesn't exist, the real server doesn't crash, it
-            // simply returns false
-            console.warn(`No action found for ID ${JSON.stringify(params.action_id)}`);
+            // when the action doesn't exist, the real server doesn't crash, it simply returns false
+            console.warn(`No action found for ID/xmlID/path ${JSON.stringify(params.action_id)}`);
+            return false;
         }
-        return action || false;
+        if (action.type === "ir.actions.server") {
+            if (action.state !== "code") {
+                throw new Error("Only server actions with code are supported on the mock server");
+            }
+            const result = action.code();
+            if (!result) {
+                return { type: "ir.actions.act_window_close" };
+            }
+            if (action.path) {
+                result.path = action.path;
+            }
+            return result;
+        }
+        return action;
     }
 
     /** @type {RouteCallback} */
@@ -991,7 +1008,7 @@ export function authenticate(login, password) {
  */
 export function defineActions(actions) {
     return defineParams(
-        { actions: Object.fromEntries(actions.map((a) => [a.xmlId || a.id, { ...a }])) },
+        { actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
         "add"
     ).actions;
 }
