@@ -170,8 +170,8 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_list_view", "should display action 8");
             assert.containsNone(target, ".o_form_view", "should no longer display the form view");
             assert.verifySteps([
-                "/web/action/load",
                 "/web/webclient/load_menus",
+                "/web/action/load",
                 "get_views",
                 "web_read",
                 "web_search_read",

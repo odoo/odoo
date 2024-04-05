@@ -27,6 +27,7 @@ import { Component, onMounted, xml } from "@odoo/owl";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 function getBreadCrumbTexts(target) {
     return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
@@ -128,7 +129,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = (route) => assert.step(route);
         const env = await makeTestEnv({ serverData, mockRPC });
 
-        assert.verifySteps(["/web/action/load", "/web/webclient/load_menus"]);
+        assert.verifySteps(["/web/webclient/load_menus"]);
 
         await mount(WebClient, getFixture(), { env });
         assert.strictEqual(
@@ -136,7 +137,39 @@ QUnit.module("ActionManager", (hooks) => {
             "http://example.com/odoo/action-1001",
             "url did not change"
         );
-        assert.verifySteps([], "pushState was not called");
+
+        await nextTick();
+        assert.verifySteps(["/web/action/load"], "pushState was not called");
+    });
+
+    QUnit.test("initial loading take complete context", async (assert) => {
+        redirect("/odoo/action-1001");
+        logHistoryInteractions(assert);
+        setupWebClientRegistries();
+
+        const mockRPC = (route, params) => {
+            assert.step(route);
+            if (route === "/web/action/load") {
+                assert.step(JSON.stringify(params.context));
+            }
+        };
+        const env = await makeTestEnv({ serverData, mockRPC });
+
+        assert.verifySteps(["/web/webclient/load_menus"]);
+
+        await mount(WebClient, getFixture(), { env });
+        user.updateContext({ an_extra_context: 22 });
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/action-1001",
+            "url did not change"
+        );
+
+        await nextTick();
+        assert.verifySteps([
+            "/web/action/load",
+            '{"lang":"en","tz":"taht","an_extra_context":22,"uid":7}',
+        ]);
     });
 
     QUnit.test("initial loading with action tag", async (assert) => {
@@ -490,8 +523,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_control_panel");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "web_search_read",
         ]);
@@ -556,8 +589,8 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_form_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "onchange",
         ]);
@@ -579,8 +612,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "web_search_read",
         ]);
@@ -614,7 +647,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "the url did not change"
             );
             assert.verifySteps(
-                ["/web/action/load", "/web/webclient/load_menus", "get_views", "web_read"],
+                ["/web/webclient/load_menus", "/web/action/load", "get_views", "web_read"],
                 "pushState was not called"
             );
             // go back to List
@@ -769,8 +802,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/onchange",
         ]);
@@ -957,7 +990,7 @@ QUnit.module("ActionManager", (hooks) => {
             const mockRPC = (route) => assert.step(route);
             const env = await makeTestEnv({ serverData, mockRPC });
 
-            assert.verifySteps(["/web/action/load", "/web/webclient/load_menus"]);
+            assert.verifySteps(["/web/webclient/load_menus"]);
 
             await mount(WebClient, getFixture(), { env });
             await nextTick();
@@ -969,6 +1002,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.verifySteps(
                 [
                     "/web/action/load_breadcrumbs",
+                    "/web/action/load",
                     "/web/dataset/call_kw/partner/get_views",
                     "/web/dataset/call_kw/partner/web_read",
                 ],
@@ -1038,11 +1072,13 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = (route) => assert.step(route);
         const env = await makeTestEnv({ serverData, mockRPC });
 
-        assert.verifySteps(["/web/action/load", "/web/webclient/load_menus"]);
+        assert.verifySteps(["/web/webclient/load_menus"]);
 
         await mount(WebClient, getFixture(), { env });
 
-        assert.verifySteps([]);
+        await nextTick();
+
+        assert.verifySteps(["/web/action/load"]);
     });
 
     QUnit.test("initial loading with action tag", async (assert) => {
@@ -1142,8 +1178,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_control_panel");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "web_search_read",
         ]);
@@ -1192,8 +1228,8 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         assert.containsOnce(target, ".o_form_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "onchange",
         ]);
@@ -1209,8 +1245,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_kanban_view");
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "get_views",
             "web_search_read",
         ]);
@@ -1237,8 +1273,8 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_list_view");
             assert.containsNone(target, ".o_form_view");
             assert.verifySteps([
-                "/web/action/load",
                 "/web/webclient/load_menus",
+                "/web/action/load",
                 "get_views",
                 "web_read",
                 "web_search_read",
@@ -1354,8 +1390,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
         assert.verifySteps([
-            "/web/action/load",
             "/web/webclient/load_menus",
+            "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/onchange",
         ]);
