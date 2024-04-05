@@ -113,22 +113,11 @@ export class DateTimeField extends Component {
                 } else {
                     toUpdate[this.props.name] = this.state.value;
                 }
-                // when startDateField and endDateField are set, and one of them has changed, we keep
-                // the unchanged one to make sure ORM protects both fields from being recomputed by the
-                // server, ORM team will handle this properly on master, then we can remove unchanged values
-                if (!this.startDateField || !this.endDateField) {
-                    // If startDateField or endDateField are not set, delete unchanged fields
-                    for (const fieldName in toUpdate) {
-                        if (areDatesEqual(toUpdate[fieldName], this.props.record.data[fieldName])) {
-                            delete toUpdate[fieldName];
-                        }
-                    }
-                } else {
-                    // If both startDateField and endDateField are set, check if they haven't changed
-                    if (areDatesEqual(toUpdate[this.startDateField], this.props.record.data[this.startDateField]) &&
-                        areDatesEqual(toUpdate[this.endDateField], this.props.record.data[this.endDateField])) {
-                        delete toUpdate[this.startDateField];
-                        delete toUpdate[this.endDateField];
+
+                // If startDateField or endDateField are not set, delete unchanged fields
+                for (const fieldName in toUpdate) {
+                    if (areDatesEqual(toUpdate[fieldName], this.props.record.data[fieldName])) {
+                        delete toUpdate[fieldName];
                     }
                 }
 
