@@ -69,7 +69,7 @@
                                         <div><t t-esc="order.name"></t></div>
                                     </div>
                                     <div class="col wide p-2">
-                                        <div><t t-esc="order.trackingNumber"></t></div>
+                                        <div><t t-esc="order.tracking_number"></t></div>
                                     </div>
                                     <div class="col p-2">
                                     <!-- <t t-debug="order" /> -->
@@ -97,7 +97,7 @@
                                 <div class="mobileOrderList order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
                                     <div class="col p-2 d-flex justify-content-between align-items-center">
-                                        <div><t t-esc="order.name"></t> / <t t-esc="order.trackingNumber"></t></div>
+                                        <div><t t-esc="order.name"></t> / <t t-esc="order.tracking_number"></t></div>
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
                                     <div class="col p-2 d-flex justify-content-between align-items-center">

@@ -113,7 +113,7 @@ export class PosOrder extends Base {
                 this.shipping_date && formatDate(DateTime.fromJSDate(new Date(this.shipping_date))),
             headerData: {
                 ...headerData,
-                trackingNumber: this.trackingNumber,
+                trackingNumber: this.tracking_number,
             },
         };
     }
