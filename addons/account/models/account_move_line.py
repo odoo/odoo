@@ -1559,7 +1559,7 @@ class AccountMoveLine(models.Model):
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
 
-        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash', 'secure_sequence_number'})
+        inalterable_fields = set(self._get_integrity_hash_fields()).union({'inalterable_hash'})
         hashed_moves = self.move_id.filtered('inalterable_hash')
         violated_fields = set(vals) & inalterable_fields
         if hashed_moves and violated_fields:
@@ -3051,7 +3051,7 @@ class AccountMoveLine(models.Model):
         hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['debit', 'credit', 'account_id', 'partner_id']
-        elif hash_version in (2, 3):
+        elif hash_version in (2, 3, 4):
             return ['name', 'debit', 'credit', 'account_id', 'partner_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
