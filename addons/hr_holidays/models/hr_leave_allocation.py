@@ -834,6 +834,8 @@ class HolidaysAllocation(models.Model):
         self.lastcall = self.date_from
         self.nextcall = False
         self.number_of_days_display = 0.0
+        self.number_of_hours_display = 0.0
+        self.number_of_days = 0.0
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
 
