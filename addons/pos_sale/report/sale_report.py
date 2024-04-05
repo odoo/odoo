@@ -34,6 +34,10 @@ class SaleReport(models.Model):
             SUM(l.qty - l.qty_delivered) AS qty_to_deliver,
             CASE WHEN pos.state = 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_invoiced,
             CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
+            SUM(l.price_unit)
+                / MIN({self._case_value_or_one('pos.currency_rate')})
+                * {self._case_value_or_one('currency_table.rate')}
+            AS price_unit,
             SUM(l.price_subtotal_incl)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('currency_table.rate')}
