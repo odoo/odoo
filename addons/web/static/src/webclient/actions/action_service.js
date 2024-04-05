@@ -132,14 +132,6 @@ export function makeActionManager(env, router = _router) {
     let actionCache = {};
     let dialog = null;
 
-    // The state action (or default user action if none) is loaded as soon as possible
-    // so that the next "doAction" will have its action ready when needed.
-    const actionParams = _getActionParams();
-    if (actionParams && typeof actionParams.actionRequest === "number") {
-        const { actionRequest, options } = actionParams;
-        _loadAction(actionRequest, options.additionalContext);
-    }
-
     env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
     });
