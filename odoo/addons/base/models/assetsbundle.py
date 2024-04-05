@@ -25,7 +25,7 @@ from markupsafe import Markup
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
-    is_odoo_module, SourceMapGenerator, profiler)
+    is_odoo_module, SourceMapGenerator, profiler, OrderedSet)
 from odoo.tools.json import scriptsafe
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, file_path
@@ -407,17 +407,27 @@ class AssetsBundle(object):
             string = etree.tostring(element, encoding='unicode')
             return string.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${")
 
+        names = OrderedSet()
+        inherit_froms = OrderedSet()
         for block in blocks:
             if block["type"] == "templates":
-                for (element, url) in block["templates"]:
+                for (element, url, inherit_from) in block["templates"]:
+                    if inherit_from:
+                        inherit_froms.add(inherit_from)
                     name = element.get("t-name")
+                    names.add(name)
                     template = get_template(element)
                     content.append(f'registerTemplate("{name}", `{url}`, `{template}`);')
             else:
                 for inherit_from, elements in block["extensions"].items():
+                    inherit_froms.add(inherit_from)
                     for (element, url) in elements:
                         template = get_template(element)
                         content.append(f'registerTemplateExtension("{inherit_from}", `{url}`, `{template}`);')
+
+        missing = inherit_froms - names
+        if missing:
+            _logger.error('Missing parent templates: %s', ", ".join(missing))
 
         return '\n'.join(content)
 
@@ -467,7 +477,7 @@ class AssetsBundle(object):
                     if block is None or block["type"] != "templates":
                         block = {"type": "templates", "templates": []}
                         blocks.append(block)
-                    block["templates"].append((template_tree, asset.url))
+                    block["templates"].append((template_tree, asset.url, inherit_from))
                 else:
                     return asset.generate_error(_("Template name is missing."))
         return blocks

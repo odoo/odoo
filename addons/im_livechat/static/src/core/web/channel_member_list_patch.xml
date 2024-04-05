@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.discuss.channel_member" t-inherit-mode="extension">
+    <t t-inherit="discuss.channel_member" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='displayName']" position="replace">
             <div class="d-flex flex-column">
                 <t>$0</t>
