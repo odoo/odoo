@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class EventTypeMail(models.Model):
@@ -81,9 +85,13 @@ class EventMailRegistration(models.Model):
             lambda r: r.scheduler_id.notification_type == "sms"
         )
         for scheduler, reg_mails in todo.grouped('scheduler_id').items():
-            reg_mails.registration_id._message_sms_schedule_mass(
-                template=scheduler.template_ref,
-                mass_keep_log=True,
-            )
+            try:
+                reg_mails.registration_id._message_sms_schedule_mass(
+                    template=scheduler.template_ref,
+                    mass_keep_log=True,
+                )
+            except Exception as e:  # noqa: BLE001 we should never raise and rollback here
+                _logger.warning('An issue happened when sending sms template ID %s. Received error %s',
+                                scheduler.template_ref.id, e)
         todo.write({'mail_sent': True})
         return super(EventMailRegistration, self - todo)._execute_on_registrations()

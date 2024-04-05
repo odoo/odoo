@@ -392,7 +392,11 @@ class EventMailRegistration(models.Model):
             }
             if not scheduler.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
-            scheduler.template_ref.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
+            try:
+                scheduler.template_ref.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
+            except Exception as e:  # noqa: BLE001 we should never raise and rollback here
+                _logger.warning('An issue happened when sending mail template ID %s. Received error %s',
+                                scheduler.template_ref.id, e)
         todo.write({'mail_sent': True})
 
     def _get_skip_domain(self):
