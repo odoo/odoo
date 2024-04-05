@@ -4034,7 +4034,7 @@ X[]
                     },
                     contentAfterEdit: '<p>ab' +
                         '\ufeff' + // before zwnbsp
-                        '<a href="#">' +
+                        '<a href="#" class="">' +
                             '\ufeff' + // start zwnbsp
                             'cd' + // content
                             '\ufeff' + // end zwnbsp
@@ -4195,7 +4195,7 @@ X[]
                     },
                     contentAfterEdit: '<p>ab[]' +
                         '\ufeff' + // before zwnbsp
-                        '<a href="#">' +
+                        '<a href="#" class="">' +
                             '\ufeff' + // start zwnbsp
                             'cd' + // content
                             '\ufeff' + // end zwnbsp

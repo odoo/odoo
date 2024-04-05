@@ -2775,9 +2775,6 @@ export class OdooEditor extends EventTarget {
         for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
             if (link !== singleLinkInSelection) {
                 link.classList.remove('o_link_in_selection');
-                if (!link.classList.length) {
-                    link.removeAttribute('class');
-                }
             }
         };
         // Compute the current selection on selectionchange but do not record it. Leave
@@ -2959,9 +2956,6 @@ export class OdooEditor extends EventTarget {
         // Remove o_link_in_selection class
         for (const link of element.querySelectorAll('.o_link_in_selection')) {
             link.classList.remove('o_link_in_selection');
-            if (!link.classList.length) {
-                link.removeAttribute('class');
-            }
         }
 
         // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
@@ -2997,6 +2991,10 @@ export class OdooEditor extends EventTarget {
             cleanZWS(el);
         }
 
+        // Remove empty class attributes
+        for (const el of element.querySelectorAll('*[class=""]')) {
+            el.removeAttribute('class');
+        }
     }
     /**
      * Handle the hint preview for the commandbar.
