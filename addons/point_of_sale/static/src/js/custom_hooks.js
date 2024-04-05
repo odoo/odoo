@@ -101,6 +101,7 @@ export function useValidateCashInput(inputRef, startingValue) {
     const localization = useService("localization");
     const decimalPoint = localization.decimalPoint;
     const thousandsSep = localization.thousandsSep;
+    const formatCurrency = useEnv().utils.formatCurrency;
     // Replace the thousands separator and decimal point with regex-escaped versions
     const escapedDecimalPoint = escapeRegExp(decimalPoint);
     let floatRegex;
@@ -125,7 +126,7 @@ export function useValidateCashInput(inputRef, startingValue) {
     }
     onMounted(() => {
         if (cashInput.el) {
-            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+            cashInput.el.value = formatCurrency(startingValue || 0, false);
             cashInput.el.addEventListener("input", handleCashInputChange);
         }
     });
