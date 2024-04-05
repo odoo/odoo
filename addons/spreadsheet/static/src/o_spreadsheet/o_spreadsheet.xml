@@ -268,7 +268,7 @@
           t-on-dblclick="() => this.onDblClick()"
           t-on-focusout="() => this.onFocusOut()"
           t-on-keydown="(ev) => this.onKeyDown(ev)"
-          t-att-contenteditable="state.isEditing ? 'plaintext-only': 'false'"
+          t-att-contenteditable="state.isEditing ? 'true': 'false'"
         />
         <span class="o-sheet-icon ms-1" t-on-click.stop="(ev) => this.onIconClick(ev)">
           <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
@@ -3857,7 +3857,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.30';
-  __info__.date = '2024-03-25T11:03:05.086Z';
-  __info__.hash = '0d2ee33';
+  __info__.version = '16.3.31';
+  __info__.date = '2024-04-05T14:12:36.176Z';
+  __info__.hash = '052efd4';
 -->
