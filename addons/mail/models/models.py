@@ -194,9 +194,13 @@ class BaseModel(models.AbstractModel):
         # try company_name + record_name, or record_name alone (or company_name alone)
         name = f"{company_name} {record_name}" if record_name else company_name
 
-        formatted_email = tools.formataddr((name, record_email))
+        formatted_email = tools.formataddr((name, record_email), 'ascii')
+        if formatted_email.startswith('=?utf-8?b?'):
+            return formatted_email
         if len(formatted_email) > length_limit:
-            formatted_email = tools.formataddr((record_name or company_name, record_email))
+            formatted_email = tools.formataddr((record_name or company_name, record_email), 'ascii')
+        if formatted_email.startswith('=?utf-8?b?'):
+            return formatted_email
         if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email
