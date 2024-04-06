@@ -470,7 +470,7 @@ msgstr "<small class=\"text-end\">Fase:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr "<small class=\"text-muted\">Toegewezen personen</small>"
+msgstr "<small class=\"text-muted\">Toegewezen aan</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -536,7 +536,7 @@ msgstr "<span class=\"o_stat_text\">Laatste beoordeling</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr "<span class=\"o_stat_text\">Bovenliggende taak</span>"
+msgstr "<span class=\"o_stat_text\">Hoofdtaak</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -633,7 +633,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr "Een privétaak kan geen bovenliggende taak hebben."
+msgstr "Een privétaak kan geen hoofdtaak hebben."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
@@ -1035,7 +1035,7 @@ msgstr "Toegewezen aan"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Assignees"
-msgstr "Toegewezen personen"
+msgstr "Toegewezen aan"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1844,7 +1844,7 @@ msgid ""
 msgstr ""
 "Als je een taak verwijdert, worden de bijbehorende subtaken ook verwijdert. "
 "Als je de subtaken wilt behouden, moet je ze eerst loskoppelen van hun "
-"bovenliggende taak. Weet je zeker dat je verder wilt gaan?"
+"hoofdtaak. Weet je zeker dat je verder wilt gaan?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1973,7 +1973,7 @@ msgstr "Schermnaam"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr "Bovenliggende taakknop weergeven"
+msgstr "Knop hoofdtaak weergeven"
 
 #. module: project
 #. odoo-python
@@ -2655,17 +2655,17 @@ msgstr "Vorige maand"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Last Stage Update"
-msgstr "Laatste fase aanpassing"
+msgstr "Laatste faseaanpassing"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_id
 msgid "Last Update"
-msgstr "Laatst bijgewerkt"
+msgstr "Laatste update"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_color
 msgid "Last Update Color"
-msgstr "Laatst kleur bijgewerkt"
+msgstr "Laatste projectupdatekleur"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
@@ -4431,7 +4431,7 @@ msgstr "Software ontwikkeling"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Sorry. Je kunt een taak niet instellen als zijn bovenliggende taak."
+msgstr "Sorry. Je kunt een taak niet instellen als zijn hoofdtaak."
 
 #. module: project
 #. odoo-javascript
@@ -5197,9 +5197,9 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
-"Om een taak in een subtaak om te zetten, selecteer een bovenliggende taak. "
-"Je kan ook het veld van de bovenliggende taak leeg laten om een subtaak in "
-"een zelfstandige taak om te zetten."
+"Om een taak in een subtaak om te zetten, selecteer een hoofdtaak. Je kan ook"
+" het veld van de hoofdtaak leeg laten om een subtaak in een zelfstandige "
+"taak om te zetten."
 
 #. module: project
 #. odoo-python
@@ -5796,7 +5796,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr "toegewezen personen"
+msgstr "toegewezen aan"
 
 #. module: project
 #. odoo-javascript

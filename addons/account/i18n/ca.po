@@ -12,6 +12,7 @@
 # Xavi Ivars <xavi.ivars@gmail.com>, 2023
 # oscaryuu, 2023
 # xean, 2023
+# martioodo hola, 2023
 # Josep Sànchez <papapep@gmx.com>, 2023
 # Sandra Franch <sandra.franch@upc.edu>, 2023
 # Arnau Ros, 2023
@@ -20,7 +21,6 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
 # AncesLatino2004, 2023
 # Ivan Espinola, 2023
-# martioodo hola, 2023
 # Harcogourmet, 2023
 # eriiikgt, 2023
 # ericrolo, 2023
@@ -1557,7 +1557,7 @@ msgstr "Un títol de secció"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr "Una declaració només hauria de contenir línies del mateix diari."
+msgstr "Un extracte només hauria de contenir línies del mateix diari."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_tag_name_uniq
@@ -3864,7 +3864,7 @@ msgstr "Arrodoniments Efectiu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
-msgstr "Declaració en Efectiu"
+msgstr "Estat d'efectiu"
 
 #. module: account
 #. odoo-python
@@ -7735,7 +7735,7 @@ msgstr "Importar els teus extractes bancaris en CAMT.053"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CSV, XLS, and XLSX"
-msgstr "Import els seus extractes bancaris en CSV, XLS i XLSX"
+msgstr "Importeu els extractes bancaris en CSV, XLS i XLSX"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9519,7 +9519,7 @@ msgstr "Maig"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__communication
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Memo"
-msgstr "Circular"
+msgstr "Anotació"
 
 #. module: account
 #. odoo-javascript
@@ -9527,7 +9527,7 @@ msgstr "Circular"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #, python-format
 msgid "Memo:"
-msgstr "Circular:"
+msgstr "Anotació:"
 
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
@@ -12154,8 +12154,8 @@ msgstr "Restringeix l'ús dels impostos a un tipus de producte."
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
 msgstr ""
-"Restringeix a les propostes tenir la mateixa moneda que la línia de "
-"declaracions."
+"Restringeix que les propostes tinguin la mateixa moneda que la línia de "
+"l'extracte."
 
 #. module: account
 #. odoo-python
@@ -12469,7 +12469,7 @@ msgstr "Mateixa moneda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Sample Memo"
-msgstr "Memo de mostra"
+msgstr "Anotació de mostra"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13321,7 +13321,7 @@ msgstr "Nom de l'extracte bancari"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Statement Reports"
-msgstr "Informes de declaració"
+msgstr "Informes d'extractes bancaris"
 
 #. module: account
 #. odoo-python
@@ -13347,7 +13347,7 @@ msgstr "Extractes"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Statements lines matched to this payment"
-msgstr "Línies de declaracions que coincideixen amb aquest pagament"
+msgstr "Línies d'extractes bancaris que coincideixen amb aquest pagament"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -14291,7 +14291,7 @@ msgstr "El país que fan servir els informes d'impostos d'aquesta empresa."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
 msgid "The currency used to enter statement"
-msgstr "La divisa utilitzada per introduir assentaments"
+msgstr "La divisa utilitzada per introduir extractes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14962,13 +14962,13 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
-"El saldo inicial no coincideix amb el saldo final de la sentència anterior, "
-"o falta una declaració anterior."
+"El saldo inicial no coincideix amb el saldo final de l'extracte bancari "
+"previ, o falta una extracte anterior."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr "La línia de declaració que ha creat aquesta entrada"
+msgstr "La línia d'extracte que ha creat aquest assentament"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_type
@@ -15074,8 +15074,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"Encara hi ha línies bancaris sense resoldre en el període que voleu tancar. "
-"Hauríeu de reconciliar- les o eliminar-les."
+"Encara hi ha línies d'extractes bancaris sense resoldre en el període que "
+"voleu tancar. Hauríeu de reconciliar- les o eliminar-les."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -15869,8 +15869,9 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
-"No s'ha pogut crear la declaració a causa de les transaccions que manquen. "
-"És possible que vulgueu reordenar les operacions abans de continuar."
+"No s'ha pogut crear un estat de compte a causa de les transaccions que "
+"manquen. És possible que vulgueu reordenar les operacions abans de "
+"continuar."
 
 #. module: account
 #. odoo-python
@@ -16815,7 +16816,7 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
-"No podeu crear una nova línia d'afirmació sense un compte transitori "
+"No podeu crear una nova línia d'extracte bancari sense un compte transitori "
 "establert en el diari %s."
 
 #. module: account
