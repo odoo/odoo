@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2024-04-06 01:03+0000\n"
+"PO-Revision-Date: 2024-04-06 01:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -103,22 +103,15 @@ msgstr ""
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
-"try to translate and print what is inside `result`.\n"
-"\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"Code should always set a variable named `result` with the result of your test, that can be a list or a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will try to translate and print what is inside `result`. If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
-"\n"
 "Should you need them, you can also use the following variables into your code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
-"\n"
 "In any ways, the code must be legal python statements with correct indentation (if needed).\n"
-"\n"
-"Example: \n"
+"Example:\n"
 "    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
+"             FROM account_move_line\n"
 "             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
@@ -148,7 +141,6 @@ msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -159,14 +151,7 @@ msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
-msgstr ""
-
-#. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: account_test
@@ -232,7 +217,7 @@ msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
-msgid "Test 7 : Closing balance on bank statements"
+msgid "Test 7: Closing balance on bank statements"
 msgstr ""
 
 #. module: account_test
@@ -252,6 +237,7 @@ msgid "Tests"
 msgstr ""
 
 #. module: account_test
+#. odoo-python
 #: code:addons/account_test/report/report_account_test.py:0
 #, python-format
 msgid "The test was passed successfully"
