@@ -238,7 +238,7 @@
             <field name="can_cancel" invisible="1"/>
             <field name="has_mandatory_day" invisible="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="not id or state != 'draft'"/>
                 <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="not can_approve or state != 'confirm'"/>
                 <button string="Validate" name="action_validate" invisible="state != 'validate1'" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object" invisible="not can_approve or state not in ('confirm', 'validate1', 'validate')"/>
