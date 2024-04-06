@@ -1191,7 +1191,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return True
 
     def action_confirm(self):
-        if self.filtered(lambda holiday: holiday.state != 'draft'):
+        if self.filtered(lambda holiday: holiday.state != 'draft' and holiday.validation_type != 'no_validation')
             raise UserError(_('Time off request must be in Draft state ("To Submit") in order to confirm it.'))
         self.write({'state': 'confirm'})
         holidays = self.filtered(lambda leave: leave.validation_type == 'no_validation')
