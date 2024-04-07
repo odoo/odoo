@@ -30,7 +30,7 @@ msgstr "# Cơ hội"
 #: code:addons/website_crm_partner_assign/static/src/js/crm_partner_assign.js:0
 #, python-format
 msgid "%s's Opportunity"
-msgstr ""
+msgstr "Cơ hội của %s"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_view_kanban
@@ -38,6 +38,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\" aria-label=\"Assigned Partner\" "
 "title=\"Assigned Partner\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\" aria-label=\"Đối tác được phân công\" "
+"title=\"Đối tác được phân công\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -57,12 +59,12 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Chỉnh sửa"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>Countries...</option>"
-msgstr ""
+msgstr "<option>Quốc gia...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>States...</option>"
-msgstr ""
+msgstr "<option>Tỉnh/TP...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -459,7 +461,7 @@ msgstr "Tất cả quốc gia"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "All fields are required!"
-msgstr ""
+msgstr "Tất cả các trường đều là bắt buộc!"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
@@ -480,7 +482,7 @@ msgstr "Đối tác được Phân công"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Assigned Partner:"
-msgstr ""
+msgstr "Đối tác được phân công"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -584,12 +586,12 @@ msgstr "Tạo cơ hội"
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
 msgid "Create a Partner Activation"
-msgstr ""
+msgstr "Tạo Kích hoạt đối tác"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
 msgid "Create a Partner Level"
-msgstr ""
+msgstr "Tạo Cấp độ đối tác"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
@@ -757,7 +759,7 @@ msgstr "Vị trí Địa lý"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Geolocation:"
-msgstr ""
+msgstr "Vị trí địa lý"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
@@ -786,7 +788,7 @@ msgstr "Nhóm theo"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "I am interested by this lead."
-msgstr ""
+msgstr "Tôi quan tâm đến lead này."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -826,7 +828,7 @@ msgstr "Tham chiếu thực hiện"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr ""
+msgstr "Số đối tác đã triển khai"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -1030,7 +1032,7 @@ msgstr "Không có kết quả nào"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 #, python-format
 msgid "Not allowed to update the following field(s): %s."
-msgstr ""
+msgstr "Không được phép cập nhật (các) trường sau: %s. "
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1094,7 +1096,7 @@ msgstr "Ngày giao cho đối tác"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Partner Assignment Date:"
-msgstr ""
+msgstr "Ngày phân công đối tác:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
@@ -1113,13 +1115,14 @@ msgstr "Cấp độ khách hàng"
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_res_partner_grade_action
 msgid "Partner Levels"
-msgstr ""
+msgstr "Cấp độ đối tác"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_grade_action
 msgid ""
 "Partner Levels allow you to rank your Partners based on their performances."
 msgstr ""
+"Cấp độ đối tác cho phép bạn xếp hạng Đối tác dựa trên hiệu suất của họ."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
@@ -1149,7 +1152,7 @@ msgstr "Đối tác trường hợp này đã được chuyển tiếp/giao cho.
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Partners Page"
-msgstr ""
+msgstr "Trang Đối tác"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1282,7 +1285,7 @@ msgstr "Gửi mail"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr ""
+msgstr "Gửi cho đối tác khi lead được phân công cho đối tác đó"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1309,7 +1312,7 @@ msgstr "Thiết đặt một địa chỉ Email cho đối tác: %s"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.snippet_options
 msgid "Show Leads / Opps"
-msgstr ""
+msgstr "Hiển thị lead/cơ hội"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_data_silver
@@ -1372,6 +1375,7 @@ msgstr "Không có Cơ hội nào ở đây"
 #, python-format
 msgid "There is no country set in addresses for %(lead_names)s."
 msgstr ""
+"Không có quốc gia nào được thiết lập trong địa chỉ của %(lead_names)s."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1400,6 +1404,8 @@ msgstr ""
 msgid ""
 "Those are used to know where your Partners stand in your onboarding process."
 msgstr ""
+"Thông tin này được sử dụng để cho biết Đối tác đang ở đâu trong quá trình "
+"nhập môn."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1486,12 +1492,12 @@ msgstr "vd: Đối tác Vàng"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "latitude,"
-msgstr ""
+msgstr "vĩ độ,"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "longitude"
-msgstr ""
+msgstr "kinh độ"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
