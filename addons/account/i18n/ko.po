@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.2\n"
+"Project-Id-Version: Odoo Server saas~17.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -709,11 +709,6 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> 결제 대기 중</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "<i class=\"fa fa-print\"/> Print"
-msgstr "<i class=\"fa fa-print\"/> 인쇄"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
@@ -1840,6 +1835,11 @@ msgid ""
 msgstr "계정: 자동 발행 기능이 활성화되어 있고 회계일자가 금일까지로 설정되어 있는 미결 전표를 발행합니다"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2278,12 +2278,6 @@ msgid "All accounts on the lines must be of the same type."
 msgstr "항목 내 모든 계정의 유형은 동일해야 합니다."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "All entries are hashed."
-msgstr "모든 항목이 해시됩니다."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "All our contractual relations will be governed exclusively by"
 msgstr "당사의 모든 계약 관계는 전적으로 법률에 의거한 "
@@ -2531,9 +2525,9 @@ msgstr "오류가 발생했습니다."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"An error occurred when computing the inalterability. Impossible to get the "
-"unique previous posted journal entry."
-msgstr "불변성 계산 중에 오류가 발생했습니다. 이전에 발행된 특정 전표 입력 항목을 가져올 수 없습니다."
+"An error occurred when computing the inalterability. A gap has been detected"
+" in the sequence."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3233,11 +3227,6 @@ msgid "Billing"
 msgstr "청구"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Billing Administrator"
-msgstr "청구서 관리자"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
@@ -3282,6 +3271,11 @@ msgstr "0인 경우 비워둠"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "차단 메시지"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3597,11 +3591,6 @@ msgstr "현금할인상각손실 계정"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "금전 등록기"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_50
-msgid "Cash Restaurant"
-msgstr "현금 레스토랑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4167,8 +4156,8 @@ msgstr "좋습니다. 지불해야 할 거래처 청구서가 없습니다."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Corrupted data on journal entry with id %s."
-msgstr "ID %s 전표 정보가 손상되었습니다."
+msgid "Corrupted data on journal entry with id %s (%s)."
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -4568,6 +4557,7 @@ msgstr "작성일자"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 msgid "Credit"
 msgstr "대변"
@@ -4967,6 +4957,11 @@ msgstr "데이터 불변성 검사"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Data Inalterability Check Report -"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data consistency check"
 msgstr "데이터 일관성 검사"
 
@@ -5084,6 +5079,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 msgid "Debit"
 msgstr "차변"
@@ -6053,8 +6049,8 @@ msgstr "항목 수"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Entries are hashed from %s (%s)"
-msgstr "항목이 %s (%s)에서 해시됩니다."
+msgid "Entries are correctly hashed"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -6995,11 +6991,6 @@ msgid "Has Unreconciled Entries"
 msgstr "미조정 항목이 있습니다."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
-msgid "Hash Integrity Result -"
-msgstr "해시 무결성 결과 -"
-
-#. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
 msgstr "해시 무결성 결과 PDF"
@@ -7271,13 +7262,21 @@ msgid ""
 msgstr "여기 표시할 경우, 최초 작업 당시 확인되지 않은 내용이 있다는 뜻입니다. 작업 시 재확인하세요."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid ""
+"If ticked, the hash chain will be computed from the last move hashed to the "
+"new move to be hashed. The hash is performed on demand."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_payment__restrict_mode_hash_table
 msgid ""
-"If ticked, the accounting entry or invoice receives a hash as soon as it is "
-"sent and cannot be modified anymore."
+"If ticked, when the invoice is sent, the hash chain will be computed from "
+"the last move hashed to the new move to be hashed. The hash can also be "
+"performed on demand."
 msgstr ""
 
 #. module: account
@@ -7454,16 +7453,16 @@ msgid "Inalterability Hash"
 msgstr "변경 불가능 해시"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
-msgid "Inalterability check"
-msgstr "불변성 검사"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
-msgid "Inalteralbility No Gap Sequence #"
-msgstr "불변성 차이 없는 순서 #"
+msgid "Inalterability No Gap Sequence #"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Inalterability check"
+msgstr "불변성 검사"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -7716,11 +7715,6 @@ msgstr "'%s' 내역의 '%s' 식에 잘못된 도메인 수식이 있습니다: %
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "회계연도 마감일이 잘못되었습니다."
-
-#. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "재고 자산 평가"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8262,6 +8256,13 @@ msgstr "전표 입력"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
 msgstr "날짜별 전표 입력"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+#: code:addons/account/models/company.py:0
+msgid "Journal Entries to Hash"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -8844,16 +8845,26 @@ msgid "Load More Limit"
 msgstr "최대치 추가"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Lock"
+msgstr "잠금"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
 msgstr "마감일 메시지"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Lock Entries Manually"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
-msgid "Lock Sent Entries with Hash"
+msgid "Lock Sent Invoices with Hash"
 msgstr ""
 
 #. module: account
@@ -9439,16 +9450,6 @@ msgstr "새 값"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "최근 항목 우선"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "다음 활동 캘린더 행사"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10204,6 +10205,7 @@ msgstr "미결제 계정"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10217,6 +10219,7 @@ msgstr "미지급금 계정"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -11076,11 +11079,6 @@ msgid "Price"
 msgstr "가격"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Print"
-msgstr "인쇄"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__print_on_new_page
 msgid "Print On New Page"
 msgstr "새 페이지에 인쇄"
@@ -11269,23 +11267,14 @@ msgid "RD Expenses"
 msgstr "연구비"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "평가"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "재배치"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11760,6 +11749,7 @@ msgstr "역분개 및 청구서 생성"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12104,12 +12094,6 @@ msgstr "영역"
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
 msgstr "안전한 순서"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-msgid "Securisation of %s - %s"
-msgstr "%s - %s 보안"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -12563,11 +12547,6 @@ msgid ""
 msgstr "표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말을 기본값으로 이름을 지정합니다."
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Show Accounting Features - Readonly"
-msgstr "회계 기능 표시 - 읽기 전용"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -12598,9 +12577,10 @@ msgid "Show Force Tax Included"
 msgstr "고정세 포함 표시"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Show Full Accounting Features"
-msgstr "전체 회계 관리 기능 표시"
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Show Journal Entries to Hash"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12671,6 +12651,14 @@ msgstr "현황판에 전표 표시"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "일반 우편"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"Some journal entries have not been hashed yet. You should hash them before "
+"locking the fiscal year."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13563,11 +13551,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The amount for %(partner_name)s appears unusual. Based your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
+"The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"%(partner_name)s의 금액이 비정상적으로 보입니다. 기록 데이터에 따르면 예상 금액은 %(mean)s (± %(wiggle)s)입니다.\n"
-"이 금액이 정확한지 확인해 주세요."
 
 #. module: account
 #. odoo-python
@@ -14373,6 +14359,13 @@ msgstr "선택한 주문서에 대해 청구서를 발행할 내역이 없습니
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"There is no journal entry flagged for accounting data inalterability yet."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
@@ -14380,14 +14373,6 @@ msgid ""
 msgstr ""
 "'%s' 회사에 대해 지정된 세금 관련 현금주의 전표가 없습니다.\n"
 "회계/환경설정/설정에서 지정하시기 바랍니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid ""
-"There isn't any journal entry flagged for data inalterability yet for this "
-"journal."
-msgstr "이 전표에 아직 데이터 불변성이 지정된 전표가 없습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -14511,6 +14496,14 @@ msgid "This can only be used on journal items"
 msgstr "전표 항목에만 사용할 수 있습니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This document is protected by a hash. Therefore, you cannot edit the "
+"following fields: %s."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
 msgid ""
 "This dummy field lets us use another search method on the field 'name'.This "
@@ -14593,8 +14586,8 @@ msgstr "특정 한도를 설정해놓지 않은 협력사에 대해서 사용할
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "This journal is not in strict mode."
-msgstr "이 전표는 최소 모드가 아닙니다."
+msgid "This journal is not restricted"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -14608,6 +14601,21 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr "상대방 정보가 확실하지 않은 경우 이 매칭 규칙을 선택하세요."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This move could not be locked either because:\n"
+"- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
+"- the move's date is anterior to the lock date"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This move has been locked."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15081,6 +15089,16 @@ msgstr "미분배 손익"
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
 msgid "Unfold All"
 msgstr "모두 펼치기"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
+msgid "Unhashed Entries"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Unhashed entries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16140,14 +16158,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr "다음 필드를 편집 할 수 없습니다 : %s. 전표에 제한 모드가 되어 있습니다."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "You cannot edit the following fields: %s.\n"
@@ -16234,14 +16244,6 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr "전표 발행이 완료되면 관련된 세금을 수정할 수 없습니다. 수정하려면 전표를 미결로 초기화하세요."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot overwrite the values ensuring the inalterability of the "
-"accounting."
-msgstr "회계의 변경 불가능성을 보장하는 값은 덮어 쓸 수 없습니다."
 
 #. module: account
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* project
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +129,7 @@ msgstr "تحديثات %(name)s "
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "مهام %(partner_name)s "
 
 #. module: project
 #. odoo-python
@@ -401,6 +401,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</t>،<br><br>\n"
+"    شكراً لتواصلك معنا. نحن نُقدِّر اهتمامك بمنتجاتنا/خدماتنا.<br>\n"
+"    يقوم فريقنا بمراجعة استفسارك وسيقومون بالرد عليك في أقرب وقت ممكن.<br>\n"
+"    إذا كانت لديك أي أسئلة أو استفسارات أخرى في الوقت الحالي، لا تتردد في التواصل معنا. تسرنا مساعدتك.<br><br>\n"
+"    شكراً لتعاونك.<br>\n"
+"    مع أطيب التحيات،\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>ميتشل آدمن</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -722,6 +735,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"تُستخدَم خطط الأنشطة لإسناد قائمة من الأنشطة ببضع نقرات فقط\n"
+"                    (مثال: \"تقرير التقدم\"، \"اجتماع سريع\"، ...) "
 
 #. module: project
 #. odoo-javascript
@@ -765,7 +780,7 @@ msgstr "إضافة محتوى إضافي لعرضه في البريد الإكت
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "أضف جهات الاتصال التي ترغب في مشاركة المشروع معهم... "
 
 #. module: project
 #. odoo-javascript
@@ -1103,6 +1118,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"قم بإرسال رسائل البريد لإلكتروني تلقائياً إلى العملاء عندما تصل مهمة ما إلى "
+"مرحلة معينة في مشروع، عن طريق تعيين هذا القالب في تلك المرحلة "
 
 #. module: project
 #. odoo-javascript
@@ -1126,7 +1143,7 @@ msgstr "متوسط التقييم (%) "
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "متوسط التقييم (1-5) "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1314,7 +1331,7 @@ msgstr "المهام المغلقة "
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "حالة الإغلاق "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1496,7 +1513,7 @@ msgstr "إنشاء مشروع"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "إنشاء خطة نشاط للمهمة "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1591,7 +1608,7 @@ msgstr "العملة"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "المستخدم الحالي لنفس وكيل الشركة "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2120,6 +2137,9 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"اعمل على تسهيل التعاون الفعال مع أصحاب المصالح الرئيسيين من خلال مشاركة "
+"المشروع معهم. سيتمكن المتعاونون من تحرير المهام وإرسال الرسائل والوصول إلى "
+"طريقة عرض كانبان للمهام. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2251,6 +2271,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"قم بمنح مستخدمي البوابة صلاحية الوصول إلى مشروعك عن طريق إضافتهم كمتابعين "
+"(غير شاملة مهام المشروع). حتى تتمكن من منح أحد مستخدمي البوابة صلاحية الوصول"
+" إلى المهام، قم بإضافته كمتابع لتلك المهام. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2655,7 +2678,7 @@ msgstr "الشهر الماضي"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "آخر تقييم (1-5) "
 
 #. module: project
 #. odoo-python
@@ -2862,19 +2885,19 @@ msgstr "التعيين كمنتهي "
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "تعيين كغير مكتمل "
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "تعيين كتم الوصول إليها "
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "تعيين المهمة كـ <b>ملغية</b> "
 
 #. module: project
 #. odoo-javascript
@@ -3191,7 +3214,7 @@ msgstr "لم يتم العثور على أنواع أنشطة. فلنقم بإن
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "لم يتم العثور على أي متعاونين. فلنقم بإنشاء بعضهم! "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3471,7 +3494,7 @@ msgstr "لا يمكن أن تختلف شركة الشريك عن شركة الم
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "مهام الوكيل "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3500,6 +3523,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"الأشخاص الذين سيكون هذا المشروع ومهامه مرئياً بالنسبة لهم.\n"
+"\n"
+"- المستخدمين الداخليين المدعوين: عند متابعة مشروع ما، سيحصل المستخدمون الداخليون على صلاحية الوصول إلى كافة مهامه دون استثناء. وإلا، فسيحصلون فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"بإمكان المستخدم ذو صلاحية الوصول المشروع > المدير الوصول إلى هذا المشروع ومهامه، حتى وإن لم يكن أحد المتابعين.\n"
+"\n"
+"- كافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"\n"
+"- مستخدمي البوابة المدعوين وكافة المستخدمين الداخليين: بوسع كافة المستخدمين الداخليين الوصول إلى المشروع وكافة مهامه دون استثناء.\n"
+"عند متابعة مشروع ما، سيحصل مستخدمو البوابة فقط على صلاحية الوصول إلى المهام المحددة التي يتابعونها.\n"
+"\n"
+"عندما تتم مشاركة مشروع للقراءة فقط، تتم إعادة توجيه مستخدم البوابة إلى بوابته. بإمكانه عرض المهام التي يتبعها ولكن لن يكون بمقدوره تحريرها.\n"
+"عندما تتم مشاركة مشروع للتحرير، تتم إعادة توجيه مستخدم البوابة إلى نافذتي عرض كانبان والقائمة للمهام. بإمكانه تعديل أي عدد من الحقول في المهتم.\n"
+"\n"
+"بأي حال، لا يزال بوسع مستخدم داخلي بلا صلاحيات وصول إلى المشاريع الوصول إلى المهام، إذا تم منحه رابط URL المناسب (ويجب أن يكون أحد المتابعين إذا كان المشروع خاصاً). "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3742,7 +3779,7 @@ msgstr "مشاركة المشروع "
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "تكرار مشاركة المشروع "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4018,7 +4055,7 @@ msgstr "تاريخ الوصول "
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "للقراءة فقط "
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4054,7 +4091,7 @@ msgstr "متكرر "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "المهام المتكررة "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4313,7 +4350,7 @@ msgstr "الإرسال عبر البريد الإلكتروني "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "إرسال الدعوة "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4396,7 +4433,7 @@ msgstr "مشاركة المهمة "
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "مشاركة مشروع "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4666,13 +4703,13 @@ msgstr "تم إلغاء المهمة "
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "تم إلغاء المهمة "
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "مهمة تم تحويلها من قائمة المهام "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4698,7 +4735,7 @@ msgstr "تبعيات المهام "
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "سجل وصف المهمة "
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4774,7 +4811,7 @@ msgstr "عنوان المهمة..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "تم نقل المهمة من المشروع %s "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4791,7 +4828,7 @@ msgstr "تمت الموافقة على المهمة "
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "تم إلغاء المهمة "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5002,7 +5039,7 @@ msgstr ""
 msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
-msgstr ""
+msgstr "لا يحتوي وصف المهمة على أي محتوى سابق يمكن استعادته في الوقت الحالي. "
 
 #. module: project
 #. odoo-python
@@ -6038,6 +6075,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: استطلاع "
+"الرضا "
 
 #. module: project
 #. odoo-javascript

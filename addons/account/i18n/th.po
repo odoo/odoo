@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.2\n"
+"Project-Id-Version: Odoo Server saas~17.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-26 15:04+0000\n"
+"POT-Creation-Date: 2024-03-29 11:36+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -715,11 +715,6 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
 "                                    <span class=\"d-none d-md-inline\"> กำลังรอการชำระเงิน </span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "<i class=\"fa fa-print\"/> Print"
-msgstr "<i class=\"fa fa-print\"/> พิมพ์"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
@@ -1866,6 +1861,11 @@ msgstr ""
 "และลงวันที่ทางบัญชีจนถึงปัจจุบัน"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Accountant"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2305,12 +2305,6 @@ msgid "All accounts on the lines must be of the same type."
 msgstr "บัญชีทั้งหมดในบรรทัดต้องเป็นประเภทเดียวกัน"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "All entries are hashed."
-msgstr "แฮชรายการทั้งหมด"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "All our contractual relations will be governed exclusively by"
 msgstr "ความสัมพันธ์ตามสัญญาทั้งหมดของเราจะถูกควบคุมโดย"
@@ -2561,11 +2555,9 @@ msgstr "เกิดข้อผิดพลาดขึ้น"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"An error occurred when computing the inalterability. Impossible to get the "
-"unique previous posted journal entry."
+"An error occurred when computing the inalterability. A gap has been detected"
+" in the sequence."
 msgstr ""
-"เกิดข้อผิดพลาดขึ้นเมื่อมีการคำนวณอะไรที่เปลี่ยนแปลงไม่ได้ "
-"ไม่สามารถรับรายการสมุดรายวันที่ลงรายการบัญชีก่อนหน้านี้ได้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3272,11 +3264,6 @@ msgid "Billing"
 msgstr "ทำรายการใบเรียกเก็บเงิน"
 
 #. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Billing Administrator"
-msgstr "ผู้ดูแลระบบการเรียกเก็บเงิน"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
@@ -3321,6 +3308,11 @@ msgstr "ให้ว่างไว้ถ้าเป็นศูนย์"
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "บล็อกข้อความ"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Bookkeeper"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3645,11 +3637,6 @@ msgstr "บัญชีขาดทุนเป็นสูญส่วนลด
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "เครื่องบันทึกเงินสด"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_50
-msgid "Cash Restaurant"
-msgstr "ร้านอาหารที่รับเงินสดเท่านั้น"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4228,8 +4215,8 @@ msgstr "เยี่ยม! ดูเหมือนว่าคุณจะไ�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Corrupted data on journal entry with id %s."
-msgstr "ข้อมูลเสียหายในรายการสมุดรายวันพร้อมไอดี %s"
+msgid "Corrupted data on journal entry with id %s (%s)."
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -4632,6 +4619,7 @@ msgstr "สร้างเมื่อ"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 msgid "Credit"
 msgstr "เครดิต"
@@ -5029,6 +5017,11 @@ msgstr "การตรวจสอบความไม่สามารถแ
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Data Inalterability Check Report -"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data consistency check"
 msgstr "การตรวจสอบความสอดคล้องของข้อมูล"
 
@@ -5148,6 +5141,7 @@ msgstr "วันของเดือนถัดไป"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 msgid "Debit"
 msgstr "เดบิต"
@@ -6123,8 +6117,8 @@ msgstr "จำนวนรายการ"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Entries are hashed from %s (%s)"
-msgstr "รายการถูกแฮชจาก %s (%s)"
+msgid "Entries are correctly hashed"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7076,11 +7070,6 @@ msgid "Has Unreconciled Entries"
 msgstr "มีรายการที่ยังไม่ได้กระทบยอด"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
-msgid "Hash Integrity Result -"
-msgstr "ผลลัพธ์ความสมบูรณ์ของแฮช -"
-
-#. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
 msgstr "PDF ผลความสมบูรณ์ของแฮช"
@@ -7370,13 +7359,21 @@ msgstr ""
 " และการย้ายนั้นจำเป็นต้องได้รับการตรวจสอบอีกครั้ง"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid ""
+"If ticked, the hash chain will be computed from the last move hashed to the "
+"new move to be hashed. The hash is performed on demand."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,help:account.field_account_payment__restrict_mode_hash_table
 msgid ""
-"If ticked, the accounting entry or invoice receives a hash as soon as it is "
-"sent and cannot be modified anymore."
+"If ticked, when the invoice is sent, the hash chain will be computed from "
+"the last move hashed to the new move to be hashed. The hash can also be "
+"performed on demand."
 msgstr ""
 
 #. module: account
@@ -7561,16 +7558,16 @@ msgid "Inalterability Hash"
 msgstr "แฮชที่ไม่สามารถเปลี่ยนแปลงได้"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
-msgid "Inalterability check"
-msgstr "การตรวจสอบความไม่สามารถเปลี่ยนแปลงได้"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_payment__secure_sequence_number
-msgid "Inalteralbility No Gap Sequence #"
-msgstr "ไม่สามารถเปลี่ยนแปลงได้ ไม่มีลำดับช่องว่าง #"
+msgid "Inalterability No Gap Sequence #"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
+msgid "Inalterability check"
+msgstr "การตรวจสอบความไม่สามารถเปลี่ยนแปลงได้"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -7830,11 +7827,6 @@ msgstr "โดเมนไม่ถูกต้องสำหรับตัว
 #: code:addons/account/models/company.py:0
 msgid "Invalid fiscal year last day"
 msgstr "วันที่สุดท้ายของปีงบประมาณไม่ถูกต้อง"
-
-#. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "การประเมินมูลค่าสินค้าคงคลัง"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -8380,6 +8372,13 @@ msgstr "รายการบันทึกสมุดรายวัน"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
 msgstr "รายการสมุดรายวันตามวันที่"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+#: code:addons/account/models/company.py:0
+msgid "Journal Entries to Hash"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -8975,16 +8974,26 @@ msgid "Load More Limit"
 msgstr "ขีดจำกัดของการโหลดเพิ่มเติม"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Lock"
+msgstr "ล็อก"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
 msgid "Lock Date Message"
 msgstr "ล็อคข้อความวันที่"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Lock Entries Manually"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_payment__restrict_mode_hash_table
-msgid "Lock Sent Entries with Hash"
+msgid "Lock Sent Invoices with Hash"
 msgstr ""
 
 #. module: account
@@ -9573,16 +9582,6 @@ msgstr "ค่าใหม่"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
 msgstr "ใหม่สุดก่อน"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10355,6 +10354,7 @@ msgstr "บัญชีคงค้าง"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
@@ -10368,6 +10368,7 @@ msgstr "บัญชีการชำระเงินคงค้าง"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: code:addons/account/saas~14.3.1.1/post-10.py:0
 #: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
@@ -11231,11 +11232,6 @@ msgid "Price"
 msgstr "ราคา"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Print"
-msgstr "พิมพ์"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__print_on_new_page
 msgid "Print On New Page"
 msgstr "พิมพ์บนหน้าใหม่"
@@ -11424,23 +11420,14 @@ msgid "RD Expenses"
 msgstr "ค่าใช้จ่าย RD"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
-#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
-#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
-msgid "Ratings"
-msgstr "การให้คะแนน"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "ลำดับใหม่"
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Read-only"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -11919,6 +11906,7 @@ msgstr "การย้อนกลับและการสร้างใบ
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12267,12 +12255,6 @@ msgstr "ส่วน"
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
 msgid "Secure Sequence"
 msgstr "ลำดับที่ปลอดภัย"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-msgid "Securisation of %s - %s"
-msgstr "การแปลงสินทรัพย์เป็นหลักทรัพย์ของ %s - %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -12731,11 +12713,6 @@ msgstr ""
 "รายการสมุดรายวันของสมุดรายวันนี้จะถูกตั้งชื่อโดยใช้คำนำหน้านี้ตามค่าเริ่มต้น"
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Show Accounting Features - Readonly"
-msgstr "แสดงฟีเจอร์ระบบบัญชี - อ่านอย่างเดียว"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -12766,9 +12743,10 @@ msgid "Show Force Tax Included"
 msgstr "แสดงรวมภาษีบังคับแล้ว"
 
 #. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Show Full Accounting Features"
-msgstr "แสดงฟีเจอร์ทางบัญชีแบบเต็ม"
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid "Show Journal Entries to Hash"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -12839,6 +12817,14 @@ msgstr "แสดงสมุดรายวันบนแดชบอร์ด
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
 msgid "Snailmail"
 msgstr "Snailmail"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"Some journal entries have not been hashed yet. You should hash them before "
+"locking the fiscal year."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13760,11 +13746,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"The amount for %(partner_name)s appears unusual. Based your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
+"The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"จำนวนเงินสำหรับ %(partner_name)s ดูไม่ปกติ จากข้อมูลในอดีตของคุณ จำนวนที่คาดหวังคือ %(mean)s (± %(wiggle)s)\n"
-"โปรดตรวจสอบว่าจำนวนเงินนี้ถูกต้องหรือไม่"
 
 #. module: account
 #. odoo-python
@@ -14621,6 +14605,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/company.py:0
+msgid ""
+"There is no journal entry flagged for accounting data inalterability yet."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_partial_reconcile.py:0
 msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
@@ -14628,16 +14619,6 @@ msgid ""
 msgstr ""
 "ไม่มีสมุดรายวันพื้นฐานเงินสดภาษีที่กำหนดไว้สำหรับบริษัท '%s'\n"
 "กำหนดค่าใน ระบบบัญชี/การกำหนดค่า/การตั้งค่า"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid ""
-"There isn't any journal entry flagged for data inalterability yet for this "
-"journal."
-msgstr ""
-"ยังไม่มีรายการสมุดรายวันใด "
-"ที่ถูกตั้งค่าสถานะว่าข้อมูลไม่สามารถเปลี่ยนแปลงได้สำหรับสมุดรายวันนี้"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -14766,6 +14747,14 @@ msgid "This can only be used on journal items"
 msgstr "สามารถใช้กับรายการสมุดรายวันเท่านั้น"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This document is protected by a hash. Therefore, you cannot edit the "
+"following fields: %s."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__name_searchable
 msgid ""
 "This dummy field lets us use another search method on the field 'name'.This "
@@ -14852,8 +14841,8 @@ msgstr "นี่เป็นวงเงินเครดิตเริ่ม
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "This journal is not in strict mode."
-msgstr "สมุดรายวันนี้ไม่ได้อยู่ในโหมดจำกัด"
+msgid "This journal is not restricted"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -14867,6 +14856,21 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr "กฎการจับคู่นี้ ใช้เมื่อผู้ใช้ไม่แน่ใจในข้อมูลทั้งหมดของคู่สัญญา"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This move could not be locked either because:\n"
+"- some move with the same sequence prefix has a higher number. You may need to resequence it.\n"
+"- the move's date is anterior to the lock date"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This move has been locked."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15357,6 +15361,16 @@ msgstr "กำไร/ขาดทุนที่ยังไม่ได้ส�
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
 msgid "Unfold All"
 msgstr "ขยายทั้งหมด"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
+msgid "Unhashed Entries"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Unhashed entries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -16478,16 +16492,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
-msgstr ""
-"คุณไม่สามารถแก้ไขข้อมูลต่อไปนี้ได้ "
-"เนื่องจากมีการเปิดใช้งานโหมดจำกัดในสมุดรายวัน: %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "You cannot edit the following fields: %s.\n"
@@ -16583,15 +16587,6 @@ msgid ""
 msgstr ""
 "คุณไม่สามารถแก้ไขภาษีที่เกี่ยวข้องกับรายการสมุดรายวันที่ลงรายการบัญชีแล้วได้"
 " คุณควรรีเซ็ตรายการสมุดรายวันเป็นแบบร่างเพื่อดำเนินการดังกล่าว"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot overwrite the values ensuring the inalterability of the "
-"accounting."
-msgstr ""
-"คุณไม่สามารถเขียนทับค่าเพื่อให้แน่ใจว่าการบัญชีไม่สามารถเปลี่ยนแปลงได้"
 
 #. module: account
 #. odoo-python

@@ -160,7 +160,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
-msgstr ""
+msgstr "%s: لا يمكن التقسيم: لا يمكن أن تكون الكميات المنتهية أكثر من الطلب "
 
 #. module: stock
 #. odoo-python
@@ -169,6 +169,8 @@ msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
 msgstr ""
+"%s: لا يوجد ما يجب تقسيمه، لقد اكتمل الطلب. للتقسيم، تحتاج إلى أن يكون هناك "
+"بند واحد على الأقل لم يتم استيفاؤه "
 
 #. module: stock
 #. odoo-python
@@ -177,6 +179,8 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
+"%s: لا يوجد ما يجب تقسيمه. قم بتعبئة الكميات التي تريدها في شحنة جديدة في "
+"الكميات المنتهية "
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -438,6 +442,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>سيتم نقل المنتجات إلى <b>%(destination)s</b>، <br/> كما هو محدد من "
+"<b>%(operation)s</b> الوجهة. "
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1778,7 +1784,7 @@ msgstr "حساب تكاليف الشحن والشحن عبر Shiprocket "
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "حساب تكاليف الشحن والشحن من خلال Starshipit "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2790,7 +2796,7 @@ msgstr "موقع الوجهة "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "أصل موقع الوجهة من القاعدة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3054,7 +3060,7 @@ msgstr "بريد إلكتروني يتم إرساله إلى العميل بمج
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "المواقع الفارغة "
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3180,18 +3186,18 @@ msgstr "الوارد أولاً يخرج أولاً (FIFO) "
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "رقم المجموعة الأولى "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "الرقم التسلسلي/رقم المجموعة الأولى "
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "الرقم التسلسلي الأول "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3447,19 +3453,19 @@ msgstr "إنشاء"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "إنشاء أرقام مجموعات "
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "إنشاء أرقام تسلسلية "
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "إنشاء أرقام تسلسلية/أرقام مجموعات "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3918,7 +3924,7 @@ msgstr "استيراد المجموعات "
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "استيراد الأرقام التسلسلية "
 
 #. module: stock
 #. odoo-javascript
@@ -4016,7 +4022,7 @@ msgstr "النقل ما بين المستودعات "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "موقع وسيط "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4234,7 +4240,7 @@ msgstr "المخزون بتاريخ "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "فارغ "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4744,7 +4750,7 @@ msgstr "خصائص المجموعة "
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "أرقام المجموعات "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5441,7 +5447,7 @@ msgstr "عدد الأرقام التسلسلية "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "عدد الأرقام التسلسلية/أرقام المجموعات "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6788,7 +6794,7 @@ msgstr "الكمية في اليد"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "الكمية المستلمة "
 
 #. module: stock
 #. odoo-python
@@ -6885,7 +6891,7 @@ msgstr "يجب أن يتم تعيين الكمية أو الكمية المحج�
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "الكمية لكل مجموعة "
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7862,7 +7868,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "الأرقام التسلسلية "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -7890,6 +7896,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"قم بتعيين استراتيجية إزالة محددة سيتم استخدامها بغض النظر عن الموقع المصدري لفئة المنتج هذه. \n"
+"\n"
+"الوارد أولاً يخرج أولاً (FIFO): المنتجات/الدفعات التي تصل إلى المخزون أولاً سيتم نقلها خارجاً أولاً. \n"
+"الوارد أخيراً يخرج أولاً (LIFO): المنتجات/الدفعات التي تصل إلى المخزون آخراً سيتم نقلها خارجاً أولاً. \n"
+"الموقع الأقرب: المنتجات/الدفعات الأقرب إلى الموقع المستهدف سيتم نقلها أولاً. \n"
+"ما تنتهي صلاحيته أولاً يخرج أولاً (FEFO): المنتجات/الدفعات ذات تاريخ الإزالة الأقرب سيتم نقلها خارجاً أولاً (يعتمد مدى توافر هذه الطريقة على إعدادات \"تواريخ انتهاء الصلاحية\"). \n"
+"الطرود الأقل: الوارد أولاً يخرج أولاً (FIFO) ولكن مع أقل عدد ممكن من الطرود عندما تكون هنام عدو طرود تحتوي على نفس المنتج. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8201,7 +8214,7 @@ msgstr "المنتجات المعلمة بنجمة "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8551,7 +8564,7 @@ msgstr "القالب "
 msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
-msgstr ""
+msgstr "تطبيق المخزون بحاجة إلى الموقع %s ولا يمكن حذفه، ولكن يمكنك أرشفته. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8593,6 +8606,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"يجب أن يكون المزيج بين الرقم التسلسلي والمنتج فريداً في الشركة بأكملها أو عندما لا تكون هناك شركة محددة. \n"
+"لدى المزيج التالي نسخة مطابقة: \n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8669,11 +8684,13 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"تقوم العملية بإحضار المنتجات إلى الموقع الوسيط، ولكن هذه العملية هي جزء من "
+"سلسلة من العمليات التي تستهدف موقع الوجهة. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "تقوم العملية بأخذ واقتراح المنتجات من هذا الموقع. "
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8691,7 +8708,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "تجلب العمليات المنتج إلى هذا الموقع "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8713,6 +8730,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"سيتم تقريب كمية الشراء إلى أحد مضاعفات كمية هذا الحقل. إذا كانت القيمة 0، لا"
+" يتم تقريبها. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8748,7 +8767,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "يجب أن تكون الكمية لكل مجموعة قيمة موجبة. "
 
 #. module: stock
 #. odoo-python
@@ -8765,7 +8784,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "لا يدعم البحث مشغّل %(operator)s أو قيمة %(value)s. "
 
 #. module: stock
 #. odoo-python
@@ -9423,6 +9442,7 @@ msgstr "تشغيل الوضع اليدوي "
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
 msgstr ""
+"قم بتشغيل عملية تجديد المخزون للمنتجات التي تم تحويلها إلى مخلفات تصنيع "
 
 #. module: stock
 #. odoo-javascript
@@ -9479,6 +9499,7 @@ msgstr "إلغاء التعيين "
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
 msgstr ""
+"الأرقام التسلسلية غير متاحة. يرجى تصحيح الأرقام التسلسلية التي تم ترميزها: "
 
 #. module: stock
 #. odoo-javascript
@@ -10063,6 +10084,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"عندما يتم تعيين القيمة كصحيحة،  سيكون موقع الوجهة الحقيقي لـ stock.move هو "
+"القاعدة. وإلا، فسيأخذها من نوع عملية الانتقاء. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10080,6 +10103,8 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"عندما يقل المخزون الافتراضي عن الحد الأدنى المحدد لهذا الحقل، يقوم أودو "
+"بإنشاء عملية شراء لرفع الكمية المتوقعة إلى أعلى من الكمية المحددة كحد أدنى. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10088,6 +10113,9 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"عندما يقل المخزون الافتراضي عن الحد الأدنى المحدد، يقوم أودو بإنشاء عملية "
+"شراء لرفع الكمية المتوقعة إلى (أو إلى ما يقارب) الكمية المحددة كحد أقصى لهذا"
+" الحقل (أو للكمية المحددة كحد أدنى، أيهما أكبر). "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10369,6 +10397,8 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"لا يمكنك تغيير شركة رقم تسلسلي/رقم مجموعة في موقع ينتمي حالياً إلى شركة "
+"أخرى. "
 
 #. module: stock
 #. odoo-python
@@ -10729,7 +10759,7 @@ msgstr "مثال: المستودع المركزي "
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "مثال: LOT-PR-00012 "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

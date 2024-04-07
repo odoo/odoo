@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +129,7 @@ msgstr "Update %(name)s"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "Task %(partner_name)s"
 
 #. module: project
 #. odoo-python
@@ -401,6 +402,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Yth <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
+"    Terima kasih sudah menghubungi kami. Kami menghargai minat Anda untuk produk/layanan kami.<br>\n"
+"    Tim kami saat ini meninjau pertanyaan Anda dan akan menanggapi email Anda secepat mungkin.<br>\n"
+"    Bila Anda memiliki pertanyaan lebih lanjut atau kekhawatiran saat ini, mohon jangan sungkan untuk memberitahu kami. Kami hadir di sini untuk membantu.<br><br>\n"
+"    Terima kasih atas kesabaran Anda.<br>\n"
+"    Salam hormat,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -725,6 +739,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"Rencana kegiatan digunakan untuk menugaskan daftar kegiatan dengan beberapa klik saja\n"
+"                    (contoh, \"Progress Report\", \"Stand-up Meeting\", ...)"
 
 #. module: project
 #. odoo-javascript
@@ -768,7 +784,7 @@ msgstr "Tambahkan konten ekstra untuk ditampilkan di email"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add the contacts you would like to share the project with..."
-msgstr ""
+msgstr "Tambahkan kontak untuk membagi project..."
 
 #. module: project
 #. odoo-javascript
@@ -1109,6 +1125,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Secara otomatis kirim email ke pelanggan saat task mencapai stage tertentu "
+"di project dengan menetapkan templat ini pada stage tersebut"
 
 #. module: project
 #. odoo-javascript
@@ -1132,7 +1150,7 @@ msgstr "Rating Rata-Rata (%)"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating (1-5)"
-msgstr ""
+msgstr "Rating Rata-Rata (1-5)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1318,7 +1336,7 @@ msgstr "Task Tertutup"
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closed state"
-msgstr ""
+msgstr "State tertutup"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
@@ -1500,7 +1518,7 @@ msgstr "Buat Proyek"
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Buat Task Rencana Kegiatan"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1598,7 +1616,7 @@ msgstr "Mata Uang"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__current_user_same_company_partner
 msgid "Current User Same Company Partner"
-msgstr ""
+msgstr "Current User Same Company Partner"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2133,6 +2151,9 @@ msgid ""
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
 msgstr ""
+"Fasilitasikan kolaborasi efisien dengan stakeholder penting dengan "
+"membagikan project dengan mereka. Kolaborator akjan memiliki kemampuan untuk"
+" mengedit task, mengirimkan pesan, dan mengakses tampilan Kanban dari task."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2267,6 +2288,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"Berikan portal user akses ke project Anda dengan menambahkan mereka sebagai "
+"pengikut (task project yang tidak termasuk). Untuk memberikan akses ke task "
+"ke portal user, tambahkan mereka sebagai pengikut untuk task-task ini."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2671,7 +2695,7 @@ msgstr "Bulan Lalu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "Rating Terakhir (1-5)"
 
 #. module: project
 #. odoo-python
@@ -2879,19 +2903,19 @@ msgstr "Tandai sebagai selesai"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Tandai sebagai tidak lengkap"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "Tandai sebagai tercapai"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Tandai task sebagai <b>Dibatalkan</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3208,7 +3232,7 @@ msgstr "Tidak ada tipe kegiatan yang ditemukan. Ayo buat baru!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "Tidak ada kolaborator yang ditemukan. Ayo undang mereka!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3491,7 +3515,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Task Partner"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3520,6 +3544,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Orang yang dapat melihat project ini dan tugasnya.\n"
+"\n"
+"- User internal yang diundang: saat mengikuti project, user internal mendapatkan akses ke semua task. Jika tidak, mereka hanya mendapatkan akses ke tugas-tugas yang mereka ikuti.\n"
+" User dengan hak akses project > administrator masih dapat mengakses project ini dan tugasnya, bahkan bila mereka tidak termasuk sebagai follower.\n"
+"\n"
+"- Semua user internal: semua user internal dapat mengakses project dan semua tugasnya.\n"
+"\n"
+"- User portal yang diundang dan semua user internal: semua user internal dapat mengakses project dan semua tugasnya.\n"
+"Saat mengikuti project, user portal hanya mendapatkan akses ke tugas-tugas yang mereka ikuti.\n"
+"\n"
+"Saat project dibagikan dalam format read-only, user portal akan dialihkan ke portal mereka. Mereka dapat melihat tugas yang mereka ikuti, tapi tidak dapat mengedit.\n"
+"Saat project dibagikan dalam format bisa diedit, user portal akan dialihkan ke tampilan daftar dan kanban dari tugas mereka. Mereka dapat memodifikasi field-field terpilih tertentu pada tugas mereka.\n"
+"\n"
+"Dalam kasus apapun juga, user internal tanpa hak akses project masih dapat mengakses tugas, asalkan mereka diberikan URL yang sesuai (dan mereka merupakan bagian dari follower bila project bersifat privat."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3763,7 +3801,7 @@ msgstr "Sharing Project"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Pengulangan Sharing Project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4042,7 +4080,7 @@ msgstr "Reached Date"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "Read-only"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4078,7 +4116,7 @@ msgstr "Berulang"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Task berulang"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -4337,7 +4375,7 @@ msgstr "Kirim sebagai Email"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Send invitation"
-msgstr ""
+msgstr "Kirim undangan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4421,7 +4459,7 @@ msgstr "Bagikan Task"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 msgid "Share a Project"
-msgstr ""
+msgstr "Bagikan Project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -4459,6 +4497,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Sortir task Anda dengan sprint menggunakan milestone, tag, atau properti "
+"terdedikasi. Setelah Anda selesai, pilih task yang tersisa di daftar Anda "
+"dan siapkan mereka untuk sprint berikutnya dengan mengedit milestone, tag, "
+"atau properti."
 
 #. module: project
 #. odoo-javascript
@@ -4690,13 +4732,13 @@ msgstr "Task Dibatalkan"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Task Dibatalkan"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Task Dikonversikan dari To-Do"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4722,7 +4764,7 @@ msgstr "Ketergantungan Task"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "Sejarah Keterangan Task"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4798,7 +4840,7 @@ msgstr "Tugas judul..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "Task Ditransfer dari Project %s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4815,7 +4857,7 @@ msgstr "Task disetujui"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Task dibatalkan"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5029,6 +5071,8 @@ msgid ""
 "The task description lacks any past content that could be restored at the "
 "moment."
 msgstr ""
+"Keterangan task tidak memiliki konten masa lalu yang dapat dipulihkan pada "
+"saat ini."
 
 #. module: project
 #. odoo-python
@@ -5839,7 +5883,7 @@ msgstr "Manajer Anda akan menentukan feedback apa yang diterima"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "alias"
-msgstr ""
+msgstr "alias"
 
 #. module: project
 #. odoo-javascript
@@ -5923,7 +5967,7 @@ msgstr "contoh To Do"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "contoh. mycompany.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -6086,6 +6130,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: Survei "
+"Kepuasan"
 
 #. module: project
 #. odoo-javascript

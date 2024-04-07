@@ -164,6 +164,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%s: Can't split: quantities done can't be above demand"
 msgstr ""
+"%s: Tidak dapat split: kuantitas yang dibuat tidak bisa di atas permintaan"
 
 #. module: stock
 #. odoo-python
@@ -172,6 +173,8 @@ msgid ""
 "%s: Nothing to split, all demand is done. For split you need at least one "
 "line not fully fulfilled"
 msgstr ""
+"%s: Tidak ada yang perlu di-split, semua tuntutan sudah selesai. Untuk split"
+" Anda membutuhkan setidaknya satu baris yang belum sepenuhnya dipenuhi"
 
 #. module: stock
 #. odoo-python
@@ -180,6 +183,8 @@ msgid ""
 "%s: Nothing to split. Fill the quantities you want in a new transfer in the "
 "done quantities"
 msgstr ""
+"%s: Tidak ada yang perlu di-split. Isi kuantitas yang Anda inginkan di "
+"transfer baru di kuantitas yang selesai"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -443,6 +448,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
+"<br>Produk akan digerakkan ke <b>%(destination)s</b>, <br/> sesuai "
+"ditentukan dari <b>%(operation)s</b> tujuan."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -1787,7 +1794,7 @@ msgstr "Hitung biaya pengiriman dan kirim dengan Shiprocket"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Hitung biaya pengiriman dan kirimkan dengan Starshipit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2803,7 +2810,7 @@ msgstr "Lokasi tujuan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "Asal lokasi tujuan dari peraturan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -3067,7 +3074,7 @@ msgstr "Email dikirim ke pelanggan setelah order selesai."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Empty Locations"
-msgstr ""
+msgstr "Lokasi Kosong"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
@@ -3192,18 +3199,18 @@ msgstr "Pertama Masuk Pertama Keluar (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr ""
+msgstr "Nomor Lot Pertama"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr ""
+msgstr "Nomor Seri/Lot Pertama"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Serial Number"
-msgstr ""
+msgstr "Nomor Seri Pertama"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3459,19 +3466,19 @@ msgstr "Buat"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Lot numbers"
-msgstr ""
+msgstr "Buat nomor Lot"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Generate Serial numbers"
-msgstr ""
+msgstr "Buat nomor Seri"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Buat Seri/Lot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3935,7 +3942,7 @@ msgstr "Impor Lot"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Serials"
-msgstr ""
+msgstr "Impor Seri"
 
 #. module: stock
 #. odoo-javascript
@@ -4036,7 +4043,7 @@ msgstr "Transit inter-gudang"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 msgid "Intermediate Location"
-msgstr ""
+msgstr "Lokasi intermediat"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.int_picking
@@ -4254,7 +4261,7 @@ msgstr "Stok Persediaan pada Tanggal"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
-msgstr ""
+msgstr "Apakah Kosong"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_is_follower
@@ -4771,7 +4778,7 @@ msgstr "Properti Lot"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "Nomor Lot"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5468,7 +5475,7 @@ msgstr "Jumlah Nomor Seri"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
 msgid "Number of SN/Lots"
-msgstr ""
+msgstr "Jumlah Nomor Seri/Lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
@@ -6820,7 +6827,7 @@ msgstr "Kuantitas Di Tangan"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity Received"
-msgstr ""
+msgstr "Kuantitas Diterima"
 
 #. module: stock
 #. odoo-python
@@ -6917,7 +6924,7 @@ msgstr "Kuantitas atau Kuantitas Cadangan harus ditetapkan."
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Quantity per Lot"
-msgstr ""
+msgstr "Kuantitas per Lot"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_positive_quantity
@@ -7897,7 +7904,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr ""
+msgstr "Nomor-nomor seri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -7925,6 +7932,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
+"Tetapkan strategi penghapusan spesifik yang akan digunakan terlepas dari sumber lokasi untuk kategori produk ini.\n"
+"\n"
+"FIFO: produk/lot yang distok terlebih dahulu akan juga dikeluarkan terlebih dahulu.\n"
+"LIFO: produk/lot yang distok terakhir akan dikeluarkan terlebih dahulu.\n"
+"Lokasi Terdekat: produk/lot yang terdekat dengan lokasi tujuan akan dikeluarkan terlebih dahulu.\n"
+"FEFO: produk/lot dengan tanggal pemindahan terdekat akan dikeluarkan terlebih dahulu (ketersediaan metode ini tergantung pada pengaturan \"Tanggal Kadaluwarsa\").\n"
+"Paket Paling Sedikit: FIFO tapi dengan jumlah paket paling sedikit yang dapat dilakukan saat terdapat beberapa paket yang memiliki produk yang sama."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8237,7 +8251,7 @@ msgstr "Product Dibintangi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -8592,6 +8606,8 @@ msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
 msgstr ""
+"Lokasi %s diperlukan oleh app Inventaris dan tidak dapat dihapus, tapi Anda "
+"dapat mengarsipnya."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -8634,6 +8650,8 @@ msgid ""
 "The combination of serial number and product must be unique across a company and no company defined.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"Kombinasi nomor seri dan produk harus unik di seluruh perusahaan dan tanpa perusahaan yang didefinisikan.\n"
+"Kombinasi berikut memiliki duplikat:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8713,11 +8731,13 @@ msgid ""
 "operation is part of a chain of operations targeting the destination "
 "location."
 msgstr ""
+"Operasi membawa produk ke lokasi intermediat. Tapi operasi ini adalah bagian"
+" dari rantai operasi yang menarget lokasi tujuan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
-msgstr ""
+msgstr "Operasi mengambil dan menyarankan produk dari lokasi ini."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8735,7 +8755,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "The operations brings product to this location"
-msgstr ""
+msgstr "Operasi membawa produk ke lokasi ini"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -8757,6 +8777,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this field "
 "quantity. If it is 0, it is not rounded."
 msgstr ""
+"Kuantitas pengadaan akan dibulatkan ke kelipatan dari kuantitas field ini. "
+"Bila 0, tidak akan dibulatkan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -8793,7 +8815,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The quantity per lot should always be a positive value."
-msgstr ""
+msgstr "Kuantitas per lot harus selalu bilangan positif."
 
 #. module: stock
 #. odoo-python
@@ -8810,7 +8832,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
 "The search does not support the %(operator)s operator or %(value)s value."
-msgstr ""
+msgstr "Pencarian tidak mendukung operator %(operator)s atau value %(value)s."
 
 #. module: stock
 #. odoo-python
@@ -9493,7 +9515,7 @@ msgstr "Picu Manual"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_scrap__should_replenish
 msgid "Trigger replenishment for scrapped products"
-msgstr ""
+msgstr "Picu pemulihan untuk produk yang dihapus."
 
 #. module: stock
 #. odoo-javascript
@@ -9550,6 +9572,7 @@ msgstr "Batalkan penetapan"
 #: code:addons/stock/models/stock_move.py:0
 msgid "Unavailable Serial numbers. Please correct the serial numbers encoded:"
 msgstr ""
+"Nomor-nomor Seri Tidak Tersedia. Mohon periksa nomor seri yang di-encode:"
 
 #. module: stock
 #. odoo-javascript
@@ -10134,6 +10157,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
+"Saat ditetapkan menjadi True lokasi tujuan dari stock.move akan menjadi "
+"peraturan. Bila tidak, akan mengambil dari tipe picking."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10152,6 +10177,9 @@ msgid ""
 " Odoo generates a procurement to bring the forecasted quantity above of this"
 " Min Quantity."
 msgstr ""
+"Ketika stok virtual berada di bawah Kuantitas Min yang ditentukan untuk "
+"kolom ini, Odoo membuat pengadaan untuk meningkatkan perkiraan jumlah di "
+"atas Jumlah Min."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -10160,6 +10188,10 @@ msgid ""
 "procurement to bring the forecasted quantity up to (or near to) the Max "
 "Quantity specified for this field (or to Min Quantity, whichever is bigger)."
 msgstr ""
+"Saat stok virtual berada di bawah Kuantitas Min, Odoo membuat pengadaan "
+"untuk meningkatkan perkiraan jumlah sampai dengan (atau dekat dengan) "
+"Kuantitas Maks yang ditentukan untuk field ini (atau ke Kuantitas Min, yang "
+"manapun yang lebih besar)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_carrier
@@ -10458,6 +10490,8 @@ msgid ""
 "You cannot change the company of a lot/serial number currently in a location"
 " belonging to another company."
 msgstr ""
+"Anda tidak dapat mengubah perusahaan dari nomor lot/seri yang saat ini di "
+"lokasi yang dimiliki perusahaan lain."
 
 #. module: stock
 #. odoo-python
@@ -10839,7 +10873,7 @@ msgstr "contoh Gudang Pusat"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr ""
+msgstr "contoh, LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:06+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,6 +116,10 @@ msgid ""
 "        (1) Return next greater item if no match. \n"
 "        (2) Wildcard match."
 msgstr ""
+"(0) مطابق تماماً. \n"
+"        (-1) أصغر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
+"        (1) أكبر عنصر يليه إذا لم يكن مطابقاً تماماً. \n"
+"        (2) مطابقة Wildcard. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -386,7 +390,7 @@ msgstr "سلسلة فرعية من نهاية سلسلة محددة. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A table can only be created on a continuous selection."
-msgstr ""
+msgstr "يمكن إنشاء جدول فقط في مجموعة خيارات مستمرة. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -479,7 +483,7 @@ msgstr "إضافة أي حروف، أرقام، أو رموز "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add filters"
-msgstr ""
+msgstr "إضافة فلاتر "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1071,7 +1075,7 @@ msgstr "تلقائي"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Automatically autofill formulas"
-msgstr ""
+msgstr "تعبئة الدالات تلقائياً "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1322,7 +1326,7 @@ msgstr "تعذر إيجاد ملف علاقات workbook "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot have filters without a header row"
-msgstr ""
+msgstr "لا يمكن أن تكون هناك فلاتر دون صف الترويسة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2321,7 +2325,7 @@ msgstr "حذف الصفوف %s - %s "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Delete table"
-msgstr ""
+msgstr "حذف الجدول "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2394,7 +2398,7 @@ msgstr "اختلاف رقمين. "
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Dimensions don't match the pivot definition"
-msgstr ""
+msgstr "لا تطابق الأبعاد تعريف المحور "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2426,7 +2430,7 @@ msgstr "تنزيل "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Dropdown list"
-msgstr ""
+msgstr "القائمة المنسدلة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2460,7 +2464,7 @@ msgstr "تحرير الرابط "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Edit table"
-msgstr ""
+msgstr "تحرير الجدول "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2635,7 +2639,7 @@ msgstr "لم يتم العثور على عامل التصفية\"%s\" "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Filter button"
-msgstr ""
+msgstr "زر الفلتر "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2665,7 +2669,7 @@ msgstr "إيجاد واستبدال "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "First column"
-msgstr ""
+msgstr "العمود الأول "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2950,6 +2954,8 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
 "or a single cell reference, not a range."
 msgstr ""
+"تتوقع الدالة [[FUNCTION_NAME]] من معيارها %s أن يكون قيمة فردية أو مرجعاً "
+"أحادي الخلية، وليس نطاقاً. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3078,7 +3084,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gray"
-msgstr ""
+msgstr "رمادي "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3090,7 +3096,7 @@ msgstr "أكبر من أو يساوي. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gridlines"
-msgstr ""
+msgstr "خطوط الشبكة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3126,7 +3132,7 @@ msgstr "تجميع محتوى الصفوف %s - %s "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Header row(s)"
-msgstr ""
+msgstr "صفوف الترويسة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3831,7 +3837,7 @@ msgstr "آخر 90 يوم "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Last column"
-msgstr ""
+msgstr "العمود الأخير "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3916,7 +3922,7 @@ msgstr "أزرق فاتح"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Light green"
-msgstr ""
+msgstr "أخضر فاتح"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4905,7 +4911,7 @@ msgstr "إعادة تنفيذ "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Reference should be defined."
-msgstr ""
+msgstr "يجب أن يكون المرجع محدداً. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5100,7 +5106,7 @@ msgstr "يُظهر عكس القيمة المنطقية الموجودة. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Returns the content of a cell, specified by a string."
-msgstr ""
+msgstr "يقوم بجلب محتوى الخلية، المحدد بواسطة سلسلة.  "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5197,7 +5203,7 @@ msgstr "يقوم بتقريب الرقم وفقاً للقواعد القياس�
 msgid ""
 "Rounds a number down to the nearest integer that is less than or equal to "
 "it."
-msgstr ""
+msgstr "يقوم بتقريب الرقم إلى أقرب عدد صحيح أصغر أقل منه أو يساويه. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5275,7 +5281,7 @@ msgstr "حفظ"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Scatter"
-msgstr ""
+msgstr "بعثرة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5687,7 +5693,7 @@ msgstr "نص يتوسطه خط "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Style options"
-msgstr ""
+msgstr "خيارات الشكل "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6930,6 +6936,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a boolean."
 msgstr ""
+"تتوقع الوظيفة [[FUNCTION_NAME]] قيمة منطقية، ولكن '%s' عبارة عن نص ولا يمكن "
+"فرضه ليكون متغيّر boolean. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7662,7 +7670,7 @@ msgstr "الرقم لإرجاعه. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number to round down to the nearest integer."
-msgstr ""
+msgstr "العدد لتقريبه لأقرب عدد صحيح. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7973,7 +7981,7 @@ msgstr "المجال غير صحيح "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The range is out of the sheet"
-msgstr ""
+msgstr "النطاق خارج الورقة "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8611,7 +8619,7 @@ msgstr "المطلوح، أو العدد لطرحه من القيمة 1. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The table zone is invalid for an unknown reason"
-msgstr ""
+msgstr "نطاق الجدول غير صالح لسبب ما "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9545,7 +9553,7 @@ msgstr "الإجمالي"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Total row"
-msgstr ""
+msgstr "صف الإجمالي "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9608,7 +9616,7 @@ msgstr "النوع"
 #: code:addons/spreadsheet/models/spreadsheet_mixin.py:0
 #: code:addons/spreadsheet/models/spreadsheet_mixin.py:0
 msgid "Uh-oh! Looks like the spreadsheet file contains invalid data."
-msgstr ""
+msgstr "أوه لا! يبدو أن ملف جدول البيانات يحتوي على بيانات غير صالحة. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10282,7 +10290,7 @@ msgstr "لا يمكنك دمج خلايا ضمن عامل تصفية موجود 
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
-msgstr ""
+msgstr "لا يمكنك إنشاء جداول متداخلة. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10420,7 +10428,7 @@ msgstr "يجب أن يكون lookup_range إما صفاً واحداً أو عم
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "match_mode should be a value in [-1, 0, 1, 2]."
-msgstr ""
+msgstr "يجب أن يكون لـ match_mode قيمة في [-1, 0, 1, 2]. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10468,7 +10476,7 @@ msgstr "يجب أن يكون لـ return_range نفس أبعاد lookup_range. "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "search_mode should be a value in [-1, 1, -2, 2]."
-msgstr ""
+msgstr "يجب أن يكون لـ search_mode قيمة في [-1, 1, -2, 2]. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10482,7 +10490,7 @@ msgstr "يجب أن يكون start_date (%s) في أو قبل end_date (%s). "
 msgid ""
 "the search and match mode combination is not supported for XLOOKUP "
 "evaluation."
-msgstr ""
+msgstr "تركيبة وضع البحث والمطابقة غير مدعومة في تقييم XLOOKUP. "
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -830,6 +831,19 @@ msgstr "Field 'Sanitized Account Number' diperlukan pada Bank Penerima."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+"Please check those in their Accounting tab. Otherwise, the generated files "
+"will be incomplete."
+msgstr ""
+"Partner-partner berikut tidak memiliki field Peppol EAS atau Peppol "
+"Endpoint: %s. Silakan periksa mereka di tab Akuntansi. Bila tidak, file yang"
+" dibuat tidak akan lengkap."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
@@ -848,6 +862,17 @@ msgid ""
 msgstr ""
 "Faktur yang telah dikonversi menjadi nota kredit dan kuantitas yang telah "
 "dipulihkan kembali."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
+"those in its Accounting tab or the generated file will be incomplete."
+msgstr ""
+"Partner ini tidak memiliki field Peppol EAS atau Peppol Endpoint. Silakan "
+"periksa di tab Akuntansi. Bila tidak, file yang dibuat tidak akan lengkap"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
