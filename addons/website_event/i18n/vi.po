@@ -85,18 +85,18 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>Hết vé"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>Đã huỷ đăng"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-2\"/>Đã đăng ký"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -123,6 +123,8 @@ msgid ""
 "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
 "title=\"Configure event tickets\"/><em>Configure Tickets</em>"
 msgstr ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Cấu hình\" "
+"title=\"Cấu hình vé sự kiện\"/><em>Cấu hình vé</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -186,11 +188,13 @@ msgid ""
 "<span class=\"badge text-bg-secondary text-uppercase "
 "o_wevent_badge\">Speaker</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary text-uppercase o_wevent_badge\">Diễn "
+"giả</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<span class=\"fa fa-plus me-1\"/> Create an Event"
-msgstr ""
+msgstr "<span class=\"fa fa-plus me-1\"/> Tạo một sự kiện"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -203,6 +207,8 @@ msgid ""
 "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
 "class=\"o_countdown_metric pe-1\">days</span>"
 msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">ngày</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -346,7 +352,7 @@ msgstr "Câu trả lời"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Hỏi một lần cho mỗi lần đặt chỗ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -393,7 +399,7 @@ msgstr "Booked by"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Business Workshops"
-msgstr ""
+msgstr "Hội thảo doanh nghiệp"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
@@ -420,7 +426,7 @@ msgstr "Đóng"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Quay lại sau khi bạn đã đăng ký để xem câu trả lời tổng quan."
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_1
@@ -454,7 +460,7 @@ msgstr "Công ty"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Conference For Architects"
-msgstr ""
+msgstr "Hội thảo cho kiến trúc sư"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -592,12 +598,12 @@ msgstr "Tên Sự kiện"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Trang sự kiện"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.action_event_pages_list
 msgid "Event Pages"
-msgstr ""
+msgstr "Trang sự kiện"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_question
@@ -638,7 +644,7 @@ msgstr "Event Tag Category"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
 msgid "Event Tags"
-msgstr ""
+msgstr "Thẻ sự kiện"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
@@ -686,7 +692,7 @@ msgstr "Sự kiện"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Events Page"
-msgstr ""
+msgstr "Trang sự kiện"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -712,7 +718,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Fold Tickets Details"
-msgstr ""
+msgstr "Ẩn thông tin vé"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -762,7 +768,7 @@ msgstr "Giải khúc côn cầu"
 #. module: website_event
 #: model:event.question,title:website_event.event_7_question_1
 msgid "How did you hear about us?"
-msgstr ""
+msgstr "Bạn biết tới chúng tôi bằng cách nào? "
 
 #. module: website_event
 #: model:event.question,title:website_event.event_0_question_2
@@ -958,7 +964,7 @@ msgstr "Sự kiện tiếp theo"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Chưa có câu trả lời nào!"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
@@ -968,12 +974,12 @@ msgstr "Chưa có mục menu website!"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No event matching your search criteria could be found."
-msgstr ""
+msgstr "Không tìm thấy sự kiện nào phù hợp với tiêu chí tìm kiếm của bạn."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No events scheduled yet"
-msgstr ""
+msgstr "Chưa có sự kiện nào được lên lịch"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
@@ -994,7 +1000,7 @@ msgstr "Chưa được đăng"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Once per Order"
-msgstr ""
+msgstr "Một lần cho mỗi lần đặt vé"
 
 #. module: website_event
 #. odoo-python
@@ -1076,7 +1082,7 @@ msgstr "Loại câu hỏi"
 #: code:addons/website_event/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
-msgstr ""
+msgstr "Không thể liên kết câu hỏi với cả Sự kiện và Loại sự kiện."
 
 #. module: website_event
 #. odoo-python
@@ -1104,7 +1110,7 @@ msgstr "Trích dẫn"
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_2
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_2
 msgid "Radio Ad"
-msgstr ""
+msgstr "Quảng cáo trên đài"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -1245,7 +1251,7 @@ msgstr "Tìm kiếm một sự kiện..."
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_tree
 msgid "Selected Answers"
-msgstr ""
+msgstr "Câu trả lời đã chọn"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
@@ -1315,7 +1321,7 @@ msgstr "Bắt đầu hôm nay"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "Start → End"
-msgstr ""
+msgstr "Bắt đầu → Kết thúc"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -1330,7 +1336,7 @@ msgstr "Thống kê"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Sub-menu (Specific)"
-msgstr ""
+msgstr "Menu phụ (Cụ thể)"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
@@ -1368,7 +1374,7 @@ msgstr "Phải có giá trị được gợi ý hoặc giá trị văn bản. "
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "The website must be from the same company as the event."
-msgstr ""
+msgstr "Trang web phải xuất phát từ cùng một công ty với sự kiện."
 
 #. module: website_event
 #. odoo-python
@@ -1394,7 +1400,7 @@ msgstr "Menu kỹ thuật này hiển thị tất cả mục menu phụ của s�
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This ticket is not available for sale for this event"
-msgstr ""
+msgstr "Vé này không được bán cho sự kiện này"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1431,7 +1437,7 @@ msgstr "Chuyển đổi điều hướng"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Top Bar Filter"
-msgstr ""
+msgstr "Bộ lọc thanh trên"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1459,6 +1465,7 @@ msgstr "Sử dụng <b>lối tắt</b> này để dễ dàng truy cập trang we
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragraph to write a short text about your events or company."
 msgstr ""
+"Sử dụng đoạn này để viết nội dung ngắn về các sự kiện hoặc công ty của bạn."
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
@@ -1489,12 +1496,14 @@ msgstr "Khách"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "We couldn't find any event matching your search for:"
-msgstr ""
+msgstr "Chúng tôi không thể tìm thấy bất kỳ sự kiện nào phù hợp với tìm kiếm:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "We couldn't find any event scheduled at this moment."
 msgstr ""
+"Chúng tôi không thể tìm thấy bất kỳ sự kiện nào được lên lịch vào thời điểm "
+"này."
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website
@@ -1575,7 +1584,7 @@ msgstr "Hình ảnh trang web"
 #. module: website_event
 #: model:event.question,title:website_event.event_5_question_1
 msgid "What's your Hockey level?"
-msgstr ""
+msgstr "Trình độ khúc côn cầu của bạn thế nào?"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
@@ -1617,7 +1626,7 @@ msgstr "Bạn không thể thay đổi kiểu câu hỏi của câu hỏi đã c
 #, python-format
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgstr "Bạn không thể xóa câu hỏi đã được người tham dự trả lời."
 
 #. module: website_event
 #. odoo-python
@@ -1625,7 +1634,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Bạn không thể xóa câu trả lời đã được người tham dự lựa chọn."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -1635,13 +1644,13 @@ msgstr "vé)"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "e.g. \"Conference for Architects\""
-msgstr ""
+msgstr "VD: \"Hội thảo cho kiến trúc sư\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "VD: \"Bạn có hạn chế nào về chế độ ăn uống không?\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
