@@ -5,10 +5,10 @@
 # Translators:
 # Martin Trigaux, 2021
 # Yihya Hugirat <hugirat@gmail.com>, 2021
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # Netta Waizer, 2022
 # NoaFarkash, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
@@ -190,14 +190,14 @@ msgid "Latest date"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "חופשה בתשלום"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -221,6 +221,13 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
 msgstr ""
 
 #. module: hr_work_entry_contract

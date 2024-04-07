@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanh.np2502@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Vo Thanh Thuy, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,14 +197,14 @@ msgid "Latest date"
 msgstr "Ngày gần nhất"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Nghỉ phép theo luật 2022"
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Nghỉ phép dài hạn"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Nghỉ phép có lương"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -228,6 +229,13 @@ msgstr "Tìm kiếm tiêu chí đã hoàn thành"
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr "Nghỉ bệnh"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0

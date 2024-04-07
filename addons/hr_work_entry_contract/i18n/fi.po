@@ -8,7 +8,7 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,14 +196,14 @@ msgid "Latest date"
 msgstr "Viimeisin päivämäärä"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr ""
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Pitkäaikainen vapaa-aika"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Palkallinen vapaa-aika"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -228,6 +228,15 @@ msgstr "Hakukriteerit täytetty"
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr "Sairauspoissaolot"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
+"Valitettavasti työkirjausten luominen peruutetuista sopimuksista ei ole "
+"sallittua."
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0

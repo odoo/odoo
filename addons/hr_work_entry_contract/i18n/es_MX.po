@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Wil Odoo, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -116,7 +117,7 @@ msgstr "Entradas de trabajo de todos"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
 msgid "Extra Hours"
-msgstr "Horas extra"
+msgstr "Horas adicionales"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
@@ -198,14 +199,14 @@ msgid "Latest date"
 msgstr "Última fecha"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Permisos legales 2022"
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Tiempo personal de largo plazo"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Tiempo personal pagado"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -230,6 +231,15 @@ msgstr "Criterios de búsqueda completados"
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr "Tiempo personal por enfermedad"
+
+#. module: hr_work_entry_contract
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
+"Lo sentimos, no es posible generar entradas de trabajo desde contratos "
+"cancelados."
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
