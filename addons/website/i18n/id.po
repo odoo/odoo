@@ -9863,7 +9863,7 @@ msgstr "Batasi publikasi ke website ini."
 #. module: website
 #: model:res.groups,name:website.group_website_restricted_editor
 msgid "Restricted Editor"
-msgstr "Editor Dibatasi"
+msgstr "Editor yang Dibatasi"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__restricted_group
@@ -13422,6 +13422,16 @@ msgstr ""
 #, python-format
 msgid "You cannot duplicate this field."
 msgstr "Anda tidak dapat menduplikat field ini."
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Anda tidak dapat menghapus menu website ini karena berfungsi sebagai menu "
+"parent default untuk website baru (contoh, /shop, /event, ...)."
 
 #. module: website
 #. odoo-python

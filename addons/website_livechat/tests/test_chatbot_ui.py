@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tests
+from odoo import Command, tests
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 
@@ -97,3 +97,45 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
 
     def test_chatbot_available_after_reload(self):
         self.start_tour("/", "website_livechat_chatbot_after_reload_tour", step_delay=100)
+
+    def test_chatbot_redirect(self):
+        chatbot_redirect_script = self.env["chatbot.script"].create(
+            {"title": "Redirection Bot"}
+        )
+        question_step, _ = tuple(
+            self.env["chatbot.script.step"].create([
+                {
+                    "chatbot_script_id": chatbot_redirect_script.id,
+                    "message": "Hello, were do you want to go?",
+                    "step_type": "question_selection",
+                },
+                {
+                    "chatbot_script_id": chatbot_redirect_script.id,
+                    "message": "Tadam, we are on the page you asked for!",
+                    "step_type": "text",
+                }
+            ])
+        )
+        self.env["chatbot.script.answer"].create([
+            {
+                "name": "Go to the #chatbot-redirect anchor",
+                "redirect_link": "#chatbot-redirect",
+                "script_step_id": question_step.id,
+            },
+            {
+                "name": "Go to the /chabtot-redirect page",
+                "redirect_link": "/chatbot-redirect",
+                "script_step_id": question_step.id,
+            },
+        ])
+        livechat_channel = self.env["im_livechat.channel"].create({
+            'name': 'Redirection Channel',
+            'rule_ids': [Command.create({
+                'regex_url': '/',
+                'chatbot_script_id': chatbot_redirect_script.id,
+            })]
+        })
+        default_website = self.env.ref("website.default_website")
+        default_website.channel_id = livechat_channel.id
+        self.env.ref("website.default_website").channel_id = livechat_channel.id
+        self.start_tour("/", "website_livechat.chatbot_redirect")

@@ -2542,6 +2542,40 @@ class TestStockFlow(TestStockCommon):
         backorder.button_validate()
         self.assertEqual(backorder.state, 'done')
 
+    def test_picking_mixed_tracking_with_backorder(self):
+        self.productB.tracking = 'lot'
+        picking = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+            'company_id': self.env.company.id,
+        })
+        no_tracking_move = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        picking.action_confirm()
+
+        no_tracking_move.picked = True
+        action_dict = picking.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action_dict['context'])).save()
+        backorder_wizard.process()
+        bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(bo.state, 'assigned')
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):

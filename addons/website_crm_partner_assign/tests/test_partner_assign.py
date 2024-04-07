@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, timedelta
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError
@@ -8,7 +9,10 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tools import MockRequest
-from odoo.addons.website_crm_partner_assign.controllers.main import WebsiteCrmPartnerAssign
+from odoo.addons.website_crm_partner_assign.controllers.main import (
+    WebsiteAccount,
+    WebsiteCrmPartnerAssign,
+)
 
 
 class TestPartnerAssign(TransactionCase):
@@ -220,6 +224,39 @@ class TestPartnerLeadPortal(TestCrmCommon):
         record_action = self.lead_portal._get_access_action(access_uid=self.user_portal.id)
         self.assertEqual(record_action['url'], '/my/opportunity/%s' % self.lead_portal.id)
         self.assertEqual(record_action['type'], 'ir.actions.act_url')
+
+    def test_route_portal_my_opportunities_as_portal(self):
+        """Test that the portal user can access its own opportunities even if
+        does not have access to the 'activity_date_deadline' field (needed
+        if using filter 'Today Activities' or 'Overdue Activities')."""
+
+        lead_today = self.lead_portal
+        lead_yesterday = self.lead_portal.copy()
+
+        (lead_today | lead_yesterday).type = "opportunity"
+
+        lead_today.activity_schedule("crm.lead_test_activity_1", date.today())
+        lead_yesterday.activity_schedule(
+            "crm.lead_test_activity_1", date.today() - timedelta(days=1)
+        )
+
+        def render_function(_, values, *args, **kwargs):
+            self.assertIn(
+                lead_today,
+                values["opportunities"],
+                "Lead with today scheduled activity should be in filtered opportunities.",
+            )
+            self.assertNotIn(
+                lead_yesterday,
+                values["opportunities"],
+                "Lead with yesterday scheduled activity should not be in filtered opportunities.",
+            )
+
+        with self.with_user(self.user_portal.login), MockRequest(
+            self.env, website=self.env["website"].browse(1)
+        ) as mock_request:
+            mock_request.render = render_function
+            WebsiteAccount().portal_my_opportunities(filterby="today")
 
     @patch('odoo.http.GeoIP')
     def test_03_crm_partner_assign_geolocalization(self, GeoIpMock):

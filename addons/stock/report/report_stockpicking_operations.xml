@@ -98,7 +98,7 @@
                                         <th name="th_from" t-if="o.picking_type_id.code != 'incoming'" align="left" groups="stock.group_stock_multi_locations">
                                             <strong>From</strong>
                                         </th>
-                                        <th name="th_to" t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <th name="th_to" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <strong>To</strong>
                                         </th>
                                         <th name="th_serial_number" class="text-center" t-if="has_serial_number">
@@ -134,7 +134,7 @@
                                                     <span t-field="ml.package_id">Package A</span>
                                                 </t>
                                         </td>
-                                        <td t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <div>
                                                 <span t-field="ml.location_dest_id">WH/Outgoing</span>
                                                 <t t-if="ml.result_package_id">
@@ -170,7 +170,7 @@
                                     <tr>
                                         <th name="th_package">Package</th>
                                         <th name="th_pko_from" t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">From</th>
-                                        <th name="th_pki_from" t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
+                                        <th name="th_pki_from" t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -187,7 +187,7 @@
                                         <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                             <span t-field="package.location_id"/>
                                         </td>
-                                        <td t-elif="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                        <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
                                             <span t-field="package.location_dest_id"/>
                                         </td>
                                     </tr>

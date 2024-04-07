@@ -150,6 +150,9 @@ export class TaxTotalsComponent extends Component {
 
     formatData(props) {
         let totals = JSON.parse(JSON.stringify(toRaw(props.record.data[this.props.name])));
+        if (!totals) {
+            return;
+        }
         const currencyFmtOpts = { currencyId: props.record.data.currency_id && props.record.data.currency_id[0] };
 
         let amount_untaxed = totals.amount_untaxed;

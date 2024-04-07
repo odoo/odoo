@@ -139,13 +139,15 @@ class SaleOrder(models.Model):
         string="Invoice Address",
         compute='_compute_partner_invoice_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        index='btree_not_null')
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string="Delivery Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        index='btree_not_null')
 
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
@@ -924,11 +926,15 @@ class SaleOrder(models.Model):
         context.pop('default_name', None)
 
         self.with_context(context)._action_confirm()
-        if self[:1].create_uid.has_group('sale.group_auto_done_setting'):
-            # Public user can confirm SO, so we check the group on any record creator.
-            self.action_lock()
+
+        self.filtered(lambda so: so._should_be_locked()).action_lock()
 
         return True
+
+    def _should_be_locked(self):
+        self.ensure_one()
+        # Public user can confirm SO, so we check the group on any record creator.
+        return self.create_uid.has_group('sale.group_auto_done_setting')
 
     def _can_be_confirmed(self):
         self.ensure_one()
@@ -1819,7 +1825,7 @@ class SaleOrder(models.Model):
         res = {}
         for product in products:
             res[product.id] = {'price': pricelist.get(product.id)}
-            if product.sale_line_warn_msg:
+            if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":
                 res[product.id]['readOnly'] = True

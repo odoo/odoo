@@ -8,7 +8,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='warnings']" position="inside">
                     <field name="enable_peppol" invisible="1"/>
-                    <div class="alert alert-warning" role="alert" invisible="not checkbox_send_peppol or not peppol_warning">
+                    <div class="alert alert-warning" role="alert" invisible="not checkbox_send_peppol or not peppol_warning or ubl_partner_warning">
+                        <!-- hiding the warning if we're already showing one through the
+                        UBL module to avoid showing basically the same errors at the same time -->
                         <field name="peppol_warning"/>
                     </div>
                 </xpath>

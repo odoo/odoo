@@ -44,7 +44,11 @@ class SmsApi:
               }, ...
           ]```
         """
-        return self._contact_iap('/iap/sms/3/send', {'messages': messages, 'webhook_url': delivery_reports_url})
+        return self._contact_iap('/api/sms/3/send', {
+            'messages': messages,
+            'webhook_url': delivery_reports_url,
+            'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        })
 
     def _get_sms_api_error_messages(self):
         """Return a mapping of `_send_sms_batch` errors to an error message.

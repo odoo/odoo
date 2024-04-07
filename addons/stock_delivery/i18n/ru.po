@@ -7,11 +7,11 @@
 # ILMIR <karamov@it-projects.info>, 2023
 # Viktor Pogrebniak <vp@aifil.ru>, 2023
 # Константин Коровин <korovin74@gmail.com>, 2023
-# Collex100, 2023
 # Alena Vlasova, 2023
 # Evgeniia Kotova, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -598,6 +598,19 @@ msgstr "Этикетка единицы измерения массы"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
 msgstr "Вес:"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Нельзя упаковывать товары в одну посылку, если они имеют разных перевозчиков"
+" (т. е. проверьте, что для всех их переводов назначен перевозчик и "
+"используется один и тот же перевозчик)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form

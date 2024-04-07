@@ -1026,6 +1026,8 @@ class TestVariantsArchive(ProductVariantsCommon):
         self.assertEqual(archived_variants, variants_2x0)
 
     def test_name_search_dynamic_attributes(self):
+        # To be able to test dynamic variant "variants" feature must be set up
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
         dynamic_attr = self.env['product.attribute'].create({
             'name': 'Dynamic',
             'create_variant': 'dynamic',

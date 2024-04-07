@@ -563,16 +563,6 @@ msgstr ""
 "varten luodaan uusia tietueita."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
-msgid "A bus presence must have a user or a guest."
-msgstr "Väylän olemassaolo edellyttää käyttäjää tai vierasta."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
-msgid "A channel member must be a partner or a guest."
-msgstr "Kanavan jäsenen tulee olla partneri tai vieras."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -591,11 +581,6 @@ msgstr ""
 "ryhmä."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
-msgid "A message reaction must be from a partner or from a guest."
-msgstr "Viestin reaktion tulee olla joko partnerilta tai vieraalta."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
@@ -612,11 +597,6 @@ msgid ""
 msgstr ""
 "Viestien kääntäminen edellyttää voimassa olevaa Google API -avainta. "
 "https://cloud.google.com/translate/docs/setup"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
-msgid "A volume setting must have a partner or a guest."
-msgstr "Äänenvoimakkuuden asetus edellyttää partneria tai vierasta."
 
 #. module: mail
 #. odoo-javascript
@@ -743,13 +723,6 @@ msgstr "Toimenpiteet"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "Toiminta tuottaa"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
-msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
-"Aktiviteetit tulee linkittää tietueisiin, joilla ei ole null-arvoa "
-"res_id:ssä."
 
 #. module: mail
 #. odoo-javascript
@@ -1670,11 +1643,6 @@ msgstr ""
 "verkkotunnusta."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
-msgid "Bounce emails should be unique"
-msgstr "Bounce-sähköpostiviestien tulisi olla ainutlaatuisia"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1889,11 +1857,6 @@ msgstr ""
 "Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen "
 "verkkotunnuksen yhteydessä. Käytä toista catchall-tunnusta tai "
 "yksinkertaisesti toista alias-verkkotunnusta."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
-msgid "Catchall emails should be unique"
-msgstr "Catchall-sähköpostien tulisi olla yksilöllisiä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2600,11 +2563,6 @@ msgstr "Mukautetut mallit"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "Räätälöity kanavan nimi"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
-msgid "Customer is required for inbox / email notification"
-msgstr "Asiakas vaaditaan viestien / sähköpostin ilmoituksiin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3371,11 +3329,6 @@ msgid "Email Thread"
 msgstr "Sähköpostiviestiketju"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
-msgid "Email address already exists!"
-msgstr "Sähköpostiosoite on jo olemassa!"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3573,11 +3526,6 @@ msgid ""
 msgstr ""
 "Virhe poikkeuksetta. Todennäköisesti syynä on sähköpostin lähettäminen ilman"
 " laskettuja vastaanottajia."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
-msgid "Error, a partner cannot follow twice the same object."
-msgstr "Virhe: kumppani ei voi olla saman tietueen seuraajan kahdesti."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -4080,14 +4028,6 @@ msgstr "Ryhmittely"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Group Name"
 msgstr "Ryhmän nimi"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
-msgid ""
-"Group authorization and group auto-subscription are only supported on "
-"channels."
-msgstr ""
-"Ryhmävaltuutusta ja automaattista ryhmätilausta tuetaan vain kanavilla."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -6770,11 +6710,6 @@ msgid "Only custom models can be modified."
 msgstr "Vain mukautettuja malleja voidaan muokata."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
-msgid "Only internal user can receive notifications in Odoo"
-msgstr "Vain sisäinen käyttäjä voi vastaanottaa ilmoituksia Odoossa"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -8026,6 +7961,13 @@ msgid "Save as a new template"
 msgstr "Tallenna uutena mallina"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "Tallenna suosikki GIF Tenor API:sta"
@@ -9150,16 +9092,6 @@ msgid "The avatar has been updated!"
 msgstr "Avatar on päivitetty!"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
-msgid "The channel UUID must be unique"
-msgstr "Kanavan UUID:n täytyy olla ainutlaatuinen"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Kanavan tyyppi ei voi olla tyhjä"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "Nykyinen käyttäjä voi muokata mallia."
@@ -9175,11 +9107,6 @@ msgstr "Ääniviestien kesto on rajoitettu 1 minuuttiin."
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "Sähköposti lähetetty"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
-msgid "The endpoint must be unique !"
-msgstr "Päätepisteen on oltava yksilöllinen !"
 
 #. module: mail
 #. odoo-python
@@ -9326,11 +9253,6 @@ msgstr "Sähköpostin esikatseluna käytetyn tekstiosan alku."
 #, python-format
 msgid "There are no messages in this conversation."
 msgstr "Tässä keskustelussa ei ole viestejä."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
-msgid "There can only be one rtc session per channel member"
-msgstr "Kanavan jäsentä kohden voi olla vain yksi RTC-istunto"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -10138,11 +10060,6 @@ msgstr "Käyttäjä ei ole aktiivinen"
 #, python-format
 msgid "User is online"
 msgstr "Käyttäjä on aktiivinen"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
-msgid "User should not have duplicated favorite GIF"
-msgstr "Käyttäjällä ei pitäisi olla päällekkäisiä suosikki-GIF:ejä"
 
 #. module: mail
 #. odoo-python

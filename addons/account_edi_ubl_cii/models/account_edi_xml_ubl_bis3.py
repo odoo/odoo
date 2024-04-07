@@ -270,13 +270,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         constraints = super()._export_invoice_constraints(invoice, vals)
 
-        constraints.update({
-            'peppol_eas_is_set_supplier': self._check_required_fields(vals['supplier'], 'peppol_eas'),
-            'peppol_eas_is_set_customer': self._check_required_fields(vals['customer'], 'peppol_eas'),
-            'peppol_endpoint_is_set_supplier':  self._check_required_fields(vals['supplier'], 'peppol_endpoint'),
-            'peppol_endpoint_is_set_customer':  self._check_required_fields(vals['customer'], 'peppol_endpoint'),
-        })
-
         constraints.update(
             self._invoice_constraints_peppol_en16931_ubl(invoice, vals)
         )

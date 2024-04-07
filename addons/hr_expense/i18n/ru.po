@@ -5,7 +5,6 @@
 # Translators:
 # alenafairy, 2023
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
-# Collex100, 2023
 # Evgeniia Kotova, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
@@ -17,6 +16,7 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # ILMIR <karamov@it-projects.info>, 2024
 # Martin Trigaux, 2024
+# Collex100, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -58,7 +58,7 @@ msgstr "$600.00"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%(date_from)s - %(date_to)s"
-msgstr ""
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -110,11 +110,6 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "2023-08-11"
 msgstr "2023-08-11"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "50%"
-msgstr "50%"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -291,11 +286,6 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Аналитический Счёт"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Analytic Account Name"
-msgstr "Имя аналитического аккаунта"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
@@ -1414,7 +1404,7 @@ msgstr "Имя"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "Новый отчет о расходах, оплаченный %(paid_by)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1735,7 +1725,7 @@ msgstr "Причина"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr "Причина отказа в расходах."
+msgstr "Причина отказа в расходах"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1842,6 +1832,13 @@ msgstr "Цена продажи"
 #, python-format
 msgid "Scan"
 msgstr "Сканировать"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -2023,8 +2020,8 @@ msgstr "Налог"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Tax Name"
-msgstr "Имя налога"
+msgid "Tax 15%"
+msgstr "Налог 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2099,6 +2096,11 @@ msgstr ""
 "содержит ли этот отчет дубликатов."
 
 #. module: hr_expense
+#: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
+msgid "The journal must be set on posted expense"
+msgstr "Журнал должен быть установлен на проведенные расходы"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "Журнал, используемый при оплате расходов сотрудником."
@@ -2140,6 +2142,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"С этой категорией связаны непредставленные расходы. Обновление стоимости "
+"категории изменит суммы расходов. Убедитесь, что это именно то, что вы "
+"хотите сделать."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2273,11 +2278,6 @@ msgstr "Используйте хлебные крошки, чтобы верн�
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "Пользователь"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "VAT"
-msgstr "НДС"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action

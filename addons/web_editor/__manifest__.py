@@ -118,6 +118,7 @@ Odoo Web Editor widget.
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/core/dialog.js',
             'web/static/src/legacy/xml/dialog.xml',
+            'web/static/src/legacy/js/core/minimal_dom.js',
             'web/static/src/legacy/js/core/dom.js',
             'web/static/src/legacy/js/core/mixins.js',
             'web/static/src/legacy/js/core/service_mixins.js',

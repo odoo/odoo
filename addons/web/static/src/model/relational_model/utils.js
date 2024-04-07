@@ -9,6 +9,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { x2ManyCommands } from "@web/core/orm_service";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred } from "@web/core/utils/concurrency";
 import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
@@ -564,22 +565,38 @@ function getValueFromGroupData(field, rawValue, range) {
  * expected by the server for a write.
  * For instance, for a many2one: { id: 3, display_name: "Marc" } => 3.
  */
-export function fromUnityToServerValues(values, fields, activeFields, { withReadonly } = {}) {
+export function fromUnityToServerValues(
+    values,
+    fields,
+    activeFields,
+    { withReadonly, context } = {}
+) {
     const { CREATE, UPDATE } = x2ManyCommands;
     const serverValues = {};
     for (const fieldName in values) {
         let value = values[fieldName];
         const field = fields[fieldName];
-        if (!withReadonly && field.readonly) {
-            continue;
+        const activeField = activeFields[fieldName];
+        if (!withReadonly) {
+            if (field.readonly) {
+                continue;
+            }
+            try {
+                if (evaluateExpr(activeField.readonly, context)) {
+                    continue;
+                }
+            } catch {
+                // if the readonly expression depends on other fields, we can't evaluate it as we
+                // didn't read the record, so we simply ignore it
+            }
         }
         switch (fields[fieldName].type) {
             case "one2many":
             case "many2many":
                 value = value.map((c) => {
                     if (c[0] === CREATE || c[0] === UPDATE) {
-                        const _fields = activeFields[fieldName].related.fields;
-                        const _activeFields = activeFields[fieldName].related.activeFields;
+                        const _fields = activeField.related.fields;
+                        const _activeFields = activeField.related.activeFields;
                         return [
                             c[0],
                             c[1],

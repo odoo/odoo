@@ -22,7 +22,7 @@ class DiscussChannel(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
-    livechat_operator_id = fields.Many2one('res.partner', string='Operator')
+    livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")

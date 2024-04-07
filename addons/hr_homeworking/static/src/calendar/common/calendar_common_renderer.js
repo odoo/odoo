@@ -98,8 +98,8 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             if (!button || !line)
                 return;
             info.homework = true;
-            button.onclick = () =>this.onDateClick(info)
-            line.onclick = () =>this.onDateClick(info)
+            button.onclick = () => this.props.createRecord(this.fcEventToRecord(info));
+            line.onclick = () => this.props.createRecord(this.fcEventToRecord(info));
         }
         if (this.props.model.scale === 'month'){
             const box = info.view.el.querySelector(`.fc-day-top[data-date='${parsedDate}']`)
@@ -180,7 +180,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         }
     },
     onDateClick(info){
-        if (info.jsEvent && info.jsEvent.target.closest(".o_worklocation_btn")) {
+        if (info.jsEvent.target.closest(".o_worklocation_btn")) {
             info.homework = true
             this.props.createRecord(this.fcEventToRecord(info));
         } else {

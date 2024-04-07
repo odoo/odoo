@@ -5,7 +5,7 @@
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
             <div class="page">
-                <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name"/>INV0001</strong></h3>
+                <h3><strong id="payment_title">Payment Receipt: <span t-field="o.name">INV0001</span></strong></h3>
 
                 <div class="mb-4 mt-3">
                     <div name="date" class="row">

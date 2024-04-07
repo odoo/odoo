@@ -4,7 +4,6 @@
 # 
 # Translators:
 # jabiri7, 2023
-# Josep Anton Belchi, 2023
 # M Palau <mpalau@tda.ad>, 2023
 # martioodo hola, 2023
 # marcescu, 2023
@@ -12,6 +11,7 @@
 # Óscar Fonseca <tecnico@pyming.com>, 2023
 # Ivan Espinola, 2023
 # Iván Infantes Castarnado, 2024
+# Josep Anton Belchi, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Iván Infantes Castarnado, 2024\n"
+"Last-Translator: Josep Anton Belchi, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -586,6 +586,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency?"
 msgstr ""
+"No es pot recuperar la divisa: %s. Heu habilitat l'opció multidivisa i heu "
+"activat la divisa?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -613,7 +615,7 @@ msgstr "E-FFF (BE)"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_search
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_tree
 msgid "EDI Format"
-msgstr ""
+msgstr "Format EDI"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -632,7 +634,7 @@ msgstr "Cada línia de factura tindrà un i només un impost."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr ""
+msgstr "Cada línia de factura ha de tenir un producte o una etiqueta."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -644,19 +646,19 @@ msgstr "Cada línia de factura hauria de tenir almenys un impost."
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "Factura electrònica"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__enable_ubl_cii_xml
 msgid "Enable Ubl Cii Xml"
-msgstr ""
+msgstr "Habilitar Ubl Cii Xml"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr ""
+msgstr "S'han produït errors mentre es creava el document EDI (format: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -668,7 +670,7 @@ msgstr "Exporta fora de la UE"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__facturx
 msgid "Factur-X (CII)"
-msgstr ""
+msgstr "Factur-X (CII)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
@@ -706,12 +708,12 @@ msgstr "Formata"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "Format usat per a importar la factura: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
 msgid "Generate Peppol format by default"
-msgstr ""
+msgstr "Generar format Peppol per defecte"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -742,6 +744,8 @@ msgstr ""
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
+"No s'ha trovat preu brut, preu net, ni import subtotal de línia per a una "
+"línia de XML"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -752,18 +756,18 @@ msgstr "Odoo"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr ""
+msgstr "Punt de connexió Peppol"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr ""
+msgstr "Adreça electrònica Peppol (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
 msgid "Peppol format"
-msgstr ""
+msgstr "Format Peppol"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -788,6 +792,8 @@ msgstr "L'impost %s no és vàlid: %s"
 #, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
 msgstr ""
+"Format de punt de connexió Peppol, no vàlid. El format esperat és: "
+"0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -796,6 +802,7 @@ msgstr ""
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
 msgstr ""
+"El punt de connexió Peppol no és vàlid. El format esperat és: 73282932000074"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -813,7 +820,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The VAT of the %s should be prefixed with its country code."
-msgstr ""
+msgstr "El NIF de %s ha de ser precedit del seu codi de país."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -849,12 +856,24 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
+"Please check those in their Accounting tab. Otherwise, the generated files "
+"will be incomplete."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid ""
 "The invoice contains line(s) with a negative unit price, which is not "
 "allowed. You might need to set a negative quantity instead."
 msgstr ""
+"La factura conté línia(es) amb un preu negatiu, la qual cosa és permesa. "
+"Caldria que establíssiu, en el seu lloc, una quantitat negativa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -865,6 +884,15 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr "La factura s'ha convertit a rectificativa revertint les quantitats."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+#, python-format
+msgid ""
+"This partner is missing Peppol EAS or Peppol Endpoint field. Please check "
+"those in its Accounting tab or the generated file will be incomplete."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -894,7 +922,7 @@ msgstr "UBL BIS Billing 3.0.12"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr ""
+msgstr "Fitxer UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint

@@ -1957,10 +1957,20 @@ class MailThread(models.AbstractModel):
 
         partners = self._mail_search_on_partner(remaining, extra_domain=extra_domain)
         done_partners += [partner for partner in partners]
-        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
 
-        # prioritize current user if exists in list
-        done_partners.sort(key=lambda p: self.env.user.partner_id != p)
+        # prioritize current user if exists in list, and partners with matching company ids
+        if company_fname := records and records._mail_get_company_field():
+            def sort_key(p):
+                return (
+                    self.env.user.partner_id == p,           # prioritize user
+                    p.company_id in records[company_fname],  # then partner associated w/ records
+                    not p.company_id,                        # else pick partner w/out company_id
+                )
+        else:
+            def sort_key(p):
+                return (self.env.user.partner_id == p, not p.company_id)
+
+        done_partners.sort(key=sort_key, reverse=True)  # reverse because False < True
 
         # iterate and keep ordering
         partners = []

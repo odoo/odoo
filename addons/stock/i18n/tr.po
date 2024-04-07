@@ -1035,15 +1035,6 @@ msgid "All at once"
 msgstr "Tümünü birden"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"All our contractual relations will be governed exclusively by United States "
-"law."
-msgstr ""
-"Tüm sözleşme ilişkilerimiz münhasıran Amerika Birleşik Devletleri yasalarına"
-" tabi olacaktır."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Tüm iade hareketleri"
@@ -1432,13 +1423,6 @@ msgid "Before scheduled date"
 msgstr "Planlanan Tarihten Önce"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr "Aşağıdaki metin bir öneridir ve Odoo S.A.'yı sorumlu kılmaz."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Engelleme Mesajı"
@@ -1580,24 +1564,6 @@ msgstr "Kategori"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Kategori Rotaları"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can My "
-"Company (Chicago) become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to My Company "
-"(Chicago) in its entirety and does not include any costs relating to the "
-"legislation of the country in which the client is located."
-msgstr ""
-"Bazı ülkeler yasalara uygun olarak kaynakta fatura tutarı üzerinden stopaj "
-"uygular. Bunlar müşteri tarafından vergi makamlarına ödenir. H,çb,r koşulda "
-"Şirketim (Şikago) bir ülkenin yasalarından doğan maliyetlerle "
-"ilişkilendirilemez. Dolayısıyla fatura bedelinin tamamı Şirketim (Şikago)'ya"
-" ödenecek olup müşterinin bulunduğu ülkedeki yasalardan kaynaklanan "
-"maliyetleri içermez."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3506,6 +3472,13 @@ msgid "Generate Serials numbers"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr ""
@@ -3725,18 +3698,6 @@ msgstr "İkon"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Bir istisna aktivite gösteren simge."
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, My Company (Chicago) reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-"Eğer bir ödeme vadesinden sonra altmış (60) gündür tahsil edilmemişse, "
-"Şirketim (Şikaho) tahsilat şirketi ile çalışma hakkına sahiptir. Tüm yasal "
-"masraflar müşteri tarafından ödenecektir."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -3975,6 +3936,13 @@ msgid "Import Lots"
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -3990,18 +3958,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Türü"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"In order for it to be admissible, My Company (Chicago) must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-"Geçerli olabilmesi için Şirketim (Şikago) her türlü talep iadeli taahhütlü "
-"olarak kayıtlı adresine malların teslimatından veya hizmetin ifa "
-"edilmesinden sonraki 8 gün içinde yapılmış olmalıdır."
 
 #. module: stock
 #. odoo-javascript
@@ -4800,6 +4756,11 @@ msgid "Lot Label Format to auto-print"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
 msgstr ""
@@ -5200,23 +5161,6 @@ msgid "My Activity Deadline"
 msgstr "Aktivite Zaman Sınırım"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. My "
-"Company (Chicago) cannot under any circumstances, be required by the client "
-"to appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-"Şirketim (Şikago) üzerinde anlaşılan sürelere uygun olarak hizmetlerini "
-"vaktinde gerçekleştirmek için en iyisini yapacağını taahhüt eder. Bununla "
-"birlikte, sorumluluklarının hiçbiri sonuç elde etme sorumluluğu olarak "
-"değerlendirilemez. Şirketim (Şikago) hiçbir durumda müşteriye nihai tüketici"
-" tarafından yapılan zarar taleplerine karşı üçüncü parti olarak yer alması "
-"gerekmez."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Sayımlarım"
@@ -5299,12 +5243,6 @@ msgstr "Yeni Stok Miktarı"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Yeni Transfer"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sonraki Aktivite Takvim Etkinliği"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5828,22 +5766,6 @@ msgstr "Orjinal İhtiyaç Kuralı"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "Diğer Bilgiler"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, My Company (Chicago) reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
-msgstr ""
-"Faturada veya siparişte farklı süre belirtilmedikçe , faturalarımız 21 "
-"işgünü içerisinde ödenmelidir. Vade tarihinde ödenmemesi durumunda, Şirketim"
-" (Şikago) bakiyenin %10'u tutarında sabit faiz talep etme hakkına haizdir. "
-"Şirketim (Şikago) geç ödeme durumunda önceden bildirim yapmaksızın "
-"hizmetlerin sağlanmasını durdurmaya yetkili olacaktır."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7081,13 +7003,6 @@ msgid "RETURN OF"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
-msgid "Ratings"
-msgstr "Değerlendirmeler"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7760,11 +7675,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "STANDART SATIŞ KOŞULLARI"
 
 #. module: stock
 #. odoo-javascript
@@ -8793,18 +8703,6 @@ msgstr "%s ön siparişi oluşturuldu."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr ""
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-"Müşteri kendi standart şartlarından feragat eder, standart satış "
-"şartlarından sonra düzenlenmiş olsa bile. Geçerli olması için, her türlü "
-"feragat önceden yazılı olarak anlaşılmış olmalıdır."
 
 #. module: stock
 #. odoo-python
@@ -10662,6 +10560,15 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -10866,11 +10773,6 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Ürünler için bir Lot / Seri numarası sağlamanız gerekir %s."
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "You should update this document to reflect your T&amp;C."
-msgstr "T&amp;C yansıtılacak şekilde bu dokümanı güncellemelisiniz."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -10909,15 +10811,6 @@ msgstr ""
 "Burada stok öngörülerine istinaden akıllı yeniden doldurma önerilerini bulabilirsiniz.\n"
 "            Almak ya da üretmek için miktarı seçin ve tek tıkla siparişleri başlatın.\n"
 "            İlerde zaman kazanmak için, \"otomatik\" olarak kuralları kaydedin."
-
-#. module: stock
-#: model_terms:res.company,lunch_notify_message:stock.res_company_1
-msgid ""
-"Your lunch has been delivered.\n"
-"Enjoy your meal!"
-msgstr ""
-"Öğle yemeğiniz teslim edildi.\n"
-"Afiyet olsun!"
 
 #. module: stock
 #. odoo-python

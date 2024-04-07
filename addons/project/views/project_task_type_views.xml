@@ -119,7 +119,7 @@
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-12">
-                                        <strong><t t-esc="record.name.value"/></strong>
+                                        <strong class="o_text_overflow"><t t-esc="record.name.value"/></strong>
                                     </div>
                                 </div>
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

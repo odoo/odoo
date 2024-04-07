@@ -17,13 +17,13 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2023
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2023
 # Denis Baranov <baranov@itlibertas.com>, 2023
-# Collex100, 2023
 # ILMIR <karamov@it-projects.info>, 2023
 # Alena Vlasova, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Martin Trigaux, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -762,6 +762,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr "<i class=\"fa fa-fw fa-check\"/> Оплачивается"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/> Перевернутый"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Просроченный"
@@ -1189,7 +1194,7 @@ msgstr ""
 "например, этот параметр может быть полезен для обмена файлами с описанием товара.\n"
 "Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра.\n"
 "например, эта опция может быть полезна для обмена руководствами пользователя или цифровым контентом, купленным в электронной коммерции.\n"
-"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения."
+"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2869,7 +2874,7 @@ msgstr "Время выполнения заказа"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
-"Позвольте своим клиентам войти в систему, чтобы просмотреть их документы."
+"Позвольте своим клиентам войти в систему, чтобы просмотреть их документы"
 
 #. module: sale
 #. odoo-javascript
@@ -3539,7 +3544,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr "Ссылка на оплату"
+msgstr "Ссылка на оплату."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3554,7 +3559,7 @@ msgstr "Токен оплаты"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "платеж"
+msgstr "Платеж"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_transaction_menu
@@ -5000,7 +5005,7 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid "The product (%s) has incompatible values: %s"
-msgstr ""
+msgstr "Продукт (%s) имеет несовместимые значения: %s"
 
 #. module: sale
 #. odoo-python
@@ -5102,7 +5107,7 @@ msgstr ""
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 "Это способ доставки, например, открытка, электронная почта или баннерная "
-"реклама."
+"реклама"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
@@ -5585,6 +5590,13 @@ msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr ""
 "Вы не можете отменить заблокированный заказ. Пожалуйста, сначала "
 "разблокируйте его."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
+msgstr ""
 
 #. module: sale
 #. odoo-python

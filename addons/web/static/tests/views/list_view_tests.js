@@ -20082,4 +20082,65 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["onchange"], "There should only be one onchange call");
         }
     );
+
+    QUnit.test("list: remove a record from sorted recordlist", async function (assert) {
+        assert.expect(7);
+
+        serverData.models.foo.records = [{ id: 1, o2m: [1, 2, 3, 4, 5, 6] }];
+        serverData.models.bar.fields = {
+            ...serverData.models.bar.fields,
+            name: { string: "Name", type: "char", sortable: true },
+            city: { string: "City", type: "boolean", default: false },
+        };
+
+        serverData.models.bar.records = [
+            { id: 1, name: "a", city: true },
+            { id: 2, name: "b" },
+            { id: 3, name: "c" },
+            { id: 4, name: "d" },
+            { id: 5, name: "e" },
+            { id: 6, name: "f", city: true },
+        ];
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            mode: "edit",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m">
+                            <tree limit="2">
+                                <field name="id"/>
+                                <field name="name" required="not city"/>
+                                <field name="city"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+        });
+
+        // 4 th (1 for delete button, 3 for columns)
+        assert.containsN(target, "th", 4, "should have 3 columns and delete buttons");
+
+        assert.containsN(target, "tbody tr.o_data_row", 2, "should have 2 rows");
+        assert.containsOnce(target, "th.o_column_sortable", "should have 1 sortable column");
+        const getColNames = () =>
+            getNodesTextContent(document.querySelectorAll('.o_data_cell[name="name"'));
+        assert.deepEqual(getColNames(), ["a", "b"], "Should be sorted by id asc");
+        // sort by name desc
+        await click(target, "th.o_column_sortable[data-name=name]");
+        await click(target, "th.o_column_sortable[data-name=name]");
+        assert.deepEqual(getColNames(), ["f", "e"], "Should be sorted by name desc");
+        // remove second record
+        await click(target.querySelectorAll(".o_list_record_remove")[1]);
+        assert.deepEqual(getColNames(), ["f", "d"], "Should be sorted by name desc");
+        // check if the record is removed
+        assert.strictEqual(
+            target.querySelector(".o_list_view .o_pager_counter").textContent,
+            "1-2 / 5",
+            "pager should be updated to 1-2 / 5"
+        );
+    });
 });

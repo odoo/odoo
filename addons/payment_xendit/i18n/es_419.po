@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-07 10:24+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2024-01-23 08:23+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -24,6 +24,7 @@ msgstr ""
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
 msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
@@ -37,12 +38,14 @@ msgstr "Código"
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
 msgid "Could not establish the connection to the API."
 msgstr "No se pudo establecer la conexión con la API."
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
 msgid "No transaction found matching reference %s."
 msgstr "No se encontró ninguna transacción que coincida con la referencia %s."
 
@@ -59,8 +62,9 @@ msgstr "Transacción de pago"
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_transaction.py:0
+#, python-format
 msgid "Received data with missing reference."
-msgstr "Se recibió información sin referencias."
+msgstr "Datos recibidos sin referencia."
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
@@ -70,6 +74,7 @@ msgstr "Clave secreta"
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
+#, python-format
 msgid ""
 "The communication with the API failed. Xendit gave us the following "
 "information: '%s'"

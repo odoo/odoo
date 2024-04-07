@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Thi Huong Nguyen, 2023
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1050,15 +1050,6 @@ msgid "All at once"
 msgstr "Cùng một lúc"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"All our contractual relations will be governed exclusively by United States "
-"law."
-msgstr ""
-"Tất cả các mối quan hệ hợp đồng của chúng tôi sẽ chỉ được điều chỉnh bởi "
-"luật pháp Hoa Kỳ."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Tất cả dịch chuyển trả hàng"
@@ -1450,15 +1441,6 @@ msgid "Before scheduled date"
 msgstr "Trước ngày theo kế hoạch"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr ""
-"Văn bản dưới đây được xem như một gợi ý và không liên quan đến trách nhiệm "
-"của Odoo S.A."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Chặn tin nhắn"
@@ -1600,25 +1582,6 @@ msgstr "Danh mục"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Tuyến theo danh mục"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can My "
-"Company (Chicago) become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to My Company "
-"(Chicago) in its entirety and does not include any costs relating to the "
-"legislation of the country in which the client is located."
-msgstr ""
-"Một số quốc gia áp dụng khấu lưu tại nguồn đối với số tiền hóa đơn, theo "
-"luật nội bộ của họ. Mọi khoản khấu trừ tại nguồn sẽ được khách hàng thanh "
-"toán cho cơ quan thuế. Trong mọi trường hợp, Công ty của tôi (Chicago) không"
-" được tạo ra các chi phí liên quan đến luật pháp của một quốc gia. Do đó, "
-"toàn bộ số tiền của hóa đơn sẽ do Công ty của tôi (Chicago) thanh toán hết "
-"và không bao gồm bất kỳ chi phí nào liên quan đến luật pháp của quốc gia nơi"
-" khách hàng cư trú."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3534,6 +3497,13 @@ msgid "Generate Serials numbers"
 msgstr "Tạo số sê-ri"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "Truy xuất nguồn gốc đầy đủ từ nhà cung cấp đến khách hàng"
@@ -3751,18 +3721,6 @@ msgstr "Biểu tượng"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, My Company (Chicago) reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-"Nếu khoản thanh toán vẫn chưa được thanh toán quá sáu mươi (60) ngày sau "
-"ngày đến hạn, Công ty của Tôi (Chicago) có quyền sử dụng dịch vụ của một "
-"công ty thu hồi nợ. Mọi chi phí pháp lý sẽ được thanh toán bởi khách hàng."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -4022,6 +3980,13 @@ msgid "Import Lots"
 msgstr "Nhập lô"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr "Nhập lô/sê-ri"
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -4037,19 +4002,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "Loại"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"In order for it to be admissible, My Company (Chicago) must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-"Để được chấp nhận, Công ty của Tôi (Chicago) phải được thông báo về mọi "
-"khiếu nại nào bằng thư, được gửi theo phương thức chuyển phát cụ thể đến văn"
-" phòng đã đăng ký của công ty trong vòng 8 ngày kể từ ngày giao hàng hoặc "
-"cung cấp dịch vụ."
 
 #. module: stock
 #. odoo-javascript
@@ -4856,6 +4808,11 @@ msgid "Lot Label Format to auto-print"
 msgstr "Định dạng nhãn lô để tự động in"
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
 msgid "Lot Properties"
 msgstr "Thuộc tính lô"
@@ -5254,24 +5211,6 @@ msgid "My Activity Deadline"
 msgstr "Hạn chót hoạt động của tôi"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. My "
-"Company (Chicago) cannot under any circumstances, be required by the client "
-"to appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-"Công ty của tôi (Chicago) cam kết sẽ cố gắng hết sức để cung cấp các dịch vụ"
-" hiệu quả trong thời gian thích hợp theo khung thời gian đã thỏa thuận. Tuy "
-"nhiên, không có nghĩa vụ nào của nó có thể được coi là nghĩa vụ phải đạt "
-"được kết quả. Trong bất kỳ trường hợp nào, Công ty của tôi (Chicago) không "
-"được khách hàng yêu cầu xuất hiện với tư cách là bên thứ ba trong bối cảnh "
-"người tiêu dùng cuối cùng có khiếu nại về những thiệt hại mà khách hàng đã "
-"nộp cho khách hàng."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Phiếu kiểm đếm của tôi"
@@ -5354,12 +5293,6 @@ msgstr "Số lượng mới hiện có"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Điều chuyển mới"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5889,24 +5822,6 @@ msgstr "Quy tắc tái đặt hàng gốc"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "Thông tin khác"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, My Company (Chicago) reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
-msgstr ""
-"Hóa đơn của chúng tôi được thanh toán trong vòng 21 ngày làm việc, trừ khi "
-"khung thời gian thanh toán khác được ghi trên hóa đơn hoặc đơn đặt hàng. "
-"Trong trường hợp không thanh toán trước hạn, Công ty của Tôi (Chicago) có "
-"quyền yêu cầu thanh toán lãi suất cố định lên tới 10% số tiền còn lại chưa "
-"thanh toán. Công ty của Tôi (Chicago) sẽ được ủy quyền để đình chỉ bất kỳ "
-"hoạt động cung cấp dịch vụ nào mà không cần cảnh báo trước trong trường hợp "
-"thanh toán chậm."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7152,13 +7067,6 @@ msgid "RETURN OF"
 msgstr "TRẢ HÀNG CỦA"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
-msgid "Ratings"
-msgstr "Đánh giá"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
@@ -7747,6 +7655,14 @@ msgstr ""
 "chọn chúng trên sản phẩm và danh mục sản phẩm"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "Thông báo quy tắc"
@@ -7820,11 +7736,6 @@ msgstr "Demo SSCC"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "ĐIỀU KHOẢN VÀ ĐIỀU KIỆN BÁN HÀNG TIÊU CHUẨN"
 
 #. module: stock
 #. odoo-javascript
@@ -8850,19 +8761,6 @@ msgstr "Đơn hàng chậm trễ %s đã được tạo."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "Mã vạch cho một vị trí của mỗi công ty phải là duy nhất!"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-"Khách hàng từ bỏ một cách rõ ràng các điều khoản và điều kiện tiêu chuẩn của"
-" riêng mình, ngay cả khi những điều khoản và điều kiện đó được soạn thảo sau"
-" các điều khoản và điều kiện bán hàng tiêu chuẩn này. Để có hiệu lực, việc "
-"huỷ bỏ phải được đồng ý trước một cách rõ ràng bằng văn bản."
 
 #. module: stock
 #. odoo-python
@@ -10763,6 +10661,15 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -10979,13 +10886,6 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Bạn cần cung cấp số lô/sê-ri cho sản phẩm %s."
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"Bạn nên cập nhật tài liệu này cho phù hợp với Điều khoản và điều kiện của "
-"bạn."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -11025,15 +10925,6 @@ msgstr ""
 "Ở đây, bạn sẽ tìm thấy các đề xuất bổ sung thông minh dựa trên dự báo hàng tồn kho.\n"
 "            Chọn số lượng để mua hoặc sản xuất và khởi động đơn đặt hàng trong một cú nhấp chuột.\n"
 "            Để tiết kiệm thời gian sau này, hãy đặt các quy tắc là \"tự động\"."
-
-#. module: stock
-#: model_terms:res.company,lunch_notify_message:stock.res_company_1
-msgid ""
-"Your lunch has been delivered.\n"
-"Enjoy your meal!"
-msgstr ""
-"Bữa trưa của bạn đã được giao.\n"
-"Chúc bạn ngon miệng!"
 
 #. module: stock
 #. odoo-python

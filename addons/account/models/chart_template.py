@@ -244,17 +244,20 @@ class AccountChartTemplate(models.AbstractModel):
                 del data['account.journal'][xmlid]
             else:
                 journal = None
+                lang = self._get_untranslatable_fields_target_language(company.chart_template, company)
+                translated_code = self._get_field_translation(journal_data, 'code', lang)
                 if 'code' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
                         *self.env['account.journal']._check_company_domain(company),
-                        ('code', '=', journal_data['code']),
+                        ('code', 'in', (journal_data['code'], translated_code)),
                     ])
                 # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
+                translated_name = self._get_field_translation(journal_data, 'name', lang)
                 if not journal and 'name' in journal_data and 'type' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
                         *self.env['account.journal']._check_company_domain(company),
                         ('type', '=', journal_data['type']),
-                        ('name', '=', journal_data['name']),
+                        ('name', 'in', (journal_data['name'], translated_name)),
                     ], limit=1)
                 if journal:
                     del data['account.journal'][xmlid]
@@ -332,13 +335,14 @@ class AccountChartTemplate(models.AbstractModel):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
                         query.add_where("account_account.code SIMILAR TO %s", [f'{values["code"]}0*'])
                         accounts = self.env['account.account'].browse(query)
-                        account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
-                        if account:
+                        existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
+                        if existing_account:
                             self.env['ir.model.data']._update_xmlids([{
                                 'xml_id': f"account.{company.id}_{xmlid}",
-                                'record': account,
+                                'record': existing_account,
                                 'noupdate': True,
                             }])
+                            account = existing_account
 
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:

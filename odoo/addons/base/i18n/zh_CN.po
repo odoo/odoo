@@ -7,11 +7,11 @@
 # Martin Trigaux, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
-# 湘子 南 <1360857908@qq.com>, 2024
 # Yazi Tian, 2024
 # Wil Odoo, 2024
 # Chloe Wang, 2024
 # qilong zhong <zhongqilong001@gmail.com>, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
@@ -31946,7 +31946,7 @@ msgstr "计划行动触发器"
 #: code:addons/base/models/ir_cron.py:0
 #, python-format
 msgid "Scheduled action disabled"
-msgstr ""
+msgstr "已禁用安排的动作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -36080,7 +36080,7 @@ msgid ""
 "\n"
 "Sorry, %s doesn't have '%s' access to:"
 msgstr ""
-"啊哦看来你无意中发现了一些绝密记录。\n"
+"哦嚯！看来你无意中发现了一些绝密记录。\n"
 "\n"
 "对不起，%s没有'%s'的访问权限："
 
@@ -37936,6 +37936,15 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "不能删除 %s 记录。"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #. odoo-python

@@ -182,6 +182,9 @@ class ResourceCalendar(models.Model):
         else:
             number_of_days = len(set(attendances.mapped('dayofweek')))
 
+        if not number_of_days:
+            return 0
+
         return float_round(hour_count / float(number_of_days), precision_digits=2)
 
     def switch_calendar_type(self):

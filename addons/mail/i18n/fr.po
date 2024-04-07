@@ -548,16 +548,6 @@ msgstr ""
 "défaut lors de la création de nouveaux enregistrements pour cet alias."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
-msgid "A bus presence must have a user or a guest."
-msgstr "La présence d'un bus requiert un utilisateur ou un invité."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_member_partner_or_guest_exists
-msgid "A channel member must be a partner or a guest."
-msgstr "Le membre d'un canal doit être un partenaire ou un invité."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
@@ -576,12 +566,6 @@ msgstr ""
 "groupe."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
-msgid "A message reaction must be from a partner or from a guest."
-msgstr ""
-"Une réaction à un message doit provenir d'un partenaire ou d'un invité."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
@@ -598,11 +582,6 @@ msgid ""
 msgstr ""
 "Une clé API Google valide est requise pour activer la traduction des "
 "messages. https://cloud.google.com/translate/docs/setup"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
-msgid "A volume setting must have a partner or a guest."
-msgstr "Un paramètre de volume requiert un partenaire ou un invité."
 
 #. module: mail
 #. odoo-javascript
@@ -730,13 +709,6 @@ msgstr "Activités"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 msgid "Activities To Generate"
 msgstr "Activités à générer"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
-msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
-"Les activités doivent être liées à des enregistrements qui n'ont pas le "
-"res_id vide."
 
 #. module: mail
 #. odoo-javascript
@@ -1661,11 +1633,6 @@ msgstr ""
 "de domaine."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
-msgid "Bounce emails should be unique"
-msgstr "Les emails de rebond doivent être uniques"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 #, python-format
@@ -1884,11 +1851,6 @@ msgstr ""
 "L'alias catchall %(catchall)s est déjà utilisé pour un autre domaine portant"
 " le même nom. Utilisez un autre catchall ou utilisez simplement l'autre "
 "alias de domaine."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
-msgid "Catchall emails should be unique"
-msgstr "Les emails catchall doivent être uniques"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2593,13 +2555,6 @@ msgstr "Modèles personnalisés"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
 msgstr "Nom du canal personnalisé"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
-msgid "Customer is required for inbox / email notification"
-msgstr ""
-"Le client est requis pour la notification dans la boîte de réception / par "
-"email"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3369,11 +3324,6 @@ msgid "Email Thread"
 msgstr "Discussion par email"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
-msgid "Email address already exists!"
-msgstr "L'adresse email existe déjà !"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
 #: model:ir.model.fields,help:mail.field_mail_mail__email_from
 #: model:ir.model.fields,help:mail.field_mail_message__email_from
@@ -3573,11 +3523,6 @@ msgid ""
 msgstr ""
 "Erreur sans exception. Probablement due à l'envoi d'un email sans "
 "destinataires calculés."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
-msgid "Error, a partner cannot follow twice the same object."
-msgstr "Erreur, un partenaire ne peut pas suivre deux fois le même objet."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
@@ -4080,15 +4025,6 @@ msgstr "Regrouper par"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Group Name"
 msgstr "Nom du groupe"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_group_public_id_check
-msgid ""
-"Group authorization and group auto-subscription are only supported on "
-"channels."
-msgstr ""
-"L'autorisation de groupe et l'abonnement automatique de groupe ne sont pris "
-"en charge que sur les canaux."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -6785,11 +6721,6 @@ msgid "Only custom models can be modified."
 msgstr "Seuls les modèles personnalisés peuvent être modifiés."
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
-msgid "Only internal user can receive notifications in Odoo"
-msgstr "Seul un utilisateur interne peut recevoir des notifications dans Odoo"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
@@ -8049,6 +7980,13 @@ msgid "Save as a new template"
 msgstr "Enregistrer comme un nouveau modèle"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+#, python-format
+msgid "Save editing"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
 msgid "Save favorite GIF from Tenor API"
 msgstr "Enregistrer votre GIF favori de l'API Tenor"
@@ -9181,16 +9119,6 @@ msgid "The avatar has been updated!"
 msgstr "L'avatar a été mis à jour !"
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
-msgid "The channel UUID must be unique"
-msgstr "Le canal UUID doit être unique"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_channel_type_not_null
-msgid "The channel type cannot be empty"
-msgstr "Le type de canal ne peut pas être vide"
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
 msgid "The current user can edit the template."
 msgstr "L'utilisateur actuel peut modifier le modèle."
@@ -9206,11 +9134,6 @@ msgstr "La durée des messages vocaux est limitée à 1 minute."
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
 msgstr "L'email envoyé à"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_partner_device_endpoint_unique
-msgid "The endpoint must be unique !"
-msgstr "Le point de terminaison doit être unique !"
 
 #. module: mail
 #. odoo-python
@@ -9357,11 +9280,6 @@ msgstr "Le début du texte du corps utilisé comme un aperçu de l'email."
 #, python-format
 msgid "There are no messages in this conversation."
 msgstr "Il n'y a aucun message dans cette conversation."
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_channel_rtc_session_channel_member_unique
-msgid "There can only be one rtc session per channel member"
-msgstr "Il ne peut y avoir qu'une seule session rtc par membre de canal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -10179,11 +10097,6 @@ msgstr "L'utilisateur est en hors ligne"
 #, python-format
 msgid "User is online"
 msgstr "L'utilisateur est en ligne"
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_discuss_gif_favorite_user_gif_favorite
-msgid "User should not have duplicated favorite GIF"
-msgstr "L'utilisateur ne doit pas avoir dupliqué son GIF favori"
 
 #. module: mail
 #. odoo-python

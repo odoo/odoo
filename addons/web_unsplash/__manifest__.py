@@ -20,6 +20,9 @@
             'web_unsplash/static/src/components/media_dialog/*.xml',
             'web_unsplash/static/src/services/unsplash_service.js',
         ],
+        'web.qunit_suite_tests': [
+            'web_unsplash/static/tests/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

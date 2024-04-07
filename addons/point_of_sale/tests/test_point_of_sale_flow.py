@@ -543,6 +543,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_order_to_invoice(self):
 
+        invoice_partner_address = self.env["res.partner"].create({
+            'name': "Test invoice address",
+            'street': "Invoice Street",
+            'type': 'invoice',
+            'parent_id': self.partner1.id,
+        })
+
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
 
@@ -597,6 +604,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I generate an invoice from the order
         res = self.pos_order_pos1.action_pos_order_invoice()
         self.assertIn('res_id', res, "Invoice should be created")
+        self.assertEqual(self.pos_order_pos1.account_move.partner_id.id, invoice_partner_address.id, "Invoice address should be used")
 
         # I test that the total of the attached invoice is correct
         invoice = self.env['account.move'].browse(res['res_id'])

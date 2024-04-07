@@ -6,6 +6,7 @@
 # ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Collex100, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Collex100, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "Код"
 #: code:addons/payment_payulatam/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid payment status."
-msgstr ""
+msgstr "Неверный статус платежа."
 
 #. module: payment_payulatam
 #. odoo-python
@@ -44,22 +45,22 @@ msgstr "Не найдено ни одной транзакции, соответ
 #: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_provider__code__payulatam
 #: model:payment.provider,name:payment_payulatam.payment_provider_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_api_key
 msgid "PayU Latam API Key"
-msgstr ""
+msgstr "API-интерфейс PayU Latam API"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_account_id
 msgid "PayU Latam Account ID"
-msgstr ""
+msgstr "ID счета PayU в Латинской Америке"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "PayU Latam Merchant ID"
-msgstr ""
+msgstr "ID продавца PayU в Латинской Америке"
 
 #. module: payment_payulatam
 #: model:ir.model,name:payment_payulatam.model_payment_provider
@@ -75,12 +76,16 @@ msgstr "Операция Оплаты"
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "The ID solely used to identify the account with PayULatam"
 msgstr ""
+"Идентификатор, используемый исключительно для идентификации счета в "
+"PayULatam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_account_id
 msgid ""
 "The ID solely used to identify the country-dependent shop with PayULatam"
 msgstr ""
+"Идентификатор, используемый исключительно для идентификации магазина в "
+"зависимости от страны с помощью PayULatam"
 
 #. module: payment_payulatam
 #: model:ir.model.fields,help:payment_payulatam.field_payment_provider__code
@@ -93,6 +98,8 @@ msgid ""
 "This provider is deprecated.\n"
 "                    Consider disabling it and moving to <strong>Mercado Pago</strong>."
 msgstr ""
+"Этот провайдер устарел.\n"
+"                    Рассмотрите возможность его отключения и перехода на <strong>Mercado Pago</strong>."
 
 #. module: payment_payulatam
 #: model_terms:payment.provider,auth_msg:payment_payulatam.payment_provider_payulatam
