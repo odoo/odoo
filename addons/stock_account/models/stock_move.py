@@ -38,12 +38,9 @@ class StockMove(models.Model):
         self.ensure_one()
         return False
 
-    def _get_price_unit(self):
-        """ Returns the unit price to value this stock move """
+    def _get_origin_returned_layers(self):
         self.ensure_one()
-        price_unit = self.price_unit
-        precision = self.env['decimal.precision'].precision_get('Product Price')
-        # If the move is a return, use the original move's price unit.
+        layers = self.env["stock.valuation.layer"]
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
@@ -51,6 +48,16 @@ class StockMove(models.Model):
             if self.origin_returned_move_id._is_dropshipped() or self.origin_returned_move_id._is_dropshipped_returned():
                 layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
+        return layers
+
+    def _get_price_unit(self):
+        """ Returns the unit price to value this stock move """
+        self.ensure_one()
+        price_unit = self.price_unit
+        precision = self.env['decimal.precision'].precision_get('Product Price')
+        # If the move is a return, use the original move's price unit.
+        layers = self._get_origin_returned_layers()
+        if layers:
             quantity = sum(layers.mapped("quantity"))
             return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
