@@ -11,14 +11,18 @@
 
         _toggleSlidePreview: function(slideTarget) {
             rpc('/slides/slide/toggle_is_preview', {
-                slide_id: slideTarget.dataset.slide_id,
+                slide_id: slideTarget.dataset.slideId,
             }).then(function (isPreview) {
                 if (isPreview) {
-                    slideTarget.classList.remove('text-bg-light badge-hide border');
+                    slideTarget.classList.remove('text-bg-light');
+                    slideTarget.classList.remove('badge-hide');
+                    slideTarget.classList.remove('border');
                     slideTarget.classList.add('text-bg-success');
                 } else {
                     slideTarget.classList.remove('text-bg-success');;
-                    slideTarget.classList.add('text-bg-light badge-hide border');;
+                    slideTarget.classList.add('text-bg-light');
+                    slideTarget.classList.add('badge-hide');
+                    slideTarget.classList.add('border');
                 }
             });
         },

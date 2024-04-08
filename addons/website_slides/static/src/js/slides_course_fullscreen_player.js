@@ -11,6 +11,7 @@
     import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
+    import { typeCastDataset } from "@web/core/utils/misc";
     import { rpc } from "@web/core/network/rpc";
 
     import { markup } from "@odoo/owl";
@@ -246,9 +247,9 @@
         },
         start: function (){
             const self = this;
-            this.addEventListener('change:slideEntry', this, this._onChangeCurrentSlide);
+            this.el.addEventListener('change:slideEntry', this, this._onChangeCurrentSlide);
             return this._super.apply(this, arguments).then(function (){
-                document.addEventListener('keydown', self._onKeyDown.bind(self));;
+                document.addEventListener('keydown', self._onKeyDown.bind(self));
             });
         },
         destroy: function () {
@@ -407,7 +408,7 @@
          */
         start: function (){
             const self = this;
-            this.addEventListener('change:slide', this, this._onChangeSlide);
+            this.el.addEventListener('change:slide', this, this._onChangeSlide);
             this._toggleSidebar();
             const backendNavEl = document.querySelector('.o_frontend_to_backend_nav');
             if (backendNavEl) {
@@ -472,9 +473,12 @@
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
+                const domParser = new DOMParser();
                 // compute embed url
                 if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
-                    slideData.embedCode = slideData.embedCode.getAttribute('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    const parsedDocument = domParser.parseFromString(slideData.embedCode, "text/html");
+                    const embedCode = parsedDocument.body.firstChild;
+                    slideData.embedCode = embedCode.getAttribute('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
                     const separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
                     const scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
                     const params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
@@ -487,7 +491,9 @@
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {
-                    slideData.embedUrl = slideData.embedCode.getAttribute('src');
+                    const parsedDocument = domParser.parseFromString(slideData.embedCode, "text/html");
+                    const embedCode = parsedDocument.body.firstChild;
+                    slideData.embedUrl = embedCode.getAttribute('src');
                 }
                 // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
@@ -701,7 +707,7 @@
          */
         _toggleSidebar: function () {
             this.el.querySelector('.o_wslides_fs_sidebar').classList.toggle('o_wslides_fs_sidebar_hidden');
-            this.el.querySelector('.o_wslides_fs_toggle_sidebar').toggle('active');
+            this.el.querySelector('.o_wslides_fs_toggle_sidebar').classList.toggle('active');
         },
     });
 
@@ -716,7 +722,7 @@
             return proms;
         },
         _extractChannelData: function (){
-            return this.el.dataset;
+            return typeCastDataset(this.el.dataset);
         },
         _getCurrentSlideID: function (){
             return parseInt(this.el.querySelector('.o_wslides_fs_sidebar_list_item.active').dataset.id);
@@ -728,8 +734,8 @@
         _getSlides: function (){
             const slides = this.el.querySelectorAll('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
             const slideList = [];
-            slides.forEach(function () {
-                const slideData = this.dataset;
+            slides.forEach(function (el) {
+                const slideData = typeCastDataset(el.dataset);
                 slideList.push(slideData);
             });
             return slideList;

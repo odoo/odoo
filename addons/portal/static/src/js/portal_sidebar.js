@@ -50,6 +50,7 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @param {string} href
      */
     _printIframeContent: function (href) {
+        debugger;
         if (!this.printContent) {
             const iframe = document.createElement('iframe');
             iframe.setAttribute('id', 'print_iframe_content');

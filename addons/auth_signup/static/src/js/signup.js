@@ -20,6 +20,6 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
         btn.setAttribute('disabled', 'disabled');
         const iTag = document.createElement('i');
         iTag.setAttribute('class', 'fa fa-refresh fa-spin');
-        document.insertBefore(iTag, btn);
+        btn.parentElement.insertBefore(iTag, btn);
     },
 });

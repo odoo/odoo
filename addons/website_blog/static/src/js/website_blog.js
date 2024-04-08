@@ -16,7 +16,9 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        $('.js_tweet, .js_comment').share({});
+        Array.from(document.querySelectorAll('.js_tweet, .js_comment')).forEach(el => {
+            el.share({});
+        });
         return this._super.apply(this, arguments);
     },
 
@@ -30,21 +32,21 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onNextBlogClick: function (ev) {
         ev.preventDefault();
-        var self = this;
-        var $el = $(ev.currentTarget);
-        var nexInfo = $el.find('#o_wblog_next_post_info').data();
-        $el.find('.o_record_cover_container').addClass(nexInfo.size + ' ' + nexInfo.text).end()
-           .find('.o_wblog_toggle').toggleClass('d-none');
+        const self = this;
+        const el = ev.currentTarget;
+        const nexInfo = el.querySelector('#o_wblog_next_post_info').dataset;
+        el.querySelector('.o_record_cover_container').classList.add(nexInfo.size, nexInfo.text);
+        el.querySelector('.o_wblog_toggle').classList.toggle('d-none');
         // Appending a placeholder so that the cover can scroll to the top of the
         // screen, regardless of its height.
         const placeholder = document.createElement('div');
         placeholder.style.minHeight = '100vh';
-        this.$('#o_wblog_next_container').append(placeholder);
+        this.el.querySelector('#o_wblog_next_container').append(placeholder);
 
         // Use setTimeout() to calculate the 'offset()'' only after that size classes
-        // have been applyed and that $el has been resized.
+        // have been applyed and that el has been resized.
         setTimeout(() => {
-            self._forumScrollAction($el, 300, function () {
+            self._forumScrollAction(el, 300, function () {
                 window.location.href = nexInfo.url;
             });
         });
@@ -56,9 +58,9 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     _onContentAnchorClick: function (ev) {
         ev.preventDefault();
         ev.stopImmediatePropagation();
-        var $el = $(ev.currentTarget.hash);
+        const el = document.querySelector(ev.currentTarget.hash);
 
-        this._forumScrollAction($el, 500, function () {
+        this._forumScrollAction(el, 500, function () {
             window.location.hash = 'blog_content';
         });
     },
@@ -68,20 +70,20 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      */
     _onShareArticle: function (ev) {
         ev.preventDefault();
-        var url = '';
-        var $element = $(ev.currentTarget);
-        var blogPostTitle = $('#o_wblog_post_name').html() || '';
-        var articleURL = window.location.href;
-        if ($element.hasClass('o_twitter')) {
-            var tweetText = _t(
+        let url = '';
+        const element = ev.currentTarget;
+        const blogPostTitle = document.querySelector('#o_wblog_post_name').innerHTML || '';
+        const articleURL = window.location.href;
+        if (element.classList.contains('o_twitter')) {
+            const tweetText = _t(
                 "Amazing blog article: %s! Check it live: %s",
                 blogPostTitle,
                 articleURL
             );
             url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
-        } else if ($element.hasClass('o_facebook')) {
+        } else if (element.classList.contains('o_facebook')) {
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(articleURL);
-        } else if ($element.hasClass('o_linkedin')) {
+        } else if (element.classList.contains('o_linkedin')) {
             url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(articleURL);
         }
         window.open(url, '', 'menubar=no, width=500, height=400');
@@ -93,11 +95,11 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {JQuery} $el - the element we are scrolling to
+     * @param {HTMLElement} el - the element we are scrolling to
      * @param {Integer} duration - scroll animation duration
      * @param {Function} callback - to be executed after the scroll is performed
      */
-    _forumScrollAction: function ($el, duration, callback) {
-        dom.scrollTo($el[0], {duration: duration}).then(() => callback());
+    _forumScrollAction: function (el, duration, callback) {
+        dom.scrollTo(el, {duration: duration}).then(() => callback());
     },
 });

@@ -23,12 +23,12 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
      */
     start: function () {
         return this._super.apply(this, arguments).then(() => {
-            let timeToLive = this.$el.data('time-to-live');
+            let timeToLive = this.el.dataset.time-to-live;
             let deadline = DateTime.now().plus({ seconds: timeToLive });
             let remainingMs = deadline.diff(DateTime.now()).as("milliseconds");
             if (remainingMs > 0) {
                 this._updateTimerDisplay(remainingMs);
-                this.$el.removeClass('d-none');
+                this.el.classList.remove('d-none');
                 this.deadline = deadline;
                 this.timer = setInterval(this._refreshTimer.bind(this), 1000);
             } else {
@@ -41,7 +41,7 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
      * @override
      */
     destroy: function () {
-        this.$el.parent().remove();
+        this.el.parentNode.remove();
         clearInterval(this.timer);
         this._super(...arguments);
     },
@@ -75,11 +75,11 @@ publicWidget.registry.websiteEventTrackTimer = publicWidget.Widget.extend({
      * @param {integer} remainingMs - Time remaining before the counter expires (in ms).
      */
     _updateTimerDisplay: function (remainingMs) {
-        let $timerTextEl = this.$el.find('span');
+        let timerTextEl = this.el.querySelector('span');
         const humanDuration = formatDuration(remainingMs / 1000, true);
         const str = _t("in %s", humanDuration);
-        if (str !== $timerTextEl.text()) {
-            $timerTextEl.text(str);
+        if (str !== timerTextEl.textContent) {
+            timerTextEl.textContent = str;
         }
     },
 });
