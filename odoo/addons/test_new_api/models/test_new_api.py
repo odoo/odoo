@@ -969,6 +969,7 @@ class ModelImage(models.Model):
     image_512 = fields.Image("Image 512", related='image', max_width=512, max_height=512, store=True, readonly=False)
     image_256 = fields.Image("Image 256", related='image', max_width=256, max_height=256, store=False, readonly=False)
     image_128 = fields.Image("Image 128", max_width=128, max_height=128)
+    image_64 = fields.Image("Image 64", related='image', max_width=64, max_height=64, store=True, attachment=False)
 
 
 class BinarySvg(models.Model):
