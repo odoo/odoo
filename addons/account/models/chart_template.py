@@ -283,14 +283,12 @@ class AccountChartTemplate(models.AbstractModel):
             for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
         }
         def tax_template_changed(tax, template):
+            template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
             return (
                 tax.amount_type != template.get('amount_type', 'percent')
                 or tax.amount != template.get('amount', 0)
-                or (
-                    len(tax.repartition_line_ids) != len(template.get('repartition_line_ids', []))
-                    # Taxes that don't have repartition lines in their templates get theirs created by default
-                    and len(template.get('repartition_line_ids', [])) != 0
-                )
+                # Taxes that don't have repartition lines in their templates get theirs created by default
+                or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
 
         obsolete_xmlid = set()
@@ -299,17 +297,18 @@ class AccountChartTemplate(models.AbstractModel):
             for xmlid, values in records.items():
                 if model_name == 'account.fiscal.position':
                     # Only add tax mappings containing new taxes
-                    values['tax_ids'] = [
-                        (command, id, vals)
-                        for command, id, vals in values.get('tax_ids', [])
-                        if (
-                            command not in (Command.UPDATE, Command.CREATE)
-                            or not self.ref(vals['tax_src_id'], raise_if_not_found=False)
-                            or (vals.get('tax_dest_id') and not self.ref(vals['tax_dest_id'], raise_if_not_found=False))
-                        )
-                    ]
-                    if not values['tax_ids']:
-                        del values['tax_ids']
+                    if old_tax_ids := values.pop('tax_ids', []):
+                        new_tax_ids = []
+                        for element in old_tax_ids:
+                            match element:
+                                case Command.CREATE, _, {'tax_src_id': src_id, 'tax_dest_id': dest_id} if (
+                                    not self.ref(src_id, raise_if_not_found=False)
+                                    or (dest_id and not self.ref(dest_id, raise_if_not_found=False))
+                                ):
+                                    new_tax_ids.append(element)
+                        if new_tax_ids:
+                            values['tax_ids'] = new_tax_ids
+
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
@@ -331,10 +330,11 @@ class AccountChartTemplate(models.AbstractModel):
                         values.clear()
                         if repartition_lines:
                             values['repartition_line_ids'] = repartition_lines
-                            for _c, _id, repartition_line in values.get('repartition_line_ids', []):
-                                tags = repartition_line.get('tag_ids')
-                                repartition_line.clear()
-                                repartition_line['tag_ids'] = tags or [Command.clear()]
+                            for element in values.get('repartition_line_ids', []):
+                                match element:
+                                    case int() as command, _, {'tag_ids': tags} as repartition_line_values if command in tuple(Command):
+                                        repartition_line_values.clear()
+                                        repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
@@ -730,7 +730,7 @@ class AccountChartTemplate(models.AbstractModel):
         else:
             accounts = self.env['account.account']._load_records([
                 {
-                    'xml_id': f"account.{str(self.env.company.id)}_{xml_id}",
+                    'xml_id': f"account.{company.id}_{xml_id}",
                     'values': values,
                     'noupdate': True,
                 }
@@ -1051,7 +1051,7 @@ class AccountChartTemplate(models.AbstractModel):
             for field_name in ('repartition_line_ids', 'invoice_repartition_line_ids', 'refund_repartition_line_ids'):
                 for element in tax_values.get(field_name, []):
                     match element:
-                        case Command(), _, {'tag_ids': str() as tags} as values:
+                        case int() as command, _, {'tag_ids': str() as tags} as values if command in tuple(Command):
                             values['tag_ids'] = [Command.set(mapper(*tags.split(TAX_TAG_DELIMITER)))]
 
     def _parse_csv(self, template_code, model, module=None):
