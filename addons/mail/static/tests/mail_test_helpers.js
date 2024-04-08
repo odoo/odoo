@@ -246,6 +246,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
 let NEXT_ENV_ID = 1;
 
 export async function start({ asTab = false, authenticateAs, env: pEnv } = {}) {
+    mockBroadcastChannel();
     if (!MockServer.current) {
         await startServer();
     }
@@ -457,6 +458,16 @@ export function mockGetMedia() {
             stream.getTracks().forEach((track) => track.stop());
         });
     });
+}
+
+function mockBroadcastChannel() {
+    class SelfClosingBroadcastChannel extends BroadcastChannel {
+        constructor() {
+            super(...arguments);
+            after(() => this.close());
+        }
+    }
+    patchWithCleanup(browser, { BroadcastChannel: SelfClosingBroadcastChannel });
 }
 
 /**
