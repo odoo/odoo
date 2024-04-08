@@ -1271,12 +1271,12 @@ QUnit.module("Views", ({ beforeEach }) => {
             `,
         });
 
-        await clickEvent(target, 4);
+        await clickEvent(target, 2);
         assert.containsOnce(target, ".o_cw_popover", "should open a popover clicking on event");
         assert.strictEqual(
             target.querySelector(".o_cw_popover .popover-header").textContent,
-            "event 4",
-            "popover should have a title 'event 4'"
+            "event 2",
+            "popover should have a title 'event 2'"
         );
         assert.containsOnce(
             target,
@@ -1294,9 +1294,13 @@ QUnit.module("Views", ({ beforeEach }) => {
             "popover should have a close button"
         );
         assert.strictEqual(
-            target.querySelector(".o_cw_popover .list-group-item span.fw-bold").textContent,
-            "December 14, 2016",
+            target.querySelectorAll(".o_cw_popover .list-group-item")[0].textContent.trim(),
+            "December 12, 2016",
             "should display date 'December 14, 2016'"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_cw_popover .list-group-item")[1].textContent.trim(),
+            "11:55 - 15:55 (4 hours)"
         );
         assert.containsN(
             target,
@@ -1316,8 +1320,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             groups[0].querySelector(".o_field_char").textContent,
-            "event 4",
-            "value should be a 'event 4'"
+            "event 2",
+            "value should be a 'event 2'"
         );
         assert.containsOnce(groups[1], ".o_form_uri", "should apply m20 widget");
         assert.strictEqual(
@@ -2333,7 +2337,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o-calendar-quick-create--edit-btn");
     });
 
-    QUnit.test(`show start time of single day event for month mode`, async (assert) => {
+    QUnit.test(`show start time of single day event`, async (assert) => {
         patchTimeZone(-240);
 
         await makeView({
@@ -2363,11 +2367,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // switch to week mode
         await changeScale(target, "week");
-        assert.containsNone(
-            findEvent(target, 2),
-            ".fc-content .fc-time",
-            "should not show time in week mode as week mode already have time on y-axis"
-        );
+        assert.containsOnce(findEvent(target, 2), ".fc-content .fc-time");
     });
 
     QUnit.test(`start time should not shown for date type field`, async (assert) => {
@@ -2389,9 +2389,15 @@ QUnit.module("Views", ({ beforeEach }) => {
             ".fc-content .fc-time",
             "should not show time for date type field"
         );
+
+        await changeScale(target, "week");
+        assert.containsNone(findEvent(target, 2), ".fc-content .fc-time");
+
+        await changeScale(target, "day");
+        assert.containsNone(findEvent(target, 2), ".fc-content .fc-time");
     });
 
-    QUnit.test(`start time should not shown in month mode if hide_time is true`, async (assert) => {
+    QUnit.test(`start time should not shown if hide_time is true`, async (assert) => {
         patchTimeZone(-240);
 
         await makeView({
@@ -2408,6 +2414,12 @@ QUnit.module("Views", ({ beforeEach }) => {
             ".fc-content .fc-time",
             "should not show time for hide_time attribute"
         );
+
+        await changeScale(target, "week");
+        assert.containsNone(findEvent(target, 2), ".fc-content .fc-time");
+
+        await changeScale(target, "day");
+        assert.containsNone(findEvent(target, 2), ".fc-content .fc-time");
     });
 
     QUnit.test(`readonly date_start field`, async (assert) => {
@@ -3435,7 +3447,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o-calendar-quick-create--create-btn");
         assert.strictEqual(
             findEvent(target, 8).textContent,
-            "new event in quick create",
+            "00:00 new event in quick create",
             "should display the new record after quick create dialog"
         );
     });
