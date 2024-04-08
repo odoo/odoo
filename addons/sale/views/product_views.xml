@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <page name="sales" position="attributes">
-                <attribute name="invisible" remove="1" separator=" or "></attribute>
+                <attribute name="invisible" remove="1" separator="or"/>
             </page>
             <field name="product_variant_count" position="after">
                 <field name="service_type" widget="radio" invisible="True"/>

@@ -5,7 +5,7 @@
         <!-- We do not let the user create the invoice by themselves. That is why we hide the
         "Get my Invoice" button -->
         <xpath expr="//div[@id='get_my_invoice']" position="attributes">
-            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator=" and " />
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
         </xpath>
         <xpath expr="//div[@id='get_my_invoice']/.." position="after">
             <h4 class="text-danger" t-if="pos_order.company_id.country_code == 'PE' and not pos_order.is_invoiced">
@@ -17,10 +17,10 @@
         because the get my invoice button is not shown and then the partner info is never saved. In they
         want they can sign up and fill data from there -->
         <xpath expr="//div[hasclass('o_portal_details')]" position="attributes">
-            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator=" and " />
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
         </xpath>
         <xpath expr="//div[@id='get_info_div']" position="attributes">
-            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator=" and " />
+            <attribute name="t-if" add="(pos_order.company_id.country_code != 'PE')" separator="and" />
         </xpath>
         <xpath expr="//div[@id='get_info_div']" position="after">
             <h4 t-else="">

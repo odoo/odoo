@@ -12,13 +12,13 @@
                 <field name="custom_mode" invisible="1"/>
             </field>
             <page name="credentials" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </page>
             <field name="payment_method_ids" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
             <a name="action_view_payment_methods" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </a>
             <field name="capture_manually" position="after">
                 <field name="qr_code" invisible="code != 'custom'" />
@@ -27,7 +27,7 @@
                 <attribute name="invisible">code == 'custom'</attribute>
             </group>
             <field name="pre_msg" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
             <field name="pending_msg" position="after">
                 <div class="o_row" colspan="2"
@@ -41,10 +41,10 @@
               </div>
             </field>
             <field name="done_msg" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
             <field name="cancel_msg" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'custom'"/>
+                <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </field>
         </field>
     </record>

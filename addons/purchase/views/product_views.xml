@@ -55,7 +55,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='purchase']" position="attributes">
-                    <attribute name="invisible" remove="1" separator=" or "></attribute>
+                    <attribute name="invisible" remove="1" separator="or"/>
                     <attribute name="groups">purchase.group_purchase_user</attribute>
                 </xpath>
                 <group name="purchase" position="before">

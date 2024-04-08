@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <page name="credentials" position="attributes">
-                <attribute name="invisible" separator=" or " add="code == 'demo'"/>
+                <attribute name="invisible" separator="or" add="code == 'demo'"/>
             </page>
         </field>
     </record>

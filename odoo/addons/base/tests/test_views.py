@@ -3768,6 +3768,234 @@ class TestViewCombined(ViewCase):
             'arch': '<a position="replace"/>',
         })
 
+    def test_inherit_python_expression(self):
+        main_view = self.View.create({
+            'model': 'res.partner',
+            'arch': '''
+                <form>
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                </form>''',
+        })
+
+        def test_inherit(arch, result):
+            view = self.View.create({
+                'model': 'res.partner',
+                'inherit_id': main_view.id,
+                'mode': 'primary',
+                'arch': arch,
+            })
+            python_expr = etree.fromstring(view.get_combined_arch())[0][0].get('invisible')
+            self.assertEqual(python_expr, result)
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">name == 'a'</attribute>
+                </xpath>
+            </data>
+        ''', "name == 'a'")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">name == 'a'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </data>
+        ''', "True")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">name == 'a'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible" add="name == 'b'" separator="or"/>
+                </xpath>
+            </data>
+        ''', "(name == 'a') or (name == 'b')")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">name == 'e' and name == 'f'</attribute>
+                    <attribute name="invisible" add="id == 33" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(name == 'e' and name == 'f') and (id == 33)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">name == 'e' and name == 'f'</attribute>
+                    <attribute name="invisible" add="id == 33" separator="and"/>
+                    <attribute name="invisible" add="id == 42" separator="or"/>
+                    <attribute name="invisible" add="id == 1" separator=" and "/>
+                </xpath>
+            </data>
+        ''', "(((name == 'e' and name == 'f') and (id == 33)) or (id == 42)) and (id == 1)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" add="id == 3" separator="and"/>
+                    <attribute name="invisible" add="id == 4" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)</attribute>
+                    <attribute name="invisible" remove="id == 2" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1)) and (id == 3)) and (id == 4)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">(id == 1) and (id == 2) and (id == 3)</attribute>
+                    <attribute name="invisible" remove="id == 2" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(id == 1) and (id == 3)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)</attribute>
+                    <attribute name="invisible" remove="id == 3" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1) and (id == 2))) and (id == 4)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="id == 1" separator="and"/>
+                </xpath>
+            </data>
+        ''', None)
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" add="id == 3" separator="and"/>
+                    <attribute name="invisible" add="id == 4" separator="and"/>
+                    <attribute name="invisible" remove="id == 3" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1) and (id == 2))) and (id == 4)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">(((id == 1) and (id == 2)) and (id == 3)) and (id == 4)</attribute>
+                    <attribute name="invisible" remove="id == 3" separator="and"/>
+                    <attribute name="invisible" remove="NO_MATCH" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1) and (id == 2))) and (id == 4)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="id == 1" add="name" separator="and"/>
+                </xpath>
+            </data>
+        ''', "name")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="id == 2" add="name == 'foo'" separator="and"/>
+                    <attribute name="invisible" add="name" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(((id == 1)) and (name == 'foo')) and (name)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1 or not name</attribute>
+                    <attribute name="invisible" remove="1" separator="or"/>
+                </xpath>
+            </data>
+        ''', "not name")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1 or not name</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="1" separator="or"/>
+                    <attribute name="invisible" remove="not name" separator="and"/>
+                </xpath>
+            </data>
+        ''', "(id == 2)")
+
+        test_inherit('''
+            <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1 or not name</attribute>
+                    <attribute name="invisible" add="id == 2" separator="and"/>
+                    <attribute name="invisible" remove="1" separator="or"/>
+                </xpath>
+            </data>
+        ''', "(not name) and (id == 2)")
+
+        self.assertInvalid(
+            ''' <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible" position="add">True</attribute>
+                </xpath>
+            </data> ''',
+            "Invalid attributes 'position' in element <attribute>",
+            inherit_id=main_view.id,
+            model=main_view.model,
+        )
+
+        self.assertInvalid(
+            ''' <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible" add="True">text</attribute>
+                </xpath>
+            </data> ''',
+            "Element <attribute> with 'add' or 'remove' cannot contain text 'text'",
+            inherit_id=main_view.id,
+            model=main_view.model,
+        )
+
+        self.assertInvalid(
+            ''' <data>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="invisible">id == 1</attribute>
+                    <attribute name="invisible" add="id == 2" separator="else"/>
+                </xpath>
+            </data> ''',
+            "Invalid separator 'else' for python expression 'invisible'; valid values are 'and' and 'or'",
+            inherit_id=main_view.id,
+            model=main_view.model,
+        )
+
 
 class TestOptionalViews(ViewCase):
     """

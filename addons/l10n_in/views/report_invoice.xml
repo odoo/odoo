@@ -23,7 +23,7 @@
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="attributes">
-            <attribute name="t-if" add="and o.company_id.account_fiscal_country_id.code != 'IN'" separator=" "/>
+            <attribute name="t-if" add="o.company_id.account_fiscal_country_id.code != 'IN'" separator="and"/>
         </xpath>
 
         <xpath expr="//div[@id='qrcode_info']" position="after">

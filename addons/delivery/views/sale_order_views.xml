@@ -40,7 +40,7 @@
                 <field name="is_delivery" column_invisible="True"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator=" or "/>
+                <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
             </xpath>
             <label for="commitment_date" position="before">
                 <field name="shipping_weight" readonly="True"/>

@@ -65,7 +65,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='sales']" position="attributes">
-                <attribute name="invisible" remove="1" separator=" or "></attribute>
+                <attribute name="invisible" remove="1" separator="or"/>
             </xpath>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group name="pos" string="Point of Sale" invisible="not sale_ok">
@@ -88,7 +88,7 @@
                 </page>
             </xpath>
             <xpath expr="//page[@name='purchase']" position="attributes">
-                <attribute name="invisible" separator=" or " add="detailed_type == 'combo'"></attribute>
+                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"></attribute>
             </xpath>
             <xpath expr="//page[@name='inventory']" position="attributes">
                 <attribute name="invisible">type in ['combo', 'service']</attribute>
