@@ -208,7 +208,7 @@ class IrHttp(models.AbstractModel):
                 args[key].check_access_rule('read')
             except (odoo.exceptions.AccessError, odoo.exceptions.MissingError) as e:
                 # custom behavior in case a record is not accessible / has been removed
-                if handle_error := rule.endpoint.original_routing.get('handle_params_access_error'):
+                if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
                     if response := handle_error(e):
                         werkzeug.exceptions.abort(response)
                 if isinstance(e, odoo.exceptions.MissingError):
