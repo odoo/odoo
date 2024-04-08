@@ -602,7 +602,7 @@ class SurveyQuestion(models.Model):
                 answer_line_ids=answer_lines,
                 answer_line_done_ids=done_lines,
                 answer_input_done_ids=done_lines.mapped('user_input_id'),
-                answer_input_skipped_ids=skipped_lines.mapped('user_input_id'),
+                answer_input_ids=answer_lines.mapped('user_input_id'),
                 comment_line_ids=comment_line_ids)
             question_data.update(question._get_stats_summary_data(answer_lines))
 
