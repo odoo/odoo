@@ -5,6 +5,7 @@ import time
 
 import odoo
 from odoo import fields, tools
+from odoo.fields import Command
 from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests.common import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
@@ -182,6 +183,78 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         current_session.action_pos_session_closing_control()
+
+    def test_order_partial_refund(self):
+        """ The purpose of this test is to make a partial refund of a pos order.
+        The amount to refund should depend on the article returned and once the
+        payment made, the refund order should be marked as paid."""
+        self.pos_config.open_session_cb(check_coa=False)
+        current_session = self.pos_config.current_session_id
+
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 10,
+                    'qty': 1,
+                    'price_subtotal': 10,
+                    'price_subtotal_incl': 10,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 15,
+                    'qty': 1,
+                    'price_subtotal': 15,
+                    'price_subtotal_incl': 15,
+                }),
+                Command.create({
+                    'product_id': self.product3.id,
+                    'price_unit': 20,
+                    'qty': 1,
+                    'price_subtotal': 20,
+                    'price_subtotal_incl': 20,
+                })
+            ],
+            'amount_total': 45.0,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        self.assertEqual(order.amount_total, order.amount_paid)
+
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = 0
+            with refund_form.lines.edit(1) as line_2:
+                line_2.qty = 0
+        refund = refund_form.save()
+
+        self.assertEqual(refund.amount_total, -20.0)
+
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        self.assertEqual(refund.state, 'paid')
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, 'closed')
 
     def test_ship_later_picking(self):
         """
