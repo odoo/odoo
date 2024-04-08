@@ -404,8 +404,8 @@ class Cursor(BaseCursor):
 
     @contextmanager
     def _enable_table_tracking(self):
+        old = self._sql_table_tracking
         try:
-            old = self._sql_table_tracking
             self._sql_table_tracking = True
             yield
         finally:
