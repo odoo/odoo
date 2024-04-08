@@ -1062,6 +1062,15 @@ class AccountChartTemplate(models.AbstractModel):
             module = self._get_chart_template_mapping().get(template_code)['module']
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
+        def evaluate(key, value, model_fields):
+            if '@' in key:
+                return value
+            if '/' in key:
+                return []
+            if model_fields and model_fields[key].type in ('boolean', 'int', 'float'):
+                return ast.literal_eval(value) if value else False
+            return value
+
         res = {}
         for template in self._get_parent_template(template_code)[::-1] or ['']:
             try:
@@ -1070,27 +1079,26 @@ class AccountChartTemplate(models.AbstractModel):
                         if row['id']:
                             last_id = row['id']
                             res[row['id']] = {
-                                key.split('/')[0]: (
-                                    value if '@' in key
-                                    else [] if '/' in key
-                                    else (value and ast.literal_eval(value) or False) if model_fields[key].type in ('boolean', 'int', 'float')
-                                    else value
-                                )
+                                key.split('/')[0]: evaluate(key, value, model_fields)
                                 for key, value in row.items()
-                                if key != 'id' and value != "" and ('@' in key or '/' in key or key in model_fields)
+                                if key != 'id' and value and ('@' in key or key in model_fields)
                             }
                         create_added = set()
                         for key, value in row.items():
                             if '/' in key and value:
-                                sub = [Command.create(res[last_id])]
-                                path = key.split('/')
-                                for p in path[:-1]:
-                                    if p not in create_added:
-                                        create_added.add(p)
-                                        sub[-1][2].setdefault(p, [])
-                                        sub[-1][2][p].append(Command.create({}))
-                                    sub = sub[-1][2][p]
-                                sub[-1][2][path[-1]] = value
+                                CurrentModel = Model
+                                sub = res[last_id]
+                                *model_path, fname = key.split('/')
+                                path_str = "/".join(model_path)
+                                for path_component in model_path:
+                                    if path_str not in create_added:
+                                        create_added.add(path_str)
+                                        sub.setdefault(path_component, [])
+                                        sub[path_component].append(Command.create({}))
+                                    sub = sub[path_component][-1][2]
+                                    CurrentModel = self.env[CurrentModel[path_component]._name]
+                                sub[fname] = evaluate(fname, value, CurrentModel._fields)
+
             except FileNotFoundError:
                 _logger.debug("No file %s found for template '%s'", model, module)
         return res
