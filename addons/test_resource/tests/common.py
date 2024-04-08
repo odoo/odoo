@@ -60,7 +60,7 @@ class TestResourceCommon(TransactionCase):
             (0, 0, 0, '1', 'line_section', 10), (8, 16, 0, '1', False, 11), (7, 15, 2, '1', False, 12),
             (8, 16, 3, '1', False, 13), (10, 16, 4, '1', False, 14)], 'Europe/Brussels')
 
-        cls.calendar_paul = cls._define_calendar('Morning and evening shifts', sum([((2, 7, i, 0.5), (10, 16, i, 0.5)) for i in range(5)], ()), 'Brazil/DeNoronha')
+        cls.calendar_paul = cls._define_calendar('Morning and evening shifts', sum([((2, 7, i, 0.5), (10, 16, i, 0.5)) for i in range(5)], ()), 'America/Noronha')
 
         cls.calendar_bob = cls._define_calendar('Calendar with adjacent attendances', sum([((8, 12, i, 0.5), (12, 16, i, 0.5)) for i in range(5)], ()), 'Europe/Brussels')
 

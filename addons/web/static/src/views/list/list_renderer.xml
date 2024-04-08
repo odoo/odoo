@@ -5,6 +5,7 @@
         <t t-set="_canSelectRecord" t-value="canSelectRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
+            t-att-class="uniqueRendererClass"
             tabindex="-1"
             t-ref="root"
         >
@@ -48,6 +49,7 @@
                                 class="'o_optional_columns_dropdown text-center border-top-0'"
                                 togglerClass="'btn p-0'"
                                 skipTogglerTabbing="true"
+                                listRendererClass="uniqueRendererClass"
                                 position="'bottom-end'">
                                 <t t-set-slot="toggler">
                                     <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
@@ -306,6 +308,13 @@
                 <td t-else="" tabindex="-1" />
             </t>
         </tr>
+    </t>
+
+    <t t-name="web.ListRenderer.OptionalFieldsDropdown" t-inherit="web.Dropdown" t-inherit-mode="primary">
+        <xpath expr="//div[@t-if='state.open']" position="attributes">
+            <attribute name="t-portal">`.${props.listRendererClass}`</attribute>
+            <attribute name="class" add="o_optional_columns_dropdown" separator=" "/>
+        </xpath>
     </t>
 
 </templates>

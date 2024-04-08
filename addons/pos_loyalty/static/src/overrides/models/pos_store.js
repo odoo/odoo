@@ -9,6 +9,7 @@ import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { PosLoyaltyCard } from "@pos_loyalty/overrides/models/loyalty";
 
+const { DateTime } = luxon;
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
 patch(PosStore.prototype, {
@@ -278,8 +279,11 @@ patch(PosStore.prototype, {
 
         for (const program of this.programs) {
             this.program_by_id[program.id] = program;
+            if (program.date_from) {
+                program.date_from = DateTime.fromISO(program.date_from);
+            }
             if (program.date_to) {
-                program.date_to = new Date(program.date_to);
+                program.date_to = DateTime.fromISO(program.date_to);
             }
             program.rules = [];
             program.rewards = [];
