@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_raw">
         <xpath expr='//t[@t-call="sale.report_saleorder_document"]' position="attributes">
-            <attribute name="t-if" add="doc.company_id.country_code != 'BR'" separator=" and "/>
+            <attribute name="t-if" add="doc.company_id.country_code != 'BR'" separator="and"/>
         </xpath>
         <xpath expr='//t[@t-call="sale.report_saleorder_document"]' position="after">
             <t t-elif="doc.company_id.country_code == 'BR'"

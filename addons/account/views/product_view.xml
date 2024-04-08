@@ -50,7 +50,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='purchase']" position="attributes">
-                    <attribute name="invisible" remove="1" separator=" or "></attribute>
+                    <attribute name="invisible" remove="1" separator="or"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="fiscal_country_codes" invisible="1"/>
