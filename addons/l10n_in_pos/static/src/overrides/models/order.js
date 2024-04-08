@@ -2,7 +2,7 @@
 
 import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
-import { l10n_in_get_hsn_summary_table } from "@l10n_in/helpers/hsn_summary";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 patch(Order.prototype, {
     export_for_printing() {
@@ -40,11 +40,11 @@ patch(Order.prototype, {
                 price_unit: line.get_unit_price(),
                 quantity: line.get_quantity(),
                 uom: null,
-                taxes: this.pos.mapTaxValues(taxes),
+                taxes_data: this.pos.mapTaxValues(taxes),
             });
         });
 
-        const hsnSummary = l10n_in_get_hsn_summary_table(baseLines, false);
+        const hsnSummary = accountTaxHelpers.l10n_in_get_hsn_summary_table(baseLines, false);
         if (hsnSummary) {
             for (const item of hsnSummary.items) {
                 for (const key of [
