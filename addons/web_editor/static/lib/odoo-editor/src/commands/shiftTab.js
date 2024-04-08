@@ -62,7 +62,7 @@ HTMLLIElement.prototype.oShiftTab = function () {
                 p = p || document.createElement('P');
                 if (dir) {
                     p.setAttribute('dir', dir);
-                    p.style.setProperty('text-align', ul.style.getPropertyValue('text-align'));
+                    p.style.setProperty('text-align', getComputedStyle(ul).textAlign);
                 }
                 p.append(li.firstChild);
             }

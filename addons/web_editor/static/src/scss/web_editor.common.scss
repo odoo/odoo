@@ -161,11 +161,24 @@ ul.o_checklist {
         }
     }
 }
-ul.o_checklist[dir="rtl"] > li:not(.oe-nested)::before {
-    left: auto;
-    right: - $o-checklist-margin-left;
+/*rtl:begin:ignore*/
+ul.o_checklist[dir="rtl"] {
     text-align: right;
+    li:not(.oe-nested)::before {
+        left: auto;
+        right: - $o-checklist-margin-left;
+        text-align: right;
+    }
 }
+ul.o_checklist[dir="ltr"] {
+    text-align: left;
+    li:not(.oe-nested)::before {
+        right: auto;
+        left: - $o-checklist-margin-left;
+        text-align: left;
+    }
+}
+/*rtl:end:ignore*/
 ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
     list-style: none;
