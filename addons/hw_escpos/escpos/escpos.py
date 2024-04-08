@@ -222,7 +222,13 @@ class XmlSerializer:
         if text:
             text = utfstr(text)
             text = text.strip()
+<<<<<<< HEAD
             text = re.sub(r'\s+', ' ', text)
+||||||| parent of a2822764d045 (temp)
+            text = re.sub('\s+',' ',text)
+=======
+            text = re.sub(r'\s+',' ',text)
+>>>>>>> a2822764d045 (temp)
             if text:
                 self.dirty = True
                 self.escpos.text(text)
@@ -287,7 +293,13 @@ class XmlLineSerializer:
         if text:
             text = utfstr(text)
             text = text.strip()
+<<<<<<< HEAD
             text = re.sub(r'\s+', ' ', text)
+||||||| parent of a2822764d045 (temp)
+            text = re.sub('\s+',' ',text)
+=======
+            text = re.sub(r'\s+',' ',text)
+>>>>>>> a2822764d045 (temp)
             if text:
                 self._txt(text)
 
@@ -538,7 +550,13 @@ class Escpos:
             if not string:
                 string = ''
             string = string.strip()
+<<<<<<< HEAD
             string = re.sub(r'\s+', ' ', string)
+||||||| parent of a2822764d045 (temp)
+            string = re.sub('\s+',' ',string)
+=======
+            string = re.sub(r'\s+',' ',string)
+>>>>>>> a2822764d045 (temp)
             return string
 
         def format_value(value, decimals=3, width=0, decimals_separator='.', thousands_separator=',', autoint=False, symbol='', position='after'):

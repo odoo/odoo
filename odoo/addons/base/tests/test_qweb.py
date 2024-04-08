@@ -3187,3 +3187,261 @@ def load_tests(loader, suite, _):
     # instance
     suite.addTests(TestQWebStaticXml.get_cases())
     return suite
+<<<<<<< HEAD
+||||||| parent of a2822764d045 (temp)
+
+class TestPageSplit(TransactionCase):
+    # need to explicitly assertTreesEqual because I guess it's registered for
+    # equality between _Element *or* HtmlElement but we're comparing a parsed
+    # HtmlElement and a convenience _Element
+    def test_split_before(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="before"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        ref = E.div(
+            E.table(E.tr()),
+            E.div({'style': 'page-break-after: always'}),
+            E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
+        )
+        self.assertTreesEqual(rendered, ref)
+
+    def test_split_after(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="after"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(
+                E.table(E.tr(), E.tr({'data-pagebreak': 'after'})),
+                E.div({'style': 'page-break-after: always'}),
+                E.table(E.tr())
+            )
+        )
+
+    def test_dontsplit(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(E.table(E.tr(), E.tr(), E.tr()))
+        )
+
+class TestEmptyLines(TransactionCase):
+    arch = '''<t t-name='test'>
+            
+                <div>
+                    
+                </div>
+                
+                
+            </t>'''
+
+    def test_no_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertFalse(re.compile('^\s+\n').match(rendered))
+        self.assertFalse(re.compile('\n\s+\n').match(rendered))
+
+    def test_keep_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True})
+        self.assertTrue(re.compile('^\s+\n').match(rendered))
+        self.assertTrue(re.compile('\n\s+\n').match(rendered))
+
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = '\n                '
+        expected = markupsafe.Markup('Text 1' + emptyline + 'Text 2' + emptyline + 'ok')
+        self.assertEqual(view1._render(), expected)
+=======
+
+class TestPageSplit(TransactionCase):
+    # need to explicitly assertTreesEqual because I guess it's registered for
+    # equality between _Element *or* HtmlElement but we're comparing a parsed
+    # HtmlElement and a convenience _Element
+    def test_split_before(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="before"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        ref = E.div(
+            E.table(E.tr()),
+            E.div({'style': 'page-break-after: always'}),
+            E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
+        )
+        self.assertTreesEqual(rendered, ref)
+
+    def test_split_after(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="after"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(
+                E.table(E.tr(), E.tr({'data-pagebreak': 'after'})),
+                E.div({'style': 'page-break-after: always'}),
+                E.table(E.tr())
+            )
+        )
+
+    def test_dontsplit(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(E.table(E.tr(), E.tr(), E.tr()))
+        )
+
+class TestEmptyLines(TransactionCase):
+    arch = '''<t t-name='test'>
+            
+                <div>
+                    
+                </div>
+                
+                
+            </t>'''
+
+    def test_no_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = self.env['ir.qweb']._render(t.id)
+        self.assertFalse(re.compile('^\\s+\n').match(rendered))
+        self.assertFalse(re.compile('\n\\s+\n').match(rendered))
+
+    def test_keep_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True})
+        self.assertTrue(re.compile('^\\s+\n').match(rendered))
+        self.assertTrue(re.compile('\n\\s+\n').match(rendered))
+
+
+class TestQWebMisc(TransactionCase):
+    def test_render_comment_tail(self):
+        """ Test the rendering of a tail text, near a comment.
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': "qweb",
+            'arch': """
+            <t>
+                <!-- it is a comment -->
+                <!-- it is another comment -->
+                Text 1
+                <!-- it is still another comment -->
+                Text 2
+                <t>ok</t>
+            </t>
+            """
+        })
+        emptyline = '\n                '
+        expected = markupsafe.Markup('Text 1' + emptyline + 'Text 2' + emptyline + 'ok')
+        self.assertEqual(view1._render(), expected)
+>>>>>>> a2822764d045 (temp)

@@ -12,6 +12,28 @@ class AccountPayment(models.Model):
     _order = "date desc, name desc"
     _check_company_auto = True
 
+<<<<<<< HEAD
+||||||| parent of a2822764d045 (temp)
+    def _get_default_journal(self):
+        ''' Retrieve the default journal for the account.payment.
+        /!\ This method will not override the method in 'account.move' because the ORM
+        doesn't allow overriding methods using _inherits. Then, this method will be called
+        manually in 'create' and 'new'.
+        :return: An account.journal record.
+        '''
+        return self.env['account.move']._search_default_journal(('bank', 'cash'))
+
+=======
+    def _get_default_journal(self):
+        r''' Retrieve the default journal for the account.payment.
+        /!\ This method will not override the method in 'account.move' because the ORM
+        doesn't allow overriding methods using _inherits. Then, this method will be called
+        manually in 'create' and 'new'.
+        :return: An account.journal record.
+        '''
+        return self.env['account.move']._search_default_journal(('bank', 'cash'))
+
+>>>>>>> a2822764d045 (temp)
     # == Business fields ==
     move_id = fields.Many2one(
         comodel_name='account.move',

@@ -176,7 +176,13 @@ class SnailmailLetter(models.Model):
             :param bin_pdf : binary content of the pdf file
         """
         pages = 0
+<<<<<<< HEAD
         for match in re.compile(br"/Count\s+(\d+)").finditer(bin_pdf):
+||||||| parent of a2822764d045 (temp)
+        for match in re.compile(b"/Count\s+(\d+)").finditer(bin_pdf):
+=======
+        for match in re.compile(rb"/Count\s+(\d+)").finditer(bin_pdf):
+>>>>>>> a2822764d045 (temp)
             pages = int(match.group(1))
         return pages
 

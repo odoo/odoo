@@ -849,7 +849,13 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             symbols.append(re.escape(currency.symbol))
             symbols.append(re.escape(currency.name))
         symbols_pattern = '|'.join(symbols)
+<<<<<<< HEAD
         price_pattern = r'((%s)?\s?%s\s?(%s)?)' % (symbols_pattern, float_pattern, symbols_pattern)
+||||||| parent of a2822764d045 (temp)
+        price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
+=======
+        price_pattern = r"((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
+>>>>>>> a2822764d045 (temp)
         matches = re.findall(price_pattern, expense_description)
         currency = currencies and currencies[0]
         if matches:

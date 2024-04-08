@@ -15,6 +15,28 @@ class AccountAccountTag(models.Model):
     tax_negate = fields.Boolean(string="Negate Tax Balance", help="Check this box to negate the absolute value of the balance of the lines associated with this tag in tax report computation.")
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="Country for which this tag is available, when applied on taxes.")
 
+<<<<<<< HEAD
+||||||| parent of a2822764d045 (temp)
+    @api.model
+    def _get_tax_tags(self, tag_name, country_id):
+        """ Returns all the tax tags corresponding to the tag name given in parameter
+        in the specified country.
+        """
+        escaped_tag_name = tag_name.replace('\\', '\\\\').replace('%', '\%').replace('_', '\_')
+        domain = [('name', '=like', '_' + escaped_tag_name), ('country_id', '=', country_id), ('applicability', '=', 'taxes')]
+        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
+
+=======
+    @api.model
+    def _get_tax_tags(self, tag_name, country_id):
+        """ Returns all the tax tags corresponding to the tag name given in parameter
+        in the specified country.
+        """
+        escaped_tag_name = tag_name.replace('\\', '\\\\').replace('%', r'\%').replace('_', r'\_')
+        domain = [('name', '=like', '_' + escaped_tag_name), ('country_id', '=', country_id), ('applicability', '=', 'taxes')]
+        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
+
+>>>>>>> a2822764d045 (temp)
     def name_get(self):
         if not self.env.company.multi_vat_foreign_country_ids:
             return super().name_get()

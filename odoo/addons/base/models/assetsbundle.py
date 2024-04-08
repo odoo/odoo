@@ -109,8 +109,8 @@ class AssetNotFound(AssetError):
 
 class AssetsBundle(object):
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
-    rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
-    rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
+    rx_preprocess_imports = re.compile(r"""(@import\s?['"]([^'"]+)['"](;?))""")
+    rx_css_split = re.compile(r"\/\*\! ([a-f0-9-]+) \*\/")
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 

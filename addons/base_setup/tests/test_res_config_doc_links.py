@@ -17,7 +17,13 @@ class TestResConfigDocLinks(HttpCase):
         Set-up the test environment
         """
         super(TestResConfigDocLinks, self).setUp()
+<<<<<<< HEAD
         self.re = re.compile(r"<a href=\"(\S+/documentation/\S+)\"")
+||||||| parent of a2822764d045 (temp)
+        self.re = re.compile("<a href=\"(\S+/documentation/\S+)\"")
+=======
+        self.re = re.compile("<a href=\"(\\S+/documentation/\\S+)\"")
+>>>>>>> a2822764d045 (temp)
         self.links = set()
 
     def test_01_links(self):

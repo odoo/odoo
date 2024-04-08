@@ -848,6 +848,40 @@ def trans_export(lang, modules, buffer, format, cr):
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
+<<<<<<< HEAD
+||||||| parent of a2822764d045 (temp)
+
+def trans_parse_rml(de):
+    res = []
+    for n in de:
+        for m in n:
+            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                continue
+            string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
+            for s in string_list:
+                if s:
+                    res.append(s.encode("utf8"))
+        res.extend(trans_parse_rml(n))
+    return res
+
+
+=======
+
+def trans_parse_rml(de):
+    res = []
+    for n in de:
+        for m in n:
+            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                continue
+            string_list = [s.replace('\n', ' ').strip() for s in re.split(r'\[\[.+?\]\]', m.text)]
+            for s in string_list:
+                if s:
+                    res.append(s.encode("utf8"))
+        res.extend(trans_parse_rml(n))
+    return res
+
+
+>>>>>>> a2822764d045 (temp)
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()

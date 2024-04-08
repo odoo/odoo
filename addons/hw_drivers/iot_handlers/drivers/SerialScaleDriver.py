@@ -62,7 +62,13 @@ ADAMEquipmentProtocol = ScaleProtocol(
     parity=serial.PARITY_NONE,
     timeout=0.2,
     writeTimeout=0.2,
+<<<<<<< HEAD
     measureRegexp=br"\s*([0-9.]+)kg",  # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
+||||||| parent of a2822764d045 (temp)
+    measureRegexp=b"\s*([0-9.]+)kg",  # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
+=======
+    measureRegexp=rb"\s*([0-9.]+)kg",  # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
+>>>>>>> a2822764d045 (temp)
     statusRegexp=None,
     commandTerminator=b"\r\n",
     commandDelay=0.2,

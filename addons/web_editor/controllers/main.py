@@ -355,6 +355,7 @@ class Web_Editor(http.Controller):
         it can be used as a base to modify it again (crop/optimization/filters).
         """
         attachment = None
+<<<<<<< HEAD
         if src.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
                 _, args = request.env['ir.http']._match(src)
@@ -366,6 +367,27 @@ class Web_Editor(http.Controller):
                 if record._name == 'ir.attachment':
                     attachment = record
         if not attachment:
+||||||| parent of a2822764d045 (temp)
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match('^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+=======
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match(r'^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+>>>>>>> a2822764d045 (temp)
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([

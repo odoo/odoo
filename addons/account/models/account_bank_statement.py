@@ -76,11 +76,71 @@ class AccountBankStatement(models.Model):
         required=True,
     )
 
+<<<<<<< HEAD
     # A statement assumed to be complete when the sum of encoded lines is equal to the difference between start and
     # end balances.
     is_complete = fields.Boolean(
         compute='_compute_is_complete', store=True,
     )
+||||||| parent of a2822764d045 (temp)
+    @api.model
+    def _prepare_counterpart_move_line_vals(self, counterpart_vals, move_line=None):
+        ''' Prepare values to create a new account.move.line move_line.
+        By default, without specified 'counterpart_vals' or 'move_line', the counterpart line is
+        created using the suspense account. Otherwise, this method is also called during the
+        reconciliation to prepare the statement line's journal entry. In that case,
+        'counterpart_vals' will be used to create a custom account.move.line (from the reconciliation widget)
+        and 'move_line' will be used to create the counterpart of an existing account.move.line to which
+        the newly created journal item will be reconciled.
+        :param counterpart_vals:    A python dictionary containing:
+            'balance':                  Optional amount to consider during the reconciliation. If a foreign currency is set on the
+                                        counterpart line in the same foreign currency as the statement line, then this amount is
+                                        considered as the amount in foreign currency. If not specified, the full balance is took.
+                                        This value must be provided if move_line is not.
+            'amount_residual':          The residual amount to reconcile expressed in the company's currency.
+                                        /!\ This value should be equivalent to move_line.amount_residual except we want
+                                        to avoid browsing the record when the only thing we need in an overview of the
+                                        reconciliation, for example in the reconciliation widget.
+            'amount_residual_currency': The residual amount to reconcile expressed in the foreign's currency.
+                                        Using this key doesn't make sense without passing 'currency_id' in vals.
+                                        /!\ This value should be equivalent to move_line.amount_residual_currency except
+                                        we want to avoid browsing the record when the only thing we need in an overview
+                                        of the reconciliation, for example in the reconciliation widget.
+            **kwargs:                   Additional values that need to land on the account.move.line to create.
+        :param move_line:           An optional account.move.line move_line representing the counterpart line to reconcile.
+        :return:                    The values to create a new account.move.line move_line.
+        '''
+        self.ensure_one()
+=======
+    @api.model
+    def _prepare_counterpart_move_line_vals(self, counterpart_vals, move_line=None):
+        r''' Prepare values to create a new account.move.line move_line.
+        By default, without specified 'counterpart_vals' or 'move_line', the counterpart line is
+        created using the suspense account. Otherwise, this method is also called during the
+        reconciliation to prepare the statement line's journal entry. In that case,
+        'counterpart_vals' will be used to create a custom account.move.line (from the reconciliation widget)
+        and 'move_line' will be used to create the counterpart of an existing account.move.line to which
+        the newly created journal item will be reconciled.
+        :param counterpart_vals:    A python dictionary containing:
+            'balance':                  Optional amount to consider during the reconciliation. If a foreign currency is set on the
+                                        counterpart line in the same foreign currency as the statement line, then this amount is
+                                        considered as the amount in foreign currency. If not specified, the full balance is took.
+                                        This value must be provided if move_line is not.
+            'amount_residual':          The residual amount to reconcile expressed in the company's currency.
+                                        /!\ This value should be equivalent to move_line.amount_residual except we want
+                                        to avoid browsing the record when the only thing we need in an overview of the
+                                        reconciliation, for example in the reconciliation widget.
+            'amount_residual_currency': The residual amount to reconcile expressed in the foreign's currency.
+                                        Using this key doesn't make sense without passing 'currency_id' in vals.
+                                        /!\ This value should be equivalent to move_line.amount_residual_currency except
+                                        we want to avoid browsing the record when the only thing we need in an overview
+                                        of the reconciliation, for example in the reconciliation widget.
+            **kwargs:                   Additional values that need to land on the account.move.line to create.
+        :param move_line:           An optional account.move.line move_line representing the counterpart line to reconcile.
+        :return:                    The values to create a new account.move.line move_line.
+        '''
+        self.ensure_one()
+>>>>>>> a2822764d045 (temp)
 
     # A statement is considered valid when the starting balance matches the ending balance of the previous statement.
     # The lines without statements are neglected because, either the user is using statements regularly, so they can
