@@ -30,7 +30,7 @@ test("Public website visitor is typing", async () => {
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     withGuest(guestId, () =>
-        rpc("/im_livechat/notify_typing", {
+        rpc("/discuss/channel/notify_typing", {
             is_typing: true,
             channel_id: channel.id,
         })

@@ -95,20 +95,6 @@ async function get_session(request) {
     });
 }
 
-registerRoute("/im_livechat/notify_typing", notify_typing);
-/** @type {RouteCallback} */
-async function notify_typing(request) {
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").DiscussChannelMember} */
-    const DiscussChannelMember = this.env["discuss.channel.member"];
-
-    const { channel_id, is_typing } = await parseRequestParams(request);
-    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
-    const memberOfCurrentUser = DiscussChannel._find_or_create_member_for_self(channel.id);
-    DiscussChannelMember.notify_typing([memberOfCurrentUser.id], is_typing);
-}
-
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
 /** @type {RouteCallback} */
 async function visitor_leave_session(request) {

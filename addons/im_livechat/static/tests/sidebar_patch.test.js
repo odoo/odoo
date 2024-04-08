@@ -93,7 +93,7 @@ test("Do not show channel when visitor is typing", async () => {
     // simulate livechat visitor typing
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     await withGuest(guestId, () =>
-        rpc("/im_livechat/notify_typing", {
+        rpc("/discuss/channel/notify_typing", {
             is_typing: true,
             channel_id: channel.id,
         })
@@ -337,7 +337,10 @@ test("Message unread counter", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, last_interest_dt: "2021-01-03 10:00:00" }),
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_interest_dt: "2021-01-03 10:00:00",
+            }),
             Command.create({ guest_id: guestId, last_interest_dt: "2021-01-03 10:00:00" }),
         ],
         channel_type: "livechat",
