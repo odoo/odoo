@@ -288,7 +288,7 @@ export function createReporting(parentReporting) {
 /**
  * @template T
  * @param {T} target
- * @param {Record<string, PropertyDescriptor>} descriptors
+ * @param {Record<keyof T, PropertyDescriptor>} descriptors
  * @returns {T}
  */
 export function createMock(target, descriptors) {
