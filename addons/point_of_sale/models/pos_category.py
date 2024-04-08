@@ -63,7 +63,7 @@ class PosCategory(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if "parent_id" in vals and not ("color" in vals):
+        if vals.get('parent_id') and not ("color" in vals):
             vals["color"] = self.search_read([("id", "=", vals["parent_id"])])[0][
                 "color"
             ]
