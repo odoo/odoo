@@ -23,6 +23,8 @@ def find_links_with_urls_and_labels(root_node, base_url, skip_regex=None, skip_p
 
     for link_node in root_node.iter(tag="a"):
         original_url = link_node.get("href")
+        if not original_url:
+            continue
         absolute_url = base_url + original_url if original_url.startswith(('/', '?', '#')) else original_url
         if (
             (skip_regex and re.search(skip_regex, absolute_url))
