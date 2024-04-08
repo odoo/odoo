@@ -46,6 +46,12 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'RETURN_GENERATOR',
     'POP_JUMP_BACKWARD_IF_FALSE',
     'SWAP',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#new-opcodes
+    'END_FOR',
+    'LOAD_FAST_AND_CLEAR',
+    'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
+    'RERAISE',
+    'CALL_INTRINSIC_1',
 ])) - _BLACKLIST
 
 
