@@ -5,7 +5,7 @@ class Competencia(models.Model):
     _name = "competencia"
     _description = "Competencia a evaluar"
 
-    nombre = fields.Char("Nombre", required=True)
+    nombre = fields.Char("Nombre de la competencia", required=True)
     descripcion = fields.Text("Descripción")
 
     company_id = fields.Many2one("res.company", string="Compañía")
