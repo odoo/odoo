@@ -184,8 +184,11 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "80.0"),
 
-            ProductScreen.scan_barcode("0100200"),
-            ProductScreen.selectedOrderlineHas("Test Product 2", "1.0", "100.0"),
+            ProductScreen.scan_barcode("0100201"),
+            ProductScreen.selectedOrderlineHas("Test Product 2 (White)", "1.0", "100.0"),
+
+            ProductScreen.scan_barcode("0100202"),
+            ProductScreen.selectedOrderlineHas("Test Product 2 (Red)", "1.0", "120.0"),
 
             ProductScreen.scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1.0", "50.0"),
