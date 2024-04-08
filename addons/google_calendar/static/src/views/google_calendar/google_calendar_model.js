@@ -11,6 +11,7 @@ patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_fu
     setup(params, { rpc }) {
         this._super(...arguments);
         this.rpc = rpc;
+        this.isAlive = params.isAlive;
         this.googleIsSync = true;
         this.googlePendingSync = false;
     },
@@ -35,7 +36,9 @@ patch(AttendeeCalendarModel.prototype, "google_calendar_google_calendar_model_fu
             console.error("Could not synchronize Google events now.", error);
             this.googlePendingSync = false;
         }
-        return _super(...arguments);
+        if (this.isAlive()) {
+            return _super(...arguments);
+        }
     },
 
     async syncGoogleCalendar(silent = false) {

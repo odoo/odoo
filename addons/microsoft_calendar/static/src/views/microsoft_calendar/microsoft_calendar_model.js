@@ -11,6 +11,7 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
     setup(params, { rpc }) {
         this._super(...arguments);
         this.rpc = rpc;
+        this.isAlive = params.isAlive;
         this.microsoftIsSync = true;
         this.microsoftPendingSync = false;
     },
@@ -35,7 +36,9 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
             console.error("Could not synchronize microsoft events now.", error);
             this.microsoftPendingSync = false;
         }
-        return _super(...arguments);
+        if (this.isAlive()) {
+            return _super(...arguments);
+        }
     },
 
     async syncMicrosoftCalendar(silent = false) {
