@@ -104,6 +104,7 @@ class ir_cron(models.Model):
         self._try_lock()
         _logger.info('Manually starting job `%s`.', self.name)
         self.with_user(self.user_id).with_context({'lastcall': self.lastcall}).ir_actions_server_id.run()
+        self.env.flush_all()
         _logger.info('Job `%s` done.', self.name)
         self.lastcall = fields.Datetime.now()
         return True
@@ -385,6 +386,7 @@ class ir_cron(models.Model):
             _logger.info('Starting job `%s`.', cron_name)
             start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()
+            self.env.flush_all()
             end_time = time.time()
             _logger.info('Job done: `%s` (%.3fs).', cron_name, end_time - start_time)
             if start_time and _logger.isEnabledFor(logging.DEBUG):
