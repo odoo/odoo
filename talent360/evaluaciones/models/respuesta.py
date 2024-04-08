@@ -9,4 +9,3 @@ class Respuesta(models.Model):
     user_id = fields.Many2one("res.users", string="Usuario")
 
     respuesta_texto = fields.Char("Respuesta", required=True)
-

@@ -6,11 +6,15 @@ class Pregunta(models.Model):
     _description = "Pregunta para una evaluación"
 
     pregunta_texto = fields.Char("Pregunta", required=True)
-    tipo = fields.Selection([
-        ('multiple_choice', 'Opción múltiple'),
-        ('open_question', 'Abierta'),
-        ('escala', 'Escala')
-    ], default='multiple_choice', required=True)
+    tipo = fields.Selection(
+        [
+            ("multiple_choice", "Opción múltiple"),
+            ("open_question", "Abierta"),
+            ("escala", "Escala"),
+        ],
+        default="multiple_choice",
+        required=True,
+    )
 
     company_id = fields.Many2one("res.company", string="Compañía")
     opcion_ids = fields.One2many("opcion", "pregunta_id", string="Opciones")
