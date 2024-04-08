@@ -182,6 +182,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
+        this._slideshowStart();
         this.$('li.fa').off('click');
     },
     /**
@@ -262,6 +263,51 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
     _relayout() {
         return this._setMode(this._getMode());
     },
+    /**
+     * Sets up listeners on slideshow to activate selected image.
+     */
+    _slideshowStart() {
+        const $carousel = this.$bsTarget.is(".carousel") ? this.$bsTarget : this.$bsTarget.find(".carousel");
+        let _previousEditor;
+        let _miniatureClicked;
+        const carouselIndicatorsEl = this.$target[0].querySelector(".carousel-indicators");
+        if (carouselIndicatorsEl) {
+            carouselIndicatorsEl.addEventListener("click", () => {
+                _miniatureClicked = true;
+            });
+        }
+        let lastSlideTimeStamp;
+        $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
+            lastSlideTimeStamp = ev.timeStamp;
+            const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+            this.trigger_up("is_element_selected", {
+                el: activeImageEl,
+                callback: () => {
+                    _previousEditor = true;
+                },
+            });
+            this.trigger_up("hide_overlay");
+        });
+        $carousel.on("slid.bs.carousel.image_gallery", (ev) => {
+            if (!_previousEditor && !_miniatureClicked) {
+                return;
+            }
+            _previousEditor = undefined;
+            _miniatureClicked = false;
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
+            setTimeout(() => {
+                const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+                this.trigger_up("activate_snippet", {
+                    $snippet: $(activeImageEl),
+                    ifInactiveOptions: true,
+                });
+            }, 0.2 * _slideDuration);
+        });
+    },
 });
 
 options.registry.gallery = options.registry.GalleryLayout.extend({
@@ -277,7 +323,13 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         } else {
             layoutPromise = Promise.resolve();
         }
-        return layoutPromise.then(() => _super.apply(this, arguments));
+        return layoutPromise.then(() => _super.apply(this, arguments).then(() => {
+            // Call specific mode's start if defined (e.g. _slideshowStart)
+            const startMode = this[`_${this._getMode()}Start`];
+            if (startMode) {
+                startMode.bind(this)();
+            }
+        }));
     },
     /**
      * @override
