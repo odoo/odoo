@@ -84,7 +84,8 @@ export class AutoComplete extends Component {
             }
         }, this.timeout);
 
-        useExternalListener(window, "scroll", this.onWindowScroll, true);
+        useExternalListener(window, "scroll", this.externalClose, true);
+        useExternalListener(window, "pointerdown", this.externalClose, true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -271,6 +272,7 @@ export class AutoComplete extends Component {
 
     onInputBlur() {
         if (this.ignoreBlur) {
+            this.ignoreBlur = false;
             return;
         }
         const value = this.inputRef.el.value;
@@ -400,12 +402,11 @@ export class AutoComplete extends Component {
         this.state.activeSourceOption = null;
     }
     onOptionClick(indices) {
-        this.ignoreBlur = false;
         this.selectOption(indices);
         this.inputRef.el.focus();
     }
 
-    onWindowScroll(ev) {
+    externalClose(ev) {
         if (this.isOpened && !this.root.el.contains(ev.target)) {
             this.close();
         }
