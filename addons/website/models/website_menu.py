@@ -39,7 +39,7 @@ class WebsiteMenu(models.Model):
                 menu.mega_menu_classes = False
 
     name = fields.Char('Menu', required=True, translate=True)
-    url = fields.Char('Url', default='')
+    url = fields.Char("Url", compute="_compute_url", store=True, required=True, default="#", copy=True)
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
@@ -66,6 +66,16 @@ class WebsiteMenu(models.Model):
             if menu.website_id:
                 menu_name += f' [{menu.website_id.name}]'
             menu.display_name = menu_name
+
+    @api.depends("page_id", "is_mega_menu", "child_id")
+    def _compute_url(self):
+        for menu in self:
+            if menu.page_id:
+                menu.url = menu.page_id.url
+            if menu.is_mega_menu or menu.child_id:
+                menu.url = "#"
+            else:
+                menu.url = menu.url or "#"
 
     @api.model_create_multi
     def create(self, vals_list):
