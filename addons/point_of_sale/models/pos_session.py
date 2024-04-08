@@ -343,8 +343,8 @@ class PosSession(models.Model):
                 else:
                     raise e
 
+            balance = sum(self.move_id.line_ids.mapped('balance'))
             try:
-                balance = sum(self.move_id.line_ids.mapped('balance'))
                 self.move_id._check_balanced()
             except UserError:
                 # Creating the account move is just part of a big database transaction
