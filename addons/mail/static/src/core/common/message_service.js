@@ -1,9 +1,9 @@
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
+import { rpcWithEnv } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { user } from "@web/core/user";
 

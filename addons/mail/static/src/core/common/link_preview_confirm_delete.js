@@ -1,8 +1,8 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Component, useState } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+import { rpcWithEnv } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { useService } from "@web/core/utils/hooks";
 

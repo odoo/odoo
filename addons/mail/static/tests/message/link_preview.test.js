@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import {
     assertSteps,
@@ -14,7 +14,7 @@ import {
     startServer,
     step,
 } from "../mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

@@ -116,3 +116,17 @@ rpc._rpc = function (url, params, settings) {
     };
     return promise;
 };
+
+export const rpcGlobal = {
+    isInTest: false,
+    elligibleEnvs: new Set(),
+};
+
+export function rpcWithEnv(env) {
+    return function (url, params = {}, settings = {}) {
+        if (rpcGlobal.isInTest && !rpcGlobal.elligibleEnvs.has(env?.envId)) {
+            return new Promise(() => {});
+        }
+        return rpc(...arguments);
+    };
+}

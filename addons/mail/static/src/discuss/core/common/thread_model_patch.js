@@ -1,12 +1,12 @@
 import { Thread } from "@mail/core/common/thread_model";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Mutex } from "@web/core/utils/concurrency";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {

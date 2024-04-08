@@ -7,7 +7,7 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
-import { rpcWithEnv, isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
@@ -29,6 +29,7 @@ import { FileUploader } from "@web/views/fields/file_handler";
 /** @type {import("@web/core/network/rpc").rpc} */
 let rpc;
 import { escape, sprintf } from "@web/core/utils/strings";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",

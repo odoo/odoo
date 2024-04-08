@@ -1,9 +1,10 @@
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
-import { rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { compareDatetime } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 

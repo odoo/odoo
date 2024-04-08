@@ -1,12 +1,12 @@
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 /**
  * @typedef {Object} TenorCategory

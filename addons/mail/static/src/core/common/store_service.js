@@ -1,9 +1,9 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+import { rpcWithEnv } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";

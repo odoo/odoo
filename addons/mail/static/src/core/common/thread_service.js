@@ -1,10 +1,10 @@
 import { prettifyMessageContent } from "@mail/utils/common/format";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+import { rpcWithEnv } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";

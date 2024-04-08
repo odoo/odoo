@@ -1,11 +1,11 @@
 import { describe, test } from "@odoo/hoot";
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 
 describe.current.tags("desktop");

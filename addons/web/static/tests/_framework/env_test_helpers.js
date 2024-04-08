@@ -4,6 +4,7 @@ import { createDebugContext } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
+import { rpcGlobal } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
@@ -16,6 +17,8 @@ import { MockServer, makeMockServer } from "./mock_server/mock_server";
 //-----------------------------------------------------------------------------
 // Internals
 //-----------------------------------------------------------------------------
+
+rpcGlobal.isInTest = true;
 
 /**
  * TODO: remove when services do not have side effects anymore
@@ -69,6 +72,8 @@ export function getService(name) {
     return currentEnv.services[name];
 }
 
+let NEXT_ENV_ID = 1;
+
 /**
  * Makes a mock environment along with a mock server
  *
@@ -84,6 +89,9 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     if (!MockServer.current) {
         await makeMockServer();
     }
+    const envId = NEXT_ENV_ID++;
+    partialEnv = { ...(partialEnv || {}), envId };
+    rpcGlobal.elligibleEnvs.add(envId);
 
     currentEnv = makeEnv();
     Object.assign(currentEnv, partialEnv, createDebugContext(currentEnv)); // This is needed if the views are in debug mode
@@ -93,7 +101,10 @@ export async function makeMockEnv(partialEnv, { makeNew = false } = {}) {
     startRouter();
     await startServices(currentEnv);
 
-    after(() => (currentEnv = null));
+    after(() => {
+        currentEnv = null;
+        rpcGlobal.elligibleEnvs.clear();
+    });
 
     return currentEnv;
 }

@@ -1,6 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import {
     assertSteps,
@@ -15,8 +15,8 @@ import {
     triggerHotkey,
 } from "../mail_test_helpers";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { mockDate } from "@odoo/hoot-mock";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

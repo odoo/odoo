@@ -11,12 +11,12 @@ import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_help
 import { tick } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { describe, test } from "@odoo/hoot";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 
 test("bus subscription updated when joining/leaving thread as non member", async () => {

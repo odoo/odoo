@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import {
     assertSteps,
@@ -25,8 +25,8 @@ import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { presenceService } from "@bus/services/presence_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

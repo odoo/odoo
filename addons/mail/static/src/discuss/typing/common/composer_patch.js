@@ -1,9 +1,9 @@
 import { Composer } from "@mail/core/common/composer";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { browser } from "@web/core/browser/browser";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+import { rpcWithEnv } from "@web/core/network/rpc";
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";

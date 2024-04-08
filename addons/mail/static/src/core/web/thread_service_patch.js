@@ -1,10 +1,11 @@
 import { ThreadService, threadService } from "@mail/core/common/thread_service";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@mail/core/common/record";
-import { assignDefined, rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { assignDefined, compareDatetime } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 patch(ThreadService.prototype, {
     /**

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 
 import { browser } from "@web/core/browser/browser";
@@ -34,7 +34,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
 import { actionService } from "@web/webclient/actions/action_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

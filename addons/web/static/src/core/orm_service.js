@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+import { rpcWithEnv } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 
 /**
@@ -94,8 +94,8 @@ export const UPDATE_METHODS = [
 ];
 
 export class ORM {
-    constructor() {
-        this.rpc = rpc; // to be overridable by the SampleORM
+    constructor(env) {
+        this.rpc = rpcWithEnv(env); // to be overridable by the SampleORM
         /** @protected */
         this._silent = false;
     }
@@ -323,8 +323,8 @@ export const ormService = {
         "webSearchRead",
         "write",
     ],
-    start() {
-        return new ORM();
+    start(env) {
+        return new ORM(env);
     },
 };
 

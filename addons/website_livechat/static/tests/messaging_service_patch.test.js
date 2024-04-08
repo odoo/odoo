@@ -1,9 +1,9 @@
 import { contains, openFormView, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { describe, test } from "@odoo/hoot";
+import { rpcWithEnv } from "@web/core/network/rpc";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+/** @type {ReturnType<import("@web/core/network/rpc").rpc>} */
 let rpc;
 
 describe.current.tags("desktop");
