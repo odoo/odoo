@@ -227,8 +227,11 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             self.event_cron_id.method_direct_trigger()
 
         # check that scheduler is finished
+        self.assertEqual(event_prev_scheduler.mail_count_done, 2)
         self.assertTrue(event_prev_scheduler.mail_done, 'event: reminder scheduler should have run')
         self.assertEqual(event_prev_scheduler.mail_state, 'sent', 'event: reminder scheduler should have run')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 2,
+                         'Still creating sequentially emails')
 
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have scheduled 2 mails (1 / registration)')
@@ -332,8 +335,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         # consider having hanging registrations, still not processed (e.g. adding
         # a new scheduler after)
         self.env.invalidate_all()
-        # com 59, event 37
-        with self.assertQueryCount(62), self.mock_datetime_and_now(reference_now), \
+        # event 37
+        with self.assertQueryCount(57), self.mock_datetime_and_now(reference_now), \
              self.mock_mail_gateway():
             _existing = self.env['event.registration'].create([
                 {
@@ -356,8 +359,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
             }),
         ]})
         self.env.invalidate_all()
-        # com 148, event 99
-        with self.assertQueryCount(153), \
+        # event 106
+        with self.assertQueryCount(120), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([
