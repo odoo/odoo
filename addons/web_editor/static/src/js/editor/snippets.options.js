@@ -41,6 +41,7 @@ import {
  } from '@web/core/utils/colors';
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
+import snippetsOptionsLegacy from "./snippets.options.legacy";
 
 const preserveCursor = OdooEditorLib.preserveCursor;
 const { DateTime } = luxon;
@@ -55,6 +56,11 @@ const clearServiceCache = () => {
         rpc: {},
     };
 };
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+// TODO: This should be removed when all options are propperly migrated to OWL
+const SnippetOptionWidget = snippetsOptionsLegacy.SnippetOptionWidget;
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -3322,48 +3328,47 @@ const userValueWidgetsRegistry = {
  * module contains the names of the specialized SnippetOptionWidget which can be
  * referenced thanks to the data-js key in the web_editor options template.
  */
-const SnippetOptionWidget = Widget.extend({
-    tagName: 'we-customizeblock-option',
-    events: {
+class SnippetOption {
+    static events = {
         'click .o_we_collapse_toggler': '_onCollapseTogglerClick',
-    },
-    custom_events: {
+    };
+    static custom_events = {
         'user_value_update': '_onUserValueUpdate',
         'user_value_widget_critical': '_onUserValueWidgetCritical',
-    },
+    };
     /**
      * Indicates if the option should be displayed in the button group at the
      * top of the options panel, next to the clone/remove button.
      *
      * @type {boolean}
      */
-    isTopOption: false,
+    static isTopOption = false;
     /**
      * Indicates if the option should be the first one displayed in the button
      * group at the top of the options panel, next to the clone/remove button.
      *
      * @type {boolean}
      */
-    isTopFirstOption: false,
+    static isTopFirstOption = false;
     /**
      * Forces the target to not be possible to remove. It will also hide the
      * clone button.
      *
      * @type {boolean}
      */
-    forceNoDeleteButton: false,
+    static forceNoDeleteButton = false;
     /**
      * The option needs the handles overlay to be displayed on the snippet.
      *
      * @type {boolean}
      */
-    displayOverlayOptions: false,
+    static displayOverlayOptions = false;
     /**
      * Forces the target to be duplicable.
      *
      * @type {boolean}
      */
-    forceDuplicateButton: false,
+    static forceDuplicateButton = false;
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3373,8 +3378,7 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent, $uiElements, $target, $overlay, data, options) {
-        this._super.apply(this, arguments);
+    init(parent, $uiElements, $target, $overlay, data, options) {
 
         this.$originalUIElements = $uiElements;
 
@@ -3391,24 +3395,22 @@ const SnippetOptionWidget = Widget.extend({
         this._actionQueues = new Map();
 
         this.dialog = this.bindService("dialog");
-    },
+    }
     /**
      * @override
      */
-    willStart: async function () {
-        await this._super(...arguments);
+    async willStart() {
         return this._renderOriginalXML().then(uiFragment => {
             this.uiFragment = uiFragment;
         });
-    },
+    }
     /**
      * @override
      */
-    renderElement: function () {
-        this._super(...arguments);
+    renderElement() {
         this.el.appendChild(this.uiFragment);
         this.uiFragment = null;
-    },
+    }
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * (the first time, this follows the call to the @see start method).
@@ -3416,7 +3418,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    async onFocus() {},
+    async onFocus() {}
     /**
      * Called when the parent edition overlay is covering the associated snippet
      * for the first time, when it is a new snippet dropped from the d&d snippet
@@ -3429,7 +3431,7 @@ const SnippetOptionWidget = Widget.extend({
      *        the main element has been built).
      * @returns {Promise|undefined}
      */
-    async onBuilt(options) {},
+    async onBuilt(options) {}
     /**
      * Called when the parent edition overlay is removed from the associated
      * snippet (another snippet enters edition for example).
@@ -3437,7 +3439,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    async onBlur() {},
+    async onBlur() {}
     /**
      * Called when the associated snippet is the result of the cloning of
      * another snippet (so `this.$target` is a cloned element).
@@ -3449,20 +3451,20 @@ const SnippetOptionWidget = Widget.extend({
      *        was cloned (so not a clone of a child of this main element that
      *        was cloned)
      */
-    onClone: function (options) {},
+    onClone(options) {}
     /**
      * Called when the associated snippet is moved to another DOM location.
      *
      * @abstract
      */
-    onMove: function () {},
+    onMove() {}
     /**
      * Called when the associated snippet is about to be removed from the DOM.
      *
      * @abstract
      * @returns {Promise|undefined}
      */
-    onRemove: async function () {},
+    async onRemove() {}
     /**
      * Called when the target is shown, only meaningful if the target was hidden
      * at some point (typically used for 'invisible' snippets).
@@ -3470,7 +3472,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    onTargetShow: async function () {},
+    async onTargetShow() {}
     /**
      * Called when the target is hidden (typically used for 'invisible'
      * snippets).
@@ -3478,7 +3480,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @returns {Promise|undefined}
      */
-    onTargetHide: async function () {},
+    async onTargetHide() {}
     /**
      * Called when the template which contains the associated snippet is about
      * to be saved.
@@ -3486,7 +3488,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @return {Promise|undefined}
      */
-    cleanForSave: async function () {},
+    async cleanForSave() {}
     /**
      * Called when the associated snippet UI needs to be cleaned (e.g. from
      * visual effects like previews).
@@ -3495,7 +3497,7 @@ const SnippetOptionWidget = Widget.extend({
      * @abstract
      * @return {Promise|undefined}
      */
-    cleanUI: async function () {},
+    async cleanUI() {}
     /**
      * Adds the given widget to the known list of user value widgets
      *
@@ -3503,7 +3505,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     registerSubWidget(widget) {
         this._userValueWidgets.push(widget);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -3524,7 +3526,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectClass: function (previewMode, widgetValue, params) {
+    selectClass(previewMode, widgetValue, params) {
         for (const classNames of params.possibleValues) {
             if (classNames) {
                 this.$target[0].classList.remove(...classNames.trim().split(/\s+/g));
@@ -3533,7 +3535,7 @@ const SnippetOptionWidget = Widget.extend({
         if (widgetValue) {
             this.$target[0].classList.add(...widgetValue.trim().split(/\s+/g));
         }
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a data attribute. The name of the data attribute is
@@ -3544,10 +3546,10 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectDataAttribute: function (previewMode, widgetValue, params) {
+    selectDataAttribute(previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
         this.$target[0].dataset[params.attributeName] = value;
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as an attribute. The name of the attribute is
@@ -3558,14 +3560,14 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectAttribute: function (previewMode, widgetValue, params) {
+    selectAttribute(previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
         if (value) {
             this.$target[0].setAttribute(params.attributeName, value);
         } else {
             this.$target[0].removeAttribute(params.attributeName);
         }
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a property. The name of the property is
@@ -3575,13 +3577,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {string} widgetValue
      * @param {Object} params
      */
-    selectProperty: function (previewMode, widgetValue, params) {
+    selectProperty(previewMode, widgetValue, params) {
         if (!params.propertyName) {
             throw new Error('Property name missing');
         }
         const value = this._selectValueHelper(widgetValue, params);
         this.$target[0][params.propertyName] = value;
-    },
+    }
     /**
      * Default option method which allows to select a value and set it on the
      * associated snippet as a css style. The name of the css property is
@@ -3600,7 +3602,7 @@ const SnippetOptionWidget = Widget.extend({
      *      an effect.
      * @returns {Promise|undefined}
      */
-    selectStyle: async function (previewMode, widgetValue, params) {
+    async selectStyle(previewMode, widgetValue, params) {
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
@@ -3758,7 +3760,7 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         _restoreTransitions();
-    },
+    }
     /**
      * Sets a color combination.
      *
@@ -3774,7 +3776,7 @@ const SnippetOptionWidget = Widget.extend({
                 this.$target[0].classList.add('o_cc', `o_cc${widgetValue}`);
             }
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -3786,20 +3788,20 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @override
      */
-    $: function () {
+    $() {
         return this.$target.find.apply(this.$target, arguments);
-    },
+    }
     /**
      * Closes all user value widgets.
      */
-    closeWidgets: function () {
+    closeWidgets() {
         this._userValueWidgets.forEach(widget => widget.close());
-    },
+    }
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
-    findWidget: function (name) {
+    findWidget(name) {
         for (const widget of this._userValueWidgets) {
             if (widget.getName() === name) {
                 return widget;
@@ -3810,7 +3812,7 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return null;
-    },
+    }
     /**
      * Sometimes, options may need to notify other options, even in parent
      * editors. This can be done thanks to the 'option_update' event, which
@@ -3819,13 +3821,13 @@ const SnippetOptionWidget = Widget.extend({
      * @param {string} name - an identifier for a type of update
      * @param {*} data
      */
-    notify: function (name, data) {
+    notify(name, data) {
         // We prefer to avoid refactoring this notify mechanism to make it
         // asynchronous because the upcoming conversion to owl might remove it.
         if (name === 'target') {
             this.setTarget(data);
         }
-    },
+    }
     /**
      * Sometimes, an option is binded on an element but should in fact apply on
      * another one. For example, elements which contain slides: we want all the
@@ -3837,9 +3839,9 @@ const SnippetOptionWidget = Widget.extend({
      * @param {jQuery} $target - the new target element
      * @returns {Promise}
      */
-    setTarget: function ($target) {
+    setTarget($target) {
         this.$target = $target;
-    },
+    }
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
@@ -3883,14 +3885,14 @@ const SnippetOptionWidget = Widget.extend({
         if (!noVisibility) {
             await this.updateUIVisibility();
         }
-    },
+    }
     /**
      * Updates the UI visibility - @see _computeVisibility. For widget update,
      * @see _computeWidgetVisibility.
      *
      * @returns {Promise}
      */
-    updateUIVisibility: async function () {
+    async updateUIVisibility() {
         const proms = this._userValueWidgets.map(async widget => {
             const params = widget.getMethodsParams();
 
@@ -3974,7 +3976,7 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         return !this.displayOverlayOptions && showUI;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3994,7 +3996,7 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return messages.join(' ');
-    },
+    }
     /**
      * @private
      * @param {UserValueWidget[]} widgets
@@ -4002,14 +4004,14 @@ const SnippetOptionWidget = Widget.extend({
      */
     async _checkIfWidgetsUpdateNeedReload(widgets) {
         return false;
-    },
+    }
     /**
      * @private
      * @returns {Promise<boolean>|boolean}
      */
-    _computeVisibility: async function () {
+    async _computeVisibility() {
         return true;
-    },
+    }
     /**
      * Returns the string value that should be hold by the widget which is
      * related to the given method name.
@@ -4021,7 +4023,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise<string|undefined>|string|undefined}
      */
-    _computeWidgetState: async function (methodName, params) {
+    async _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'selectClass': {
                 let maxNbClasses = 0;
@@ -4169,22 +4171,22 @@ const SnippetOptionWidget = Widget.extend({
                 return '';
             }
         }
-    },
+    }
     /**
      * @private
      * @param {string} widgetName
      * @param {Object} params
      * @returns {Promise<boolean>|boolean}
      */
-    _computeWidgetVisibility: async function (widgetName, params) {
+    async _computeWidgetVisibility(widgetName, params) {
         return true;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} el
      * @returns {Object}
      */
-    _extraInfoFromDescriptionElement: function (el) {
+    _extraInfoFromDescriptionElement(el) {
         return {
             title: el.getAttribute('string'),
             options: {
@@ -4195,39 +4197,39 @@ const SnippetOptionWidget = Widget.extend({
                 childNodes: [...el.childNodes],
             },
         };
-    },
+    }
     /**
      * @private
      * @param {*}
      * @returns {string}
      */
-    _normalizeWidgetValue: function (value) {
+    _normalizeWidgetValue(value) {
         value = `${value}`.trim(); // Force to a trimmed string
         value = normalizeCSSColor(value); // If is a css color, normalize it
         return value;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} uiFragment
      * @returns {Promise}
      */
-    _renderCustomWidgets: function (uiFragment) {
+    _renderCustomWidgets(uiFragment) {
         return Promise.resolve();
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} uiFragment
      * @returns {Promise}
      */
-    _renderCustomXML: function (uiFragment) {
+    _renderCustomXML(uiFragment) {
         return Promise.resolve();
-    },
+    }
     /**
      * @private
      * @param {jQuery} [$xml] - default to original xml content
      * @returns {Promise}
      */
-    _renderOriginalXML: async function ($xml) {
+    async _renderOriginalXML($xml) {
         const uiFragment = document.createDocumentFragment();
         ($xml || this.$originalUIElements).clone(true).appendTo(uiFragment);
 
@@ -4263,14 +4265,14 @@ const SnippetOptionWidget = Widget.extend({
         });
 
         return uiFragment;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} parentEl
      * @param {SnippetOptionWidget|UserValueWidget} parentWidget
      * @returns {Promise}
      */
-    _renderXMLWidgets: function (parentEl, parentWidget) {
+    _renderXMLWidgets(parentEl, parentWidget) {
         const proms = [...parentEl.children].map(el => {
             const widgetName = el.tagName.toLowerCase();
             if (!userValueWidgetsRegistry.hasOwnProperty(widgetName)) {
@@ -4291,14 +4293,14 @@ const SnippetOptionWidget = Widget.extend({
             });
         });
         return Promise.all(proms);
-    },
+    }
     /**
      * @private
      * @param {...string} widgetNames
      * @param {boolean} [allowParentOption=false]
      * @returns {UserValueWidget[]}
      */
-    _requestUserValueWidgets: function (...args) {
+    _requestUserValueWidgets(...args) {
         const widgetNames = args;
         let allowParentOption = false;
         const lastArg = args[args.length - 1];
@@ -4320,13 +4322,13 @@ const SnippetOptionWidget = Widget.extend({
             }
         }
         return widgets;
-    },
+    }
     /**
      * @private
      * @param {function<Promise<jQuery>>} [callback]
      * @returns {Promise}
      */
-    _rerenderXML: async function (callback) {
+    async _rerenderXML(callback) {
         this._userValueWidgets.forEach(widget => widget.destroy());
         this._userValueWidgets = [];
         this.$el.empty();
@@ -4340,7 +4342,7 @@ const SnippetOptionWidget = Widget.extend({
             this.$el.append(uiFragment);
             return this.updateUI();
         });
-    },
+    }
     /**
      * Activates the option associated to the given DOM element.
      *
@@ -4352,7 +4354,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {UserValueWidget} widget - the widget which triggered the option change
      * @returns {Promise}
      */
-    _select: async function (previewMode, widget) {
+    async _select(previewMode, widget) {
         let $applyTo = null;
 
         if (previewMode === true) {
@@ -4386,7 +4388,7 @@ const SnippetOptionWidget = Widget.extend({
         // this.$target could not be in an editable element while the elements
         // targeted by apply-to are.
         ($applyTo || this.$target).trigger('content_changed');
-    },
+    }
     /**
      * Used to handle attribute or data attribute value change
      *
@@ -4397,7 +4399,7 @@ const SnippetOptionWidget = Widget.extend({
             throw new Error('Attribute name missing');
         }
         return this._selectValueHelper(value, params);
-    },
+    }
     /**
      * Used to handle value of a select
      *
@@ -4415,7 +4417,7 @@ const SnippetOptionWidget = Widget.extend({
             this.$target.toggleClass(params.extraClass, params.defaultValue !== value);
         }
         return value;
-    },
+    }
     /**
      * @private
      * @param {HTMLElement} collapseEl
@@ -4424,7 +4426,7 @@ const SnippetOptionWidget = Widget.extend({
     _toggleCollapseEl(collapseEl, show) {
         collapseEl.classList.toggle('active', show);
         collapseEl.querySelector('we-toggler.o_we_collapse_toggler').classList.toggle('active', show);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4440,14 +4442,14 @@ const SnippetOptionWidget = Widget.extend({
         for (const collapseEl of currentCollapseEl.querySelectorAll('we-collapse')) {
             this._toggleCollapseEl(collapseEl, false);
         }
-    },
+    }
     /**
      * Called when a widget notifies a preview/change/reset.
      *
      * @private
      * @param {Event} ev
      */
-    _onUserValueUpdate: async function (ev) {
+    async _onUserValueUpdate(ev) {
         ev.stopPropagation();
         const widget = ev.data.widget;
         const previewMode = ev.data.previewMode;
@@ -4592,7 +4594,7 @@ const SnippetOptionWidget = Widget.extend({
                 url: this.data.reload,
             });
         }
-    },
+    }
     /**
      * @private
      */
@@ -4600,8 +4602,8 @@ const SnippetOptionWidget = Widget.extend({
         this.trigger_up('remove_snippet', {
             $snippet: this.$target,
         });
-    },
-});
+    }
+}
 const registry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
