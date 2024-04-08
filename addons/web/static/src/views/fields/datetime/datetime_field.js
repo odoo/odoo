@@ -250,13 +250,17 @@ export const dateField = {
             label: _lt("Earliest accepted date"),
             name: "min_date",
             type: "string",
-            help: sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today"),
+            get help() {
+                return sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today");
+            },
         },
         {
             label: _lt("Latest accepted date"),
             name: "max_date",
             type: "string",
-            help: sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today"),
+            get help() {
+                return sprintf(_lt(`ISO-formatted date (e.g. "2018-12-31") or "%s".`), "today");
+            },
         },
         {
             label: _lt("Warning for future dates"),
