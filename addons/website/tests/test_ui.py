@@ -677,3 +677,6 @@ class TestUi(odoo.tests.HttpCase):
 
         self.env['website.menu'].save(website.id, {'data': [parent_menu, child_menu]})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
+
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')
