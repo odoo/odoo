@@ -176,6 +176,10 @@ export class SaleOrderManagementScreen extends Component {
                     continue;
                 }
 
+                if (line.display_type === "line_section") {
+                    continue;
+                }
+
                 const newLine = await this.pos.addLineToCurrentOrder(newLineValues, {}, false);
                 previousProductLine = newLine;
 
@@ -227,7 +231,10 @@ export class SaleOrderManagementScreen extends Component {
             // apply a downpayment
             if (this.pos.config.down_payment_product_id) {
                 const lines = sale_order.order_line.filter((line) => {
-                    return line.product_id.id !== this.pos.config.down_payment_product_id.id;
+                    return (
+                        line.product_id &&
+                        line.product_id.id !== this.pos.config.down_payment_product_id.id
+                    );
                 });
                 const tab = lines.map((line) => ({
                     product_name: line.product_id.display_name,
