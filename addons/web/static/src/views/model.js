@@ -5,7 +5,7 @@ import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "@web/views/sample_server";
 import { useSetupView } from "@web/views/view_hook";
 
-import { EventBus, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
+import { EventBus, onWillStart, onWillUpdateProps, status, useComponent } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -94,6 +94,10 @@ export function useModel(ModelClass, params, options = {}) {
         services[key] = useService(key);
     }
     services.orm = services.orm || useService("orm");
+
+    if (!("isAlive" in params)) {
+        params.isAlive = () => status(component) !== "destroyed";
+    }
 
     const model = new ModelClass(component.env, params, services);
     useBus(
