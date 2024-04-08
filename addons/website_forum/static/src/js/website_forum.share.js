@@ -5,7 +5,7 @@ import "@website/js/content/snippets.animation";
 import { renderToElement } from "@web/core/utils/render";
 
 // FIXME There is no reason to inherit from socialShare here
-var ForumShare = publicWidget.registry.socialShare.extend({
+const ForumShare = publicWidget.registry.socialShare.extend({
     selector: '',
     events: {},
 
@@ -23,7 +23,7 @@ var ForumShare = publicWidget.registry.socialShare.extend({
      * @override
      */
     start: function () {
-        var def = this._super.apply(this, arguments);
+        const def = this._super.apply(this, arguments);
         this._onMouseEnter();
         return def;
     },
@@ -36,18 +36,19 @@ var ForumShare = publicWidget.registry.socialShare.extend({
      * @private
      */
     _render: function () {
-        var $question = this.$('article.question');
+        const question = document.querySelector('article.question');
         if (!this.targetType) {
             this._super.apply(this, arguments);
         } else if (this.targetType === 'social-alert') {
-            $question.before(renderToElement('website.social_alert', {medias: this.socialList}));
+            question.insertAdjacentHTML('beforebegin', renderToElement('website.social_alert', {medias: this.socialList}));
         } else {
-            $('body').append(renderToElement('website.social_modal', {
+            document.body.insertAdjacentHTML('beforeend', renderToElement('website.social_modal', {
                 medias: this.socialList,
                 target_type: this.targetType,
-                state: $question.data('state'),
+                state: question.dataset.state,
             }));
-            $('#oe_social_share_modal').modal('show');
+            const modal = document.querySelector('#oe_social_share_modal');
+            new Modal(modal).show();
         }
     },
 });
@@ -61,8 +62,8 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
     start: function () {
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
-            var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            const socialData = JSON.parse(sessionStorage.getItem('social_share'));
+            (new ForumShare(this, false, socialData.targetType)).attachTo(document.body);
             sessionStorage.removeItem('social_share');
         }
 

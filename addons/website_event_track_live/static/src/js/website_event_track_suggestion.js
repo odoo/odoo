@@ -47,11 +47,11 @@ var WebsiteEventTrackSuggestion = PublicWidget.extend({
 
     _onCloseClick: function () {
         clearInterval(this.timerInterval);
-        this.$('.owevent_track_suggestion_next').addClass('invisible');
+        this.el.querySelector('.owevent_track_suggestion_next').classList.add('invisible');
     },
 
     _onNextTrackClick: function (ev) {
-        if ($(ev.target).hasClass('owevent_track_suggestion_close')) {
+        if (ev.target.classList.contains('owevent_track_suggestion_close')) {
             return;
         }
 
@@ -63,11 +63,11 @@ var WebsiteEventTrackSuggestion = PublicWidget.extend({
     //--------------------------------------------------------------------------
 
     _updateTimer: function () {
-        var secondsLeft = parseInt(this.$('.owevent_track_suggestion_timer_text').text());
+        var secondsLeft = parseInt(this.el.querySelector('.owevent_track_suggestion_timer_text').textContent);
 
         if (secondsLeft > 1) {
             secondsLeft -= 1;
-            this.$('.owevent_track_suggestion_timer_text').text(secondsLeft);
+            this.el.querySelector('.owevent_track_suggestion_timer_text').textContent = secondsLeft;
         } else {
             window.location = this.suggestion.trackUrl;
         }
