@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from datetime import datetime
 from odoo.fields import Datetime, Date
 from odoo.tools.misc import format_date
+from odoo.addons.l10n_fr_pos_cert.models.pos import MAX_HASH_VERSION
 import pytz
 
 
@@ -69,8 +70,13 @@ class ResCompany(models.Model):
 
             previous_hash = u''
             corrupted_orders = []
+            current_hash_version = 1
             for order in orders:
-                if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
+                computed_hash = order.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                while order.l10n_fr_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                    current_hash_version += 1
+                    computed_hash = order.with_context(hash_version=current_hash_version)._compute_hash(previous_hash=previous_hash)
+                if order.l10n_fr_hash != computed_hash:
                     corrupted_orders.append(order.name)
                     msg_alert = (_('Corrupted data on point of sale order with id %s.', order.id))
                 previous_hash = order.l10n_fr_hash
