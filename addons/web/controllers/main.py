@@ -367,7 +367,7 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     return res
 
 class HomeStaticTemplateHelpers(object):
-    """
+    r"""
     Helper Class that wraps the reading of static qweb templates files
     and xpath inheritance applied to those templates
     /!\ Template inheritance order is defined by ir.module.module natural order

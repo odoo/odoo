@@ -258,7 +258,7 @@ class Web_Editor(http.Controller):
         id_match = re.search('^/web/image/([^/?]+)', src)
         if id_match:
             url_segment = id_match.group(1)
-            number_match = re.match('^(\d+)', url_segment)
+            number_match = re.match(r'^(\d+)', url_segment)
             if '.' in url_segment: # xml-id
                 attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
             elif number_match: # numeric id
@@ -381,7 +381,7 @@ class Web_Editor(http.Controller):
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
-        excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+        excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         # First check the t-call-assets used in the related views
         url_infos = dict()

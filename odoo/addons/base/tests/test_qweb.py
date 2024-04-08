@@ -1342,8 +1342,8 @@ class TestEmptyLines(TransactionCase):
             'arch_db': self.arch
         })
         rendered = self.env['ir.qweb']._render(t.id)
-        self.assertFalse(re.compile('^\s+\n').match(rendered))
-        self.assertFalse(re.compile('\n\s+\n').match(rendered))
+        self.assertFalse(re.compile('^\\s+\n').match(rendered))
+        self.assertFalse(re.compile('\n\\s+\n').match(rendered))
 
     def test_keep_empty_lines(self):
         t = self.env['ir.ui.view'].create({
@@ -1352,8 +1352,8 @@ class TestEmptyLines(TransactionCase):
             'arch_db': self.arch
         })
         rendered = self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True})
-        self.assertTrue(re.compile('^\s+\n').match(rendered))
-        self.assertTrue(re.compile('\n\s+\n').match(rendered))
+        self.assertTrue(re.compile('^\\s+\n').match(rendered))
+        self.assertTrue(re.compile('\n\\s+\n').match(rendered))
 
 
 class TestQWebMisc(TransactionCase):
