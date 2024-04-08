@@ -647,8 +647,8 @@ class EventEvent(models.Model):
 
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
         for event in self:
-            for attendee in event.registration_ids.filtered(filter_func):
-                self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+            attendees = event.registration_ids.filtered(filter_func)
+            self.env['mail.template'].browse(template_id).send_mail_batch(attendees.ids, force_send=force_send)
 
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.

@@ -231,8 +231,8 @@ class TestMailSchedule(EventCase, MockEmail, CronMixinCase):
         self.assertEqual(event_prev_scheduler.mail_count_done, 2)
         self.assertTrue(event_prev_scheduler.mail_done, 'event: reminder scheduler should have run')
         self.assertEqual(event_prev_scheduler.mail_state, 'sent', 'event: reminder scheduler should have run')
-        self.assertEqual(self.mail_mail_create_mocked.call_count, 2,
-                         'Still creating sequentially emails')
+        self.assertEqual(self.mail_mail_create_mocked.call_count, 1,
+                         'Created all emails in batch')
 
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have scheduled 2 mails (1 / registration)')
