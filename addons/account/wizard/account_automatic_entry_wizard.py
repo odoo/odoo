@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
-from odoo.tools import groupby
+from odoo.tools import groupby, frozendict
 import json
 
 class AutomaticEntryWizard(models.TransientModel):
@@ -171,14 +171,19 @@ class AutomaticEntryWizard(models.TransientModel):
             counterpart_balances[(line.partner_id, counterpart_currency)]['amount_currency'] += counterpart_amount_currency
             counterpart_balances[(line.partner_id, counterpart_currency)]['balance'] += line.balance
             counterpart_balances[(line.partner_id, counterpart_currency)]['analytic_distribution'] = line.analytic_distribution
-            grouped_source_lines[(line.partner_id, line.currency_id, line.account_id)] += line
+            grouped_source_lines[(
+                line.partner_id,
+                line.currency_id,
+                line.account_id,
+                line.analytic_distribution and frozendict(line.analytic_distribution),
+            )] += line
 
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
             source_accounts = self.move_line_ids.mapped('account_id')
             counterpart_label = len(source_accounts) == 1 and _("Transfer from %s", source_accounts.display_name) or _("Transfer counterpart")
 
-            if not counterpart_currency.is_zero(counterpart_vals['amount_currency']):
+            if not counterpart_currency.is_zero(counterpart_vals['amount_currency']) or not self.company_id.currency_id.is_zero(counterpart_vals['balance']):
                 line_vals.append({
                     'name': counterpart_label,
                     'debit': counterpart_vals['balance'] > 0 and self.company_id.currency_id.round(counterpart_vals['balance']) or 0,
@@ -191,7 +196,7 @@ class AutomaticEntryWizard(models.TransientModel):
                 })
 
         # Generate change_account lines' vals
-        for (partner, currency, account), lines in grouped_source_lines.items():
+        for (partner, currency, account, analytic_distribution), lines in grouped_source_lines.items():
             account_balance = sum(line.balance for line in lines)
             if not self.company_id.currency_id.is_zero(account_balance):
                 account_amount_currency = currency.round(sum(line.amount_currency for line in lines))
@@ -203,6 +208,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'partner_id': partner.id or None,
                     'currency_id': currency.id,
                     'amount_currency': (account_balance > 0 and -1 or 1) * abs(account_amount_currency),
+                    'analytic_distribution': analytic_distribution,
                 })
 
         return [{
