@@ -158,7 +158,11 @@ patch(PosStore.prototype, {
             }
             const oldChanges = changesPerProgram[program.id] || [];
             // Update point changes for those that exist
-            for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
+            for (
+                let idx = 0;
+                idx < Math.min(pointsAdded.length, oldChanges.length) && !oldChanges[idx].manual;
+                idx++
+            ) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
             if (pointsAdded.length < oldChanges.length) {
@@ -169,15 +173,46 @@ patch(PosStore.prototype, {
                     })
                 );
             } else if (pointsAdded.length > oldChanges.length) {
-                for (const pa of pointsAdded.splice(oldChanges.length)) {
+                const pointsCount = pointsAdded.reduce((acc, pointObj) => {
+                    const { points, barcode = "" } = pointObj;
+                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    acc[key] = (acc[key] || 0) + 1;
+                    return acc;
+                }, {});
+
+                oldChanges.forEach((pointObj) => {
+                    const { points, barcode = "" } = pointObj;
+                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    if (pointsCount[key] && pointsCount[key] > 0) {
+                        pointsCount[key]--;
+                    }
+                });
+
+                // Get new points added which are not in oldChanges
+                const newPointsAdded = [];
+                Object.keys(pointsCount).forEach((key) => {
+                    const [points, barcode = ""] = key.split("-");
+                    while (pointsCount[key] > 0) {
+                        newPointsAdded.push({ points: Number(points), barcode });
+                        pointsCount[key]--;
+                    }
+                });
+
+                for (const pa of newPointsAdded) {
                     const coupon = await this.couponForProgram(program);
-                    order.uiState.couponPointChanges[coupon.id] = {
+                    const couponPointChange = {
                         points: pa.points,
                         program_id: program.id,
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
                         appliedRules: pointsForProgramsCountedRules[program.id],
                     };
+
+                    if (program && program.program_type === "gift_card") {
+                        couponPointChange.product_id = order.get_selected_orderline().product_id.id;
+                    }
+
+                    order.uiState.couponPointChanges[coupon.id] = couponPointChange;
                 }
             }
         }

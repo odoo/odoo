@@ -5,6 +5,10 @@
             <li t-if="line.isGiftCardOrEWalletReward()">
                 Current Balance: <t t-esc="line.getGiftCardOrEWalletBalance()"/>
             </li>
+            <t t-if="!line.isGiftCardOrEWalletReward() and line.getEWalletGiftCardProgramType() === 'gift_card'">
+                <a t-if="!line.gift_code" class="text-wrap text-primary" t-on-click="manageGiftCard">Sell physical gift card?</a>
+                <div t-if="line.gift_code" class="text-wrap" t-esc="line.gift_code"/>
+            </t>
         </xpath>
         <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
             <t t-foreach="pos.get_order()?.getLoyaltyPoints() or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">

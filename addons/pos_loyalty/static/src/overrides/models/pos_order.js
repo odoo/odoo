@@ -694,7 +694,13 @@ patch(PosOrder.prototype, {
      * @returns {Array} List of {Object} containing the coupon_id and reward keys
      */
     getClaimableRewards(coupon_id = false, program_id = false, auto = false) {
+        const couponPointChanges = this.uiState.couponPointChanges;
+        const excludedCouponIds = Object.keys(couponPointChanges)
+            .filter((id) => couponPointChanges[id].manual && couponPointChanges[id].existing_code)
+            .map((id) => couponPointChanges[id].coupon_id);
+
         const allCouponPrograms = Object.values(this.uiState.couponPointChanges)
+            .filter((pe) => !excludedCouponIds.includes(pe.coupon_id))
             .map((pe) => {
                 return {
                     program_id: pe.program_id,
@@ -834,7 +840,67 @@ patch(PosOrder.prototype, {
         }
         return true;
     },
+    /**
+     * Checks if there are any existing manual changes or new coupon additions for the given coupon code
+     */
+    duplicateCouponChanges(code) {
+        return Object.keys(this.uiState.couponPointChanges).some((key) => {
+            const change = this.uiState.couponPointChanges[key];
+            return (
+                (change.existing_code === code && change.manual) ||
+                (change.code === code && change.coupon_id < 0)
+            );
+        });
+    },
+    /**
+     * Processes a gift card by either updating an existing card's points or creating a new gift card.
+     *
+     * @param {loyalty.card} existingGiftCard loyalty.card object if the card exists.
+     * @param {String} newGiftCardCode gift card code as a string if new gift card to be created.
+     * @param {number} points number of points to assign to the gift card.
+     */
+    processGiftCard(existingGiftCard, newGiftCardCode, points) {
+        const partner_id = this.partner_id?.id || false;
+        const product_id = this.get_selected_orderline().product_id.id;
+        const program = this.models["loyalty.program"].find((p) => p.program_type === "gift_card");
 
+        let couponId;
+        const couponData = {
+            program_id: program?.id,
+            points: points,
+            manual: true,
+            product_id: product_id,
+        };
+
+        // Fetch all coupon_ids for the specified points and not manually created, that are associated with the gift card program
+        const applicableCouponIds = Object.keys(this.uiState.couponPointChanges).filter((key) => {
+            const change = this.uiState.couponPointChanges[key];
+            return (
+                change.points === points &&
+                change.program_id === program.id &&
+                change.product_id === product_id &&
+                !change.manual
+            );
+        });
+
+        if (existingGiftCard) {
+            if (applicableCouponIds.length) {
+                couponId = applicableCouponIds.shift();
+                delete this.uiState.couponPointChanges[couponId];
+            }
+            couponId = existingGiftCard.id;
+            couponData.coupon_id = couponId;
+            couponData.existing_code = existingGiftCard.code;
+            couponData.program_id = existingGiftCard.program_id.id;
+        } else if (newGiftCardCode) {
+            couponId = applicableCouponIds.shift() || loyaltyIdsGenerator();
+            couponData.coupon_id = couponId;
+            couponData.code = newGiftCardCode;
+            couponData.partner_id = partner_id;
+        }
+
+        this.uiState.couponPointChanges[couponId] = couponData;
+    },
     /**
      * @param {loyalty.reward} reward
      * @returns the discountable and discountable per tax for this discount on order reward.
