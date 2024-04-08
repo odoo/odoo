@@ -2606,6 +2606,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         # test create related no store (resize, width limited)
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        # test create related store on column (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (64, 32))
 
         record.write({
             'image': image_h,
@@ -2620,6 +2622,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         # test write related no store (resize, height limited)
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+        # test write related store on column (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (32, 64))
 
         record = self.env['test_new_api.model_image'].create({
             'name': 'image',
@@ -2635,6 +2639,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         # test create related no store (resize, height limited)
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+        # test create related store on column (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (32, 64))
 
         record.write({
             'image': image_w,
@@ -2649,6 +2655,8 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         # test write related store (resize, width limited)
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        # test write related store on column (resize, width limited)
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (64, 32))
 
         # test create inverse store
         record = self.env['test_new_api.model_image'].create({
@@ -2659,6 +2667,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (64, 32))
         # test write inverse store
         record.write({
             'image_512': image_h,
@@ -2667,6 +2676,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (32, 64))
 
         # test create inverse no store
         record = self.env['test_new_api.model_image'].with_context(image_no_postprocess=True).create({
@@ -2677,6 +2687,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (512, 256))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (4000, 2000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (256, 128))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (64, 32))
         # test write inverse no store
         record.write({
             'image_256': image_h,
@@ -2685,6 +2696,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_512))).size, (256, 512))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image))).size, (2000, 4000))
         self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_256))).size, (128, 256))
+        self.assertEqual(Image.open(io.BytesIO(base64.b64decode(record.image_64))).size, (32, 64))
 
         # test bin_size
         record_bin_size = record.with_context(bin_size=True)
@@ -2713,18 +2725,16 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertQueryCount(0):
             new_record.image = image_w
 
-    def test_95_binary_bin_size(self):
+    def test_95_binary_bin_size_create(self):
         binary_value = base64.b64encode(b'content')
         binary_size = b'7.00 bytes'
 
         def assertBinaryValue(record, value):
             for field in ('binary', 'binary_related_store', 'binary_related_no_store'):
-                self.assertEqual(record[field], value)
+                self.assertEqual(record[field], value, f'Incorrect result for {field}')
 
-        # created, flushed, and first read without context
+        # created and first read without context
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
-        self.env.flush_all()
-        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2732,10 +2742,8 @@ class TestFields(TransactionCaseWithUserDemo):
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
 
-        # created, flushed, and first read with bin_size=False
+        # created and first read with bin_size=False
         record_no_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=False).create({'binary': binary_value})
-        self.env.flush_all()
-        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2743,10 +2751,8 @@ class TestFields(TransactionCaseWithUserDemo):
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
 
-        # created, flushed, and first read with bin_size=True
+        # created and first read with bin_size=True
         record_bin_size = self.env['test_new_api.model_binary'].with_context(bin_size=True).create({'binary': binary_value})
-        self.env.flush_all()
-        self.env.invalidate_all()
         record = self.env['test_new_api.model_binary'].browse(record.id)
         record_no_bin_size = record.with_context(bin_size=False)
 
@@ -2754,12 +2760,11 @@ class TestFields(TransactionCaseWithUserDemo):
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record, binary_value)
 
-        # created without context and flushed with bin_size
+        # created without context and flushed/invalidated with bin_size=True
         record = self.env['test_new_api.model_binary'].create({'binary': binary_value})
+        record.with_context(bin_size=True).env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
-        self.env.flush_all()
-        self.env.invalidate_all()
 
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_no_bin_size, binary_value)
@@ -2767,8 +2772,6 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # check computed binary field with arbitrary Python value
         record = self.env['test_new_api.model_binary'].create({})
-        self.env.flush_all()
-        self.env.invalidate_all()
         record_no_bin_size = record.with_context(bin_size=False)
         record_bin_size = record.with_context(bin_size=True)
 
@@ -2776,6 +2779,64 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.binary_computed, expected_value)
         self.assertEqual(record_no_bin_size.binary_computed, expected_value)
         self.assertEqual(record_bin_size.binary_computed, expected_value)
+
+    def test_95_binary_bin_size_write(self):
+        binary_value = base64.b64encode(b'content')
+        binary_size = b'7.00 bytes'
+
+        def assertBinaryValue(record, value):
+            for field in ('binary', 'binary_related_store', 'binary_related_no_store'):
+                self.assertEqual(record[field], value, f'Incorrect result for {field}')
+
+        # created and written without context
+        record = self.env['test_new_api.model_binary'].create({})
+        record.write({'binary': binary_value})
+        record_no_bin_size = record.with_context(bin_size=False)
+        record_bin_size = record.with_context(bin_size=True)
+
+        assertBinaryValue(record, binary_value)
+        assertBinaryValue(record_no_bin_size, binary_value)
+        assertBinaryValue(record_bin_size, binary_size)
+
+        # created without context, written with bin_size=False
+        record = self.env['test_new_api.model_binary'].create({})
+        record.with_context(bin_size=False).write({'binary': binary_value})
+        record_bin_size = record.with_context(bin_size=True)
+
+        assertBinaryValue(record_no_bin_size, binary_value)
+        assertBinaryValue(record, binary_value)
+        assertBinaryValue(record_bin_size, binary_size)
+
+        # created without context, written with bin_size=True
+        record = self.env['test_new_api.model_binary'].create({})
+        record.with_context(bin_size=True).write({'binary': binary_value})
+        record_no_bin_size = record.with_context(bin_size=False)
+
+        assertBinaryValue(record_bin_size, binary_size)
+        assertBinaryValue(record_no_bin_size, binary_value)
+        assertBinaryValue(record, binary_value)
+
+        # created without context and flushed with bin_size=True
+        record = self.env['test_new_api.model_binary'].create({})
+        record.write({'binary': binary_value})
+        record.with_context(bin_size=True).env.invalidate_all()
+        record_no_bin_size = record.with_context(bin_size=False)
+        record_bin_size = record.with_context(bin_size=True)
+
+        assertBinaryValue(record, binary_value)
+        assertBinaryValue(record_no_bin_size, binary_value)
+        assertBinaryValue(record_bin_size, binary_size)
+
+        # created and written without context, flushed without bin_size
+        record = self.env['test_new_api.model_binary'].create({})
+        record.write({'binary': binary_value})
+        record.env.invalidate_all()
+        record_no_bin_size = record.with_context(bin_size=False)
+        record_bin_size = record.with_context(bin_size=True)
+
+        assertBinaryValue(record, binary_value)
+        assertBinaryValue(record_no_bin_size, binary_value)
+        assertBinaryValue(record_bin_size, binary_size)
 
     def test_96_order_m2o(self):
         belgium, congo = self.env['test_new_api.country'].create([
