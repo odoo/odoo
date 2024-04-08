@@ -7,15 +7,6 @@ from odoo.exceptions import UserError
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    gift_card_settings = fields.Selection(
-        [
-            ("create_set", "Generate PDF cards"),
-            ("scan_use", "Scan existing cards"),
-        ],
-        string="Gift Cards settings",
-        default="create_set",
-        help="Defines the way you want to set your gift cards.",
-    )
     # NOTE: this funtions acts as a m2m field with loyalty.program model. We do this to handle an excpetional use case:
     # When no PoS is specified at a loyalty program form, this program is applied to every PoS (instead of none)
     def _get_program_ids(self):
@@ -63,11 +54,10 @@ class PosConfig(models.Model):
                 reward = gc_program.reward_ids
                 if reward.reward_type != 'discount' or reward.discount_mode != 'per_point' or reward.discount != 1:
                     raise UserError(_('Invalid gift card program reward. Use 1 currency per point discount.'))
-                if self.gift_card_settings == "create_set":
-                    if not gc_program.mail_template_id:
-                        raise UserError(_('There is no email template on the gift card program and your pos is set to print them.'))
-                    if not gc_program.pos_report_print_id:
-                        raise UserError(_('There is no print report on the gift card program and your pos is set to print them.'))
+                if not gc_program.mail_template_id:
+                    raise UserError(_('There is no email template on the gift card program and your pos is set to print them.'))
+                if not gc_program.pos_report_print_id:
+                    raise UserError(_('There is no print report on the gift card program and your pos is set to print them.'))
 
         return super()._check_before_creating_new_session()
 

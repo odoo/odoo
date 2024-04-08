@@ -123,3 +123,35 @@ export function checkAddedLoyaltyPoints(points) {
         },
     ];
 }
+
+export function createManualGiftCard(code, amount) {
+    return [
+        {
+            trigger: `a:contains("Sell physical gift card?")`,
+            run: "click",
+        },
+        {
+            content: `Input code '${code}'`,
+            trigger: `input[id="code"]`,
+            run: `edit ${code}`,
+        },
+        {
+            content: `Input amount '${amount}'`,
+            trigger: `input[id="amount"]`,
+            run: `edit ${amount}`,
+        },
+        {
+            trigger: `.btn-primary:contains("Add Balance")`,
+            run: "click",
+        },
+    ];
+}
+
+export function clickPhysicalGiftCard(code = "Sell physical gift card?") {
+    return [
+        {
+            trigger: `ul.info-list .text-wrap:contains("${code}")`,
+            run: "click",
+        },
+    ];
+}

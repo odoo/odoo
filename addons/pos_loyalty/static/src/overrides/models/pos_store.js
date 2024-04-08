@@ -3,7 +3,6 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { ask, makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
@@ -161,7 +160,11 @@ patch(PosStore.prototype, {
             }
             const oldChanges = changesPerProgram[program.id] || [];
             // Update point changes for those that exist
-            for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
+            for (
+                let idx = 0;
+                idx < Math.min(pointsAdded.length, oldChanges.length) && !oldChanges[idx].manual;
+                idx++
+            ) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
             }
             if (pointsAdded.length < oldChanges.length) {
@@ -172,15 +175,47 @@ patch(PosStore.prototype, {
                     })
                 );
             } else if (pointsAdded.length > oldChanges.length) {
-                for (const pa of pointsAdded.splice(oldChanges.length)) {
+                const pointsCount = pointsAdded.reduce((acc, pointObj) => {
+                    const { points, barcode = "" } = pointObj;
+                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    acc[key] = (acc[key] || 0) + 1;
+                    return acc;
+                }, {});
+
+                oldChanges.forEach((pointObj) => {
+                    const { points, barcode = "" } = pointObj;
+                    const key = barcode ? `${points}-${barcode}` : `${points}`;
+                    if (pointsCount[key] && pointsCount[key] > 0) {
+                        pointsCount[key]--;
+                    }
+                });
+
+                // Get new points added which are not in oldChanges
+                const newPointsAdded = [];
+                Object.keys(pointsCount).forEach((key) => {
+                    const [points, barcode = ""] = key.split("-");
+                    while (pointsCount[key] > 0) {
+                        newPointsAdded.push({ points: Number(points), barcode });
+                        pointsCount[key]--;
+                    }
+                });
+
+                for (const pa of newPointsAdded) {
                     const coupon = await this.couponForProgram(program);
-                    order.uiState.couponPointChanges[coupon.id] = {
+                    const couponPointChange = {
                         points: pa.points,
                         program_id: program.id,
                         coupon_id: coupon.id,
                         barcode: pa.barcode,
                         appliedRules: pointsForProgramsCountedRules[program.id],
                     };
+
+                    if (program && program.program_type === "gift_card") {
+                        couponPointChange.product_id =
+                            order.get_selected_orderline()?.product_id.id;
+                    }
+
+                    order.uiState.couponPointChanges[coupon.id] = couponPointChange;
                 }
             }
         }
@@ -405,61 +440,6 @@ patch(PosStore.prototype, {
         options.merge = false;
         options.eWalletGiftCardProgram = program;
 
-        // If gift card program setting is 'scan_use', ask for the code.
-        if (this.config.gift_card_settings == "scan_use") {
-            const code = await makeAwaitable(this.dialog, TextInputPopup, {
-                title: _t("Generate a Gift Card"),
-                placeholder: _t("Enter the gift card code"),
-            });
-            if (!code) {
-                return false;
-            }
-            const trimmedCode = code.trim();
-            let nomenclatureRules = this.barcodeReader.parser.nomenclature.rules;
-            if (this.barcodeReader.fallbackParser) {
-                nomenclatureRules = nomenclatureRules.concat(
-                    this.barcodeReader.fallbackParser.nomenclature.rules
-                );
-            }
-            const couponRules = nomenclatureRules.filter((rule) => rule.type === "coupon");
-            const isValidCoupon = couponRules.some((rule) => {
-                const patterns = rule.pattern.split("|");
-                return patterns.some((pattern) => trimmedCode.startsWith(pattern));
-            });
-            if (isValidCoupon) {
-                // check if the code exist in the database
-                // if so, use its balance, otherwise, use the unit price of the gift card product
-                const fetchedGiftCard = await this.data.searchRead(
-                    "loyalty.card",
-                    [
-                        ["code", "=", trimmedCode],
-                        ["program_id", "=", program.id],
-                    ],
-                    ["points", "source_pos_order_id", "code", "program_id"]
-                );
-
-                // There should be maximum one gift card for a given code.
-                const giftCard = fetchedGiftCard[0];
-                if (giftCard && giftCard.source_pos_order_id) {
-                    this.dialog.add(AlertDialog, {
-                        title: _t("This gift card has already been sold"),
-                        body: _t("You cannot sell a gift card that has already been sold."),
-                    });
-                    return false;
-                }
-                options.giftBarcode = trimmedCode;
-                if (giftCard) {
-                    // Use the balance of the gift card as the price of the orderline.
-                    // NOTE: No need to convert the points to price because when opening a session,
-                    // the gift card programs are made sure to have 1 point = 1 currency unit.
-                    options.price_unit = giftCard.points;
-                    options.giftCardId = giftCard.id;
-                }
-            } else {
-                this.notification.add("Please enter a valid gift card code.");
-                return false;
-            }
-        }
         return true;
     },
     async setupEWalletOptions(program, options) {
