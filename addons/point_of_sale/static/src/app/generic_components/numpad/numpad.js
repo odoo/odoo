@@ -31,10 +31,10 @@ export function getButtons(env, rightColumn) {
         { value: "8" },
         { value: "9" },
         ...(rightColumn ? [rightColumn[2]] : []),
-        { value: env.services.localization.decimalPoint },
-        { value: "0" },
-        { value: "Backspace", text: "⌫" },
         ...(rightColumn ? [rightColumn[3]] : []),
+        { value: "0" },
+        { value: env.services.localization.decimalPoint },
+        { value: "Backspace", text: "⌫" },
     ];
 }
 export function enhancedButtons(env) {
