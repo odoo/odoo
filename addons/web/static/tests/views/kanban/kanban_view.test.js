@@ -3157,7 +3157,9 @@ test.tags("desktop")("quick create record: cancel when modal is opened", async (
         <form>
             <field name="product_id"/>
             <field name="foo"/>
-        </form>`;
+        </form>
+    `;
+    Product._views.form = '<form><field name="name"/></form>';
 
     await mountView({
         type: "kanban",
@@ -3182,7 +3184,7 @@ test.tags("desktop")("quick create record: cancel when modal is opened", async (
     press("s");
     press("t");
     await runAllTimers();
-    click(".o_field_widget[name=foo] input"); // blur the many2one
+    click(".o_m2o_dropdown_option_create_edit"); // open create and edit dialog
     await animationFrame();
 
     // When focusing out of the many2one, a modal to add a 'product' will appear.
