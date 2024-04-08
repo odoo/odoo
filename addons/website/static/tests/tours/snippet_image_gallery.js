@@ -65,6 +65,20 @@ tour.register("snippet_image_gallery", {
     trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:contains('Blur')",
     run: () => null, // This is a check.
 }, {
+    content: "Click to access next image",
+    trigger: ".s_image_gallery .carousel-control-next",
+}, {
+    content: "Check that the option has changed",
+    trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:not(:contains('Blur'))",
+    run: () => null, // This is a check.
+}, {
+    content: "Click to access previous image",
+    trigger: ".s_image_gallery .carousel-control-prev",
+}, {
+    content: "Check that the option is restored",
+    trigger: ".snippet-option-ImageOptimize we-select:contains('Filter') we-toggler:contains('Blur')",
+    run: () => null, // This is a check.
+}, {
     content: "Click on Remove Block",
     trigger: ".o_we_customize_panel we-title:has(span:contains('Image Gallery')) we-button[title='Remove Block']",
 }, {
