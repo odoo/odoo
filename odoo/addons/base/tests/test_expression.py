@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import collections
+import datetime
 import textwrap
 import unittest
 from ast import literal_eval
@@ -2287,3 +2288,71 @@ class TestAnyfy(TransactionCase):
                     ('name', '=', 'Daniel'),
             ])
         ])
+
+
+class TestDynamicValue(TransactionCase):
+    def check_eval_domain(self, expected, domain, model=None):
+        if model is None:
+            model = self.env['res.users']
+        new_domain = expression.domain_dynamic_value_eval(domain, model)
+        return self.assertEqual(expected, new_domain)
+
+    def test_dynamic_value_env(self):
+        u1 = self.env['res.users'].create({
+            'login': 'testu1_dynamic_value@test.com',
+            'name': 'test user',
+        })
+        u1 = u1.with_user(u1)
+        self.check_eval_domain(
+            [('id', '=', u1.id)],
+            [('id', '=', {'env': 'uid'})],
+            u1,
+        )
+        self.check_eval_domain(
+            [('id', '=', u1.env.lang)],
+            [('id', '=', {'env': 'lang'})],
+            u1,
+        )
+        self.check_eval_domain(
+            [('group_id', 'in', u1.groups_id.ids)],
+            [('group_id', 'in', {'env': 'groups'})],
+            u1,
+        )
+        self.check_eval_domain(
+            [('id', 'in', u1.mapped('partner_id.email'))],
+            [('id', 'in', {'env': 'user.partner_id.email'})],
+            u1,
+        )
+
+    def test_dynamic_value_ref(self):
+        root = self.env.ref('base.user_root')
+        self.check_eval_domain(
+            [('id', '=', root.id)],
+            [('id', '=', {'ref': 'base.user_root'})],
+        )
+        self.check_eval_domain(
+            [('id', '=', 88)],
+            [('id', '=', {'ref': 'base.missing.id', 'missing': 88})],
+        )
+
+    def test_dynamic_value_date(self):
+        today = datetime.date.today()
+        self.check_eval_domain(
+            [('create_date', '=', today)],
+            [('create_date', '=', {'date': 'today'})],
+        )
+        self.check_eval_domain(
+            [('create_date', '=', today - datetime.timedelta(days=1))],
+            [('create_date', '=', {'date': 'today', 'days': -1})],
+        )
+
+    def test_dynamic_value_datetime(self):
+        model = self.env['res.users']
+        # just check the second argument is a datetime
+        val = {'date': 'now'}
+        domain = expression.domain_dynamic_value_eval([('create_date', '<', val)], model)
+        self.assertTrue(isinstance(domain[0][2], datetime.datetime))
+
+    def test_dynamic_value_err(self):
+        with self.assertRaises(ValueError):
+            expression.domain_dynamic_value_eval([('id', '=', {})], self.env['res.users'])

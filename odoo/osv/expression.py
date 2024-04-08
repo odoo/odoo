@@ -117,6 +117,7 @@ import logging
 import reprlib
 import traceback
 from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 import warnings
 
 import odoo.modules
@@ -598,6 +599,93 @@ def domain_combine_anies(domain, model):
     return new_domain
 
 
+def _dynamic_value_date(spec, model=None):
+    """Evaluate relative date using the spec"""
+    spec = dict(spec)
+    typ = spec.pop("date")
+    if typ == "today":
+        d = date.today()
+    else:
+        # by default, start from now()
+        d = datetime.now()
+    if spec:
+        d += relativedelta(**spec)
+    return d
+
+
+def _dynamic_value_env(env, name):
+    """Get value by name from the environment"""
+    if name == 'uid':
+        return env.uid
+    if name == 'lang':
+        return env.lang
+    if name == 'user':
+        return env.user.id
+    if name == 'company':
+        return env.company.id
+    if name == 'companies':
+        return env.companies.ids
+    if name == 'partner_id':
+        return env.user.partner_id.id
+    if name == 'commercial_partner_id':
+        return env.user.commercial_partner_id.id
+    if name == 'groups':
+        return env.user.groups_id.ids
+    if name == 'website_id' and 'website' in env:
+        return env['website'].get_current_website().id
+    # mapped records
+    value = None
+    for prefix, obj in (
+        ('user.', env.user),
+        ('company.', env.company),
+        ('companies.', env.companies),
+    ):
+        if name.startswith(prefix):
+            value = obj.mapped(name[len(prefix):])
+            if isinstance(value, BaseModel):
+                return value.ids
+            return value
+    # name not found
+    raise ValueError(f"env value for {name} not evaluated")
+
+
+def _dynamic_value_eval(value, model):
+    """Evaluate a single value (dict) to a value used in a model
+
+    Evaluates:
+    {'ref': 'xmlid', 'missing': False}
+    {'env': 'name of attribute'}
+    {'date': 'now', 'months': -1}
+    """
+    assert isinstance(value, dict)
+    # env value
+    if val := value.get('env'):
+        return _dynamic_value_env(model.env, val)
+    # eval reference
+    if ref := value.get('ref'):
+        missing = value.get('missing')
+        result = model.env.ref(ref, raise_if_not_found=missing is None)
+        return result.id if result else missing
+    # dates
+    if value.get('date'):
+        return _dynamic_value_date(value, model)
+    # invalid value
+    raise ValueError(f"Invalid value for domain: {value}")
+
+
+def domain_dynamic_value_eval(domain, model):
+    """ Return a domain where the dict values are evaluated.
+
+    A domain such as ('id', '=', {'env': 'uid'}) evaluates to ('id', '=', model.env.uid)
+    """
+    result = []
+    for d in domain:
+        if isinstance(d, (tuple, list)) and len(d) == 3 and isinstance(d[2], dict):
+            d = d[0], d[1], _dynamic_value_eval(d[2], model)
+        result.append(d)
+    return result
+
+
 def prettify_domain(domain, pre_indent=0):
     """
     Pretty-format a domain into a string by separating each leaf on a
@@ -777,7 +865,9 @@ class expression(object):
         self.root_alias = alias or model._table
 
         # normalize and prepare the expression for parsing
-        self.expression = domain_combine_anies(domain, model)
+        domain = domain_combine_anies(domain, model)
+        domain = domain_dynamic_value_eval(domain, model)
+        self.expression = domain
 
         # this object handles all the joins
         self.query = Query(model.env, model._table, model._table_sql) if query is None else query

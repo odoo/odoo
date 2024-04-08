@@ -45,7 +45,7 @@
                     <field name="name" string="Filter Name"/>
                     <filter string="User" domain="[('user_id','!=',False)]" name="user" help="Filters visible only for one user"/>
                     <filter string="Shared" domain="[('user_id','=',False)]" name="shared" help="Filters shared with all users"/>
-                    <filter string="My filters" domain="[('user_id','=',uid)]" name="my_filters" help="Filters created by myself"/>
+                    <filter string="My filters" domain="[('user_id','=',{'env': 'uid'})]" name="my_filters" help="Filters created by myself"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
