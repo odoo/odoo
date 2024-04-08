@@ -190,6 +190,15 @@ export const editorCommands = {
             block.nodeName === node.nodeName || ['BLOCKQUOTE', 'PRE'].includes(block.nodeName)
         );
 
+        // Empty block must contain a br element.
+        if (
+            container.lastElementChild &&
+            isBlockElement(container.lastElementChild) &&
+            !container.lastElementChild.hasChildNodes()
+        ) {
+            container.lastElementChild.appendChild(document.createElement('br'));
+        }
+
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>. The same is true for a <pre> inside a <pre>.
