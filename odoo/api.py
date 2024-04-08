@@ -815,6 +815,8 @@ class Environment(Mapping):
                     return get_context('lang') or None
                 elif key == 'active_test':
                     return get_context('active_test', field.context.get('active_test', True))
+                elif key.startswith('bin_size'):
+                    return bool(get_context(key))
                 else:
                     val = get_context(key)
                     if type(val) is list:

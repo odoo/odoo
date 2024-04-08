@@ -2458,6 +2458,7 @@ class Binary(Field):
         ])
 
     def write(self, records, value):
+        records = records.with_context(bin_size=False)
         if not self.attachment:
             super().write(records, value)
             return
