@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import ValidationError
 
 
@@ -20,11 +20,8 @@ class ProductDocument(models.Model):
              "header pages and the quote table. ",
     )
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.keys() & {'attached_on', 'mimetype'}:
-            if any(
-                doc.attached_on == 'inside' and not doc.mimetype.endswith('pdf') for doc in self
-            ):
+    @api.constrains('attached_on', 'type', 'mimetype')
+    def _constrains_check_attached_on(self):
+        for doc in self:
+            if doc.attached_on == 'inside' and ((doc.mimetype and not doc.mimetype.endswith('pdf')) or doc.type == 'url'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
-        return res
