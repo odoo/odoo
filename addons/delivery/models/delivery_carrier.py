@@ -231,7 +231,12 @@ class DeliveryCarrier(models.Model):
             res['carrier_price'] = res['price']
             # free when order is large enough
             amount_without_delivery = order._compute_amount_total_without_delivery()
-            if res['success'] and self.free_over and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount:
+            if (
+                res['success']
+                and self.free_over
+                and self.delivery_type != 'base_on_rule'
+                and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount
+            ):
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.', self.amount)
                 res['price'] = 0.0
             return res
@@ -374,8 +379,6 @@ class DeliveryCarrier(models.Model):
         price = 0.0
         criteria_found = False
         price_dict = self._get_price_dict(total, weight, volume, quantity)
-        if self.free_over and total >= self.amount:
-            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
