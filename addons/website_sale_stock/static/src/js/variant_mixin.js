@@ -48,6 +48,8 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     const $addQtyInput = $parent.find('input[name="add_qty"]');
     let qty = $addQtyInput.val();
 
+    $parent.find('#add_to_cart_wrap').prev('.css_quantity')[0].classList.replace('d-none', 'd-inline-flex');
+    $parent.find('#add_to_cart_wrap')[0].classList.replace('d-none', 'd-inline');
     $parent.find('#add_to_cart').removeClass('out_of_stock');
     $parent.find('.o_we_buy_now').removeClass('out_of_stock');
     if (combination.product_type === 'product' && !combination.allow_out_of_stock_order) {
@@ -61,7 +63,9 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
             $addQtyInput.val(qty);
         }
         if (combination.free_qty < 1) {
-            $parent.find('#add_to_cart').addClass('disabled out_of_stock');
+            $parent.find('#add_to_cart').addClass('out_of_stock');
+            $parent.find('#add_to_cart_wrap').prev('.css_quantity')[0].classList.replace('d-inline-flex', 'd-none');
+            $parent.find('#add_to_cart_wrap')[0].classList.replace('d-inline', 'd-none');
             $parent.find('.o_we_buy_now').addClass('disabled out_of_stock');
         }
     }
