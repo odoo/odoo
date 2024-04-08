@@ -182,6 +182,12 @@ class PaymentPortal(portal.CustomerPortal):
     def _get_payment_page_template_xmlid(self, **kwargs):
         return 'payment.pay'
 
+    def _get_manage_payment_amount(self, **kwargs):
+        return 0.  # There is no amount to pay with validation transactions.
+
+    def _get_manage_payment_validation(self, **kwargs):
+        return True
+
     @http.route('/my/payment_method', type='http', methods=['GET'], auth='user', website=True)
     def payment_method(self, **kwargs):
         """ Display the form to manage payment methods.
@@ -192,13 +198,16 @@ class PaymentPortal(portal.CustomerPortal):
         """
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
 
+        if 'currency_id' in kwargs:
+            kwargs['currency_id'] = self._cast_as_int(kwargs['currency_id'])
+
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             request.env.company.id,
             partner_sudo.id,
-            0.,  # There is no amount to pay with validation transactions.
+            self._get_manage_payment_amount(**kwargs),
             force_tokenization=True,
-            is_validation=True,
+            is_validation=self._get_manage_payment_validation(**kwargs),
             **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
