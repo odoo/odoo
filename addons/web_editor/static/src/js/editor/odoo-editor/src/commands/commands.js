@@ -195,6 +195,15 @@ export const editorCommands = {
             )
         );
 
+        // Empty block must contain a br element to allow cursor placement.
+        if (
+            container.lastElementChild &&
+            isBlock(container.lastElementChild) &&
+            !container.lastElementChild.hasChildNodes()
+        ) {
+            fillEmpty(container.lastElementChild);
+        }
+
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>. The same is true for a <pre> inside a <pre>.
