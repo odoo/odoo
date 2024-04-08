@@ -1632,13 +1632,13 @@ actual arch.
                     name_manager.must_have_fields(node, vnames, f"context ({expr})")
                 for key, val_ast in get_dict_asts(expr).items():
                     if key == 'group_by':  # only in context
-                        if not isinstance(val_ast, ast.Str):
+                        if not isinstance(val_ast, ast.Constant) or not isinstance(val_ast.value, str):
                             msg = _(
                                 '"group_by" value must be a string %(attribute)s=%(value)r',
                                 attribute=attr, value=expr,
                             )
                             self._raise_view_error(msg, node)
-                        group_by = val_ast.s
+                        group_by = val_ast.value
                         fname = group_by.split(':')[0]
                         if fname not in name_manager.model._fields:
                             msg = _(
