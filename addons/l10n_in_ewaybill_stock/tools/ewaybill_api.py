@@ -37,7 +37,7 @@ class EWayBillError(Exception):
 
     def get_all_error_message(self):
         return Markup("<br/>").join(
-            [Markup("[%s] %s") % (e.get("code"), e.get("message")) for e in self.error_json.get('error')]
+            ["[%s] %s" % (e.get("code"), e.get("message")) for e in self.error_json.get('error')]
         )
 
     def get_error_codes(self):

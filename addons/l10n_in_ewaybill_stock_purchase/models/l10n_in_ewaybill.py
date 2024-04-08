@@ -8,9 +8,11 @@ class Ewaybill(models.Model):
 
     def _compute_document_partners_details(self):
         super()._compute_document_partners_details()
-        for ewaybill in self:
-            if purchase_id := ewaybill.picking_id.purchase_id:
-                if ewaybill.picking_type_code == 'outgoing':
-                    ewaybill.partner_bill_from_id = purchase_id.company_id.partner_id
-                elif ewaybill.picking_type_code != 'dropship':
-                    ewaybill.partner_bill_from_id = purchase_id.partner_id
+        for ewaybill in self.filtered(lambda ewb: ewb.picking_id.purchase_id):
+            if ewaybill.picking_type_code == 'outgoing':
+                ewaybill.partner_bill_from_id = ewaybill.company_id.partner_id
+            elif ewaybill.picking_type_code != 'dropship':
+                ewaybill.partner_bill_from_id = ewaybill.picking_id.partner_id
+            if ewaybill.picking_type_code == 'dropship':
+                ewaybill.partner_ship_to_id = ewaybill.picking_id.purchase_id.dest_address_id
+                ewaybill.partner_ship_from_id = ewaybill.picking_id.partner_id

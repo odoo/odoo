@@ -40,9 +40,9 @@ class Ewaybill(models.Model):
     picking_type_code = fields.Selection(related='picking_id.picking_type_id.code')
 
     # Document details
-    document_date = fields.Datetime("Document Date", compute="_compute_document_details", store=True)
-    document_number = fields.Char("Document", compute="_compute_document_details", store=True)
-    company_id = fields.Many2one("res.company", compute="_compute_document_details", store=True)
+    document_date = fields.Datetime("Document Date", related="picking_id.date_done")
+    document_number = fields.Char("Document", related="picking_id.name")
+    company_id = fields.Many2one("res.company", related="picking_id.company_id")
     company_currency_id = fields.Many2one(related="company_id.currency_id")
     supply_type = fields.Selection(string="Supply Type", selection=[
         ("O", "Outward"),
@@ -113,7 +113,13 @@ class Ewaybill(models.Model):
     vehicle_type = fields.Selection([
         ("R", "Regular"),
         ("O", "Over Dimensional Cargo")],
-        string="Vehicle Type", copy=False, tracking=True)
+        string="Vehicle Type",
+        compute="_compute_vehicle_type",
+        store=True,
+        copy=False,
+        tracking=True,
+        readonly=False
+    )
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
     transportation_doc_no = fields.Char(
@@ -144,14 +150,6 @@ class Ewaybill(models.Model):
     def _compute_supply_type(self):
         for ewaybill in self:
             ewaybill.supply_type = ewaybill.picking_type_code == 'incoming' and 'I' or 'O'
-
-    @api.depends('partner_bill_to_id', 'partner_bill_from_id')
-    def _compute_document_details(self):
-        for ewaybill in self:
-            picking_id = ewaybill.picking_id
-            ewaybill.document_number = picking_id.name
-            ewaybill.company_id = picking_id.company_id.id
-            ewaybill.document_date = picking_id.date_done or picking_id.scheduled_date
 
     @api.depends('picking_id')
     def _compute_document_partners_details(self):
@@ -195,11 +193,11 @@ class Ewaybill(models.Model):
         for ewaybill in self:
             ewaybill.display_name = ewaybill.name or _('Pending')
 
-    @api.onchange('mode')
-    def _onchange_mode(self):
+    @api.depends('mode')
+    def _compute_vehicle_type(self):
         """when transportation mode is ship then vehicle type should be Over Dimensional Cargo (ODC)"""
-        if self.mode == "4":
-            self.vehicle_type = 'O'
+        for ewaybill in self.filtered(lambda ewb: ewb.state == 'pending' and ewb.mode == "4"):
+            ewaybill.vehicle_type = 'O'
 
     def action_export_json(self):
         self.ensure_one()

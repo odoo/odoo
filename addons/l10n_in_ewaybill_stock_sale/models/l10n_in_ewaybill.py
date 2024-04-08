@@ -8,9 +8,5 @@ class Ewaybill(models.Model):
 
     def _compute_document_partners_details(self):
         super()._compute_document_partners_details()
-        for ewaybill in self:
-            if sale_id := ewaybill.picking_id.sale_id:
-                ewaybill.partner_bill_to_id = (
-                    ewaybill.picking_type_code == 'incoming' and
-                    sale_id.company_id.partner_id or sale_id.partner_invoice_id
-                )
+        for ewaybill in self.filtered(lambda ewb: ewb.picking_id.sale_id and ewb.picking_type_code != 'incoming'):
+            ewaybill.partner_bill_to_id = ewaybill.sale_id.partner_invoice_id
