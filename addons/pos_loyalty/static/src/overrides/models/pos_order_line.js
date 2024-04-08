@@ -12,6 +12,12 @@ patch(PosOrderline, {
             type: "many2one",
             local: true,
         },
+        gift_code: {
+            model: "pos.order.line",
+            name: "gift_code",
+            type: "char",
+            local: true,
+        },
         _gift_barcode: {
             model: "pos.order.line",
             name: "_gift_barcode",

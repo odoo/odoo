@@ -456,9 +456,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour("PosLoyaltyTour3")
 
-    def test_gift_card_program_create_set(self):
+    def test_gift_card_program(self):
         """
-        Test for gift card program when pos.config.gift_card_settings == 'create_set'.
+        Test for gift card program.
         """
         self.pos_user.write({
             'groups_id': [
@@ -472,60 +472,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'create_set'})
         # Run the tour to create a gift card
-        self.start_pos_tour("GiftCardProgramCreateSetTour1")
+        self.start_pos_tour("GiftCardProgramTour1")
         # Check that gift cards are created
         self.assertEqual(len(gift_card_program.coupon_ids), 1)
         # Change the code to 044123456 so that we can use it in the next tour.
         # Make sure it starts with 044 because it's the prefix of the loyalty cards.
         gift_card_program.coupon_ids.code = '044123456'
         # Run the tour to use the gift card
-        self.start_pos_tour("GiftCardProgramCreateSetTour2")
+        self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
-
-    def test_gift_card_program_scan_use(self):
-        """
-        Test for gift card program with pos.config.gift_card_settings == 'scan_use'.
-        - The gift card coupon codes are known before opening pos.
-        - They will be scanned and paid by the customer which links the coupon to the order.
-            - Meaning, it's paid.
-        - Then it will be scanned for usage.
-        """
-        self.pos_user.write({
-            'groups_id': [
-                (4, self.env.ref('stock.group_stock_user').id),
-            ]
-        })
-        # set the nomenclature to GS1
-        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
-        self.main_pos_config.company_id.write({
-            'nomenclature_id': barcodes_gs1_nomenclature.id
-        })
-
-        LoyaltyProgram = self.env['loyalty.program']
-        # Deactivate all other programs to avoid interference
-        (LoyaltyProgram.search([])).write({'pos_ok': False})
-        # But activate the gift_card_product_50 because it's shared among new gift card programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
-        # Create gift card program
-        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
-        # Generate 5$ gift card.
-        self.env["loyalty.generate.wizard"].with_context(
-            {"active_id": gift_card_program.id}
-        ).create({"coupon_qty": 1, 'points_granted': 5}).generate_coupons()
-        # Change the code of the gift card.
-        gift_card_program.coupon_ids.code = '043123456'
-        # Run the tour. It will pay the gift card and use it.
-        self.start_pos_tour("GiftCardProgramScanUseTour")
-        # Check that gift cards are used
-        self.assertAlmostEqual(gift_card_program.coupon_ids.points, 0, places=2)
-        # 3 order should be created.
-        self.assertEqual(len(self.main_pos_config.current_session_id.order_ids), 3)
 
     def test_ewallet_program(self):
         """
@@ -583,8 +540,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             ('ewallet_1', 'ewallet'),
             ('ewallet_2', 'ewallet')
         ])
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'create_set'})
         # Create test partners
         partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
         partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
@@ -854,8 +809,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         # Create gift card program
         self.create_programs([('arbitrary_name', 'gift_card')])
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'create_set'})
         self.start_pos_tour("GiftCardWithRefundtTour")
 
     def test_loyalty_program_specific_product(self):
@@ -1564,9 +1517,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         # But activate the gift_card_product_50 because it's shared among new gift card programs.
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
 
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
-
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
 
@@ -1590,6 +1540,50 @@ class TestUi(TestPointOfSaleHttpCommon):
             "GiftCardProgramPriceNoTaxTour",
             login="pos_user"
         )
+
+    def test_physical_gift_card_sale(self):
+        """
+        Test that the manual gift card sold has been correctly generated.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+
+        # Run the tour
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PhysicalGiftCardProgramSaleTour",
+            login="pos_user"
+        )
+
+        expected_coupons = {
+            "test-card-0000": 125,
+            "new-card-0001": 250,
+        }
+
+        # Check if the expected coupon codes are present
+        coupon_codes = {coupon.code for coupon in gift_card_program.coupon_ids}
+        for expected_code in expected_coupons:
+            self.assertIn(expected_code, coupon_codes, f"Expected coupon code '{expected_code}' not found")
+
+        # Check if the expected number of coupons are generated
+        self.assertEqual(len(gift_card_program.coupon_ids), 3, "Three coupons should be generated")
+
+        # Check if the coupon codes and points match the expected values
+        for coupon in gift_card_program.coupon_ids:
+            if coupon.code in expected_coupons:
+                self.assertEqual(coupon.points, expected_coupons[coupon.code], f"Coupon points for '{coupon.code}' should be {expected_coupons[coupon.code]}")
+            else:
+                # This is the auto-generated coupon with 50 points
+                self.assertEqual(coupon.points, 100, "Auto-generated coupon should have 100 points")
+
+        # Check if the total points of all coupons match the expected value
+        total_points = sum(coupon.points for coupon in gift_card_program.coupon_ids)
+        self.assertEqual(total_points, 475, "Total points should be 425")
 
     def test_dont_grant_points_reward_order_lines(self):
         """
@@ -1914,14 +1908,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        # Change the gift card program settings
-        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
-        # Generate 50$ gift card.
-        self.env["loyalty.generate.wizard"].with_context(
-            {"active_id": gift_card_program.id}
-        ).create({"coupon_qty": 1, 'points_granted': 50}).generate_coupons()
-        # Change the code of the gift card.
-        gift_card_program.coupon_ids.code = '044123456'
 
         self.product_a.write({
             'list_price': 100,
@@ -2114,11 +2100,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             "amount": "15.00",
         })
         gift_card_program.payment_program_discount_product_id.taxes_id = self.tax01
-        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
-        self.env["loyalty.generate.wizard"].with_context(
-            {"active_id": gift_card_program.id}
-        ).create({"coupon_qty": 1, 'points_granted': 50}).generate_coupons()
-        gift_card_program.coupon_ids.code = '044123456'
 
         self.main_pos_config.open_ui()
         self.start_tour(

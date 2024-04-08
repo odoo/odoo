@@ -7,9 +7,6 @@
         <field name="arch" type="xml">
             <xpath expr="//setting[@id='pos-loyalty']" position="inside">
                 <div class="content-group" invisible="not module_loyalty">
-                    <div class="mt16 o_light_label" id="pos_gift_card_settings" invisible="is_kiosk_mode">
-                        <field name="pos_gift_card_settings" colspan="4" nolabel="1" widget="radio"/>
-                    </div>
                     <div class="mt8">
                         <button name="%(loyalty.loyalty_program_discount_loyalty_action)d" icon="oi-arrow-right" type="action" string="Discount &amp; Loyalty" class="btn-link"/>
                     </div>
