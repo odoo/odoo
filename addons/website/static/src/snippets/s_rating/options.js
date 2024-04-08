@@ -2,7 +2,7 @@
 
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 
 options.registry.Rating = options.Class.extend({
     /**

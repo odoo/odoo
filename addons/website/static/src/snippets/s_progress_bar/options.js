@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { clamp } from "@web/core/utils/numbers";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 
 options.registry.progress = options.Class.extend({
 

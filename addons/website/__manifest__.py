@@ -247,6 +247,7 @@
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/js/editor/snippets.editor.js',
             'website/static/src/js/editor/snippets.options.js',
+            'website/static/src/js/editor/snippets.options.legacy.js',
             'website/static/src/snippets/s_facebook_page/options.js',
             'website/static/src/snippets/s_image/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',

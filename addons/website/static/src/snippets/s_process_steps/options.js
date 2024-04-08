@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import options from '@web_editor/js/editor/snippets.options';
+import options from '@web_editor/js/editor/snippets.options.legacy';
 import weUtils from '@web_editor/js/common/utils';
 
 options.registry.StepsConnector = options.Class.extend({

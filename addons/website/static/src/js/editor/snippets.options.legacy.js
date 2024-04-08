@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { loadCSS } from "@web/core/assets";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
@@ -35,13 +34,8 @@ import {
     drawTextHighlightSVG,
 } from "@website/js/text_processing";
 
-import { Component, markup, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, markup, useRef, useState } from "@odoo/owl";
 
-import {
-    legacyRegistry,
-    owlRegistry,
-    UnitUserValue,
-} from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
@@ -161,35 +155,10 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     }
 });
 
-class GoogleFontAutoComplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.inputRef = useRef("input");
-        this.sourcesListRef = useRef("sourcesList");
-        useEffect((el) => {
-            el.setAttribute("id", "google_font");
-        }, () => [this.inputRef.el]);
-    }
-
-    get dropdownOptions() {
-        return {
-            ...super.dropdownOptions,
-            position: "bottom-fit",
-        };
-    }
-
-    onInput(ev) {
-        super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
-        }
-    }
-}
-
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
-        'click .o_we_add_font_btn': '_onAddFontClick',
-        'click .o_we_delete_font_btn': '_onDeleteFontClick',
+        'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
+        'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
     }),
     fontVariables: [], // Filled by editor menu when all options are loaded
 
@@ -198,7 +167,6 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     init() {
         this.dialog = this.bindService("dialog");
-        this.orm = this.bindService("orm");
         return this._super(...arguments);
     },
     /**
@@ -215,9 +183,6 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
         this.googleLocalFonts = googleLocalFontsProperty ?
             googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
-        const uploadedLocalFontsProperty = weUtils.getCSSVariableValue('uploaded-local-fonts', style);
-        this.uploadedLocalFonts = uploadedLocalFontsProperty ?
-            uploadedLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
         // If a same font exists both remotely and locally, we remove the remote
         // font to prioritize the local font. The remote one will never be
         // displayed or loaded as long as the local one exists.
@@ -248,7 +213,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
-        const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length + this.uploadedLocalFonts.length);
+        const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
         for (let fontNb = 0; fontNb < nbFonts; fontNb++) {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
@@ -265,13 +230,10 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             fontEl.dataset.variable = variable;
             fontEl.dataset[methodName] = fontKey;
             fontEl.dataset.fontFamily = fontFamily;
-            const iconWrapperEl = document.createElement("div");
-            iconWrapperEl.classList.add("text-end");
-            fontEl.appendChild(iconWrapperEl);
             if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
                 // Add the "cloud" icon next to the theme's default fonts
                 // because they are served by Google.
-                iconWrapperEl.appendChild(Object.assign(document.createElement('i'), {
+                fontEl.appendChild(Object.assign(document.createElement('i'), {
                     role: 'button',
                     className: 'text-info me-2 fa fa-cloud',
                     title: _t("This font is hosted and served to your visitors by Google servers"),
@@ -281,22 +243,12 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             this.menuEl.appendChild(fontEl);
         }
 
-        if (this.uploadedLocalFonts.length) {
-            const uploadedLocalFontsEls = fontEls.splice(-this.uploadedLocalFonts.length);
-            uploadedLocalFontsEls.forEach((el, index) => {
-                $(el).find(".text-end").append(renderToFragment('website.delete_font_btn', {
-                    index: index,
-                    local: "uploaded",
-                }));
-            });
-        }
-
         if (this.googleLocalFonts.length) {
             const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
             googleLocalFontsEls.forEach((el, index) => {
-                $(el).find(".text-end").append(renderToFragment('website.delete_font_btn', {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
-                    local: "google",
+                    local: "true",
                 }));
             });
         }
@@ -304,13 +256,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.googleFonts.length) {
             const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
-                $(el).find(".text-end").append(renderToFragment('website.delete_font_btn', {
+                $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
         }
 
-        $(this.menuEl).append($(renderToElement('website.add_font_btn', {
+        $(this.menuEl).append($(renderToElement('website.add_google_font_btn', {
             variable: variable,
         })));
 
@@ -341,24 +293,20 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     /**
      * @private
      */
-    async _onAddFontClick(ev) {
-        const addFontDialog = class extends Component {
-            static template = "website.dialog.addFont";
-            static components = { GoogleFontAutoComplete, Dialog };
+    _onAddGoogleFontClick: function (ev) {
+        const addGoogleFontDialog = class extends Component {
+            static template = "website.dialog.addGoogleFont";
+            static components = { Dialog };
             static props = { close: Function, title: String, onClickSave: Function };
-            state = useState({
-                valid: true, loading: false,
-                googleFontFamily: undefined, googleServe: true,
-                uploadedFontName: undefined, uploadedFonts: [], uploadedFontFaces: undefined,
-                previewText: _t("The quick brown fox jumps over the lazy dog."),
-            });
-            fileInput = useRef("fileInput");
+            title = _t("Add a Google Font");
+            state = useState({ valid: true, loading: false, googleServe: true });
+            fontInput = useRef("fontInput");
             async onClickSave() {
                 if (this.state.loading) {
                     return;
                 }
                 this.state.loading = true;
-                const shouldClose = await this.props.onClickSave(this.state);
+                const shouldClose = await this.props.onClickSave(this.state, this.fontInput.el);
                 if (shouldClose) {
                     this.props.close();
                     return;
@@ -368,229 +316,68 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             onClickCancel() {
                 this.props.close();
             }
-            get getGoogleFontList() {
-                return [{options: async (term) => {
-                    if (!this.googleFontList) {
-                        await rpc("/website/google_font_metadata").then((data) => {
-                            this.googleFontList = data.familyMetadataList.map((font) => font.family);
-                        });
+        };
+        const variable = $(ev.currentTarget).data('variable');
+        this.dialog.add(addGoogleFontDialog, {
+            title: _t("Add a Google Font"),
+            onClickSave: async (state, inputEl) => {
+                // if font page link (what is expected)
+                let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
+                if (!m) {
+                    // if embed code (so that it works anyway if the user put the embed code instead of the page link)
+                    m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                    if (!m) {
+                        inputEl.classList.add('is-invalid');
+                        return;
                     }
-                    const lowerCaseTerm = term.toLowerCase();
-                    const filtered = this.googleFontList.filter((value) => value.toLowerCase().includes(lowerCaseTerm));
-                    return filtered.map((fontFamilyName) => {
-                        return {
-                            label: fontFamilyName,
-                            value: fontFamilyName,
-                        };
-                    });
-                }}];
-            }
-            async onGoogleFontSelect(selected) {
-                this.fileInput.el.value = "";
-                this.state.uploadedFonts = [];
-                this.state.uploadedFontName = undefined;
-                this.state.uploadedFontFaces = undefined;
+                }
+
+                let isValidFamily = false;
+
                 try {
-                    const fontFamily = selected.value;
-                    const result = await fetch(`https://fonts.googleapis.com/css?family=${encodeURIComponent(fontFamily)}:300,300i,400,400i,700,700i`, {method: 'HEAD'});
+                    // Font family is an encoded query parameter:
+                    // "Open+Sans" needs to remain "Open+Sans".
+                    const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
                     // Google fonts server returns a 400 status code if family is not valid.
                     if (result.ok) {
-                        const linkId = `previewFont${fontFamily}`;
-                        if (!document.querySelector(`link[id='${linkId}']`)) {
-                            const linkEl = document.createElement("link");
-                            linkEl.id = linkId;
-                            linkEl.setAttribute("href", result.url);
-                            linkEl.setAttribute("rel", "stylesheet");
-                            linkEl.dataset.fontPreview = true;
-                            document.head.appendChild(linkEl);
-                        }
-                        this.state.googleFontFamily = fontFamily;
-                    } else {
-                        this.state.googleFontFamily = undefined;
+                        isValidFamily = true;
                     }
                 } catch (error) {
                     console.error(error);
                 }
-            }
-            async onUploadChange(e) {
-                this.state.googleFontFamily = undefined;
-                const file = this.fileInput.el.files[0];
-                if (!file) {
-                    this.state.uploadedFonts = [];
-                    this.state.uploadedFontName = undefined;
-                    this.state.uploadedFontFaces = undefined;
+
+                if (!isValidFamily) {
+                    inputEl.classList.add('is-invalid');
                     return;
                 }
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const base64 = e.target.result.split(',')[1];
-                    rpc("/website/theme_upload_font", {
-                        name: file.name,
-                        data: base64,
-                    }).then(result => {
-                        this.state.uploadedFonts = result;
-                        this.updateFontStyle(file.name.substr(0, file.name.lastIndexOf(".")));
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-            /**
-             * Deduces the style of uploaded fonts and creates inline style
-             * elements in the backend iframe's head to make the font-faces
-             * available for preview.
-             *
-             * @param baseFontName
-             */
-            updateFontStyle(baseFontName) {
-                const targetFonts = {};
-                // Add candidate tags to fonts.
-                let shortestNamedFont;
-                for (const font of this.state.uploadedFonts) {
-                    if (!shortestNamedFont || font.name.length < shortestNamedFont.name.length) {
-                        shortestNamedFont = font;
-                    }
-                    font.isItalic = /italic/i.test(font.name);
-                    font.isLight = /light|300/i.test(font.name);
-                    font.isBold = /bold|700/i.test(font.name);
-                    font.isRegular = /regular|400/i.test(font.name);
-                    font.weight = font.isRegular ? 400 : font.isLight ? 300 : font.isBold ? 700 : undefined;
-                    if (font.isItalic && !font.weight) {
-                        if (!/00|thin|medium|black|condense|extrude/i.test(font.name)) {
-                            font.isRegular = true;
-                            font.weight = 400;
-                        }
-                    }
-                    font.style = font.isItalic ? "italic" : "normal";
-                    if (font.weight) {
-                        targetFonts[`${font.weight}${font.style}`] = font;
-                    }
+
+                const font = m[1].replace(/\+/g, ' ');
+                const googleFontServe = state.googleServe;
+                const fontName = `'${font}'`;
+                // If the font already exists, it will only be added if
+                // the user chooses to add it locally when it is already
+                // imported from the Google Fonts server.
+                const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                const fontExistsOnServer = this.allFonts.includes(fontName);
+                const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
+                if (preventFontAddition) {
+                    inputEl.classList.add('is-invalid');
+                    // Show custom validity error message.
+                    inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
+                    inputEl.reportValidity();
+                    return;
                 }
-                if (!Object.values(targetFonts).filter((font) => font.isRegular).length) {
-                    // Keep font with shortest name.
-                    shortestNamedFont.weight = 400;
-                    shortestNamedFont.style = "normal";
-                    targetFonts["400"] = shortestNamedFont;
-                }
-                const fontFaces = [];
-                for (const font of Object.values(targetFonts)) {
-                    fontFaces.push(`@font-face{
-                        font-family: ${baseFontName};
-                        font-style: ${font.style};
-                        font-weight: ${font.weight};
-                        src:url("${font.url}");
-                    }`);
-                }
-                let styleEl = document.head.querySelector(`style[id='WebsiteThemeFontPreview-${baseFontName}']`);
-                if (!styleEl) {
-                    styleEl = document.createElement("style");
-                    styleEl.id = `WebsiteThemeFontPreview-${baseFontName}`;
-                    styleEl.dataset.fontPreview = true;
-                    document.head.appendChild(styleEl);
-                }
-                const previewFontFaces = fontFaces.join("");
-                styleEl.textContent = previewFontFaces;
-                this.state.uploadedFontName = baseFontName;
-                this.state.uploadedFontFaces = previewFontFaces;
-            }
-        };
-        const variable = $(ev.currentTarget).data('variable');
-        this.dialog.add(addFontDialog, {
-            title: _t("Add a Google font or upload a custom font"),
-            onClickSave: async (state) => {
-                const uploadedFontName = state.uploadedFontName;
-                const uploadedFontFaces = state.uploadedFontFaces;
-                let font = undefined;
-                if (uploadedFontName && uploadedFontFaces) {
-                    const fontExistsLocally = this.uploadedLocalFonts.some(localFont => localFont.split(':')[0] === `'${uploadedFontName}'`);
-                    if (fontExistsLocally) {
-                        this.dialog.add(ConfirmationDialog, {
-                            title: _t("Font exists"),
-                            body: _t("This uploaded font already exists.\nTo replace an existing font, remove it first."),
-                        });
-                        return;
-                    }
-                    const homonymGoogleFontExists =
-                        this.googleFonts.some(font => font === uploadedFontName) ||
-                        this.googleLocalFonts.some(font => font.split(':')[0] === `'${uploadedFontName}'`);
-                    if (homonymGoogleFontExists) {
-                        this.dialog.add(ConfirmationDialog, {
-                            title: _t("Font name already used"),
-                            body: _t("A font with the same name already exists.\nTry renaming the uploaded file."),
-                        });
-                        return;
-                    }
-                    // Create attachment.
-                    const [fontCssId] = await this.orm.call("ir.attachment", "create_unique", [[{
-                        name: uploadedFontName,
-                        description: `CSS font face for ${uploadedFontName}`,
-                        datas: btoa(uploadedFontFaces),
-                        res_model: "ir.attachment",
-                        mimetype: "text/css",
-                        "public": true,
-                    }]]);
-                    this.uploadedLocalFonts.push(`'${uploadedFontName}': ${fontCssId}`);
-                    font = uploadedFontName;
+                if (googleFontServe) {
+                    this.googleFonts.push(font);
                 } else {
-                    let isValidFamily = false;
-                    font = state.googleFontFamily;
-
-                    try {
-                        const result = await fetch("https://fonts.googleapis.com/css?family=" + encodeURIComponent(font) + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
-                        // Google fonts server returns a 400 status code if family is not valid.
-                        if (result.ok) {
-                            isValidFamily = true;
-                        }
-                    } catch (error) {
-                        console.error(error);
-                    }
-
-                    if (!isValidFamily) {
-                        this.dialog.add(ConfirmationDialog, {
-                            title: _t("Font access"),
-                            body: _t("The selected font cannot be accessed."),
-                        });
-                        return;
-                    }
-
-                    const googleFontServe = state.googleServe;
-                    const fontName = `'${font}'`;
-                    // If the font already exists, it will only be added if
-                    // the user chooses to add it locally when it is already
-                    // imported from the Google Fonts server.
-                    const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
-                    const fontExistsOnServer = this.allFonts.includes(fontName);
-                    const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
-                    if (preventFontAddition) {
-                        this.dialog.add(ConfirmationDialog, {
-                            title: _t("Font exists"),
-                            body: _t("This font already exists, you can only add it as a local font to replace the server version."),
-                        });
-                        return;
-                    }
-                    if (googleFontServe) {
-                        this.googleFonts.push(font);
-                    } else {
-                        this.googleLocalFonts.push(`'${font}': ''`);
-                    }
+                    this.googleLocalFonts.push(`'${font}': ''`);
                 }
-                this.trigger_up('fonts_custo_request', {
+                this.trigger_up('google_fonts_custo_request', {
                     values: {[variable]: `'${font}'`},
                     googleFonts: this.googleFonts,
                     googleLocalFonts: this.googleLocalFonts,
-                    uploadedLocalFonts: this.uploadedLocalFonts,
                 });
-                let styleEl = document.head.querySelector(`[id='WebsiteThemeFontPreview-${font}']`);
-                if (styleEl) {
-                    delete styleEl.dataset.fontPreview;
-                }
                 return true;
-            },
-        },
-        {
-            onClose: () => {
-                for (const el of document.head.querySelectorAll("[data-font-preview]")) {
-                    el.remove();
-                }
             },
         });
     },
@@ -598,7 +385,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      * @param {Event} ev
      */
-    _onDeleteFontClick: async function (ev) {
+    _onDeleteGoogleFontClick: async function (ev) {
         ev.preventDefault();
         const values = {};
 
@@ -614,42 +401,35 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
 
         // Remove Google font
-        const fontIndex = parseInt(ev.target.dataset.fontIndex);
-        const localFont = ev.target.dataset.localFont;
-        let fontName;
-        if (localFont === 'uploaded') {
-            const font = this.uploadedLocalFonts[fontIndex].split(':');
+        const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
+        const isLocalFont = ev.target.dataset.localFont;
+        let googleFontName;
+        if (isLocalFont) {
+            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
             // Remove double quotes
-            fontName = font[0].substring(1, font[0].length - 1);
-            values['delete-font-attachment-id'] = font[1];
-            this.uploadedLocalFonts.splice(fontIndex, 1);
-        } else if (localFont === 'google') {
-            const googleFont = this.googleLocalFonts[fontIndex].split(':');
-            // Remove double quotes
-            fontName = googleFont[0].substring(1, googleFont[0].length - 1);
+            googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
             values['delete-font-attachment-id'] = googleFont[1];
-            this.googleLocalFonts.splice(fontIndex, 1);
+            this.googleLocalFonts.splice(googleFontIndex, 1);
         } else {
-            fontName = this.googleFonts[fontIndex];
-            this.googleFonts.splice(fontIndex, 1);
+            googleFontName = this.googleFonts[googleFontIndex];
+            this.googleFonts.splice(googleFontIndex, 1);
         }
 
         // Adapt font variable indexes to the removal
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         FontFamilyPickerUserValueWidget.prototype.fontVariables.forEach((variable) => {
             const value = weUtils.getCSSVariableValue(variable, style);
-            if (value.substring(1, value.length - 1) === fontName) {
+            if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
                 values[variable] = 'null';
             }
         });
 
-        this.trigger_up('fonts_custo_request', {
+        this.trigger_up('google_fonts_custo_request', {
             values: values,
             googleFonts: this.googleFonts,
             googleLocalFonts: this.googleLocalFonts,
-            uploadedLocalFonts: this.uploadedLocalFonts,
         });
     },
 });
@@ -869,17 +649,15 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
-/*
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
-*/
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 options.Class.include({
     custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
-        'fonts_custo_request': '_onFontsCustoRequest',
+        'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
@@ -1215,11 +993,10 @@ options.Class.include({
      * @private
      * @param {OdooEvent} ev
      */
-    _onFontsCustoRequest(ev) {
+    _onGoogleFontsCustoRequest: function (ev) {
         const values = ev.data.values ? Object.assign({}, ev.data.values) : {};
         const googleFonts = ev.data.googleFonts;
         const googleLocalFonts = ev.data.googleLocalFonts;
-        const uploadedLocalFonts = ev.data.uploadedLocalFonts;
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
@@ -1229,11 +1006,6 @@ options.Class.include({
             values['google-local-fonts'] = "(" + googleLocalFonts.join(", ") + ")";
         } else {
             values['google-local-fonts'] = 'null';
-        }
-        if (uploadedLocalFonts.length) {
-            values['uploaded-local-fonts'] = "(" + uploadedLocalFonts.join(", ") + ")";
-        } else {
-            values['uploaded-local-fonts'] = 'null';
         }
         this.trigger_up('snippet_edition_request', {exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
@@ -2420,7 +2192,7 @@ options.registry.collapse = options.Class.extend({
      */
     start: function () {
         var self = this;
-        this.$bsTarget.on('shown.bs.collapse hidden.bs.collapse', '[role="region"]', function () {
+        this.$bsTarget.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
             self.$target.trigger('content_changed');
         });
@@ -2465,32 +2237,32 @@ options.registry.collapse = options.Class.extend({
      */
     _createIDs: function () {
         let time = new Date().getTime();
-        const accordionEl = this.$target[0].closest(".accordion");
-        const accordionBtnEl = this.$target[0].querySelector(".accordion-button");
-        const accordionContentEl = this.$target[0].querySelector('[role="region"]');
+        const $tablist = this.$target.closest('[role="tablist"]');
+        const $tab = this.$target.find('[role="tab"]');
+        const $panel = this.$target.find('[role="tabpanel"]');
         const $body = this.$target.closest('body');
 
-        const setUniqueId = (el, label) => {
-            let elemId = el.id;
+        const setUniqueId = ($elem, label) => {
+            let elemId = $elem.attr('id');
             if (!elemId || $body.find('[id="' + elemId + '"]').length > 1) {
                 do {
                     time++;
                     elemId = label + time;
                 } while ($body.find('#' + elemId).length);
-                el.id = elemId;
+                $elem.attr('id', elemId);
             }
             return elemId;
         };
 
-        const accordionId = setUniqueId(accordionEl, "myCollapse");
-        accordionContentEl.dataset.bsParent = "#" + accordionId;
-        
-        const contentId = setUniqueId(accordionContentEl, "myCollapseTab");
-        accordionBtnEl.dataset.bsTarget = "#" + contentId;
-        accordionBtnEl.setAttribute("aria-controls", contentId);
+        const tablistId = setUniqueId($tablist, 'myCollapse');
+        $panel.attr('data-bs-parent', '#' + tablistId);
+        $panel.data('bs-parent', '#' + tablistId);
 
-        const buttonId = setUniqueId(accordionBtnEl, "myCollapseBtn");
-        accordionContentEl.setAttribute("aria-labelledby", buttonId);
+        const panelId = setUniqueId($panel, 'myCollapseTab');
+        $tab.attr('data-bs-target', '#' + panelId);
+        $tab.data('bs-target', '#' + panelId);
+
+        $tab[0].setAttribute("aria-controls", panelId);
     },
 });
 
@@ -4445,7 +4217,7 @@ options.registry.SnippetMove.include({
     },
 });
 
-const oldExport = {
-    // UrlPickerUserValueWidget: UrlPickerUserValueWidget,
-    // FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
+export default {
+    UrlPickerUserValueWidget: UrlPickerUserValueWidget,
+    FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };
