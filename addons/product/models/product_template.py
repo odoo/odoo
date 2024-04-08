@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
     _description = "Product"
     _order = "is_favorite desc, name"
+    _check_company_domain = models.check_company_domain_parent_of
 
     @tools.ormcache()
     def _get_default_category_id(self):
