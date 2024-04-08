@@ -1,1 +1,1 @@
-from zeep.wsse.username import UsernameToken
+from zeep.wsse.username import *
