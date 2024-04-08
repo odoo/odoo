@@ -5,6 +5,9 @@ from lxml.builder import E
 
 from odoo import api, models, tools, _
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
@@ -176,15 +179,25 @@ class BaseModel(models.AbstractModel):
         a bad management of quotes (missing quotes after refold). This appears
         therefore only when having quotes (aka not simple names, and not when
         being unicode encoded).
+        Another edge-case produces a linebreak (CRLF) immediately after the
+        colon character separating the header name from the header value.
+        This creates an issue in certain DKIM tech stacks that will
+        incorrectly read the reply-to value as empty and fail the verification.
 
-        To avoid that issue when formataddr would return more than 78 chars we
-        return a simplified name/email to try to stay under 78 chars. If not
+        To avoid that issue when formataddr would return more than 68 chars we
+        return a simplified name/email to try to stay under 68 chars. If not
         possible we return only the email and skip the formataddr which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
         """
-        # address itself is too long for 78 chars limit: return only email
-        if len(record_email) >= 78:
+        length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
+        # address itself is too long : return only email and log warning
+        if len(record_email) >= length_limit:
+            _logger.warning('Notification email address for reply-to is longer than 68 characters. '
+                'This might create non-compliant folding in the email header in certain DKIM '
+                'verification tech stacks. It is advised to shorten it if possible. '
+                'Record name (if set): %s '
+                'Reply-To: %s ', record_name, record_email)
             return record_email
 
         company_name = company.name if company else self.env.company.name
@@ -193,9 +206,9 @@ class BaseModel(models.AbstractModel):
         name = f"{company_name} {record_name}" if record_name else company_name
 
         formatted_email = tools.formataddr((name, record_email))
-        if len(formatted_email) > 78:
+        if len(formatted_email) > length_limit:
             formatted_email = tools.formataddr((record_name or company_name, record_email))
-        if len(formatted_email) > 78:
+        if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email
 
