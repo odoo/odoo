@@ -1,0 +1,1 @@
+pylint --ignore-patterns="__manifest__.py" --load-plugins=pylint_odoo -d all -e odoolint .\talent360\
