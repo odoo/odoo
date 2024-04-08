@@ -498,7 +498,7 @@ export class CalendarModel extends Model {
      * @param {Record<string, any>} rawRecord
      */
     normalizeRecord(rawRecord) {
-        const { fields, fieldMapping, isTimeHidden, scale } = this.meta;
+        const { fields, fieldMapping, isTimeHidden } = this.meta;
 
         const startType = fields[fieldMapping.date_start].type;
         const isAllDay =
@@ -530,7 +530,6 @@ export class CalendarModel extends Model {
 
         const showTime =
             !(fieldMapping.all_day && rawRecord[fieldMapping.all_day]) &&
-            scale === "month" &&
             startType !== "date" &&
             start.day === end.day;
 
