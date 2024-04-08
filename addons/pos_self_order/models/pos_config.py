@@ -5,7 +5,7 @@ import io
 import uuid
 import base64
 from os.path import join as opj
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from typing import Optional, List, Dict
 from werkzeug.urls import url_quote
 from odoo.exceptions import UserError
@@ -165,6 +165,12 @@ class PosConfig(models.Model):
 
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
+
+            if vals.get('self_ordering_image_brand'):
+                try:
+                    Image.open(io.BytesIO(base64.b64decode(vals['self_ordering_image_brand'])))
+                except UnidentifiedImageError:
+                    raise UserError(_('This file could not be decoded as an image file.'))
         return super().write(vals)
 
     @api.depends("module_pos_restaurant")
