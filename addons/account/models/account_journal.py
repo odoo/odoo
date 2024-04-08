@@ -189,11 +189,6 @@ class AccountJournal(models.Model):
         check_company=True,
         string="Journal Groups")
 
-    secure_sequence_id = fields.Many2one('ir.sequence',
-        help='Sequence to use to ensure the securisation of data',
-        check_company=True,
-        readonly=True, copy=False)
-
     available_payment_method_ids = fields.Many2many(
         comodel_name='account.payment.method',
         compute='_compute_available_payment_method_ids'
