@@ -12,7 +12,7 @@ from odoo import models
 from odoo.tools import misc
 from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
-_match_asset_file_url_regex = re.compile("^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
+_match_asset_file_url_regex = re.compile(r"^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
 
 
 class Assets(models.AbstractModel):

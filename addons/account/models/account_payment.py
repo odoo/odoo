@@ -14,7 +14,7 @@ class AccountPayment(models.Model):
     _check_company_auto = True
 
     def _get_default_journal(self):
-        ''' Retrieve the default journal for the account.payment.
+        r''' Retrieve the default journal for the account.payment.
         /!\ This method will not override the method in 'account.move' because the ORM
         doesn't allow overriding methods using _inherits. Then, this method will be called
         manually in 'create' and 'new'.

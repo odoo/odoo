@@ -353,7 +353,7 @@ class IrHttp(models.AbstractModel):
         mimetype = getattr(record, 'mimetype', False)
         if record.type == 'url' and record.url:
             # if url in in the form /somehint server locally
-            url_match = re.match("^/(\w+)/(.+)$", record.url)
+            url_match = re.match(r"^/(\w+)/(.+)$", record.url)
             if url_match:
                 module = url_match.group(1)
                 module_path = get_module_path(module)
