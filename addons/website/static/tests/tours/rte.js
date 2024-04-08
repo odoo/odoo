@@ -88,14 +88,29 @@ wTourUtils.dragNDrop({
     run: function () {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
                 <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-                useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
-                <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
+                useful to your <a href="/999">readers</a>.</p>\
+                <p class="test_translate">&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
 }, {
     content: "ensure change was applied",
     trigger: ':iframe #wrap p:first b',
     isCheck: true,
+    },
+wTourUtils.dragNDrop({
+    id: "s_website_form",
+    name: "Form"
+}), {
+    content: "Click on form text input",
+    trigger: ':iframe .s_website_form input[type="text"]',
+}, {
+    content: "Set a placeholder",
+    trigger: '[data-attribute-name="placeholder"] input',
+    run: 'edit test translate placeholder',
+}, {
+    content: "Set a default value",
+    trigger: '[data-attribute-name="value"] input',
+    run: 'edit test translate default value',
 },
 ...wTourUtils.clickOnSave(),
 {
@@ -131,7 +146,7 @@ wTourUtils.dragNDrop({
     },
 }, {
     content: "translate text with special char",
-    trigger: ':iframe #wrap input + p span:first',
+    trigger: ':iframe #wrap p.test_translate span:first',
     run: function (actionHelper) {
         actionHelper.click();
         this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
@@ -142,21 +157,17 @@ wTourUtils.dragNDrop({
     },
 }, {
     content: "click on input",
-    trigger: ':iframe #wrap input:first',
+    trigger: ':iframe .s_website_form input[type="text"]',
     extra_trigger: ':iframe #wrap .o_dirty font:first:contains(translated Parseltongue text)',
     run: 'click',
 }, {
     content: "translate placeholder",
-    trigger: '.modal-dialog input:first',
+    trigger: '[data-attribute-name="placeholder"] input',
     run: "edit test Parseltongue placeholder",
 }, {
     content: "translate default value",
-    trigger: '.modal-dialog input:last',
+    trigger: '[data-attribute-name="value"] input',
     run: "edit test Parseltongue default value",
-}, {
-    content: "close modal",
-    trigger: '.modal-footer .btn-primary',
-    extra_trigger: '.modal input:value("test Parseltongue placeholder")',
 }, {
     content: "check: input marked as translated",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
@@ -166,16 +177,16 @@ wTourUtils.dragNDrop({
 {
     content: "check: content is translated",
     trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
-    run: function () {}, // it's a check
+    isCheck: true,
 }, {
     content: "check: content with special char is translated",
-    trigger: ":iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
-    run: function () {}, // it's a check
+    trigger: ":iframe #wrap p.test_translate:contains(<{translated}><b></b> is an HTML tag & )",
+    isCheck: true,
 
 }, {
     content: "check: placeholder translation",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
-    run: function () {}, // it's a check
+    isCheck: true,
 }, {
     content: "check: default value translation",
     trigger: ':iframe input[value="test Parseltongue default value"]',
@@ -190,7 +201,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "Check body",
     trigger: ":iframe body:not(:has(#wrap p font:first:contains(/^paragraphs <b>describing</b>$/)))",
-    run: function () {}, // it's a check
+    isCheck: true,
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
@@ -251,5 +262,5 @@ wTourUtils.dragNDrop({
 }, {
     content: "Check that the editor is not showing translated content (2)",
     trigger: ':iframe body:not(.rte_translator_error)',
-    run: function () {},
+    isCheck: true,
 }]);

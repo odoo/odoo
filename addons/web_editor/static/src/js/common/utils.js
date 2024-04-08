@@ -462,6 +462,13 @@ function _shouldEditableMediaBeEditable(mediaEl) {
     // first non editable ancestor is in fact in an editable parent.
     const parentEl = mediaEl.parentElement;
     const nonEditableAncestorRootEl = parentEl && parentEl.closest('[contenteditable="false"]');
+    if (
+        nonEditableAncestorRootEl
+        && nonEditableAncestorRootEl.id === "wrapwrap"
+        && nonEditableAncestorRootEl.closest("[data-edit_translations]")
+    ) {
+        return true;
+    }
     return nonEditableAncestorRootEl
         && nonEditableAncestorRootEl.parentElement
         && nonEditableAncestorRootEl.parentElement.isContentEditable;
