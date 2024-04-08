@@ -740,10 +740,13 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @users('admin', 'employee')
     @warmup
     def test_notification_reply_to_batch(self):
+        # overwrite company name to keep it short/simple
+        # and not trigger the 68 character reply_to formatting
+        self.env.user.company_id.name = "Forced"
         test_records_sudo = self.env['mail.test.container'].sudo().create([
-            {'alias_name': 'alias.test.%s.%d' % (self.env.user.name, index),
+            {'alias_name': 'a.%s.%d' % (self.env.user.name, index),
              'customer_id': self.customer.id,
-             'name': 'Test_%d' % index,
+             'name': 'T_%d' % index,
             } for index in range(10)
         ])
 
