@@ -1,5 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts, queryFirst, queryLast, queryOne } from "@odoo/hoot-dom";
+import {
+    pointerDown,
+    pointerUp,
+    queryAllTexts,
+    queryFirst,
+    queryLast,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
@@ -536,4 +543,43 @@ test("correct sequence of blur, focus and select", async () => {
     await contains(document.body).click();
     expect(["blur", "change"]).toVerifySteps();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+});
+
+test("autocomplete always closes on click away [REQUIRE FOCUS]", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete
+                value="state.value"
+                sources="sources"
+                onSelect.bind="onSelect"
+                autoSelect="true"
+            />
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({
+                value: "",
+            });
+        }
+        get sources() {
+            return [
+                {
+                    options: [{ label: "World" }, { label: "Hello" }],
+                },
+            ];
+        }
+        onSelect(option) {
+            queryOne(".o-autocomplete--input").value = option.label;
+        }
+    }
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete input").toHaveCount(1);
+    await contains(".o-autocomplete input").click();
+    expect(".o-autocomplete--dropdown-item").toHaveCount(2);
+    pointerDown(queryLast(".o-autocomplete--dropdown-item"));
+    pointerUp(document.body);
+    expect(".o-autocomplete--dropdown-item").toHaveCount(2);
+    await contains(document.body).click();
+    expect(".o-autocomplete--dropdown-item").toHaveCount(0);
 });
