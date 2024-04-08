@@ -5,7 +5,7 @@ class Template(models.Model):
     _name = "template"
     _description = "Plantilla para una evaluación"
 
-    nombre = fields.Char("Nombre de la plantilla", required=True)
+    nombre = fields.Char(required=True)
     descripcion = fields.Text("Descripción")
     tipo = fields.Selection([
         ('nom_085', 'NOM 085'),

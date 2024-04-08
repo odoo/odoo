@@ -5,7 +5,7 @@ class Evaluacion(models.Model):
     _name = "evaluacion"
     _description = "Evaluacion de pesonal"
 
-    nombre = fields.Char("Nombre de la evaluación", required=True)
+    nombre = fields.Char(required=True)
     estado = fields.Selection([
         ('borrador', 'Borrador'),
         ('publicado', 'Publicado'),
