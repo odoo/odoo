@@ -2,7 +2,7 @@
 
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { l10n_in_get_hsn_summary_table } from "@l10n_in/helpers/hsn_summary";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
@@ -56,7 +56,7 @@ patch(PosOrder.prototype, {
             });
         });
 
-        const hsnSummary = l10n_in_get_hsn_summary_table(baseLines, false);
+        const hsnSummary = accountTaxHelpers.l10n_in_get_hsn_summary_table(baseLines, false);
         if (hsnSummary) {
             for (const item of hsnSummary.items) {
                 for (const key of [
