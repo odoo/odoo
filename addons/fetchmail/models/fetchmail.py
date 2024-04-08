@@ -136,6 +136,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
 
     def button_confirm_login(self):
         for server in self:
+            connection = False
             try:
                 connection = server.connect()
                 server.write({'state': 'done'})
