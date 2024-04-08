@@ -24,13 +24,13 @@
                 </small>
             </t>
             <t t-else="">
-                <t t-foreach="range(0, val_integer)" t-as="num" t-key="num_index">
+                <t t-foreach="range(0, val_integer)" t-as="num">
                     <i class="fa fa-star" role="img"></i>
                 </t>
                 <t t-if="val_decimal">
                     <i class="fa fa-star-half-o" role="img"></i>
                 </t>
-                <t t-foreach="range(0, empty_star)" t-as="num" t-key="num_index">
+                <t t-foreach="range(0, empty_star)" t-as="num">
                     <i class="fa fa-star-o" role="img"></i>
                 </t>
                 <small class="text-muted ms-1">
