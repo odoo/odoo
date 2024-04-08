@@ -231,11 +231,6 @@ class Orderpoint(models.Model):
         """ Extend to add more depends values """
         return super()._compute_qty()
 
-    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
-    def _compute_qty_to_order(self):
-        """ Extend to add more depends values """
-        return super()._compute_qty_to_order()
-
     @api.depends('supplier_id')
     def _compute_lead_days(self):
         return super()._compute_lead_days()
