@@ -149,7 +149,7 @@
         class="o_search_panel w-100 overflow-visible"
         t-ref="root"
         >
-        <div class="d-flex overflow-auto align-items-center">
+        <div class="d-flex overflow-auto align-items-center px-2 border-top">
             <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
                 <button class="btn w-100">
                     <div class="d-flex align-items-center me-2 ms-auto">All</div>
@@ -157,7 +157,7 @@
             </div>
             <Dropdown t-foreach="sections" t-as="section" t-key="section.id" menuClass="'my-2 mx-1'" onOpened.bind="updateGroupHeadersChecked">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
-                    <i t-if="hasSelection(section.id)" class="position-absolute fa fa-circle" style="color: red; top: -5px; right: -5px"/>
+                    <i t-if="hasSelection(section.id)" class="fa fa-circle position-absolute top-0 start-100 translate-middle text-danger"/>
                     <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
                     />
@@ -169,11 +169,11 @@
                         <t t-call="web.SearchPanel.Section"/>
                     </div>
                     <div t-if="section.type !== 'category' and hasSelection(section.id)" class="text-end">
-                        <a href="#" class="px-2 text-nowrap" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</a>
+                        <a href="#" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</a>
                     </div>
                 </t>
             </Dropdown>
-            <a href="#" t-if="hasSelection()" class="px-2 text-nowrap" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
+            <a href="#" t-if="hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
             <div t-else="" class="mx-4"/>
         </div>
     </div>
