@@ -1068,6 +1068,7 @@ class ChromeBrowser:
         delay = 0.1
         tries = 0
         failure_info = None
+        message = ''
         while timeout > 0:
             try:
                 os.kill(self.chrome_pid, 0)

@@ -662,6 +662,7 @@ class TestQWebNS(TransactionCase):
             """
         })
 
+        error_msg = ''
         try:
             "" + 0
         except TypeError as e:
