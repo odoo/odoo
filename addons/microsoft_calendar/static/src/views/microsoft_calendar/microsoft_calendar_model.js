@@ -24,10 +24,7 @@ patch(AttendeeCalendarModel.prototype, "microsoft_calendar_microsoft_calendar_mo
             return _super(...arguments);
         }
         try {
-            await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)),
-                this.syncMicrosoftCalendar(true)
-            ]);
+            await this.syncMicrosoftCalendar(true);
         } catch (error) {
             if (error.event) {
                 error.event.preventDefault();
