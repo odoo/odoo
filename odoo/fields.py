@@ -2523,10 +2523,11 @@ class Image(Binary):
     def create(self, record_values):
         new_record_values = []
         for record, value in record_values:
-            # strange behavior when setting related image field, when `self`
-            # does not resize the same way as its related field
             new_value = self._image_process(value, record.env)
             new_record_values.append((record, new_value))
+            # when setting related image field, keep the unprocessed image in
+            # cache to let the inverse method use the original image; the image
+            # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
             record.env.cache.update(record, self, itertools.repeat(cache_value))
         super(Image, self).create(new_record_values)
@@ -2548,6 +2549,16 @@ class Image(Binary):
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         dirty = self.column_type and self.store and any(records._ids)
         records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+
+    def _inverse_related(self, records):
+        super()._inverse_related(records)
+        if not (self.max_width and self.max_height):
+            return
+        # the inverse has been applied with the original image; now we fix the
+        # cache with the resized value
+        for record in records:
+            value = self._process_related(record[self.name], record.env)
+            record.env.cache.set(record, self, value, dirty=(self.store and self.column_type))
 
     def _image_process(self, value, env):
         if self.readonly and not self.max_width and not self.max_height:
