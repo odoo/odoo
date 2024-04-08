@@ -15,23 +15,23 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
     //--------------------------------------------------------------------------
 
     _onClickCreate: async function () {
-        if (!this.$createModal) {
+        if (!this.createModal) {
             const langs = await rpc("/event/active_langs");
-
-            this.$createModal = $(renderToElement(
+            // TODO-shsa : check the validity of this also use getOrCreate
+            this.createModal = renderToElement(
                 'event_meet_create_room_modal',
                 {
                     csrf_token: odoo.csrf_token,
-                    eventId: this.$el.data("eventId"),
-                    defaultLangCode: this.$el.data("defaultLangCode"),
+                    eventId: this.el.dataset.eventId,
+                    defaultLangCode: this.el.dataset.defaultLangCode,
                     langs: langs,
                 }
-            ));
+            );
 
-            this.$createModal.appendTo(this.$el.parentNode);
+            this.el.parentNode.appendChild(this.createModal);
         }
 
-        this.$createModal.modal('show');
+        this.createModal.classList.add('show');
     },
 
     //--------------------------------------------------------------------------
@@ -45,7 +45,10 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
      * @override
      */
     destroy: function () {
-        $('.o_wevent_create_meeting_room_modal').remove();
+        const modal = document.querySelector('.o_wevent_create_meeting_room_modal');
+        if (modal) {
+            modal.parentNode.removeChild(modal);
+        }
         this._super.apply(this, arguments);
     },
 });

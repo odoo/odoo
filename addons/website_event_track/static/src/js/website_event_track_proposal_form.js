@@ -37,32 +37,33 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         var formErrors = [];
 
         // 1) Valid Form Inputs
-        this.$('.form-control').each(function () {
-            var $formControl = $(this);
+        Array.from(document.querySelectorAll('.form-control')).forEach(function (formControl) {
             // Validate current input, if not select2 field.
-            var inputs = $formControl.not('.o_wetrack_select2_tags');
-            var invalidInputs = inputs.toArray().filter(function (input) {
+            var inputs = formControl.classList.contains('o_wetrack_select2_tags') ? [] : [formControl];
+            var invalidInputs = inputs.filter(function (input) {
                 return !input.checkValidity();
             });
 
-            $formControl.removeClass('o_wetrack_input_error is-invalid');
+            formControl.classList.remove('o_wetrack_input_error', 'is-invalid');
             if (invalidInputs.length) {
-                $formControl.addClass('o_wetrack_input_error is-invalid');
+                formControl.classList.add('o_wetrack_input_error', 'is-invalid');
                 formErrors.push('invalidFormInputs');
             }
         });
 
         // 2) Advanced Contact Must Have a Contact Mean
         if (this.useAdvancedContact) {
-            var hasContactMean = this.$('.o_wetrack_contact_phone_input').val() ||
-                this.$('.o_wetrack_contact_email_input').val();
+            var hasContactMean = document.querySelector('.o_wetrack_contact_phone_input').value ||
+                document.querySelector('.o_wetrack_contact_email_input').value;
             if (!hasContactMean) {
-                this.$('.o_wetrack_contact_information').addClass('o_wetrack_no_contact_mean_error');
-                this.$('.o_wetrack_contact_mean').addClass('is-invalid');
+                document.querySelector('.o_wetrack_contact_information').classList.add('o_wetrack_no_contact_mean_error');
+                document.querySelector('.o_wetrack_contact_mean').classList.add('is-invalid');
                 formErrors.push('noContactMean');
             } else {
-                this.$('.o_wetrack_contact_information').removeClass('o_wetrack_no_contact_mean_error');
-                this.$('.o_wetrack_contact_mean:not(".o_wetrack_input_error")').removeClass('is-invalid');
+                document.querySelector('.o_wetrack_contact_information').classList.remove('o_wetrack_no_contact_mean_error');
+                Array.from(document.querySelectorAll('.o_wetrack_contact_mean:not(".o_wetrack_input_error")')).forEach(function (el) {
+                    el.classList.remove('is-invalid');
+                });
             }
         }
 
@@ -80,10 +81,10 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
      */
     _updateErrorDisplay: function (errors) {
 
-        this.$('.o_wetrack_proposal_error_section').toggleClass('d-none', !errors.length);
+        document.querySelector('.o_wetrack_proposal_error_section').classList.toggle('d-none', !errors.length);
 
         var errorMessages = [];
-        var $errorElement = this.$('.o_wetrack_proposal_error_message');
+        var errorElement = document.querySelector('.o_wetrack_proposal_error_message');
 
         if (errors.includes('invalidFormInputs')) {
             errorMessages.push(_t('Please fill out the form correctly.'));
@@ -97,7 +98,8 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
             errorMessages.push(_t('You cannot access this page.'));
         }
 
-        $errorElement.text(errorMessages.join(' ')).change();
+        errorElement.textContent = errorMessages.join(' ');
+        errorElement.dispatchEvent(new Event('change'));
     },
 
     //--------------------------------------------------------------------------
@@ -114,16 +116,16 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
      */
     _onAdvancedContactToggle: function (ev) {
         this.useAdvancedContact = !this.useAdvancedContact;
-        var $contactName = this.$(".o_wetrack_contact_name_input")[0];
-        var $advancedInformation = this.$('.o_wetrack_contact_information');
+        var contactName = document.querySelector(".o_wetrack_contact_name_input");
+        var advancedInformation = document.querySelector('.o_wetrack_contact_information');
 
         if (this.useAdvancedContact) {
-            $advancedInformation.removeClass('d-none');
-            $contactName.setAttribute("required", "True");
+            advancedInformation.classList.remove('d-none');
+            contactName.setAttribute("required", "True");
         } else {
-            this.$('.o_wetrack_contact_email_input').val('').change();
-            $advancedInformation.addClass('d-none');
-            $contactName.removeAttribute("required");
+            document.querySelector('.o_wetrack_contact_email_input').value = '';
+            advancedInformation.classList.add('d-none');
+            contactName.removeAttribute("required");
         }
     },
 
@@ -135,10 +137,12 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
      * @param {Event} ev
      */
     _onPartnerNameInput: function (ev) {
-        var partnerNameText = $(ev.currentTarget).val();
-        var contactNameText = this.$(".o_wetrack_contact_name_input").val();
+        var partnerNameText = ev.currentTarget.value;
+        var contactNameInput = document.querySelector(".o_wetrack_contact_name_input");
+        var contactNameText = contactNameInput.value;
         if (partnerNameText.startsWith(contactNameText)) {
-            this.$(".o_wetrack_contact_name_input").val(partnerNameText).change();
+            contactNameInput.value = partnerNameText;
+            contactNameInput.dispatchEvent(new Event('change'));
         }
     },
 
@@ -160,38 +164,34 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         ev.stopPropagation();
 
         // Prevent further clicking
-        this.$el.find('.o_wetrack_proposal_submit_button')
-            .addClass('disabled')
-            .attr('disabled', 'disabled');
+        var submitButton = this.el.querySelector('.o_wetrack_proposal_submit_button');
+        submitButton.classList.add('disabled');
+        submitButton.setAttribute('disabled', 'disabled');
 
         // Submission of the form if no errors remain
         if (this._isFormValid()) {
-            const formData = new FormData(this.$el[0]);
+            const formData = new FormData(this.el);
 
-            const response = await $.ajax({
-                url: `/event/${encodeURIComponent(this.$el.data('eventId'))}/track_proposal/post`,
-                data: formData,
-                processData: false,
-                contentType: false,
-                type: 'POST'
+            const response = await fetch(`/event/${encodeURIComponent(this.el.dataset.eventId)}/track_proposal/post`, {
+                method: 'POST',
+                body: formData
             });
 
-            const jsonResponse = response && JSON.parse(response);
+            const jsonResponse = await response.json();
             if (jsonResponse.success) {
-                const offsetTop = ($("#wrapwrap").scrollTop() || 0) + this.$el.offset().top;
-                const floatingMenuHeight = ($('.o_header_standard').height() || 0) +
-                    ($('#oe_main_menu_navbar').height() || 0);
-                this.$el.replaceWith($(renderToElement('event_track_proposal_success')));
-                $('#wrapwrap').scrollTop(offsetTop - floatingMenuHeight);
+                const offsetTop = (document.querySelector("#wrapwrap").scrollTop || 0) + this.el.offsetTop;
+                const floatingMenuHeight = (document.querySelector('.o_header_standard').offsetHeight || 0) +
+                    (document.querySelector('#oe_main_menu_navbar').offsetHeight || 0);
+                this.el.outerHTML = renderToElement('event_track_proposal_success');
+                document.querySelector('#wrapwrap').scrollTop = offsetTop - floatingMenuHeight;
             } else if (jsonResponse.error) {
                 this._updateErrorDisplay([jsonResponse.error]);
             }
         }
 
         // Restore button
-        this.$el.find('.o_wetrack_proposal_submit_button')
-            .removeAttr('disabled')
-            .removeClass('disabled');
+        submitButton.removeAttribute('disabled');
+        submitButton.classList.remove('disabled');
     },
 });
 

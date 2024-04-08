@@ -22,10 +22,12 @@ publicWidget.registry.MailGroupMessage = publicWidget.Widget.extend({
         const readMore = document.createElement('button');
         readMore.setAttribute('class', 'btn btn-light btn-sm ms-1');
         readMore.textContent = '. . .';
-        document.insertBefore(readMore, quoted[0]);
-        readMore.addEventListener('click', () => {
-            [...quoted].forEach((elem) => elem.classList.toggle('visible'));
-        });
+        if (quoted.length) {
+            quoted.parentElement.insertBefore(readMore, quoted[0]);
+            readMore.addEventListener('click', () => {
+                [...quoted].forEach((elem) => elem.classList.toggle('visible'));
+            });
+        }
 
         return this._super.apply(this, arguments);
     },

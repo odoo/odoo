@@ -91,9 +91,11 @@ publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
     init: function () {
         // Show the "deactivate your account" modal if needed
         const modalElem = document.querySelector('.modal.show#portal_deactivate_account_modal');
-        modalElem.classList.remove();
-        const modal = new Modal(modalElem)
-        modal.show();
+        if (modalElem) {
+            modalElem.classList.remove();
+            const modal = new Modal(modalElem)
+            modal.show();
+        }
 
         // Remove the error messages when we close the modal,
         // so when we re-open it again we get a fresh new form

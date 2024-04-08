@@ -23,22 +23,22 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         this._super(...arguments);
         this.orm = this.bindService("orm");
     },
-
+    
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    
     /**
      * @private
-     * @param {jQuery} $btn
+     * @param {Element} btn
      * @param {function} callback
      * @returns {Promise}
      */
-    _buttonExec: function ($btn, callback) {
+    _buttonExec: function (btn, callback) {
         // TODO remove once the automatic system which does this lands in master
-        $btn.prop('disabled', true);
+        btn.setAttribute('disabled', true);
         return callback.call(this).catch(function (e) {
-            $btn.prop('disabled', false);
+            btn.removeAttribute('disabled');
             if (e instanceof Error) {
                 return Promise.reject(e);
             }
@@ -50,8 +50,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _confirmInterestedPartner: function () {
         return this.orm.call("crm.lead", "partner_interested", [
-            [parseInt($('.interested_partner_assign_form .assign_lead_id').val())],
-            $('.interested_partner_assign_form .comment_interested').val()
+            [parseInt(document.querySelector('.interested_partner_assign_form .assign_lead_id').value)],
+            document.querySelector('.interested_partner_assign_form .comment_interested').value
         ]).then(function () {
             window.location.href = '/my/leads';
         });
@@ -62,10 +62,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _confirmDesinterestedPartner: function () {
         return this.orm.call("crm.lead", "partner_desinterested", [
-            [parseInt($('.desinterested_partner_assign_form .assign_lead_id').val())],
-            $('.desinterested_partner_assign_form .comment_desinterested').val(),
-            $('.desinterested_partner_assign_form .contacted_desinterested').prop('checked'),
-            $('.desinterested_partner_assign_form .customer_mark_spam').prop('checked'),
+            [parseInt(document.querySelector('.desinterested_partner_assign_form .assign_lead_id').value)],
+            document.querySelector('.desinterested_partner_assign_form .comment_desinterested').value,
+            document.querySelector('.desinterested_partner_assign_form .contacted_desinterested').checked,
+            document.querySelector('.desinterested_partner_assign_form .customer_mark_spam').checked,
         ]).then(function () {
             window.location.href = '/my/leads';
         });
@@ -88,18 +88,18 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _editContact: function () {
         return this.orm.call("crm.lead", "update_contact_details_from_portal", [
-            [parseInt($('.edit_contact_form .opportunity_id').val())],
+            [parseInt(document.querySelector('.edit_contact_form .opportunity_id').value)],
             {
-                partner_name: $('.edit_contact_form .partner_name').val(),
-                phone: $('.edit_contact_form .phone').val(),
-                mobile: $('.edit_contact_form .mobile').val(),
-                email_from: $('.edit_contact_form .email_from').val(),
-                street: $('.edit_contact_form .street').val(),
-                street2: $('.edit_contact_form .street2').val(),
-                city: $('.edit_contact_form .city').val(),
-                zip: $('.edit_contact_form .zip').val(),
-                state_id: parseInt($('.edit_contact_form .state_id').find(':selected').attr('value')),
-                country_id: parseInt($('.edit_contact_form .country_id').find(':selected').attr('value')),
+                partner_name: document.querySelector('.edit_contact_form .partner_name').value,
+                phone: document.querySelector('.edit_contact_form .phone').value,
+                mobile: document.querySelector('.edit_contact_form .mobile').value,
+                email_from: document.querySelector('.edit_contact_form .email_from').value,
+                street: document.querySelector('.edit_contact_form .street').value,
+                street2: document.querySelector('.edit_contact_form .street2').value,
+                city: document.querySelector('.edit_contact_form .city').value,
+                zip: document.querySelector('.edit_contact_form .zip').value,
+                state_id: parseInt(document.querySelector('.edit_contact_form .state_id').selectedOptions[0].value),
+                country_id: parseInt(document.querySelector('.edit_contact_form .country_id').selectedOptions[0].value),
             },
         ]).then(function () {
             window.location.reload();
@@ -111,13 +111,13 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _createOpportunity: function () {
         return this.orm.call("crm.lead", "create_opp_portal", [{
-            contact_name: $('.new_opp_form .contact_name').val(),
-            title: $('.new_opp_form .title').val(),
-            description: $('.new_opp_form .description').val(),
+            contact_name: document.querySelector('.new_opp_form .contact_name').value,
+            title: document.querySelector('.new_opp_form .title').value,
+            description: document.querySelector('.new_opp_form .description').value,
         }]).then(function (response) {
             if (response.errors) {
-                $('#new-opp-dialog .alert').remove();
-                $('#new-opp-dialog div:first').prepend('<div class="alert alert-danger">' + response.errors + '</div>');
+                document.querySelector('#new-opp-dialog .alert').remove();
+                document.querySelector('#new-opp-dialog div:first').insertAdjacentHTML('afterbegin', '<div class="alert alert-danger">' + response.errors + '</div>');
                 return Promise.reject(response);
             } else {
                 window.location = '/my/opportunity/' + response.id;
@@ -130,26 +130,26 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      */
     _editOpportunity: function () {
         return this.orm.call("crm.lead", "update_lead_portal", [
-            [parseInt($('.edit_opp_form .opportunity_id').val())],
+            [parseInt(document.querySelector('.edit_opp_form .opportunity_id').value)],
             {
-                date_deadline: this._parse_date($('.edit_opp_form .date_deadline').val()),
-                expected_revenue: parseFloat($('.edit_opp_form .expected_revenue').val()),
-                probability: parseFloat($('.edit_opp_form .probability').val()),
-                activity_type_id: parseInt($('.edit_opp_form .next_activity').find(':selected').attr('data')),
-                activity_summary: $('.edit_opp_form .activity_summary').val(),
-                activity_date_deadline: this._parse_date($('.edit_opp_form .activity_date_deadline').val()),
-                priority: $('input[name="PriorityRadioOptions"]:checked').val(),
+                date_deadline: this._parse_date(document.querySelector('.edit_opp_form .date_deadline').value),
+                expected_revenue: parseFloat(document.querySelector('.edit_opp_form .expected_revenue').value),
+                probability: parseFloat(document.querySelector('.edit_opp_form .probability').value),
+                activity_type_id: parseInt(document.querySelector('.edit_opp_form .next_activity').selectedOptions[0].dataset),
+                activity_summary: document.querySelector('.edit_opp_form .activity_summary').value,
+                activity_date_deadline: this._parse_date(document.querySelector('.edit_opp_form .activity_date_deadline').value),
+                priority: document.querySelector('input[name="PriorityRadioOptions"]:checked').value,
             },
         ]).then(function () {
             window.location.reload();
         });
     },
-
-
+    
+    
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
+    
     /**
      * @private
      * @param {Event} ev
@@ -157,10 +157,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onInterestedPartnerAssignConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if ($('.interested_partner_assign_form .comment_interested').val() && $('.interested_partner_assign_form .contacted_interested').prop('checked')) {
-            this._buttonExec($(ev.currentTarget), this._confirmInterestedPartner);
+        if (document.querySelector('.interested_partner_assign_form .comment_interested').value && document.querySelector('.interested_partner_assign_form .contacted_interested').checked) {
+            this._buttonExec(ev.currentTarget, this._confirmInterestedPartner);
         } else {
-            $('.interested_partner_assign_form .error_partner_assign_interested').css('display', 'block');
+            document.querySelector('.interested_partner_assign_form .error_partner_assign_interested').style.display = 'block';
         }
     },
     /**
@@ -170,17 +170,17 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onDesinterestedPartnerAssignConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._confirmDesinterestedPartner);
+        this._buttonExec(ev.currentTarget, this._confirmDesinterestedPartner);
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onOppStageButtonClick: function (ev) {
-        var $btn = $(ev.currentTarget);
+        var btn = ev.currentTarget;
         this._buttonExec(
-            $btn,
-            this._changeOppStage.bind(this, parseInt($btn.attr('opp')), parseInt($btn.attr('data')))
+            btn,
+            this._changeOppStage.bind(this, parseInt(btn.getAttribute('opp')), parseInt(btn.getAttribute('data')))
         );
     },
     /**
@@ -188,9 +188,10 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onEditContactFormChange: function (ev) {
-        var countryID = $('.edit_contact_form .country_id').find(':selected').attr('value');
-        $('.edit_contact_form .state[country!=' + countryID + ']').css('display', 'none');
-        $('.edit_contact_form .state[country=' + countryID + ']').css('display', 'block');
+        var countryID = document.querySelector('.edit_contact_form .country_id').selectedOptions[0].value;
+        document.querySelectorAll('.edit_contact_form .state').forEach(state => {
+            state.style.display = state.getAttribute('country') != countryID ? 'none' : 'block';
+        });
     },
     /**
      * @private
@@ -199,16 +200,15 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onEditContactConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._editContact);
-    },
-    /**
+        this._buttonExec(ev.currentTarget, this._editContact);
+    },    /**
      * @private
      * @param {Event} ev
      */
     _onNewOppConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._createOpportunity);
+        this._buttonExec(ev.currentTarget, this._createOpportunity);
     },
     /**
      * @private
@@ -217,7 +217,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _onEditOppConfirm: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this._buttonExec($(ev.currentTarget), this._editOpportunity);
+        this._buttonExec(ev.currentTarget, this._editOpportunity);
     },
     /**
      * @private
@@ -235,15 +235,15 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onChangeNextActivity: function (ev) {
-        var $selected = $('.edit_opp_form .next_activity').find(':selected');
-        if ($selected.attr('activity_summary')) {
-            $('.edit_opp_form .activity_summary').val($selected.attr('activity_summary'));
+        const selected = document.querySelector('.edit_opp_form .next_activity').selectedOptions[0];
+        if (selected.getAttribute('activity_summary')) {
+            document.querySelector('.edit_opp_form .activity_summary').value = selected.getAttribute('activity_summary');
         }
-        if ($selected.attr('delay_count')) {
-            const value = +$selected.attr('delay_count');
-            const unit = $selected.attr('delay_unit');
+        if (selected.getAttribute('delay_count')) {
+            const value = +selected.getAttribute('delay_count');
+            const unit = selected.getAttribute('delay_unit');
             const date = DateTime.now().plus({ [unit]: value});
-            $('.edit_opp_form .activity_date_deadline').val( formatDate(date) );
+            document.querySelector('.edit_opp_form .activity_date_deadline').value = formatDate(date);
         }
     },
     _parse_date: function (value) {

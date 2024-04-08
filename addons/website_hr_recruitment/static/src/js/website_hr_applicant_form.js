@@ -15,17 +15,17 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     _onClickApplyButton (ev) {
-        const $linkedin_profile = $('#recruitment4');
-        const $resume = $('#recruitment6');
+        const linkedin_profile = document.querySelector('#recruitment4');
+        const resume = document.querySelector('#recruitment6');
 
-        const is_linkedin_empty = !$linkedin_profile.length || $linkedin_profile.val().trim() === '';
-        const is_resume_empty = !$resume.length || !$resume[0].files.length;
+        const is_linkedin_empty = !linkedin_profile || linkedin_profile.value.trim() === '';
+        const is_resume_empty = !resume || !resume.files.length;
         if (is_linkedin_empty && is_resume_empty) {
-            $linkedin_profile.attr('required', true);
-            $resume.attr('required', true);
+            linkedin_profile.setAttribute('required', true);
+            resume.setAttribute('required', true);
         } else {
-            $linkedin_profile.attr('required', false);
-            $resume.attr('required', false);
+            linkedin_profile.removeAttribute('required');
+            resume.removeAttribute('required');
         }
     },
 
@@ -48,51 +48,55 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     async _onFocusOutLinkedin (ev) {
-        const linkedin = $(ev.currentTarget).val();
+        const linkedin = ev.currentTarget.value;
         const field = "linkedin";
         const messageContainerId = "#linkedin-message";
         const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
         if (!linkedin_regex.test(linkedin)) {
-            $('#linkedin-message').removeClass('alert-warning').hide();
-            $(ev.currentTarget).addClass('border-warning');
-            $('#linkedin-message').text(_t("The value entered doesn't seems like a linkedin profile.")).addClass('alert-warning').show();
+            document.querySelector('#linkedin-message').classList.remove('alert-warning');
+            document.querySelector('#linkedin-message').style.display = 'none';
+            ev.currentTarget.classList.add('border-warning');
+            document.querySelector('#linkedin-message').textContent = _t("The value entered doesn't seems like a linkedin profile.");
+            document.querySelector('#linkedin-message').classList.add('alert-warning');
+            document.querySelector('#linkedin-message').style.display = 'block';
         }
 
         await this.checkRedundant(ev.currentTarget, field, messageContainerId);
     },
 
     async checkRedundant(target, field, messageContainerId) {
-        const value = $(target).val();
+        const value = target.value;
         if (!value) {
-            $(target).removeClass("border-warning");
-            $(messageContainerId).removeClass("alert-warning").hide();
+            target.classList.remove("border-warning");
+            document.querySelector(messageContainerId).classList.remove("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'none';
             return;
         }
-        const job_id = $('#recruitment7').val();
-                const data = await rpc("/website_hr_recruitment/check_recent_application", {
+        const job_id = document.querySelector('#recruitment7').value;
+        const data = await rpc("/website_hr_recruitment/check_recent_application", {
             field: field,
             value: value,
             job_id: job_id,
         });
 
         if (data.applied_same_job) {
-            $(messageContainerId).removeClass("alert-warning").hide();
-            $(target).addClass("border-warning");
-            $(messageContainerId).text(_t(data.message)).addClass("alert-warning").show();
+            document.querySelector(messageContainerId).classList.remove("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'none';
+            target.classList.add("border-warning");
+            document.querySelector(messageContainerId).textContent = _t(data.message);
+            document.querySelector(messageContainerId).classList.add("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'block';
         } else if (data.applied_other_job) {
-            $(messageContainerId).removeClass("alert-warning").hide();
-            $(target).addClass("border-warning");
-            $(messageContainerId)
-                .text(
-                    _t(
-                        "You already applied to another position recently. You can continue if it's not a mistake."
-                    )
-                )
-                .addClass("alert-warning")
-                .show();
+            document.querySelector(messageContainerId).classList.remove("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'none';
+            target.classList.add("border-warning");
+            document.querySelector(messageContainerId).textContent = _t("You already applied to another position recently. You can continue if it's not a mistake.");
+            document.querySelector(messageContainerId).classList.add("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'block';
         } else {
-            $(target).removeClass("border-warning");
-            $(messageContainerId).removeClass("alert-warning").hide();
+            target.classList.remove("border-warning");
+            document.querySelector(messageContainerId).classList.remove("alert-warning");
+            document.querySelector(messageContainerId).style.display = 'none';
         }
     },
 });

@@ -51,8 +51,8 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
     start: function () {
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
-            var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            const socialData = JSON.parse(sessionStorage.getItem('social_share'));
+            (new ForumShare(this, false, socialData.targetType)).attachTo(document.body);
             sessionStorage.removeItem('social_share');
         }
 

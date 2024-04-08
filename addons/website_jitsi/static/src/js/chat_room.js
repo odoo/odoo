@@ -26,21 +26,21 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       */
     start: async function () {
         await this._super.apply(this, arguments);
-        this.roomName = this.$el.data('room-name');
-        this.chatRoomId = parseInt(this.$el.data('chat-room-id'));
+        this.roomName = this.el.dataset['room-name'];
+        this.chatRoomId = parseInt(this.el.dataset['chat-room-id']);
         // automatically open the current room
-        this.autoOpen = parseInt(this.$el.data('auto-open') || 0);
+        this.autoOpen = parseInt(this.el.dataset['auto-open'] || 0);
         // before joining, perform a RPC call to verify that the chat room is not full
-        this.checkFull = parseInt(this.$el.data('check-full') || 0);
+        this.checkFull = parseInt(this.el.dataset['check-full'] || 0);
         // query selector of the element on which we attach the Jitsi iframe
         // if not defined, the widget will pop in a modal instead
-        this.attachTo = this.$el.data('attach-to') || false;
+        this.attachTo = this.el.dataset['attach-to'] || false;
         // default username for jitsi
-        this.defaultUsername = this.$el.data('default-username') || false;
+        this.defaultUsername = this.el.dataset['default-username'] || false;
 
-        this.jitsiServer = this.$el.data('jitsi-server') || 'meet.jit.si';
+        this.jitsiServer = this.el.dataset['jitsi-server'] || 'meet.jit.si';
 
-        this.maxCapacity = parseInt(this.$el.data('max-capacity')) || Infinity;
+        this.maxCapacity = parseInt(this.el.dataset['max-capacity']) || Infinity;
 
         if (this.autoOpen) {
             await this._onChatRoomClick();
@@ -77,28 +77,36 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
 
         if (this.attachTo) {
             // attach the Jitsi iframe on the given parent node
-            let $parentNode = $(this.attachTo);
-            $parentNode.find("iframe").trigger("empty");
-            $parentNode.empty();
+            let parentNode = document.querySelector(this.attachTo);
+            let iframes = parentNode.querySelectorAll("iframe");
+            iframes.forEach(iframe => {
+                let event = new Event('empty');
+                iframe.dispatchEvent(event);
+            });
 
-            await this._joinJitsiRoom($parentNode);
+            while (parentNode.firstChild) {
+                parentNode.removeChild(parentNode.firstChild);
+            }
+
+            await this._joinJitsiRoom(parentNode);
         } else {
             // create a model and append the Jitsi iframe in it
-            let $jitsiModal = $(renderToElement('chat_room_modal', {}));
-            $("body").append($jitsiModal);
-            $jitsiModal.modal('show');
+            let jitsiModal = document.createElement('div');
+            jitsiModal.innerHTML = renderToElement('chat_room_modal', {});
+            document.body.appendChild(jitsiModal);
+            jitsiModal.style.display = 'block';
 
-            let jitsiRoom = await this._joinJitsiRoom($jitsiModal.find('.modal-body'));
+            let jitsiRoom = await this._joinJitsiRoom(jitsiModal.querySelector('.modal-body'));
 
             // close the modal when hanging up
             jitsiRoom.addEventListener('videoConferenceLeft', async () => {
-                $('.o_wjitsi_room_modal').modal('hide');
+                document.querySelector('.o_wjitsi_room_modal').style.display = 'none';
             });
 
             // when the modal is closed, delete the Jitsi room object and clear the DOM
-            $jitsiModal.on('hidden.bs.modal', async () => {
+            jitsiModal.addEventListener('hidden.bs.modal', async () => {
                 jitsiRoom.dispose();
-                $(".o_wjitsi_room_modal").remove();
+                document.querySelector(".o_wjitsi_room_modal").remove();
             });
         }
     },
@@ -133,11 +141,11 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       * Update on the 29 June 2020
       *
       * @private
-      * @param {jQuery} $jitsiModal, jQuery modal element in which we add the Jitsi room
-      * @returns {JitsiRoom} the newly created Jitsi room
+      * @param jitsiModal, modal element in which we add the Jitsi room
+      * @returns {jitsiRoom} the newly created Jitsi room
       */
-    _joinJitsiRoom: async function ($parentNode) {
-        let jitsiRoom = await this._createJitsiRoom(this.roomName, $parentNode);
+    _joinJitsiRoom: async function (parentNode) {
+        let jitsiRoom = await this._createJitsiRoom(this.roomName, parentNode);
 
         if (this.defaultUsername) {
             jitsiRoom.executeCommand("displayName", this.defaultUsername);
@@ -170,7 +178,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         jitsiRoom.addEventListener('videoConferenceJoined', async (event) => {
             this.participantId = event.id;
             updateParticipantCount(true);
-            $('.o_wjitsi_chat_room_loading').addClass('d-none');
+            document.querySelector('.o_wjitsi_chat_room_loading').classList.remove('d-none');
 
             // recheck if the room is not full
             if (this.checkFull && this.allParticipantIds.length > this.maxCapacity) {
@@ -233,16 +241,16 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       *
       * @private
       * @param {string} roomName
-      * @param {jQuery} $parentNode
+      * @param {Object} parentNode
       * @returns {JitsiRoom} the newly created Jitsi room
       */
-    _createJitsiRoom: async function (roomName, $parentNode) {
+    _createJitsiRoom: async function (roomName, parentNode) {
       await this._loadJisti();
         const options = {
             roomName: roomName,
             width: "100%",
             height: "100%",
-            parentNode: $parentNode[0],
+            parentNode: parentNode[0],
             configOverwrite: {disableDeepLinking: true},
         };
         return new window.JitsiMeetExternalAPI(this.jitsiServer, options);
@@ -255,10 +263,9 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       */
     _loadJisti: async function () {
       if (!window.JitsiMeetExternalAPI) {
-          await $.ajax({
-              url: `https://${this.jitsiServer}/external_api.js`,
-              dataType: "script",
-          });
+          await fetch(`https://${this.jitsiServer}/external_api.js`)
+            .then(response => response.text())
+            .then(text => eval(text));
       }
     },
 });

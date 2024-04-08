@@ -60,7 +60,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     _reloadRatingPopupComposer: function () {
         const popupComposerStars = this.el.querySelector('.o_rating_popup_composer_stars');
         if (this.options.hide_rating_avg) {
-            popupComposerStars.replaceChild();
+            popupComposerStars.innerHTML = "";
         } else {
             const ratingAverage = renderToElement(
                 'portal_rating.rating_stars_static', {
@@ -68,8 +68,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
                 widget: this,
                 val: this.rating_avg,
             });
-            popupComposerStars.replaceChild();
-            popupComposerStars.html(ratingAverage);
+            popupComposerStars.innerHTML = "";
+            popupComposerStars.appendChild(ratingAverage);
         }
 
         // Append the modal
@@ -79,7 +79,11 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             widget: this,
             val: this.rating_avg,
         }) || '';
-        this.el.querySelector('.o_rating_popup_composer_modal').innerHTML = modal;
+        if (modal) {
+            const modalEl = this.el.querySelector('.o_rating_popup_composer_modal');
+            modalEl.innerHTML = "";
+            modalEl.appendChild(modal);
+        }
 
         if (this._composer) {
             this._composer.destroy();
@@ -89,11 +93,14 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         this._composer = new PortalComposer(this, this.options);
         return this._composer.appendTo(this.el.querySelector('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
             // Change the text of the button
-            this.el.querySelector('.o_rating_popup_composer_text').textContent = (
-                this.options.is_fullscreen ?
-                _t('Review') : this.options.default_message_id ?
-                _t('Edit Review') : _t('Add Review')
-            );
+            const textEl = this.el.querySelector('.o_rating_popup_composer_text');
+            if (textEl) {
+                textEl.textContent = (
+                    this.options.is_fullscreen ?
+                    _t('Review') : this.options.default_message_id ?
+                    _t('Edit Review') : _t('Add Review')
+                );
+            }
         });
     },
 

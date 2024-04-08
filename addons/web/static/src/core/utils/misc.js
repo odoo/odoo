@@ -42,3 +42,38 @@ export function parents(el, selector) {
     }
     return parents;
 }
+
+/**
+ * Set height on HTML Element.
+ *
+ * @param {HTMLElement} el
+ * @param {Integer} val
+ */
+export function setHeight(el, val) {
+    if (typeof val === 'function') {
+        val = val();
+    }
+    if (typeof val === 'string') {
+        el.style.height = val;
+    } else {
+        el.style.height = val + 'px';
+    }
+}
+
+/**
+ * Typecase values of Element Dataset, it runs on each key and typecast it.
+ *
+ * @param {Object} dataset
+ */
+export function typeCastDataset(dataset) {
+    const data = {};
+    Object.keys(dataset).forEach((key) => {
+        const val = +dataset[key];
+        if(isNaN(val)) {
+            data[key] = dataset[key];
+        } else {
+            data[key] = val;
+        }
+    });
+    return data;
+}

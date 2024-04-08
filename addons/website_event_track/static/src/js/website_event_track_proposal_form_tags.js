@@ -20,7 +20,9 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
      * @private
      */
     _bindSelect2Dropdown: function () {
-        this.$('.o_wetrack_select2_tags').select2(this._select2Wrapper(_t('Select categories'),
+        // TODO-shsa : The select2 method is a jQuery plugin and doesn't have a direct equivalent in vanilla JS. 
+        // Need to find a vanilla JS library that provides similar functionality or write your own implementation
+        document.querySelector('.o_wetrack_select2_tags').select2(this._select2Wrapper(_t('Select categories'),
             function () {
                 return rpc("/event/track_tag/search_read", {
                     fields: ['name', 'category_id'],

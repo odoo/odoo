@@ -20,12 +20,12 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
      */
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
-        var $element = $(ev.currentTarget);
+        const element = ev.currentTarget;
         rpc('/profile/send_validation_email', {
-            'redirect_url': $element.data('redirect_url'),
+            'redirect_url': element.dataset['redirect_url'],
         }).then(function (data) {
             if (data) {
-                window.location = $element.data('redirect_url');
+                window.location = element.dataset['redirect_url'];
             }
         });
     },
@@ -57,23 +57,23 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             return def;
         }
 
-        const $textarea = this.$("textarea.o_wysiwyg_loader");
+        const textarea = document.querySelector("textarea.o_wysiwyg_loader");
 
         const options = {
             recordInfo: {
                 context: this._getContext(),
                 res_model: "res.users",
-                res_id: parseInt(this.$("input[name=user_id]").val()),
+                res_id: parseInt(document.querySelector("input[name=user_id]").value),
             },
             resizable: true,
             userGeneratedContent: true,
         };
 
-        if ($textarea[0].attributes.placeholder) {
-            options.placeholder = $textarea[0].attributes.placeholder.value;
+        if (textarea.attributes.placeholder) {
+            options.placeholder = textarea.attributes.placeholder.value;
         }
 
-        this._wysiwyg = await loadWysiwygFromTextarea(this, $textarea[0], options);
+        this._wysiwyg = await loadWysiwygFromTextarea(this, textarea, options);
 
         return Promise.all([def]);
     },
@@ -88,7 +88,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onEditProfilePicClick: function (ev) {
         ev.preventDefault();
-        $(ev.currentTarget).closest('form').find('.o_forum_file_upload').trigger('click');
+        document.querySelector(ev.currentTarget).closest('form').querySelector('.o_forum_file_upload').click();
     },
     /**
      * @private
@@ -98,22 +98,22 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         if (!ev.currentTarget.files.length) {
             return;
         }
-        var $form = $(ev.currentTarget).closest('form');
-        var reader = new window.FileReader();
+        const form = ev.currentTarget.closest('form');
+        const reader = new window.FileReader();
         reader.readAsDataURL(ev.currentTarget.files[0]);
         reader.onload = function (ev) {
-            $form.find('.o_wforum_avatar_img').attr('src', ev.target.result);
+            form.querySelector('.o_wforum_avatar_img').src = ev.target.result;
         };
-        $form.find('#forum_clear_image').remove();
+        form.querySelector('#forum_clear_image').remove();
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onProfilePicClearClick: function (ev) {
-        var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_wforum_avatar_img').attr('src', '/web/static/img/placeholder.png');
-        $form.append($('<input/>', {
+        const form = ev.currentTarget.closest('form');
+        form.querySelector('.o_wforum_avatar_img').src = '/web/static/img/placeholder.png';
+        form.append(document.createElement('input').setAttribute({
             name: 'clear_image',
             id: 'forum_clear_image',
             type: 'hidden',
@@ -152,7 +152,9 @@ publicWidget.registry.websiteProfileNextRankCard = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.$('g[data-bs-toggle="tooltip"]').tooltip();
+        document.querySelectorAll('g[data-bs-toggle="tooltip"]').forEach(element => {
+            new Tooltip(element);
+        });
         return this._super.apply(this, arguments);
     },
 

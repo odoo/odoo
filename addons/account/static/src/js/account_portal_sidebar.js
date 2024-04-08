@@ -3,6 +3,7 @@
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import PortalSidebar from "@portal/js/portal_sidebar";
+import { setHeight } from "@web/core/utils/misc"
 
 publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_invoice_sidebar',
@@ -43,12 +44,11 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      * @param {object} $el: the iframe
      */
     _updateIframeSize: function (el) {
-        const childNodes = el.querySelector().childNodes;
-        // TODO: MSH: Following line will iterate over all childnodes and set wrapwrap as last one, maybe we can consider only first one
-        const wrapwrap = [...childNodes].forEach((element) => { return element.querySelector("div#wrapwrap"); });
+        const wrapwrap = el.contentDocument.querySelector("div#wrapwrap");
+
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
-        el.height(0);
-        el.height(wrapwrap.scrollHeight);
+        setHeight(el, 0);
+        setHeight(el, wrapwrap.scrollHeight);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)

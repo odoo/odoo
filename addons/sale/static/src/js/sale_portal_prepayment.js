@@ -36,7 +36,7 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
 
         // When updating the amount re-open the modal.
         if (showPaymentModal) {
-            const payNowButton = this.$('#o_sale_portal_paynow')[0];
+            const payNowButton = document.querySelector('#o_sale_portal_paynow');
             payNowButton && payNowButton.click();
         }
     },
@@ -48,8 +48,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(true);
         } else {
-            this.$('span[id="o_sale_portal_use_amount_total"]').hide();
-            this.$('span[id="o_sale_portal_use_amount_prepayment"]').show();
+            document.querySelector('span[id="o_sale_portal_use_amount_total"]').style.display = 'none';
+            document.querySelector('span[id="o_sale_portal_use_amount_prepayment"]').style.display = 'block';
         }
     },
 
@@ -60,8 +60,8 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         if (doReload) {
             this._reloadAmount(false);
         } else {
-            this.$('span[id="o_sale_portal_use_amount_total"]').show();
-            this.$('span[id="o_sale_portal_use_amount_prepayment"]').hide();
+            document.querySelector('span[id="o_sale_portal_use_amount_total"]').style.display = 'block';
+            document.querySelector('span[id="o_sale_portal_use_amount_prepayment"]').style.display = 'none';
         }
     },
 

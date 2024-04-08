@@ -22,9 +22,9 @@ var WebsiteEventTrackSuggestionQuiz = Quiz.include({
         var self = this;
         return this._super(...arguments).then(function (data) {
             if (data.quiz_completed) {
-                self.$('.o_quiz_js_quiz_next_track')
-                    .removeClass('btn-light')
-                    .addClass('btn-secondary');
+                self.el.querySelector('.o_quiz_js_quiz_next_track')
+                    .classList.remove('btn-light')
+                    .classList.addClass('btn-secondary');
             }
 
             return Promise.resolve(data);

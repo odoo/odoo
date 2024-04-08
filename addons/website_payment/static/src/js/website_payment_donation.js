@@ -18,18 +18,18 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFocusAmountInput(ev) {
-        this.$el.find('#other_amount').prop("checked", true);
+        this.el.querySelector('#other_amount').checked = true;
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onChangeDonationComment(ev) {
-        const $donationComment = this.$el.find('#donation_comment');
-        const checked = $(ev.currentTarget).is(':checked');
-        $donationComment.toggleClass('d-none', !checked);
+        const donationComment = this.el.querySelector('#donation_comment');
+        const checked = ev.currentTarget.checked;
+        donationComment.classList.toggle('d-none', !checked);
         if (!checked) {
-            $donationComment.val('');
+            donationComment.val('');
         }
     },
 });
