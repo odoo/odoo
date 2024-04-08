@@ -1,9 +1,12 @@
 import datetime
+import logging
 import pytz
 from unittest.mock import patch
 
 from odoo.tests.common import TransactionCase
 from odoo.tools._monkeypatches_pytz import _tz_mapping
+
+_logger = logging.getLogger(__name__)
 
 
 class TestTZ(TransactionCase):
@@ -28,7 +31,12 @@ class TestTZ(TransactionCase):
             with self.subTest(source=source, target=target):
                 if source == 'Pacific/Enderbury':  # this one was wrong in some version of tzdata
                     continue
-                assertTZEqual(pytz.timezone(source), pytz.timezone(target))
+                try:
+                    target_tz = pytz.timezone(target)
+                except pytz.UnknownTimeZoneError:
+                    _logger.info("Skipping test for %s -> %s, target does not exist", source, target)
+                    continue
+                assertTZEqual(pytz.timezone(source), target_tz)
 
     def test_dont_adapt_available_tz(self):
         with patch.dict(_tz_mapping, {
