@@ -240,7 +240,7 @@ class SurveyCase(common.TransactionCase):
             False
         )
         self.assertTrue(bool(question_data))
-        self.assertEqual(len(question_data.get('answer_input_skipped_ids')), 1)
+        self.assertEqual(len(question_data.get('answer_input_ids') - question_data.get('answer_input_done_ids')), 1)
 
     def _create_one_question_per_type(self):
         all_questions = self.env['survey.question']
