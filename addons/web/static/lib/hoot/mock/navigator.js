@@ -148,6 +148,7 @@ const makeUserAgent = (platform) => {
 const permissionStatuses = new Set();
 const userAgentBrowser = getUserAgentBrowser();
 let currentUserAgent = makeUserAgent("linux");
+let currentSendBeacon = () => {};
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -262,11 +263,12 @@ export const mockPermissions = new MockPermissions();
 
 export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
-    permissions: { value: mockPermissions },
-    userAgent: { get: () => currentUserAgent },
-    serviceWorker: { get: () => undefined },
-    platform: { get: () => "MacIntel" },
     maxTouchPoints: { get: () => 0 },
+    permissions: { value: mockPermissions },
+    platform: { get: () => "MacIntel" },
+    sendBeacon: { value: (...args) => currentSendBeacon(...args) },
+    serviceWorker: { get: () => undefined },
+    userAgent: { get: () => currentUserAgent },
 });
 
 export function cleanupNavigator() {
@@ -293,6 +295,13 @@ export function mockPermission(name, value) {
             permissionStatus.dispatchEvent(new Event("change"));
         }
     }
+}
+
+/**
+ * @param {typeof navigator.sendBeacon} callback
+ */
+export function mockSendBeacon(callback) {
+    currentSendBeacon = callback;
 }
 
 /**
