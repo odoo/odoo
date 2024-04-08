@@ -17,4 +17,11 @@ patch(AttachmentUploadService.prototype, {
         }
         return formData;
     },
+    _buildFormData(formData, file, thread, composer, tmpId, options) {
+        super._buildFormData(...arguments);
+        if (options?.voice) {
+            formData.append("voice", true);
+        }
+        return formData;
+    },
 });

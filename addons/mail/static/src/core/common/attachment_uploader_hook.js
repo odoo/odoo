@@ -13,6 +13,9 @@ export class AttachmentUploader {
     constructor(thread, { composer, onFileUploaded } = {}) {
         this.attachmentUploadService = useService("mail.attachment_upload");
         Object.assign(this, { thread, composer, onFileUploaded });
+        if (this.onFileUploaded) {
+            this.attachmentUploadService.onFileUploaded(this.thread, this.onFileUploaded);
+        }
     }
 
     uploadData({ data, name, type }) {
@@ -21,7 +24,7 @@ export class AttachmentUploader {
     }
 
     async uploadFile(file, options) {
-        return this.attachmentUploadService.uploadFile(this, file, options);
+        return this.attachmentUploadService.upload(this.thread, this.composer, file, options);
     }
 
     async unlink(attachment) {
