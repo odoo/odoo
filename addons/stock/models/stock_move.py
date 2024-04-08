@@ -4,6 +4,16 @@
 
 from collections import defaultdict
 from datetime import timedelta
+<<<<<<< HEAD
+||||||| parent of a941e47fb14d (temp)
+from itertools import groupby
+
+from odoo.osv.expression import OR, AND
+from odoo.tools import groupby as groupbyelem
+=======
+from itertools import groupby
+from odoo.tools import groupby as groupbyelem
+>>>>>>> a941e47fb14d (temp)
 from operator import itemgetter
 
 from odoo import _, api, Command, fields, models

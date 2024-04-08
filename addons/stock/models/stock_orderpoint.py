@@ -6,6 +6,7 @@ from pytz import timezone, UTC
 from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
+from itertools import groupby
 from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
@@ -46,8 +47,14 @@ class StockWarehouseOrderpoint(models.Model):
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
+<<<<<<< HEAD
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
         check_company=True, ondelete="cascade", required=True)
+||||||| parent of a941e47fb14d (temp)
+        check_company=True, ondelete="cascade", required=True, index=True)
+=======
+        check_company=True, ondelete="cascade", required=True)
+>>>>>>> a941e47fb14d (temp)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
@@ -261,7 +268,13 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
+<<<<<<< HEAD
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+||||||| parent of a941e47fb14d (temp)
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'product_id', 'location_id')
+=======
+    @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty')
+>>>>>>> a941e47fb14d (temp)
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:

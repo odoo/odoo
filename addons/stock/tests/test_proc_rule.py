@@ -53,6 +53,7 @@ class TestProcRule(TransactionCase):
 
         # Then, creates a rule and adds it into the route's rules.
         reception_route.rule_ids.action_archive()
+<<<<<<< HEAD
         self.env['stock.rule'].create({
             'name': 'Looping Rule',
             'route_id': reception_route.id,
@@ -62,6 +63,18 @@ class TestProcRule(TransactionCase):
             'procure_method': 'make_to_order',
             'picking_type_id': warehouse.int_type_id.id,
         })
+||||||| parent of a941e47fb14d (temp)
+=======
+        self.env['stock.rule'].create({
+            'name': 'Looping Rule',
+            'route_id': reception_route.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_src_id': warehouse.lot_stock_id.id,
+            'action': 'pull_push',
+            'procure_method': 'make_to_order',
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+>>>>>>> a941e47fb14d (temp)
 
         # Tries to open the Replenishment view -> It should raise an UserError.
         with self.assertRaises(UserError):
