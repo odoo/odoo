@@ -148,6 +148,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'product_uom_qty': 1,
                 'product_uom': product_b.uom_id.id,
                 'price_unit': product_b.lst_price,
+            }), (0, 0, {
+                # Add this line to test that it should not cause any issue when settling this order.
+                'name': 'section line',
+                'display_type': 'line_section',
             })],
         })
         sale_order.action_confirm()
