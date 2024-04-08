@@ -108,11 +108,14 @@ patch(MockServer.prototype, {
             channelId,
             this._mock__getGuestName()
         );
-        const [guestMemberId] = this.pyEnv["discuss.channel.member"].search([
-            ["channel_id", "=", channelId],
-            ["guest_id", "!=", false],
-        ]);
-        this.pyEnv["discuss.channel.member"].write([guestMemberId], { fold_state: "open" });
+        const memberDomain = [["channel_id", "=", channelId]];
+        if (!this.pyEnv.currentUser._is_public()) {
+            memberDomain.push(["partner_id", "=", this.pyEnv.currentPartner.id]);
+        } else {
+            memberDomain.push(["guest_id", "!=", false]);
+        }
+        const [memberId] = this.pyEnv["discuss.channel.member"].search(memberDomain);
+        this.pyEnv["discuss.channel.member"].write([memberId], { fold_state: "open" });
         const res = this._mockResUsers__init_store_data();
         return Object.assign(res, {
             Thread: {
