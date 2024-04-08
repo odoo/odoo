@@ -215,7 +215,7 @@
                 </a>
             </p>
             <div class="o_mg_link_content d-none row justify-content-center">
-                <div class="mx-4 my-3 text-center o_mg_attachment" t-foreach="attachments" t-as="attachment" t-key="attachment_index">
+                <div class="mx-4 my-3 text-center o_mg_attachment" t-foreach="attachments" t-as="attachment">
                     <t t-if="attachment.access_token">
                         <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
                             <div class="oe_attachment_embedded o_image" t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80?access_token=#{attachment.access_token}"/>
