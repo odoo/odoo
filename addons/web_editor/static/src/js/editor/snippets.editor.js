@@ -1775,6 +1775,7 @@ class SnippetsMenu extends Component {
         'drag_and_drop_start': '_onSnippetDragAndDropStart',
         'get_snippet_versions': '_onGetSnippetVersions',
         'find_snippet_template': '_onFindSnippetTemplate',
+        'is_element_selected': '_onIsElementSelected',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
@@ -4106,6 +4107,19 @@ class SnippetsMenu extends Component {
     _onHideOverlay() {
         for (const editor of this.snippetEditors) {
             editor.toggleOverlay(false);
+        }
+    }
+    /**
+     * Calls back if the specified element is selected.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onIsElementSelected(ev) {
+        for (const editor of this.snippetEditors) {
+            if (editor.isShown() && editor.$target[0] === ev.data.el) {
+                ev.data.callback();
+            }
         }
     }
     /**
