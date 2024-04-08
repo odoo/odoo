@@ -850,7 +850,7 @@ class Message(models.Model):
                 if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking_value_ids.append({
                         'id': tracking.id,
-                        'changed_field': tracking.field_desc,
+                        'changed_field': tracking.field.field_description,
                         'old_value': tracking.get_old_display_value()[0],
                         'new_value': tracking.get_new_display_value()[0],
                         'field_type': tracking.field_type,
