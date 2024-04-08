@@ -120,6 +120,14 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
+
+        # This condition below makes sure that preview is computed only if the document layout is still under creation.
+        # If the document layout is finished (i.e., edit wizard is closed), the preview should not be recomputed.
+        # This solves the issue of the preview glitching at the wizard closing.
+        if self.env['base.document.layout'].browse(self.id):
+            self.preview = False
+            return
+
         styles = self._get_asset_style()
 
         for wizard in self:
@@ -136,7 +144,12 @@ class BaseDocumentLayout(models.TransientModel):
 
     def _get_render_information(self, styles):
         self.ensure_one()
-        wizard_with_logo = self.with_context(bin_size=False)
+        # guarantees that bin_size is always set to False,
+        # so the logo always contains the bin data instead of the binary size
+        if self.env.context.get('bin_size'):
+            wizard_with_logo = self.with_context(bin_size=False)
+        else:
+            wizard_with_logo = self
         preview_css = self._get_css_for_preview(styles, wizard_with_logo.id)
         return preview_css, wizard_with_logo
 
