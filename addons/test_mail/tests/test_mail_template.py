@@ -132,7 +132,7 @@ class TestMailTemplate(TestMailTemplateCommon):
         self.assertEqual(mail.body, body_result)
 
 
-@tagged('mail_template', 'multi_lang', 'post_install', '-at_install')
+@tagged('mail_template', 'mail_performance', 'multi_lang', 'post_install', '-at_install')
 class TestMailTemplateLanguages(TestMailTemplateCommon):
 
     @classmethod
