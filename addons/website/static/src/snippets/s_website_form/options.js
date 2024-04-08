@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import FormEditorRegistry from "@website/js/form_editor_registry";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import weUtils from "@web_editor/js/common/utils";
 import "@website/js/editor/snippets.options";

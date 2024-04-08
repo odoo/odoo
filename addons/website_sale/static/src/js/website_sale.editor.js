@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";

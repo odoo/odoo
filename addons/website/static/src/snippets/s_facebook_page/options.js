@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { pick } from "@web/core/utils/objects";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 
 options.registry.facebookPage = options.Class.extend({
     init() {

@@ -7,7 +7,7 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { useChildRef } from "@web/core/utils/hooks";
 import weUtils from "@web_editor/js/common/utils";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 import { NavbarLinkPopoverWidget } from "@website/js/widgets/link_popover_widget";
 import wUtils from "@website/js/utils";
 import {

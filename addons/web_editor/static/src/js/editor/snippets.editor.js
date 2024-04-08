@@ -6,7 +6,7 @@ import { useService, useBus } from "@web/core/utils/hooks";
 import dom from "@web/legacy/js/core/dom";
 import Widget from "@web/legacy/js/core/widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
-import options from "@web_editor/js/editor/snippets.options";
+import options from "@web_editor/js/editor/snippets.options.legacy";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { escape } from "@web/core/utils/strings";
