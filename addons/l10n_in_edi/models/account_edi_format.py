@@ -85,7 +85,7 @@ class AccountEdiFormat(models.Model):
             return super()._check_move_configuration(move)
         error_message = []
         error_message += self._l10n_in_validate_partner(move.partner_id)
-        error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
+        error_message += self._l10n_in_validate_partner(move.company_id.partner_id)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
         all_base_tags = self._get_l10n_in_base_tags()
@@ -112,7 +112,7 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("product is required to get HSN code"))
         return error_message
 
-    def _l10n_in_edi_get_iap_buy_credits_message(self, company):
+    def _l10n_in_edi_get_iap_buy_credits_message(self):
         url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
             _("You have insufficient credits to send this document!"),
@@ -157,7 +157,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             elif error:
@@ -213,7 +213,7 @@ class AccountEdiFormat(models.Model):
             if "no-credit" in error_codes:
                 return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(),
                     "blocking_level": "error",
                 }}
             if error:
@@ -237,8 +237,7 @@ class AccountEdiFormat(models.Model):
                 })
             return {invoice: {"success": True, "attachment": attachment}}
 
-    def _l10n_in_validate_partner(self, partner, is_company=False):
-        self.ensure_one()
+    def _l10n_in_validate_partner(self, partner):
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
             message.append(_("- Street required min 3 and max 100 characters"))
