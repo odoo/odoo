@@ -85,7 +85,7 @@ function computePosition(popper, target, { container, margin, position }) {
 
     // Retrieve container
     if (!container) {
-        container = target.ownerDocument.documentElement;
+        container = popper.ownerDocument.documentElement;
     } else if (typeof container === "function") {
         container = container();
     }
