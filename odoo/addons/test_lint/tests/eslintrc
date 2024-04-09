@@ -33,6 +33,10 @@
             {
                 "selector": "CallExpression[callee.name='_t'] > :first-child[value=/(.*%s){2,}/]",
                 "message": "Usage of _t function with multiple unnamed placeholders"
+            },
+            {
+                "selector": "BinaryExpression[operator='+'] > CallExpression[callee.name='_t']",
+                "message": "Concatenation of translated text"
             }
         ],
         "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all" }]
