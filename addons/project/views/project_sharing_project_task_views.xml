@@ -161,9 +161,9 @@
                             <field name="allow_milestones" invisible="1"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
-                                context="{'default_project_id': project_id}"
                                 invisible="not allow_milestones"
-                                options="{'no_open': True, 'no_create': True, 'no_edit': True}"/>
+                                readonly="1"
+                                options="{'no_open': True}"/>
                             <field name="user_ids" invisible="1" />
                             <field name="portal_user_names"
                                 string="Assignees"
@@ -195,7 +195,8 @@
                                     <field name="allow_milestones" column_invisible="True"/>
                                     <field name="milestone_id"
                                         optional="hide"
-                                        context="{'default_project_id': project_id}"
+                                        options="{'no_open': True}"
+                                        readonly="1"
                                         column_invisible="not parent.allow_milestones"
                                         invisible="not allow_milestones"/>
                                     <field name="company_id" column_invisible="True"/>
@@ -207,7 +208,7 @@
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
-                                            invisible="project_id or project_id != id"/>
+                                            invisible="project_id != context.get('active_id')"/>
                                 </tree>
                             </field>
                         </page>

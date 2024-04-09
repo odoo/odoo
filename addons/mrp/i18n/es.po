@@ -282,7 +282,7 @@ msgstr "<span class=\"ms-2\">Generar LdM</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Parciales</span>"
+msgstr "<span class=\"o_stat_text\">Pedidos pendientes</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -721,8 +721,8 @@ msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
-"Permitir a los usuarios de fabricación modificar las cantidades por consumir"
-" sin aprobación previa"
+"Permitir a los usuarios de fabricación modificar las cantidades a consumir "
+"sin aprobación previa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
@@ -987,56 +987,58 @@ msgstr "Informe de resumen de LdM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "Variantes del producto BOM"
+msgstr "Variantes de la LdM del producto"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "Se necesitan variantes de producto LdM para aplicar esta línea."
+msgstr ""
+"Se necesitan variantes de listas de materiales del producto para aplicar "
+"esta línea."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "Líneas de la LdM a la que se refiere"
+msgstr "Líneas de la LdM de la LdM referida"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Línea de confirmación de órdenes pendientes"
+msgstr "Línea de confirmación de pedidos pendientes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Líneas de confirmación de órdenes pendientes"
+msgstr "Líneas de confirmación de pedidos pendientes"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "Orden de fabricación parcial"
+msgstr "Pedidos pendientes para orden de fabricación"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "Órdenes de fabricación parciales"
+msgstr "Pedidos pendientes para órdenes de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
 msgid "Backorder Sequence"
-msgstr "Secuencia de orden parcial"
+msgstr "Secuencia de pedido pendiente"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Secuencia de orden parcial, si es igual a 0 significa que no está "
-"relacionada a una orden parcial."
+"Secuencia de pedido pendiente, si es igual a 0 significa que no está "
+"relacionada a un pedido pendiente."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -1136,7 +1138,7 @@ msgstr "Bloquear centro de trabajo"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter__working_state__blocked
 msgid "Blocked"
-msgstr "Bloqueada"
+msgstr "Bloqueado"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
@@ -1185,7 +1187,7 @@ msgstr "Componentes de LdM"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "Coste de Lista de Materiales"
+msgstr "Coste de la LdM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1669,12 +1671,12 @@ msgstr "No se pudo mostrar la hoja de cálculo seleccionada"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "Número de órdenes parciales vinculadas"
+msgstr "Número de pedidos pendientes vinculados"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Create Backorder"
-msgstr "Crear entrega parcial"
+msgstr "Crear pedido pendiente"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1685,7 +1687,7 @@ msgstr "Crear nuevos números de lotes/serie para componentes"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Crear una orden parcial"
+msgstr "Crear un pedido pendiente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1693,8 +1695,8 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
-"Cree una orden parcial si espera procesar los productos restantes más tarde."
-" No cree una orden parcial si no procesará los productos restantes."
+"Cree un pedido pendiente si espera procesar los productos restantes más "
+"tarde. No cree un pedido pendiente si no procesará los productos restantes."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1725,7 +1727,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Crear orden parcial"
+msgstr "Crear pedido pendiente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -1745,7 +1747,7 @@ msgstr ""
 "planificación como en el estado de las órdenes de trabajo tras la "
 "confirmación de la orden de fabricación. Si esta función se encuentra "
 "seleccionada, y no se especifica nada, Odoo asumirá que todas las "
-"operaciones se pueden iniciar de forma simultánea."
+"operaciones se pueden iniciar simultáneamente."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1918,7 +1920,7 @@ msgstr "Duración por defecto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr "Tiempo Estándar de Entrega de Producción"
+msgstr "Plazo de fabricación por defecto"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
@@ -2315,7 +2317,7 @@ msgstr "Número de lote/serie terminado"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr "Movimientos Finalizados"
+msgstr "Movimientos terminados"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -2325,22 +2327,22 @@ msgstr "Producto terminado"
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_finished_product
 msgid "Finished Product Label (PDF)"
-msgstr "Etiqueta de Producto Terminado (PDF)"
+msgstr "Etiqueta de producto terminado (PDF)"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.label_manufacture_template
 msgid "Finished Product Label (ZPL)"
-msgstr "Etiqueta de Productos Finalizados (ZPL)"
+msgstr "Etiqueta de producto terminado (ZPL)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_finished_ids
 msgid "Finished Products"
-msgstr "Productos finalizados"
+msgstr "Productos terminados"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_dest_id
 msgid "Finished Products Location"
-msgstr "Ubicación productos finalizados"
+msgstr "Ubicación de productos terminados"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
@@ -2382,7 +2384,7 @@ msgstr "Forzar"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Forecast"
-msgstr "Previsión"
+msgstr "Pronóstico"
 
 #. module: mrp
 #. odoo-javascript
@@ -2391,7 +2393,7 @@ msgstr "Previsión"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #, python-format
 msgid "Forecast Report"
-msgstr "Informe de Previsión"
+msgstr "Informe de pronóstico"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
@@ -2504,7 +2506,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
-msgstr "Indica el orden de secuencia cuando se visualiza."
+msgstr "Indica la orden de secuencia cuando se visualiza."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -2874,12 +2876,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_planned
 msgid "Its Operations are Planned"
-msgstr "Sus operaciones están planeadas"
+msgstr "Sus operaciones están planificadas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__json_popover
 msgid "JSON data for the popover widget"
-msgstr "Datos JSON para el widget popover"
+msgstr "Datos JSON para el widget de ventana emergente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3062,7 +3064,7 @@ msgstr "Ubicación donde el sistema buscará los componentes."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "Ubicación donde el sistema almacenará los productos finalizados."
+msgstr "Ubicación donde el sistema almacenará los productos terminados."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_dest_id
@@ -3139,7 +3141,7 @@ msgstr "Baja"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "Orden de fabricación parcial"
+msgstr "Pedido pendiente de la orden de fabricación"
 
 #. module: mrp
 #. odoo-javascript
@@ -3192,12 +3194,12 @@ msgstr "Referencia de la orden de fabricación"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
 msgid "MRP Reception Report"
-msgstr "Reporte de recepción de MRP"
+msgstr "Informe de recepción de MRP"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
 msgid "MRP Work Orders"
-msgstr "Órdenes de trabajo MRP"
+msgstr "Órdenes de trabajo del MRP"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
@@ -3339,7 +3341,7 @@ msgstr "Pronóstico de fabricación"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 #, python-format
 msgid "Manufacturing Lead Time"
-msgstr "Plazo de entrega de fabricación"
+msgstr "Plazo de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -3455,7 +3457,7 @@ msgstr "Producir en masa"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
 msgid "Master Production Schedule"
-msgstr "Programa Maestro de Producción"
+msgstr "Plan maestro de producción"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason0
@@ -3517,17 +3519,17 @@ msgstr "Mover subproducto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
 msgid "Moves to Track"
-msgstr "Movimientos a trazar"
+msgstr "Movimientos a rastrear"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
 msgid "Mrp Consumption Warning Line"
-msgstr "Advertencia de línea de consumo de fabricación"
+msgstr "Línea de advertencia de consumo de fabricación"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
 msgid "Mrp Display"
-msgstr "Visualización de fabricación"
+msgstr "Pantalla de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3610,7 +3612,7 @@ msgstr "Tipo de la siguiente actividad"
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
-msgstr "No crear entrega parcial"
+msgstr "Sin pedido pendiente"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -5127,7 +5129,7 @@ msgstr "Mostrar aplicar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_backorders
 msgid "Show Backorders"
-msgstr "Mostrar órdenes parciales"
+msgstr "Mostrar pedidos pendientes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
@@ -5170,7 +5172,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Mostrar líneas de órdenes parciales"
+msgstr "Mostrar líneas de pedidos pendientes"
 
 #. module: mrp
 #. odoo-javascript
@@ -5397,7 +5399,7 @@ msgstr "Almacén Asignar Números de Serie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
 msgid "Stock Availability"
-msgstr "Disponibilidad de existencias"
+msgstr "Disponibilidad del stock"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -5407,7 +5409,7 @@ msgstr "Movimiento de stock"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
 msgid "Stock Movements of Produced Goods"
-msgstr "Movimientos de las existencias de los productos producidos"
+msgstr "Movimientos de stock de los productos producidos"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
@@ -5444,7 +5446,7 @@ msgstr "Informe de regla de inventario"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Store Finished Product"
-msgstr "Almacenar Producto Terminado"
+msgstr "Almacenar producto terminado"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
@@ -5513,21 +5515,19 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Technical field for workcenter views"
-msgstr "Campo técnico para las vistas de los centros de trabajo "
+msgstr "Campo técnico para las vistas de los centros de trabajo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
-"Campo técnico para comprobar si se puede mostrar el botón de todos los "
-"productos "
+"Campo técnico para comprobar si se puede mostrar el botón mostrar el botón "
+"\"Producir todo\""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
-"Campo técnico para comprobar si se puede mostrar el botón de todos los "
-"productos "
+msgstr "Campo técnico para comprobar si se puede mostrar el botón \"Producir\""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5677,7 +5677,7 @@ msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
 msgstr ""
 "La cantidad ya producida está en espera de asignación en la cadena de "
-"órdenes parciales."
+"pedidos pendientes."
 
 #. module: mrp
 #. odoo-python
@@ -5934,7 +5934,7 @@ msgstr "A"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "Para hacer un orden pendiente"
+msgstr "Para hacer pedido pendiente"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -5958,7 +5958,7 @@ msgstr "Por hacer"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr "Lanzar"
+msgstr "A lanzar"
 
 #. module: mrp
 #. odoo-python
@@ -6312,14 +6312,14 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Utilice las Órdenes de Fabricación para fabricar productos terminados "
-"utilizando componentes. Por ejemplo, 1 mesa = 4 patas de mesa + 1 cubierta "
-"de mesa "
+"Utilice las órdenes de fabricación para producir productos terminados "
+"mediante el uso de componentes. Por ejemplo, 1 mesa = 4 patas de mesa + 1 "
+"superficie de mesa "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
 msgid "Use Operation Dependencies"
-msgstr "Utilizar dependencias en las operaciones"
+msgstr "Utilizar dependencias de operación"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
@@ -6689,7 +6689,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
 msgid "Work Order To Consume"
-msgstr "Orden de trabajo para consumir"
+msgstr "Orden de trabajo a consumir"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -7023,9 +7023,9 @@ msgid ""
 "                        Create a backorder if you expect to process the remaining quantities later.<br/>\n"
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
-"Ingresó menos números de serie que la cantidad por producir.<br/>\n"
-"                        Cree una orden parcial si espera procesar las cantidades restantes más tarde<br/>\n"
-"                        No cree una orden parcial si no procesará los productos restantes"
+"Ingresó menos números de serie que la cantidad a producir.<br/>\n"
+"                        Cree un pedido pendiente si espera procesar las cantidades restantes más tarde<br/>\n"
+"                        No cree un pedido pendiente si no procesará los productos restantes"
 
 #. module: mrp
 #. odoo-python
@@ -7141,7 +7141,7 @@ msgid ""
 "have multiple lot reservations.<br/>\n"
 "                        Do you want to confirm anyway ?"
 msgstr ""
-"tiene múltiples reservas.<br/>\n"
+"tienen múltiples reservas.<br/>\n"
 "                        ¿Desea confirmar de todos modos?"
 
 #. module: mrp

@@ -1383,7 +1383,7 @@ msgstr "Entregas parciales"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Confirmación de entrega parcial"
+msgstr "Confirmación de pedido pendiente"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
@@ -1398,13 +1398,13 @@ msgstr "Líneas de confirmación de pedidos pendientes"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Creación de entrega parcial"
+msgstr "Creación de pedido pendiente"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Entregas parciales"
+msgstr "Pedidos pendientes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -1950,7 +1950,7 @@ msgstr "Número de recolecciones"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Número de recolecciones de órdenes parciales"
+msgstr "Número de recolecciones de pedidos pendientes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -1995,14 +1995,14 @@ msgstr "Ubicaciones de contrapartida"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Crear entrega parcial"
+msgstr "Crear pedido pendiente"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "¿Crear entrega parcial?"
+msgstr "¿Crear pedido pendiente?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2028,8 +2028,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
-"Cree una orden parcial si espera procesar los productos\n"
-"                            restantes más tarde. No cree una orden parcial si no\n"
+"Cree un pedido pendiente si espera procesar los productos\n"
+"                            restantes más tarde. No cree un pedido pendiente si no\n"
 "                            procesará los productos restantes."
 
 #. module: stock
@@ -3517,7 +3517,7 @@ msgstr "Generar números de serie"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Generate Serials/Lots"
-msgstr ""
+msgstr "Generar números de serie/lote"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4006,7 +4006,7 @@ msgstr "Importar lotes"
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #, python-format
 msgid "Import Serials/Lots"
-msgstr ""
+msgstr "Importar números de serie/lote"
 
 #. module: stock
 #. odoo-python
@@ -5367,7 +5367,7 @@ msgstr "No se seleccionó %s u orden de entrega"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "No crear entrega parcial"
+msgstr "Sin pedido pendiente"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -5956,7 +5956,7 @@ msgstr "Fecha de empaquetado"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date Demo"
-msgstr "Fecha de empaquetado de demonstración"
+msgstr "Fecha de empaquetado de demostración"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -8812,7 +8812,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "The backorder %s has been created."
-msgstr "Se creó la orden parcial %s."
+msgstr "Se ha creado el pedido pendiente %s."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -9183,7 +9183,7 @@ msgid ""
 "moves affects the product reservation, and should be done with care."
 msgstr ""
 "Esta es la cantidad de producto que se planifica mover. Reducir esta "
-"cantidad no genera una orden pendiente. Modificar esta cantidad en "
+"cantidad no genera un pedido pendiente. Modificar esta cantidad en "
 "movimientos asignados afecta a la reserva de producto, y debe hacerse con "
 "cuidado."
 
@@ -9424,7 +9424,7 @@ msgstr "A aplicar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "Para hacer un pedido pendiente"
+msgstr "Para hacer pedido pendiente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -10389,8 +10389,8 @@ msgid ""
 " * Never: remaining products are cancelled"
 msgstr ""
 "Al validar un traslado:\n"
-" * Preguntar: se le pide a los usuarios elegir si desean crear una orden parcial para los productos restantes\n"
-" * Siempre: se crea una orden parcial para los productos restantes de forma automática\n"
+" * Preguntar: se le pide a los usuarios elegir si desean crear un pedido pendiente para los productos restantes\n"
+" * Siempre: se crea automáticamente un pedido pendiente para los productos restantes\n"
 " * Nunca: se cancelan los productos restantes"
 
 #. module: stock

@@ -2205,7 +2205,7 @@ class Application:
                     pass
                 elif isinstance(exc, SessionExpiredException):
                     _logger.info(exc)
-                elif isinstance(exc, (UserError, AccessError, NotFound)):
+                elif isinstance(exc, (UserError, AccessError)):
                     _logger.warning(exc)
                 else:
                     _logger.error("Exception during request handling.", exc_info=True)

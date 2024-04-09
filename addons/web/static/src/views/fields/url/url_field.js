@@ -21,16 +21,10 @@ export class UrlField extends Component {
     }
 
     get formattedHref() {
-        let value = "";
-        if (typeof this.props.record.data[this.props.name] === "string") {
-            const shouldaddPrefix = !(
-                this.props.websitePath ||
-                this.props.record.data[this.props.name].includes("://") ||
-                /^\//.test(this.props.record.data[this.props.name])
-            );
-            value = shouldaddPrefix
-                ? `http://${this.props.record.data[this.props.name]}`
-                : this.props.record.data[this.props.name];
+        let value = this.props.record.data[this.props.name];
+        if (value && !this.props.websitePath) {
+            const regex = /^((ftp|http)s?:\/)?\//i; // http(s)://... ftp(s)://... /...
+            value = !regex.test(value) ? `http://${value}` : value;
         }
         return value;
     }

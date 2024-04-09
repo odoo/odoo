@@ -13407,6 +13407,8 @@ msgid ""
 "Blame the following rules:\n"
 "%s"
 msgstr ""
+"Na vině je následující přístupové pravidlo:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
@@ -34277,9 +34279,9 @@ msgid ""
 "\n"
 "Sorry, %s doesn't have '%s' access to:"
 msgstr ""
-"Ach-och! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
+"Uh-oh! Vypadá to, že jste zakopli o nějaký přísně tajný záznam.\n"
 "\n"
-"Prominňte, %s nemá přístup pro '%s' k:"
+"%s nemá přístup '%s' pro záznam:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -36182,6 +36184,15 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "Nemůžete smazat %s záznam."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #. odoo-python
