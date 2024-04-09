@@ -1411,39 +1411,31 @@ class DiscussChannel(models.Model):
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
-        for channel in self:
-            if not channel.message_ids.ids:
-                continue
-            # a bit not-modular but helps understanding code
-            if channel.channel_type not in {'chat', 'whatsapp'}:
-                continue
-            last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
-            member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-            if not member:
-                # member not a part of the channel
-                continue
-            if member.fetched_message_id.id == last_message_id:
-                # last message fetched by user is already up-to-date
-                continue
-            # Avoid serialization error when multiple tabs are opened.
-            query = """
-                UPDATE discuss_channel_member
-                SET fetched_message_id = %s
-                WHERE id IN (
-                    SELECT id FROM discuss_channel_member WHERE id = %s
-                    FOR NO KEY UPDATE SKIP LOCKED
-                )
-            """
-            self.env.cr.execute(query, (last_message_id, member.id))
-            channel._bus_send(
-                "discuss.channel.member/fetched",
-                {
-                    "channel_id": channel.id,
-                    "id": member.id,
-                    "last_message_id": last_message_id,
-                    "partner_id": self.env.user.partner_id.id,
-                },
-            )
+        # Avoid serialization error when multiple tabs are opened.
+        # In order to completely avoid any issues with concurrency, the very first thing we do on
+        # the cursor needs to be a SELECT FOR UPDATE
+        fetchable = self.filtered(lambda c: c.channel_type in ('chat', 'whatsapp'))
+        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)]).subselect()
+        with self.env.registry.cursor() as cr:
+            cursor_self = self.with_env(self.env(cr=cr))
+            to_update = cursor_self.env.execute_query(SQL("""
+                SELECT id
+                  FROM discuss_channel_member
+                 WHERE id IN (%s)
+                   FOR NO KEY UPDATE SKIP LOCKED
+            """, member_query))
+            members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
+            channel2message = members.channel_id._get_last_messages().grouped('channel_id')
+            for member in members:
+                last_message = channel2message[member.channel_id]
+                if member.fetched_message_id != last_message:
+                    member.fetched_message_id = last_message
+                    member.channel_id._bus_send('discuss.channel.member/fetched', {
+                        'channel_id': member.channel_id.id,
+                        'id': member.id,
+                        'last_message_id': last_message.id,
+                        'partner_id': cursor_self.env.user.partner_id.id,
+                    })
 
     def channel_set_custom_name(self, name):
         self.ensure_one()
