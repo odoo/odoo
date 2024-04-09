@@ -83,4 +83,14 @@ patch(Thread.prototype, {
         }
         return super.getMemberName(persona);
     },
+    /**
+     * @override
+     * @param {boolean} pushState
+     */
+    setAsDiscussThread(pushState) {
+        super.setAsDiscussThread(pushState);
+        if (this.store.env.services.ui.isSmall && this.channel_type === "livechat") {
+            this.store.discuss.activeTab = "livechat";
+        }
+    },
 });

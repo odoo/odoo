@@ -16,10 +16,10 @@ export class RecipientList extends Component {
 
     setup() {
         super.setup();
-        this.threadService = useState(useService("mail.thread"));
+        this.store = useState(useService("mail.store"));
         this.loadMoreState = useVisible("load-more", () => {
             if (this.loadMoreState.isVisible) {
-                this.threadService.loadMoreRecipients(this.props.thread);
+                this.props.thread.loadMoreRecipients();
             }
         });
     }

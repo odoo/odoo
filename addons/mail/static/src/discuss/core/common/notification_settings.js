@@ -1,18 +1,12 @@
-import { useState, Component } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 export class NotificationSettings extends Component {
     static components = { Dropdown, DropdownItem };
     static props = ["hasSizeConstraints?", "thread", "close", "className?"];
     static template = "discuss.NotificationSettings";
-
-    setup() {
-        super.setup();
-        this.threadService = useState(useService("mail.thread"));
-    }
 
     get muteUntilText() {
         if (
@@ -26,16 +20,16 @@ export class NotificationSettings extends Component {
     }
 
     selectUnmute() {
-        this.threadService.muteThread(this.props.thread);
+        this.props.thread.mute();
         this.props.close();
     }
 
     setMute(minutes) {
-        this.threadService.muteThread(this.props.thread, { minutes });
+        this.props.thread.mute({ minutes });
         this.props.close();
     }
 
     setSetting(setting) {
-        this.threadService.updateCustomNotifications(this.props.thread, setting.id);
+        this.props.thread.updateCustomNotifications(setting.id);
     }
 }

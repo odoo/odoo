@@ -1,11 +1,14 @@
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
-import { compareDatetime } from "@mail/utils/common/misc";
+import { prettifyMessageContent } from "@mail/utils/common/format";
+import { compareDatetime, rpcWithEnv } from "@mail/utils/common/misc";
+import { router } from "@web/core/browser/router";
 
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
+let rpc;
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
@@ -39,6 +42,7 @@ export class Thread extends Record {
         return super.insert(...arguments);
     }
     static new(data) {
+        rpc = rpcWithEnv(this.env);
         const thread = super.new(data);
         Record.onChange(thread, ["state"], () => {
             if (thread.state !== "closed" && !this.store.env.services.ui.isSmall) {
@@ -581,6 +585,184 @@ export class Thread extends Record {
             .length;
     }
 
+    executeCommand(command, body = "") {
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            command.methodName,
+            [[this.id]],
+            { body }
+        );
+    }
+
+    async fetchChannelMembers() {
+        if (this.fetchMembersState === "pending") {
+            return;
+        }
+        const previousState = this.fetchMembersState;
+        this.fetchMembersState = "pending";
+        const known_member_ids = this.channelMembers.map((channelMember) => channelMember.id);
+        let results;
+        try {
+            results = await rpc("/discuss/channel/members", {
+                channel_id: this.id,
+                known_member_ids: known_member_ids,
+            });
+        } catch (e) {
+            this.fetchMembersState = previousState;
+            throw e;
+        }
+        this.fetchMembersState = "fetched";
+        this.update(results);
+    }
+
+    /** @param {{after: Number, before: Number}} */
+    async fetchMessages({ after, before } = {}) {
+        this.status = "loading";
+        if (!["mail.box", "discuss.channel"].includes(this.model) && !this.id) {
+            this.isLoaded = true;
+            return [];
+        }
+        try {
+            // ordered messages received: newest to oldest
+            const { messages: rawMessages } = await rpc(this.getFetchRoute(), {
+                ...this.getFetchParams(),
+                limit: this.store.FETCH_LIMIT,
+                after,
+                before,
+            });
+            const messages = this.store.Message.insert(rawMessages.reverse(), { html: true });
+            this.isLoaded = true;
+            return messages;
+        } catch (e) {
+            this.hasLoadingFailed = true;
+            throw e;
+        } finally {
+            this.status = "ready";
+        }
+    }
+
+    /** @param {"older"|"newer"} epoch */
+    async fetchMoreMessages(epoch = "older") {
+        if (
+            this.status === "loading" ||
+            (epoch === "older" && !this.loadOlder) ||
+            (epoch === "newer" && !this.loadNewer)
+        ) {
+            return;
+        }
+        const before = epoch === "older" ? this.oldestPersistentMessage?.id : undefined;
+        const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
+        try {
+            const fetched = await this.fetchMessages({ after, before });
+            if (
+                (after !== undefined && !this.messages.some((message) => message.id === after)) ||
+                (before !== undefined && !this.messages.some((message) => message.id === before))
+            ) {
+                // there might have been a jump to message during RPC fetch.
+                // Abort feeding messages as to not put holes in message list.
+                return;
+            }
+            const alreadyKnownMessages = new Set(this.messages.map(({ id }) => id));
+            const messagesToAdd = fetched.filter(
+                (message) => !alreadyKnownMessages.has(message.id)
+            );
+            if (epoch === "older") {
+                this.messages.unshift(...messagesToAdd);
+            } else {
+                this.messages.push(...messagesToAdd);
+            }
+            if (fetched.length < this.store.FETCH_LIMIT) {
+                if (epoch === "older") {
+                    this.loadOlder = false;
+                } else if (epoch === "newer") {
+                    this.loadNewer = false;
+                    const missingMessages = this.pendingNewMessages.filter(
+                        ({ id }) => !alreadyKnownMessages.has(id)
+                    );
+                    if (missingMessages.length > 0) {
+                        this.messages.push(...missingMessages);
+                        this.messages.sort((m1, m2) => m1.id - m2.id);
+                    }
+                }
+            }
+            this._enrichMessagesWithTransient();
+        } catch {
+            // handled in fetchMessages
+        }
+        this.pendingNewMessages = [];
+    }
+
+    async fetchNewMessages() {
+        if (
+            this.status === "loading" ||
+            (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
+        ) {
+            return;
+        }
+        const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
+        try {
+            const fetched = await this.fetchMessages({ after });
+            // feed messages
+            // could have received a new message as notification during fetch
+            // filter out already fetched (e.g. received as notification in the meantime)
+            let startIndex;
+            if (after === undefined) {
+                startIndex = 0;
+            } else {
+                const afterIndex = this.messages.findIndex((message) => message.id === after);
+                if (afterIndex === -1) {
+                    // there might have been a jump to message during RPC fetch.
+                    // Abort feeding messages as to not put holes in message list.
+                    return;
+                } else {
+                    startIndex = afterIndex + 1;
+                }
+            }
+            const alreadyKnownMessages = new Set(this.messages.map((m) => m.id));
+            const filtered = fetched.filter(
+                (message) =>
+                    !alreadyKnownMessages.has(message.id) &&
+                    (this.persistentMessages.length === 0 ||
+                        message.id < this.oldestPersistentMessage.id ||
+                        message.id > this.newestPersistentMessage.id)
+            );
+            this.messages.splice(startIndex, 0, ...filtered);
+            Object.assign(this, {
+                loadOlder:
+                    after === undefined && fetched.length === this.store.FETCH_LIMIT
+                        ? true
+                        : after === undefined && fetched.length !== this.store.FETCH_LIMIT
+                        ? false
+                        : this.loadOlder,
+            });
+        } catch {
+            // handled in fetchMessages
+        }
+    }
+
+    getFetchParams() {
+        if (this.model === "discuss.channel") {
+            return { channel_id: this.id };
+        }
+        if (this.model === "mail.box") {
+            return {};
+        }
+        return {
+            thread_id: this.id,
+            thread_model: this.model,
+        };
+    }
+
+    getFetchRoute() {
+        if (this.model === "discuss.channel") {
+            return "/discuss/channel/messages";
+        }
+        if (this.model === "mail.box") {
+            return `/mail/${this.id}/messages`;
+        }
+        return "/mail/thread/messages";
+    }
+
     /** @param {import("models").Persona} persona */
     getMemberName(persona) {
         return persona.name;
@@ -592,6 +774,370 @@ export class Thread extends Record {
             return false;
         }
         return this.store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
+    }
+
+    async leave() {
+        await this.store.env.services.orm.call("discuss.channel", "action_unfollow", [this.id]);
+        this.delete();
+        const thread = this.store.discuss.channels.threads[0]
+            ? this.store.discuss.channels.threads[0]
+            : this.store.discuss.inbox;
+        thread?.setAsDiscussThread();
+    }
+
+    /**
+     * Get ready to jump to a message in a thread. This method will fetch the
+     * messages around the message to jump to if required, and update the thread
+     * messages accordingly.
+     *
+     * @param {import("models").Message} [messageId] if not provided, load around newest message
+     */
+    async loadAround(messageId) {
+        if (!this.messages.some(({ id }) => id === messageId)) {
+            this.isLoaded = false;
+            this.scrollTop = undefined;
+            const { messages } = await rpc(this.getFetchRoute(), {
+                ...this.getFetchParams(),
+                around: messageId,
+            });
+            this.isLoaded = true;
+            this.messages = this.store.Message.insert(messages.reverse(), { html: true });
+            this.loadNewer = messageId ? true : false;
+            this.loadOlder = true;
+            if (messages.length < this.store.FETCH_LIMIT) {
+                const olderMessagesCount = messages.filter(({ id }) => id < messageId).length;
+                if (olderMessagesCount < this.store.FETCH_LIMIT / 2) {
+                    this.loadOlder = false;
+                } else {
+                    this.loadNewer = false;
+                }
+            }
+            this._enrichMessagesWithTransient();
+        }
+    }
+
+    async markAllMessagesAsRead() {
+        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
+            [
+                ["model", "=", this.model],
+                ["res_id", "=", this.id],
+            ],
+        ]);
+        if (this.selfMember) {
+            this.selfMember.seen_message_id = this.newestPersistentNotEmptyOfAllMessage;
+        }
+        Object.assign(this, {
+            message_unread_counter: 0,
+            message_needaction_counter: 0,
+        });
+    }
+
+    async markAsFetched() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
+            [this.id],
+        ]);
+    }
+
+    markAsRead() {
+        const newestPersistentMessage = this.newestPersistentOfAllMessage;
+        if (!newestPersistentMessage && !this.isLoaded) {
+            this.isLoadedDeferred.then(() => new Promise(setTimeout)).then(() => this.markAsRead());
+        }
+        if (this.selfMember) {
+            this.selfMember.seen_message_id = newestPersistentMessage;
+        }
+        if (
+            this.message_unread_counter > 0 &&
+            this.model === "discuss.channel" &&
+            newestPersistentMessage
+        ) {
+            rpc("/discuss/channel/set_last_seen_message", {
+                channel_id: this.id,
+                last_message_id: newestPersistentMessage.id,
+            })
+                .then(() => {
+                    this.updateSeen(newestPersistentMessage);
+                })
+                .catch((e) => {
+                    if (e.code !== 404) {
+                        throw e;
+                    }
+                });
+        } else if (newestPersistentMessage) {
+            this.updateSeen();
+        }
+        if (this.needactionMessages.length > 0) {
+            this.markAllMessagesAsRead();
+        }
+    }
+
+    /** @param {string} data base64 representation of the binary */
+    async notifyAvatarToServer(data) {
+        await rpc("/discuss/channel/update_avatar", {
+            channel_id: this.id,
+            data,
+        });
+    }
+
+    async notifyDescriptionToServer(description) {
+        this.description = description;
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            "channel_change_description",
+            [[this.id]],
+            { description }
+        );
+    }
+
+    /**
+     * Handle the notification of a new message based on the notification setting of the user.
+     * Thread on mute:
+     * 1. No longer see the unread status: the bold text disappears and the channel name fades out.
+     * 2. Without sound + need action counter.
+
+     * Thread Notification Type:
+     * All messages:All messages sound + need action counter
+     * Mentions:Only mention sounds + need action counter
+     * Nothing: No sound + need action counter
+
+     * @param {import("models").Message} message
+     */
+    notifyMessageToUser(message) {
+        let notify = this.channel_type !== "channel";
+        if (this.channel_type === "channel" && message.recipients?.includes(this.store.self)) {
+            notify = true;
+        }
+        if (
+            this.correspondent?.eq(this.store.odoobot) ||
+            this.mute_until_dt ||
+            this.custom_notifications === "no_notif" ||
+            (this.custom_notifications === "mentions" &&
+                !message.recipients?.includes(this.store.self))
+        ) {
+            return;
+        }
+        if (notify) {
+            this.store.ChatWindow.insert({ thread: this });
+            this.store.env.services["mail.out_of_focus"].notify(message, this);
+        }
+    }
+
+    /**
+     * @param {boolean} replaceNewMessageChatWindow
+     * @param {Object} [options]
+     */
+    open(replaceNewMessageChatWindow, options) {
+        this.setAsDiscussThread();
+    }
+
+    pin() {
+        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
+            return;
+        }
+        this.is_pinned = true;
+        return this.store.env.services.orm.silent.call(
+            "discuss.channel",
+            "channel_pin",
+            [this.id],
+            { pinned: true }
+        );
+    }
+
+    /** @param {string} name */
+    async rename(name) {
+        const newName = name.trim();
+        if (
+            newName !== this.displayName &&
+            ((newName && this.channel_type === "channel") ||
+                this.channel_type === "chat" ||
+                this.channel_type === "group")
+        ) {
+            if (this.channel_type === "channel" || this.channel_type === "group") {
+                this.name = newName;
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_rename",
+                    [[this.id]],
+                    { name: newName }
+                );
+            } else if (this.channel_type === "chat") {
+                this.custom_channel_name = newName;
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_set_custom_name",
+                    [[this.id]],
+                    { name: newName }
+                );
+            }
+        }
+    }
+
+    /** @param {string} body */
+    async post(
+        body,
+        {
+            attachments = [],
+            isNote = false,
+            parentId,
+            mentionedChannels = [],
+            mentionedPartners = [],
+            cannedResponseIds,
+        } = {}
+    ) {
+        let tmpMsg;
+        const params = await this.store.getMessagePostParams({
+            attachments,
+            body,
+            cannedResponseIds,
+            isNote,
+            mentionedChannels,
+            mentionedPartners,
+            thread: this,
+        });
+        const tmpId = this.store.env.services["mail.message"].getNextTemporaryId();
+        params.context = { ...user.context, ...params.context, temporary_id: tmpId };
+        if (parentId) {
+            params.post_data.parent_id = parentId;
+        }
+        if (this.model !== "discuss.channel") {
+            params.thread_id = this.id;
+            params.thread_model = this.model;
+        } else {
+            const tmpData = {
+                id: tmpId,
+                attachments: attachments,
+                res_id: this.id,
+                model: "discuss.channel",
+            };
+            tmpData.author = this.store.self;
+            if (parentId) {
+                tmpData.parentMessage = this.store.Message.get(parentId);
+            }
+            const prettyContent = await prettifyMessageContent(
+                body,
+                this.store.env.services["mail.message"].getMentionsFromText(body, {
+                    mentionedChannels,
+                    mentionedPartners,
+                })
+            );
+            tmpMsg = this.store.Message.insert(
+                {
+                    ...tmpData,
+                    body: prettyContent,
+                    thread: this,
+                    temporary_id: tmpId,
+                },
+                { html: true }
+            );
+            this.messages.push(tmpMsg);
+            if (this.selfMember) {
+                this.selfMember.seen_message_id = tmpMsg;
+            }
+        }
+        const data = await rpc("/mail/message/post", params);
+        if (!data) {
+            tmpMsg?.delete();
+            return;
+        }
+        if (data.id in this.store.Message.records) {
+            data.temporary_id = null;
+        }
+        const message = this.store.Message.insert(data, { html: true });
+        this.messages.add(message);
+        if (this.selfMember?.seen_message_id?.id < message.id) {
+            this.selfMember.seen_message_id = message;
+        }
+        // Only delete the temporary message now that seen_message_id is updated
+        // to avoid flickering.
+        tmpMsg?.delete();
+        if (message.hasLink && this.store.hasLinkPreviewFeature) {
+            rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
+        }
+        return message;
+    }
+
+    /** @param {boolean} pushState */
+    setAsDiscussThread(pushState) {
+        if (pushState === undefined) {
+            pushState = this.notEq(this.store.discuss.thread);
+        }
+        this.store.discuss.thread = this;
+        const activeId =
+            typeof this.id === "string" ? `mail.box_${this.id}` : `discuss.channel_${this.id}`;
+        this.store.discuss.activeTab =
+            !this.store.env.services.ui.isSmall || this.model === "mail.box"
+                ? "main"
+                : ["chat", "group"].includes(this.channel_type)
+                ? "chat"
+                : "channel";
+        if (pushState) {
+            router.pushState({ active_id: activeId });
+        }
+    }
+
+    /** @param {number} index */
+    async setMainAttachmentFromIndex(index) {
+        this.mainAttachment = this.attachmentsInWebClientView[index];
+        await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
+            this.mainAttachment.id,
+        ]);
+    }
+
+    async unpin() {
+        this.isLocallyPinned = false;
+        if (this.eq(this.store.discuss.thread)) {
+            router.replaceState({ active_id: undefined });
+        }
+        if (this.model === "discuss.channel" && this.is_pinned) {
+            return this.store.env.services.orm.silent.call(
+                "discuss.channel",
+                "channel_pin",
+                [this.id],
+                { pinned: false }
+            );
+        }
+    }
+
+    updateSeen(lastSeen = this.newestPersistentOfAllMessage) {
+        const lastReadIndex = this.messages.findIndex((message) => message.eq(lastSeen));
+        let newNeedactionCounter = 0;
+        let newUnreadCounter = 0;
+        for (const message of this.messages.slice(lastReadIndex + 1)) {
+            if (message.isNeedaction) {
+                newNeedactionCounter++;
+            }
+            if (Number.isInteger(message.id)) {
+                newUnreadCounter++;
+            }
+        }
+        if (this.selfMember) {
+            this.selfMember.seen_message_id = lastSeen;
+        }
+        Object.assign(this, {
+            message_needaction_counter: newNeedactionCounter,
+            message_unread_counter: newUnreadCounter,
+        });
+    }
+
+    /**
+     * Following a load more or load around, listing of messages contains persistent messages.
+     * Transient messages are missing, so this function puts known transient messages at the
+     * right place in message list of thread.
+     */
+    _enrichMessagesWithTransient() {
+        for (const message of this.transientMessages) {
+            if (message.id < this.oldestPersistentMessage && !this.loadOlder) {
+                this.messages.unshift(message);
+            } else if (message.id > this.newestPersistentMessage && !this.loadNewer) {
+                this.messages.push(message);
+            } else {
+                let afterIndex = this.messages.findIndex((msg) => msg.id > message.id);
+                if (afterIndex === -1) {
+                    afterIndex = this.messages.length + 1;
+                }
+                this.messages.splice(afterIndex - 1, 0, message);
+            }
+        }
     }
 }
 

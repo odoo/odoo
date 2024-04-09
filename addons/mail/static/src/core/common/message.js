@@ -114,7 +114,6 @@ export class Message extends Component {
         this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
-        this.threadService = useState(useService("mail.thread"));
         this.messageService = useState(useService("mail.message"));
         this.attachmentService = useService("mail.attachment");
         this.dialog = useService("dialog");
@@ -426,14 +425,14 @@ export class Message extends Component {
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
             const thread = store.Thread.insert({ model, id });
-            this.threadService.open(thread);
+            thread.open();
             return;
         }
         if (ev.target.closest(".o_mail_redirect")) {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
             if (user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
+                this.store.openChat({ partnerId });
             }
             return;
         }

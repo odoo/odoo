@@ -12,7 +12,6 @@ export class DiscussPublic extends Component {
 
     setup() {
         super.setup();
-        this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.state = useState({
             welcome: this.props.data.discussPublicViewData.shouldDisplayWelcomeViewInitially,
@@ -36,8 +35,8 @@ export class DiscussPublic extends Component {
     }
 
     displayChannel() {
-        this.threadService.setDiscussThread(this.thread, false);
-        this.threadService.fetchChannelMembers(this.thread);
+        this.thread.setAsDiscussThread(false);
+        this.thread.fetchChannelMembers();
     }
 
     get thread() {

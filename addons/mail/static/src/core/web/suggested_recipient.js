@@ -18,7 +18,6 @@ export class SuggestedRecipient extends Component {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
-        this.threadService = useService("mail.thread");
     }
 
     get titleText() {

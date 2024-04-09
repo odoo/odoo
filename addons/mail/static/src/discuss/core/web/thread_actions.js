@@ -14,7 +14,7 @@ threadActionsRegistry.add("expand-discuss", {
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
     open(component) {
-        component.threadService.setDiscussThread(component.thread);
+        component.thread.setAsDiscussThread();
         component.actionService.doAction(
             {
                 type: "ir.actions.client",

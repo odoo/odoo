@@ -164,7 +164,6 @@ export function useVisible(refName, cb, { ready = true } = {}) {
  */
 export function useMessageHighlight(duration = 2000) {
     let timeout;
-    const threadService = useService("mail.thread");
     const state = useState({
         clearHighlight() {
             if (this.highlightedMessageId) {
@@ -181,7 +180,7 @@ export function useMessageHighlight(duration = 2000) {
             if (thread.notEq(message.thread)) {
                 return;
             }
-            await threadService.loadAround(thread, message.id);
+            await thread.loadAround(message.id);
             const lastHighlightedMessageId = state.highlightedMessageId;
             this.clearHighlight();
             if (lastHighlightedMessageId === message.id) {
