@@ -136,6 +136,7 @@ var KanbanController = BasicController.extend({
      * @private
      * @param {Widget} kanbanRecord
      * @param {Object} params
+     * @returns {Promise}
      */
     _reloadAfterButtonClick: function (kanbanRecord, params) {
         var self = this;
@@ -143,7 +144,7 @@ var KanbanController = BasicController.extend({
         var group = this.model.localData[recordModel.parentID];
         var parent = this.model.localData[group.parentID];
 
-        this.model.reload(params.record.id).then(function (db_id) {
+        return this.model.reload(params.record.id).then(function (db_id) {
             var data = self.model.get(db_id);
             kanbanRecord.update(data);
 
