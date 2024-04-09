@@ -124,9 +124,9 @@ function _protectMethod(component, fn) {
 /**
  * Import a service into a component
  *
- * @template {keyof import("services").Services} K
+ * @template {keyof import("services").ServiceFactories} K
  * @param {K} serviceName
- * @returns {import("services").ExtractServiceType<import("services").Services[K]>}
+ * @returns {import("services").ServiceFactories[K]}
  */
 export function useService(serviceName) {
     const component = useComponent();

@@ -10,7 +10,7 @@ import { MockServer, makeMockServer } from "./mock_server/mock_server";
  *
  * @typedef {import("@web/core/registry").Registry} Registry
  *
- * @typedef {import("services").Services} Services
+ * @typedef {import("services").ServiceFactories} Services
  */
 
 //-----------------------------------------------------------------------------

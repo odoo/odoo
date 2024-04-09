@@ -28,7 +28,10 @@ declare module "services" {
     import { demoDataService } from "@web/webclient/settings_form_view/widgets/demo_data_service";
     import { userInviteService } from "@web/webclient/settings_form_view/widgets/user_invite_service";
 
-    export type ExtractServiceType<T extends ServicesRegistryShape> = Awaited<ReturnType<T["start"]>>;
+    type ExtractServiceFactory<T extends ServicesRegistryShape> = Awaited<ReturnType<T["start"]>>;
+    export type ServiceFactories = {
+        [P in keyof Services]: ExtractServiceFactory<Services[P]>;
+    };
 
     export interface Services {
         action: typeof actionService;
