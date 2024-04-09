@@ -143,9 +143,13 @@ function computePosition(popper, target, { container, margin, position }) {
             let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
+            directionMin += vertical ? iframeBox.top : iframeBox.left;
+            directionMax += vertical ? iframeBox.top : iframeBox.left;
             let [variantMin, variantMax] = vertical
                 ? [contBox.left, contBox.right]
                 : [contBox.top, contBox.bottom];
+            variantMin += vertical ? iframeBox.left : iframeBox.top;
+            variantMax += vertical ? iframeBox.left : iframeBox.top;
 
             if (containerIsHTMLNode) {
                 if (vertical) {
