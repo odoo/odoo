@@ -87,7 +87,7 @@ export class MailThread extends models.ServerModel {
             const attachments = IrAttachment._filter([
                 ["id", "in", kwargs.attachment_ids],
                 ["res_model", "=", "mail.compose.message"],
-                ["res_id", "=", 0],
+                ["res_id", "=", false],
             ]);
             const attachmentIds = attachments.map((attachment) => attachment.id);
             IrAttachment.write(attachmentIds, {
