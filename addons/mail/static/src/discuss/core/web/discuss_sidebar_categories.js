@@ -30,7 +30,6 @@ export class DiscussSidebarCategories extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.discussCoreWebService = useState(useService("discuss.core.web"));
-        this.threadService = useState(useService("mail.thread"));
         this.state = useState({
             editing: false,
             quickSearchVal: "",
@@ -96,7 +95,7 @@ export class DiscussSidebarCategories extends Component {
                 )
             );
         }
-        this.threadService.leaveChannel(thread);
+        thread.leave();
     }
 
     openCategory(category) {
@@ -135,7 +134,7 @@ export class DiscussSidebarCategories extends Component {
      */
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
-        this.threadService.setDiscussThread(thread);
+        thread.setAsDiscussThread();
     }
 
     stopEditing() {

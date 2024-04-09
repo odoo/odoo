@@ -8,12 +8,11 @@ export class CallInvitation extends Component {
 
     setup() {
         super.setup();
-        this.threadService = useService("mail.thread");
         this.rtc = useService("discuss.rtc");
     }
 
     async onClickAccept(ev) {
-        this.threadService.open(this.props.thread);
+        this.props.thread.open();
         if (this.rtc.state.hasPendingRequest) {
             return;
         }
@@ -21,7 +20,7 @@ export class CallInvitation extends Component {
     }
 
     onClickAvatar(ev) {
-        this.threadService.open(this.props.thread);
+        this.props.thread.open();
     }
 
     onClickRefuse(ev) {

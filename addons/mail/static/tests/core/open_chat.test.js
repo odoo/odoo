@@ -9,7 +9,7 @@ test("openChat: display notification for partner without user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const env = await start();
-    await env.services["mail.thread"].openChat({ partnerId });
+    await env.services["mail.store"].openChat({ partnerId });
     await contains(".o_notification:has(.o_notification_bar.bg-info)", {
         text: "You can only chat with partners that have a dedicated user.",
     });
@@ -20,7 +20,7 @@ test("openChat: display notification for wrong user", async () => {
     pyEnv["res.users"].create({});
     const env = await start();
     // userId not in the server data
-    await env.services["mail.thread"].openChat({ userId: 4242 });
+    await env.services["mail.store"].openChat({ userId: 4242 });
     await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
         text: "You can only chat with existing users.",
     });
@@ -33,7 +33,7 @@ test("openChat: open new chat for user", async () => {
     const env = await start();
     await contains(".o-mail-ChatWindowContainer");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    env.services["mail.thread"].openChat({ partnerId });
+    env.services["mail.store"].openChat({ partnerId });
     await contains(".o-mail-ChatWindow");
 });
 
@@ -53,6 +53,6 @@ test("openChat: open existing chat for user [REQUIRE FOCUS]", async () => {
     });
     const env = await start();
     await contains(".o-mail-ChatWindow .o-mail-Composer-input:not(:focus)");
-    env.services["mail.thread"].openChat({ partnerId });
+    env.services["mail.store"].openChat({ partnerId });
     await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
 });

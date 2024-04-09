@@ -36,7 +36,6 @@ export class CallParticipantCard extends Component {
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.rootHover = useHover("root");
-        this.threadService = useService("mail.thread");
         this.state = useState({ drag: false, dragPos: undefined });
         onMounted(() => {
             if (!this.rtcSession) {

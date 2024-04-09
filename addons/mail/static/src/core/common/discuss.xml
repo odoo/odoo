@@ -94,7 +94,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': mailbox.eq(store.discuss.thread),
-        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
+        }" t-on-click="() => mailbox.setAsDiscussThread()" t-esc="mailbox.name"
     />
 </t>
 

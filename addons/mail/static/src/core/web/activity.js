@@ -27,7 +27,6 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.activityService = useService("mail.activity");
-        this.threadService = useService("mail.thread");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -78,7 +77,7 @@ export class Activity extends Component {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.activityService.markAsDone(this.props.activity, [attachmentId]);
         this.props.onActivityChanged(thread);
-        await this.threadService.fetchNewMessages(thread);
+        await thread.fetchNewMessages();
     }
 
     onClickAvatar(ev) {
