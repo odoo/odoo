@@ -89,3 +89,13 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.url_open('/chat/xyz')
         channel = self.env['discuss.channel'].search([('uuid', '=', 'xyz')])
         self.assertEqual(len(channel), 1)
+
+    def test_channel_invitation_from_token(self):
+        public_channel = self.env["discuss.channel"].channel_create(name="Public Channel", group_id=None)
+        internal_channel = self.env["discuss.channel"].channel_create(name="Internal Channel", group_id=self.env.ref("base.group_user").id)
+
+        public_response = self.url_open(public_channel.invitation_url)
+        self.assertEqual(public_response.status_code, 200)
+
+        internal_response = self.url_open(internal_channel.invitation_url)
+        self.assertEqual(internal_response.status_code, 404)
