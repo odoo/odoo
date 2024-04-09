@@ -435,6 +435,7 @@ export function makeDraggableHook(hookParams) {
      * @returns {Error}
      */
     const makeError = (reason) => new Error(`Error in hook ${hookName}: ${reason}.`);
+    let preventClick = false;
 
     return {
         [hookName](params) {
@@ -553,6 +554,7 @@ export function makeDraggableHook(hookParams) {
              */
             const dragEnd = (target, inErrorState) => {
                 if (state.dragging) {
+                    preventClick = true;
                     if (!inErrorState) {
                         if (target) {
                             callBuildHandler("onDrop", { target });
@@ -607,6 +609,17 @@ export function makeDraggableHook(hookParams) {
             };
 
             /**
+             * Global (= ref) "click" event handler.
+             * Used to prevent click events after dragEnd
+             * @param {PointerEvent} ev
+             */
+            const onClick = (ev) => {
+                if (preventClick) {
+                    safePrevent(ev, { stop: true });
+                }
+            };
+
+            /**
              * Window "keydown" event handler.
              * @param {KeyboardEvent} ev
              */
@@ -634,6 +647,7 @@ export function makeDraggableHook(hookParams) {
              * @param {PointerEvent} ev
              */
             const onPointerDown = (ev) => {
+                preventClick = false;
                 updatePointerPosition(ev);
 
                 const initiationDelay = ev.pointerType === "touch" ? ctx.touch_delay : ctx.delay;
@@ -977,6 +991,7 @@ export function makeDraggableHook(hookParams) {
                         const { addListener } = makeDOMHelpers({ add });
                         const event = useMouseEvents ? "mousedown" : "pointerdown";
                         addListener(el, event, onPointerDown, { noAddedStyle: true });
+                        addListener(el, "click", onClick);
                         if (hasTouch()) {
                             addListener(el, "contextmenu", safePrevent);
                             // Adds a non-passive listener on touchstart: this allows
