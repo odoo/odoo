@@ -7,6 +7,9 @@ import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Mutex } from "@web/core/utils/concurrency";
+import { registry } from "@web/core/registry";
+
+const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -91,8 +94,53 @@ const threadPatch = {
             return data ? this : undefined;
         });
     },
+    async fetchMoreAttachments(limit = 30) {
+        if (this.isLoadingAttachments || this.areAttachmentsLoaded) {
+            return;
+        }
+        this.isLoadingAttachments = true;
+        try {
+            const rawAttachments = await rpc("/discuss/channel/attachments", {
+                before: Math.min(...this.attachments.map(({ id }) => id)),
+                channel_id: this.id,
+                limit,
+            });
+            const attachments = this.store.Attachment.insert(rawAttachments);
+            if (attachments.length < limit) {
+                this.areAttachmentsLoaded = true;
+            }
+        } finally {
+            this.isLoadingAttachments = false;
+        }
+    },
     incrementUnreadCounter() {
         this.message_unread_counter++;
+    },
+    async mute({ minutes = false } = {}) {
+        await rpc("/discuss/channel/mute", { channel_id: this.id, minutes });
+    },
+    /** @param {string} body */
+    async post(body) {
+        if (this.model === "discuss.channel" && body.startsWith("/")) {
+            const [firstWord] = body.substring(1).split(/\s/);
+            const command = commandRegistry.get(firstWord, false);
+            if (
+                command &&
+                (!command.channel_types || command.channel_types.includes(this.channel_type))
+            ) {
+                await this.executeCommand(command, body);
+                return;
+            }
+        }
+        return super.post(...arguments);
+    },
+    async updateCustomNotifications(custom_notifications) {
+        // Update the UI instantly to provide a better UX (no need to wait for the RPC to finish).
+        this.custom_notifications = custom_notifications;
+        await rpc("/discuss/channel/update_custom_notifications", {
+            channel_id: this.id,
+            custom_notifications,
+        });
     },
 };
 patch(Thread, {

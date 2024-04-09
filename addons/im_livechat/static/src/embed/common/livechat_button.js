@@ -37,8 +37,6 @@ export class LivechatButton extends Component {
         this.store = useState(useService("mail.store"));
         /** @type {import('@im_livechat/embed/common/livechat_service').LivechatService} */
         this.livechatService = useState(useService("im_livechat.livechat"));
-        /** @type {import('@mail/core/common/thread_service').ThreadService} */
-        this.threadService = useService("mail.thread");
         this.onClick = debounce(this.onClick.bind(this), LivechatButton.DEBOUNCE_DELAY, {
             leading: true,
         });

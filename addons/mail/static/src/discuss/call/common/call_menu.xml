@@ -3,7 +3,7 @@
 
     <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="() => this.threadService.open(this.rtc.state.channel)">
+            <button t-if="rtc.state.channel" class="px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="() => this.rtc.state.channel.open()">
                 <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center">
                     <span class="position-relative me-2">
                         <i class="fa me-2" t-att-class="{

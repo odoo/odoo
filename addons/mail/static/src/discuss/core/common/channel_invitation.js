@@ -19,7 +19,6 @@ export class ChannelInvitation extends Component {
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.notification = useService("notification");
-        this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
         this.inputRef = useRef("input");

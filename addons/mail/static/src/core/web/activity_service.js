@@ -119,7 +119,7 @@ export class ActivityService {
                     model: data.payload.model,
                     id: data.payload.id,
                 });
-                this.env.services["mail.thread"].fetchNewMessages(thread);
+                thread.fetchNewMessages();
                 break;
             }
         }

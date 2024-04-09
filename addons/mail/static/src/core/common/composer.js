@@ -97,7 +97,6 @@ export class Composer extends Component {
             { composer: this.props.composer }
         );
         this.messageService = useState(useService("mail.message"));
-        this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
@@ -531,9 +530,7 @@ export class Composer extends Component {
                     this.clear();
                 }
                 this.props.messageToReplyTo?.cancel();
-                if (this.thread) {
-                    this.threadService.fetchNewMessages(this.thread);
-                }
+                this.thread?.fetchNewMessages();
             },
         };
         await this.env.services.action.doAction(action, options);
@@ -619,7 +616,7 @@ export class Composer extends Component {
      */
     async _sendMessage(value, postData) {
         const thread = toRaw(this.props.composer.thread);
-        await this.threadService.post(toRaw(this.thread), value, postData);
+        await toRaw(this.thread).post(value, postData);
         if (thread.model === "mail.box") {
             this.notifySendFromMailbox();
         }
@@ -663,9 +660,7 @@ export class Composer extends Component {
     onFocusin() {
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
-        if (composer.thread) {
-            this.threadService.markAsRead(composer.thread);
-        }
+        composer.thread?.markAsRead();
     }
 
     saveContent() {

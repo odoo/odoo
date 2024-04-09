@@ -53,7 +53,7 @@ export class FollowerSubtypeDialog extends Component {
         const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
         const thread = this.props.follower.thread;
         if (selectedSubtypes.length === 0) {
-            await this.env.services["mail.thread"].removeFollower(this.props.follower);
+            await this.props.follower.remove();
         } else {
             await this.env.services.orm.call(
                 this.props.follower.thread.model,
@@ -65,7 +65,7 @@ export class FollowerSubtypeDialog extends Component {
                 }
             );
             if (!selectedSubtypes.some((subtype) => subtype.id === this.store.mt_comment_id)) {
-                this.env.services["mail.thread"].removeRecipient(this.props.follower);
+                this.props.follower.removeRecipient();
             }
             this.env.services.notification.add(
                 _t("The subscription preferences were successfully applied."),
