@@ -115,7 +115,8 @@ def run_suite(suite):
     threading.current_thread().testing = True
 
     results = OdooTestResult()
-    suite(results)
+    with tools.profiler.Profiler():
+        suite(results)
 
     threading.current_thread().testing = False
     module.current_test = False
