@@ -27,7 +27,7 @@ export class ChannelMember extends Record {
     thread = Record.one("Thread", { inverse: "channelMembers" });
     threadAsSelf = Record.one("Thread", {
         compute() {
-            if (this._store.self?.eq(this.persona)) {
+            if (this.store.self?.eq(this.persona)) {
                 return this.thread;
             }
         },

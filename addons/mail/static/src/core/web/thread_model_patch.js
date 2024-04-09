@@ -17,7 +17,7 @@ patch(Thread.prototype, {
                 return a.date_deadline < b.date_deadline ? -1 : 1;
             },
             onDelete(r) {
-                this._store.env.services["mail.activity"].delete(r);
+                this.store.env.services["mail.activity"].delete(r);
             },
         });
     },

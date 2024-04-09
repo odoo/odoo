@@ -40,7 +40,7 @@ patch(Thread.prototype, {
             const messagesData = await rpc("/discuss/channel/pinned_messages", {
                 channel_id: this.id,
             });
-            this._store.Message.insert(messagesData, { html: true });
+            this.store.Message.insert(messagesData, { html: true });
             this.pinnedMessagesState = "loaded";
         } catch (e) {
             this.pinnedMessagesState = "error";
