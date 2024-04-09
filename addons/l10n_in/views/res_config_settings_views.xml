@@ -27,26 +27,26 @@
                                         class="btn-link"/>
                             </div>
                         </setting>
-                        <setting/>
+                        <setting name="l10n_in_tds_tcs"
+                                 help="Enable this to activate Tax Deduction Source and Tax Collection Source."
+                                 string="TDS and TCS">
+                            <field name="module_l10n_in_withholding"/>
+                        </setting>
                         <setting name="electronic_invoices_in"
                                  help="Connect to NIC (National Informatics Center) to submit invoices on posting."
                                  company_dependent="1"
-                                 invisible="country_code != 'IN'"
                                  documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing">
                             <field name="module_l10n_in_edi"/>
                         </setting>
                         <setting name="electronic_waybill_in"
                                  help="Connect to NIC (National Informatics Center) to submit e-waybill on posting."
                                  company_dependent="1"
-                                 
-                                 invisible="country_code != 'IN'"
                                  documentation="/applications/finance/fiscal_localizations/india.html#indian-e-waybill">
                             <field name="module_l10n_in_edi_ewaybill" class="oe_inline" widget="upgrade_boolean"/>
                         </setting>
                         <setting name="india_gstin_status_api_settings"
                                  string="Check GST Number Status"
-                                 help="Enable this to check the GST Number status"
-                                 invisible="country_code != 'IN'">
+                                 help="Enable this to check the GST Number status">
                             <field name="module_l10n_in_gstin_status" class="oe_inline"/>
                         </setting>
                     </block>

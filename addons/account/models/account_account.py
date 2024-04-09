@@ -44,6 +44,7 @@ class AccountAccount(models.Model):
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
     company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id')
+    company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
@@ -525,6 +526,10 @@ class AccountAccount(models.Model):
     @api.depends_context('company')
     def _compute_company_currency_id(self):
         self.company_currency_id = self.env.company.currency_id
+
+    @api.depends_context('company')
+    def _compute_company_fiscal_country_code(self):
+        self.company_fiscal_country_code = self.env.company.account_fiscal_country_id.code
 
     @api.depends_context('company')
     def _compute_opening_debit_credit(self):

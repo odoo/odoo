@@ -33,6 +33,11 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_in_tcs_tds_warning">
+                    <field name="l10n_in_tcs_tds_warning" readonly="1"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
