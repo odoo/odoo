@@ -19,12 +19,12 @@
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title t-esc="title or 'Odoo'"/>
+        <title t-out="title or 'Odoo'"/>
         <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
         <script id="web.layout.odooscript" type="text/javascript">
             var odoo = {
-                csrf_token: "<t t-nocache="The csrf token must always be up to date." t-esc="request.csrf_token(None)"/>",
-                debug: "<t t-esc="debug"/>",
+                csrf_token: "<t t-nocache="The csrf token must always be up to date." t-out="request.csrf_token(None)"/>",
+                debug: "<t t-out="debug"/>",
             };
         </script>
         <t t-out="head or ''"/>
