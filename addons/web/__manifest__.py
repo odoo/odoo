@@ -135,6 +135,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/polyfills/object.js',
+            'web/static/src/polyfills/array.js',
             'web/static/src/module_loader.js',
             'web/static/src/session.js',
             'web/static/src/core/browser/cookie.js',
