@@ -10,7 +10,6 @@ export class MailCoreWeb {
     constructor(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.threadService = services["mail.thread"];
         this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
@@ -88,7 +87,7 @@ export class MailCoreWeb {
                 inbox.counter_bus_id = notifId;
             }
             if (inbox.counter > inbox.messages.length) {
-                this.threadService.fetchMoreMessages(inbox);
+                inbox.fetchMoreMessages();
             }
         });
         this.busService.start();
@@ -96,7 +95,7 @@ export class MailCoreWeb {
 }
 
 export const mailCoreWeb = {
-    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store", "mail.thread"],
+    dependencies: ["bus_service", "mail.message", "mail.messaging", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

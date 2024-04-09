@@ -11,7 +11,6 @@ export class AutopopupService {
      * @param {{
      * "im_livechat.chatbot": import("@im_livechat/embed/common/chatbot/chatbot_service").ChatBotService,
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
-     * "mail.thread": import("@mail/core/common/thread_service").ThreadService,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * ui: typeof import("@web/core/ui/ui_service").uiService.start,
      * }} services
@@ -21,12 +20,10 @@ export class AutopopupService {
         {
             "im_livechat.chatbot": chatbotService,
             "im_livechat.livechat": livechatService,
-            "mail.thread": threadService,
             "mail.store": storeService,
             ui,
         }
     ) {
-        this.threadService = threadService;
         this.storeService = storeService;
         this.livechatService = livechatService;
         this.chatbotService = chatbotService;
@@ -55,13 +52,7 @@ export class AutopopupService {
 }
 
 export const autoPopupService = {
-    dependencies: [
-        "im_livechat.livechat",
-        "im_livechat.chatbot",
-        "mail.thread",
-        "mail.store",
-        "ui",
-    ],
+    dependencies: ["im_livechat.livechat", "im_livechat.chatbot", "mail.store", "ui"],
 
     start(env, services) {
         return new AutopopupService(env, services);

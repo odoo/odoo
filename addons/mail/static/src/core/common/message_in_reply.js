@@ -11,7 +11,6 @@ export class MessageInReply extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.threadService = useService("mail.thread");
     }
 
     get authorAvatarUrl() {

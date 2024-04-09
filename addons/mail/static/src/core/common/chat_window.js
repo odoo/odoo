@@ -44,7 +44,6 @@ export class ChatWindow extends Component {
         super.setup();
         this.store = useState(useService("mail.store"));
         this.chatWindowService = useState(useService("mail.chat_window"));
-        this.threadService = useState(useService("mail.thread"));
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -146,7 +145,7 @@ export class ChatWindow extends Component {
 
     async renameThread(name) {
         const thread = toRaw(this.thread);
-        await this.threadService.renameThread(thread, name);
+        await thread.rename(name);
         this.state.editingName = false;
     }
 

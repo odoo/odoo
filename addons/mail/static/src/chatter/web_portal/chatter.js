@@ -41,7 +41,6 @@ export class Chatter extends Component {
         super.setup();
         this.action = useService("action");
         this.attachmentBox = useRef("attachment-box");
-        this.threadService = useService("mail.thread");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
         this.messageService = useService("mail.message");
@@ -129,7 +128,7 @@ export class Chatter extends Component {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        this.threadService.fetchData(thread, requestList);
+        thread.fetchData(requestList);
     }
 
     onPostCallback() {

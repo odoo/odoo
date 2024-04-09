@@ -24,4 +24,10 @@ patch(Thread.prototype, {
             this.store.discuss.thread = undefined;
         }
     },
+    setAsDiscussThread() {
+        super.setAsDiscussThread(...arguments);
+        if (!this.displayToSelf && this.model === "discuss.channel") {
+            this.isLocallyPinned = true;
+        }
+    },
 });

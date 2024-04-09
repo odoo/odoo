@@ -20,7 +20,6 @@ export class ChannelSelector extends Component {
         super.setup();
         this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.store = useState(useService("mail.store"));
-        this.threadService = useState(useService("mail.thread"));
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
         this.sequential = useSequential();
@@ -157,10 +156,10 @@ export class ChannelSelector extends Component {
                     ])
                     .then((data) => {
                         const channel = this.discussCoreCommonService.createChannelThread(data);
-                        this.threadService.open(channel);
+                        channel.open();
                     });
             } else {
-                this.threadService.joinChannel(option.channelId, option.label);
+                this.store.joinChannel(option.channelId, option.label);
             }
             this.onValidate();
         }

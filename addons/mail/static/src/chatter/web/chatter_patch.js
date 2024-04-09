@@ -239,7 +239,7 @@ patch(Chatter.prototype, {
 
     async onClickUnfollow() {
         const thread = this.state.thread;
-        await this.threadService.removeFollower(thread.selfFollower);
+        await thread.selfFollower.remove();
         this.onFollowerChanged(thread);
     },
 

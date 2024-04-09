@@ -1,5 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -23,6 +24,14 @@ const StorePatch = {
                 return getSortId(g1) - getSortId(g2);
             },
         });
+    },
+    getNeedactionChannels() {
+        return this.getRecentChannels().filter((channel) => channel.importantCounter > 0);
+    },
+    getRecentChannels() {
+        return Object.values(this.Thread.records)
+            .filter((thread) => thread.model === "discuss.channel")
+            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
     onUpdateActivityGroups() {},
 };
