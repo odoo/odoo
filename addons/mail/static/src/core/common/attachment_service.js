@@ -38,7 +38,6 @@ export class AttachmentService {
      * @param {Attachment} attachment
      */
     async delete(attachment) {
-        this.remove(attachment);
         if (attachment.id > 0) {
             await this.rpc(
                 "/mail/attachment/delete",
@@ -48,6 +47,7 @@ export class AttachmentService {
                 )
             );
         }
+        this.remove(attachment);
     }
 }
 
