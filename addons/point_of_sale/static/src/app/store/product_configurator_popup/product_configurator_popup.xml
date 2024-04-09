@@ -121,13 +121,14 @@
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="props.product.display_name">
-            <div t-foreach="attributes" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
+            <div t-foreach="props.attributeLines" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
+                <t t-set="attribute" t-value="attributeLine.attribute_id"/>
                 <div class="attribute_name mb-2 fw-bolder" t-esc="attribute.name"/>
-                <RadioProductAttribute t-if="attribute.display_type === 'radio'" attribute="attribute"/>
-                <PillsProductAttribute t-elif="attribute.display_type === 'pills'" attribute="attribute"/>
-                <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
-                <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
-                <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attribute="attribute"/>
+                <RadioProductAttribute t-if="attribute.display_type === 'radio'" attributeLine="attributeLine"/>
+                <PillsProductAttribute t-elif="attribute.display_type === 'pills'" attributeLine="attributeLine"/>
+                <SelectProductAttribute t-elif="attribute.display_type === 'select'" attributeLine="attributeLine"/>
+                <ColorProductAttribute t-elif="attribute.display_type === 'color'" attributeLine="attributeLine"/>
+                <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attributeLine="attributeLine"/>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
