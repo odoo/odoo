@@ -524,6 +524,15 @@ class StockPickingType(models.Model):
             }]
             picking_type.kanban_dashboard_graph = json.dumps(graph_data)
 
+    def _get_code_report_name(self):
+        self.ensure_one()
+        code_names = {
+            'outgoing': _('Delivery Note'),
+            'incoming': _('Goods Receipt Note'),
+            'internal': _('Internal Move'),
+        }
+        return code_names.get(self.code)
+
 
 class StockPicking(models.Model):
     _name = 'stock.picking'
