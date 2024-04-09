@@ -6,6 +6,7 @@ import {
 import { patch } from "@web/core/utils/patch";
 import { MockResponse } from "@web/../lib/hoot/mock/network";
 import { loadBundle } from "@web/core/assets";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 /**
  * @template [T={}]
@@ -81,11 +82,14 @@ async function get_session(request) {
     }
     const channelId = DiscussChannel.create(channelVals);
     DiscussChannel._find_or_create_persona_for_channel(channelId, "Visitor");
-    const [guestMemberId] = DiscussChannelMember.search([
-        ["channel_id", "=", channelId],
-        ["guest_id", "!=", false],
-    ]);
-    DiscussChannelMember.write([guestMemberId], { fold_state: "open" });
+    const memberDomain = [["channel_id", "=", channelId]];
+    if (this.env.user && !ResUsers._is_public(this.env.uid)) {
+        memberDomain.push(["partner_id", "=", serverState.partnerId]);
+    } else {
+        memberDomain.push(["guest_id", "!=", false]);
+    }
+    const [memberId] = DiscussChannelMember.search(memberDomain);
+    DiscussChannelMember.write([memberId], { fold_state: "open" });
     const res = ResUsers._init_store_data();
     return Object.assign(res, {
         Thread: {
