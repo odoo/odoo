@@ -100,7 +100,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
     getPivotIdFromPosition(position) {
         const cell = this.getters.getCorrespondingFormulaCell(position);
         if (cell && cell.isFormula) {
-            const pivotFunction = this.getters.getFirstPivotFunction(cell.compiledFormula.tokens);
+            const pivotFunction = this.getters.getFirstPivotFunction(position.sheetId, cell.compiledFormula.tokens);
             if (pivotFunction && pivotFunction.args[0]) {
                 return this.getters.getPivotId(pivotFunction.args[0].toString());
             }
@@ -108,7 +108,11 @@ export class PivotUIPlugin extends OdooUIPlugin {
         return undefined;
     }
 
-    getFirstPivotFunction(tokens) {
+    /**
+     * @param {string} sheetId sheet id on which the formula tokens are
+     * @param {import("@odoo/o-spreadsheet").Token[]} tokens
+     */
+    getFirstPivotFunction(sheetId, tokens) {
         const pivotFunction = getFirstPivotFunction(tokens);
         if (!pivotFunction) {
             return undefined;
@@ -125,7 +129,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
                 return argAst.value;
             }
             const argsString = astToFormula(argAst);
-            return this.getters.evaluateFormula(this.getters.getActiveSheetId(), argsString);
+            return this.getters.evaluateFormula(sheetId, argsString);
         });
         return { functionName, args: evaluatedArgs };
     }
@@ -157,6 +161,7 @@ export class PivotUIPlugin extends OdooUIPlugin {
         }
         const mainPosition = this.getters.getCellPosition(cell.id);
         const { args, functionName } = this.getters.getFirstPivotFunction(
+            position.sheetId,
             cell.compiledFormula.tokens
         );
         if (functionName === "ODOO.PIVOT.TABLE") {
