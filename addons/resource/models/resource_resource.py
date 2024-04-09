@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from pytz import timezone
@@ -96,10 +93,6 @@ class ResourceResource(models.Model):
     def _onchange_user_id(self):
         if self.user_id:
             self.tz = self.user_id.tz
-
-    def _get_work_interval(self, start, end):
-        # Deprecated method. Use `_adjust_to_calendar` instead
-        return self._adjust_to_calendar(start, end)
 
     def _adjust_to_calendar(self, start, end, compute_leaves=True):
         """Adjust the given start and end datetimes to the closest effective hours encoded

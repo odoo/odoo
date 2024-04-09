@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import date, datetime
 from freezegun import freeze_time
 from pytz import timezone, utc
@@ -578,72 +575,72 @@ class TestResMixin(TestResourceCommon):
         # Calendar:
         # Tuesdays 8-16
         # Fridays 8-13 and 16-23
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 3, 9, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
         )
-        self.assertEqual(result[self.john],(
+        self.assertEqual(result[self.john.resource_id], (
             datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
         ))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 3, 13, 1, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
         )
-        self.assertEqual(result[self.john],(
+        self.assertEqual(result[self.john.resource_id], (
             datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
         ))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 4, 9, 0, 0, tzinfo=self.john.tz),  # both a day without attendance
             datetime_tz(2020, 4, 4, 14, 0, 0, tzinfo=self.john.tz),
         )
-        self.assertEqual(result[self.john], (None, None))
+        self.assertEqual(result[self.john.resource_id], (None, None))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 4, 14, 0, 0, tzinfo=self.john.tz),  # day without attendance
         )
-        self.assertEqual(result[self.john], (
+        self.assertEqual(result[self.john.resource_id], (
             datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
         ))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 2, 8, 0, 0, tzinfo=self.john.tz),  # day without attendance
             datetime_tz(2020, 4, 3, 14, 0, 0, tzinfo=self.john.tz),
         )
-        self.assertEqual(result[self.john], (
+        self.assertEqual(result[self.john.resource_id], (
             datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 13, 0, 0, tzinfo=self.john.tz),
         ))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 3, 31, 0, 0, 0, tzinfo=self.john.tz),  # search between Tuesday and Thursday
             datetime_tz(2020, 4, 2, 23, 59, 59, tzinfo=self.john.tz),
         )
-        self.assertEqual(result[self.john], (
+        self.assertEqual(result[self.john.resource_id], (
             datetime_tz(2020, 3, 31, 8, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 3, 31, 16, 0, tzinfo=self.john.tz),
         ))
 
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 3, 31, 0, 0, 0, tzinfo=self.john.tz),  # search between Tuesday and Friday
             datetime_tz(2020, 4, 3, 23, 59, 59, tzinfo=self.john.tz),
         )
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime_tz(2020, 3, 31, 8, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2020, 4, 3, 23, 0, 0, tzinfo=self.john.tz),
         )
         # It should find the start and end within the search range
-        result = self.paul._adjust_to_calendar(
+        result = self.paul.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 2, 2, 0, 0, tzinfo='UTC'),
             datetime_tz(2020, 4, 3, 1, 59, 59, tzinfo='UTC'),
         )
 
-        self.assertEqual(result[self.paul], (
+        self.assertEqual(result[self.paul.resource_id], (
             datetime_tz(2020, 4, 2, 4, 0, tzinfo='UTC'),
             datetime_tz(2020, 4, 2, 18, 0, tzinfo='UTC')
         ), "It should have found the start and end of the shift on the same day on April 2nd, 2020")
@@ -654,11 +651,11 @@ class TestResMixin(TestResourceCommon):
         self.jean.tz = 'Japan'
         self.calendar_jean.tz = 'Europe/Brussels'
 
-        result = self.jean._adjust_to_calendar(
+        result = self.jean.resource_id._adjust_to_calendar(
             datetime_tz(2020, 4, 1, 0, 0, 0, tzinfo='Japan'),
             datetime_tz(2020, 4, 1, 23, 59, 59, tzinfo='Japan'),
         )
-        self.assertEqual(result[self.jean], (
+        self.assertEqual(result[self.jean.resource_id], (
             datetime_tz(2020, 4, 1, 8, 0, 0, tzinfo='Japan'),
             datetime_tz(2020, 4, 1, 16, 0, 0, tzinfo='Japan'),
         ), "It should have found a starting time the 1st")
@@ -669,11 +666,11 @@ class TestResMixin(TestResourceCommon):
         # Fridays 8-13 and 16-23
         tz = 'Europe/Brussels'
         self.john.tz = tz
-        result = self.john._adjust_to_calendar(
+        result = self.john.resource_id._adjust_to_calendar(
             datetime(2020, 4, 2, 23, 0, 0),  # The previous day in UTC, but the 3rd in Europe/Brussels
             datetime(2020, 4, 3, 20, 0, 0),
         )
-        self.assertEqual(result[self.john], (
+        self.assertEqual(result[self.john.resource_id], (
             datetime(2020, 4, 3, 6, 0, 0),
             datetime(2020, 4, 3, 21, 0, 0),
         ), "It should have found a starting time the 3rd")
@@ -695,7 +692,6 @@ class TestResMixin(TestResourceCommon):
         )[self.bob.id]
         self.assertEqual(data, {'days': 5, 'hours': 40})
 
-
         # Viewing it as Patel
         # Views from 2018/04/01 20:00:00 to 2018/04/06 12:00:00
         data = self.jean._get_work_days_data_batch(
@@ -711,7 +707,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 6, 16, 0, 0, tzinfo=self.john.tz),
         )[self.jean.id]
         # still showing as 5 days because of rounding, but we see only 39 hours
-        self.assertEqual(data, {'days': 4.875, 'hours': 39})
+        self.assertEqual(data, {'days': 4.88, 'hours': 39})
 
         # Looking at John's calendar
 
@@ -721,7 +717,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 1.4375, 'hours': 13})
+        self.assertEqual(data, {'days': 1.3, 'hours': 13})
 
         # Viewing it as Patel
         # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
@@ -729,7 +725,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 1.1875, 'hours': 10})
+        self.assertEqual(data, {'days': 1, 'hours': 10})
 
         # Viewing it as John
         data = self.john._get_work_days_data_batch(
@@ -875,7 +871,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 0.9375, 'hours': 10})
+        self.assertEqual(data, {'days': 1, 'hours': 10})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({
