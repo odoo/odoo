@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
-from odoo import Command
+from odoo import Command, modules
 
 DISABLED_MAIL_CONTEXT = {
     'tracking_disable': True,
@@ -445,7 +445,7 @@ class MockSmtplibCase:
 
         with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
-             patch.object(type(IrMailServer), '_is_test_mode', lambda self: False), \
+             patch.object(modules.module, 'current_test', False), \
              patch.object(type(IrMailServer), 'connect', mock_function(connect_origin)) as connect_mocked, \
              patch.object(type(IrMailServer), '_find_mail_server', mock_function(find_mail_server_origin)) as find_mail_server_mocked:
             self.connect_mocked = connect_mocked.mock
@@ -463,7 +463,7 @@ class MockSmtplibCase:
         )
 
     def _send_email(self, msg, smtp_session):
-        with patch.object(threading.current_thread(), 'testing', False):
+        with patch.object(modules.module, 'current_test', False):
             self.env['ir.mail_server'].send_email(msg, smtp_session=smtp_session)
         return smtp_session.messages.pop()
 

@@ -11,6 +11,7 @@ from pathlib import Path
 from unittest.mock import patch
 from socket import getaddrinfo  # keep a reference on the non-patched function
 
+from odoo import modules
 from odoo.exceptions import UserError
 from odoo.tools import file_path, mute_logger
 from .common import TransactionCaseWithUserDemo
@@ -137,9 +138,8 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         # reactivate sending emails during this test suite, make sure
         # NOT TO send emails using another ir.mail_server than the one
         # created in setUp!
-        patcher = patch.object(cls.registry['ir.mail_server'], '_is_test_mode')
-        mock = patcher.start()
-        mock.return_value = False
+        patcher = patch.object(modules.module, 'current_test', False)
+        patcher.start()
         cls.addClassCleanup(patcher.stop)
 
         # fix runbot, docker uses a single ipv4 stack but it gives ::1

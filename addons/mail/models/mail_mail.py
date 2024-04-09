@@ -14,7 +14,7 @@ import pytz
 from collections import defaultdict
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo import _, api, fields, models, modules, registry, SUPERUSER_ID
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
@@ -639,9 +639,10 @@ class MailMail(models.Model):
                     mail_server=mail_server,
                     post_send_callback=post_send_callback,
                 )
-                _logger.info(
-                    'Sent batch %s emails via mail server ID #%s',
-                    len(batch_ids), mail_server_id)
+                if not modules.module.current_test:
+                    _logger.info(
+                        'Sent batch %s emails via mail server ID #%s',
+                        len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
                     smtp_session.quit()
@@ -756,7 +757,8 @@ class MailMail(models.Model):
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
-                    _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
+                    if not modules.module.current_test:
+                        _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
