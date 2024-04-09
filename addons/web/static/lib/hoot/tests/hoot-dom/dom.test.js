@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { getParentFrame } from "../../../hoot-dom/helpers/dom";
-import { click } from "../../../hoot-dom/helpers/events";
+import { describe, expect, getFixture, mountOnFixture, test } from "@odoo/hoot";
 import {
+    click,
     formatXml,
     getActiveElement,
     getFocusableElements,
@@ -21,9 +21,9 @@ import {
     waitFor,
     waitForNone,
     waitUntil,
-} from "../../../hoot-dom/hoot-dom";
-import { describe, expect, getFixture, mountOnFixture, test } from "../../hoot";
-import { tick } from "../../hoot-mock";
+} from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { getParentFrame } from "../../../hoot-dom/helpers/dom";
 import { parseUrl } from "../local_helpers";
 
 /**
@@ -340,7 +340,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
         expect([]).toVerifySteps();
 
-        await tick();
+        await animationFrame();
 
         expect(["title"]).toVerifySteps();
     });
@@ -361,7 +361,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             return el;
         });
 
-        await tick();
+        await animationFrame();
 
         expect([]).toVerifySteps();
 
@@ -376,7 +376,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         waitForNone(".title").then(() => expect.step("none"));
         expect([]).toVerifySteps();
 
-        await tick();
+        await animationFrame();
 
         expect(["none"]).toVerifySteps();
     });
@@ -387,7 +387,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         await expect(waitForNone(".title", { timeout: 1 })).rejects.toThrow();
     });
 
-    test("waitForNone; delete elements", async () => {
+    test("waitForNone: delete elements", async () => {
         await mountOnFixture(FULL_HTML_TEMPLATE);
 
         waitForNone(".title").then(() => expect.step("none"));
@@ -398,7 +398,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
 
             title.remove();
 
-            await tick();
+            await animationFrame();
         }
 
         expect(["none"]).toVerifySteps();
@@ -423,7 +423,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect([]).toVerifySteps();
 
         getFixture().setAttribute("data-value", "test"); // trigger mutation observer
-        await tick();
+        await animationFrame();
 
         expect(["test"]).toVerifySteps();
     });

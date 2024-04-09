@@ -1925,14 +1925,10 @@ export async function waitUntil(predicate, options) {
         return result;
     }
 
-    let disconnect;
     let handle;
     let timeoutId;
     return new Promise((resolve, reject) => {
         const runCheck = () => {
-            if (handle) {
-                cancelAnimationFrame(handle);
-            }
             const result = predicate();
             if (result) {
                 resolve(result);
@@ -1949,19 +1945,10 @@ export async function waitUntil(predicate, options) {
             }
             reject(new HootDomError(message.replace("%timeout%", String(timeout))));
         }, timeout);
-
-        disconnect = observe(getDefaultRoot(), runCheck);
-        runCheck();
+        handle = requestAnimationFrame(runCheck);
     }).finally(() => {
-        if (disconnect) {
-            disconnect();
-        }
-        if (handle) {
-            cancelAnimationFrame(handle);
-        }
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
+        cancelAnimationFrame(handle);
+        clearTimeout(timeoutId);
     });
 }
 
