@@ -348,7 +348,7 @@ class TestChannelInternals(MailCommon):
 
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
-        # do the operation once before the assert to grab the value to expect
+        self.env['bus.bus'].search([]).unlink()
         with self.assertBus(
             [(self.cr.dbname, 'discuss.channel', channel.id)],
             [{
@@ -363,7 +363,6 @@ class TestChannelInternals(MailCommon):
             }]
         ):
             channel.name = "test test"
-            channel.description = "test"
 
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
@@ -378,9 +377,9 @@ class TestChannelInternals(MailCommon):
                 "type": "mail.record/insert",
                 "payload": {
                     'Thread': {
-                        "avatarCacheKey": avatar_cache_key,
                         "id": channel.id,
                         'model': "discuss.channel",
+                        "avatarCacheKey": avatar_cache_key,
                     }
                 },
             }]
