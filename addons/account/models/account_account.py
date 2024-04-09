@@ -7,7 +7,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, Query
 from bisect import bisect_left
 from collections import defaultdict
+import logging
 import re
+
+_logger = logging.getLogger(__name__)
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*))?(.*)')
 ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
@@ -859,13 +862,12 @@ class AccountAccount(models.Model):
 class AccountGroup(models.Model):
     _name = "account.group"
     _description = 'Account Group'
-    _parent_store = True
     _order = 'code_prefix_start'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True, check_company=True)
-    parent_path = fields.Char(index=True)
+    parent_path = fields.Char(index=True)  # unused, can be removed
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
@@ -1033,16 +1035,20 @@ class AccountGroup(models.Model):
                    AND parent.id != child.id
                    AND parent.company_id = child.company_id
                  WHERE child.company_id IN %(company_ids)s
+                   AND child.parent_id IS DISTINCT FROM parent.id -- IMPORTANT avoid to update if nothing changed
               ORDER BY child.id, char_length(parent.code_prefix_start) DESC
             )
             UPDATE account_group child
                SET parent_id = relation.parent_id
               FROM relation
-             WHERE child.id = relation.child_id;
+             WHERE child.id = relation.child_id
+         RETURNING child.id
         """
         self.env.cr.execute(query, {'company_ids': tuple(self.company_id.ids)})
-        self.invalidate_model(['parent_id'])
-        self.search([('company_id', 'in', self.company_id.ids)])._parent_store_update()
+
+        updated_rows = self.env.cr.fetchall()
+        if updated_rows:
+            self.invalidate_model(['parent_id'])
 
 
 class AccountRoot(models.Model):
