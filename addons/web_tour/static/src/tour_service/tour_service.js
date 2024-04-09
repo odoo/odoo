@@ -293,6 +293,24 @@ export const tourService = {
         }
 
         /**
+         * Register shadow roots that must be observed by the tour to
+         * the macro engine.
+         *
+         * @param {Tour} tour
+         */
+        function setupShadowObservers(tour) {
+            const shadowDOMs = tour.steps.reduce((acc, step) => {
+                if (step.shadow_dom) {
+                    acc.add(step.shadow_dom);
+                }
+                return acc;
+            }, new Set());
+            if (shadowDOMs.size > 0) {
+                observeShadows(shadowDOMs);
+            }
+        }
+
+        /**
          * Disable transition before starting an "auto" tour.
          * @param {Macro} macro
          * @param {'auto' | 'manual'} mode
@@ -338,15 +356,7 @@ export const tourService = {
                 }
             });
             if (!willUnload) {
-                const shadow_doms = tour.steps.reduce((acc, step) => {
-                    if (step.shadow_dom) {
-                        acc.add(step.shadow_dom);
-                    }
-                    return acc;
-                }, new Set());
-                if (shadow_doms.size > 0) {
-                    observeShadows(shadow_doms);
-                }
+                setupShadowObservers(tour);
                 pointer.start();
                 activateMacro(macro, options.mode);
             }
@@ -371,6 +381,7 @@ export const tourService = {
                 keepWatchBrowser,
                 showPointerDuration,
             });
+            setupShadowObservers(tour);
             pointer.start();
             activateMacro(macro, mode);
         }
