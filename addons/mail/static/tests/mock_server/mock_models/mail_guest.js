@@ -11,7 +11,13 @@ export class MailGuest extends models.ServerModel {
     _init_messaging() {
         return {
             Store: {
+<<<<<<< HEAD
                 initBusId: this.lastBusNotificationId,
+||||||| parent of 9a5600b4f823 (temp)
+                initBusId: this.lastBusNotificationId, // deprecated, last id should be checked per field
+=======
+                initBusId: this.env["bus.bus"].lastBusNotificationId, // deprecated, last id should be checked per field
+>>>>>>> 9a5600b4f823 (temp)
             },
         };
     }

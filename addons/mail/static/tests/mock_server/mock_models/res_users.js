@@ -114,6 +114,12 @@ export class ResUsers extends webModels.ResUsers {
             ["channel_id", "in", channels.map((channel) => channel.id)],
             ["partner_id", "=", user.partner_id],
         ]);
+<<<<<<< HEAD
+||||||| parent of 9a5600b4f823 (temp)
+        const bus_last_id = this.lastBusNotificationId;
+=======
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
+>>>>>>> 9a5600b4f823 (temp)
         return {
             Store: {
                 discuss: {
@@ -130,7 +136,13 @@ export class ResUsers extends webModels.ResUsers {
                         model: "mail.box",
                     },
                 },
+<<<<<<< HEAD
                 initBusId: this.lastBusNotificationId,
+||||||| parent of 9a5600b4f823 (temp)
+                initBusId: this.lastBusNotificationId, // deprecated, last id should be checked per field
+=======
+                initBusId: bus_last_id, // deprecated, last id should be checked per field
+>>>>>>> 9a5600b4f823 (temp)
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
             },

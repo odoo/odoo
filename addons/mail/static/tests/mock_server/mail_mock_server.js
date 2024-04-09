@@ -812,6 +812,12 @@ async function processRequest(request) {
         });
     }
     if (args.systray_get_activities && this.env.user?.partner_id) {
+<<<<<<< HEAD
+||||||| parent of 9a5600b4f823 (temp)
+        const bus_last_id = this.lastBusNotificationId;
+=======
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
+>>>>>>> 9a5600b4f823 (temp)
         const groups = ResUsers._get_activity_groups();
         addToRes(res, {
             Store: {

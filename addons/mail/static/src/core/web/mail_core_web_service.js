@@ -30,6 +30,7 @@ export class MailCoreWeb {
                 if (message.isNeedaction) {
                     this.store.discuss.inbox.counter--;
                 }
+<<<<<<< HEAD
                 if (message.isStarred) {
                     this.store.discuss.starred.counter--;
                 }
@@ -83,6 +84,28 @@ export class MailCoreWeb {
                 }
             });
             this.busService.start();
+||||||| parent of 9a5600b4f823 (temp)
+                inbox.messages.delete({ id: messageId });
+                const history = this.store.discuss.history;
+                history.messages.add(message);
+            }
+            inbox.counter = needaction_inbox_counter;
+            if (inbox.counter > inbox.messages.length) {
+                this.threadService.fetchMoreMessages(inbox);
+            }
+=======
+                inbox.messages.delete({ id: messageId });
+                const history = this.store.discuss.history;
+                history.messages.add(message);
+            }
+            if (notifId > inbox.counter_bus_id) {
+                inbox.counter = needaction_inbox_counter;
+                inbox.counter_bus_id = notifId;
+            }
+            if (inbox.counter > inbox.messages.length) {
+                this.threadService.fetchMoreMessages(inbox);
+            }
+>>>>>>> 9a5600b4f823 (temp)
         });
     }
 }
