@@ -15,6 +15,8 @@
                 <header>
                     <button name="%(event_barcode_action_main_view)d"
                         type="action"
+                        class="btn btn-primary"
+                        invisible="not seats_taken"
                         context="{'default_event_id': id}">
                         Registration Desk
                     </button>
@@ -38,17 +40,6 @@
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
-
-                        <button name="%(event_barcode_action_main_view)d"
-                            type="action"
-                            class="oe_stat_button"
-                            icon="fa-mobile"
-                            context="{'default_event_id': id}">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">Registration Desk</span>
-                            </div>
-                        </button>
-
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
