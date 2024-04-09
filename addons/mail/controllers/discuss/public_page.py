@@ -84,6 +84,9 @@ class PublicPageController(http.Controller):
         return self._response_discuss_channel_invitation(channel_sudo.sudo(False), is_channel_token_secret=False)
 
     def _response_discuss_channel_invitation(self, channel, is_channel_token_secret=True):
+        # group restriction takes precedence over token
+        if channel.group_public_id and channel.group_public_id not in request.env.user.groups_id:
+            raise request.not_found()
         discuss_public_view_data = {
             "isChannelTokenSecret": is_channel_token_secret,
         }
