@@ -8,8 +8,8 @@ patch(AttachmentUploadService.prototype, {
         return url("/im_livechat/cors/attachment/upload");
     },
 
-    _makeFormData() {
-        const formData = super._makeFormData(...arguments);
+    _buildFormData() {
+        const formData = super._buildFormData(...arguments);
         formData.append("guest_token", this.env.services["im_livechat.livechat"].guestToken);
     },
 });
