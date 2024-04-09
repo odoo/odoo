@@ -1431,7 +1431,7 @@ export class PosStore extends Reactive {
         return this.currency ? this.currency.symbol : "$";
     }
     isOpenOrderShareable() {
-        return this.config.trusted_config_ids.length > 0;
+        return this.config.raw.trusted_config_ids.length > 0;
     }
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
