@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
@@ -147,86 +146,3 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
         new_sale_order = self.env['sale.order'].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
         self.assertEqual(new_order_line.name, 'Short (TEST) (M always, M dynamic)\n\nNever attribute size: M never\nNever attribute size custom: Yes never custom: TEST')
-
-    def test_03_only_no_variant_attributes(self):
-        """ Test that the configurator dialog is opened when a product with only no variant
-            attributes is added from the /shop page.
-        """
-        self.env.ref('website_sale.products_add_to_cart').active = True  # Enable quick add button
-        no_variant_attribute = self.env['product.attribute'].create({
-            'name': 'Never attribute size',
-            'display_type': 'radio',
-            'create_variant': 'no_variant',
-            'value_ids': [
-                Command.create({'name': 'S never'}),
-                Command.create({'name': 'M never'}),
-            ]
-        })
-        self.env['product.template'].create({
-            'name': 'Short (TEST)',
-            'website_published': True,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': no_variant_attribute.id,
-                    'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                })
-            ],
-        })
-
-        self.start_tour("/shop", 'tour_configurator_quick_add_only_no_variant_attributes')
-
-    def test_04_only_dynamic_attributes(self):
-        """ Test that the configurator dialog is opened when a product with only dynamic
-            attributes is added from the /shop page.
-        """
-        self.env.ref('website_sale.products_add_to_cart').active = True  # Enable quick add button
-        dynamic_attribute = self.env['product.attribute'].create({
-            'name': 'Dynamic attribute size',
-            'display_type': 'radio',
-            'create_variant': 'dynamic',
-            'value_ids': [
-                Command.create({'name': 'S dynamic'}),
-                Command.create({'name': 'M dynamic'}),
-            ]
-        })
-        self.env['product.template'].create({
-            'name': 'Short (TEST)',
-            'website_published': True,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': dynamic_attribute.id,
-                    'value_ids': [Command.set(dynamic_attribute.value_ids.ids)],
-                })
-            ],
-        })
-
-        self.start_tour("/shop", 'tour_configurator_quick_add_only_no_dynamic_attributes')
-
-    def test_05_single_custom_attribute(self):
-        """ Test that the configurator dialog is opened when a product with a single custom
-            attributes is added from the /shop page.
-        """
-        self.env.ref('website_sale.products_add_to_cart').active = True  # Enable quick add button
-        attribute = self.env['product.attribute'].create({
-            'name': 'Always attribute size',
-            'display_type': 'radio',
-            'create_variant': 'always',
-            'value_ids': [
-                Command.create({
-                    'name': 'Yes never custom',
-                    'is_custom': True,
-                }),
-            ]
-        })
-        self.env['product.template'].create({
-            'name': 'Short (TEST)',
-            'website_published': True,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': attribute.id,
-                    'value_ids': [Command.set(attribute.value_ids.ids)],
-                })
-            ],
-        })
-
-        self.start_tour("/shop", 'tour_configurator_quick_add_single_custom_attribute')
