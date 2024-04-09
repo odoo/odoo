@@ -846,6 +846,8 @@ class Channel(models.Model):
         """
         if not self:
             return []
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
@@ -887,11 +889,13 @@ class Channel(models.Model):
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
+                info["message_needaction_counter_bus_id"] = bus_last_id
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format(extra_fields={"last_interest_dt": True}).values()))]
                     info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
+                    info["message_unread_counter_bus_id"] = bus_last_id
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = fields.Datetime.to_string(member.mute_until_dt)
                     info['custom_channel_name'] = member.custom_channel_name

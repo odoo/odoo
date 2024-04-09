@@ -583,6 +583,7 @@ patch(MockServer.prototype, {
      * @returns {Object[]}
      */
     _mockDiscussChannelChannelInfo(ids) {
+        const bus_last_id = this.lastBusNotificationId;
         const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         return channels.map((channel) => {
             const members = this.getRecords("discuss.channel.member", [
@@ -601,6 +602,7 @@ patch(MockServer.prototype, {
             Object.assign(res, {
                 fetchChannelInfoState: "fetched",
                 message_needaction_counter: messageNeedactionCounter,
+                message_needaction_counter_bus_id: bus_last_id,
             });
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
@@ -618,6 +620,7 @@ patch(MockServer.prototype, {
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
+                    message_unread_counter_bus_id: bus_last_id,
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res["rtcInvitingSession"] = {

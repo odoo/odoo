@@ -383,6 +383,7 @@ export class DiscussChannel extends models.ServerModel {
         ids = kwargs.ids;
         delete kwargs.ids;
 
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").DiscussChannelRtcSession} */
@@ -411,18 +412,17 @@ export class DiscussChannel extends models.ServerModel {
                 Object.assign(res, {
                     fetchChannelInfoState: "fetched",
                     message_needaction_counter,
+                    message_needaction_counter_bus_id: bus_last_id,
                 });
             }
             const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
+                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_pinned: memberOfCurrentUser.is_pinned,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
+                    message_unread_counter_bus_id: bus_last_id,
                     state: memberOfCurrentUser.fold_state || "closed",
-                });
-                Object.assign(res, {
-                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
-                    message_unread_counter: memberOfCurrentUser.message_unread_counter,
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res.rtcInvitingSession = {

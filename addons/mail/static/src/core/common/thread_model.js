@@ -140,6 +140,7 @@ export class Thread extends Record {
         },
     });
     counter = 0;
+    counter_bus_id = 0;
     /** @type {string} */
     custom_channel_name;
     /** @type {string} */
@@ -211,7 +212,9 @@ export class Thread extends Record {
     mainAttachment = Record.one("Attachment");
     memberCount = 0;
     message_needaction_counter = 0;
+    message_needaction_counter_bus_id = 0;
     message_unread_counter = 0;
+    message_unread_counter_bus_id = 0;
     /**
      * Contains continuous sequence of messages to show in message list.
      * Messages are ordered from older to most recent.
