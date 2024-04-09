@@ -49,6 +49,7 @@ import {
     fillEmpty,
     isEmptyBlock,
     getCursorDirection,
+    leftPos,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/;
@@ -197,6 +198,10 @@ export const editorCommands = {
             }
             // Grab the content of the last child block and isolate it.
             if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                // Empty block must contain a br element.
+                if (!container.lastElementChild.hasChildNodes()) {
+                    container.lastElementChild.appendChild(document.createElement('br'));
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -220,6 +225,8 @@ export const editorCommands = {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
+        let cursorPosition = true;
+
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of (insertBefore ? nodes.reverse() : nodes)) {
                 reference[insertBefore ? 'before' : 'after'](child);
@@ -228,9 +235,16 @@ export const editorCommands = {
         }
         if (containerLastChild.hasChildNodes()) {
             const toInsert = [...containerLastChild.childNodes]; // Prevent mutation
-            _insertAt(currentNode, [...toInsert], insertBefore);
-            currentNode = insertBefore ? toInsert[0] : currentNode;
-            lastChildNode = toInsert[toInsert.length - 1];
+            const isEmptyLine = toInsert.length === 1 && toInsert[0].nodeName === 'BR';
+            if (isEmptyLine && (startNode.nextSibling || insertBefore)) {
+                currentNode = lastChildNode = currentNode.nextSibling || currentNode;
+                insertBefore = true;
+            } else {
+                _insertAt(currentNode, [...toInsert], insertBefore);
+                currentNode = insertBefore ? toInsert[0] : currentNode;
+                lastChildNode = toInsert[toInsert.length - 1];
+            }
+            isEmptyLine && (cursorPosition = false);
         }
         if (containerFirstChild.hasChildNodes()) {
             const toInsert = [...containerFirstChild.childNodes]; // Prevent mutation
@@ -295,7 +309,7 @@ export const editorCommands = {
         currentNode = lastChildNode || currentNode;
         selection.removeAllRanges();
         const newRange = new Range();
-        let lastPosition = rightPos(currentNode);
+        let lastPosition = cursorPosition ? rightPos(currentNode) : leftPos(currentNode);
         if (lastPosition[0] === editor.editable) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
