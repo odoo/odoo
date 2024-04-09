@@ -5,9 +5,9 @@ import {
     getActiveElement,
     getDocument,
     getNextFocusableElement,
+    getNodeRect,
     getNodeValue,
     getPreviousFocusableElement,
-    getNodeRect,
     getWindow,
     isCheckable,
     isEditable,
@@ -89,6 +89,14 @@ const $hasFocus = document.hasFocus.bind(document);
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {EventTarget} target
+ * @param {EventType} type
+ */
+const catchNextEvent = (target, type) => {
+    target.addEventListener(type, (event) => currentEvents.push(event), { once: true });
+};
 
 /**
  * @param {EventTarget} target
@@ -674,6 +682,9 @@ const triggerFocus = (target) => {
         return;
     }
     if (previous !== target.ownerDocument.body) {
+        if ($hasFocus()) {
+            catchNextEvent(previous, "blur");
+        }
         // If document is focused, this will trigger a trusted "blur" event
         previous.blur();
         if (!$hasFocus()) {
@@ -685,6 +696,9 @@ const triggerFocus = (target) => {
         const previousSelection = getStringSelection(target);
 
         // If document is focused, this will trigger a trusted "focus" event
+        if ($hasFocus()) {
+            catchNextEvent(target, "focus");
+        }
         target.focus();
         if (!$hasFocus()) {
             // When document is not focused: manually trigger a "focus" event
@@ -2061,6 +2075,7 @@ export function scroll(target, position, options) {
         dispatch(element, "wheel");
     }
     // This will trigger a trusted "scroll" event
+    catchNextEvent(element, "scroll");
     element.scrollTo(scrollOptions);
 
     return logEvents("scroll");
