@@ -10,8 +10,7 @@
                     <div name="div_outgoing_address">
                         <div name="outgoing_delivery_address"
                             t-if="o.should_print_delivery_address()">
-                            <strong>Delivery Address:</strong>
-                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
+                            <div t-field="o.move_ids[0].partner_id or o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                         <div name="outgoing_warehouse_address"
@@ -42,9 +41,10 @@
                     </div>
                 </t>
                 <div class="page">
-                    <h2>
+                    <h2 t-out="o.picking_type_id._get_code_report_name()" style="margin-top: 15px;"/>
+                    <h3>
                         <span t-field="o.name">WH/OUT/0001</span>
-                    </h2>
+                    </h3>
                     <div class="oe_structure"></div>
                     <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
                         <div t-if="o.origin" class="col col-3 mw-100 mb-2" name="div_origin">
@@ -56,14 +56,19 @@
                             <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
                             <div t-else="" t-field="o.scheduled_date" class="m-0"/>
                         </div>
+                        <div t-if="o.user_id" class="col-auto" name="div_operator">
+                            <strong>Operator:</strong>
+                                <p t-field="o.user_id">Mitchel Admin</p>
+                        </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <table class="table table-borderless" t-if="o.state!='done'" name="stock_move_table">
+                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else '{:.2f}'.format(x)"/>
+                    <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table" style="table-layout: fixed; width: 100%">
                         <thead>
                             <tr>
-                                <th name="th_sm_product">Product</th>
-                                <th name="th_sm_ordered" class="text-end">Ordered</th>
-                                <th name="th_sm_quantity" class="text-end">Delivered</th>
+                                <th name="th_sm_product" class="text-center"><strong>Product</strong></th>
+                                <th name="th_sm_ordered" class="text-center"><strong>Ordered</strong></th>
+                                <th name="th_sm_quantity" class="text-center"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,14 +81,14 @@
                                     </p>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="move.product_uom_qty">3.00</span>
+                                    <span t-out="format_number(move.product_uom_qty)">3.00</span>
                                     <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
                                         (<span t-field="move.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
                                     </span>
                                 </td>
                                 <td class="text-end">
-                                    <span t-field="move.quantity">3.00</span>
+                                    <span t-out="format_number(move.quantity)">3.00</span>
                                     <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                     <span t-if="move.product_packaging_id">
                                         (<span t-field="move.product_packaging_quantity" t-options='{"widget": "integer"}'/> <span t-field="move.product_packaging_id"/>)
@@ -92,15 +97,19 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-borderless mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                    <table class="table table-sm mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table" style="table-layout: fixed; width: 100%">
                         <t t-set="has_serial_number" t-value="False"/>
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
                             <tr>
-                                <th name="th_sml_product">Product</th>
-                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">Ordered</th>
-                                <th name="lot_serial" t-else="">Lot/Serial Number</th>
-                                <th name="th_sml_quantity" class="text-center">Delivered</th>
+                                <th name="th_sml_product" class="text-center"><strong>Product</strong></th>
+                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">
+                                    <strong>Ordered</strong>
+                                </th>
+                                <th name="lot_serial" class="text-center" t-else="">
+                                    Lot/Serial Number
+                                </th>
+                                <th name="th_sml_quantity" class="text-center"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -164,10 +173,10 @@
                         <p class="mt-5">
                             <span>Remaining quantities not yet delivered:</span>
                         </p>
-                        <table class="table table-borderless" name="stock_backorder_table">
+                        <table class="table table-sm" name="stock_backorder_table" style="table-layout: fixed; width: 100%">
                             <thead>
                                 <tr>
-                                    <th name="th_sb_product"><strong>Product</strong></th>
+                                    <th name="th_sb_product" class="text-center"><strong>Product</strong></th>
                                     <th/>
                                     <th name="th_sb_quantity" class="text-center"><strong>Quantity</strong></th>
                                 </tr>
@@ -181,8 +190,8 @@
                                         </p>
                                     </td>
                                     <td/>
-                                    <td class="text-center w-auto">
-                                        <span t-field="bo_line.product_uom_qty">3.00</span>
+                                    <td class="text-end w-auto">
+                                        <span t-out="format_number(bo_line.product_uom_qty)">3.00</span>
                                         <span t-field="bo_line.product_uom" groups="uom.group_uom">units</span>
                                     </td>
                                 </tr>
@@ -222,14 +231,14 @@
                      description != move_line.product_id.display_name and
                      description != move_line.product_id.name"
             >
-                <span t-esc="description"/>
+                <span t-out="description"/>
             </p>
         </td>
         <t t-if="has_serial_number" name="move_line_lot">
-            <td><span t-field="move_line.lot_id.name"/></td>
+            <td class="text-center"><span t-field="move_line.lot_id.name"/></td>
         </t>
-        <td class="text-center" name="move_line_lot_quantity">
-            <span t-field="move_line.quantity"/>
+        <td class="text-end" name="move_line_lot_quantity">
+            <span t-out="format_number(move_line.quantity)"/>
             <span t-field="move_line.product_uom_id"/>
             <span t-if="move_line.move_id.product_packaging_id" groups="product.group_stock_packaging">
                 (<span t-field="move_line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="move_line.move_id.product_packaging_id.display_name"/>)
@@ -239,24 +248,22 @@
     <template id="stock_report_delivery_aggregated_move_lines">
         <tr t-foreach="aggregated_lines" t-as="line">
             <td>
-                <span t-esc="aggregated_lines[line]['name']"/>
+                <span t-out="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
                     <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
-            <td class="text-center" name="move_line_aggregated_qty_ordered">
-                <span t-esc="aggregated_lines[line]['qty_ordered']"
-                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+            <td class="text-end" name="move_line_aggregated_qty_ordered">
+                <span t-out="format_number(aggregated_lines[line]['qty_ordered'])"/>
+                <span t-out="aggregated_lines[line]['product_uom'].name"/>
                 <span t-if="aggregated_lines[line]['packaging'].name">
                     (<span t-out="aggregated_lines[line]['packaging_qty']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
                 </span>
             </td>
-            <td class="text-center" name="move_line_aggregated_quantity">
+            <td class="text-end" name="move_line_aggregated_quantity">
                 <t t-if="aggregated_lines[line]['quantity']">
-                    <span t-esc="aggregated_lines[line]['quantity']"
-                        t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
-                    <span t-esc="aggregated_lines[line]['product_uom'].name"/>
+                    <span t-out="format_number(aggregated_lines[line]['quantity'])"/>
+                    <span t-out="aggregated_lines[line]['product_uom'].name"/>
                     <span t-if="aggregated_lines[line]['packaging'].name">
                         (<span t-out="aggregated_lines[line]['packaging_quantity']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
                     </span>
