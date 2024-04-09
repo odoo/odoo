@@ -8,3 +8,4 @@ class AccountTax(models.Model):
         ('sale', 'Sale'),
         ('purchase', 'Purchase')
     ], string="TDS Tax Type")
+    l10n_in_section_id = fields.Many2one('l10n_in.section.alert', string="Section")
