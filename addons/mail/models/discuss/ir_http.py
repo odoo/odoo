@@ -27,3 +27,15 @@ class IrHttp(models.AbstractModel):
         if guest:
             request.update_context(guest=guest)
         return guest
+
+    # @classmethod
+    # def _set_guest_and_cookie(cls, guest):
+    #     request = http_request or websocket_request
+    #     expiration_date = cls.env.cr.now() + timedelta(days=365)
+    #     request.future_response.set_cookie(
+    #         guest._cookie_name,
+    #         guest._format_auth_cookie(),
+    #         httponly=True,
+    #         expires=expiration_date,
+    #     )
+    #     request.update_context(guest=guest.sudo(False))
