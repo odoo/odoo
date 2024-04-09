@@ -114,7 +114,7 @@ const mockEventListeners = (target) => {
     /** @type {addEventListener} */
     const mockedAddEventListener = (type, callback, options) => {
         const listeners = listenerMap.get(target);
-        if (listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
+        if (callback && listeners && !R_OWL_SYNTHETIC_LISTENER.test(String(callback))) {
             if (options?.once) {
                 const originalCallback = callback;
                 callback = (...args) => {
@@ -130,7 +130,7 @@ const mockEventListeners = (target) => {
     /** @type {removeEventListener} */
     const mockedRemoveEventListener = (type, callback, options) => {
         const listeners = listenerMap.get(target);
-        if (listeners) {
+        if (callback && listeners) {
             unregisterListener(listeners, type, callback);
         }
         return removeEventListener.call(target, type, callback, options);
