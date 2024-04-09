@@ -10,7 +10,7 @@
                     <div name="div_outgoing_address">
                         <div name="outgoing_delivery_address"
                             t-if="o.should_print_delivery_address()">
-                            <div t-field="o.move_ids[0].partner_id or o.partner_id"
+                            <div t-out="o.move_ids[0].partner_id or o.partner_id"
                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                         <div name="outgoing_warehouse_address"
@@ -62,13 +62,13 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else '{:.2f}'.format(x)"/>
+                    <t t-set="format_number" t-value="lambda x: int(x) if x.is_integer() else x"/>
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table" style="table-layout: fixed; width: 100%">
                         <thead>
                             <tr>
                                 <th name="th_sm_product" class="text-center"><strong>Product</strong></th>
-                                <th name="th_sm_ordered" class="text-center"><strong>Ordered</strong></th>
-                                <th name="th_sm_quantity" class="text-center"><strong>Delivered</strong></th>
+                                <th name="th_sm_ordered" class="text-end"><strong>Ordered</strong></th>
+                                <th name="th_sm_quantity" class="text-end"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,13 +103,13 @@
                         <thead>
                             <tr>
                                 <th name="th_sml_product" class="text-center"><strong>Product</strong></th>
-                                <th name="th_sml_qty_ordered" class="text-center" t-if="not has_serial_number">
+                                <th name="th_sml_qty_ordered" class="text-end" t-if="not has_serial_number">
                                     <strong>Ordered</strong>
                                 </th>
-                                <th name="lot_serial" class="text-center" t-else="">
+                                <th name="lot_serial" class="text-end" t-else="">
                                     Lot/Serial Number
                                 </th>
-                                <th name="th_sml_quantity" class="text-center"><strong>Delivered</strong></th>
+                                <th name="th_sml_quantity" class="text-end"><strong>Delivered</strong></th>
                             </tr>
                         </thead>
                         <tbody>
