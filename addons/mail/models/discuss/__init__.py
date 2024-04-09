@@ -2,6 +2,7 @@
 
 # mail
 from . import mail_message
+from . import mail_thread
 
 # discuss
 from . import discuss_channel_member
