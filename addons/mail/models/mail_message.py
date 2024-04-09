@@ -848,12 +848,12 @@ class Message(models.Model):
 
     def _message_reaction(self, content, action):
         self.ensure_one()
-        partner, guest = self.env["res.partner"]._get_current_persona()
+        persona = self.env["discuss.persona"]._get_current_persona()
         # search for existing reaction
         domain = [
             ("message_id", "=", self.id),
-            ("partner_id", "=", partner.id),
-            ("guest_id", "=", guest.id),
+            ("partner_id", "=", persona.partner_id.id),
+            ("guest_id", "=", persona.guest_id.id),
             ("content", "=", content),
         ]
         reaction = self.env["mail.message.reaction"].search(domain)
@@ -862,8 +862,8 @@ class Message(models.Model):
             create_values = {
                 "message_id": self.id,
                 "content": content,
-                "partner_id": partner.id,
-                "guest_id": guest.id,
+                "partner_id": persona.partner_id.id,
+                "guest_id": persona.guest_id.id,
             }
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
@@ -872,7 +872,7 @@ class Message(models.Model):
         group_domain = [("message_id", "=", self.id), ("content", "=", content)]
         count = self.env["mail.message.reaction"].search_count(group_domain)
         group_command = "ADD" if count > 0 else "DELETE"
-        personas = [("ADD" if action == "add" else "DELETE", {"id": guest.id if guest else partner.id, "type": "guest" if guest else "partner"})] if guest or partner else []
+        personas = [("ADD" if action == "add" else "DELETE", {"id": persona.id, "type": persona.type})] if persona else []
         group_values = {
             "content": content,
             "count": count,

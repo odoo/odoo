@@ -55,27 +55,28 @@ class ChannelMember(models.Model):
     def _compute_is_self(self):
         if not self:
             return
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        persona = self.env["discuss.persona"]._get_current_persona()
         self.is_self = False
         for member in self:
-            if current_partner and member.partner_id == current_partner:
+            if member.partner_id == persona.partner_id:
                 member.is_self = True
-            if current_guest and member.guest_id == current_guest:
+            if member.guest_id == persona.guest_id:
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):
         is_in = (operator == "=" and operand) or (operator == "!=" and not operand)
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        persona = self.env["discuss.persona"]._get_current_persona()
+        print(persona.partner_id)
         if is_in:
             return [
                 '|',
-                ("partner_id", "=", current_partner.id) if current_partner else expression.FALSE_LEAF,
-                ("guest_id", "=", current_guest.id) if current_guest else expression.FALSE_LEAF,
+                ("partner_id", "=", persona.partner_id.id) if persona.partner_id else expression.FALSE_LEAF,
+                ("guest_id", "=", persona.guest_id.id) if persona.guest_id.id else expression.FALSE_LEAF,
             ]
         else:
             return [
-                ("partner_id", "!=", current_partner.id) if current_partner else expression.TRUE_LEAF,
-                ("guest_id", "!=", current_guest.id) if current_guest else expression.TRUE_LEAF,
+                ("partner_id", "!=", persona.partner_id.id) if persona.partner_id else expression.TRUE_LEAF,
+                ("guest_id", "!=", persona.guest_id.id) if persona.guest_id else expression.TRUE_LEAF,
             ]
 
     def _search_is_pinned(self, operator, operand):

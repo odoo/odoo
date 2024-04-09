@@ -303,9 +303,3 @@ class Partner(models.Model):
             ('partner_id', 'not in', excluded_ids)
         ], order='name, id', limit=limit)
         return list(users.partner_id.mail_partner_format().values())
-
-    @api.model
-    def _get_current_persona(self):
-        if not self.env.user or self.env.user._is_public():
-            return (self.env["res.partner"], self.env["mail.guest"]._get_guest_from_context())
-        return (self.env.user.partner_id, self.env["mail.guest"])

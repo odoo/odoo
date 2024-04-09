@@ -185,13 +185,10 @@ class Channel(models.Model):
         # given it doesn't need to make (incorrect) guess, at the cost of one extra but fast query.
         # It is expected to return hundreds of channels, a thousand at most, which is acceptable.
         # A "join" would be ideal, but the ORM is currently not able to generate it from the domain.
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if current_guest:
+        persona = self.env["discuss.persona"]._get_current_persona()
+        if persona:
             # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_guest.sudo().channel_ids
-        elif current_partner:
-            # sudo: discuss.channel - sudo for performance, just checking existence
-            channels = current_partner.sudo().channel_ids
+            channels = persona.sudo().channel_ids
         else:
             channels = self.env["discuss.channel"]
         return [('id', "in" if is_in else "not in", channels.ids)]
@@ -375,7 +372,7 @@ class Channel(models.Model):
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        persona = self.env["discuss.persona"]._get_current_persona()
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
         notifications = []
@@ -435,11 +432,11 @@ class Channel(models.Model):
                     'model': "discuss.channel",
                 }
             }))
-            if existing_members and (current_partner or current_guest):
+            if existing_members and persona:
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                notifications.append((current_partner or current_guest, 'mail.record/insert', {
+                notifications.append((persona.partner_id or persona.guest_id, 'mail.record/insert', {
                     'Thread': {
                         'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
                         'id': channel.id,
@@ -849,7 +846,7 @@ class Channel(models.Model):
         channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        persona = self.env["discuss.persona"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()
         # Query instead of ORM for performance reasons: "LEFT JOIN" is more
@@ -869,7 +866,7 @@ class Channel(models.Model):
                      OR discuss_channel_member.guest_id = %(current_guest_id)s
                     )
                ORDER BY discuss_channel_member.id ASC
-        """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
+        """, {'channel_ids': tuple(self.ids), 'current_partner_id': persona.partner_id.id or None, 'current_guest_id': persona.guest_id.id or None})
         all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
         all_needed_members._discuss_channel_member_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
@@ -879,13 +876,13 @@ class Channel(models.Model):
             members_by_channel[member.channel_id] += member
             if member.rtc_inviting_session_id:
                 invited_members_by_channel[member.channel_id] += member
-            if (current_partner and member.partner_id == current_partner) or (current_guest and member.guest_id == current_guest):
+            if persona and (member.partner_id == persona.partner_id or member.guest_id == persona.guest_id):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
             info = channel._channel_basic_info()
             info["fetchChannelInfoState"] = "fetched"
             # find the channel member state
-            if current_partner or current_guest:
+            if persona:
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['discuss.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
@@ -1048,12 +1045,12 @@ class Channel(models.Model):
         :param notify: whether to send a `discuss.channel.member/seen`
         notification.
         """
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if not current_partner and not current_guest:
+        persona = self.env["discuss.persona"]._get_current_persona()
+        if not persona:
             return
         channel_member_domain = expression.AND([
             [('channel_id', 'in', self.ids)],
-            [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
+            [('partner_id', '=', persona.partner_id.id) if persona.partner_id else ('guest_id', '=', persona.guest_id.id)],
             [] if allow_older else expression.OR([
                 [('seen_message_id', '=', False)],
                 [('seen_message_id', '<', last_message.id)]
@@ -1073,8 +1070,8 @@ class Channel(models.Model):
                 'id': member.id,
                 'last_message_id': last_message.id,
             }
-            data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
-            target = current_partner or current_guest
+            data['partner_id' if persona.partner_id else 'guest_id'] = persona.id
+            target = persona.partner_id or persona.guest_id
             if self.channel_type in self._types_allowing_seen_infos():
                 target = self
             self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
