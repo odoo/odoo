@@ -350,6 +350,8 @@ class AccountChartTemplate(models.AbstractModel):
                             }])
                             account = existing_account
 
+                    # Prevents overriding user setting & raising a partial reconcile error.
+                    values.pop('reconcile', None)
                     # on existing accounts, only tag_ids are to be updated using default data
                     if account and 'tag_ids' in data[model_name][xmlid]:
                         data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
