@@ -105,7 +105,7 @@ class PricelistItem(models.Model):
             ('formula', "Formula"),
             ('fixed', "Fixed Price"),
         ],
-        index=True, default='percentage', required=True)
+        index=True, default='fixed', required=True)
 
     fixed_price = fields.Float(string="Fixed Price", digits='Product Price')
     percent_price = fields.Float(
@@ -249,7 +249,6 @@ class PricelistItem(models.Model):
                 'price_discount': 0.0,
                 'price_discount_surcharge': 0.0,
             })
-            
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
@@ -319,7 +318,8 @@ class PricelistItem(models.Model):
             variants_rules.update({'applied_on': '0_product_variant'})
             template_rules.update({'applied_on': '1_product'})
             category_rules.update({'applied_on': '2_product_category'})
-            (self-variants_rules-template_rules-category_rules).update({'applied_on': '3_global'})
+            global_rules = self - variants_rules - template_rules - category_rules
+            global_rules.update({'applied_on': '3_global'})
 
     @api.onchange('price_round')
     def _onchange_price_round(self):
