@@ -1,1 +1,1 @@
-python odoo-bin -r odoo -w odoo --addons-path=addons -d rd-demo
+python odoo-bin -r odoo -w odoo --addons-path=addons,talent360 -d rd-demo -u evaluaciones
