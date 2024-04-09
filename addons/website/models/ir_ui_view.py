@@ -20,7 +20,7 @@ class View(models.Model):
     _name = "ir.ui.view"
     _inherit = ["ir.ui.view", "website.seo.metadata"]
 
-    website_id = fields.Many2one('website', ondelete='cascade', string="Website")
+    website_id = fields.Many2one('website', ondelete='cascade', string="Website", copy=False)
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
     track = fields.Boolean(string='Track', default=False, help="Allow to specify for one page of the website to be trackable or not")
