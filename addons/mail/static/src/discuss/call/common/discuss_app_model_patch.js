@@ -10,11 +10,11 @@ patch(DiscussApp.prototype, {
             /** @this {import("models").DiscussApp} */
             onUpdate() {
                 if (this.ringingThreads.length > 0) {
-                    this._store.env.services["mail.sound_effects"].play("incoming-call", {
+                    this.store.env.services["mail.sound_effects"].play("incoming-call", {
                         loop: true,
                     });
                 } else {
-                    this._store.env.services["mail.sound_effects"].stop("incoming-call");
+                    this.store.env.services["mail.sound_effects"].stop("incoming-call");
                 }
             },
         });

@@ -91,7 +91,7 @@ export class Thread extends Record {
     otherTypingMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */
         compute() {
-            return this.typingMembers.filter((member) => !member.persona?.eq(this._store.self));
+            return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
         },
     });
     hasOtherMembersTyping = Record.attr(false, {
@@ -103,29 +103,29 @@ export class Thread extends Record {
     rtcSessions = Record.many("RtcSession", {
         /** @this {import("models").Thread} */
         onDelete(r) {
-            this._store.env.services["discuss.rtc"].deleteSession(r.id);
+            this.store.env.services["discuss.rtc"].deleteSession(r.id);
         },
     });
     rtcInvitingSession = Record.one("RtcSession", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             this.rtcSessions.add(r);
-            this._store.discuss.ringingThreads.add(this);
+            this.store.discuss.ringingThreads.add(this);
         },
         /** @this {import("models").Thread} */
         onDelete(r) {
-            this._store.discuss.ringingThreads.delete(this);
+            this.store.discuss.ringingThreads.delete(this);
         },
     });
     toggleBusSubscription = Record.attr(false, {
         compute() {
             return (
                 this.model === "discuss.channel" &&
-                this.selfMember?.memberSince >= this._store.env.services.bus_service.startedAt
+                this.selfMember?.memberSince >= this.store.env.services.bus_service.startedAt
             );
         },
         onUpdate() {
-            this._store.updateBusSubscription();
+            this.store.updateBusSubscription();
         },
     });
     invitedMembers = Record.many("ChannelMember");
@@ -185,7 +185,7 @@ export class Thread extends Record {
     }
     isCorrespondentOdooBot = Record.attr(undefined, {
         compute() {
-            return this.correspondent?.eq(this._store.odoobot);
+            return this.correspondent?.eq(this.store.odoobot);
         },
     });
     isLoadingAttachments = false;
@@ -309,10 +309,10 @@ export class Thread extends Record {
 
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel_type)) {
-            return this._store.discuss.chats;
+            return this.store.discuss.chats;
         }
         if (this.channel_type === "channel") {
-            return this._store.discuss.channels;
+            return this.store.discuss.channels;
         }
     }
 
@@ -361,7 +361,7 @@ export class Thread extends Record {
     get allowCalls() {
         return (
             this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.eq(this._store.odoobot)
+            !this.correspondent?.eq(this.store.odoobot)
         );
     }
 
@@ -397,7 +397,7 @@ export class Thread extends Record {
     get correspondents() {
         const members = [];
         for (const channelMember of this.channelMembers) {
-            if (channelMember.persona.notEq(this._store.self)) {
+            if (channelMember.persona.notEq(this.store.self)) {
                 members.push(channelMember.persona);
             }
         }
@@ -415,7 +415,7 @@ export class Thread extends Record {
         }
         if (correspondents.length === 0 && this.channelMembers.length === 1) {
             // Self-chat.
-            return this._store.self;
+            return this.store.self;
         }
         return undefined;
     }
@@ -522,7 +522,7 @@ export class Thread extends Record {
 
     get lastSelfMessageSeenByEveryone() {
         const otherMembers = this.channelMembers.filter((member) =>
-            member.persona.notEq(this._store.self)
+            member.persona.notEq(this.store.self)
         );
         if (otherMembers.length === 0) {
             return false;
@@ -535,7 +535,7 @@ export class Thread extends Record {
         }
         const lastMessageSeenByAllId = Math.min(...otherLastSeenMessageIds);
         const orderedSelfSeenMessages = this.persistentMessages.filter((message) => {
-            return message.author?.eq(this._store.self) && message.id <= lastMessageSeenByAllId;
+            return message.author?.eq(this.store.self) && message.id <= lastMessageSeenByAllId;
         });
         if (!orderedSelfSeenMessages || orderedSelfSeenMessages.length === 0) {
             return false;
@@ -574,7 +574,7 @@ export class Thread extends Record {
     }
 
     get videoCount() {
-        return Object.values(this._store.RtcSession.records).filter((session) => session.hasVideo)
+        return Object.values(this.store.RtcSession.records).filter((session) => session.hasVideo)
             .length;
     }
 
@@ -588,7 +588,7 @@ export class Thread extends Record {
         if (previousMessages.length === 0) {
             return false;
         }
-        return this._store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
+        return this.store.Message.get(Math.max(...previousMessages.map((m) => m.id)));
     }
 }
 

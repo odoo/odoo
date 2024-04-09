@@ -85,7 +85,7 @@ export class RecordInternal {
             });
             Object.assign(recordList, {
                 _raw: recordList,
-                _store: record._store,
+                _store: record.store,
             });
             record[fieldName] = recordList;
         } else {

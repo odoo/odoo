@@ -327,7 +327,7 @@ export class Record {
     }
 
     /** @returns {import("models").Store} */
-    get _store() {
+    get store() {
         return toRaw(this)._raw.Model._rawStore._proxy;
     }
     /** @returns {import("models").Store} */

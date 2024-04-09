@@ -79,7 +79,7 @@ const threadPatch = {
     },
     async fetchChannelInfo() {
         return this.fetchChannelMutex.exec(async () => {
-            if (!(this.localId in this._store.Thread.records)) {
+            if (!(this.localId in this.store.Thread.records)) {
                 return; // channel was deleted in-between two calls
             }
             const data = await rpc("/discuss/channel/info", { channel_id: this.id });

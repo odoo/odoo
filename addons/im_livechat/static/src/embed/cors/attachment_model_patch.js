@@ -5,7 +5,7 @@ patch(Attachment.prototype, {
     get urlQueryParams() {
         return {
             ...super.urlQueryParams,
-            guest_token: this._store.env.services["im_livechat.livechat"].guestToken,
+            guest_token: this.store.env.services["im_livechat.livechat"].guestToken,
         };
     },
     get urlRoute() {

@@ -594,14 +594,14 @@ test("lazy sort should re-sort while they are observed", async () => {
     message.sequence = 10;
     expect(
         `${toRaw(thread)._raw.messages.data.map(
-            (localId) => toRaw(thread)._raw._store.get(localId).id
+            (localId) => toRaw(thread)._raw.store.get(localId).id
         )}`
     ).toBe("2,1", { message: "observed one last time when it changes" });
     expect([]).toVerifySteps();
     message.sequence = 1;
     expect(
         `${toRaw(thread)._raw.messages.data.map(
-            (localId) => toRaw(thread)._raw._store.get(localId).id
+            (localId) => toRaw(thread)._raw.store.get(localId).id
         )}`
     ).toBe("2,1", { message: "no longer observed" });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
@@ -671,8 +671,8 @@ test("store updates can be observed", async () => {
     expect(["abc:undefined"]).toVerifySteps();
     store.abc = 1;
     expect(["abc:1"]).toVerifySteps({ message: "observable from makeStore" });
-    rawStore._store.abc = 2;
-    expect(["abc:2"]).toVerifySteps({ message: "observable from record._store" });
+    rawStore.store.abc = 2;
+    expect(["abc:2"]).toVerifySteps({ message: "observable from record.store" });
     rawStore.Model.store.abc = 3;
     expect(["abc:3"]).toVerifySteps({ message: "observable from Model.store" });
 });

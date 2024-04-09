@@ -38,7 +38,7 @@ export class Persona extends Record {
         /** @this {import("models").Persona} */
         compute() {
             if (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public) {
-                return this._store;
+                return this.store;
             }
         },
         eager: true,

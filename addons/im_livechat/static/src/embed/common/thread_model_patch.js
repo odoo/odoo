@@ -16,7 +16,7 @@ patch(Thread.prototype, {
         this.livechatWelcomeMessage = Record.one("Message", {
             compute() {
                 if (this.hasWelcomeMessage) {
-                    const livechatService = this._store.env.services["im_livechat.livechat"];
+                    const livechatService = this.store.env.services["im_livechat.livechat"];
                     return {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,

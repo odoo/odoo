@@ -27,10 +27,10 @@ export class Notification extends Record {
         /** @this {import("models").Notification} */
         compute() {
             const thread = this.message?.thread;
-            if (!this.message?.author?.eq(this._store.self)) {
+            if (!this.message?.author?.eq(this.store.self)) {
                 return;
             }
-            const failure = Object.values(this._store.Failure.records).find((f) => {
+            const failure = Object.values(this.store.Failure.records).find((f) => {
                 return (
                     f.resModel === thread?.model &&
                     f.type === this.notification_type &&
@@ -39,7 +39,7 @@ export class Notification extends Record {
             });
             return this.isFailure
                 ? {
-                      id: failure ? failure.id : this._store.Failure.nextId.value++,
+                      id: failure ? failure.id : this.store.Failure.nextId.value++,
                   }
                 : false;
         },
