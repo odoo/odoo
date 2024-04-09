@@ -13,6 +13,7 @@ import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_c
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
+import { sortBy } from "@web/core/utils/arrays";
 
 /**
  * @typedef {string} JQuerySelector
@@ -288,7 +289,21 @@ export const tourService = {
             const macro = convertToMacro(tour, pointer, options);
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tour.url !== options.startUrl && options.redirect) {
-                    window.location.href = window.location.origin + tour.url;
+                    const fromUrl = new URL(browser.location.href);
+                    const toUrl = new URL(browser.location.origin + tour.url);
+                    const debugMode = fromUrl.searchParams.get("debug");
+                    if (debugMode) {
+                        const allDebug = [];
+                        [toUrl.searchParams.get("debug") || "", debugMode].forEach((string) => {
+                            string.split(",").forEach((mode) => {
+                                if (mode && !allDebug.includes(mode)) {
+                                    allDebug.push(mode);
+                                }
+                            });
+                        });
+                        toUrl.searchParams.set("debug", sortBy(allDebug).join(","));
+                    }
+                    browser.location.href = toUrl.href;
                 }
             });
             if (!willUnload) {
