@@ -29,9 +29,11 @@
                 <attribute name="context">{'default_website_id': website_id}</attribute>
                 <attribute name="groups">website.group_multi_website</attribute>
             </xpath>
+            <xpath expr="//button[@name='%(event.event_registration_action_stats_from_event)d']" position="before">
+                <field name="is_published" widget="website_redirect_button"/>
+            </xpath>
             <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
-                <field name="is_published" widget="website_redirect_button"/>
             </div>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
