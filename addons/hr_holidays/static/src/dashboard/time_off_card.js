@@ -39,6 +39,7 @@ TimeOffCardPopover.props = [
     "max_allowed_negative",
     "onClickNewAllocationRequest?",
     "errorLeaves",
+    "accrualExcess",
 ];
 
 export class TimeOffCard extends Component {
@@ -63,17 +64,14 @@ export class TimeOffCard extends Component {
 
     updateWarning() {
         const { data } = this.props;
-        const excess = Math.max(data.exceeding_duration, -data.virtual_remaining_leaves);
-        const exceeding_duration = data.allows_negative
-            ? excess > data.max_allowed_negative
-            : excess > 0;
         const errorLeavesSignificant = data.allows_negative
             ? this.errorLeavesDuration > data.max_allowed_negative
             : this.errorLeavesDuration > 0;
+        const accrualExcess = this.getAccrualExcess(data);
         const closeExpire =
             data.closest_allocation_duration &&
             data.closest_allocation_duration < data.virtual_remaining_leaves;
-        this.warning = errorLeavesSignificant || exceeding_duration || closeExpire;
+        this.warning = errorLeavesSignificant || accrualExcess || closeExpire;
     }
 
     onClickInfo(ev) {
@@ -92,7 +90,14 @@ export class TimeOffCard extends Component {
             max_allowed_negative: data.max_allowed_negative,
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
             errorLeaves: this.errorLeaves,
+            accrualExcess: this.getAccrualExcess(data),
         });
+    }
+
+    getAccrualExcess(data) {
+        return data.allows_negative
+            ? -data.exceeding_duration > data.max_allowed_negative
+            : -data.exceeding_duration > 0;
     }
 
     async newAllocationRequestFrom() {
