@@ -10,19 +10,14 @@ class StockMove(models.Model):
     _inherit = "stock.move"
     _description = "Stock Move Ewaybill"
 
-    ewaybill_id = fields.Many2one(
-        comodel_name='l10n.in.ewaybill'
-    )
+    l10n_in_ewaybill_id = fields.One2many(related="picking_id.l10n_in_ewaybill_id")
 
-    ewaybill_company_currency_id = fields.Many2one(
-        comodel_name='res.currency',
-        related='company_id.currency_id'
-    )
+    company_currency_id = fields.Many2one(related='company_id.currency_id')
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Monetary(
         compute='_compute_ewaybill_price_unit',
-        currency_field='ewaybill_company_currency_id',
+        currency_field='company_currency_id',
         store=True
     )
     ewaybill_tax_ids = fields.Many2many(
@@ -32,16 +27,16 @@ class StockMove(models.Model):
         store=True
     )
 
-    @api.depends('product_id.uom_id', 'product_id.standard_price', 'ewaybill_id')
+    @api.depends('product_id.uom_id', 'product_id.standard_price', 'l10n_in_ewaybill_id')
     def _compute_ewaybill_price_unit(self):
-        for line in self.filtered(lambda line: line.ewaybill_id.state == 'pending'):
+        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
             line.ewaybill_price_unit = line.product_id.uom_id._compute_price(
                 line.product_id.with_company(line.company_id).standard_price, line.product_uom
             )
 
-    @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'ewaybill_id')
+    @api.depends('product_id.supplier_taxes_id', 'product_id.taxes_id', 'l10n_in_ewaybill_id')
     def _compute_tax_ids(self):
-        for line in self.filtered(lambda line: line.ewaybill_id.state == 'pending'):
+        for line in self.filtered(lambda line: line.l10n_in_ewaybill_id.state == 'pending'):
             taxes = (
                 line.picking_code == "incoming" and
                 line.product_id.supplier_taxes_id or line.product_id.taxes_id
@@ -56,6 +51,6 @@ class StockMove(models.Model):
             _logger.warning("""
                 Fiscal position with ID fiscal_position_in_inter_state is not found in the system.
                 In case of inter state transaction tax is not auto changed to IGST""")
-        if fiscal_position and self.ewaybill_id.transaction_type == "inter_state":
+        if fiscal_position and self.l10n_in_ewaybill_id.transaction_type == "inter_state":
             return fiscal_position.map_tax(taxes)
         return taxes

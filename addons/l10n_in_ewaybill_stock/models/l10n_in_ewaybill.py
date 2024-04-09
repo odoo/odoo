@@ -31,12 +31,7 @@ class Ewaybill(models.Model):
 
     # Stock picking details
     picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
-    move_ids = fields.One2many(
-        comodel_name='stock.move',
-        related="picking_id.move_ids",
-        inverse_name='ewaybill_id',
-        store=True
-    )
+    move_ids = fields.One2many(related="picking_id.move_ids")
     picking_type_code = fields.Selection(related='picking_id.picking_type_id.code')
 
     # Document details
