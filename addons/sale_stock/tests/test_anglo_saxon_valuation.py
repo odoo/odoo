@@ -1727,3 +1727,83 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Check no reinvoice line addded to the sale order
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.order_line.product_uom_qty, 2.0)
+
+    def test_anglo_saxon_cogs_with_down_payment(self):
+        """Create a SO with a product invoiced on delivered quantity.
+        Do a 100% down payment, deliver a part of it with a backorder
+        then invoice the delivered part from the down payment.
+        Deliver the remaining part and invoice it."""
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,  # tracking serial
+            'inventory_quantity': 20,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        }).action_apply_inventory()
+
+        # Create a SO with a product invoiced on delivered quantity
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 10.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        # Do a 100% down payment
+        down_payment = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'percentage',
+            'amount': 100,
+            'sale_order_ids': so.ids,
+        })
+        down_payment.create_invoices()
+        # Invoice the delivered part from the down payment
+        down_payment_invoices = so.invoice_ids
+        down_payment_invoices.action_post()
+
+        # Deliver a part of it with a backorder
+        so.picking_ids.move_ids.quantity = 4
+        so.picking_ids.move_ids.picked = True
+        backorder_wizard_dict = so.picking_ids.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+
+        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
+        invoice_wizard.create_invoices()
+        credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        self.assertEqual(len(credit_note), 1)
+        self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
+        down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        down_payment_line.quantity = 0.4
+        credit_note.action_post()
+        # Deliver the remaining part and invoice itµ
+        backorder = so.picking_ids.filtered(lambda p: p.state != 'done')
+        backorder.move_ids.quantity = 6
+        backorder.move_ids.picked = True
+        backorder.button_validate()
+
+        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
+        invoice_wizard.create_invoices()
+
+        invoice = so.invoice_ids.filtered(lambda i: i.state != 'posted')
+        invoice.action_post()
+
+        # Check the resulting accounting entries
+        account_stock_out = self.company_data['default_account_stock_out']
+        account_expense = self.company_data['default_account_expense']
+        invoice_1_cogs = credit_note.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        invoice_2_cogs = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(invoice_1_cogs, [
+            {'debit': 0, 'credit': 40, 'account_id': account_stock_out.id, 'reconciled': True},
+            {'debit': 40, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
+        ])
+        self.assertRecordValues(invoice_2_cogs, [
+            {'debit': 0, 'credit': 60, 'account_id': account_stock_out.id, 'reconciled': True},
+            {'debit': 60, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
+        ])
