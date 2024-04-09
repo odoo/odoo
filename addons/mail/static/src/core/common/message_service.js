@@ -51,18 +51,18 @@ export class MessageService {
     }
 
     async delete(message) {
-        if (message.isStarred) {
-            this.store.discuss.starred.counter--;
-            this.store.discuss.starred.messages.delete(message);
-        }
-        message.body = "";
-        message.attachments = [];
         await rpc("/mail/message/update_content", {
             attachment_ids: [],
             attachment_tokens: [],
             body: "",
             message_id: message.id,
         });
+        if (message.isStarred) {
+            this.store.discuss.starred.counter--;
+            this.store.discuss.starred.messages.delete(message);
+        }
+        message.body = "";
+        message.attachments = [];
     }
 
     /**
