@@ -29,6 +29,9 @@
             }
         }
     }
+    .ace_hidpi .ace_text-layer, .ace_hidpi .ace_gutter-layer, .ace_hidpi .ace_content, .ace_hidpi .ace_gutter {
+        contain: layout !important;
+    }
     .ace_editor {
         overflow: visible;
         .ace_qweb, .ace_tag-name {
@@ -54,7 +57,11 @@
             }
         }
         .ace_gutter {
+            width: 134px !important;
             overflow: visible;
+        }
+        .ace_scroller {
+            left: 134px !important;
         }
         .ace_gutter-layer {
             width: 134px !important;
