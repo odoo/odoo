@@ -83,7 +83,10 @@ export class MailCoreWeb {
                 const history = this.store.discuss.history;
                 history.messages.add(message);
             }
-            inbox.counter = needaction_inbox_counter;
+            if (notifId > inbox.counter_bus_id) {
+                inbox.counter = needaction_inbox_counter;
+                inbox.counter_bus_id = notifId;
+            }
             if (inbox.counter > inbox.messages.length) {
                 this.threadService.fetchMoreMessages(inbox);
             }

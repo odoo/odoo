@@ -110,7 +110,7 @@ export class ResUsers extends webModels.ResUsers {
             ["channel_id", "in", channels.map((channel) => channel.id)],
             ["partner_id", "=", user.partner_id],
         ]);
-        const bus_last_id = this.lastBusNotificationId;
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         return {
             Store: {
                 discuss: {
@@ -129,7 +129,7 @@ export class ResUsers extends webModels.ResUsers {
                         model: "mail.box",
                     },
                 },
-                initBusId: this.lastBusNotificationId, // deprecated, last id should be checked per field
+                initBusId: bus_last_id, // deprecated, last id should be checked per field
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
             },
