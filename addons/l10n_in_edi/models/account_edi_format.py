@@ -70,7 +70,6 @@ class AccountEdiFormat(models.Model):
     def _l10n_in_edi_xml_invoice_content(self, invoice):
         return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
-    @api.model
     def _l10n_in_edi_extract_digits(self, string):
         if not string:
             return string
@@ -113,7 +112,6 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("product is required to get HSN code"))
         return error_message
 
-    @api.model
     def _l10n_in_edi_get_iap_buy_credits_message(self, company):
         url = self.env["iap.account"].get_credits_url(service_name="l10n_in_edi")
         return markupsafe.Markup("""<p><b>%s</b></p><p>%s <a href="%s">%s</a></p>""") % (
@@ -239,8 +237,8 @@ class AccountEdiFormat(models.Model):
                 })
             return {invoice: {"success": True, "attachment": attachment}}
 
-    @api.model
     def _l10n_in_validate_partner(self, partner, is_company=False):
+        self.ensure_one()
         message = []
         if not re.match("^.{3,100}$", partner.street or ""):
             message.append(_("- Street required min 3 and max 100 characters"))
