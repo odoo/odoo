@@ -325,4 +325,20 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("url field with non falsy, but non url value", async function (assert) {
+        serverData.models.partner.fields.foo.default = "odoo://hello";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="foo" widget="url"/></form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name='foo'] a").getAttribute("href"),
+            "http://odoo://hello"
+        );
+    });
 });

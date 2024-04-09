@@ -49,8 +49,25 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
 for module in _ALLOWED_MODULES:
     __import__(module)
 
-_UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame', 'gi_code',
-                      'co_code', 'func_globals']
+
+_UNSAFE_ATTRIBUTES = {
+    # Frames
+    'f_builtins', 'f_code', 'f_globals', 'f_locals',
+    # Python 2 functions
+    'func_code', 'func_globals', 'mro',
+    # Code object
+    'co_code',
+    # Tracebacks
+    'tb_frame',
+    # Generators
+    'gi_code', 'gi_frame', 'g_yieldfrom'
+    # Coroutines
+    'cr_await', 'cr_code', 'cr_frame',
+    # Coroutine generators
+    'ag_await', 'ag_code', 'ag_frame',
+
+}
+
 
 def to_opcodes(opnames, _opmap=opmap):
     for x in opnames:
@@ -72,7 +89,7 @@ _CONST_OPCODES = set(to_opcodes([
     # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
     'LOAD_CONST',
-    'RETURN_VALUE', # return the result of the literal/expr evaluation
+    'RETURN_VALUE',  # return the result of the literal/expr evaluation
     # literal collections
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
@@ -86,7 +103,7 @@ _CONST_OPCODES = set(to_opcodes([
 
 # operations which are both binary and inplace, same order as in doc'
 _operations = [
-    'POWER', 'MULTIPLY', # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
+    'POWER', 'MULTIPLY',  # 'MATRIX_MULTIPLY', # matrix operator (3.5+)
     'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
     'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
 ]
@@ -120,7 +137,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'CALL_METHOD', 'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE',
+    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
     'SETUP_FINALLY', 'END_FINALLY',
     # Added in 3.8 https://bugs.python.org/issue17611
@@ -142,15 +159,13 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     # special case of the previous for IS NONE / IS NOT NONE
     'POP_JUMP_FORWARD_IF_NONE', 'POP_JUMP_BACKWARD_IF_NONE',
     'POP_JUMP_FORWARD_IF_NOT_NONE', 'POP_JUMP_BACKWARD_IF_NOT_NONE',
-    #replacement of JUMP_ABSOLUTE
-    'JUMP_BACKWARD',
-    #replacement of JUMP_IF_NOT_EXC_MATCH
+    # replacement of JUMP_IF_NOT_EXC_MATCH
     'CHECK_EXC_MATCH',
     # new opcodes
     'RETURN_GENERATOR',
     'PUSH_EXC_INFO',
     'NOP',
-    'FORMAT_VALUE', 'BUILD_STRING'
+    'FORMAT_VALUE', 'BUILD_STRING',
 
 ])) - _BLACKLIST
 
