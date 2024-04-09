@@ -7,7 +7,7 @@
         <field name="model">event.event</field>
         <field name="priority" eval="3"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='is_published']" position="before">
+            <xpath expr="//field[@name='website_url']" position="before">
                 <button name="%(action_event_track_from_event)d"
                         type="action"
                         class="oe_stat_button"

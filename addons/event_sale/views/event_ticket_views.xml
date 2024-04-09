@@ -7,7 +7,7 @@
         <field name="model">event.type.ticket</field>
         <field name="inherit_id" ref="event.event_type_ticket_view_tree_from_type"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <field name="name" position="before">
                 <field name="product_id"
                     context="{
                         'default_type': 'service',
@@ -26,7 +26,7 @@
         <field name="model">event.type.ticket</field>
         <field name="inherit_id" ref="event.event_type_ticket_view_form_from_type"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <field name="name" position="before">
                 <field name="product_id"
                     context="{
                         'default_type': 'service',
@@ -52,7 +52,7 @@
             <field name="end_sale_datetime" position="attributes">
                 <attribute name="string">Sales End</attribute>
             </field>
-            <field name="name" position="after">
+            <field name="name" position="before">
                 <field name="product_id"
                     context="{
                         'default_type': 'service',
@@ -72,7 +72,7 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_view_form_from_event"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <field name="name" position="before">
                 <field name="product_id"
                     context="{
                         'default_type': 'service',
@@ -91,7 +91,7 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_view_kanban_from_event"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <field name="name" position="before">
                 <field name="product_id"/>
                 <field name="price"/>
             </field>

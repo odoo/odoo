@@ -11,11 +11,11 @@
                 <button name="action_invite_contacts" type="object" string="Invite"
                     class="btn btn-primary"
                     groups="mass_mailing.group_mass_mailing_user"
-                    invisible="not event_registrations_open"/>
+                    invisible="is_finished or not event_registrations_open"/>
                 <button name="action_invite_contacts" type="object" string="Invite"
                     class="btn btn-secondary"
                     groups="mass_mailing.group_mass_mailing_user"
-                    invisible="event_registrations_open"/>
+                    invisible="is_finished or event_registrations_open"/>
                 <button name="action_mass_mailing_attendees" type="object" string="Contact Attendees"
                     groups="mass_mailing.group_mass_mailing_user"
                     invisible="seats_taken == 0"/>

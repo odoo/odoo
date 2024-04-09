@@ -7,7 +7,7 @@
         <field name="priority" eval="5"/>
         <field name="inherit_id" ref="website_event.event_event_view_form"/>
         <field name="arch" type="xml">
-            <field name="is_published" position="before">
+            <field name="website_url" position="before">
                 <button name="%(event_sponsor_action_from_event)d"
                         type="action"
                         class="oe_stat_button"
