@@ -379,7 +379,7 @@ export class DiscussChannel extends models.ServerModel {
         ids = kwargs.ids;
         delete kwargs.ids;
 
-        const bus_last_id = this.lastBusNotificationId;
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").DiscussChannelRtcSession} */
