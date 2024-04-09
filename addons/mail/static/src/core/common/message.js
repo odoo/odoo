@@ -30,14 +30,11 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { cookie } from "@web/core/browser/cookie";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 /**
  * @typedef {Object} Props
@@ -94,7 +91,6 @@ export class Message extends Component {
     static template = "mail.Message";
 
     setup() {
-        rpc = rpcWithEnv(this.env);
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
@@ -398,7 +394,7 @@ export class Message extends Component {
         if (this.props.thread.seen_message_id === previousMessageId) {
             return;
         }
-        return rpc("/discuss/channel/set_last_seen_message", {
+        return this.store.rpc("/discuss/channel/set_last_seen_message", {
             channel_id: this.message.thread.id,
             last_message_id: previousMessageId,
             allow_older: true,
@@ -508,7 +504,7 @@ export class Message extends Component {
 
     async onClickToggleTranslation() {
         if (!this.message.translationValue) {
-            const { error, lang_name, body } = await rpc("/mail/message/translate", {
+            const { error, lang_name, body } = await this.store.rpc("/mail/message/translate", {
                 message_id: this.message.id,
             });
             this.message.translationValue = body && markup(body);

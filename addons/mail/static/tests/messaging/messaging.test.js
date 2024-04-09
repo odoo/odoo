@@ -1,7 +1,5 @@
 import { describe, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -15,9 +13,8 @@ import {
     startServer,
     step,
 } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -38,8 +35,8 @@ test("Receiving a new message out of discuss app should open a chat window", asy
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
@@ -51,7 +48,7 @@ test("Receiving a new message out of discuss app should open a chat window", asy
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receving new message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -76,8 +73,8 @@ test("Receiving a new message in discuss app should open a chat window after lea
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
@@ -90,7 +87,7 @@ test("Receiving a new message in discuss app should open a chat window after lea
     await openDiscuss();
     // simulate receiving new message
     await withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

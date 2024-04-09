@@ -1,7 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     assertSteps,
     click,
@@ -14,7 +12,7 @@ import {
     startServer,
     step,
 } from "../mail_test_helpers";
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { getService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -271,11 +269,11 @@ test("No crash on receiving link preview of non-known message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await openDiscuss();
-    rpc("/mail/link_preview", { message_id: messageId });
-    rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
+    store.rpc("/mail/link_preview", { message_id: messageId });
+    store.rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
     expect(true).toBe(true, { message: "no assertions" });
 });
 

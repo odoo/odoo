@@ -1,18 +1,11 @@
 import { ThreadService } from "@mail/core/common/thread_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
 patch(ThreadService.prototype, {
-    setup(...args) {
-        super.setup(...args);
-        rpc = rpcWithEnv(this.env);
-    },
     /**
      * @override
      * @param {import("models").Thread} thread
@@ -39,7 +32,7 @@ patch(ThreadService.prototype, {
         }
         thread.isLoadingAttachments = true;
         try {
-            const rawAttachments = await rpc("/discuss/channel/attachments", {
+            const rawAttachments = await this.store.rpc("/discuss/channel/attachments", {
                 before: Math.min(...thread.attachments.map(({ id }) => id)),
                 channel_id: thread.id,
                 limit,
@@ -54,13 +47,13 @@ patch(ThreadService.prototype, {
     },
 
     async muteThread(thread, { minutes = false } = {}) {
-        await rpc("/discuss/channel/mute", { channel_id: thread.id, minutes });
+        await this.store.rpc("/discuss/channel/mute", { channel_id: thread.id, minutes });
     },
 
     async updateCustomNotifications(thread, custom_notifications) {
         // Update the UI instantly to provide a better UX (no need to wait for the RPC to finish).
         thread.custom_notifications = custom_notifications;
-        await rpc("/discuss/channel/update_custom_notifications", {
+        await this.store.rpc("/discuss/channel/update_custom_notifications", {
             channel_id: thread.id,
             custom_notifications,
         });

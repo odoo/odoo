@@ -1,10 +1,7 @@
 import { convertBrToLineBreak, prettifyMessageContent } from "@mail/utils/common/format";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
@@ -15,7 +12,6 @@ export class MessageService {
      * @param {Partial<import("services").Services>} services
      */
     constructor(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.orm = services.orm;
@@ -34,7 +30,7 @@ export class MessageService {
             mentionedChannels,
             mentionedPartners,
         });
-        const messageData = await rpc("/mail/message/update_content", {
+        const messageData = await this.store.rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .concat(message.attachments)
                 .map((attachment) => attachment.id),
@@ -47,7 +43,7 @@ export class MessageService {
         });
         this.store.Message.insert(messageData, { html: true });
         if (message.hasLink && this.store.hasLinkPreviewFeature) {
-            rpc("/mail/link_preview", { message_id: message.id }, { silent: true });
+            this.store.rpc("/mail/link_preview", { message_id: message.id }, { silent: true });
         }
     }
 
@@ -58,7 +54,7 @@ export class MessageService {
         }
         message.body = "";
         message.attachments = [];
-        await rpc("/mail/message/update_content", {
+        await this.store.rpc("/mail/message/update_content", {
             attachment_ids: [],
             attachment_tokens: [],
             body: "",
@@ -135,7 +131,7 @@ export class MessageService {
     }
 
     async react(message, content) {
-        await rpc(
+        await this.store.rpc(
             "/mail/message/reaction",
             {
                 action: "add",
@@ -147,7 +143,7 @@ export class MessageService {
     }
 
     async removeReaction(reaction) {
-        await rpc(
+        await this.store.rpc(
             "/mail/message/reaction",
             {
                 action: "remove",

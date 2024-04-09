@@ -454,5 +454,9 @@ export class Record {
         }
         return data;
     }
+    // definition here so it can be easily autocompleted
+    rpc() {
+        return this._store.env.services["mail.rpc"](...arguments);
+    }
 }
 Record.register();

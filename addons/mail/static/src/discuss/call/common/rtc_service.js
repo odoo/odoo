@@ -1,13 +1,11 @@
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
-import { rpcWithEnv, closeStream, onChange } from "@mail/utils/common/misc";
+import { closeStream, onChange } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle } from "@web/core/assets";
@@ -116,7 +114,6 @@ export class Rtc {
      * @param {Partial<import("services").Services>} services
      */
     constructor(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
         this.notification = services.notification;
@@ -905,7 +902,7 @@ export class Rtc {
         }
         this.pttExtService.subscribe();
         this.state.hasPendingRequest = true;
-        const { rtcSessions, iceServers, sessionId, serverInfo } = await rpc(
+        const { rtcSessions, iceServers, sessionId, serverInfo } = await this.store.rpc(
             "/mail/rtc/channel/join_call",
             {
                 channel_id: channel.id,
@@ -948,7 +945,7 @@ export class Rtc {
                 if (!this.state.selfSession) {
                     return;
                 }
-                await rpc(
+                await this.store.rpc(
                     "/mail/rtc/session/update_and_broadcast",
                     {
                         session_id: this.state.selfSession.id,
@@ -1022,7 +1019,7 @@ export class Rtc {
     }
 
     async rpcLeaveCall(channel) {
-        await rpc(
+        await this.store.rpc(
             "/mail/rtc/channel/leave_call",
             {
                 channel_id: channel.id,
@@ -1032,7 +1029,7 @@ export class Rtc {
     }
 
     async ping() {
-        const { rtcSessions } = await rpc(
+        const { rtcSessions } = await this.store.rpc(
             "/discuss/channel/ping",
             {
                 channel_id: this.state.channel.id,
@@ -1220,7 +1217,7 @@ export class Rtc {
             ]);
         });
         try {
-            await rpc(
+            await this.store.rpc(
                 "/mail/rtc/session/notify_call_members",
                 {
                     peer_notifications: notifications,

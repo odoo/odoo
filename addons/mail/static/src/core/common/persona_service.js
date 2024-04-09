@@ -1,9 +1,7 @@
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { useSequential } from "@mail/utils/common/hooks";
 import { markRaw } from "@odoo/owl";
-import { rpcWithEnv, compareDatetime } from "@mail/utils/common/misc";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
@@ -17,7 +15,6 @@ export class PersonaService {
      * @param {Partial<import("services").Services>} services
      */
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.orm = services.orm;
         /** @type {import("@mail/core/common/store_service").Store} */
@@ -31,7 +28,7 @@ export class PersonaService {
     }
 
     async updateGuestName(guest, name) {
-        await rpc("/mail/guest/update_name", {
+        await this.store.rpc("/mail/guest/update_name", {
             guest_id: guest.id,
             name,
         });

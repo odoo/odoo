@@ -1,11 +1,8 @@
 import { Thread } from "@mail/core/common/thread_model";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Mutex } from "@web/core/utils/concurrency";
 
 /** @type {import("models").Thread} */
@@ -82,7 +79,7 @@ const threadPatch = {
             if (!(this.localId in this._store.Thread.records)) {
                 return; // channel was deleted in-between two calls
             }
-            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
+            const data = await this.rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
                 this.update(data);
             } else {
@@ -95,10 +92,4 @@ const threadPatch = {
         this.message_unread_counter++;
     },
 };
-patch(Thread, {
-    new(...args) {
-        rpc = rpcWithEnv(this.env);
-        return super.new(...args);
-    },
-});
 patch(Thread.prototype, threadPatch);

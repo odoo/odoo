@@ -1,8 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -29,9 +26,8 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
@@ -49,13 +45,13 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
         channel_type: "chat",
     });
     patchUiSize({ size: SIZES.SM });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -635,11 +631,11 @@ test("new message separator is shown in a chat window of a chat on receiving new
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -669,8 +665,8 @@ test("new message separator is shown in chat window of chat on receiving new mes
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},
@@ -682,7 +678,7 @@ test("new message separator is shown in chat window of chat on receiving new mes
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -701,17 +697,17 @@ test("chat window should open when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -729,17 +725,17 @@ test("chat window should not open when receiving a new DM from odoobot", async (
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "new message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -790,12 +786,12 @@ test("chat window should remain folded when new message is received", async () =
         ],
         channel_type: "chat",
     });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await contains(".o-mail-ChatWindow.o-folded");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "New Message", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
@@ -900,12 +896,12 @@ test("focusing a chat window of a chat should make new message separator disappe
         ["partner_id", "=", serverState.partnerId],
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
-    const env = await start();
-    rpc = rpcWithEnv(env);
+    await start();
+    const store = getService("mail.store");
     await contains(".o-mail-Composer-input:not(:focus)");
     // simulate receiving a message
     withUser(userId, () =>
-        rpc("/mail/message/post", {
+        store.rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",

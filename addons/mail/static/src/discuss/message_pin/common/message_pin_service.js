@@ -3,13 +3,10 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { Message as MessageModel } from "@mail/core/common/message_model";
 import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
-import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -18,7 +15,6 @@ export const OTHER_LONG_TYPING = 60000;
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        rpc = rpcWithEnv(this.env);
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
         this.pinnedMessages = Record.many("Message");
@@ -75,7 +71,7 @@ export class MessagePin {
         }
         channel.pinnedMessagesState = "loading";
         try {
-            const messagesData = await rpc("/discuss/channel/pinned_messages", {
+            const messagesData = await this.store.rpc("/discuss/channel/pinned_messages", {
                 channel_id: channel.id,
             });
             this.store.Message.insert(messagesData, { html: true });

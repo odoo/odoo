@@ -1,10 +1,7 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -16,7 +13,6 @@ export class Store extends BaseStore {
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
-        rpc = rpcWithEnv(this.env);
         return super.insert(...arguments);
     }
 
@@ -248,7 +244,7 @@ export class Store extends BaseStore {
             ...user.context,
             ...this.fetchParams.context,
         };
-        rpc(this.fetchReadonly ? "/mail/data" : "/mail/action", this.fetchParams, {
+        this.rpc(this.fetchReadonly ? "/mail/data" : "/mail/action", this.fetchParams, {
             silent: this.fetchSilent,
         }).then(
             (data) => {
@@ -316,7 +312,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui"],
+    dependencies: ["bus_service", "im_status", "mail.rpc", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

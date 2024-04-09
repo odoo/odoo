@@ -1,10 +1,7 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -27,14 +24,13 @@ export class FollowerSubtypeDialog extends Component {
     static template = "mail.FollowerSubtypeDialog";
 
     setup() {
-        rpc = rpcWithEnv(this.env);
         this.store = useState(useService("mail.store"));
         this.state = useState({
             /** @type {SubtypeData[]} */
             subtypes: [],
         });
         onWillStart(async () => {
-            this.state.subtypes = await rpc("/mail/read_subscription_data", {
+            this.state.subtypes = await this.store.rpc("/mail/read_subscription_data", {
                 follower_id: this.props.follower.id,
             });
         });

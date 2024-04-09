@@ -11,6 +11,7 @@ declare module "services" {
     import { discussTypingService } from "@mail/discuss/typing/common/typing_service"
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
+    import { mailRpcService } from "@mail/core/common/mail_rpc_service";
     import { messagePinService } from "@mail/discuss/message_pin/common/message_pin_service"
     import { messageService } from "@mail/core/common/message_service";
     import { messagingService } from "@mail/core/common/messaging_service";
@@ -42,6 +43,7 @@ declare module "services" {
         "mail.notification.permission": ReturnType<typeof notificationPermissionService.start>;
         "mail.out_of_focus": ReturnType<typeof outOfFocusService.start>;
         "mail.persona": ReturnType<typeof personaService.start>;
+        "mail.rpc": ReturnType<typeof mailRpcService.start>,
         "mail.sound_effects": ReturnType<typeof soundEffects.start>;
         "mail.store": ReturnType<typeof storeService.start>;
         "mail.suggestion": ReturnType<typeof suggestionService.start>;

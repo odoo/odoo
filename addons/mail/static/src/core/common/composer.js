@@ -7,7 +7,7 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
-import { rpcWithEnv, isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
@@ -26,8 +26,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
-/** @type {import("@web/core/network/rpc").rpc} */
-let rpc;
 import { escape, sprintf } from "@web/core/utils/strings";
 
 const EDIT_CLICK_TYPE = {
@@ -85,7 +83,6 @@ export class Composer extends Component {
     static template = "mail.Composer";
 
     setup() {
-        rpc = rpcWithEnv(this.env);
         this.SEND_KEYBIND_TO_SEND = markup(
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
@@ -461,7 +458,7 @@ export class Composer extends Component {
                     recipientEmails.push(recipient.email);
                     recipientAdditionalValues[recipient.email] = recipient.create_values || {};
                 });
-                const partners = await rpc("/mail/partner/from_email", {
+                const partners = await this.store.rpc("/mail/partner/from_email", {
                     emails: recipientEmails,
                     additional_values: recipientAdditionalValues,
                 });

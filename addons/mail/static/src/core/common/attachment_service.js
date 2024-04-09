@@ -1,7 +1,5 @@
-import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import { registry } from "@web/core/registry";
 
 export class AttachmentService {
@@ -14,7 +12,6 @@ export class AttachmentService {
     }
 
     setup(env, services) {
-        rpc = rpcWithEnv(env);
         this.env = env;
         this.store = services["mail.store"];
     }
@@ -40,7 +37,7 @@ export class AttachmentService {
     async delete(attachment) {
         this.remove(attachment);
         if (attachment.id > 0) {
-            await rpc(
+            await this.store.rpc(
                 "/mail/attachment/delete",
                 assignDefined(
                     { attachment_id: attachment.id },
