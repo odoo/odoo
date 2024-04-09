@@ -6,6 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.tools.image import image_data_uri
+from odoo.addons.l10n_in.const import TCS_GROUPS, TDS_GROUPS
 
 
 class AccountMove(models.Model):
@@ -29,6 +30,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
+    l10n_in_tcs_tds_warning = fields.Char('TDC/TCS Warning', compute="_compute_l10n_in_tcs_tds_warning", store=True)
 
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
     def _compute_l10n_in_gst_treatment(self):
@@ -66,6 +68,137 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
+    @api.depends('state')
+    def _compute_l10n_in_tcs_tds_warning(self):
+        def compute_warning_sections(move):
+            def check_per_transaction_limits(per_transaction_total):
+                sections = []
+                for tax_group_id, limits in per_transaction_total.items():
+                    for limit in limits:
+                        if (
+                            tax_group_id.l10n_in_is_per_transaction_limit
+                            and limit > tax_group_id.l10n_in_per_transaction_limit
+                            and tax_group_id.name[5:] not in sections
+                            and is_warning_applicable(tax_group_id)
+                        ):
+                            sections.append(tax_group_id.name[5:])
+                return sections
+
+            def check_aggregate_limits(totals):
+                sections = []
+                for partner, tax_group_ids in totals.items():
+                    for tax_group_id, total in tax_group_ids.items():
+                        if (
+                            tax_group_id.l10n_in_is_aggregate_limit
+                            and total > tax_group_id.l10n_in_aggregate_limit
+                            and move.invoice_line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section not in l.tax_ids.mapped('tax_group_id') and (l.price_unit != 0 or (l.move_id.move_type == 'entry' and (l.credit != 0 or l.debit != 0))))
+                            and tax_group_id.name[5:] not in sections
+                            and is_warning_applicable(tax_group_id)
+                        ):
+                            sections.append(tax_group_id.name[5:])
+                return sections
+
+            def is_warning_applicable(tax_group_id):
+                tax_group_xml_id = move._get_tax_group_xml_id(tax_group_id)
+                return (
+                    (tax_group_xml_id in TCS_GROUPS and move.journal_id.type == 'sale')
+                    or (tax_group_xml_id in TDS_GROUPS and move.journal_id.type == 'purchase')
+                    or (
+                        tax_group_xml_id in TCS_GROUPS
+                        and move.move_type == 'entry'
+                        and move.line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section and move._get_tax_group_xml_id(l.account_id.l10n_in_tds_tcs_section) in TCS_GROUPS and l.debit == 0)
+                    )
+                    or (
+                        tax_group_xml_id in TDS_GROUPS
+                        and move.move_type == 'entry'
+                        and move.line_ids.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section and move._get_tax_group_xml_id(l.account_id.l10n_in_tds_tcs_section) in TDS_GROUPS and l.credit == 0)
+                    )
+                )
+
+            def check_line_warnings(move, warning_sections):
+                for line in move.invoice_line_ids:
+                    tax_group = line.account_id.l10n_in_tds_tcs_section
+                    section_name = tax_group and tax_group.name[5:]
+                    line_price = line.price_unit if line.move_id.move_type != 'entry' else (line.credit or line.debit)
+                    if is_line_warning_applicable(line, tax_group):
+                        set_line_warning(line, tax_group, line_price, warning_sections, section_name)
+                    else:
+                        line.l10n_in_line_warning = False
+
+            def is_line_warning_applicable(line, tax_group):
+                return (
+                    (line.move_id.journal_id.type == 'sale' and line.move_id.move_type == 'out_invoice')
+                    or (line.move_id.journal_id.type == 'purchase' and line.move_id.move_type == 'in_invoice')
+                    or (line.move_id.move_type == 'entry')
+                ) and tax_group and tax_group not in line.tax_ids.mapped('tax_group_id') and (line.price_unit != 0 or (line.move_id.move_type == 'entry' and (line.credit != 0 or line.debit != 0)))
+
+            def set_line_warning(line, tax_group, line_price, warning_sections, section_name):
+                if section_name not in warning_sections:
+                    if tax_group.l10n_in_per_transection_units == 'per_unit':
+                        line.l10n_in_line_warning = tax_group.l10n_in_is_per_transaction_limit and line_price > tax_group.l10n_in_per_transaction_limit and is_warning_applicable(tax_group)
+                    else:
+                        if any(tax_group in l.account_id.l10n_in_tds_tcs_section and (l.price_unit != 0 or (l.move_id.move_type == 'entry' and (l.credit != 0 or l.debit != 0))) for l in line.move_id.invoice_line_ids):
+                            if line.move_id.invoice_line_ids.filtered(lambda l: tax_group in l.tax_ids.mapped('tax_group_id')):
+                                line.l10n_in_line_warning = is_warning_applicable(tax_group)
+                                warning_sections.append(section_name)
+                            else:
+                                line.l10n_in_line_warning = False
+                        else:
+                            line.l10n_in_line_warning = False
+                else:
+                    if tax_group.l10n_in_per_transection_units == 'per_unit':
+                        if (
+                            tax_group.l10n_in_is_per_transaction_limit and line_price > tax_group.l10n_in_per_transaction_limit
+                            and is_warning_applicable(tax_group)
+                        ):
+                            line.l10n_in_line_warning = True
+                        else:
+                            line.l10n_in_line_warning = False
+                    else:
+                        if line.move_id.move_type == 'entry' and tax_group.l10n_in_is_per_transaction_limit:
+                            if line_price > tax_group.l10n_in_per_transaction_limit:
+                                line.l10n_in_line_warning = True
+                            else:
+                                line.l10n_in_line_warning = is_warning_applicable(tax_group)
+                        else:
+                            line.l10n_in_line_warning = is_warning_applicable(tax_group)
+
+            warning_sections = []
+            per_transaction_total = move._l10n_in_calculate_per_transaction_total()
+            tax_fiscal_yearly_totals, tax_monthly_totals = move._l10n_in_calculate_aggregate_totals(
+                move.invoice_line_ids.mapped('partner_id')
+            )
+
+            warning_sections.extend(check_per_transaction_limits(per_transaction_total))
+            warning_sections.extend(check_aggregate_limits(tax_fiscal_yearly_totals))
+            warning_sections.extend(check_aggregate_limits(tax_monthly_totals))
+
+            check_line_warnings(move, warning_sections)
+            return warning_sections
+
+        def filter_warning_sections(move, warning_sections):
+            filtered_sections = []
+            for section in warning_sections:
+                lines = move.invoice_line_ids.filtered(lambda line: line.account_id.l10n_in_tds_tcs_section and section == line.account_id.l10n_in_tds_tcs_section.name[5:])
+                if lines.filtered(lambda l: l.account_id.l10n_in_tds_tcs_section not in l.tax_ids.mapped('tax_group_id')):
+                    if section not in filtered_sections:
+                        filtered_sections.append(section)
+            return filtered_sections
+
+        def generate_warning_message(move, warning_sections):
+            warning = ', '.join(warning_sections)
+            if (move.journal_id.type == 'sale' and move.move_type == 'out_invoice') and move.move_type == 'entry':
+                return len(warning_sections) > 0 and _("It's advisable to collect TCS u/s %s on this transaction.", warning) or False
+            elif (move.journal_id.type == 'purchase' and move.move_type == 'in_invoice') or move.move_type == 'entry':
+                return len(warning_sections) > 0 and _("It's advisable to deduct TDS u/s %s on this transaction.", warning) or False
+            return False
+
+        for move in self:
+            if move.country_code == 'IN' and move.state == 'posted':
+                warning_sections = compute_warning_sections(move)
+                warning_sections = filter_warning_sections(move, warning_sections)
+                move.l10n_in_tcs_tds_warning = generate_warning_message(move, warning_sections)
+
     @api.onchange('name')
     def _onchange_name_warning(self):
         if self.country_code == 'IN' and self.journal_id.type == 'sale' and self.name and (len(self.name) > 16 or not re.match(r'^[a-zA-Z0-9-\/]+$', self.name)):
@@ -78,11 +211,201 @@ class AccountMove(models.Model):
             }}
         return super()._onchange_name_warning()
 
+    def _l10n_in_calculate_aggregate_totals(self, partner_id):
+        def get_company_ids(company):
+            company_ids = company
+            if company.parent_id:
+                company_ids |= company.parent_id
+                if company.parent_id.child_ids:
+                    company_ids |= company.parent_id.mapped('child_ids')
+            if company.child_ids:
+                company_ids |= company.mapped('child_ids')
+            return company_ids
+
+        def get_partner_ids(partner_domain):
+            return self.env['res.partner'].search(partner_domain)
+
+        def get_move_lines(partner_domain, start_date, end_date, account_ids, period):
+            company_ids = get_company_ids(self.company_id)
+            partner_ids = get_partner_ids(partner_domain)
+            query = """
+                SELECT line.id
+                FROM account_move_line line
+                JOIN account_move move ON line.move_id = move.id
+                JOIN account_account account ON line.account_id = account.id
+                WHERE move.date >= %s
+                    AND move.date <= %s
+                    AND move.company_id IN %s
+                    AND account.id IN %s
+                    AND account.l10n_in_tds_tcs_section IS NOT NULL
+                    AND account.l10n_in_tds_tcs_section IN (
+                        SELECT id
+                        FROM account_tax_group
+                        WHERE l10n_in_aggregate_period = %s
+                    )
+            """
+            if partner_ids:
+                partner_condition = "AND line.partner_id IN %s"
+                query += f"\n{partner_condition}"
+                params = (start_date, end_date, tuple(company_ids.ids), tuple(account_ids.ids), period, tuple(partner_ids.ids))
+            else:
+                params = (start_date, end_date, tuple(company_ids.ids), tuple(account_ids.ids), period)
+            self.env.cr.execute(query, params)
+            line_ids = [row[0] for row in self.env.cr.fetchall()]
+            invoice_lines = self.env['account.move.line'].browse(line_ids)
+
+            lines_group_by_partners = {}
+            for line in invoice_lines:
+                partner_pan = line.partner_id.l10n_in_pan or line.partner_id.id
+                if partner_pan not in lines_group_by_partners:
+                    lines_group_by_partners[partner_pan] = line
+                lines_group_by_partners[partner_pan] |= line
+            return lines_group_by_partners
+
+        def calculate_fiscal_year_dates():
+            fiscal_year_end_date = fields.Date.from_string('%s-%s-%s' % (fields.Date.today().year + 1, self.company_id.fiscalyear_last_month, self.company_id.fiscalyear_last_day))
+            fiscal_year_start_date = fields.Date.add(fields.Date.subtract(fiscal_year_end_date, months=12), days=1)
+            return fiscal_year_start_date, fiscal_year_end_date
+
+        def get_partner_domain():
+            if not partner_id:
+                return []
+
+            if partner_id.filtered(lambda p: p.l10n_in_pan):
+                return ['|', ('l10n_in_pan', 'in', partner_id.mapped('l10n_in_pan')), ('id', 'in', partner_id.ids)]
+            else:
+                return [('id', 'in', partner_id.ids)]
+
+        fiscal_year_start_date, fiscal_year_end_date = calculate_fiscal_year_dates()
+        partner_domain = get_partner_domain()
+        account_ids = self.invoice_line_ids.mapped('account_id')
+
+        moves_within_fiscal_year = get_move_lines(
+            partner_domain=partner_domain,
+            start_date=fiscal_year_start_date,
+            end_date=fiscal_year_end_date,
+            account_ids=account_ids,
+            period='fiscal_year'
+        )
+        tax_fiscal_yearly_totals = self._l10n_in_calculate_tax_aggregate_totals(moves_within_fiscal_year)
+
+        tax_monthly_totals = {}
+        if self.invoice_line_ids.filtered(lambda line: line.account_id.l10n_in_tds_tcs_section.l10n_in_aggregate_period == 'month'):
+            month_start_date = fields.Date.start_of(self.date, "month")
+            month_end_date = fields.Date.end_of(self.date, "month")
+            moves_within_month = get_move_lines(
+                partner_domain=partner_domain,
+                start_date=month_start_date,
+                end_date=month_end_date,
+                account_ids=account_ids,
+                period='month'
+            )
+            tax_monthly_totals = self._l10n_in_calculate_tax_aggregate_totals(moves_within_month)
+
+        return tax_fiscal_yearly_totals, tax_monthly_totals
+
+    def _l10n_in_calculate_tax_aggregate_totals(self, records):
+        all_tax_totals = {}
+        for partner in records:
+            accounts = records[partner].mapped('account_id')
+            if (tax_totals := {
+                account.l10n_in_tds_tcs_section: 0 for account in accounts.filtered(
+                    lambda account: account.l10n_in_tds_tcs_section
+                )
+            }):
+                for line in records[partner]:
+                    tax_group_id = line.account_id.l10n_in_tds_tcs_section
+                    if tax_group_id.l10n_in_is_aggregate_limit:
+                        xml_id = self._get_tax_group_xml_id(tax_group_id)
+
+                        if line.tax_ids and line.move_id.move_type == 'entry':
+                            line_price = line.debit if line.credit == 0 else line.credit
+                            taxes_res = line.tax_ids.compute_all(line_price)
+                            line.price_total = taxes_res['total_included']
+
+                        if xml_id in TDS_GROUPS:
+                            if line.move_id.move_type in ['out_refund', 'in_invoice']:
+                                tax_totals[tax_group_id] += line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_subtotal
+                            elif line.move_id.move_type in ['out_invoice', 'in_refund']:
+                                tax_totals[tax_group_id] -= line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_subtotal
+                            elif line.move_id.move_type == 'entry':
+                                if line.credit == 0:
+                                    tax_totals[tax_group_id] += line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.debit
+                                else:
+                                    tax_totals[tax_group_id] -= line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.credit
+                        else:
+                            if line.move_id.move_type in ['out_invoice', 'in_refund']:
+                                tax_totals[tax_group_id] += line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_subtotal
+                            elif line.move_id.move_type in ['out_refund', 'in_invoice']:
+                                tax_totals[tax_group_id] -= line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_subtotal
+                            elif line.move_id.move_type == 'entry':
+                                if line.debit == 0:
+                                    tax_totals[tax_group_id] += line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.credit
+                                else:
+                                    tax_totals[tax_group_id] -= line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.debit
+                if partner not in all_tax_totals:
+                    all_tax_totals[partner] = tax_totals
+
+        return all_tax_totals
+
+    def _l10n_in_calculate_per_transaction_total(self):
+        def get_unit_value(line, tax_group_id):
+            if line.move_id.move_type == 'entry':
+                return get_entry_move_value(line, tax_group_id)
+            else:
+                return (line.price_total / line.quantity) if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_unit
+
+        def get_total_value(line, tax_group_id):
+            if line.move_id.move_type == 'entry':
+                return get_entry_move_value(line, tax_group_id)
+            else:
+                return line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.price_subtotal
+
+        def get_entry_move_value(line, tax_group_id):
+            if line.credit == 0:
+                return line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.debit
+            else:
+                return line.price_total if tax_group_id.l10n_in_consider_tax == 'total_amount' else line.credit
+
+        self.ensure_one()
+        per_transaction_total = {}
+
+        for line in self.invoice_line_ids.filtered(lambda line: line.account_id.l10n_in_tds_tcs_section not in line.tax_ids.mapped('tax_group_id')):
+            tax_group_id = line.account_id.l10n_in_tds_tcs_section
+            if tax_group_id.l10n_in_is_per_transaction_limit:
+                if line.tax_ids and line.move_id.move_type == 'entry':
+                    line_price = line.debit if line.credit == 0 else line.credit
+                    taxes_res = line.tax_ids.compute_all(line_price)
+                    line.price_total = taxes_res['total_included']
+
+                if tax_group_id.l10n_in_per_transection_units == 'per_unit':
+                    unit_value = get_unit_value(line, tax_group_id)
+                else:
+                    unit_value = get_total_value(line, tax_group_id)
+
+                if line.move_id.move_type != 'entry':
+                    if tax_group_id not in per_transaction_total:
+                        per_transaction_total[tax_group_id] = [unit_value]
+                    elif tax_group_id.l10n_in_per_transection_units == 'total':
+                        per_transaction_total[tax_group_id][0] += unit_value
+                    elif tax_group_id.l10n_in_per_transection_units == 'per_unit':
+                        per_transaction_total[tax_group_id].append(unit_value)
+                else:
+                    if tax_group_id not in per_transaction_total:
+                        per_transaction_total[tax_group_id] = [unit_value]
+                    else:
+                        per_transaction_total[tax_group_id].append(unit_value)
+        return per_transaction_total
+
     def _get_name_invoice_report(self):
         self.ensure_one()
         if self.country_code == 'IN':
             return 'l10n_in.l10n_in_report_invoice_document_inherit'
         return super()._get_name_invoice_report()
+
+    def _get_tax_group_xml_id(self, tax_group_id):
+        xml_id = self.env['ir.model.data'].search([('res_id', '=', tax_group_id.id), ('model', '=', 'account.tax.group')], limit=1)
+        return xml_id.name[len(str(self.company_id.parent_id.id or self.company_id.id)) + 1:]
 
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""

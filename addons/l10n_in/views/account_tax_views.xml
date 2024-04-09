@@ -10,4 +10,32 @@
             </field>
         </field>
     </record>
+
+    <record id="view_tax_group_form_inherit" model="ir.ui.view">
+        <field name="name">tax.group.form.view.inherit</field>
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="l10_in_is_threshold" widget="boolean_toggle" invisible="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <group name="tds_threshold_limit" string="TCS/TDS Threshold Limit" invisible="l10_in_is_threshold == False or country_code != 'IN'">
+                    <field name="l10n_in_consider_tax" invisible="l10_in_is_threshold == False"/>
+                    <label for="l10n_in_is_per_transaction_limit"/>
+                    <div>
+                        <field class="w-25" name="l10n_in_is_per_transaction_limit" widget="boolean_toggle"/>
+                        <field class="w-25 text-center oe_inline" name="l10n_in_per_transaction_limit" invisible="l10_in_is_threshold == False or l10n_in_is_per_transaction_limit == False"/>
+                        <field class="w-25" name="l10n_in_per_transection_units" invisible="l10_in_is_threshold == False or l10n_in_is_per_transaction_limit == False"/>
+                    </div>
+                    <label for="l10n_in_is_aggregate_limit"/>
+                    <div>
+                        <field class="w-25" name="l10n_in_is_aggregate_limit" widget="boolean_toggle"/>
+                        <field class="w-25 text-center oe_inline" name="l10n_in_aggregate_limit" invisible="l10_in_is_threshold == False or l10n_in_is_aggregate_limit == False"/>
+                        <field class="w-25" name="l10n_in_aggregate_period" invisible="l10_in_is_threshold == False or l10n_in_is_aggregate_limit == False"/>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
 </odoo>

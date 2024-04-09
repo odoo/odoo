@@ -5,6 +5,7 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     l10n_in_hsn_code = fields.Char(string="HSN/SAC Code", compute="_compute_l10n_in_hsn_code", store=True, readonly=False, copy=False)
+    l10n_in_line_warning = fields.Boolean()
 
     @api.depends('product_id', 'product_id.l10n_in_hsn_code')
     def _compute_l10n_in_hsn_code(self):
