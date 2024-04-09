@@ -33,7 +33,7 @@ export class BusBus extends models.Model {
 
     wsWorker;
     channelsByUser = {};
-    lastBusNotificationId = 1;
+    lastBusNotificationId = 0;
 
     constructor() {
         super(...arguments);
@@ -83,7 +83,7 @@ export class BusBus extends models.Model {
         }
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
-            values.push({ id: this.lastBusNotificationId++, message: { payload, type } });
+            values.push({ id: ++this.lastBusNotificationId, message: { payload, type } });
         }
         this.wsWorker.broadcast("notification", values);
     }

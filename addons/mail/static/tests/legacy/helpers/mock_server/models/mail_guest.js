@@ -8,13 +8,6 @@ patch(MockServer.prototype, {
         const guestId = this.pyEnv?.cookie.get("dgid");
         return guestId ? this.pyEnv["mail.guest"].search_read([["id", "=", guestId]])[0] : null;
     },
-    _mockMailGuest__initMessaging(context) {
-        return {
-            Store: {
-                initBusId: this.lastBusNotificationId,
-            },
-        };
-    },
     /**
      * Simulates `_guest_format` on `mail_guest`.
      *

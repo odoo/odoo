@@ -8,14 +8,6 @@ export class MailGuest extends models.ServerModel {
         return guestId ? this.search_read([["id", "=", guestId]])[0] : null;
     }
 
-    _init_messaging() {
-        return {
-            Store: {
-                initBusId: this.lastBusNotificationId,
-            },
-        };
-    }
-
     /**
      * @param {Number[]} ids
      * @returns {Record<string, ModelRecord>}

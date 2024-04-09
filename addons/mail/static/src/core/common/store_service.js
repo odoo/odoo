@@ -64,15 +64,6 @@ export class Store extends BaseStore {
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**
-     * The last id of bus notification at the time for fetch init_messaging.
-     * When receiving a notification:
-     * - if id greater than this value: the notification is newer than init_messaging state.
-     * - if same id or lower: the notification is older than init_messaging state.
-     * This is useful to determine whether we should increment or decrement a counter based
-     * on init_messaging state.
-     */
-    initBusId = 0;
-    /**
      * Indicates whether the current user is using the application through the
      * public page.
      */

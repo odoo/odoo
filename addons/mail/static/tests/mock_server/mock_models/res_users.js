@@ -114,11 +114,13 @@ export class ResUsers extends webModels.ResUsers {
             ["channel_id", "in", channels.map((channel) => channel.id)],
             ["partner_id", "=", user.partner_id],
         ]);
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         return {
             Store: {
                 discuss: {
                     inbox: {
                         counter: ResPartner._get_needaction_count(user.partner_id),
+                        counter_bus_id: bus_last_id,
                         id: "inbox",
                         model: "mail.box",
                     },
@@ -126,11 +128,11 @@ export class ResUsers extends webModels.ResUsers {
                         counter: MailMessage._filter([
                             ["starred_partner_ids", "in", user.partner_id],
                         ]).length,
+                        counter_bus_id: bus_last_id,
                         id: "starred",
                         model: "mail.box",
                     },
                 },
-                initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
             },

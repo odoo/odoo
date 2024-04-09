@@ -61,11 +61,13 @@ patch(MockServer.prototype, {
             ["channel_id", "in", channels.map((channel) => channel.id)],
             ["partner_id", "=", user.partner_id],
         ]);
+        const bus_last_id = this.lastBusNotificationId;
         return {
             Store: {
                 discuss: {
                     inbox: {
                         counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
+                        counter_bus_id: bus_last_id,
                         id: "inbox",
                         model: "mail.box",
                     },
@@ -73,11 +75,11 @@ patch(MockServer.prototype, {
                         counter: this.getRecords("mail.message", [
                             ["starred_partner_ids", "in", user.partner_id],
                         ]).length,
+                        counter_bus_id: bus_last_id,
                         id: "starred",
                         model: "mail.box",
                     },
                 },
-                initBusId: this.lastBusNotificationId,
                 initChannelsUnreadCounter: members.filter((member) => member.message_unread_counter)
                     .length,
             },
