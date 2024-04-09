@@ -157,9 +157,98 @@ class HolidaysAllocation(models.Model):
 
     @api.depends('holiday_status_id', 'number_of_days')
     def _compute_description(self):
+<<<<<<< saas-17.4
+||||||| 822b5a493bd0da475e082ef9fc8a478761223c76
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+
+=======
+        self.check_access_rights('read')
+        self.check_access_rule('read')
+>>>>>>> 60f1ab42b80ceb1405c336f132d7597de707f319
         for allocation in self:
+<<<<<<< saas-17.4
             if not allocation.is_name_custom:
                 allocation.name = allocation._get_title()
+||||||| 822b5a493bd0da475e082ef9fc8a478761223c76
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
+                title = allocation.sudo().private_name
+                if allocation.env.context.get('is_employee_allocation'):
+                    if allocation.holiday_status_id:
+                        allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
+                        title = _("%s allocation request (%s %s)",
+                            allocation.holiday_status_id.name,
+                            allocation_duration,
+                            allocation.type_request_unit)
+                    else:
+                        title = _("Allocation Request")
+                allocation.name = title
+            else:
+                allocation.name = '*****'
+
+    def _inverse_description(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
+                allocation.sudo().private_name = allocation.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
+
+        allocations = self.sudo().search(domain)
+        return [('id', 'in', allocations.ids)]
+
+    @api.depends('accrual_plan_id')
+    def _compute_has_accrual_plan(self):
+        self.has_accrual_plan = bool(self.env['hr.leave.accrual.plan'].sudo().search_count([('active', '=', True)]))
+=======
+            if not allocation.env.context.get('is_employee_allocation'):
+                allocation.name = allocation.sudo().private_name
+            elif not allocation.holiday_status_id:
+                allocation.name = _("Allocation Request")
+            elif allocation.type_request_unit == 'hour':
+                allocation.name = _(
+                    '%(name)s (%(duration)s hour(s))',
+                    name=allocation.holiday_status_id.name,
+                    duration=allocation.number_of_days * (
+                        allocation.employee_id.sudo().resource_calendar_id.hours_per_day
+                        or allocation.holiday_status_id.company_id.resource_calendar_id.hours_per_day
+                        or HOURS_PER_DAY
+                    ),
+                )
+            else:
+                allocation.name = _(
+                    '%(name)s (%(duration)s day(s))',
+                    name=allocation.holiday_status_id.name,
+                    duration=allocation.number_of_days,
+                )
+
+    def _inverse_description(self):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for allocation in self:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
+                allocation.sudo().private_name = allocation.name
+
+    def _search_description(self, operator, value):
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        domain = [('private_name', operator, value)]
+
+        if not is_officer:
+            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
+
+        allocations = self.sudo().search(domain)
+        return [('id', 'in', allocations.ids)]
+
+    @api.depends('accrual_plan_id')
+    def _compute_has_accrual_plan(self):
+        self.has_accrual_plan = bool(self.env['hr.leave.accrual.plan'].sudo().search_count([('active', '=', True)]))
+>>>>>>> 60f1ab42b80ceb1405c336f132d7597de707f319
 
     @api.depends('name', 'date_from', 'date_to')
     def _compute_description_validity(self):
