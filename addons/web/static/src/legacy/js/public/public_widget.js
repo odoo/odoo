@@ -97,7 +97,7 @@ function makeButtonHandler(fct) {
         // a 'real' debounce creation useless. Also, during the debouncing
         // part, the button is disabled without any visual effect.
         button.classList.add("pe-none");
-        Promise.resolve(dom.DEBOUNCE && delay(DEBOUNCE)).then(function () {
+        delay(DEBOUNCE).then(function () {
             button.classList.remove("pe-none");
             const restore = addLoadingEffect(button);
             return Promise.resolve(result).finally(restore);
