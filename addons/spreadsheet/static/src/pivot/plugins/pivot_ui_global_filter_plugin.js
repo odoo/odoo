@@ -75,7 +75,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                 const { col, row } = event.anchor.cell;
                 const cell = this.getters.getCell({ sheetId, col, row });
                 if (cell !== undefined && cell.content.startsWith("=PIVOT.HEADER(")) {
-                    const filters = this._getFiltersMatchingPivot(cell.compiledFormula.tokens);
+                    const filters = this._getFiltersMatchingPivot(
+                        sheetId,
+                        cell.compiledFormula.tokens
+                    );
                     this.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
                 }
                 break;
@@ -144,8 +147,8 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
      *
      * @returns {Array<Object>}
      */
-    _getFiltersMatchingPivot(tokens) {
-        const functionDescription = this.getters.getFirstPivotFunction(tokens);
+    _getFiltersMatchingPivot(sheetId, tokens) {
+        const functionDescription = this.getters.getFirstPivotFunction(sheetId, tokens);
         if (!functionDescription) {
             return [];
         }
