@@ -282,18 +282,8 @@ class StockMove(models.Model):
 
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
-        if self.is_subcontract:
-            vals['move_orig_ids'] = [] if not self.move_orig_ids else [(4, self.move_orig_ids[-1].id)]
         vals['location_id'] = self.location_id.id
         return vals
-
-    def _split(self, qty, restrict_partner_id=False):
-        self.ensure_one()
-        new_move_vals = super()._split(qty=qty, restrict_partner_id=restrict_partner_id)
-        # Update the origin moves to remove the split one
-        if self.move_orig_ids and self.is_subcontract:
-            self.move_orig_ids = (self.move_orig_ids - self.move_orig_ids[-1]).ids
-        return new_move_vals
 
     def _should_bypass_set_qty_producing(self):
         if (self.production_id | self.raw_material_production_id)._get_subcontract_move():
