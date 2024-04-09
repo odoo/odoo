@@ -2229,7 +2229,7 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline")) {
+    if (!isTangible(el) && !el.hasAttribute("data-oe-zws-empty-inline") && !el.hasChildNodes()) {
         // As soon as there is actual content in the node, the zero-width space
         // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
@@ -2241,6 +2241,18 @@ export function fillEmpty(el) {
             previousSibling.remove();
         }
         setSelection(zws, 0, zws, 0);
+    }
+    // If the element is empty and inside an <a> tag with 'inline' display,
+    // it's not possible to place the cursor in element even if it contains
+    // ZWSP. To make the element cursor-friendly, change its display to
+    // 'inline-block'.
+    if (
+        !isVisible(el) &&
+        el.nodeName !== 'A' &&
+        closestElement(el, 'a') &&
+        getComputedStyle(el).display === 'inline'
+    ) {
+        el.style.display = 'inline-block';
     }
     return fillers;
 }
