@@ -1057,6 +1057,7 @@ test("chat should be sorted by last activity time [REQUIRE FOCUS]", async () => 
     // post a new message on the last channel
     await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
     await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "Blabla" });
     await contains(
         ".o-mail-DiscussSidebarChannel",
         { text: "Demo" },
