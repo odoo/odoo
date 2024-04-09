@@ -127,15 +127,6 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
-    def _init_messaging(self, store):
-        self.ensure_one()
-        store.add({
-            "Store": {
-                # sudo: bus.bus: reading non-sensitive last id
-                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
-            },
-        })
-
     def _guest_format(self, fields=None):
         if not fields:
             fields = {'id': True, 'name': True, 'im_status': True, "write_date": True}

@@ -766,7 +766,7 @@ async function processRequest(request) {
     if ("init_messaging" in args) {
         const initMessaging =
             MailGuest._get_guest_from_context() && ResUsers._is_public(this.env.uid)
-                ? MailGuest._init_messaging(args.context)
+                ? {}
                 : ResUsers._init_messaging([this.env.uid], args.context);
         addToRes(res, initMessaging);
         const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
@@ -812,6 +812,7 @@ async function processRequest(request) {
         });
     }
     if (args.systray_get_activities && this.env.user?.partner_id) {
+        const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         const groups = ResUsers._get_activity_groups();
         addToRes(res, {
             Store: {
@@ -819,6 +820,7 @@ async function processRequest(request) {
                     (counter, group) => counter + (group.total_count || 0),
                     0
                 ),
+                activity_counter_bus_id: bus_last_id,
                 activityGroups: groups,
             },
         });

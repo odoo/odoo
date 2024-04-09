@@ -29,7 +29,6 @@ export class DiscussCoreWeb {
     }
 
     setup() {
-        this.messagingService.isReady.then(() => this.busService.start());
         this.sidebarCategoriesBroadcast?.addEventListener("message", ({ data: { id, open } }) => {
             const category = this.store.DiscussAppCategory.get(id);
             if (category) {
@@ -92,6 +91,7 @@ export class DiscussCoreWeb {
                 this.store.channels.fetch();
             }
         });
+        this.busService.start();
     }
 
     /**

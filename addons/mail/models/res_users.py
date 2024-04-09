@@ -298,13 +298,26 @@ class Users(models.Model):
     def _init_messaging(self, store):
         self.ensure_one()
         self = self.with_user(self)
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         store.add({
             "Store": {
                 "discuss": {
-                    "inbox": {"counter": self.partner_id._get_needaction_count(), "id": "inbox", "model": "mail.box"},
-                    "starred": {"counter": self.env["mail.message"].search_count([("starred_partner_ids", "in", self.partner_id.ids)]), "id": "starred", "model": "mail.box"},
+                    "inbox": {
+                        "counter": self.partner_id._get_needaction_count(),
+                        "counter_bus_id": bus_last_id,
+                        "id": "inbox",
+                        "model": "mail.box",
+                    },
+                    "starred": {
+                        "counter": self.env["mail.message"].search_count(
+                            [("starred_partner_ids", "in", self.partner_id.ids)]
+                        ),
+                        "counter_bus_id": bus_last_id,
+                        "id": "starred",
+                        "model": "mail.box",
+                    },
                 },
-                "initBusId": self.env["bus.bus"].sudo()._bus_last_id(),
             },
         })
 

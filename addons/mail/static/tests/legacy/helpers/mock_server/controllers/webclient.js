@@ -20,7 +20,7 @@ patch(MockServer.prototype, {
         if ("init_messaging" in args) {
             const initMessaging =
                 this._mockMailGuest__getGuestFromContext() && this.pyEnv.currentUser?._is_public()
-                    ? this._mockMailGuest__initMessaging(args.context)
+                    ? {}
                     : this._mockResUsers_InitMessaging([this.pyEnv.currentUserId], args.context);
             this._addToRes(res, initMessaging);
             const guest =
@@ -75,6 +75,7 @@ patch(MockServer.prototype, {
             });
         }
         if (args.systray_get_activities && this.pyEnv.currentPartnerId) {
+            const bus_last_id = this.lastBusNotificationId;
             const groups = this._mockResUsers_getActivityGroups();
             this._addToRes(res, {
                 Store: {
@@ -82,6 +83,7 @@ patch(MockServer.prototype, {
                         (counter, group) => counter + (group.total_count || 0),
                         0
                     ),
+                    activity_counter_bus_id: bus_last_id,
                     activityGroups: groups,
                 },
             });
