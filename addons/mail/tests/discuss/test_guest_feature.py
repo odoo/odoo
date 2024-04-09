@@ -60,3 +60,35 @@ class TestGuestFeature(WebsocketCase):
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]["message"]["type"], "lambda")
         self.assertEqual(notifications[0]["message"]["payload"], {"foo": "bar"})
+
+
+@tagged("mail_guest", "post_install", "-at_install")
+class TestGuestInternals(WebsocketCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_guest = cls.env["mail.guest"].create({
+            "access_token": "test_token",
+            "country_id": cls.env.ref("base.be").id,
+            "lang": "en_US",
+            "timezone": "Europe/Brussels",
+            "name": "Guest",
+        })
+
+    def _make_jsonrpc_request_with_guest(self, route, parameters, guest, headers=None):
+        """ Helper hiding cookie management for guest """
+        headers = dict((headers or {}), Cookie=f"{guest._cookie_name}={guest._format_auth_cookie()};")
+        return self.make_jsonrpc_request(route, parameters, headers=headers)
+
+    def test_controller_guest_update_name(self):
+        """ Test for '/mail/guest/update_name' """
+        _res = self._make_jsonrpc_request_with_guest(
+            "/mail/guest/update_name",
+            {
+                "guest_id": self.test_guest.id,
+                "name": "New Name",
+            },
+            self.test_guest,
+        )
+        self.assertEqual(self.test_guest.name, "New Name")
