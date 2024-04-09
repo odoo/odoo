@@ -14,6 +14,10 @@ class ResPartner(models.Model):
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
 
+    def get_payment_term_discount(self):
+        # return the sum of all % discounts included in this partner's payment term record
+        return sum(self.property_payment_term_id.line_ids.mapped('discount_percentage'))
+
     def _compute_pos_order(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])

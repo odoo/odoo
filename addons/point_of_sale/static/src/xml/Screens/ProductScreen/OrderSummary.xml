@@ -5,6 +5,12 @@
         <div class="summary clearfix">
             <t t-set="_total" t-value="getTotal()" />
             <t t-set="_tax" t-value="getTax()" />
+            <t t-set="_term_discount" t-value="getTermDiscount()"/>
+            <div class="font-small">
+                <t t-if="_term_discount !== 0">
+                    <t t-esc="_term_discount"/>% immediate payment discount
+                </t>
+            </div>
             <div class="line">
                 <div class="entry total">
                     <span class="badge">Total: </span>

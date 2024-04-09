@@ -197,10 +197,11 @@ class PosOrder(models.Model):
     def _prepare_invoice_line(self, order_line):
         #apply customer language on invoice
         name = order_line.product_id.with_context(lang=order_line.order_id.partner_id.lang or self.env.user.lang).get_product_multiline_description_sale()
+        residual_discount = order_line.order_id.partner_id.get_payment_term_discount()
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
-            'discount': order_line.discount,
+            'discount': order_line.discount + residual_discount,
             'price_unit': order_line.price_unit,
             'name': name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
@@ -612,6 +613,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         self.ensure_one()
+
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
         vals = {
@@ -627,7 +629,7 @@ class PosOrder(models.Model):
             'invoice_date': invoice_date.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
-            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
+            # 'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False

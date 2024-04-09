@@ -18,6 +18,9 @@ odoo.define('point_of_sale.OrderSummary', function(require) {
                 displayAmount: this.env.pos.format_currency(taxAmount),
             };
         }
+        getTermDiscount() {
+            return this.props.order.payment_term_discount;
+        }
     }
     OrderSummary.template = 'OrderSummary';
 

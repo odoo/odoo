@@ -2486,6 +2486,7 @@ class Order extends PosModel {
         this.pos_session_id = this.pos.pos_session.id;
         this.cashier        = this.pos.get_cashier();
         this.finalized      = false; // if true, cannot be modified.
+        this.payment_term_discount = 0;
 
         this.partner = null;
 
@@ -2922,6 +2923,19 @@ class Order extends PosModel {
             self.fix_tax_included_price(line);
         });
     }
+
+    async set_payment_term_discount () {
+        if (!this.partner) {
+            this.payment_term_discount = 0
+        } else {
+            this.payment_term_discount = await this.pos.env.services.rpc({
+                model: 'res.partner',
+                method: 'get_payment_term_discount',
+                args: [this.partner.id],
+            })
+        }
+    }
+
     remove_orderline( line ){
         this.assert_editable();
         this.orderlines.remove(line);
@@ -3153,7 +3167,7 @@ class Order extends PosModel {
     get_total_without_tax() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             return sum + orderLine.get_price_without_tax();
-        }), 0), this.pos.currency.rounding);
+        }), 0) * (1 - this.payment_term_discount / 100), this.pos.currency.rounding);
     }
     _get_ignored_product_ids_total_discount() {
         return [];
@@ -3175,7 +3189,7 @@ class Order extends PosModel {
                 }
             }
             return sum;
-        }, 0), this.pos.currency.rounding);
+        }, 0) + this.payment_term_discount, this.pos.currency.rounding);
     }
     get_total_tax() {
         if (this.pos.company.tax_calculation_rounding_method === "round_globally") {
@@ -3202,11 +3216,11 @@ class Order extends PosModel {
                 var taxAmount = groupTaxes[taxIds[j]];
                 sum += round_pr(taxAmount, this.pos.currency.rounding);
             }
-            return sum;
+            return sum * (1.0 - this.payment_term_discount/100);
         } else {
             return round_pr(this.orderlines.reduce((function(sum, orderLine) {
                 return sum + orderLine.get_tax();
-            }), 0), this.pos.currency.rounding);
+            }), 0) * (1.0 - this.payment_term_discount/100), this.pos.currency.rounding);
         }
     }
     get_total_paid() {
@@ -3498,6 +3512,7 @@ class Order extends PosModel {
         }
         this.set_fiscal_position(newPartnerFiscalPosition);
         this.set_pricelist(newPartnerPricelist);
+        this.set_payment_term_discount();
     }
     /* ---- Ship later --- */
     set_to_ship(to_ship) {
