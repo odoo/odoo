@@ -5,6 +5,7 @@ import { getCurrentDimensions, isInDOM, mockedMatchMedia } from "@web/../lib/hoo
 import { MockMath } from "./math";
 import { mockNavigator } from "./navigator";
 import {
+    ClearableBroadcastChannel,
     MockCookie,
     MockHistory,
     MockLocation,
@@ -198,6 +199,7 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
     },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
+    BroadcastChannel: { value: ClearableBroadcastChannel, writable: false },
     cancelAnimationFrame: { value: mockedCancelAnimationFrame, writable: false },
     clearInterval: { value: mockedClearInterval, writable: false },
     clearTimeout: { value: mockedClearTimeout, writable: false },
@@ -256,6 +258,9 @@ export function cleanupWindow() {
             }
         }
     }
+
+    // Other web APIs
+    ClearableBroadcastChannel.cleanup();
 }
 
 export function getTitle() {

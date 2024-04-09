@@ -804,3 +804,19 @@ export class ServerWebSocket extends EventTarget {
         this.#clientWs.dispatchEvent(new MessageEvent("message", { data }));
     }
 }
+
+export class ClearableBroadcastChannel extends BroadcastChannel {
+    static instances = [];
+
+    constructor() {
+        super(...arguments);
+        ClearableBroadcastChannel.instances.push(this);
+    }
+
+    static cleanup() {
+        for (const channel of ClearableBroadcastChannel.instances) {
+            channel.close();
+        }
+        ClearableBroadcastChannel.instances = [];
+    }
+}
