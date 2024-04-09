@@ -175,14 +175,14 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         debugHelp: "This is a hack/workaround for the next step",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item below the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Shop') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .fa-bars",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item as a child of the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: 'drag_and_drop_native .oe_menu_editor li:contains("Contact us") .form-control',
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .form-control",
     },
     {
         content: "Wait for drop",
