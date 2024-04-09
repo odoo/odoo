@@ -73,10 +73,11 @@ const DEFAULT_LIST_FIELD_MATCHINGS = {
 };
 
 function getFiltersMatchingPivot(model, formula) {
+    const sheetId = model.getters.getActiveSheetId();
     const pivotUIPlugin = model["handlers"].find(
         (handler) => handler instanceof PivotUIGlobalFilterPlugin
     );
-    return pivotUIPlugin._getFiltersMatchingPivot(tokenize(formula));
+    return pivotUIPlugin._getFiltersMatchingPivot(sheetId, tokenize(formula));
 }
 
 QUnit.module("spreadsheet > Global filters model", {}, () => {
