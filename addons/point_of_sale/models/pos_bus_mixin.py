@@ -26,4 +26,5 @@ class PosBusMixin(models.AbstractModel):
             if len(notifications) != 2:
                 raise ValueError("If you want to send a single notification, you must provide a name: str and a message: any")
             notifications = [notifications]
-        self.env['bus.bus']._sendmany((self.access_token, f"{self.access_token}-{name}" if private else name, message) for name, message in notifications)
+        for name, message in notifications:
+            self.env['bus.bus']._add_to_queue(self.access_token, f"{self.access_token}-{name}" if private else name, message)

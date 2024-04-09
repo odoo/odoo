@@ -108,7 +108,7 @@ class DiscussChannel(models.Model):
         return msg
 
     def execute_command_history(self, **kwargs):
-        self.env['bus.bus']._add_to_queue(self, 'im_livechat.history_command', {'id': self.id})
+        self._bus_send('im_livechat.history_command', {'id': self.id})
 
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')

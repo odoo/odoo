@@ -64,6 +64,7 @@ class Message(models.Model):
     information.
     """
     _name = 'mail.message'
+    _inherit = ['bus.listener.mixin']
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
@@ -741,11 +742,8 @@ class Message(models.Model):
                 messages_by_partner[partner] |= elem
 
         # Notify front-end of messages deletion for partners having a user
-        if messages_by_partner:
-            self.env['bus.bus']._sendmany([
-                (partner, 'mail.message/delete', {'message_ids': messages.ids})
-                for partner, messages in messages_by_partner.items()
-            ])
+        for partner, messages in messages_by_partner.items():
+            partner._bus_send('mail.message/delete', {'message_ids': messages.ids})
 
         return super(Message, self).unlink()
 
@@ -790,7 +788,7 @@ class Message(models.Model):
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.message/mark_as_read', {
+        self.env.user._bus_send('mail.message/mark_as_read', {
             'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
@@ -811,7 +809,7 @@ class Message(models.Model):
         notifications.write({'is_read': True})
 
         # notifies changes in messages through the bus.
-        self.env['bus.bus']._add_to_queue(partner_id, 'mail.message/mark_as_read', {
+        self.env.user._bus_send('mail.message/mark_as_read', {
             'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
@@ -823,7 +821,7 @@ class Message(models.Model):
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
         partner.starred_message_ids -= starred_messages
-        self.env['bus.bus']._add_to_queue(partner, 'mail.message/toggle_star', {
+        self.env.user._bus_send('mail.message/toggle_star', {
             'message_ids': starred_messages.ids,
             'starred': False,
         })
@@ -841,7 +839,7 @@ class Message(models.Model):
         else:
             partner.starred_message_ids -= self
 
-        self.env['bus.bus']._add_to_queue(partner, 'mail.message/toggle_star', {
+        self.env.user._bus_send('mail.message/toggle_star', {
             'message_ids': [self.id],
             'starred': starred,
         })
@@ -880,7 +878,7 @@ class Message(models.Model):
             "message": {"id": self.id},
         }
         payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
-        self.env["bus.bus"]._add_to_queue(self._bus_notification_target(), "mail.record/insert", payload)
+        self._bus_send("mail.record/insert", payload)
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
@@ -1187,13 +1185,10 @@ class Message(models.Model):
                 messages_per_partner[self.env.user.partner_id] |= message
             if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
                 messages_per_partner[message.author_id] |= message
-        updates = [
-            (partner, 'mail.message/notification_update', {'elements': messages._message_notification_format()})
-            for partner, messages in messages_per_partner.items()
-        ]
-        self.env['bus.bus']._sendmany(updates)
+        for partner, messages in messages_per_partner.items():
+            partner._bus_send('mail.message/notification_update', {'elements': messages._message_notification_format()})
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         return self.env.user.partner_id
 

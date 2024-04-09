@@ -32,7 +32,7 @@ class Channel(models.Model):
     _name = 'discuss.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'bus.listener.mixin']
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -273,7 +273,8 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
-        self.env['bus.bus']._sendmany([(channel, 'discuss.channel/delete', {'id': channel.id}) for channel in self])
+        for channel in self:
+            channel._bus_send('discuss.channel/delete', {'id': channel.id})
 
     def write(self, vals):
         if 'channel_type' in vals:
@@ -282,7 +283,6 @@ class Channel(models.Model):
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
         old_vals = {channel: channel._channel_basic_info() for channel in self}
         result = super().write(vals)
-        notifications = []
         for channel in self:
             info = channel._channel_basic_info()
             diff = {}
@@ -290,16 +290,15 @@ class Channel(models.Model):
                 if value != old_vals[channel][key]:
                     diff[key] = value
             if diff:
-                notifications.append([channel, "mail.record/insert", {
+                channel._bus_send("mail.record/insert", {
                     "Thread": {
                         "id": channel.id,
                         "model": "discuss.channel",
                         **diff
                     }
-                }])
+                })
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
-        self.env['bus.bus']._sendmany(notifications)
         return result
 
     def init(self):
@@ -321,16 +320,14 @@ class Channel(models.Model):
             ]
             # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
             self.env['discuss.channel.member'].sudo().create(to_create)
-        notifications = []
         for channel in self:
             for group in channel.group_ids:
-                notifications.append((group, 'mail.record/insert', {
+                group._bus_send('mail.record/insert', {
                     'Thread': {
                         **channel._channel_basic_info(),
                         "is_pinned": True,
                     }
-                }))
-        self.env["bus.bus"]._sendmany(notifications)
+                })
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
@@ -355,8 +352,8 @@ class Channel(models.Model):
         notification = Markup('<div class="o_mail_notification">%s</div>') % _('left the channel')
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
-        self.env['bus.bus']._add_to_queue(partner, 'discuss.channel/leave', channel_info)
-        self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {
+        partner._bus_send('discuss.channel/leave', channel_info)
+        self._bus_send('mail.record/insert', {
             'Thread': {
                 'channelMembers': [('DELETE', {'id': member.id})],
                 'id': self.id,
@@ -370,7 +367,6 @@ class Channel(models.Model):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
-        notifications = []
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
@@ -395,14 +391,14 @@ class Channel(models.Model):
                 # notify invited members through the bus
                 user = member.partner_id.user_ids[0] if member.partner_id.user_ids else self.env['res.users']
                 if user:
-                    notifications.append((member.partner_id, 'discuss.channel/joined', {
+                    member._bus_send('discuss.channel/joined', {
                         'channel': {
                             **member.channel_id._channel_basic_info(),
                             "is_pinned": True,
                         },
                         'invited_by_user_id': self.env.user.id,
                         'open_chat_window': open_chat_window,
-                    }))
+                    })
                 if post_joined_message:
                     # notify existing members with a new message in the channel
                     if member.partner_id == self.env.user.partner_id:
@@ -414,31 +410,29 @@ class Channel(models.Model):
                 if post_joined_message:
                     member.channel_id.message_post(body=Markup('<div class="o_mail_notification">%s</div>') % _('joined the channel'),
                         message_type="notification", subtype_xmlid="mail.mt_comment")
-                guest = member.guest_id
-                if guest:
-                    notifications.append((guest, 'discuss.channel/joined', {
-                        'channel': member.channel_id._channel_basic_info(),
-                    }))
-            notifications.append((channel, 'mail.record/insert', {
+                member._bus_send('discuss.channel/joined', {
+                    'channel': member.channel_id._channel_basic_info(),
+                })
+            channel._bus_send('mail.record/insert', {
                 'Thread': {
                     'channelMembers': [('ADD', list(new_members._discuss_channel_member_format().values()))],
                     'id': channel.id,
                     'memberCount': channel.member_count,
                     'model': "discuss.channel",
                 }
-            }))
+            })
             if existing_members and (current_partner or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
                 # create channel from form view, and then join from discuss without refreshing the page.
-                notifications.append((current_partner or current_guest, 'mail.record/insert', {
+                (current_partner or current_guest)._bus_send('mail.record/insert', {
                     'Thread': {
                         'channelMembers': [('ADD', list(existing_members._discuss_channel_member_format().values()))],
                         'id': channel.id,
                         'memberCount': channel.member_count,
                         'model': "discuss.channel",
                     }
-                }))
+                })
         if invite_to_rtc_call:
             for channel in self:
                 current_channel_member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('is_self', '=', True)])
@@ -446,7 +440,6 @@ class Channel(models.Model):
                 if current_channel_member and current_channel_member.sudo().rtc_session_ids:
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
                     current_channel_member.sudo()._rtc_invite_members(member_ids=new_members.ids)
-        self.env['bus.bus']._sendmany(notifications)
         return all_new_members
 
     # ------------------------------------------------------------
@@ -466,26 +459,20 @@ class Channel(models.Model):
         ]
         if member_ids:
             channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
-        invitation_notifications = []
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         for member in members:
             member.rtc_inviting_session_id = False
-            if member.partner_id:
-                target = member.partner_id
-            else:
-                target = member.guest_id
-            invitation_notifications.append((target, 'mail.record/insert', {
+            member._bus_send('mail.record/insert', {
                 'Thread': {
                     'id': self.id,
                     'model': 'discuss.channel',
                     'rtcInvitingSession': False,
                 }
-            }))
-        self.env['bus.bus']._sendmany(invitation_notifications)
+            })
         channel_data = {'id': self.id, 'model': 'discuss.channel'}
         if members:
             channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
-            self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {'Thread': channel_data})
+            self._bus_send('mail.record/insert', {'Thread': channel_data})
         return channel_data
 
     # ------------------------------------------------------------
@@ -592,14 +579,10 @@ class Channel(models.Model):
         message_format = message._message_format()[0]
         if "temporary_id" in self.env.context:
             message_format["temporary_id"] = self.env.context["temporary_id"]
-        bus_notifications = [
-            ((self, "members"), "mail.record/insert", {
-                "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
-            }),
-            (self, "discuss.channel/new_message", {"id": self.id, "message": message_format}),
-        ]
-        # sudo: bus.bus - sending on safe channel (discuss.channel)
-        self.env["bus.bus"].sudo()._sendmany(bus_notifications)
+        self._bus_send("mail.record/insert", {
+            "Thread": {"id": self.id, "is_pinned": True, "model": "discuss.channel"}
+        }, subchannel="members")
+        self._bus_send("discuss.channel/new_message", {"id": self.id, "message": message_format})
         return rdata
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
@@ -681,15 +664,6 @@ class Channel(models.Model):
         """ Broadcast the current channel header to the given partner ids
             :param partner_ids : the partner to notify
         """
-        notifications = self._channel_channel_notifications(partner_ids)
-        self.env['bus.bus']._sendmany(notifications)
-
-    def _channel_channel_notifications(self, partner_ids):
-        """ Generate the bus notifications of current channel for the given partner ids
-            :param partner_ids : the partner to send the current channel header
-            :returns list of bus notifications (tuple (bus_channe, message_content))
-        """
-        notifications = []
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
@@ -698,8 +672,7 @@ class Channel(models.Model):
                     allowed_company_ids=user_id.sudo().company_ids.ids
                 )
                 for channel_info in user_channels._channel_info():
-                    notifications.append((partner, 'mail.record/insert', {"Thread": channel_info}))
-        return notifications
+                    partner._bus_send('mail.record/insert', {"Thread": channel_info})
 
     # ------------------------------------------------------------
     # INSTANT MESSAGING API
@@ -733,7 +706,7 @@ class Channel(models.Model):
                             (fields.Datetime.now() if pinned else None, message_to_update.id))
         message_to_update.invalidate_recordset(['pinned_at'])
 
-        self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {
+        self._bus_send('mail.record/insert', {
             'Message': {
                 'id': message_id,
                 'pinned_at': fields.Datetime.to_string(message_to_update.pinned_at),
@@ -1009,9 +982,9 @@ class Channel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
+            self.env.user._bus_send('discuss.channel/unpin', {'id': self.id})
         else:
-            self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
+            self.env.user._bus_send('mail.record/insert', {"Thread": self._channel_info()[0]})
 
     def _channel_seen(self, last_message_id=None, allow_older=False):
         """
@@ -1073,7 +1046,7 @@ class Channel(models.Model):
             target = current_partner or current_guest
             if self.channel_type in self._types_allowing_seen_infos():
                 target = self
-            self.env['bus.bus']._add_to_queue(target, 'discuss.channel.member/seen', data)
+            target._bus_send('discuss.channel.member/seen', data)
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
@@ -1104,7 +1077,7 @@ class Channel(models.Model):
                 )
             """
             self.env.cr.execute(query, (last_message_id, member.id))
-            self.env['bus.bus']._add_to_queue(channel, 'discuss.channel.member/fetched', {
+            channel._bus_send('discuss.channel.member/fetched', {
                 'channel_id': channel.id,
                 'id': member.id,
                 'last_message_id': last_message_id,
@@ -1115,7 +1088,7 @@ class Channel(models.Model):
         self.ensure_one()
         member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
-        self.env['bus.bus']._add_to_queue(member.partner_id, 'mail.record/insert', {
+        member._bus_send('mail.record/insert', {
             'Thread': {
                 'custom_channel_name': name,
                 'id': self.id,
@@ -1157,7 +1130,7 @@ class Channel(models.Model):
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel._channel_info()[0]
-        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
+        self.env.user._bus_send('mail.record/insert', {"Thread": channel_info})
         return new_channel
 
     @api.model
@@ -1238,7 +1211,7 @@ class Channel(models.Model):
             written in this channel.
             `content` is HTML, dynamic parts should be escaped by the caller.
         """
-        self.env['bus.bus']._add_to_queue(partner_to, 'discuss.channel/transient_message', {
+        partner_to._bus_send('discuss.channel/transient_message', {
             'body': f"<span class='o_mail_notification'>{content}</span>",
             'thread': {'model': self._name, 'id': self.id},
         })

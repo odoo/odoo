@@ -24,7 +24,7 @@ class IapAccount(models.Model):
         if title is not None:
             params['title'] = title
 
-        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'iap_notification', params)
+        self.env.user._bus_send('iap_notification', params)
 
     @api.model
     def _send_no_credit_notification(self, service_name, title):
@@ -33,4 +33,4 @@ class IapAccount(models.Model):
             'type': 'no_credit',
             'get_credits_url': self.env['iap.account'].get_credits_url(service_name),
         }
-        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'iap_notification', params)
+        self.env.user._bus_send('iap_notification', params)

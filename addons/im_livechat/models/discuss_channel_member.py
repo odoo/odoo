@@ -19,7 +19,8 @@ class ChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
-        self.env['bus.bus']._sendmany([(member.partner_id, 'discuss.channel/unpin', {'id': member.channel_id.id}) for member in sessions_to_be_unpinned])
+        for member in sessions_to_be_unpinned:
+            member._bus_send('discuss.channel/unpin', {'id': member.channel_id.id})
 
     def _get_partner_data(self, fields=None):
         if self.channel_id.channel_type == 'livechat':

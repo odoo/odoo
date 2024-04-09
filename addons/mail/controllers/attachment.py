@@ -86,8 +86,7 @@ class AttachmentController(http.Controller):
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment:
-            target = request.env.user.partner_id
-            request.env["bus.bus"]._add_to_queue(target, "ir.attachment/delete", {"id": attachment_id})
+            request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             return
         message = request.env["mail.message"].search([("attachment_ids", "in", attachment.ids)], limit=1)
         if not request.env.user.share:

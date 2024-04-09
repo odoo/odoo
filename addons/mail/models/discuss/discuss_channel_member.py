@@ -15,6 +15,7 @@ SFU_MODE_THRESHOLD = 3
 
 class ChannelMember(models.Model):
     _name = "discuss.channel.member"
+    _inherit = ['bus.listener.mixin']
     _description = "Channel Member"
     _rec_names_search = ["channel_id", "partner_id", "guest_id"]
     _bypass_create_check = {}
@@ -185,32 +186,29 @@ class ChannelMember(models.Model):
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
         return super().unlink()
 
+    def _bus_channel(self):
+        return self.partner_id or self.guest_id
+
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the members are typing or not
         """
-        notifications = []
         for member in self:
             formatted_member = member._discuss_channel_member_format().get(member)
             formatted_member['isTyping'] = is_typing
-            notifications.append([member.channel_id, 'discuss.channel.member/typing_status', formatted_member])
-            notifications.append([member.channel_id.uuid, 'discuss.channel.member/typing_status', formatted_member])  # notify livechat users
-        self.env['bus.bus']._sendmany(notifications)
+            member.channel_id._bus_send('discuss.channel.member/typing_status', formatted_member)
 
     @api.model
     def _unmute(self):
         # Unmute notifications for the all the channel members whose mute date is passed.
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
-        notifications = []
         for member in members:
-            channel_data = {
+            member._bus_send("mail.record/insert", {"Thread": {
                 "id": member.channel_id.id,
                 "model": "discuss.channel",
                 "mute_until_dt": False,
-            }
-            notifications.append((member.partner_id, "mail.record/insert", {"Thread": channel_data}))
-        self.env["bus.bus"]._sendmany(notifications)
+            }})
 
     def _discuss_channel_member_format(self, fields=None, extra_fields=None):
         if not fields:
@@ -268,7 +266,7 @@ class ChannelMember(models.Model):
         if self.fold_state == state:
             return
         self.fold_state = state
-        self.env['bus.bus']._add_to_queue(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
+        self._bus_send('discuss.Thread/fold_state', {
             'foldStateCount': state_count,
             'id': self.channel_id.id,
             'model': 'discuss.channel',
@@ -334,15 +332,10 @@ class ChannelMember(models.Model):
         response_dict = response.json()
         self.channel_id.sfu_channel_uuid = response_dict["uuid"]
         self.channel_id.sfu_server_url = response_dict["url"]
-        notifications = [
-            [
-                session.guest_id or session.partner_id,
-                "discuss.channel.rtc.session/sfu_hot_swap",
-                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_server_key)},
-            ]
-            for session in self.channel_id.rtc_session_ids
-        ]
-        self.env["bus.bus"]._sendmany(notifications)
+        for session in self.channel_id.rtc_session_ids:
+            session._bus_send("discuss.channel.rtc.session/sfu_hot_swap", {
+                "serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_server_key),
+            })
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
         sfu_channel_uuid = self.channel_id.sfu_channel_uuid
@@ -394,24 +387,18 @@ class ChannelMember(models.Model):
         ]
         if member_ids:
             channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
-        invitation_notifications = []
         members = self.env['discuss.channel.member'].search(channel_member_domain)
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
-            if member.partner_id:
-                target = member.partner_id
-            else:
-                target = member.guest_id
-            invitation_notifications.append((target, 'mail.record/insert', {
+            member._bus_send('mail.record/insert', {
                 'Thread': {
                     'id': self.channel_id.id,
                     'model': 'discuss.channel',
                     'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
                 }
-            }))
-        self.env['bus.bus']._sendmany(invitation_notifications)
+            })
         if members:
             channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
             channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
-            self.env['bus.bus']._add_to_queue(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
+            self.channel_id._bus_send('mail.record/insert', {'Thread': channel_data})
         return members

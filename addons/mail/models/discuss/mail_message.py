@@ -23,11 +23,11 @@ class MailMessage(models.Model):
             vals["parentMessage"] = self.parent_id._message_format(format_reply=False)[0]
         return vals
 
-    def _bus_notification_target(self):
+    def _bus_channel(self):
         self.ensure_one()
         if self.model == "discuss.channel" and self.res_id:
             return self.env["discuss.channel"].browse(self.res_id)
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
             return guest
-        return super()._bus_notification_target()
+        return super()._bus_channel()

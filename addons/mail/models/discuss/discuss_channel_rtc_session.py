@@ -14,6 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class MailRtcSession(models.Model):
     _name = 'discuss.channel.rtc.session'
+    _inherit = ['bus.listener.mixin']
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'
 
@@ -37,10 +38,11 @@ class MailRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        self.env['bus.bus']._sendmany([(channel, 'discuss.channel/rtc_sessions_update', {
-            'id': channel.id,
-            'rtcSessions': [('ADD', sessions_data)],
-        }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
+        for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items():
+            channel._bus_send("discuss.channel/rtc_sessions_update", {
+                'id': channel.id,
+                'rtcSessions': [('ADD', sessions_data)],
+            })
         return rtc_sessions
 
     def unlink(self):
@@ -56,14 +58,16 @@ class MailRtcSession(models.Model):
                 # than to attempt recycling a possibly stale channel uuid.
                 channel.sfu_channel_uuid = False
                 channel.sfu_server_url = False
-        notifications = [(channel, 'discuss.channel/rtc_sessions_update', {
-            'id': channel.id,
-            'rtcSessions': [('DELETE', [{'id': session_data['id']} for session_data in sessions_data])],
-        }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
+
+        for channel, sessions_data in self._mail_rtc_session_format_by_channel().items():
+            channel._bus_send('discuss.channel/rtc_sessions_update', {
+                'id': channel.id,
+                'rtcSessions': [('DELETE', [{'id': session_data['id']} for session_data in sessions_data])],
+            })
+
         for rtc_session in self:
-            target = rtc_session.guest_id or rtc_session.partner_id
-            notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
-        self.env['bus.bus']._sendmany(notifications)
+            rtc_session._bus_send('discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id})
+
         return super().unlink()
 
     def _update_and_broadcast(self, values):
@@ -73,8 +77,7 @@ class MailRtcSession(models.Model):
         valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
         self.write({key: values[key] for key in valid_values if key in values})
         session_data = self._mail_rtc_session_format(extra=True)
-        self.env["bus.bus"]._add_to_queue(
-            self.channel_id,
+        self.channel_id._bus_send(
             "discuss.channel.rtc.session/update_and_broadcast",
             {"data": session_data, "channelId": self.channel_id.id},
         )
@@ -124,9 +127,9 @@ class MailRtcSession(models.Model):
         payload_by_target = defaultdict(lambda: {'sender': self.id, 'notifications': []})
         for target_session_ids, content in notifications:
             for target_session in self.env['discuss.channel.rtc.session'].browse(target_session_ids).exists():
-                target = target_session.guest_id or target_session.partner_id
-                payload_by_target[target]['notifications'].append(content)
-        return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
+                payload_by_target[target_session]['notifications'].append(content)
+        for target, payload in payload_by_target.items():
+            target._bus_send('discuss.channel.rtc.session/peer_notification', payload)
 
     def _mail_rtc_session_format(self, extra=False):
         self.ensure_one()
@@ -158,3 +161,6 @@ class MailRtcSession(models.Model):
     @api.model
     def _inactive_rtc_session_domain(self):
         return [('write_date', '<', fields.Datetime.now() - relativedelta(minutes=1))]
+
+    def _bus_channel(self):
+        return self.channel_member_id._bus_channel()

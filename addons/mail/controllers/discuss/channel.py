@@ -95,7 +95,7 @@ class ChannelController(http.Controller):
             "model": "discuss.channel",
             "mute_until_dt": member.mute_until_dt,
         }
-        request.env["bus.bus"]._add_to_queue(member.partner_id, "mail.record/insert", {"Thread": channel_data})
+        member._bus_send("mail.record/insert", {"Thread": channel_data})
 
     @http.route("/discuss/channel/update_custom_notifications", methods=["POST"], type="json", auth="user")
     def discuss_channel_update_custom_notifications(self, channel_id, custom_notifications):
@@ -111,7 +111,7 @@ class ChannelController(http.Controller):
             "id": member.channel_id.id,
             "model": "discuss.channel",
         }
-        request.env["bus.bus"]._add_to_queue(member.partner_id, "mail.record/insert", {"Thread": channel_data})
+        member._bus_send("mail.record/insert", {"Thread": channel_data})
 
     @http.route("/discuss/channel/set_last_seen_message", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

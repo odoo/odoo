@@ -44,7 +44,7 @@ def add_guest_to_context(func):
 class MailGuest(models.Model):
     _name = 'mail.guest'
     _description = "Guest"
-    _inherit = ['avatar.mixin']
+    _inherit = ['avatar.mixin', 'bus.listener.mixin']
     _avatar_name_field = "name"
     _cookie_name = 'dgid'
     _cookie_separator = '|'
@@ -112,9 +112,8 @@ class MailGuest(models.Model):
             'name': self.name,
             'type': "guest"
         }
-        bus_notifs = [(channel, 'mail.record/insert', {'Persona': guest_data}) for channel in self.channel_ids]
-        bus_notifs.append((self, 'mail.record/insert', {'Persona': guest_data}))
-        self.env['bus.bus']._sendmany(bus_notifs)
+        self.channel_ids._bus_send('mail.record/insert', {'Persona': guest_data})
+        self._bus_send('mail.record/insert', {'Persona': guest_data})
 
     def _update_timezone(self, timezone):
         query = """

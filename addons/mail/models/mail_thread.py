@@ -3156,7 +3156,6 @@ class MailThread(models.AbstractModel):
         :param dict msg_vals: values dict used to create the message, allows to
           skip message usage and spare some queries;
         """
-        bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
         if inbox_pids:
             notif_create_values = [{
@@ -3171,13 +3170,11 @@ class MailThread(models.AbstractModel):
             MailMessage = self.env['mail.message']
             messages_format_prepared = MailMessage._message_format_personalized_prepare(
                 message._message_format(msg_vals=msg_vals), partner_ids=inbox_pids)
-            for partner_id in inbox_pids:
-                bus_notifications.append(
-                    (self.env['res.partner'].browse(partner_id),
-                     'mail.message/inbox',
-                     MailMessage._message_format_personalize(partner_id, messages_format_prepared)[0])
+            for partner in self.env['res.partner'].browse(inbox_pids):
+                partner._bus_send(
+                    'mail.message/inbox',
+                     MailMessage._message_format_personalize(partner.id, messages_format_prepared)[0]
                 )
-        self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
                                 mail_auto_delete=True,  # mail.mail
@@ -4512,7 +4509,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             payload["Message"]["translationValue"] = False
-        self.env["bus.bus"]._add_to_queue(message._bus_notification_target(), "mail.record/insert", payload)
+        message._bus_send("mail.record/insert", payload)
 
     # ------------------------------------------------------
     # CONTROLLERS

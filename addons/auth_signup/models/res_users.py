@@ -134,13 +134,11 @@ class ResUsers(models.Model):
 
     def _notify_inviter(self):
         for user in self:
-            invite_partner = user.create_uid.partner_id
-            if invite_partner:
-                # notify invite user that new user is connected
-                self.env['bus.bus']._add_to_queue(invite_partner, 'res.users/connection', {
-                    'username': user.name,
-                    'partnerId': user.partner_id.id,
-                })
+            # notify invite user that new user is connected
+            user.create_uid._bus_send('res.users/connection', {
+                'username': user.name,
+                'partnerId': user.partner_id.id,
+            })
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))

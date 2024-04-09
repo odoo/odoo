@@ -53,7 +53,7 @@ class LinkPreview(models.Model):
         if link_preview_values:
             link_previews += link_previews.create(link_preview_values)
         if link_previews:
-            self.env['bus.bus']._add_to_queue(message._bus_notification_target(), 'mail.record/insert', {
+            message._bus_send('mail.record/insert', {
                 'Message': {
                     'linkPreviews': link_previews.sorted(key=lambda preview: list(urls).index(preview.source_url))._link_preview_format(),
                     'id': message.id,
@@ -63,35 +63,25 @@ class LinkPreview(models.Model):
     def _hide_and_notify(self):
         if not self:
             return True
-        notifications = [
-            (
-                link_preview.message_id._bus_notification_target(),
-                'mail.record/insert', {
-                    'Message': {
-                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
-                        'id': link_preview.message_id.id,
-                    }
+        for mail_link_preview in self:
+            mail_link_preview.message_id._bus_send('mail.record/insert', {
+                'Message': {
+                    'linkPreviews': [('DELETE', {'id': link_preview.id})],
+                    'id': link_preview.message_id.id,
                 }
-            ) for link_preview in self
-        ]
+            })
         self.is_hidden = True
-        self.env['bus.bus']._sendmany(notifications)
 
     def _unlink_and_notify(self):
         if not self:
             return True
-        notifications = [
-            (
-                link_preview.message_id._bus_notification_target(),
-                'mail.record/insert', {
-                    'Message': {
-                        'linkPreviews': [('DELETE', {'id': link_preview.id})],
-                        'id': link_preview.message_id.id,
-                    }
+        for mail_link_preview in self:
+            mail_link_preview.message_id._bus_send('mail.record/insert', {
+                'Message': {
+                    'linkPreviews': [('DELETE', {'id': mail_link_preview.id})],
+                    'id': mail_link_preview.message_id.id,
                 }
-            ) for link_preview in self
-        ]
-        self.env['bus.bus']._sendmany(notifications)
+            })
         self.unlink()
 
     @api.model

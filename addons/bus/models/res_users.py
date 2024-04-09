@@ -6,10 +6,13 @@ from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 
 
 class ResUsers(models.Model):
-
-    _inherit = "res.users"
+    _name = 'res.users'
+    _inherit = ['res.users', 'bus.listener.mixin']
 
     im_status = fields.Char('IM Status', compute='_compute_im_status')
+
+    def _bus_channel(self):
+        return self.partner_id
 
     def _compute_im_status(self):
         """ Compute the im_status of the users """

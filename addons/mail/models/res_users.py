@@ -144,7 +144,7 @@ class Users(models.Model):
                 )
         if 'notification_type' in vals:
             for user in user_notification_type_modified:
-                self.env["bus.bus"]._add_to_queue(user.partner_id, "mail.record/insert", {"Persona": {"id": user.partner_id.id, "type": "partner", "notification_preference": user.notification_type}})
+                user._bus_send("mail.record/insert", {"Persona": {"id": user.partner_id.id, "type": "partner", "notification_preference": user.notification_type}})
 
         return write_res
 

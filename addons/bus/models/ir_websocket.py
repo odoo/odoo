@@ -51,7 +51,7 @@ class IrWebsocket(models.AbstractModel):
             )
             im_status_notification = self._get_im_status(im_status_ids_by_model)
             if im_status_notification:
-                self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.record/insert', im_status_notification)
+                self.env.user._bus_send('mail.record/insert', im_status_notification)
 
     @classmethod
     def _authenticate(cls):

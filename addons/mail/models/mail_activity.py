@@ -297,16 +297,13 @@ class MailActivity(models.Model):
         # send notifications about activity creation
         todo_activities = activities.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
-            self.env['bus.bus']._sendmany([
-                (activity.user_id.partner_id, 'mail.activity/updated', {'activity_created': True})
-                for activity in todo_activities
-            ])
+            activity.user_id._bus_send('mail.activity/updated', {'activity_created': True})
         return activities
 
     def write(self, values):
         if values.get('user_id'):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
-            pre_responsibles = user_changes.mapped('user_id.partner_id')
+            pre_responsibles = user_changes.user_id
         res = super(MailActivity, self).write(values)
 
         if values.get('user_id'):
@@ -319,23 +316,14 @@ class MailActivity(models.Model):
             # send bus notifications
             todo_activities = user_changes.filtered(lambda act: act.date_deadline <= fields.Date.today())
             if todo_activities:
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_created': True}]
-                    for partner in todo_activities.user_id.partner_id
-                ])
-                self.env['bus.bus']._sendmany([
-                    [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                    for partner in pre_responsibles
-                ])
+                todo_activities.user_id._bus_send('mail.activity/updated', {'activity_created': True})
+                pre_responsibles._bus_send('mail.activity/updated', {'activity_deleted': True})
         return res
 
     def unlink(self):
         todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
-            self.env['bus.bus']._sendmany([
-                [partner, 'mail.activity/updated', {'activity_deleted': True}]
-                for partner in todo_activities.user_id.partner_id
-            ])
+            todo_activities.user_id._bus_send('mail.activity/updated', {'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
     @api.model
