@@ -387,12 +387,12 @@ export class PosStore extends Reactive {
     }
     async openConfigurator({ product, initQuantity = 1 }) {
         const attrById = this.models["product.attribute"].getAllBy("id");
-        const attributes = product.attribute_line_ids.filter(
+        const attributeLines = product.attribute_line_ids.filter(
             (attr) => attr.attribute_id.id in attrById
         );
         return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
             product: product,
-            attributes: attributes,
+            attributeLines: attributeLines,
         });
     }
     getProductPrice(product, p = false) {
