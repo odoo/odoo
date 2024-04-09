@@ -7,6 +7,7 @@ import {
 } from "@web/views/fields/relational_utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { CommonSkillsListRenderer } from "../../views/skills_list_renderer";
 import { useService } from '@web/core/utils/hooks';
 import { onWillStart } from "@odoo/owl";
@@ -22,6 +23,13 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         onWillStart(async () => {
             const res = await this.orm.searchCount('hr.skill', []);
             this.anySkills = res > 0;
+            [this.user] = await this.orm.read("res.users", [user.userId], ["employee_ids"]);
+            this.IsHrUser = await user.hasGroup("hr.group_hr_user");
+            this.userSubordinates = (await this.orm.searchRead(
+                "hr.employee",
+                [["id", "child_of", this.user.employee_ids]],
+                ["id"]
+            )).map((record) => record["id"]);
         });
     }
 
@@ -62,7 +70,15 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     }
 
     get showTimeline() {
-        return !this.props.list.context.no_timeline;
+        return this.SkillsRight && !this.props.list.context.no_timeline;
+    }
+
+    get SkillsRight() {
+        let isSubordinate = false;
+        if (this.env.model.root.data.employee_id) {
+            isSubordinate = this.userSubordinates.includes(this.env.model.root.data.employee_id[0]);
+        }
+        return this.IsHrUser || isSubordinate;
     }
 }
 
