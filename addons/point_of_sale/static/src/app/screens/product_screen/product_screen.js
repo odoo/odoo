@@ -22,7 +22,6 @@ import {
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
-import { useScrollDirection } from "@point_of_sale/app/utils/useScrollDirection";
 import { unaccent } from "@web/core/utils/strings";
 
 export class ProductScreen extends Component {
@@ -82,7 +81,6 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
-        this.scrollDirection = useScrollDirection("products");
     }
     getAncestorsAndCurrent() {
         const selectedCategory = this.pos.selectedCategory;
@@ -108,7 +106,7 @@ export class ProductScreen extends Component {
                 this.pos.config.show_category_images && category.has_image
                     ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
                     : undefined,
-            isSelected: this.getAncestorsAndCurrent().includes(category) && !this.ui.isSmall,
+            isSelected: this.getAncestorsAndCurrent().includes(category),
             isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
         }));
     }

@@ -14,7 +14,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
     test: true,
     steps: () =>
         [
-            ProductScreen.clickShowProductsMobile(),
             // press close button in receipt screen
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10"),
@@ -82,7 +81,6 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Test Product", "1"),
             ProductScreen.clickPriceList("special_pricelist"),
             inLeftSide(Order.hasLine({ productName: "Test Product", oldPrice: "7.0" })),
@@ -98,7 +96,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Desk Pad", "5", "5"),
             ProductScreen.selectedOrderlineHas("Desk Pad", "5"),
             ProductScreen.clickPayButton(),
@@ -122,7 +119,6 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("123456789"),
             ProductScreen.clickPayButton(),

@@ -12,7 +12,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
     test: true,
     steps: () =>
         [
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Letter Tray", "10"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "10.0"),
             ProductScreen.clickPayButton(),
@@ -74,7 +73,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
     test: true,
     steps: () =>
         [
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Letter Tray", "1", "10"),
             ProductScreen.clickPayButton(),
 
@@ -91,7 +89,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 
@@ -115,7 +112,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 
@@ -139,7 +135,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),
 
@@ -188,7 +183,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Product Test 40", "1"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Partner Test 1"),
@@ -228,7 +222,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
     test: true,
     steps: () =>
         [
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.addOrderline("Product Test", "1"),
             ProductScreen.clickPayButton(),
 

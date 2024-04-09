@@ -21,7 +21,6 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Lumber Inc"),
             ProductScreen.clickPriceList("Public Pricelist", true),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Wall Shelf", true, "1.0"),
             ProductScreen.clickPriceList("min_quantity ordering"),
             ProductScreen.clickReview(),

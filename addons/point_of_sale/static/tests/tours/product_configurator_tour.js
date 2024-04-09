@@ -12,8 +12,6 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
         [
             Dialog.confirm("Open session"),
 
-            ProductScreen.clickShowProductsMobile(),
-
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
 

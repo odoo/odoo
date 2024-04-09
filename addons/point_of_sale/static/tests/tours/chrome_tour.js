@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.isCashMoveButtonShown(),
             Chrome.clickMenuButton(),
 
-            ProductScreen.clickShowProductsMobile(),
             // Order 1 is at Product Screen
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
             Chrome.clickMenuButton(),
