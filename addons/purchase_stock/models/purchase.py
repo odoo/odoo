@@ -511,7 +511,9 @@ class PurchaseOrderLine(models.Model):
             'date': date_planned,
             'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)
+                and (picking.location_dest_id.parent_path in self.orderpoint_id.location_id.parent_path))
+                and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
