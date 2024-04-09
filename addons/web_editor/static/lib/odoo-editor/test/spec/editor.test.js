@@ -3325,6 +3325,7 @@ X[]
                         // That selection is equivalent to </b>[]
                         contentBefore: '<p><b>abc[]</b>def</p>',
                         stepFunction: insertLineBreak,
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b>def</p>',
                         // JW cAfter: '<p><b>abc[]<br></b>def</p>',
                         contentAfter: '<p><b>abc<br>[]</b>def</p>',
                     });
@@ -3335,15 +3336,23 @@ X[]
                         // it is visible (because it's after a <br>).
                         // Visually, the caret does show _after_ the line
                         // break.
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b> def</p>',
                         // JW cAfter: '<p><b>abc[]<br></b>&nbsp;def</p>',
-                        contentAfter: '<p><b>abc<br>[]</b>&nbsp;def</p>',
+                        contentAfter: '<p><b>abc<br>[]</b> def</p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc []</b>def</p>',
                         stepFunction: insertLineBreak,
                         // The space is converted to a non-breaking space so it
                         // is visible (because it's before a <br>).
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc&nbsp;<br>[]\u200B</b>def</p>',
                         contentAfter: '<p><b>abc&nbsp;<br>[]</b>def</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><b>abc[]</b><br><br></p>',
+                        stepFunction: insertLineBreak,
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b><br><br></p>',
+                        contentAfter: '<p><b>abc<br>[]</b><br><br></p>',
                     });
                 });
                 it('should insert a <br> at the beginning of a format node', async () => {

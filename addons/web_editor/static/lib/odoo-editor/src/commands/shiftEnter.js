@@ -9,6 +9,8 @@ import {
     getState,
     leftPos,
     splitTextNode,
+    closestElement,
+    isBlock,
 } from '../utils/utils.js';
 
 Text.prototype.oShiftEnter = function (offset) {
@@ -22,6 +24,11 @@ HTMLElement.prototype.oShiftEnter = function (offset) {
     const brEls = [brEl];
     if (offset >= this.childNodes.length) {
         this.appendChild(brEl);
+        if (!isBlock(closestElement(this)) && this.nextSibling) {
+            const zws = document.createTextNode('\u200B');
+            this.appendChild(zws);
+            this.setAttribute("oe-inline-line-break", "");
+        }
     } else {
         this.insertBefore(brEl, this.childNodes[offset]);
     }
