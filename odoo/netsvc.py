@@ -157,9 +157,6 @@ def init_logger():
 
     # enable deprecation warnings (disabled by default)
     warnings.simplefilter('default', category=DeprecationWarning)
-    # ignore deprecation warnings from invalid escape (there's a ton and it's
-    # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \'?\\.', category=DeprecationWarning)
     # https://github.com/urllib3/urllib3/issues/2680
     warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
     # ofxparse use an html parser to parse ofx xml files and triggers a warning since bs4 4.11.0
@@ -186,6 +183,9 @@ def init_logger():
     warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
     # reportlab does a bunch of bytes/str mixing in a hashmap
     warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
+
+    # need to be adapted later but too muchwork for this pr.
+    warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
 
     from .tools.translate import resetlocale
     resetlocale()
