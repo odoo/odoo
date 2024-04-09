@@ -88,7 +88,7 @@ class PosPayment(models.Model):
                 'move_id': payment_move.id,
             }, amounts['amount'], amounts['amount_converted'])
             debit_line_vals = pos_session._debit_amounts({
-                'account_id': pos_session.company_id.account_default_pos_receivable_account_id.id,
+                'account_id': self.payment_method_id.receivable_account_id.id,
                 'move_id': payment_move.id,
             }, amounts['amount'], amounts['amount_converted'])
             self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
