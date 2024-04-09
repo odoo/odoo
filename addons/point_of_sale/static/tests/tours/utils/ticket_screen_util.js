@@ -109,7 +109,7 @@ export function clickBackToMainTicketScreen() {
         },
     ];
 }
-export function confirmRefund() {
+export function clickConfirmRefund() {
     return [
         ProductScreen.clickReview(),
         {

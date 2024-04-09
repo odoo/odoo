@@ -9,6 +9,10 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import {
+    isChangeValueIs,
+    isRemainingValueIs,
+} from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     test: true,
@@ -42,8 +46,8 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.enterPaymentLineAmount("Cash", "70", true, { remaining: "2.0" }),
             PaymentScreen.clickNumpad("0"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "700"),
-            PaymentScreen.remainingIs("0.00"),
-            PaymentScreen.changeIs("628.0"),
+            PaymentScreen.isRemainingValueIs("0.00"),
+            PaymentScreen.isChangeValueIs("628.0"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.totalAmountContains("72.0"),

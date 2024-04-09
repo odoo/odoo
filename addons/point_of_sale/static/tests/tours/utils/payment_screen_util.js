@@ -38,10 +38,10 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
 
     if (isCheckNeeded) {
         if (remaining) {
-            step.push(...remainingIs(remaining));
+            step.push(...isRemainingValueIs(remaining));
         }
         if (change) {
-            step.push(...changeIs(change));
+            step.push(...isChangeValueIs(change));
         }
         if (amount) {
             step.push(...selectedPaymentlineHas(name, amount));
@@ -102,11 +102,11 @@ export function clickValidate() {
  *
  * e.g. :
  *  PaymentScreen.enterPaymentLineAmount("Cash", "70"),
- *  PaymentScreen.remainingIs("2.0"),
+ *  PaymentScreen.isRemainingValueIs("2.0"),
  *  PaymentScreen.clickNumpad("0"), <- desktop: add a 0
  *  PaymentScreen.fillPaymentLineAmountMobile("Cash", "700"), <- mobile: rewrite the amount
- *  PaymentScreen.remainingIs("0.00"),
- *  PaymentScreen.changeIs("628.0"),
+ *  PaymentScreen.isRemainingValueIs("0.00"),
+ *  PaymentScreen.isChangeValueIs("628.0"),
  *
  * @param {String} keys space-separated numpad keys
  */
@@ -158,10 +158,10 @@ export function enterPaymentLineAmount(lineName, keys, isCheckNeeded = false, op
 
     if (isCheckNeeded) {
         if (remaining) {
-            step.push(...remainingIs(remaining));
+            step.push(...isRemainingValueIs(remaining));
         }
         if (change) {
-            step.push(...changeIs(change));
+            step.push(...isChangeValueIs(change));
         }
         if (amount) {
             step.push(...selectedPaymentlineHas(lineName, amount));
@@ -201,7 +201,7 @@ export function isShown() {
  * Check if change is the provided amount.
  * @param {String} amount
  */
-export function changeIs(amount) {
+export function isChangeValueIs(amount) {
     return [
         {
             content: `change is ${amount}`,
@@ -223,7 +223,7 @@ export function isInvoiceOptionSelected() {
  * Check if the remaining is the provided amount.
  * @param {String} amount
  */
-export function remainingIs(amount) {
+export function isRemainingValueIs(amount) {
     return [
         {
             content: `remaining amount is ${amount}`,

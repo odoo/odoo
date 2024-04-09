@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             Dialog.confirm(),
             Utils.refresh(),
             Chrome.clickMenuOption("Edit Plan"),
-            Utils.elementDoesNotExist(
+            Utils.isElementDoesNotExist(
                 ".floor-selector .button-floor:contains('Main Floor (copy)')"
             ),
 
