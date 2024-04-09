@@ -58,7 +58,12 @@ selectSignImageStep,
 }, {
     content: "Change the link of the image",
     trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
-    run: "edit /contactus",
+    // TODO: This should not be needed, but there seems to be an odd behavior
+    // with the input not properly blurring when clicking on the reorder
+    // buttons. However this is also the case in older versions. It
+    // only crashes here because there is also a change in the tour framework
+    // now using hoot.
+    run: "edit /contactus && click body",
 }, {
     content: "Click on move to previous",
     trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
