@@ -465,6 +465,7 @@ export function makeDraggableHook(hookParams) {
              */
             const dragStart = () => {
                 state.dragging = true;
+                state.willDrag = false;
 
                 // Compute scrollable parent
                 [ctx.current.scrollParentX, ctx.current.scrollParentY] = getScrollParents(
@@ -739,6 +740,7 @@ export function makeDraggableHook(hookParams) {
                 ctx.current.container = ctx.ref.el;
 
                 cleanup.add(() => (ctx.current = {}));
+                state.willDrag = true;
 
                 callBuildHandler("onWillStartDrag");
             };
@@ -787,6 +789,9 @@ export function makeDraggableHook(hookParams) {
                 edgeScrolling: { enabled: true },
                 get dragging() {
                     return state.dragging;
+                },
+                get willDrag() {
+                    return state.willDrag;
                 },
                 // Current context
                 current: {},
