@@ -5,7 +5,7 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
-export function mergeTableHelpers(childName, parentName) {
+export function clickMergeTable(childName, parentName) {
     return [
         FloorScreen.clickTable(childName),
         ProductScreen.clickControlButtonMore(),

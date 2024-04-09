@@ -35,7 +35,7 @@ export function refresh() {
     };
 }
 
-export function elementDoesNotExist(selector) {
+export function isElementDoesNotExist(selector) {
     return {
         content: `Check that element "${selector}" don't exist.`,
         trigger: negate(selector),

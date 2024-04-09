@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
                 quantity: "1.0",
             }),
             ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
+            TicketScreen.clickConfirmRefund(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),

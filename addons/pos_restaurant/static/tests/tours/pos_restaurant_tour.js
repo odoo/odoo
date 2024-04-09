@@ -194,7 +194,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ...MergeTable.mergeTableHelpers("5", "4"),
+            ...MergeTable.clickMergeTable("5", "4"),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickPayButton(),
@@ -207,7 +207,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             },
             ReceiptScreen.clickNextOrder(),
             ...MergeTable.checkMergeTableIsCancelHelpers(),
-            ...MergeTable.mergeTableHelpers("5", "4"),
+            ...MergeTable.clickMergeTable("5", "4"),
             Chrome.clickMenuOption("Edit Plan"),
             {
                 content: `select linked table`,
@@ -219,7 +219,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             },
             Chrome.clickMenuOption("Edit Plan"),
             ...MergeTable.checkMergeTableIsCancelHelpers(),
-            ...MergeTable.mergeTableHelpers("5", "4"),
+            ...MergeTable.clickMergeTable("5", "4"),
             {
                 content: `refresh page`,
                 trigger: 'div.table div.label:contains("4")',
