@@ -14,16 +14,21 @@ patch(MockServer.prototype, {
      */
     mockWrite(model, args) {
         const notifications = [];
+        const old_info = {};
         if (model == "discuss.channel") {
-            const vals = args[1];
+            Object.assign(old_info, this._mockDiscussChannelBasicInfo(args[0][0]));
+        }
+        const mockWriteResult = super.mockWrite(...arguments);
+        if (model == "discuss.channel") {
             const [channel] = this.getRecords(model, [["id", "=", args[0][0]]]);
-            if (channel) {
-                const diff = {};
-                for (const key in vals) {
-                    if (channel[key] != vals[key] && key !== "image_128") {
-                        diff[key] = vals[key];
-                    }
+            const info = this._mockDiscussChannelBasicInfo(channel.id);
+            const diff = {};
+            for (const key of Object.keys(info)) {
+                if (info[key] !== old_info[key]) {
+                    diff[key] = info[key];
                 }
+            }
+            if (Object.keys(diff).length) {
                 notifications.push([
                     channel,
                     "mail.record/insert",
@@ -37,7 +42,6 @@ patch(MockServer.prototype, {
                 ]);
             }
         }
-        const mockWriteResult = super.mockWrite(...arguments);
         if (notifications.length) {
             this.pyEnv["bus.bus"]._sendmany(notifications);
         }
@@ -596,6 +600,39 @@ patch(MockServer.prototype, {
         return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
+     * Simulates `_channel_basic_info` on `discuss.channel`.
+     *
+     * @private
+     * @param {integer} id
+     * @returns {Object[]}
+     */
+    _mockDiscussChannelBasicInfo(id) {
+        const [channel] = this.getRecords("discuss.channel", [["id", "=", id]]);
+        const [group_public_id] = this.getRecords("res.groups", [
+            ["id", "=", channel.group_public_id],
+        ]);
+        const res = assignDefined({}, channel, [
+            "allow_public_upload",
+            "avatarCacheKey",
+            "channel_type",
+            "create_uid",
+            "defaultDisplayMode",
+            "description",
+            "group_based_subscription",
+            "id",
+            "name",
+            "uuid",
+        ]);
+        Object.assign(res, {
+            memberCount: this.pyEnv["discuss.channel.member"].searchCount([
+                ["channel_id", "=", channel.id],
+            ]),
+            authorizedGroupFullName: group_public_id ? group_public_id.name : false,
+            model: "discuss.channel",
+        });
+        return res;
+    },
+    /**
      * Simulates `channel_info` on `discuss.channel`.
      *
      * @private
@@ -608,37 +645,17 @@ patch(MockServer.prototype, {
             const members = this.getRecords("discuss.channel.member", [
                 ["id", "in", channel.channel_member_ids],
             ]);
+            const res = this._mockDiscussChannelBasicInfo(channel.id);
             const messages = this.getRecords("mail.message", [
                 ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
-            ]);
-            const [group_public_id] = this.getRecords("res.groups", [
-                ["id", "=", channel.group_public_id],
             ]);
             const messageNeedactionCounter = this.getRecords("mail.notification", [
                 ["res_partner_id", "=", this.pyEnv.currentPartnerId],
                 ["is_read", "=", false],
                 ["mail_message_id", "in", messages.map((message) => message.id)],
             ]).length;
-            const res = assignDefined({}, channel, [
-                "id",
-                "name",
-                "defaultDisplayMode",
-                "description",
-                "uuid",
-                "create_uid",
-                "group_based_subscription",
-                "avatarCacheKey",
-            ]);
-            Object.assign(res, {
-                channel_type: channel.channel_type,
-                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
-                    ["channel_id", "=", channel.id],
-                ]),
-                message_needaction_counter: messageNeedactionCounter,
-                authorizedGroupFullName: group_public_id ? group_public_id.name : false,
-                model: "discuss.channel",
-            });
+            res.message_needaction_counter = messageNeedactionCounter;
             const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
                 channel.id
             );
@@ -714,7 +731,6 @@ patch(MockServer.prototype, {
                     ),
                 ],
             ];
-            res.allow_public_upload = channel.allow_public_upload;
             return res;
         });
     },

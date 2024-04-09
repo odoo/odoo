@@ -271,33 +271,25 @@ class Channel(models.Model):
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        old_vals = {channel: channel._channel_basic_info() for channel in self}
+        result = super().write(vals)
         notifications = []
         for channel in self:
-            current_val = channel.read(vals.keys())[0]
+            info = channel._channel_basic_info()
             diff = {}
-            for key in vals.keys():
-                if current_val.get(key) != vals.get(key) and key != "image_128":
-                    diff[key] = vals[key]
+            for key, value in info.items():
+                if value != old_vals[channel][key]:
+                    diff[key] = value
             if diff:
                 notifications.append([channel, "mail.record/insert", {
                     "Thread": {
-                        "id": current_val["id"],
+                        "id": channel.id,
                         "model": "discuss.channel",
                         **diff
                     }
                 }])
-        result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
-        if 'image_128' in vals:
-            for channel in self:
-                notifications.append([channel, 'mail.record/insert', {
-                    'Thread': {
-                        'avatarCacheKey': channel._get_avatar_cache_key(),
-                        'id': channel.id,
-                        'model': "discuss.channel",
-                    }
-                }])
         self.env['bus.bus']._sendmany(notifications)
         return result
 
@@ -777,6 +769,24 @@ class Channel(models.Model):
             self.add_members(guest_ids=guest.ids, post_joined_message=post_joined_message)
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
+    def _channel_basic_info(self):
+        self.ensure_one()
+        return {
+            'avatarCacheKey': self._get_avatar_cache_key(),
+            'channel_type': self.channel_type,
+            'memberCount': self.member_count,
+            'id': self.id,
+            'name': self.name,
+            'defaultDisplayMode': self.default_display_mode,
+            'description': self.description,
+            'uuid': self.uuid,
+            'group_based_subscription': bool(self.group_ids),
+            'create_uid': self.create_uid.id,
+            'authorizedGroupFullName': self.group_public_id.full_name,
+            'allow_public_upload': self.allow_public_upload,
+            'model': "discuss.channel",
+        }
+
     def _channel_info(self):
         """ Get the informations header for the current channels
             :returns a list of channels values
@@ -820,24 +830,8 @@ class Channel(models.Model):
             if (current_partner and member.partner_id == current_partner) or (current_guest and member.guest_id == current_guest):
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
-            info = {
-                'avatarCacheKey': channel._get_avatar_cache_key(),
-                'channel_type': channel.channel_type,
-                'memberCount': channel.member_count,
-                'id': channel.id,
-                'name': channel.name,
-                'defaultDisplayMode': channel.default_display_mode,
-                'description': channel.description,
-                'uuid': channel.uuid,
-                'state': 'open',
-                'is_editable': channel.is_editable,
-                'is_minimized': False,
-                'group_based_subscription': bool(channel.group_ids),
-                'create_uid': channel.create_uid.id,
-                'authorizedGroupFullName': channel.group_public_id.full_name,
-                'allow_public_upload': channel.allow_public_upload,
-                'model': "discuss.channel",
-            }
+            info = channel._channel_basic_info()
+            info["is_editable"] = channel.is_editable
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
