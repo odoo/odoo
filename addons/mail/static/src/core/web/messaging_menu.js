@@ -24,7 +24,6 @@ export class MessagingMenu extends Component {
         this.messagingService = useState(useService("mail.messaging"));
         this.notification = useState(useService("mail.notification.permission"));
         this.chatWindowService = useState(useService("mail.chat_window"));
-        this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.installPrompt = useState(useService("installPrompt"));
         this.ui = useState(useService("ui"));
@@ -46,7 +45,7 @@ export class MessagingMenu extends Component {
                 this.store.discuss.inbox.status !== "loading" &&
                 this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
             ) {
-                this.threadService.fetchNewMessages(this.store.discuss.inbox);
+                this.store.discuss.inbox.fetchNewMessages();
             }
         });
     }
@@ -61,10 +60,10 @@ export class MessagingMenu extends Component {
 
     markAsRead(thread) {
         if (thread.needactionMessages.length > 0) {
-            this.threadService.markAllMessagesAsRead(thread);
+            thread.markAllMessagesAsRead();
         }
         if (thread.model === "discuss.channel") {
-            this.threadService.markAsRead(thread);
+            thread.markAsRead();
         }
     }
 
@@ -140,7 +139,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
+        thread.open(undefined, { openMessagingMenuOnClose: true });
         this.dropdown.close();
     }
 
@@ -177,7 +176,7 @@ export class MessagingMenu extends Component {
             // and the chat window does not look good.
             this.store.discuss.chatWindows.find(({ thr }) => thr?.eq(thread))?.close();
         } else {
-            this.threadService.open(thread, undefined, { openMessagingMenuOnClose: true });
+            thread.open(undefined, { openMessagingMenuOnClose: true });
         }
         this.dropdown.close();
     }
@@ -218,9 +217,7 @@ export class MessagingMenu extends Component {
             this.env.inDiscussApp &&
             (!this.store.discuss.thread || this.store.discuss.thread.model !== "mail.box")
         ) {
-            this.threadService.setDiscussThread(
-                Object.values(this.store.Thread.records).find((thread) => thread.id === "inbox")
-            );
+            this.store.discuss.inbox.setAsDiscussThread();
         }
         if (this.store.discuss.activeTab !== "main") {
             this.store.discuss.thread = undefined;

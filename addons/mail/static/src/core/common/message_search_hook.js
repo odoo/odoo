@@ -51,9 +51,9 @@ export function searchHighlight(searchTerm, target) {
     return markup(htmlDoc.body.innerHTML);
 }
 
-/** @param {import('@mail/core/common/thread_model').Thread} thread */
+/** @param {import('models').Thread} thread */
 export function useMessageSearch(thread) {
-    const threadService = useService("mail.thread");
+    const store = useService("mail.store");
     const sequential = useSequential();
     const state = useState({
         thread,
@@ -61,7 +61,7 @@ export function useMessageSearch(thread) {
             if (this.searchTerm) {
                 this.searching = true;
                 const { count, loadMore, messages } = await sequential(() =>
-                    threadService.search(this.searchTerm, this.thread, before)
+                    store.search(this.searchTerm, this.thread, before)
                 );
                 this.searched = true;
                 this.searching = false;

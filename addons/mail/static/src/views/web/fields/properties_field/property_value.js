@@ -12,7 +12,7 @@ patch(PropertyValue.prototype, {
     setup() {
         super.setup();
 
-        if (this.env.services["mail.thread"]) {
+        if (this.env.services["mail.store"]) {
             // work only for the res.users model
             this.openChat = useOpenChat("res.users");
         }
@@ -34,7 +34,7 @@ export class Many2manyPropertiesTagsList extends TagsList {
 
     setup() {
         super.setup();
-        if (this.env.services["mail.thread"]) {
+        if (this.env.services["mail.store"]) {
             this.openChat = useOpenChat("res.users");
         }
     }

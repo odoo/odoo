@@ -21,7 +21,7 @@
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
             <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
             <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
-                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.thread.fetchChannelMembers()">Load more</button>
             </div>
         </ActionPanel>
     </t>

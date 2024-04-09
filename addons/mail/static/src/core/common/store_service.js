@@ -10,9 +10,13 @@ import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
+import { _t } from "@web/core/l10n/translation";
+import { prettifyMessageContent } from "@mail/utils/common/format";
+import { escape } from "@web/core/utils/strings";
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
+    FETCH_LIMIT = 30;
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
@@ -303,6 +307,197 @@ export class Store extends BaseStore {
 
     /** Provides an override point for when the store service has started. */
     onStarted() {}
+
+    /**
+     * Search and fetch for a partner with a given user or partner id.
+     * @param {Object} param0
+     * @param {number} param0.userId
+     * @param {number} param0.partnerId
+     * @returns {Promise<import("models").Thread | undefined>}
+     */
+    async getChat({ userId, partnerId }) {
+        const partner = await this.getPartner({ userId, partnerId });
+        let chat = partner?.searchChat();
+        if (!chat || !chat.is_pinned) {
+            chat = await this.joinChat(partnerId || partner?.id);
+        }
+        if (!chat) {
+            this.env.services.notification.add(
+                _t("An unexpected error occurred during the creation of the chat."),
+                { type: "warning" }
+            );
+            return;
+        }
+        return chat;
+    }
+
+    getDiscussSidebarCategoryCounter(categoryId) {
+        return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
+            if (categoryId === "channels") {
+                return channel.message_needaction_counter > 0 ? acc + 1 : acc;
+            } else {
+                return channel.message_unread_counter > 0 ? acc + 1 : acc;
+            }
+        }, 0);
+    }
+
+    /**
+     * Get the parameters to pass to the message post route.
+     */
+    async getMessagePostParams({
+        attachments,
+        body,
+        cannedResponseIds,
+        isNote,
+        mentionedChannels,
+        mentionedPartners,
+        thread,
+    }) {
+        const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
+        const validMentions =
+            this.self.type === "partner"
+                ? this.env.services["mail.message"].getMentionsFromText(body, {
+                      mentionedChannels,
+                      mentionedPartners,
+                  })
+                : undefined;
+        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        const recipientEmails = [];
+        const recipientAdditionalValues = {};
+        if (!isNote) {
+            const recipientIds = thread.suggestedRecipients
+                .filter((recipient) => recipient.persona && recipient.checked)
+                .map((recipient) => recipient.persona.id);
+            thread.suggestedRecipients
+                .filter((recipient) => recipient.checked && !recipient.persona)
+                .forEach((recipient) => {
+                    recipientEmails.push(recipient.email);
+                    recipientAdditionalValues[recipient.email] = recipient.create_values;
+                });
+            partner_ids.push(...recipientIds);
+        }
+        return {
+            context: {
+                mail_post_autofollow: !isNote && thread.hasWriteAccess,
+            },
+            post_data: {
+                body: await prettifyMessageContent(body, validMentions),
+                attachment_ids: attachments.map(({ id }) => id),
+                attachment_tokens: attachments.map((attachment) => attachment.accessToken),
+                canned_response_ids: cannedResponseIds,
+                message_type: "comment",
+                partner_ids,
+                subtype_xmlid: subtype,
+                partner_emails: recipientEmails,
+                partner_additional_values: recipientAdditionalValues,
+            },
+            thread_id: thread.id,
+            thread_model: thread.model,
+        };
+    }
+
+    /**
+     * Search and fetch for a partner with a given user or partner id.
+     * @param {Object} param0
+     * @param {number} param0.userId
+     * @param {number} param0.partnerId
+     * @returns {Promise<import("models").Persona> | undefined}
+     */
+    async getPartner({ userId, partnerId }) {
+        if (userId) {
+            let user = this.users[userId];
+            if (!user) {
+                this.users[userId] = { id: userId };
+                user = this.users[userId];
+            }
+            if (!user.partner_id) {
+                const [userData] = await this.env.services.orm.silent.read(
+                    "res.users",
+                    [user.id],
+                    ["partner_id"],
+                    { context: { active_test: false } }
+                );
+                if (userData) {
+                    user.partner_id = userData.partner_id[0];
+                }
+            }
+            if (!user.partner_id) {
+                this.env.services.notification.add(_t("You can only chat with existing users."), {
+                    type: "warning",
+                });
+                return;
+            }
+            partnerId = user.partner_id;
+        }
+        if (partnerId) {
+            const partner = this.Persona.insert({ id: partnerId, type: "partner" });
+            if (!partner.userId) {
+                const [userId] = await this.env.services.orm.silent.search(
+                    "res.users",
+                    [["partner_id", "=", partnerId]],
+                    { context: { active_test: false } }
+                );
+                if (!userId) {
+                    this.env.services.notification.add(
+                        _t("You can only chat with partners that have a dedicated user."),
+                        { type: "info" }
+                    );
+                    return;
+                }
+                partner.userId = userId;
+            }
+            return partner;
+        }
+    }
+
+    async joinChannel(id, name) {
+        await this.env.services.orm.call("discuss.channel", "add_members", [[id]], {
+            partner_ids: [this.self.id],
+        });
+        const thread = this.Thread.insert({
+            channel_type: "channel",
+            id,
+            model: "discuss.channel",
+            name,
+        });
+        if (!thread.avatarCacheKey) {
+            thread.avatarCacheKey = "hello";
+        }
+        thread.open();
+        return thread;
+    }
+
+    async joinChat(id, forceOpen = false) {
+        const data = await this.env.services.orm.call("discuss.channel", "channel_get", [], {
+            partners_to: [id],
+            force_open: forceOpen,
+        });
+        const thread = this.Thread.insert(data);
+        return thread;
+    }
+
+    async openChat(person) {
+        const chat = await this.getChat(person);
+        chat?.open();
+    }
+
+    /**
+     * @param {string} searchTerm
+     * @param {Thread} thread
+     * @param {number|false} [before]
+     */
+    async search(searchTerm, thread, before = false) {
+        const { messages, count } = await rpc(thread.getFetchRoute(), {
+            ...thread.getFetchParams(),
+            search_term: escape(searchTerm),
+            before,
+        });
+        return {
+            count,
+            loadMore: messages.length === this.FETCH_LIMIT,
+            messages: this.Message.insert(messages, { html: true }),
+        };
+    }
 }
 Store.register();
 

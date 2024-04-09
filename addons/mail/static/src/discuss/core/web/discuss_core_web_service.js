@@ -18,7 +18,6 @@ export class DiscussCoreWeb {
         this.discussCoreCommonService = services["discuss.core.common"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
-        this.threadService = services["mail.thread"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
                 "discuss_core_web.sidebar_categories"
@@ -46,7 +45,7 @@ export class DiscussCoreWeb {
                     this.store.odoobotOnboarding = false;
                     return;
                 }
-                this.threadService.notifyMessageToUser(channel, message);
+                channel.notifyMessageToUser(message);
             }
         );
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
@@ -58,7 +57,7 @@ export class DiscussCoreWeb {
                 { user: username }
             );
             this.notificationService.add(notification, { type: "info" });
-            const chat = await this.threadService.getChat({ partnerId });
+            const chat = await this.store.getChat({ partnerId });
             if (chat && !this.ui.isSmall) {
                 this.store.ChatWindow.insert({ thread: chat });
             }
@@ -111,7 +110,6 @@ export const discussCoreWeb = {
         "mail.chat_window",
         "mail.messaging",
         "mail.store",
-        "mail.thread",
         "notification",
         "ui",
     ],

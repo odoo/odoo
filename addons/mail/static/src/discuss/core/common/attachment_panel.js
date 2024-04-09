@@ -20,19 +20,18 @@ export class AttachmentPanel extends Component {
         this.sequential = useSequential();
         this.store = useService("mail.store");
         this.ormService = useService("orm");
-        this.threadService = useService("mail.thread");
         this.attachmentUploadService = useService("mail.attachment_upload");
         onWillStart(() => {
-            this.threadService.fetchMoreAttachments(this.props.thread);
+            this.props.thread.fetchMoreAttachments();
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.notEq(this.props.thread)) {
-                this.threadService.fetchMoreAttachments(nextProps.thread);
+                nextProps.thread.fetchMoreAttachments();
             }
         });
         useVisible("load-older", (isVisible) => {
             if (isVisible) {
-                this.threadService.fetchMoreAttachments(this.props.thread);
+                this.props.thread.fetchMoreAttachments();
             }
         });
     }

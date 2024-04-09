@@ -7,7 +7,7 @@
                 <li t-foreach="props.thread.recipients" t-as="recipient" t-key="recipient.id">
                     <t t-out="getRecipientText(recipient)"/>
                 </li>
-                <span t-if="!props.thread.recipientsFullyLoaded" class="btn btn-link w-100" t-on-click="() => threadService.loadMoreRecipients(props.thread)" t-ref="load-more">Load more</span>
+                <span t-if="!props.thread.recipientsFullyLoaded" class="btn btn-link w-100" t-on-click="() => props.thread.loadMoreRecipients()" t-ref="load-more">Load more</span>
             </ul>
         </div>
     </t>

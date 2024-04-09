@@ -2,6 +2,7 @@ import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
+import { SESSION_STATE } from "./livechat_service";
 
 patch(Thread.prototype, {
     setup() {
@@ -46,5 +47,21 @@ patch(Thread.prototype, {
 
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;
+    },
+    /** @returns {Promise<import("models").Message} */
+    async post(body, params) {
+        if (
+            this.channel_type === "livechat" &&
+            this.store.env.services["im_livechat.livechat"].state !== SESSION_STATE.PERSISTED
+        ) {
+            const thread = await this.store.env.services["im_livechat.livechat"].persist();
+            if (!thread) {
+                return;
+            }
+            return thread.post(...arguments);
+        }
+        const message = await super.post(body, params);
+        this.store.env.services["im_livechat.chatbot"].bus.trigger("MESSAGE_POST", message);
+        return message;
     },
 });

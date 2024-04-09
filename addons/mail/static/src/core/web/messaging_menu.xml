@@ -87,7 +87,7 @@
                     muted="thread.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
-                    onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                    onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" persona="thread.correspondent" thread="thread" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>

@@ -22,8 +22,8 @@
                 <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
                 <i t-if="category.canAdd and category.open" class="o-mail-DiscussSidebarCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"  t-att-data-hotkey="category.addHotkey"/>
             </div>
-            <div t-if="!category.open and threadService.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
-                <t t-esc="threadService.getDiscussSidebarCategoryCounter(category.id)"/>
+            <div t-if="!category.open and store.getDiscussSidebarCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
+                <t t-esc="store.getDiscussSidebarCategoryCounter(category.id)"/>
             </div>
         </div>
         <t t-if="category.open">
@@ -61,7 +61,7 @@
                 <i t-if="thread.channel_type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }} text-700" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
                 <div t-if="thread.canLeave" class="fa fa-times ms-1" t-attf-class="{{ hover_class }} text-700"
                     t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
-                <div t-if="thread.canUnpin" t-attf-class="fa fa-times ms-1 {{ hover_class }} text-700" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
+                <div t-if="thread.canUnpin" t-attf-class="fa fa-times ms-1 {{ hover_class }} text-700" t-on-click.stop="() => thread.unpin()" title="Unpin Conversation" role="img"/>
             </div>
             <t t-foreach="channelIndicators" t-as="indicator" t-key="indicator_index" t-component="indicator" t-props="{ thread }"/>
             <div t-if="thread.importantCounter > 0">

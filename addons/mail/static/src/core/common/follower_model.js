@@ -25,6 +25,18 @@ export class Follower extends Record {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
         return this.partner.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
     }
+
+    async remove() {
+        await this.store.env.services.orm.call(this.thread.model, "message_unsubscribe", [
+            [this.thread.id],
+            [this.partner.id],
+        ]);
+        this.delete();
+    }
+
+    removeRecipient() {
+        this.thread.recipients.delete(this);
+    }
 }
 
 Follower.register();

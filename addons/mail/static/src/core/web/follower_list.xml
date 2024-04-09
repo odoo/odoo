@@ -20,7 +20,7 @@
                 <t t-set="follower" t-value="follower"/>
             </t>
         </t>
-        <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="() => threadService.loadMoreFollowers(props.thread)" t-ref="load-more">Load more</span>
+        <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="() => props.thread.loadMoreFollowers()" t-ref="load-more">Load more</span>
     </t>
     <div t-elif="!props.thread.hasWriteAccess" class="dropdown-item disabled">
         No Followers

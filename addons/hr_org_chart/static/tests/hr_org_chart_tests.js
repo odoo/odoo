@@ -2,6 +2,7 @@
 
 import { getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
 let target;
 let serverData;
@@ -23,6 +24,7 @@ QUnit.module("hr_org_chart", {
             },
         };
         setupViewRegistries();
+        registry.category("services").add("mail.store", { start() {} })
     },
 }, function () {
     QUnit.test("hr org chart: empty render", async function (assert) {

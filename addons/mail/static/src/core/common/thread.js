@@ -71,7 +71,6 @@ export class Thread extends Component {
             showJumpPresent: false,
         });
         this.lastJumpPresent = this.props.jumpPresent;
-        this.threadService = useState(useService("mail.thread"));
         this.orm = useService("orm");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageHighlight>|null} */
         this.messageHighlight = this.env.messageHighlight
@@ -88,7 +87,7 @@ export class Thread extends Component {
             "load-older",
             () => {
                 if (this.loadOlderState.isVisible) {
-                    this.threadService.fetchMoreMessages(toRaw(this.props.thread));
+                    toRaw(this.props.thread).fetchMoreMessages();
                 }
             },
             { ready: false }
@@ -97,7 +96,7 @@ export class Thread extends Component {
             "load-newer",
             () => {
                 if (this.loadNewerState.isVisible) {
-                    this.threadService.fetchMoreMessages(toRaw(this.props.thread), "newer");
+                    toRaw(this.props.thread).fetchMoreMessages("newer");
                 }
             },
             { ready: false }
@@ -148,7 +147,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                this.threadService.fetchNewMessages(toRaw(this.props.thread));
+                toRaw(this.props.thread).fetchNewMessages();
             }
         });
         useEffect(
@@ -165,7 +164,7 @@ export class Thread extends Component {
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
             if (detail.model === model && detail.id === id) {
-                this.threadService.fetchNewMessages(toRaw(this.props.thread));
+                toRaw(this.props.thread).fetchNewMessages();
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -176,7 +175,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                this.threadService.fetchNewMessages(toRaw(nextProps.thread));
+                toRaw(nextProps.thread).fetchNewMessages();
             }
         });
     }
@@ -372,7 +371,7 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        this.threadService.fetchMoreMessages(this.props.thread);
+        this.props.thread.fetchMoreMessages();
     }
 
     async onClickPreferences() {
@@ -383,7 +382,7 @@ export class Thread extends Component {
 
     async jumpToPresent() {
         this.messageHighlight?.clearHighlight();
-        await this.threadService.loadAround(this.props.thread);
+        await this.props.thread.loadAround();
         this.props.thread.loadNewer = false;
         this.props.thread.scrollTop = this.props.order === "desc" ? 0 : "bottom";
         this.state.showJumpPresent = false;

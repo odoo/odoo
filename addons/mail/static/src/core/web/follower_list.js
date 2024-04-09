@@ -22,10 +22,9 @@ export class FollowerList extends Component {
         super.setup();
         this.action = useService("action");
         this.messaging = useState(useService("mail.messaging"));
-        this.threadService = useState(useService("mail.thread"));
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
-                this.threadService.loadMoreFollowers(this.props.thread);
+                this.props.thread.loadMoreFollowers();
             }
         });
     }
@@ -77,7 +76,7 @@ export class FollowerList extends Component {
      */
     async onClickRemove(ev, follower) {
         const thread = this.props.thread;
-        await this.threadService.removeFollower(follower);
+        await follower.remove();
         this.props.onFollowerChanged?.(thread);
     }
 }

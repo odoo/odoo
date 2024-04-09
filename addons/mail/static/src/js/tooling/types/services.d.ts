@@ -20,7 +20,6 @@ declare module "services" {
     import { soundEffects } from "@mail/core/common/sound_effects_service";
     import { storeService } from "@mail/core/common/store_service";
     import { suggestionService } from "@mail/core/common/suggestion_service";
-    import { threadService } from "@mail/core/common/thread_service";
 
     export interface Services {
         "discuss.channel.member": typeof channelMemberService;
@@ -43,6 +42,5 @@ declare module "services" {
         "mail.sound_effects": typeof soundEffects;
         "mail.store": typeof storeService;
         "mail.suggestion": typeof suggestionService;
-        "mail.thread": typeof threadService;
     }
 }
