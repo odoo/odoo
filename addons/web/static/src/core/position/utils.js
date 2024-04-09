@@ -151,9 +151,13 @@ function computePosition(popper, target, { container, margin, position }) {
                 if (vertical) {
                     directionMin += container.scrollTop;
                     directionMax += container.scrollTop;
+                    variantMin += container.scrollLeft;
+                    variantMax += container.scrollLeft;
                 } else {
                     variantMin += container.scrollTop;
                     variantMax += container.scrollTop;
+                    directionMin += container.scrollLeft;
+                    directionMax += container.scrollLeft;
                 }
             }
 
