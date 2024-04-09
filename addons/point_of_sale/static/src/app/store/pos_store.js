@@ -1674,9 +1674,7 @@ export class PosStore extends Reactive {
     showBackButton() {
         return (
             this.mainScreen.component === PaymentScreen ||
-            (this.mainScreen.component === ProductScreen &&
-                (this.selectedCategory || this.showResultMobile || this.mobile_pane == "left") &&
-                this.ui.isSmall) ||
+            (this.mainScreen.component === ProductScreen && this.mobile_pane == "left") ||
             this.mainScreen.component === TicketScreen
         );
     }

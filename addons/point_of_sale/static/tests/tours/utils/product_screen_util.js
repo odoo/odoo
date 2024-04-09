@@ -94,15 +94,6 @@ export function clickSubcategory(name) {
         },
     ];
 }
-export function clickShowProductsMobile() {
-    return [
-        {
-            content: `Click on show products in mobile mode`,
-            trigger: `button.show-products-mobile`,
-            mobile: true,
-        },
-    ];
-}
 /**
  * Press the numpad in sequence based on the given space-separated keys.
  * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive

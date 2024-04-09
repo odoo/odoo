@@ -11,7 +11,6 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ProductScreen.clickShowProductsMobile(),
             ProductScreen.clickDisplayedProduct("Zero Amount Product", true, "1.0", "1.0"),
             ProductScreen.clickNumpad("+/-", "1"),
             ProductScreen.selectedOrderlineHas("Zero Amount Product", "-1.0", "-1.0"),
