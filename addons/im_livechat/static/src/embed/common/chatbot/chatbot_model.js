@@ -60,9 +60,9 @@ export class Chatbot extends Record {
         if (!this.currentStep || this.currentStep.completed) {
             return;
         }
-        this.currentStep.message = this._store.Message.insert(
+        this.currentStep.message = this.store.Message.insert(
             this.currentStep.message ?? {
-                id: this._store.env.services["mail.message"].getNextTemporaryId(),
+                id: this.store.env.services["mail.message"].getNextTemporaryId(),
                 author: this.script.partner,
                 body: this.currentStep.scriptStep.message,
                 thread: this.thread,

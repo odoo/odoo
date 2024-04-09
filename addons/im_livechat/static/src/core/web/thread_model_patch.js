@@ -8,7 +8,7 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.appAsLivechats = Record.one("DiscussApp", {
             compute() {
-                return this.channel_type === "livechat" ? this._store.discuss : null;
+                return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
         this.livechatChannel = Record.one("LivechatChannel");

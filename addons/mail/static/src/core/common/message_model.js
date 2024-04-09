@@ -165,7 +165,7 @@ export class Message extends Record {
     now = DateTime.now().set({ milliseconds: 0 });
 
     get editable() {
-        if (!this._store.self.isAdmin && !this.isSelfAuthored) {
+        if (!this.store.self.isAdmin && !this.isSelfAuthored) {
             return false;
         }
         return this.message_type === "comment";
@@ -188,7 +188,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this._store.self.in(this.recipients);
+        return this.store.self.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -199,17 +199,17 @@ export class Message extends Record {
         if (!this.author) {
             return false;
         }
-        return this.author.eq(this._store.self);
+        return this.author.eq(this.store.self);
     }
 
     get isStarred() {
-        return this._store.self.in(this.starredPersonas);
+        return this.store.self.in(this.starredPersonas);
     }
 
     get isNeedaction() {
         return (
-            this._store.self.type === "partner" &&
-            this.needaction_partner_ids.includes(this._store.self.id)
+            this.store.self.type === "partner" &&
+            this.needaction_partner_ids.includes(this.store.self.id)
         );
     }
 
@@ -219,8 +219,8 @@ export class Message extends Record {
 
     get isHistory() {
         return (
-            this._store.self.type === "partner" &&
-            this.history_partner_ids.includes(this._store.self.id)
+            this.store.self.type === "partner" &&
+            this.history_partner_ids.includes(this.store.self.id)
         );
     }
 
@@ -270,8 +270,8 @@ export class Message extends Record {
         /** @this {import("models").Message} */
         onUpdate() {
             if (this.isEmpty && this.isStarred) {
-                this.starredPersonas.delete(this._store.self);
-                const starred = this._store.discuss.starred;
+                this.starredPersonas.delete(this.store.self);
+                const starred = this.store.discuss.starred;
                 starred.counter--;
                 starred.messages.delete(this);
             }
@@ -293,7 +293,7 @@ export class Message extends Record {
      */
     get linkPreviewSquash() {
         return (
-            this._store.hasLinkPreviewFeature &&
+            this.store.hasLinkPreviewFeature &&
             this.body &&
             this.body.startsWith("<a") &&
             this.body.endsWith("/a>") &&

@@ -15,17 +15,20 @@ patch(Message.prototype, {
         if (this.pinned_at) {
             this.unpin();
         } else {
-            this._store.env.services.dialog.add(MessageConfirmDialog, {
+            this.store.env.services.dialog.add(MessageConfirmDialog, {
                 confirmText: _t("Yeah, pin it!"),
                 message: this,
                 messageComponent: MessageComponent,
-                prompt: _t("You sure want this message pinned to %(conversation)s forever and ever?", {
-                    conversation: this.thread.prefix + this.thread.displayName,
-                }),
+                prompt: _t(
+                    "You sure want this message pinned to %(conversation)s forever and ever?",
+                    {
+                        conversation: this.thread.prefix + this.thread.displayName,
+                    }
+                ),
                 size: "md",
                 title: _t("Pin It"),
                 onConfirm: () => {
-                    this._store.env.services.orm.call(
+                    this.store.env.services.orm.call(
                         "discuss.channel",
                         "set_message_pin",
                         [this.thread.id],
@@ -36,7 +39,7 @@ patch(Message.prototype, {
         }
     },
     unpin() {
-        this._store.env.services.dialog.add(MessageConfirmDialog, {
+        this.store.env.services.dialog.add(MessageConfirmDialog, {
             confirmColor: "btn-danger",
             confirmText: _t("Yes, remove it please"),
             message: this,
@@ -47,7 +50,7 @@ patch(Message.prototype, {
             size: "md",
             title: _t("Unpin Message"),
             onConfirm: () => {
-                this._store.env.services.orm.call(
+                this.store.env.services.orm.call(
                     "discuss.channel",
                     "set_message_pin",
                     [this.thread.id],
