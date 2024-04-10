@@ -1,10 +1,11 @@
 import { isValidEmail } from "@im_livechat/embed/common/misc";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { Component, useState } from "@odoo/owl";
 
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
+let rpc;
 /**
  * @typedef {Object} Props
  * @property {import("models").Thread}
@@ -28,6 +29,7 @@ export class TranscriptSender extends Component {
             email: "",
             status: this.STATUS.IDLE,
         });
+        rpc = rpcWithEnv(this.env);
     }
 
     async onClickSend() {

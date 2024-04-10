@@ -10,7 +10,6 @@ export class MailCoreWeb {
     constructor(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
 
@@ -94,7 +93,7 @@ export class MailCoreWeb {
 }
 
 export const mailCoreWeb = {
-    dependencies: ["bus_service", "mail.messaging", "mail.store"],
+    dependencies: ["bus_service", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

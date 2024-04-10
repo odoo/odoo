@@ -21,7 +21,7 @@ export class FollowerList extends Component {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.messaging = useState(useService("mail.messaging"));
+        this.store = useState(useService("mail.store"));
         useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();
@@ -54,7 +54,7 @@ export class FollowerList extends Component {
      * @param {import("models").Follower} follower
      */
     onClickDetails(ev, follower) {
-        this.messaging.openDocument({ id: follower.partner.id, model: "res.partner" });
+        this.store.openDocument({ id: follower.partner.id, model: "res.partner" });
         this.props.dropdown.close();
     }
 

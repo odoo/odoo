@@ -1,12 +1,11 @@
+import { rpcWithEnv } from "@mail/utils/common/misc";
 import { reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 import { cookie } from "@web/core/browser/cookie";
 import { parseDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 
 /**
@@ -15,6 +14,8 @@ import { session } from "@web/session";
  * @property {number?} [auto_popup_timer]
  * @property {import("@im_livechat/embed/common/chatbot/chatbot_model").IChatbot} [chatbot]
  */
+
+let rpc;
 
 export const RATING = Object.freeze({
     GOOD: 5,
@@ -46,7 +47,6 @@ export class LivechatService {
     state = SESSION_STATE.NONE;
     /** @type {LivechatRule} */
     rule;
-    initializedDeferred = new Deferred();
     initialized = false;
     available = session.livechatData?.isAvailable;
     _onStateChangeCallbacks = {
@@ -57,6 +57,7 @@ export class LivechatService {
 
     constructor(env, services) {
         this.setup(env, services);
+        rpc = rpcWithEnv(env);
     }
 
     /**
@@ -96,7 +97,7 @@ export class LivechatService {
             await this.busService.addChannel(`mail.guest_${this.guestToken}`);
         }
         this.initialized = true;
-        this.initializedDeferred.resolve();
+        this.env.services["im_livechat.initialized"].ready.resolve();
     }
 
     /**
@@ -136,7 +137,7 @@ export class LivechatService {
         }
         this.store.ChatWindow.insert({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await this.env.services["mail.messaging"].initialize();
+        await this.env.services["mail.store"].initialize();
         return this.thread;
     }
 
@@ -254,7 +255,13 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: ["bus_service", "mail.chat_window", "mail.store", "notification"],
+    dependencies: [
+        "bus_service",
+        "mail.chat_window",
+        "im_livechat.initialized",
+        "mail.store",
+        "notification",
+    ],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         (async () => {

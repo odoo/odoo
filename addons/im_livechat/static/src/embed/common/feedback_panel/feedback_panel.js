@@ -3,11 +3,12 @@ import { TranscriptSender } from "@im_livechat/embed/common/feedback_panel/trans
 
 import { Component, useState } from "@odoo/owl";
 
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { url } from "@web/core/utils/urls";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
+let rpc;
 /**
  * @typedef {Object} Props
  * @property {Function} [onClickClose]
@@ -34,6 +35,7 @@ export class FeedbackPanel extends Component {
             feedback: "",
         });
         this.url = url;
+        rpc = rpcWithEnv(this.env);
     }
 
     /**
