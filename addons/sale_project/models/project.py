@@ -838,7 +838,7 @@ class ProjectTask(models.Model):
         (self - billable_task).partner_id = False
         super(ProjectTask, billable_task)._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    @api.depends('partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not (task.allow_billable or task.parent_id.allow_billable):
