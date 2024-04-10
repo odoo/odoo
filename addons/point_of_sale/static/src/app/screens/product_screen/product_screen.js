@@ -15,7 +15,7 @@ import { Orderline } from "@point_of_sale/app/generic_components/orderline/order
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { ProductInfoPopup } from "./product_info_popup/product_info_popup";
-import { fuzzyLookup } from "@point_of_sale/utils";
+import { fuzzyLookup } from "@web/core/utils/search";
 import { ProductCard } from "@point_of_sale/app/generic_components/product_card/product_card";
 import {
     ControlButtons,
