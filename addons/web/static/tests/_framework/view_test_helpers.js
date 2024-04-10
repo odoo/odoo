@@ -213,12 +213,14 @@ export async function mountViewInDialog(params) {
 
 /**
  * @param {MountViewParams} params
+ * @param {HTMLElement} [target]
  */
-export async function mountView(params) {
+export async function mountView(params, target = null) {
     const config = { ...getDefaultConfig(), ...params.config };
     return mountWithCleanup(View, {
         env: params.env || getMockEnv() || (await makeMockEnv({ config })),
         props: parseViewProps(params),
+        target,
     });
 }
 
