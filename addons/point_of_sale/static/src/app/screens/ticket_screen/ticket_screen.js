@@ -121,7 +121,6 @@ export class TicketScreen extends Component {
     }
     async onDeleteOrder(order) {
         const screen = order.get_screen_data();
-        order.uiState.displayed = false;
 
         if (
             ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
@@ -139,6 +138,7 @@ export class TicketScreen extends Component {
                 return false;
             }
         }
+        order.uiState.displayed = false;
         if (order && (await this._onBeforeDeleteOrder(order))) {
             if (Object.keys(order.last_order_preparation_change).length > 0) {
                 await this.pos.sendOrderInPreparationUpdateLastChange(order, true);
