@@ -15,7 +15,7 @@
         <field name="name">mail.blacklist.view.form</field>
         <field name="model">mail.blacklist</field>
         <field name="arch" type="xml">
-            <form string="Add Email Blacklist" duplicate="false" edit="false">
+            <form string="Add Email Blacklist" duplicate="false">
                 <header>
                     <button name="mail_action_blacklist_remove" string="Unblacklist"
                         type="object" class="oe_highlight" context="{'default_email': email}"
@@ -25,13 +25,9 @@
                         invisible="active or not email"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="badge rounded-pill text-bg-danger float-end fs-6 border-0" invisible="active">Archived</div>
                     <group>
-                        <group>
-                            <field name="email"/>
-                            <field name="active" readonly="1"/>
-                            <br/>
-                        </group>
+                        <field name="email"/>
                     </group>
                 </sheet>
                 <chatter/>

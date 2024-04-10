@@ -7,10 +7,10 @@
             <form string="phone_blacklist_removal">
                 <group class="oe_title">
                     <field name="phone" string="Phone Number"/>
-                    <field name="reason" string="Reason"/>
+                    <field name="reason" string="Reason" placeholder='e.g "Asked to receive our next newsletters"'/>
                 </group>
                 <footer>
-                    <button name="action_unblacklist_apply" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="action_unblacklist_apply" string="Remove phone from blacklist" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
