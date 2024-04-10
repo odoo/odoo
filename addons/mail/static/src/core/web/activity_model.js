@@ -1,5 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef Data
@@ -66,9 +67,9 @@ export class Activity extends Record {
         }
         assignDefined(activity, data);
         if (broadcast) {
-            this.env.services["mail.activity"].broadcastChannel?.postMessage({
+            this.store.activityBroadcastChannel?.postMessage({
                 type: "INSERT",
-                payload: this.env.services["mail.activity"]._serialize(activity),
+                payload: activity.serialize(),
             });
         }
         return activity;
@@ -145,6 +146,63 @@ export class Activity extends Record {
 
     get dateCreateFormatted() {
         return this.create_date.toLocaleString(luxon.DateTime.DATETIME_SHORT);
+    }
+
+    async edit() {
+        return new Promise((resolve) =>
+            this.store.env.services.action.doAction(
+                {
+                    type: "ir.actions.act_window",
+                    name: _t("Schedule Activity"),
+                    res_model: "mail.activity",
+                    view_mode: "form",
+                    views: [[false, "form"]],
+                    target: "new",
+                    res_id: this.id,
+                },
+                { onClose: resolve }
+            )
+        );
+    }
+
+    /** @param {number[]} attachmentIds */
+    async markAsDone(attachmentIds = []) {
+        await this.store.env.services.orm.call("mail.activity", "action_feedback", [[this.id]], {
+            attachment_ids: attachmentIds,
+            feedback: this.feedback,
+        });
+        this.store.activityBroadcastChannel?.postMessage({
+            type: "RELOAD_CHATTER",
+            payload: { id: this.res_id, model: this.res_model },
+        });
+    }
+
+    async markAsDoneAndScheduleNext() {
+        const action = await this.store.env.services.orm.call(
+            "mail.activity",
+            "action_feedback_schedule_next",
+            [[this.id]],
+            { feedback: this.feedback }
+        );
+        this.activityBroadcastChannel?.postMessage({
+            type: "RELOAD_CHATTER",
+            payload: { id: this.res_id, model: this.res_model },
+        });
+        return action;
+    }
+
+    remove({ broadcast = true } = {}) {
+        this.delete();
+        if (broadcast) {
+            this.activityBroadcastChannel?.postMessage({
+                type: "DELETE",
+                payload: { id: this.id },
+            });
+        }
+    }
+
+    serialize() {
+        return JSON.parse(JSON.stringify(this.toData()));
     }
 }
 

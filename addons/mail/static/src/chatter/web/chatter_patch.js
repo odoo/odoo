@@ -7,14 +7,13 @@ import { useHover } from "@mail/utils/common/hooks";
 import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { useState, markup, useEffect } from "@odoo/owl";
+import { markup, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { escape } from "@web/core/utils/strings";
 import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export const DELAY_FOR_SPINNER = 1000;
@@ -56,7 +55,6 @@ Object.assign(Chatter.defaultProps, {
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
-        this.activityService = useState(useService("mail.activity"));
         this.recipientsPopover = usePopover(RecipientList);
         Object.assign(this.state, {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
@@ -281,7 +279,7 @@ patch(Chatter.prototype, {
     async scheduleActivity() {
         this.closeSearch();
         const schedule = async (thread) => {
-            await this.activityService.schedule(thread.model, [thread.id]);
+            await this.store.scheduleActivity(thread.model, [thread.id]);
             this.load(thread, ["activities", "messages"]);
         };
         if (this.state.thread.id) {
