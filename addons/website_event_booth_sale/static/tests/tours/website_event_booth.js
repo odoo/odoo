@@ -10,8 +10,8 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
     trigger: 'h5.card-title span:contains("Test Event Booths")',
     run: "click",
 }, {
-    content: 'Go to "Get A Booth" page',
-    trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
+    content: 'Go to "Booth" page',
+    trigger: 'a:contains("Become exhibitor")',
     run: "click",
 }, {
     content: 'Select the first two booths',
