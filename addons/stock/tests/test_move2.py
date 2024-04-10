@@ -2054,7 +2054,7 @@ class TestSinglePicking(TestStockCommon):
         receipt2 = self.env['stock.picking'].create({
             'location_id': warehouse.wh_input_stock_loc_id.id,
             'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
-            'picking_type_id': warehouse.int_type_id.id,
+            'picking_type_id': warehouse.qc_type_id.id,
             'state': 'draft',
         })
         move1_receipt_2 = self.MoveObj.create({
