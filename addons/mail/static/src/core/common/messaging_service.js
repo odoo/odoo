@@ -97,12 +97,7 @@ export class Messaging {
 }
 
 export const messagingService = {
-    dependencies: [
-        "mail.store",
-        "orm",
-        "im_status",
-        "mail.persona", // FIXME: still necessary until insert is managed by this service
-    ],
+    dependencies: ["mail.store", "orm", "im_status"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

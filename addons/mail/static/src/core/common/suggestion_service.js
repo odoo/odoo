@@ -12,7 +12,6 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
-        this.personaService = services["mail.persona"];
     }
 
     getSupportedDelimiters(thread) {
@@ -184,7 +183,7 @@ export class SuggestionService {
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
-        const context = { recentChatPartnerIds: this.personaService.getRecentChatPartnerIds() };
+        const context = { recentChatPartnerIds: this.store.getRecentChatPartnerIds() };
         return partners.sort((p1, p2) => {
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
@@ -252,7 +251,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store", "mail.persona"],
+    dependencies: ["orm", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
