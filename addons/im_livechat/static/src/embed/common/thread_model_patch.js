@@ -31,22 +31,6 @@ patch(Thread, {
                     }
                 }
             );
-            if (this.env.services["im_livechat.chatbot"].isChatbotThread(thread)) {
-                thread.chatbotTypingMessage = {
-                    id: this.env.services["mail.message"].getNextTemporaryId(),
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                };
-            } else {
-                thread.livechatWelcomeMessage = {
-                    id: this.env.services["mail.message"].getNextTemporaryId(),
-                    body: livechatService.options.default_message,
-                    res_id: thread.id,
-                    model: thread.model,
-                    author: thread.operator,
-                };
-            }
         }
         return thread;
     },
@@ -55,8 +39,32 @@ patch(Thread, {
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.chatbotTypingMessage = Record.one("Message");
-        this.livechatWelcomeMessage = Record.one("Message");
+        this.chatbotTypingMessage = Record.one("Message", {
+            compute() {
+                if (this._store.env.services["im_livechat.chatbot"].isChatbotThread(this)) {
+                    return {
+                        id: Number.isInteger(this.id) ? -0.1 - this.id : -0.1,
+                        res_id: this.id,
+                        model: this.model,
+                        author: this.operator,
+                    };
+                }
+            },
+        });
+        this.livechatWelcomeMessage = Record.one("Message", {
+            compute() {
+                if (this.displayWelcomeMessage) {
+                    const livechatService = this._store.env.services["im_livechat.livechat"];
+                    return {
+                        id: Number.isInteger(this.id) ? -0.2 - this.id : -0.2,
+                        body: livechatService.options.default_message,
+                        res_id: this.id,
+                        model: this.model,
+                        author: this.operator,
+                    };
+                }
+            },
+        });
         this.chatbotScriptId = null;
         /**
          * Indicates whether this thread was just created (i.e. no reload occurs
@@ -81,5 +89,9 @@ patch(Thread.prototype, {
 
     get isTransient() {
         return super.isTransient || this.id === LivechatService.TEMPORARY_ID;
+    },
+
+    get displayWelcomeMessage() {
+        return !this._store.env.services["im_livechat.chatbot"].isChatbotThread(this);
     },
 });
