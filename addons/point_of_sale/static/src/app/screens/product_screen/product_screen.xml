@@ -35,6 +35,7 @@
                             productInfo="true"
                             onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
                     </div>
+<<<<<<< HEAD
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
                         <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
@@ -44,6 +45,64 @@
                                 <div class="o_spinner d-flex flex-column mb-4">
                                     <img src="/web/static/img/spin.svg" alt="Loading..."/>
                                     Loading...
+||||||| parent of 92ddac9c5aaf (temp)
+                </div>
+                <div t-ref="products" class="overflow-y-auto flex-grow-1">
+                    <t t-if="!ui.isSmall or getChildCategories(this.pos.selectedCategory).length === 0 or searchWord or pos.showResultMobile">
+                        <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                            <t  t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                                <ProductCard
+                                    class="pos.productViewMode"
+                                    name="product.display_name"
+                                    productId="product.id"
+                                    color="product.pos_categ_ids?.at(-1)?.color"
+                                    price="pos.getProductPriceFormatted(product)"
+                                    imageUrl="pos.show_product_images and product.getImageUrl()"
+                                    onClick.bind="() => this.addProductToOrder(product)"
+                                    productInfo="true"
+                                    onProductInfoClick.bind="() => this.onProductInfoClick(product)"
+                                />
+                            </t>
+                        </div>
+                        <div t-else="" class="flex-grow-1 text-center mt-5">
+                            <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                            <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                            <p t-elif="!state.loadingDemo" class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
+                            <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
+                                <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
+                                    <div class="o_spinner d-flex flex-column mb-4">
+                                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                                        Loading...
+                                    </div>
+=======
+                </div>
+                <div t-ref="products" class="overflow-y-auto flex-grow-1">
+                    <t t-if="!ui.isSmall or getChildCategories(this.pos.selectedCategory).length === 0 or searchWord or pos.showResultMobile">
+                        <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                            <t  t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                                <ProductCard
+                                    class="pos.productViewMode"
+                                    name="product.display_name"
+                                    productId="product.id"
+                                    price="pos.getProductPriceFormatted(product)"
+                                    imageUrl="pos.show_product_images and product.getImageUrl()"
+                                    onClick.bind="() => this.addProductToOrder(product)"
+                                    productInfo="true"
+                                    onProductInfoClick.bind="() => this.onProductInfoClick(product)"
+                                />
+                            </t>
+                        </div>
+                        <div t-else="" class="flex-grow-1 text-center mt-5">
+                            <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                            <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                            <p t-elif="!state.loadingDemo" class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
+                            <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
+                                <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
+                                    <div class="o_spinner d-flex flex-column mb-4">
+                                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                                        Loading...
+                                    </div>
+>>>>>>> 92ddac9c5aaf (temp)
                                 </div>
                             </div>
                         </div>

@@ -229,6 +229,22 @@ export class PosData extends Reactive {
         this.network.loading = false;
     }
 
+<<<<<<< HEAD
+||||||| parent of 92ddac9c5aaf (temp)
+    async loadMissingRecords(missingRecords) {
+        for (const [model, ids] of Object.entries(missingRecords)) {
+            await this.read(model, Array.from(ids), [], {}, false);
+        }
+    }
+
+=======
+    async loadMissingRecords(missingRecords) {
+        for (const [model, ids] of Object.entries(missingRecords)) {
+            await this.read(model, Array.from(ids), this.fields[model], {}, false);
+        }
+    }
+
+>>>>>>> 92ddac9c5aaf (temp)
     async execute({
         type,
         model,
