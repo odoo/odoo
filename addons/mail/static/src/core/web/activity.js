@@ -9,7 +9,6 @@ import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -26,7 +25,6 @@ export class Activity extends Component {
 
     setup() {
         super.setup();
-        this.activityService = useService("mail.activity");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
@@ -75,7 +73,7 @@ export class Activity extends Component {
     async onFileUploaded(data) {
         const thread = this.thread;
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.activityService.markAsDone(this.props.activity, [attachmentId]);
+        await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }
@@ -91,14 +89,13 @@ export class Activity extends Component {
 
     async edit() {
         const thread = this.thread;
-        const id = this.props.activity.id;
-        await this.env.services["mail.activity"].edit(id);
+        await this.props.activity.edit();
         this.props.onActivityChanged(thread);
     }
 
     async unlink() {
         const thread = this.thread;
-        this.activityService.delete(this.props.activity);
+        this.props.activity.remove();
         await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
         this.props.onActivityChanged(thread);
     }

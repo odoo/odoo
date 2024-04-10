@@ -78,9 +78,7 @@ export class ActivityListPopoverItem extends Component {
 
     onClickEditActivityButton() {
         this.props.onClickEditActivityButton();
-        this.env.services["mail.activity"]
-            .edit(this.props.activity.id)
-            .then(() => this.props.onActivityChanged?.());
+        this.props.activity.edit().then(() => this.props.onActivityChanged?.());
     }
 
     onClickMarkAsDone() {
@@ -89,7 +87,7 @@ export class ActivityListPopoverItem extends Component {
 
     async onFileUploaded(data) {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
+        await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged?.();
     }
 

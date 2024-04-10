@@ -38,7 +38,7 @@ export class ActivityMarkAsDone extends Component {
             model: res_model,
             id: res_id,
         });
-        await this.env.services["mail.activity"].markAsDone(this.props.activity);
+        await this.props.activity.markAsDone();
         this.props.onActivityChanged(thread);
         await thread.fetchNewMessages();
     }
@@ -55,9 +55,7 @@ export class ActivityMarkAsDone extends Component {
         if (this.props.close) {
             this.props.close();
         }
-        const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
-            this.props.activity
-        );
+        const action = await this.props.activity.markAsDoneAndScheduleNext();
         thread.fetchNewMessages();
         this.props.onActivityChanged(thread);
         if (!action) {

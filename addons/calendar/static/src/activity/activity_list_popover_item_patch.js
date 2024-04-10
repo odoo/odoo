@@ -1,5 +1,3 @@
-/** @odoo-module */
-
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { patch } from "@web/core/utils/patch";
 
@@ -9,6 +7,6 @@ patch(ActivityListPopoverItem.prototype, {
     },
 
     async onClickReschedule() {
-        await this.env.services["mail.activity"].rescheduleMeeting(this.props.activity.id);
+        await this.props.activity.rescheduleMeeting();
     },
 });
