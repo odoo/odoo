@@ -186,7 +186,7 @@
 
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                             <label for="videocall_location" class="opacity-100"/>
-                            <div col="2">
+                            <div name="videocall_location_div" col="2">
                                 <field name="videocall_location" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="videocall_source == 'discuss' or not user_can_edit"/>
                                 <button name="clear_videocall_location" type="object" class="btn btn-link ps-0"
                                     invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
