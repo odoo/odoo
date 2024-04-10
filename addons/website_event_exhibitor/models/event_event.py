@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class EventEvent(models.Model):
@@ -57,6 +57,15 @@ class EventEvent(models.Model):
 
     def _get_website_menu_entries(self):
         self.ensure_one()
-        return super(EventEvent, self)._get_website_menu_entries() + [
-            (_('Exhibitors'), '/event/%s/exhibitors' % self.env['ir.http']._slug(self), False, 60, 'exhibitor')
-        ]
+        menu_entries = super()._get_website_menu_entries()
+        exhibitor_menu_exists = any(entry[0] == self.env._('Exhibitors') for entry in menu_entries)
+        if not exhibitor_menu_exists:
+            menu_entries.extend([
+                (self.env._('Exhibitors'), '#', False, 55, 'exhibitor', False),
+                (self.env._('Exhibitors list'), '/event/%s/exhibitors' % self.env['ir.http']._slug(self), False, 60, 'exhibitor', 'exhibitor')
+            ])
+        else:
+            menu_entries.append(
+                (self.env._('Exhibitors list'), '/event/%s/exhibitors' % self.env['ir.http']._slug(self), False, 60, 'exhibitor', 'booth')
+            )
+        return menu_entries

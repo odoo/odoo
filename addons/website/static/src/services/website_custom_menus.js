@@ -137,4 +137,4 @@ registry.category('website_custom_menus').add('website.custom_menu_edit_menu', {
     isDisplayed: (env) => env.services.website.currentWebsite
         && env.services.website.currentWebsite.metadata.contentMenus
         && env.services.website.currentWebsite.metadata.contentMenus.length,
-});
+}, { force: true });
