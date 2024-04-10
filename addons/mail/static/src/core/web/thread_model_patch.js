@@ -27,9 +27,7 @@ patch(Thread.prototype, {
     },
     closeChatWindow() {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
-        if (chatWindow) {
-            this.store.env.services["mail.chat_window"].close(chatWindow, { notifyState: false });
-        }
+        chatWindow?.close({ notifyState: false });
     },
     async leave() {
         this.closeChatWindow();
@@ -88,9 +86,7 @@ patch(Thread.prototype, {
     },
     async unpin() {
         const chatWindow = this.store.discuss.chatWindows.find((c) => c.thread?.eq(this));
-        if (chatWindow) {
-            await this.store.env.services["mail.chat_window"].close(chatWindow);
-        }
+        await chatWindow?.close();
         super.unpin(...arguments);
     },
     _openChatWindow(replaceNewMessageChatWindow, { openMessagingMenuOnClose } = {}) {
@@ -106,6 +102,6 @@ patch(Thread.prototype, {
         );
         chatWindow.autofocus++;
         this.state = "open";
-        this.store.env.services["mail.chat_window"].notifyState(chatWindow);
+        chatWindow.notifyState();
     },
 });

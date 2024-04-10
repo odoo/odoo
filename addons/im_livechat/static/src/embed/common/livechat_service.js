@@ -64,14 +64,12 @@ export class LivechatService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * bus_service: ReturnType<typeof import("@bus/services/bus_service").busService.start>,
-     * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService>,
      * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
      */
     setup(env, services) {
         this.env = env;
         this.busService = services.bus_service;
-        this.chatWindowService = services["mail.chat_window"];
         this.notificationService = services.notification;
         this.store = services["mail.store"];
     }
@@ -107,10 +105,7 @@ export class LivechatService {
      */
     async open() {
         await this._createThread({ persist: false });
-        if (!this.thread) {
-            return;
-        }
-        this.env.services["mail.chat_window"].open(this.thread);
+        this.thread?.openChatWindow();
     }
 
     /**
@@ -130,7 +125,7 @@ export class LivechatService {
                 (c) => c.thread?.id === temporaryThread.id
             );
             temporaryThread.delete();
-            this.env.services["mail.chat_window"].close(chatWindow);
+            chatWindow.close();
         }
         if (!this.thread) {
             return;
@@ -255,13 +250,7 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: [
-        "bus_service",
-        "mail.chat_window",
-        "im_livechat.initialized",
-        "mail.store",
-        "notification",
-    ],
+    dependencies: ["bus_service", "im_livechat.initialized", "mail.store", "notification"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         (async () => {

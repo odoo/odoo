@@ -43,7 +43,6 @@ export class ChatWindow extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.chatWindowService = useState(useService("mail.chat_window"));
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -104,12 +103,11 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = this.chatWindowService.visible.findIndex((cw) => cw.eq(chatWindow));
+                const index = this.store.visibleChatWindows.findIndex((cw) => cw.eq(chatWindow));
                 if (index === 0) {
-                    this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
-                        .autofocus++;
+                    this.store.visibleChatWindows.at(-1).autofocus++;
                 } else {
-                    this.chatWindowService.visible[index - 1].autofocus++;
+                    this.store.visibleChatWindows[index - 1].autofocus++;
                 }
                 break;
             }
@@ -128,15 +126,15 @@ export class ChatWindow extends Component {
             return;
         }
         if (chatWindow.hidden) {
-            this.chatWindowService.makeVisible(chatWindow);
+            chatWindow.makeVisible();
         } else {
-            this.chatWindowService.toggleFold(chatWindow);
+            chatWindow.toggleFold();
         }
     }
 
     async close(options) {
         const chatWindow = toRaw(this.props.chatWindow);
-        await this.chatWindowService.close(chatWindow, options);
+        await chatWindow.close(options);
     }
 
     get actionsMenuTitleText() {

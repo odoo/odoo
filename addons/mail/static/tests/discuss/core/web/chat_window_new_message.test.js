@@ -1,11 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
 import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/core/common/chat_window_service";
-import {
     click,
     contains,
     defineMailModels,
@@ -14,7 +9,7 @@ import {
     start,
     startServer,
 } from "../../../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -80,12 +75,15 @@ test('open chat from "new message" chat window should open chat in place of this
         },
     ]);
     patchUiSize({ width: 1920 });
+    await start();
+    const store = getService("mail.store");
     expect(
-        CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 3 + CHAT_WINDOW_INBETWEEN_WIDTH * 2
+        store.CHAT_WINDOW_END_GAP_WIDTH * 2 +
+            store.CHAT_WINDOW_WIDTH * 3 +
+            store.CHAT_WINDOW_INBETWEEN_WIDTH * 2
     ).toBeLessThan(1920, {
         message: "should have enough space to open 3 chat windows simultaneously",
     });
-    await start();
     // open "new message" chat window
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { text: "channel-1" });

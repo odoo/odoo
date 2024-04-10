@@ -52,7 +52,7 @@ threadActionsRegistry
                 res_model: component.thread.model,
                 views: [[false, "form"]],
             });
-            component.chatWindowService.close(component.props.chatWindow);
+            component.props.chatWindow.close();
         },
         sequence: 50,
     });
