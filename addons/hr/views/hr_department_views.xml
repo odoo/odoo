@@ -123,26 +123,9 @@
             </field>
         </record>
 
-        <record id="hr_department_kanban_action" model="ir.actions.act_window">
-            <field name="name">Departments</field>
-            <field name="res_model">hr.department</field>
-            <field name="path">departments</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="view_department_filter"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new department
-              </p><p>
-                Odoo's department structure is used to manage all documents
-                related to employees by departments: expenses, timesheets,
-                time off, recruitments, etc.
-              </p>
-            </field>
-        </record>
         <record id="hr_department_tree_action" model="ir.actions.act_window">
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
-            <field name="view_mode">tree,form,kanban</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -150,9 +133,61 @@
                 </p><p>
                     Odoo's department structure is used to manage all documents
                     related to employees by departments: expenses, timesheets,
-                    leaves, recruitments, etc.
+                    time off, recruitments, etc.
                 </p>
             </field>
+        </record>
+
+        <record id="hr_department_tree_view_tree_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="hr.hr_department_tree_action"/>
+        </record>
+
+        <record id="hr_department_form_view_tree_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr.hr_department_tree_action"/>
+        </record>
+
+        <record id="hr_department_kanban_view_tree_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="hr.hr_department_tree_action"/>
+        </record>
+
+        <record id="hr_department_kanban_action" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="path">departments</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new department
+                </p><p>
+                    Odoo's department structure is used to manage all documents
+                    related to employees by departments: expenses, timesheets,
+                    time off, recruitments, etc.
+                </p>
+            </field>
+        </record>
+
+        <record id="hr_department_kanban_view_kanban_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="hr.hr_department_kanban_action"/>
+        </record>
+
+        <record id="hr_department_tree_view_kanban_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="hr.hr_department_kanban_action"/>
+        </record>
+
+        <record id="hr_department_form_view_kanban_action" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr.hr_department_kanban_action"/>
         </record>
     </data>
 </odoo>

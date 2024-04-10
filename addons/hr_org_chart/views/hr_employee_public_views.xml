@@ -30,7 +30,9 @@
         </field>
     </record>
 
-    <record id="hr.hr_employee_public_action" model="ir.actions.act_window">
-        <field name="view_mode">kanban,tree,form,hierarchy</field>
+    <record id="act_hr_employee_public_hierarchy_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">hierarchy</field>
+        <field name="act_window_id" ref="hr.hr_employee_public_action"/>
     </record>
 </odoo>

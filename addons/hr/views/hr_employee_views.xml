@@ -392,7 +392,6 @@
             <field name="name">Employees</field>
             <field name="path">employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_mode">kanban,tree,form,activity,graph,pivot</field>
             <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
@@ -406,6 +405,42 @@
                     contact data, job position, availability, etc.
                 </p>
             </field>
+        </record>
+
+        <record id="act_hr_employee_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+        </record>
+
+        <record id="act_hr_employee_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+        </record>
+
+        <record id="act_hr_employee_form_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+        </record>
+
+        <record id="act_hr_employee_activity_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="25"/>
+            <field name="view_mode">activity</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+        </record>
+
+        <record id="act_hr_employee_graph_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="30"/>
+            <field name="view_mode">graph</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+        </record>
+
+        <record id="act_hr_employee_pivot_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="35"/>
+            <field name="view_mode">pivot</field>
+            <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
         </record>
 
         <record id="open_view_employee_list" model="ir.actions.act_window">

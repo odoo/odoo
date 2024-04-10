@@ -188,7 +188,6 @@
         <record id="hr_employee_public_action" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee.public</field>
-            <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
@@ -202,6 +201,24 @@
                 contact data, job position, availability, etc.
               </p>
             </field>
+        </record>
+
+        <record id="act_hr_employee_public_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
+        </record>
+
+        <record id="act_hr_employee_public_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="15"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
+        </record>
+
+        <record id="act_hr_employee_public_form_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="hr.hr_employee_public_action"/>
         </record>
 
     </data>
