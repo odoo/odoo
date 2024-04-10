@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TransferMergeDialog">
+        <Dialog title="this.props.title" size="'md'" body="this.props.body">
+            <span>
+                Transferring to an occupied table will add a new, separate order found in the order menu. Perhaps you would prefer to merge them into a single instead?
+            </span>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o-default-button" t-on-click="() => this.confirm(false)">Transfer</button>
+                <button class="btn btn-secondary o-default-button" t-on-click="() => this.confirm(true)">Merge into single bill</button>
+                <button class="btn btn-secondary o-default-button" t-on-click="closeDialog">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

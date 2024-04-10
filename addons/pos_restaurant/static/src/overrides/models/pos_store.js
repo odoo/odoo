@@ -8,7 +8,8 @@ import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
-import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { TransferMergeDialog } from "../components/dialog/transfer_merge_dialog";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -282,14 +283,18 @@ patch(PosStore.prototype, {
             this.tableHasOrders(table) &&
             this.tableHasOrders(originalTable)
         ) {
-            const confirm = await ask(this.dialog, {
-                title: _t("Multiple open orders"),
-                body: _t(
-                    "Both tables have an open order. If you proceed, both orders will live on the same table. You can access them anytime from the Orders menu."
-                ),
+            const merge = await makeAwaitable(this.dialog, TransferMergeDialog, {
+                title: _t("Transfer/Merge"),
+                isTableToMerge: this.isTableToMerge,
             });
-            if (!confirm) {
-                return;
+            if(merge !== undefined){
+                if (merge) {
+                    this.isTableToMerge = true;
+                } else {
+                    this.isTableToMerge = false;
+                }
+            } else {
+                return ;
             }
         }
         this.selectedTable = table;
@@ -302,12 +307,50 @@ patch(PosStore.prototype, {
                 originalTable.update({ parent_id: table });
                 this.updateTables(originalTable);
                 this.isTableToMerge = false;
+                const order = this.updateOrders(originalTable);
+                this.set_order(order);
+            } else {
+                this.set_order(this.orderToTransfer);
             }
             this.orderToTransfer.tableId = table.id;
-            this.set_order(this.orderToTransfer);
             this.transferredOrdersSet.add(this.orderToTransfer);
             this.orderToTransfer = null;
         }
+    },
+    updateOrders(originalTable) {
+        const selectedTableId = this.selectedTable.id;
+        const selectedOrderIndex = this.orders.findIndex(
+            (order) => order.tableId === selectedTableId
+        );
+        const originalOrderIndex = this.orders.findIndex(
+            (order) => order.tableId === originalTable.id
+        );
+        const selectedOrder = this.orders[selectedOrderIndex];
+        const originalOrder = this.orders[originalOrderIndex];
+        if (selectedOrder && originalOrder && originalOrder.orderlines.length) {
+            const oLineProcessed = [];
+            for (const oLine of originalOrder.orderlines) {
+                for (const sLine of selectedOrder.orderlines) {
+                    const canBeMerge = oLine.can_be_merged_with(sLine);
+                    if (canBeMerge) {
+                        sLine.set_quantity(sLine.get_quantity() + oLine.get_quantity());
+                        oLineProcessed.push(oLine.uid);
+                        break;
+                    }
+                }
+            }
+            for (const oLine of originalOrder.orderlines) {
+                if (!oLineProcessed.includes(oLine.uid)) {
+                    selectedOrder.add_orderline(oLine);
+                }
+            }
+        }
+        this.orders[selectedOrderIndex].setCustomerCount(
+            this.orders[selectedOrderIndex].getCustomerCount() + originalOrder.getCustomerCount()
+        );
+        this.orderToTransfer.setCustomerCount(0);
+        this.removeOrder(originalOrder);
+        return selectedOrder;
     },
     updateTables(...tables) {
         this.data.call("restaurant.table", "update_tables", [
