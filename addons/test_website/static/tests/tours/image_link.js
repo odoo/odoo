@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import wTourUtils from '@website/js/tours/tour_utils';
 
 /**
@@ -34,7 +32,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter site URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "edit odoo.com",
+        run: "edit odoo.com && click body",
     },
     ...selectImageSteps,
     {
@@ -44,7 +42,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "clear",
+        run: "clear && click body",
     },
     ...selectImageSteps,
     {
@@ -54,7 +52,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter email URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "edit mailto:test@test.com",
+        run: "edit mailto:test@test.com && click body",
     },
     ...selectImageSteps,
     {
@@ -64,7 +62,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "enter phone URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "edit tel:555-2368",
+        run: "edit tel:555-2368 && click body",
     },
     ...selectImageSteps,
     {
@@ -74,7 +72,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     }, {
         content: "remove URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",
-        run: "clear",
+        run: "clear && click body",
     },
     ...selectImageSteps,
     {
