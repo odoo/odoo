@@ -13,7 +13,6 @@ declare module "services" {
     import { messagingService } from "@mail/core/common/messaging_service";
     import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
     import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
-    import { personaService } from "@mail/core/common/persona_service";
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
     import { soundEffects } from "@mail/core/common/sound_effects_service";
     import { storeService } from "@mail/core/common/store_service";
@@ -34,7 +33,6 @@ declare module "services" {
         "mail.messaging": typeof messagingService;
         "mail.notification.permission": typeof notificationPermissionService;
         "mail.out_of_focus": typeof outOfFocusService;
-        "mail.persona": typeof personaService;
         "mail.sound_effects": typeof soundEffects;
         "mail.store": typeof storeService;
         "mail.suggestion": typeof suggestionService;
