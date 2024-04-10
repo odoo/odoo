@@ -34,11 +34,11 @@ class PickingType(models.Model):
     sequence_code = fields.Char('Sequence Prefix', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location', compute='_compute_default_location_src_id',
-        check_company=True, store=True, readonly=False, precompute=True,
+        check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Default Destination Location', compute='_compute_default_location_dest_id',
-        check_company=True, store=True, readonly=False, precompute=True,
+        check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
     default_location_return_id = fields.Many2one('stock.location', 'Default returns location', check_company=True,
         help="This is the default location for returns created from a picking with this operation type.",

@@ -466,7 +466,7 @@ class TestPacking(TestPackingCommon):
         # Settings of receipt.
         self.warehouse.in_type_id.show_entire_packs = True
         # Settings of internal transfer.
-        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.store_type_id.show_entire_packs = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -524,7 +524,7 @@ class TestPacking(TestPackingCommon):
 
         # Checks an internal transfer was created following the validation of the receipt.
         internal_transfer = self.env['stock.picking'].search([
-            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+            ('picking_type_id', '=', self.warehouse.store_type_id.id)
         ], order='id desc', limit=1)
         self.assertEqual(internal_transfer.origin, receipt.name)
         self.assertEqual(
@@ -550,7 +550,7 @@ class TestPacking(TestPackingCommon):
         internal_transfer.action_cancel()
         picking = self.env['stock.picking'].create({
             'state': 'draft',
-            'picking_type_id':  self.warehouse.int_type_id.id,
+            'picking_type_id':  self.warehouse.store_type_id.id,
             })
         internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields
@@ -603,7 +603,7 @@ class TestPacking(TestPackingCommon):
         # Settings of receipt.
         self.warehouse.in_type_id.show_entire_packs = True
         # Settings of internal transfer.
-        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.store_type_id.show_entire_packs = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -668,7 +668,7 @@ class TestPacking(TestPackingCommon):
 
         # Checks an internal transfer was created following the validation of the receipt.
         internal_transfer = self.env['stock.picking'].search([
-            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+            ('picking_type_id', '=', self.warehouse.store_type_id.id)
         ], order='id desc', limit=1)
         self.assertEqual(internal_transfer.origin, receipt.name)
         self.assertEqual(
@@ -694,7 +694,7 @@ class TestPacking(TestPackingCommon):
         internal_transfer.action_cancel()
         picking = self.env['stock.picking'].create({
             'state': 'draft',
-            'picking_type_id':  self.warehouse.int_type_id.id,
+            'picking_type_id':  self.warehouse.store_type_id.id,
             })
         internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields

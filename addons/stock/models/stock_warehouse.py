@@ -77,6 +77,9 @@ class Warehouse(models.Model):
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type', check_company=True, copy=False)
     in_type_id = fields.Many2one('stock.picking.type', 'In Type', check_company=True, copy=False)
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type', check_company=True, copy=False)
+    qc_type_id = fields.Many2one('stock.picking.type', 'Quality Control Type', check_company=True, copy=False)
+    store_type_id = fields.Many2one('stock.picking.type', 'Storage Type', check_company=True, copy=False)
+    xdock_type_id = fields.Many2one('stock.picking.type', 'Cross Dock Type', check_company=True, copy=False)
     crossdock_route_id = fields.Many2one('stock.route', 'Crossdock Route', ondelete='restrict', copy=False)
     reception_route_id = fields.Many2one('stock.route', 'Receipt Route', ondelete='restrict', copy=False)
     delivery_route_id = fields.Many2one('stock.route', 'Delivery Route', ondelete='restrict', copy=False)
@@ -765,13 +768,13 @@ class Warehouse(models.Model):
                 'one_step': [self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull')],
                 'two_steps': [
                     self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull'),
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'push')],
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
                 'three_steps': [
                     self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull'),
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'push'),
-                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'push')],
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.qc_type_id, 'push'),
+                    self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.store_type_id, 'push')],
                 'crossdock': [
-                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.int_type_id, 'pull'),
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.xdock_type_id, 'pull'),
                     self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id, 'pull')],
                 'ship_only': [self.Routing(warehouse.lot_stock_id, customer_loc, warehouse.out_type_id, 'pull')],
                 'pick_ship': [
@@ -795,10 +798,10 @@ class Warehouse(models.Model):
         """
         return {
             'one_step': [],
-            'two_steps': [self.Routing(self.wh_input_stock_loc_id, self.lot_stock_id, self.int_type_id, 'push')],
+            'two_steps': [self.Routing(self.wh_input_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
             'three_steps': [
-                self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.int_type_id, 'push'),
-                self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.int_type_id, 'push')],
+                self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.qc_type_id, 'push'),
+                self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.store_type_id, 'push')],
         }
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
@@ -908,10 +911,13 @@ class Warehouse(models.Model):
             if self.env.user.has_group('stock.group_stock_manager'):
                 warehouse = warehouse.sudo()
             warehouse.in_type_id.sequence_id.write(sequence_data['in_type_id'])
+            warehouse.qc_type_id.sequence_id.write(sequence_data['qc_type_id'])
+            warehouse.store_type_id.sequence_id.write(sequence_data['store_type_id'])
             warehouse.out_type_id.sequence_id.write(sequence_data['out_type_id'])
             warehouse.pack_type_id.sequence_id.write(sequence_data['pack_type_id'])
             warehouse.pick_type_id.sequence_id.write(sequence_data['pick_type_id'])
             warehouse.int_type_id.sequence_id.write(sequence_data['int_type_id'])
+            warehouse.xdock_type_id.sequence_id.write(sequence_data['xdock_type_id'])
 
     def _update_location_reception(self, new_reception_step):
         self.mapped('wh_qc_stock_loc_id').write({'active': new_reception_step == 'three_steps'})
@@ -948,8 +954,21 @@ class Warehouse(models.Model):
                 'default_location_dest_id': output_loc.id,
                 'barcode': self.code.replace(" ", "").upper() + "PACK",
             },
+            'qc_type_id': {
+                'active': self.reception_steps == 'three_steps' and self.active,
+                'barcode': self.code.replace(" ", "").upper() + "QC",
+            },
+            'store_type_id': {
+                'active': self.reception_steps != 'one_step' and self.active,
+                'default_location_src_id': input_loc.id if self.reception_steps == 'two_steps' else self.wh_qc_stock_loc_id.id,
+                'barcode': self.code.replace(" ", "").upper() + "STOR",
+            },
             'int_type_id': {
                 'barcode': self.code.replace(" ", "").upper() + "INT",
+            },
+            'xdock_type_id': {
+                'active': self.reception_steps != 'one_step' and self.delivery_steps != 'ship_only' and self.active,
+                'barcode': self.code.replace(" ", "").upper() + "XD",
             }
         }
 
@@ -972,7 +991,7 @@ class Warehouse(models.Model):
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',
                 'use_create_lots': False,
-                'sequence': max_sequence + 5,
+                'sequence': max_sequence + 7,
                 'sequence_code': 'OUT',
                 'print_label': True,
                 'company_id': self.company_id.id,
@@ -983,7 +1002,7 @@ class Warehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_src_id': self.wh_pack_stock_loc_id.id,
                 'default_location_dest_id': output_loc.id,
-                'sequence': max_sequence + 4,
+                'sequence': max_sequence + 6,
                 'sequence_code': 'PACK',
                 'company_id': self.company_id.id,
             }, 'pick_type_id': {
@@ -992,8 +1011,27 @@ class Warehouse(models.Model):
                 'use_create_lots': False,
                 'use_existing_lots': True,
                 'default_location_src_id': self.lot_stock_id.id,
-                'sequence': max_sequence + 3,
+                'sequence': max_sequence + 5,
                 'sequence_code': 'PICK',
+                'company_id': self.company_id.id,
+            }, 'qc_type_id': {
+                'name': _('Quality Control'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': self.wh_input_stock_loc_id.id,
+                'default_location_dest_id': self.wh_qc_stock_loc_id.id,
+                'sequence': max_sequence + 2,
+                'sequence_code': 'QC',
+                'company_id': self.company_id.id,
+            }, 'store_type_id': {
+                'name': _('Storage'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_dest_id': self.lot_stock_id.id,
+                'sequence': max_sequence + 3,
+                'sequence_code': 'STOR',
                 'company_id': self.company_id.id,
             }, 'int_type_id': {
                 'name': _('Internal Transfers'),
@@ -1002,12 +1040,22 @@ class Warehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': self.lot_stock_id.id,
-                'active': self.reception_steps != 'one_step' or self.delivery_steps != 'ship_only' or self.env.user.has_group('stock.group_stock_multi_locations'),
-                'sequence': max_sequence + 2,
+                'active': self.env.user.has_group('stock.group_stock_multi_locations'),
+                'sequence': max_sequence + 4,
                 'sequence_code': 'INT',
                 'company_id': self.company_id.id,
-            },
-        }, max_sequence + 6
+            }, 'xdock_type_id': {
+                'name': _('Cross Dock'),
+                'code': 'internal',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': input_loc.id,
+                'default_location_dest_id': output_loc.id,
+                'sequence': max_sequence + 8,
+                'sequence_code': 'XD',
+                'company_id': self.company_id.id,
+            }
+        }, max_sequence + 9
 
     def _get_sequence_values(self, name=False, code=False):
         """ Each picking type is created with a sequence. This method returns
@@ -1036,9 +1084,24 @@ class Warehouse(models.Model):
                 'prefix': code + '/PICK/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
+            'qc_type_id': {
+                'name': name + ' ' + _('Sequence quality control'),
+                'prefix': code + '/QC/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'store_type_id': {
+                'name': name + ' ' + _('Sequence storage'),
+                'prefix': code + '/STOR/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
             'int_type_id': {
                 'name': name + ' ' + _('Sequence internal'),
                 'prefix': code + '/INT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'xdock_type_id': {
+                'name': name + ' ' + _('Sequence cross dock'),
+                'prefix': code + '/XD/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }

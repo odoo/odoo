@@ -499,7 +499,7 @@ class TestBatchPicking(TransactionCase):
             'auto_batch': True,
             'batch_group_by_src_loc': True,
         })
-        warehouse_2.int_type_id.write({
+        (warehouse_2.qc_type_id | warehouse_2.store_type_id).write({
             'auto_batch': True,
             'batch_group_by_dest_loc': True,
         })

@@ -540,7 +540,7 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 0.1)
 
     def test_intercom_lot_pull(self):
-        """Use warehouse of comany a to resupply warehouse of company b. Check
+        """Use warehouse of company a to resupply warehouse of company b. Check
         pull rule works correctly in two companies and moves are unchained from
         inter-company transit location."""
         customer_location = self.env.ref('stock.stock_location_customers')
