@@ -272,5 +272,7 @@ export async function editAce(value) {
     // because the tested behaviour comes from a lib on which we have no control.
     manuallyDispatchProgrammaticEvent(queryOne(".ace_editor .ace_content"), "mousedown");
 
-    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value);
+    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value, {
+        instantly: true,
+    });
 }
