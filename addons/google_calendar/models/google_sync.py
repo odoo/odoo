@@ -273,6 +273,13 @@ class GoogleSync(models.AbstractModel):
         }
         return writeable_values
 
+    def _need_video_call(self):
+        """ Implement this method to return True if the event needs a video call
+        :return: bool
+        """
+        self.ensure_one()
+        return True
+
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
         if not values:
@@ -282,7 +289,7 @@ class GoogleSync(models.AbstractModel):
                 try:
                     send_updates = self._context.get('send_updates', True)
                     google_service.google_service = google_service.google_service.with_context(send_updates=send_updates)
-                    google_values = google_service.insert(values, token=token, timeout=timeout)
+                    google_values = google_service.insert(values, token=token, timeout=timeout, need_video_call=self._need_video_call())
                     self.with_context(dont_notify=True).write(self._get_post_sync_values(values, google_values))
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
