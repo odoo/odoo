@@ -72,6 +72,30 @@ patch(PosStore.prototype, {
             tableByIds[table.id].uiState.skipCount = table.skip_changes;
         }
     },
+    get categoryCount() {
+        const orderChange = this.getOrderChanges().orderlines;
+
+        const categories = Object.values(orderChange).reduce((acc, curr) => {
+            const categories =
+                this.models["product.product"].get(curr.product_id)?.pos_categ_ids || [];
+
+            for (const category of categories) {
+                if (category) {
+                    if (!acc[category.id]) {
+                        acc[category.id] = {
+                            count: curr.quantity,
+                            name: category.name,
+                        };
+                    } else {
+                        acc[category.id].count += curr.quantity;
+                    }
+                }
+            }
+
+            return acc;
+        }, {});
+        return Object.values(categories);
+    },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);
 
