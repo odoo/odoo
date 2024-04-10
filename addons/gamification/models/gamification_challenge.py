@@ -542,12 +542,12 @@ class Challenge(models.Model):
 
             line_data['own_goal_id'] = False,
             line_data['goals'] = []
-            if line.condition=='higher':
-                goals = Goals.search(domain, order="completeness desc, current desc")
-            else:
-                goals = Goals.search(domain, order="completeness desc, current asc")
+            goals = Goals.search(domain, order='id')
             if not goals:
                 continue
+            goals = goals.sorted(key=lambda goal: (
+                -goal.completeness, -goal.current if line.condition == 'higher' else goal.current
+            ))
 
             for ranking, goal in enumerate(goals):
                 if user and goal.user_id == user:
