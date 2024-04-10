@@ -967,7 +967,7 @@ class AccountGroup(models.Model):
             children_ids.write({'parent_id': record.parent_id.id})
         return super().unlink()
 
-    def _adapt_accounts_for_account_groups(self, account_ids=None):
+    def _adapt_accounts_for_account_groups(self, account_ids=None, company=None):
         """Ensure consistency between accounts and account groups.
 
         Find and set the most specific group matching the code of the account.
@@ -976,20 +976,25 @@ class AccountGroup(models.Model):
         """
         if self.env.context.get('delay_account_group_sync'):
             return
-        company_ids = account_ids.company_id.root_id.ids if account_ids else self.company_id.ids
-        account_ids = account_ids.ids if account_ids else []
-        if not company_ids and not account_ids:
-            return
+
         self.flush_model()
         self.env['account.account'].flush_model(['code'])
 
-        account_where_clause = ''
-        where_params = [tuple(company_ids)]
+        if company:
+            company_ids = company.root_id.ids
+        elif account_ids:
+            company_ids = account_ids.company_id.root_id.ids
+            account_ids = account_ids.ids
+        else:
+            company_ids = self.company_id.ids
+            account_ids = []
+        if not company_ids and not account_ids:
+            return
+        account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
         if account_ids:
-            account_where_clause = 'AND account.id IN %s'
-            where_params.append(tuple(account_ids))
+            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
 
-        self._cr.execute(f"""
+        self._cr.execute(SQL("""
             WITH relation AS (
                  SELECT DISTINCT ON (account.id)
                         account.id AS account_id,
@@ -1000,17 +1005,17 @@ class AccountGroup(models.Model):
                      ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
                     AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
                     AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
-                  WHERE account.company_id IN %s {account_where_clause}
+                  WHERE %s
                ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
               FROM relation rel
              WHERE account_account.id = rel.account_id
-        """, where_params)
+        """, account_where_clause))
         self.env['account.account'].invalidate_model(['group_id'], flush=False)
 
-    def _adapt_parent_account_group(self):
+    def _adapt_parent_account_group(self, company=None):
         """Ensure consistency of the hierarchy of account groups.
 
         Find and set the most specific parent for each group.
@@ -1019,10 +1024,13 @@ class AccountGroup(models.Model):
         """
         if self.env.context.get('delay_account_group_sync'):
             return
-        if not self:
+
+        company_ids = company.ids if company else self.company_id.ids
+        if not company_ids:
             return
+
         self.flush_model()
-        query = """
+        query = SQL("""
             WITH relation AS (
                 SELECT DISTINCT ON (child.id)
                        child.id AS child_id,
@@ -1034,7 +1042,7 @@ class AccountGroup(models.Model):
                    AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
                    AND parent.id != child.id
                    AND parent.company_id = child.company_id
-                 WHERE child.company_id IN %(company_ids)s
+                 WHERE child.company_id IN %s
                    AND child.parent_id IS DISTINCT FROM parent.id -- IMPORTANT avoid to update if nothing changed
               ORDER BY child.id, char_length(parent.code_prefix_start) DESC
             )
@@ -1043,8 +1051,8 @@ class AccountGroup(models.Model):
               FROM relation
              WHERE child.id = relation.child_id
          RETURNING child.id
-        """
-        self.env.cr.execute(query, {'company_ids': tuple(self.company_id.ids)})
+        """, tuple(company_ids))
+        self.env.cr.execute(query)
 
         updated_rows = self.env.cr.fetchall()
         if updated_rows:
