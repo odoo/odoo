@@ -298,23 +298,24 @@ const NULL_ID = '__NULL__';
  * Base class for components to be used in snippet options widgets to retrieve
  * user values.
  */
-const UserValueWidget = Widget.extend({
-    className: 'o_we_user_value_widget',
-    custom_events: {
+const UserValueWidget = Widget;
+
+class UserValue {
+    static custom_events = {
         'user_value_update': '_onUserValueNotification',
-    },
+    };
 
     /**
      * @constructor
      */
-    init: function (parent, title, options, $target) {
+    constructor(parent, title, options, $target) {
         this._super(...arguments);
         this.title = title;
         this.options = options;
         this._userValueWidgets = [];
         this._value = '';
         this.$target = $target;
-    },
+    }
     /**
      * @override
      */
@@ -329,11 +330,11 @@ const UserValueWidget = Widget.extend({
         if (this.options.dataAttributes.reload) {
             this.options.dataAttributes.noPreview = "true";
         }
-    },
+    }
     /**
      * @override
      */
-    _makeDescriptive: function () {
+    _makeDescriptive() {
         const $el = this._super(...arguments);
         const el = $el[0];
         _addTitleAndAllowedAttributes(el, this.title, this.options);
@@ -345,7 +346,7 @@ const UserValueWidget = Widget.extend({
 
         el.appendChild(this.containerEl);
         return $el;
-    },
+    }
     /**
      * @override
      */
@@ -363,7 +364,7 @@ const UserValueWidget = Widget.extend({
             this.$el.on('mouseenter.img_animate', buildImgExtensionSwitcher('png', 'gif'));
             this.$el.on('mouseleave.img_animate', buildImgExtensionSwitcher('gif', 'png'));
         }
-    },
+    }
     /**
      * @override
      */
@@ -376,7 +377,7 @@ const UserValueWidget = Widget.extend({
             this.$el.off('.img_animate');
         }
         this._super(...arguments);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -385,7 +386,7 @@ const UserValueWidget = Widget.extend({
     /**
      * Closes the widget (only meaningful for widgets that can be closed).
      */
-    close: function () {
+    close() {
         if (!this.el) {
             // In case the method is called while the widget is not fully
             // initialized yet. No need to prevent that case: asking a non
@@ -406,18 +407,18 @@ const UserValueWidget = Widget.extend({
         this.trigger_up('user_value_widget_closing');
         this.el.classList.remove('o_we_widget_opened');
         this._userValueWidgets.forEach(widget => widget.close());
-    },
+    }
     /**
      * Simulates the correct event on the element to make it active.
      */
     enable() {
         this.$el.click();
-    },
+    }
     /**
      * @param {string} name
      * @returns {UserValueWidget|null}
      */
-    findWidget: function (name) {
+    findWidget(name) {
         for (const widget of this._userValueWidgets) {
             if (widget.getName() === name) {
                 return widget;
@@ -428,7 +429,7 @@ const UserValueWidget = Widget.extend({
             }
         }
         return null;
-    },
+    }
     /**
      * Focus the main focusable element of the widget.
      */
@@ -437,7 +438,7 @@ const UserValueWidget = Widget.extend({
         if (el) {
             el.focus();
         }
-    },
+    }
     /**
      * Returns the value that the widget would hold if it was active, by default
      * the internal value it holds.
@@ -445,9 +446,9 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getActiveValue: function (methodName) {
+    getActiveValue(methodName) {
         return this._value;
-    },
+    }
     /**
      * Returns the default value the widget holds when inactive, by default the
      * first "possible value".
@@ -455,25 +456,25 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getDefaultValue: function (methodName) {
+    getDefaultValue(methodName) {
         const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
         return possibleValues && possibleValues[0] || '';
-    },
+    }
     /**
      * @returns {string[]}
      */
-    getDependencies: function () {
+    getDependencies() {
         return this._dependencies;
-    },
+    }
     /**
      * Returns the names of the option methods associated to the widget. Those
      * are loaded with @see loadMethodsData.
      *
      * @returns {string[]}
      */
-    getMethodsNames: function () {
+    getMethodsNames() {
         return this._methodsNames;
-    },
+    }
     /**
      * Returns the option parameters associated to the widget (for a given
      * method name or not). Most are loaded with @see loadMethodsData.
@@ -481,7 +482,7 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {Object}
      */
-    getMethodsParams: function (methodName) {
+    getMethodsParams(methodName) {
         const params = Object.assign({}, this._methodsParams);
         if (methodName) {
             params.possibleValues = params.optionsPossibleValues[methodName] || [];
@@ -489,13 +490,13 @@ const UserValueWidget = Widget.extend({
             params.defaultValue = this.getDefaultValue(methodName);
         }
         return params;
-    },
+    }
     /**
      * @returns {string} empty string if no name is used by the widget
      */
-    getName: function () {
+    getName() {
         return this._methodsParams.name || '';
-    },
+    }
     /**
      * Returns the user value that the widget currently holds. The value is a
      * string, this is the value that will be received in the option methods
@@ -504,7 +505,7 @@ const UserValueWidget = Widget.extend({
      * @param {string} [methodName]
      * @returns {string}
      */
-    getValue: function (methodName) {
+    getValue(methodName) {
         const isActive = this.isActive();
         if (!methodName || !this._methodsNames.includes(methodName)) {
             return isActive ? 'true' : '';
@@ -513,44 +514,44 @@ const UserValueWidget = Widget.extend({
             return this.getActiveValue(methodName);
         }
         return this.getDefaultValue(methodName);
-    },
+    }
     /**
      * Returns whether or not the widget is active (holds a value).
      *
      * @returns {boolean}
      */
-    isActive: function () {
+    isActive() {
         return this._value && this._value !== NULL_ID;
-    },
+    }
     /**
      * Indicates if the widget can contain sub user value widgets or not.
      *
      * @returns {boolean}
      */
-    isContainer: function () {
+    isContainer() {
         return false;
-    },
+    }
     /**
      * Indicates if the widget is being previewed or not: the user is
      * manipulating it. Base case: if an internal <input/> element is focused.
      *
      * @returns {boolean}
      */
-    isPreviewed: function () {
+    isPreviewed() {
         const focusEl = document.activeElement;
         if (focusEl && focusEl.tagName === 'INPUT'
                 && (this.el === focusEl || this.el.contains(focusEl))) {
             return true;
         }
         return this.el.classList.contains('o_we_preview');
-    },
+    }
     /**
      * Loads option method names and option method parameters.
      *
      * @param {string[]} validMethodNames
      * @param {Object} extraParams
      */
-    loadMethodsData: function (validMethodNames, extraParams) {
+    loadMethodsData(validMethodNames, extraParams) {
         this._methodsNames = [];
         this._methodsParams = Object.assign({}, extraParams);
         this._methodsParams.optionsPossibleValues = {};
@@ -603,12 +604,12 @@ const UserValueWidget = Widget.extend({
         // not be done when possible (the methods should be independent from
         // each other when possible).
         this._methodsNames.sort();
-    },
+    }
     /**
      * @param {boolean} [previewMode=false]
      * @param {boolean} [isSimulatedEvent=false]
      */
-    notifyValueChange: function (previewMode, isSimulatedEvent) {
+    notifyValueChange(previewMode, isSimulatedEvent) {
         // In the case we notify a change update, force a preview update if it
         // was not already previewed
         const isPreviewed = this.isPreviewed();
@@ -637,23 +638,23 @@ const UserValueWidget = Widget.extend({
         }
 
         this.trigger_up('user_value_update', data);
-    },
+    }
     /**
      * Opens the widget (only meaningful for widgets that can be opened).
      */
     open() {
         this.trigger_up('user_value_widget_opening');
         this.el.classList.add('o_we_widget_opened');
-    },
+    }
     /**
      * Adds the given widget to the known list of user value sub-widgets (useful
      * for container widgets).
      *
      * @param {UserValueWidget} widget
      */
-    registerSubWidget: function (widget) {
+    registerSubWidget(widget) {
         this._userValueWidgets.push(widget);
-    },
+    }
     /**
      * Sets the user value that the widget should currently hold, for the
      * given method name.
@@ -670,11 +671,11 @@ const UserValueWidget = Widget.extend({
     async setValue(value, methodName) {
         this._value = value;
         this.el.classList.remove('o_we_preview');
-    },
+    }
     /**
      * @param {boolean} show
      */
-    toggleVisibility: function (show) {
+    toggleVisibility(show) {
         let doFocus = false;
         if (show) {
             const wasInvisible = this.el.classList.contains('d-none');
@@ -684,7 +685,7 @@ const UserValueWidget = Widget.extend({
         if (doFocus) {
             this.focus();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -698,15 +699,15 @@ const UserValueWidget = Widget.extend({
      * @private
      * @returns {HTMLElement}
      */
-    _getFocusableElement: function () {
+    _getFocusableElement() {
         return null;
-    },
+    }
     /**
      * @private
      * @param {OdooEvent|Event}
      * @returns {boolean}
      */
-    _handleNotifierEvent: function (ev) {
+    _handleNotifierEvent(ev) {
         if (!ev) {
             return true;
         }
@@ -718,7 +719,7 @@ const UserValueWidget = Widget.extend({
             ev.preventDefault();
         }
         return true;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -731,18 +732,18 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValueChange: function (ev) {
+    _onUserValueChange(ev) {
         if (this._handleNotifierEvent(ev)) {
             this.notifyValueChange(false);
         }
-    },
+    }
     /**
      * Allows container widgets to add additional data if needed.
      *
      * @private
      * @param {OdooEvent} ev
      */
-    _onUserValueNotification: function (ev) {
+    _onUserValueNotification(ev) {
         ev.data.widget = this;
 
         if (!ev.data.triggerWidgetsNames) {
@@ -754,7 +755,7 @@ const UserValueWidget = Widget.extend({
             ev.data.triggerWidgetsValues = [];
         }
         ev.data.triggerWidgetsValues.push(...this._triggerWidgetsValues);
-    },
+    }
     /**
      * Should be called when an user event on the widget indicates a value
      * preview.
@@ -762,11 +763,11 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValuePreview: function (ev) {
+    _onUserValuePreview(ev) {
         if (this._handleNotifierEvent(ev)) {
             this.notifyValueChange(true);
         }
-    },
+    }
     /**
      * Should be called when an user event on the widget indicates a value
      * reset.
@@ -774,12 +775,12 @@ const UserValueWidget = Widget.extend({
      * @private
      * @param {OdooEvent|Event} [ev]
      */
-    _onUserValueReset: function (ev) {
+    _onUserValueReset(ev) {
         if (this._handleNotifierEvent(ev)) {
             this.notifyValueChange('reset');
         }
-    },
-});
+    }
+}
 
 const ButtonUserValueWidget = UserValueWidget.extend({
     tagName: 'we-button',
