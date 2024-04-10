@@ -17,7 +17,7 @@ class Project(models.Model):
         data = self.env['purchase.order.line']._read_group(
             [('analytic_distribution', 'in', self.analytic_account_id.ids)],
             ['analytic_distribution'],
-            ['order_id:count_distinct'],
+            ['__count'],
         )
         data = {int(account_id): order_count for account_id, order_count in data}
         for project in self:
@@ -126,7 +126,10 @@ class Project(models.Model):
                 for pol in purchase_order_lines:
                     purchase_order_line_invoice_line_ids.extend(pol.invoice_lines.ids)
                     price_unit = pol.currency_id._convert(pol.price_unit, self.currency_id, self.company_id)
-                    analytic_contribution = pol.analytic_distribution[str(self.analytic_account_id.id)] / 100.
+                    analytic_contribution = sum(
+                        percentage for ids, percentage in pol.analytic_distribution.items()
+                        if str(self.analytic_account_id.id) in ids.split(',')
+                    ) / 100.
                     amount_invoiced -= price_unit * pol.qty_invoiced * analytic_contribution if pol.qty_invoiced > 0 else 0.0
                     if pol.qty_to_invoice > 0:
                         amount_to_invoice -= price_unit * pol.qty_to_invoice * analytic_contribution
