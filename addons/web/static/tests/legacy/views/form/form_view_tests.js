@@ -1221,6 +1221,59 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views (res.company)", "onchange (res.company)"]);
     });
 
+    QUnit.test("x2many form_view_ref with defined list", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, timmy: [1] }];
+        serverData.models.partner_type.records = [{ id: 1, display_name: "Timmy 1" }];
+        serverData.views = {
+            "partner_type,foo_partner_type_form_view,form": `
+                <form>
+                    <div class="form_view_ref_partner_type">
+                        <field name="display_name" />
+                    </div>
+                </form>`,
+        };
+        const userContext = {
+            lang: "en",
+            tz: "taht",
+            uid: 7,
+        };
+        const expectedContexts = new Map();
+
+        expectedContexts.set("partner", { ...userContext });
+        expectedContexts.set("partner_type", {
+            ...userContext,
+            form_view_ref: "foo_partner_type_form_view",
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" invisible="1" />
+                    <field string="Partner Types" name="timmy" context="{
+                        'default_partner_id': id,
+                        'form_view_ref': 'foo_partner_type_form_view'
+                    }">
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC: (route, { method, model, kwargs }) => {
+                if (method === "get_views") {
+                    const { context } = kwargs;
+                    assert.step(`${method} (${model})`);
+                    assert.deepEqual(context, expectedContexts.get(model));
+                }
+            },
+        });
+        assert.verifySteps(["get_views (partner)"]);
+        await click(target, ".o_field_widget[name='timmy'] .o_field_cell");
+        assert.verifySteps(["get_views (partner_type)"]);
+    });
+
     QUnit.test("invisible fields are properly hidden", async function (assert) {
         await makeView({
             type: "form",
