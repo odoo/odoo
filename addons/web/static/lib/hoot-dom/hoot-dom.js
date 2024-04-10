@@ -71,4 +71,5 @@ export {
     setInputFiles,
     setInputRange,
     uncheck,
+    unload,
 } from "./helpers/events";

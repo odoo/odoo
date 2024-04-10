@@ -276,6 +276,13 @@ const getEventConstructor = (eventType) => {
         case "wheel":
             return [WheelEvent, mapWheelEvent];
 
+        case "beforeunload":
+            // BeforeUnloadEvent cannot be constructed.
+            return [Event, mapNonBubblingCancelableEvent];
+
+        case "unload":
+            return [Event, mapNonBubblingEvent];
+
         // Default: base Event constructor
         default:
             return [Event, mapBubblingEvent];
@@ -1319,13 +1326,22 @@ const mapBubblingEvent = (eventInit) => ({
 
 /**
  * - does not bubble
+ * - can be canceled
+ * @param {EventInit} [eventInit]
+ */
+const mapNonBubblingCancelableEvent = (eventInit) => ({
+    ...mapNonBubblingEvent(eventInit),
+    cancelable: true,
+});
+
+/**
+ * - does not bubble
  * - cannot be canceled
  * @param {EventInit} [eventInit]
  */
 const mapNonBubblingEvent = (eventInit) => ({
     composed: true,
     ...eventInit,
-    bubbles: false,
 });
 
 // Pointer & wheel event mappers
@@ -2142,4 +2158,14 @@ export function uncheck(target, options) {
     }
 
     return logEvents("uncheck");
+}
+
+/**
+ * Triggers a "beforeunload" event the current window.
+ *
+ * @returns {Event[]}
+ */
+export function unload() {
+    dispatch(getWindow(), "beforeunload");
+    return logEvents("unload");
 }
