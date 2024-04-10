@@ -14,16 +14,16 @@
  * @param {Element} template
  */
 const replaceAttributes = (template) => {
-    for (const [attribute, defaultValue] of ATTRIBUTE_DEFAULT_VALUES) {
+    for (const { attribute, tagName, value } of ATTRIBUTE_DEFAULT_VALUES) {
         for (const prefix of ATTRIBUTE_PREFIXES) {
             const fullAttribute = `${prefix}${attribute}`;
             const dataAttribute = `${prefix}data-${attribute}`;
-            for (const element of template.querySelectorAll(`[${fullAttribute}]`)) {
+            for (const element of template.querySelectorAll(`${tagName || ""}[${fullAttribute}]`)) {
                 element.setAttribute(dataAttribute, element.getAttribute(fullAttribute));
                 if (attribute !== fullAttribute) {
                     element.removeAttribute(fullAttribute);
                 }
-                element.setAttribute(attribute, defaultValue);
+                element.setAttribute(attribute, value);
             }
         }
     }
@@ -31,12 +31,14 @@ const replaceAttributes = (template) => {
 
 const ATTRIBUTE_DEFAULT_VALUES = [
     // "alt": empty string
-    ["alt", ""],
-    // "src": 1x1 fuschia image
-    [
-        "src",
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==",
-    ],
+    { attribute: "alt", value: "" },
+    { attribute: "src", tagName: "iframe", value: "" },
+    {
+        attribute: "src",
+        tagName: "img",
+        // "src": 1x1 fuschia image
+        value: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==",
+    },
 ];
 const ATTRIBUTE_PREFIXES = ["", "t-att-", "t-attf-"];
 
