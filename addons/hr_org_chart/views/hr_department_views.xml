@@ -28,12 +28,16 @@
         </field>
     </record>
 
-    <record id="hr.hr_department_kanban_action" model="ir.actions.act_window">
-        <field name="view_mode">kanban,tree,hierarchy,form</field>
+    <record id="act_hr_department_hierarchy_view_kanban_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">hierarchy</field>
+        <field name="act_window_id" ref="hr.hr_department_kanban_action"/>
     </record>
 
-    <record id="hr.hr_department_tree_action" model="ir.actions.act_window">
-        <field name="view_mode">tree,kanban,hierarchy,form</field>
+    <record id="act_hr_department_hierarchy_view_tree_action" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">hierarchy</field>
+        <field name="act_window_id" ref="hr.hr_department_tree_action"/>
     </record>
 
 </odoo>
