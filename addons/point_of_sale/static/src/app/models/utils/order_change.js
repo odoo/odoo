@@ -1,5 +1,4 @@
 /** @odoo-module */
-
 export const changesToOrder = (
     order,
     skipped = false,
@@ -60,6 +59,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     attribute_value_ids: orderline.attribute_value_ids,
                     quantity: quantityDiff,
                     note: note,
+                    pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+                    pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 };
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
