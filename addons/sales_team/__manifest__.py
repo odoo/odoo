@@ -16,6 +16,7 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         'security/sales_team_security.xml',
         'security/ir.model.access.csv',
         'data/crm_team_data.xml',
+        'data/ir_config_parameter.xml',
         'views/crm_tag_views.xml',
         'views/crm_team_views.xml',
         'views/crm_team_member_views.xml',
