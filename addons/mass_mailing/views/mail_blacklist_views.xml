@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="mail.mail_blacklist_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='email']" position="after">
-                <field name="opt_out_reason_id"/>
+                <field name="opt_out_reason_id" placeholder="e.g. I received too many emails"/>
             </xpath>
         </field>
     </record>
