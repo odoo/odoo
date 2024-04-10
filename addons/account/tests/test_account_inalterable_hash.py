@@ -640,3 +640,27 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         Model.write(moves_v3_post_restrict_mode[1], {'date': fields.Date.from_string('2024-11-07')})
         self._verify_integrity(moves, f'Corrupted data on journal entry with id {moves_v3_post_restrict_mode[1].id}.*', prefix=moves[0].sequence_prefix)
+
+    def test_inalterable_hash_verification_by_batches(self):
+        """Test that the integrity report can handle a large amount of entries by
+           verifying the integrity by batches."""
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        moves = self.env['account.move']
+        for _ in range(10):
+            moves |= self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000, 2000], post=True)
+        moves.button_hash()
+
+        for move in moves:
+            self.assertNotEqual(move.inalterable_hash, False)
+
+        with patch('odoo.addons.account.models.company.INTEGRITY_HASH_BATCH_SIZE', 3):
+            self._verify_integrity(moves, "Entries are correctly hashed", moves[0], moves[-1], moves[0].journal_id.name)
+
+        with patch('odoo.addons.account.models.company.INTEGRITY_HASH_BATCH_SIZE', 5):
+            self._verify_integrity(moves, "Entries are correctly hashed", moves[0], moves[-1], moves[0].journal_id.name)
+
+        with patch('odoo.addons.account.models.company.INTEGRITY_HASH_BATCH_SIZE', 10):
+            self._verify_integrity(moves, "Entries are correctly hashed", moves[0], moves[-1], moves[0].journal_id.name)
+
+        with patch('odoo.addons.account.models.company.INTEGRITY_HASH_BATCH_SIZE', 12):
+            self._verify_integrity(moves, "Entries are correctly hashed", moves[0], moves[-1], moves[0].journal_id.name)

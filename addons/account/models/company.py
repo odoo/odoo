@@ -6,10 +6,9 @@ import calendar
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.osv import expression
+from odoo.tools import SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
-from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 
 
@@ -33,6 +32,9 @@ PEPPOL_LIST = [
     'FR', 'GB', 'GR', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT', 'LU', 'LV', 'MC', 'ME',
     'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'SE', 'SI', 'SK', 'SM', 'TR', 'VA',
 ]
+
+INTEGRITY_HASH_BATCH_SIZE = 1000
+
 
 class ResCompany(models.Model):
     _name = "res.company"
@@ -646,57 +648,52 @@ class ResCompany(models.Model):
             # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
             # This is required in order to generate consistent hashes.
             # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
-            field_names = [
-                *self.env['account.move']._get_integrity_hash_fields(),
-                'inalterable_hash',
-                'journal_id',
-                'move_type',
-                'sequence_prefix',
-                'sequence_number',
-                'secure_sequence_number',
-            ]
-            moves = self.env['account.move'].sudo().search_fetch(
+            query = self.env['account.move'].sudo()._search(
                 domain=[
                     ('journal_id', '=', journal.id),
                     ('inalterable_hash', '!=', False),
                 ],
-                field_names=field_names,
-                order="secure_sequence_number ASC NULLS LAST, sequence_prefix, sequence_number ASC"
+                order="secure_sequence_number ASC NULLS LAST, sequence_prefix, sequence_number ASC",
             )
-
-            if not moves:
-                results.append({
-                    'journal_name': journal.name,
-                    'restricted_by_hash_table': 'V',
-                    'status': 'no_data',
-                    'msg_cover': _('There is no journal entry flagged for accounting data inalterability yet.'),
-                })
-                continue
-
             prefix2result = defaultdict(lambda: {
                 'first_move': self.env['account.move'],
                 'last_move': self.env['account.move'],
                 'corrupted_move': self.env['account.move'],
             })
             last_move = self.env['account.move']
-            current_hash_version = 1
-            for move in moves:
-                prefix_result = prefix2result[move.sequence_prefix]
-                if prefix_result['corrupted_move']:
+            self.env.execute_query(SQL("DECLARE hashed_moves CURSOR FOR %s", query.select()))
+            while move_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_moves", INTEGRITY_HASH_BATCH_SIZE)):
+                self.env.invalidate_all()
+                moves = self.env['account.move'].browse(move_id[0] for move_id in move_ids)
+                if not moves and not last_move:
+                    results.append({
+                        'journal_name': journal.name,
+                        'restricted_by_hash_table': 'V',
+                        'status': 'no_data',
+                        'msg_cover': _('There is no journal entry flagged for accounting data inalterability yet.'),
+                    })
                     continue
-                previous_move = prefix_result['last_move'] if not move.secure_sequence_number else last_move
-                previous_hash = previous_move.inalterable_hash or ""
-                computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
-                    current_hash_version += 1
+
+                current_hash_version = 1
+                for move in moves:
+                    prefix_result = prefix2result[move.sequence_prefix]
+                    if prefix_result['corrupted_move']:
+                        continue
+                    previous_move = prefix_result['last_move'] if not move.secure_sequence_number else last_move
+                    previous_hash = previous_move.inalterable_hash or ""
                     computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                if move.inalterable_hash != computed_hash:
-                    prefix_result['corrupted_move'] = move
-                    continue
-                if not prefix_result['first_move']:
-                    prefix_result['first_move'] = move
-                prefix_result['last_move'] = move
-                last_move = move
+                    while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
+                        current_hash_version += 1
+                        computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
+                    if move.inalterable_hash != computed_hash:
+                        prefix_result['corrupted_move'] = move
+                        continue
+                    if not prefix_result['first_move']:
+                        prefix_result['first_move'] = move
+                    prefix_result['last_move'] = move
+                    last_move = move
+
+            self.env.execute_query(SQL("CLOSE hashed_moves"))
 
             for prefix, prefix_result in prefix2result.items():
                 if corrupted_move := prefix_result['corrupted_move']:
