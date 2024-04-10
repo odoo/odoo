@@ -1,13 +1,20 @@
 import { Record } from "@mail/core/common/record";
-import { EMOJI_REGEX, htmlToTextContentInline } from "@mail/utils/common/format";
+import {
+    EMOJI_REGEX,
+    convertBrToLineBreak,
+    htmlToTextContentInline,
+    prettifyMessageContent,
+} from "@mail/utils/common/format";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
-
+let rpc;
 export class Message extends Record {
     static id = "id";
     /** @type {Object.<number, import("models").Message>} */
@@ -19,6 +26,10 @@ export class Message extends Record {
     /** @returns {import("models").Message|import("models").Message[]} */
     static insert(data) {
         return super.insert(...arguments);
+    }
+    static new() {
+        rpc = rpcWithEnv(this.store.env);
+        return super.new(...arguments);
     }
 
     /** @param {Object} data */
@@ -179,6 +190,12 @@ export class Message extends Record {
         return dateDay;
     }
 
+    dateSimple() {
+        return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
+            locale: user.lang?.replace("_", "-"),
+        });
+    }
+
     get datetime() {
         return this.date || DateTime.now();
     }
@@ -325,6 +342,86 @@ export class Message extends Record {
     get editDatetimeHuge() {
         return deserializeDateTime(this.editDate).toLocaleString(
             omit(DateTime.DATETIME_HUGE, "timeZoneName")
+        );
+    }
+
+    get scheduledDateSimple() {
+        return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
+            locale: user.lang?.replace("_", "-"),
+        });
+    }
+
+    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+        if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+            return;
+        }
+        const validMentions = this.store.getMentionsFromText(body, {
+            mentionedChannels,
+            mentionedPartners,
+        });
+        const messageData = await rpc("/mail/message/update_content", {
+            attachment_ids: attachments.concat(this.attachments).map((attachment) => attachment.id),
+            attachment_tokens: attachments
+                .concat(this.attachments)
+                .map((attachment) => attachment.accessToken),
+            body: await prettifyMessageContent(body, validMentions),
+            message_id: this.id,
+            partner_ids: validMentions?.partners?.map((partner) => partner.id),
+        });
+        this.store.Message.insert(messageData, { html: true });
+        if (this.hasLink && this.store.hasLinkPreviewFeature) {
+            rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
+        }
+    }
+
+    async react(content) {
+        await rpc(
+            "/mail/message/reaction",
+            {
+                action: "add",
+                content,
+                message_id: this.id,
+            },
+            { silent: true }
+        );
+    }
+
+    async remove() {
+        await rpc("/mail/message/update_content", {
+            attachment_ids: [],
+            attachment_tokens: [],
+            body: "",
+            message_id: this.id,
+        });
+        if (this.isStarred) {
+            this.store.discuss.starred.counter--;
+            this.store.discuss.starred.messages.delete(this);
+        }
+        this.body = "";
+        this.attachments = [];
+    }
+
+    async setDone() {
+        await this.store.env.services.orm.silent.call("mail.message", "set_message_done", [
+            [this.id],
+        ]);
+    }
+
+    async toggleStar() {
+        await this.store.env.services.orm.silent.call("mail.message", "toggle_message_starred", [
+            [this.id],
+        ]);
+    }
+
+    async unfollow() {
+        if (this.isNeedaction) {
+            await this.setDone();
+        }
+        const thread = this.thread;
+        await thread.selfFollower.remove();
+        this.store.env.services.notification.add(
+            _t('You are no longer following "%(thread_name)s".', { thread_name: thread.name }),
+            { type: "success" }
         );
     }
 }

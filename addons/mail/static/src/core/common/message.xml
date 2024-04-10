@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.messageService.setDone(this.message), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative"
                 t-att-class="attClass"
                 role="group"
@@ -21,7 +21,7 @@
                         </div>
                         <t t-elif="!message.is_transient">
                             <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75">
-                                <t t-esc="messageService.dateSimple(message)"/>
+                                <t t-esc="message.dateSimple"/>
                             </small>
                             <div t-else="">
                                 <MessageSeenIndicator
@@ -54,7 +54,7 @@
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.thread.displayName"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
+                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>

@@ -26,12 +26,12 @@ threadActionsRegistry
             return component.thread.isEmpty;
         },
         open(component) {
-            component.messageService.unstarAll();
+            component.store.unstarAll();
         },
         sequence: 2,
         setup() {
             const component = useComponent();
-            component.messageService = useState(useService("mail.message"));
+            component.store = useState(useService("mail.store"));
         },
         text: _t("Unstar all"),
     })

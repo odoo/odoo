@@ -28,14 +28,14 @@ messageActionsRegistry
         icon: (component) =>
             component.props.message.isStarred ? "fa-star o-mail-Message-starred" : "fa-star-o",
         title: _t("Mark as Todo"),
-        onClick: (component) => component.messageService.toggleStar(component.props.message),
+        onClick: (component) => component.props.message.toggleStar(),
         sequence: 30,
     })
     .add("mark-as-read", {
         condition: (component) => component.isInInbox,
         icon: "fa-check",
         title: _t("Mark as Read"),
-        onClick: (component) => component.messageService.setDone(component.props.message),
+        onClick: (component) => component.props.message.setDone(),
         sequence: 40,
     })
     .add("reactions", {
@@ -50,7 +50,7 @@ messageActionsRegistry
         condition: (component) => component.showUnfollow,
         icon: "fa-user-times",
         title: _t("Unfollow"),
-        onClick: (component) => component.messageService.unfollow(component.props.message),
+        onClick: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
     .add("mark-as-unread", {
