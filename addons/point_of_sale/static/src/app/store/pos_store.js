@@ -1161,12 +1161,25 @@ export class PosStore extends Reactive {
         }
     }
 
+<<<<<<< HEAD
     getProductPrice(product, p = false) {
         const pricelist = this.getDefaultPricelist();
         let price = p === false ? product.get_price(pricelist, 1) : p;
+||||||| parent of 2b317fbdb9cb (temp)
+    push_orders(opts = {}) {
+        return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
+    }
+=======
+    push_orders(opts = {}) {
+        // The 'printedOrders' is added to prevent printed orders from being reverted to draft
+        opts = Object.assign({ printedOrders: true }, opts);
+        return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
+    }
+>>>>>>> 2b317fbdb9cb (temp)
 
         let taxes = product.taxes_id;
 
+<<<<<<< HEAD
         // Fiscal position.
         const order = this.get_order();
         if (order && order.fiscal_position_id) {
@@ -1177,6 +1190,219 @@ export class PosStore extends Reactive {
                 this.company._product_default_values,
                 order.fiscal_position_id,
                 this.models
+||||||| parent of 2b317fbdb9cb (temp)
+    // Send validated orders to the backend.
+    // Resolves to the backend ids of the synced orders.
+    async _flush_orders(orders, options) {
+        try {
+            const server_ids = await this._save_to_server(orders, options);
+            for (let i = 0; i < server_ids.length; i++) {
+                this.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
+                    server_ids[i].id;
+            }
+            return server_ids;
+        } catch (error) {
+            if (!(error instanceof ConnectionLostError)) {
+                for (const order of orders) {
+                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
+                    reactiveOrder.finalized = false;
+                    this.db.remove_order(reactiveOrder.uid);
+                    this.db.save_unpaid_order(reactiveOrder);
+                }
+                this.set_synch("connected");
+            }
+            throw error;
+        } finally {
+            this._after_flush_orders(orders);
+        }
+    }
+    /**
+     * Hook method after _flush_orders resolved or rejected.
+     * It aims to:
+     *   - remove the refund orderlines from toRefundLines
+     *   - invalidate cache of refunded synced orders
+     */
+    _after_flush_orders(orders) {
+        const refundedOrderIds = new Set();
+        for (const order of orders) {
+            for (const line of order.data.lines) {
+                const refundDetail = this.toRefundLines[line[2].refunded_orderline_id];
+                if (!refundDetail) {
+                    continue;
+                }
+                // Collect the backend id of the refunded orders.
+                refundedOrderIds.add(refundDetail.orderline.orderBackendId);
+                // Reset the refund detail for the orderline.
+                delete this.toRefundLines[refundDetail.orderline.id];
+            }
+        }
+        this._invalidateSyncedOrdersCache([...refundedOrderIds]);
+    }
+    _invalidateSyncedOrdersCache(ids) {
+        for (const id of ids) {
+            delete this.TICKET_SCREEN_STATE.syncedOrders.cache[id];
+        }
+    }
+    set_synch(status, pending) {
+        if (["connected", "connecting", "error", "disconnected"].indexOf(status) === -1) {
+            console.error(status, " is not a known connection state.");
+        } else if (status === "connected") {
+            this.showOfflineWarning = true;
+        }
+
+        pending =
+            pending || this.db.get_orders().length + this.db.get_ids_to_remove_from_server().length;
+        this.synch = { status, pending };
+    }
+
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        return this.context || {};
+    }
+    // send an array of orders to the server
+    // available options:
+    // - timeout: timeout for the rpc call in ms
+    // returns a promise that resolves with the list of
+    // server generated ids for the sent orders
+    async _save_to_server(orders, options) {
+        if (!orders || !orders.length) {
+            return Promise.resolve([]);
+        }
+        this.set_synch("connecting", orders.length);
+        options = options || {};
+
+        // Keep the order ids that are about to be sent to the
+        // backend. In between create_from_ui and the success callback
+        // new orders may have been added to it.
+        var order_ids_to_sync = orders.map((o) => o.id);
+
+        for (const order of orders) {
+            order.to_invoice = options.to_invoice || false;
+        }
+        // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
+        // then we want to notify the user that we are waiting on something )
+        const orm = options.to_invoice ? this.orm : this.orm.silent;
+
+        try {
+            // FIXME POSREF timeout
+            // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
+            const serverIds = await orm.call(
+                "pos.order",
+                "create_from_ui",
+                [orders, options.draft || false],
+                {
+                    context: this._getCreateOrderContext(orders, options),
+                }
+=======
+    // Send validated orders to the backend.
+    // Resolves to the backend ids of the synced orders.
+    async _flush_orders(orders, options = {}) {
+        try {
+            const server_ids = await this._save_to_server(orders, options);
+            for (let i = 0; i < server_ids.length; i++) {
+                this.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
+                    server_ids[i].id;
+            }
+            return server_ids;
+        } catch (error) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
+                for (const order of orders) {
+                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
+                    reactiveOrder.finalized = false;
+                    this.db.remove_order(reactiveOrder.uid);
+                    this.db.save_unpaid_order(reactiveOrder);
+                }
+                this.set_synch("connected");
+            }
+            throw error;
+        } finally {
+            this._after_flush_orders(orders);
+        }
+    }
+    /**
+     * Hook method after _flush_orders resolved or rejected.
+     * It aims to:
+     *   - remove the refund orderlines from toRefundLines
+     *   - invalidate cache of refunded synced orders
+     */
+    _after_flush_orders(orders) {
+        const refundedOrderIds = new Set();
+        for (const order of orders) {
+            for (const line of order.data.lines) {
+                const refundDetail = this.toRefundLines[line[2].refunded_orderline_id];
+                if (!refundDetail) {
+                    continue;
+                }
+                // Collect the backend id of the refunded orders.
+                refundedOrderIds.add(refundDetail.orderline.orderBackendId);
+                // Reset the refund detail for the orderline.
+                delete this.toRefundLines[refundDetail.orderline.id];
+            }
+        }
+        this._invalidateSyncedOrdersCache([...refundedOrderIds]);
+    }
+    _invalidateSyncedOrdersCache(ids) {
+        for (const id of ids) {
+            delete this.TICKET_SCREEN_STATE.syncedOrders.cache[id];
+        }
+    }
+    set_synch(status, pending) {
+        if (["connected", "connecting", "error", "disconnected"].indexOf(status) === -1) {
+            console.error(status, " is not a known connection state.");
+        } else if (status === "connected") {
+            this.showOfflineWarning = true;
+        }
+
+        pending =
+            pending || this.db.get_orders().length + this.db.get_ids_to_remove_from_server().length;
+        this.synch = { status, pending };
+    }
+
+    /**
+     * Context to be overriden in other modules/localisations
+     * while processing orders in the backend
+     */
+    _getCreateOrderContext(orders, options) {
+        return this.context || {};
+    }
+    // send an array of orders to the server
+    // available options:
+    // - timeout: timeout for the rpc call in ms
+    // returns a promise that resolves with the list of
+    // server generated ids for the sent orders
+    async _save_to_server(orders, options) {
+        if (!orders || !orders.length) {
+            return Promise.resolve([]);
+        }
+        this.set_synch("connecting", orders.length);
+        options = options || {};
+
+        // Keep the order ids that are about to be sent to the
+        // backend. In between create_from_ui and the success callback
+        // new orders may have been added to it.
+        var order_ids_to_sync = orders.map((o) => o.id);
+
+        for (const order of orders) {
+            order.to_invoice = options.to_invoice || false;
+        }
+        // we try to send the order. silent prevents a spinner if it takes too long. (unless we are sending an invoice,
+        // then we want to notify the user that we are waiting on something )
+        const orm = options.to_invoice ? this.orm : this.orm.silent;
+
+        try {
+            // FIXME POSREF timeout
+            // const timeout = typeof options.timeout === "number" ? options.timeout : 30000 * orders.length;
+            const serverIds = await orm.call(
+                "pos.order",
+                "create_from_ui",
+                [orders, options.draft || false],
+                {
+                    context: this._getCreateOrderContext(orders, options),
+                }
+>>>>>>> 2b317fbdb9cb (temp)
             );
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
