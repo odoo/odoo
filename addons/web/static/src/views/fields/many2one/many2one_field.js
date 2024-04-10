@@ -90,10 +90,7 @@ export class Many2OneField extends Component {
         };
 
         if (this.props.canQuickCreate) {
-            this.quickCreate = (name, params = {}) => {
-                if (params.triggeredOnBlur) {
-                    return this.openConfirmationDialog(name);
-                }
+            this.quickCreate = (name) => {
                 return this.props.update([false, name]);
             };
         }
