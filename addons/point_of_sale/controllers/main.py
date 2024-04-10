@@ -65,6 +65,7 @@ class PosController(PortalAccount):
             'login_number': pos_session.login(),
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
+            'access_token': pos_session.config_id.access_token,
         }
         response = request.render('point_of_sale.index', context)
         response.headers['Cache-Control'] = 'no-store'
@@ -84,6 +85,7 @@ class PosController(PortalAccount):
             'session_info': session_info,
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
+            'access_token': pos_session.config_id.access_token,
         }
         return request.render('point_of_sale.qunit_suite', qcontext=context)
 

@@ -55,8 +55,7 @@ export class PosData extends Reactive {
 
     initIndexedDB() {
         // In web tests info is not defined
-        const db = odoo?.info?.db || "pos_db";
-        const dbName = `${db}-${odoo.pos_config_id}`;
+        const dbName = `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
         const models = this.opts.databaseTable.map((m) => {
             return [m.key, m.name];
         });
