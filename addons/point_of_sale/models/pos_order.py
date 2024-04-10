@@ -1157,10 +1157,10 @@ class PosOrderLine(models.Model):
         store=True, readonly=False)
     price_unit = fields.Float(string='Unit Price', digits=0)
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
-    price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,
-        readonly=True, required=True)
-    price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
-        readonly=True, required=True)
+    price_subtotal = fields.Float(string='Tax Excl.', digits=0,
+        readonly=True, store=True, compute='_compute_amount_line_all')
+    price_subtotal_incl = fields.Float(string='Tax Incl.', digits=0,
+        readonly=True, store=True, compute='_compute_amount_line_all')
     price_extra = fields.Float(string="Price extra")
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
@@ -1260,22 +1260,15 @@ class PosOrderLine(models.Model):
         if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
             raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
 
-    @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
-    def _onchange_amount_line_all(self):
-        for line in self:
-            res = line._compute_amount_line_all()
-            line.update(res)
-
+    @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _compute_amount_line_all(self):
-        self.ensure_one()
-        fpos = self.order_id.fiscal_position_id
-        tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
-        price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
-        return {
-            'price_subtotal_incl': taxes['total_included'],
-            'price_subtotal': taxes['total_excluded'],
-        }
+        for orderline in self:
+            fpos = orderline.order_id.fiscal_position_id
+            tax_ids_after_fiscal_position = fpos.map_tax(orderline.tax_ids)
+            price = orderline.price_unit * (1 - (orderline.discount or 0.0) / 100.0)
+            taxes = tax_ids_after_fiscal_position.compute_all(price, orderline.order_id.currency_id, orderline.qty, product=orderline.product_id, partner=orderline.order_id.partner_id)
+            orderline.price_subtotal_incl = taxes['total_included']
+            orderline.price_subtotal = taxes['total_excluded']
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
