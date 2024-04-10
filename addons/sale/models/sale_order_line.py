@@ -411,7 +411,7 @@ class SaleOrderLine(models.Model):
 
         return name
 
-    @api.depends('display_type', 'product_id')
+    @api.depends('display_type', 'product_id', 'product_packaging_qty')
     def _compute_product_uom_qty(self):
         for line in self:
             if line.display_type:
@@ -676,15 +676,11 @@ class SaleOrderLine(models.Model):
                         .filtered(lambda p: p.sales and (p.product_id.company_id <= p.company_id <= line.company_id))\
                         ._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
                 if line.product_packaging_id:
-                    packaging_uom = line.product_packaging_id.product_uom_id
-                    qty_per_packaging = line.product_packaging_id.qty
-                    product_uom_qty = packaging_uom._compute_quantity(
-                        line.product_packaging_qty * qty_per_packaging, line.product_uom)
-                    if float_compare(product_uom_qty, line.product_uom_qty, precision_rounding=line.product_uom.rounding) == 0:
+                    if line._origin.product_packaging_id == line.product_packaging_id and line._origin.product_uom_qty == line.product_uom_qty and line._origin.product_packaging_qty != line.product_packaging_qty:
                         continue
                 line.product_packaging_id = suggested_packaging or line.product_packaging_id
 
-    @api.depends('product_uom')
+    @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
         self.product_packaging_qty = 0
         for line in self:
@@ -980,7 +976,6 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_packaging_id', 'product_uom_qty')
     def _onchange_packaging_id_or_product_uom_qty(self):
         if self.product_packaging_id and self.product_uom_qty:
-            self.product_packaging_qty = self.product_packaging_id._compute_qty(self.product_uom_qty, self.product_uom)
             newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
             if self.product_uom_qty == 1:
                 self.product_uom_qty = newqty
@@ -998,16 +993,6 @@ class SaleOrderLine(models.Model):
                         ),
                     },
                 }
-
-    @api.onchange('product_packaging_qty')
-    def _onchange_product_packaging_qty(self):
-        for line in self:
-            if line.product_packaging_id and line.product_uom_qty:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                qty_per_packaging = line.product_packaging_id.qty
-                product_uom_qty = packaging_uom._compute_quantity(
-                    line.product_packaging_qty * qty_per_packaging, line.product_uom)
-                line.product_uom_qty = product_uom_qty
 
     #=== CRUD METHODS ===#
 

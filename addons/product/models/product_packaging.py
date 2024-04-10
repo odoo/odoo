@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import math
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
@@ -83,4 +83,4 @@ class ProductPackaging(models.Model):
         self.ensure_one()
         if qty_uom:
             qty = qty_uom._compute_quantity(qty, self.product_uom_id)
-        return math.ceil(float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding))
+        return float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding, rounding_method='HALF_UP')
