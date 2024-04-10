@@ -5,9 +5,12 @@
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
             <button
                 t-if="this.swapButton"
-                class="btn-switchpane btn flex-fill rounded-0 fw-bolder"
+                class="btn-switchpane btn flex-fill rounded-0 fw-bolder position-relative overflow-hidden"
                 t-on-click="submitOrder"
                 t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-secondary' }}">
+                <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
+                    <img src="/web/static/img/spin.svg" style="height:35px; width:35px" alt="Loading..."/>
+                </div>
                 <!-- Replace the payment button by the order button -->
                 <span class="fs-1 d-block">Order</span>
                 <span><t t-esc="nbrOfChanges"/> changes</span>

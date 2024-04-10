@@ -1,11 +1,18 @@
 /** @odoo-module */
 import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
+import { useState } from "@odoo/owl";
 /**
  * @props partner
  */
 
 patch(ActionpadWidget.prototype, {
+    setup() {
+        super.setup();
+        this.uiState = useState({
+            clicked: false,
+        });
+    },
     get swapButton() {
         return this.props.actionType === "payment" && this.pos.config.module_pos_restaurant;
     },
@@ -18,17 +25,18 @@ patch(ActionpadWidget.prototype, {
     },
     get swapButtonClasses() {
         return {
-            "highlight btn-primary": this.hasChangesToPrint,
+            "highlight btn-primary": this.displayCategoryCount.length,
+            "pe-none": !this.displayCategoryCount.length,
             altlight: !this.hasChangesToPrint && this.currentOrder?.hasSkippedChanges(),
         };
     },
     async submitOrder() {
-        if (!this.clicked) {
-            this.clicked = true;
+        if (!this.uiState.clicked) {
+            this.uiState.clicked = true;
             try {
                 await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
             } finally {
-                this.clicked = false;
+                this.uiState.clicked = false;
             }
         }
     },
@@ -42,35 +50,11 @@ patch(ActionpadWidget.prototype, {
     get highlightPay() {
         return super.highlightPay && !this.hasChangesToPrint && this.hasQuantity(this.currentOrder);
     },
-    get categoryCount() {
-        const orderChange = this.pos.getOrderChanges().orderlines;
-
-        const categories = Object.values(orderChange).reduce((acc, curr) => {
-            const categories =
-                this.pos.models["product.product"].get(curr.product_id)?.pos_categ_ids || [];
-
-            for (const category of categories) {
-                if (category) {
-                    if (!acc[category.id]) {
-                        acc[category.id] = {
-                            count: curr.quantity,
-                            name: category.name,
-                        };
-                    } else {
-                        acc[category.id].count += curr.quantity;
-                    }
-                }
-            }
-
-            return acc;
-        }, {});
-        return Object.values(categories);
-    },
     get displayCategoryCount() {
-        return this.categoryCount.slice(0, 3);
+        return this.pos.categoryCount.slice(0, 3);
     },
     get isCategoryCountOverflow() {
-        if (this.categoryCount.length > 3) {
+        if (this.pos.categoryCount.length > 3) {
             return true;
         }
         return false;
