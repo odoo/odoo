@@ -1911,7 +1911,7 @@ test("Chats input should wait until the previous RPC is done before starting a n
     await assertSteps(["Second RPC"]);
 });
 
-test("Escape key should close the channel selector and focus the composer", async () => {
+test("Escape key should close the channel selector and focus the composer [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -1924,7 +1924,7 @@ test("Escape key should close the channel selector and focus the composer", asyn
     await contains(".o-mail-Composer-input:focus");
 });
 
-test("Escape key should focus the composer if it's not focused", async () => {
+test("Escape key should focus the composer if it's not focused [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -2056,7 +2056,7 @@ test("Newly created chat should be at the top of the direct message list", async
     });
 });
 
-test("Read of unread chat where new message is deleted should mark as read.", async () => {
+test("Read of unread chat where new message is deleted should mark as read [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({

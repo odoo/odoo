@@ -790,7 +790,7 @@ test("first unseen message should be directly preceded by the new message separa
     await contains(".o-mail-Message:not([aria-label='Note']) + .o-mail-Thread-newMessage");
 });
 
-test("composer should be focused automatically after clicking on the send button", async () => {
+test("composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
@@ -885,7 +885,7 @@ test("Thread messages are only loaded once", async () => {
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });
 
-test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
+test("Opening thread with needaction messages should mark all messages of thread as read [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -948,7 +948,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     await assertSteps([]);
 });
 
-test("can be marked as read while loading", async () => {
+test("can be marked as read while loading [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
