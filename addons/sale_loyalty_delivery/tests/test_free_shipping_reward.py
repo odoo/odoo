@@ -400,3 +400,33 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Make sure the promotion is NOT added
         err_msg = "No reward lines should be created as the delivery line shouldn't be included in the promotion calculation"
         self.assertEqual(len(order.order_line.ids), 2, err_msg)
+
+    def test_free_shipping(self):
+        """ Test that a free shipping coupon is correctly applied. """
+        program = self.env['loyalty.program'].create({
+            'name': 'Free Shipping',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {})],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'shipping',
+            })],
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.steve.id,
+            'order_line': [
+                (0, False, {
+                    'product_id': self.product_B.id,
+                    'name': 'Product B',
+                    'product_uom': self.uom_unit.id,
+                    'product_uom_qty': 1.0,
+                })
+            ]
+        })
+        self._auto_rewards(order, program)
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': order.id,
+            'default_carrier_id': self.env['delivery.carrier'].search([])[1]
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+        self.assertEqual(choose_delivery_carrier.delivery_price, 0.0)
