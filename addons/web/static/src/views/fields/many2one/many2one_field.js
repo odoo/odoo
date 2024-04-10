@@ -140,10 +140,7 @@ export class Many2OneField extends Component {
         };
 
         if (this.props.canQuickCreate) {
-            this.quickCreate = (name, params = {}) => {
-                if (params.triggeredOnBlur) {
-                    return this.openConfirmationDialog(name);
-                }
+            this.quickCreate = (name) => {
                 this.state.isFloating = false;
                 return this.updateRecord([false, name]);
             };
