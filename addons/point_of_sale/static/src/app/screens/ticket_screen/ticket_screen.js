@@ -740,7 +740,8 @@ export class TicketScreen extends Component {
         const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
             return deserializeDateTime(orderInfo[1]) > cacheDate;
         });
-        const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
+
+        const idsToLoad = [...new Set(idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]))];
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.pos.data.call("pos.order", "export_for_ui", [
                 idsToLoad,
