@@ -999,5 +999,72 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]);
 
+    // Check that the editable form content is actually editable.
+    tour.register("website_form_editable_content", {
+        test: true,
+        url: "/",
+    }, [{
+            content: "Enter edit mode",
+            trigger: "a[data-action=edit]",
+        },
+        {
+            content: "Add a new 'Form' snippet",
+            trigger: "#oe_snippets .oe_snippet[name=Form] .oe_snippet_thumbnail",
+            run: "drag_and_drop #wrap",
+        },
+        {
+            content: "Check that a form field is not editable",
+            extra_trigger: ".s_website_form_field",
+            trigger: "section.s_website_form input",
+            run: function () {
+                if (this.$anchor[0].isContentEditable) {
+                    console.error("A form field should not be editable.");
+                }
+            },
+        },
+        {
+            content: "Go back to blocks",
+            trigger: ".o_we_add_snippet_btn",
+        },
+        {
+            content: "Add a new 'Columns' snippet",
+            trigger: "#oe_snippets .oe_snippet[name=Columns] .oe_snippet_thumbnail",
+            run: "drag_and_drop #wrapwrap footer",
+        },
+        {
+            content: "Select the first column",
+            trigger: ".s_three_columns .row > :nth-child(1)",
+        },
+        {
+            content: "Drag and drop the selected column inside the form",
+            trigger: ".o_overlay_move_options .ui-draggable-handle",
+            run: "drag_and_drop section.s_website_form",
+        },
+        {
+            content: "Click on the text inside the dropped form column",
+            trigger: "section.s_website_form h3.card-title",
+            run: "dblclick",
+        },
+        {   // Simulate a user interaction with the editable content.
+            content: "Update the text inside the form column",
+            trigger: "section.s_website_form h3.card-title",
+            run: "keydown 65 66 67",
+        },
+        {
+            content: "Check that the new text value was correctly set",
+            trigger: "section.s_website_form h3:containsExact(ABC)",
+            run: () => null, // it's a check
+        },
+        {   content: "Remove the dropped column",
+            trigger: ".oe_overlay.oe_active .oe_snippet_remove",
+            run: "click",
+        },
+        {
+            content: "Save the changes",
+            trigger: "button[data-action=save]",
+            run: "click",
+        },
+    ]);
+
     return {};
 });
