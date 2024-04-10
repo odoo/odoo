@@ -242,8 +242,16 @@ class StockMoveLine(models.Model):
                 for sml in smls:
                     if len(used_locations) > 1:
                         break
+<<<<<<< HEAD
                     sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(sml.product_id, quantity=sml.reserved_uom_qty)
                     excluded_smls.discard(sml.id)
+||||||| parent of ec30b9b760ef (temp)
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(sml.product_id, quantity=sml.product_uom_qty)
+                    excluded_smls -= sml
+=======
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(sml.product_id, quantity=sml.product_uom_qty)
+                    excluded_smls.discard(sml.id)
+>>>>>>> ec30b9b760ef (temp)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
                     smls.location_dest_id = smls.move_id.location_dest_id
@@ -251,8 +259,16 @@ class StockMoveLine(models.Model):
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
                 for sml in smls:
+<<<<<<< HEAD
                     qty = max(sml.reserved_uom_qty, sml.qty_done)
                     putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
+||||||| parent of ec30b9b760ef (temp)
+                    qty = max(sml.product_uom_qty, sml.qty_done)
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
+=======
+                    qty = max(sml.product_uom_qty, sml.qty_done)
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
+>>>>>>> ec30b9b760ef (temp)
                         sml.product_id, quantity=qty, packaging=sml.move_id.product_packaging_id,
                     )
                     if putaway_loc_id != sml.location_dest_id:

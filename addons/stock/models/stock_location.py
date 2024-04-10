@@ -282,8 +282,16 @@ class Location(models.Model):
             qty_by_location = defaultdict(lambda: 0)
             if locations.storage_category_id:
                 if package and package.package_type_id:
+<<<<<<< HEAD
                     move_line_data = self.env['stock.move.line']._read_group([
                         ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+||||||| parent of ec30b9b760ef (temp)
+                    move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
+=======
+                    move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+>>>>>>> ec30b9b760ef (temp)
                         ('result_package_id.package_type_id', '=', package_type.id),
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['result_package_id:count_distinct'], ['location_dest_id'])
@@ -296,8 +304,16 @@ class Location(models.Model):
                     for values in quant_data:
                         qty_by_location[values['location_id'][0]] += values['package_id']
                 else:
+<<<<<<< HEAD
                     move_line_data = self.env['stock.move.line']._read_group([
                         ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+||||||| parent of ec30b9b760ef (temp)
+                    move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', self._context.get('exclude_sml_ids', [])),
+=======
+                    move_line_data = self.env['stock.move.line'].read_group([
+                        ('id', 'not in', list(self._context.get('exclude_sml_ids', set()))),
+>>>>>>> ec30b9b760ef (temp)
                         ('product_id', '=', product.id),
                         ('location_dest_id', 'in', locations.ids),
                         ('state', 'not in', ['draft', 'done', 'cancel'])
@@ -371,7 +387,13 @@ class Location(models.Model):
             if package and package.package_type_id:
                 # check weight
                 package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id)])
+<<<<<<< HEAD
                 if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.reserved_qty * sml.product_id.weight)):
+||||||| parent of ec30b9b760ef (temp)
+                if self.storage_category_id.max_weight < self.forecast_weight + sum(package_smls.mapped(lambda sml: sml.product_qty * sml.product_id.weight)):
+=======
+                if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.product_qty * sml.product_id.weight)):
+>>>>>>> ec30b9b760ef (temp)
                     return False
                 # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
@@ -406,6 +428,7 @@ class Location(models.Model):
                     return False
         return True
 
+<<<<<<< HEAD
     def _get_weight(self, excluded_sml_ids=False):
         """Returns a dictionary with the net and forecasted weight of the location.
         param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
@@ -425,6 +448,29 @@ class Location(models.Model):
             for line in outgoing_move_lines:
                 result[location]['forecast_weight'] -= line.product_id.weight * line.reserved_qty
         return result
+||||||| parent of ec30b9b760ef (temp)
+=======
+    def _get_weight(self, excluded_sml_ids=False):
+        """Returns a dictionary with the net and forecasted weight of the location.
+        param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
+        """
+        result = defaultdict(lambda: defaultdict(float))
+        if not excluded_sml_ids:
+            excluded_sml_ids = set()
+        for location in self:
+            quants = location.quant_ids
+            incoming_move_lines = location.incoming_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            outgoing_move_lines = location.outgoing_move_line_ids.filtered(lambda ml: ml.state not in ['draft', 'done', 'cancel'] and ml.id not in excluded_sml_ids)
+            for quant in quants:
+                result[location]['net_weight'] += quant.product_id.weight * quant.quantity
+            result[location]['forecast_weight'] = result[location]['net_weight']
+            for line in incoming_move_lines:
+                result[location]['forecast_weight'] += line.product_id.weight * line.product_qty
+            for line in outgoing_move_lines:
+                result[location]['forecast_weight'] -= line.product_id.weight * line.product_qty
+        return result
+
+>>>>>>> ec30b9b760ef (temp)
 
 
 class StockRoute(models.Model):
