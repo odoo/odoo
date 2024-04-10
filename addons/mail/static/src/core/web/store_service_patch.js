@@ -24,6 +24,13 @@ const StorePatch = {
             },
         });
     },
+    get initMessagingParams() {
+        return {
+            ...super.initMessagingParams,
+            failures: true,
+            systray_get_activities: true,
+        };
+    },
     getNeedactionChannels() {
         return this.getRecentChannels().filter((channel) => channel.importantCounter > 0);
     },

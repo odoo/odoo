@@ -22,7 +22,6 @@ export class DiscussClientAction extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
-        this.messaging = useState(useService("mail.messaging"));
         onWillStart(() => {
             // bracket to avoid blocking rendering with restore promise
             this.restoreDiscussThread(this.props);

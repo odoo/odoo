@@ -32,7 +32,6 @@ export class ChatWindowContainer extends Component {
 
     setup() {
         super.setup();
-        this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.ui = useState(useService("ui"));

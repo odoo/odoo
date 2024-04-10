@@ -14,12 +14,11 @@ export class DiscussCoreCommon {
         this.notificationService = services.notification;
         this.orm = services.orm;
         this.presence = services.presence;
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
 
     setup() {
-        this.messagingService.isReady.then(() => {
+        this.store.isReady.then(() => {
             this.busService.subscribe("discuss.channel/joined", async (payload) => {
                 const { channel, invited_by_user_id: invitedByUserId } = payload;
                 const thread = this.store.Thread.insert(channel);
@@ -257,7 +256,6 @@ export class DiscussCoreCommon {
 export const discussCoreCommon = {
     dependencies: [
         "bus_service",
-        "mail.messaging",
         "mail.out_of_focus",
         "mail.store",
         "notification",

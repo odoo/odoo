@@ -136,7 +136,7 @@ export class LivechatService {
         }
         this.store.ChatWindow.insert({ thread: this.thread }).autofocus++;
         await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await this.env.services["mail.messaging"].initialize();
+        await this.env.services["mail.store"].initialize();
         return this.thread;
     }
 

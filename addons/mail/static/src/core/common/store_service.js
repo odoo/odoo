@@ -11,13 +11,14 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { prettifyMessageContent } from "@mail/utils/common/format";
+import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
 import { escape } from "@web/core/utils/strings";
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
+    isReady = new Deferred();
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
@@ -197,6 +198,12 @@ export class Store extends BaseStore {
 
     cannedReponses = this.makeCachedFetchData({ canned_responses: true });
 
+    get initMessagingParams() {
+        return {
+            init_messaging: {},
+        };
+    }
+
     /**
      * @returns {Deferred}
      */
@@ -207,6 +214,12 @@ export class Store extends BaseStore {
         const fetchDeferred = this.fetchDeferred;
         this._fetchDataDebounced();
         return fetchDeferred;
+    }
+
+    /** Import data received from init_messaging */
+    async initialize() {
+        await this.fetchData(this.initMessagingParams, { readonly: false });
+        this.isReady.resolve();
     }
 
     /**
@@ -316,7 +329,25 @@ export class Store extends BaseStore {
     }
 
     /** Provides an override point for when the store service has started. */
-    onStarted() {}
+    onStarted() {
+        this.discuss.inbox = {
+            id: "inbox",
+            model: "mail.box",
+            name: _t("Inbox"),
+        };
+        this.discuss.starred = {
+            id: "starred",
+            model: "mail.box",
+            name: _t("Starred"),
+            counter: 0,
+        };
+        this.discuss.history = {
+            id: "history",
+            model: "mail.box",
+            name: _t("History"),
+            counter: 0,
+        };
+    }
 
     /**
      * Search and fetch for a partner with a given user or partner id.
@@ -543,6 +574,15 @@ export class Store extends BaseStore {
         chat?.open();
     }
 
+    openDocument({ id, model }) {
+        this.env.services.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: model,
+            views: [[false, "form"]],
+            res_id: id,
+        });
+    }
+
     /**
      * @param {string} searchTerm
      * @param {Thread} thread
@@ -559,6 +599,35 @@ export class Store extends BaseStore {
             loadMore: messages.length === this.FETCH_LIMIT,
             messages: this.Message.insert(messages, { html: true }),
         };
+    }
+
+    async searchPartners(searchStr = "", limit = 10) {
+        const partners = [];
+        const searchTerm = cleanTerm(searchStr);
+        for (const localId in this.Persona.records) {
+            const persona = this.Persona.records[localId];
+            if (persona.type !== "partner") {
+                continue;
+            }
+            const partner = persona;
+            // todo: need to filter out non-user partners (there was a user key)
+            // also, filter out inactive partners
+            if (partner.name && cleanTerm(partner.name).includes(searchTerm)) {
+                partners.push(partner);
+                if (partners.length >= limit) {
+                    break;
+                }
+            }
+        }
+        if (!partners.length) {
+            const partnersData = await this.env.services.orm.silent.call(
+                "res.partner",
+                "im_search",
+                [searchTerm, limit]
+            );
+            this.Persona.insert(partnersData);
+        }
+        return partners;
     }
 
     async unstarAll() {

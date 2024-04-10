@@ -22,7 +22,6 @@ export class ChatBotService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
-     * "mail.messaging": import("@mail/core/common/messaging_service").Messaging,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * }} services
      */
@@ -31,7 +30,7 @@ export class ChatBotService {
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
         this.store = services["mail.store"];
-        services["mail.messaging"].isReady.then(async () => {
+        services["mail.store"].isReady.then(async () => {
             if (this.chatbot) {
                 await this.livechatService.thread.isLoadedDeferred;
                 // wait for messages to be fully inserted
@@ -159,7 +158,7 @@ export class ChatBotService {
 }
 
 export const chatBotService = {
-    dependencies: ["im_livechat.livechat", "mail.messaging", "mail.store"],
+    dependencies: ["im_livechat.livechat", "mail.store"],
     start(env, services) {
         return new ChatBotService(env, services);
     },
