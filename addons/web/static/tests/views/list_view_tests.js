@@ -12844,10 +12844,9 @@ QUnit.module("Views", (hooks) => {
             await editInput(target, ".o_field_many2one input", "abcdef");
             await nextTick();
 
-            // simulate focus out
-            await triggerEvent(target, ".o_field_many2one input", "blur");
+            await click(target, ".o_m2o_dropdown_option_create_edit");
 
-            assert.containsOnce(target, ".modal", "should ask confirmation to create a record");
+            assert.containsOnce(target, ".modal", "should show dialog to create the record");
             assert.containsOnce(target, ".o_data_row", "the row should still be there");
         }
     );
@@ -16413,13 +16412,9 @@ QUnit.module("Views", (hooks) => {
 
         const input = target.querySelector(".o_data_row .o_data_cell input");
         await editInput(input, null, "aaa");
-        await triggerEvents(input, null, ["keyup", "blur"]);
-        document.body.click();
+        await triggerEvents(input, null, ["keyup"]);
+        await triggerHotkey("tab");
         await nextTick();
-        assert.containsOnce(target, ".modal", "the quick_create modal should appear");
-
-        await click(target.querySelector(".modal .btn-primary"));
-        await click(target.querySelector(".o_list_view"));
         assert.strictEqual(
             target.getElementsByClassName("o_data_cell")[0].innerHTML,
             "aaa",
