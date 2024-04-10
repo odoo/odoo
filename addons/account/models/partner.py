@@ -866,12 +866,10 @@ class ResPartner(models.Model):
                 return None
             return self.env['res.partner'].search(domain + extra_domain, limit=1)
 
-        company = company or self.env.company
         for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in ([*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)], []):
-                partner = search_method(extra_domain)
-                if partner and len(partner) == 1:
-                    return partner
+            partner = search_method(self.env['res.partner']._check_company_domain(company or self.env.company))
+            if partner and len(partner) == 1:
+                return partner
         return self.env['res.partner']
 
     def _merge_method(self, destination, source):
