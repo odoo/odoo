@@ -1124,7 +1124,7 @@
         if (typeof o1 !== typeof o2)
             return false;
         if (typeof o1 !== "object")
-            return o1 === o2;
+            return false;
         // Objects can have different keys if the values are undefined
         const keys = new Set();
         Object.keys(o1).forEach((key) => keys.add(key));
@@ -6283,6 +6283,7 @@
                         this.save();
                     }
                     ev.stopPropagation();
+                    ev.preventDefault();
                     break;
                 case "Escape":
                     this.cancel();
@@ -9471,9 +9472,12 @@
     // Filters action
     //------------------------------------------------------------------------------
     const FILTERS_CREATE_FILTER_TABLE = (env) => {
+        const zones = env.model.getters.getSelectedZones();
+        if (zones.length === 1 && getZoneArea(zones[0]) === 1) {
+            env.model.selection.selectTableAroundSelection();
+        }
         const sheetId = env.model.getters.getActiveSheetId();
-        const selection = env.model.getters.getSelection().zones;
-        interactiveAddFilter(env, sheetId, selection);
+        interactiveAddFilter(env, sheetId, env.model.getters.getSelectedZones());
     };
     const FILTERS_REMOVE_FILTER_TABLE = (env) => {
         const sheetId = env.model.getters.getActiveSheetId();
@@ -21337,6 +21341,11 @@
         onBlur() {
             this.isKeyStillDown = false;
         }
+        onContextMenu(ev) {
+            if (this.env.model.getters.getEditionMode() === "inactive") {
+                this.props.onInputContextMenu?.(ev);
+            }
+        }
         // ---------------------------------------------------------------------------
         // Private
         // ---------------------------------------------------------------------------
@@ -21558,6 +21567,7 @@
         onComposerCellFocused: { type: Function, optional: true },
         onComposerContentFocused: Function,
         isDefaultFocus: { type: Boolean, optional: true },
+        onInputContextMenu: { type: Function, optional: true },
     };
 
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
@@ -21634,6 +21644,7 @@
                 isDefaultFocus: true,
                 onComposerContentFocused: this.props.onComposerContentFocused,
                 onComposerCellFocused: this.props.onComposerCellFocused,
+                onInputContextMenu: this.props.onInputContextMenu,
             };
         }
         get containerStyle() {
@@ -21722,6 +21733,7 @@
         onComposerContentFocused: Function,
         gridDims: Object,
         onComposerCellFocused: Function,
+        onInputContextMenu: Function,
     };
 
     const CSS$1 = css /* scss */ `
@@ -24057,8 +24069,8 @@
             else if (this.env.model.getters.getActiveRows().has(row)) {
                 type = "ROW";
             }
-            const { x, y, width, height } = this.env.model.getters.getVisibleRect(lastZone);
-            this.toggleContextMenu(type, x + width, y + height);
+            const { x, y, width } = this.env.model.getters.getVisibleRect(lastZone);
+            this.toggleContextMenu(type, this.canvasPosition.x + x + width, this.canvasPosition.y + y);
         }
         onCellRightClicked(col, row, { x, y }) {
             const zones = this.env.model.getters.getSelectedZones();
@@ -26385,29 +26397,12 @@
             return width;
         return Math.round((width / WIDTH_FACTOR) * 100) / 100;
     }
-    function convertBorderDescr(descr) {
-        if (!descr) {
-            return undefined;
-        }
-        return {
-            style: descr.style,
-            color: { rgb: descr.color },
-        };
-    }
     function extractStyle(cell, data) {
         let style = {};
         if (cell.style) {
             style = data.styles[cell.style];
         }
         const format = extractFormat(cell, data);
-        const exportedBorder = {};
-        if (cell.border) {
-            const border = data.borders[cell.border];
-            exportedBorder.left = convertBorderDescr(border.left);
-            exportedBorder.right = convertBorderDescr(border.right);
-            exportedBorder.bottom = convertBorderDescr(border.bottom);
-            exportedBorder.top = convertBorderDescr(border.top);
-        }
         const styles = {
             font: {
                 size: style?.fontSize || DEFAULT_FONT_SIZE,
@@ -26421,7 +26416,7 @@
                 }
                 : { reservedAttribute: "none" },
             numFmt: format ? { format: format, id: 0 /* id not used for export */ } : undefined,
-            border: exportedBorder || {},
+            border: cell.border || 0,
             alignment: {
                 horizontal: style.align,
                 vertical: style.verticalAlign
@@ -26453,15 +26448,12 @@
         return undefined;
     }
     function normalizeStyle(construct, styles) {
-        const { id: fontId } = pushElement(styles["font"], construct.fonts);
-        const { id: fillId } = pushElement(styles["fill"], construct.fills);
-        const { id: borderId } = pushElement(styles["border"], construct.borders);
         // Normalize this
         const numFmtId = convertFormat(styles["numFmt"], construct.numFmts);
         const style = {
-            fontId,
-            fillId,
-            borderId,
+            fontId: pushElement(styles.font, construct.fonts),
+            fillId: pushElement(styles.fill, construct.fills),
+            borderId: styles.border,
             numFmtId,
             alignment: {
                 vertical: styles.alignment.vertical,
@@ -26469,8 +26461,7 @@
                 wrapText: styles.alignment.wrapText,
             },
         };
-        const { id } = pushElement(style, construct.styles);
-        return id;
+        return pushElement(style, construct.styles);
     }
     function convertFormat(format, numFmtStructure) {
         if (!format) {
@@ -26478,8 +26469,7 @@
         }
         let formatId = XLSX_FORMAT_MAP[format.format];
         if (!formatId) {
-            const { id } = pushElement(format, numFmtStructure);
-            formatId = id + FIRST_NUMFMT_ID;
+            formatId = pushElement(format, numFmtStructure) + FIRST_NUMFMT_ID;
         }
         return formatId;
     }
@@ -26504,20 +26494,15 @@
         return id;
     }
     function pushElement(property, propertyList) {
-        for (let [key, value] of Object.entries(propertyList)) {
-            if (JSON.stringify(value) === JSON.stringify(property)) {
-                return { id: parseInt(key, 10), list: propertyList };
+        let len = propertyList.length;
+        const operator = typeof property === "object" ? deepEquals : (a, b) => a === b;
+        for (let i = 0; i < len; i++) {
+            if (operator(property, propertyList[i])) {
+                return i;
             }
         }
-        let elemId = propertyList.findIndex((elem) => JSON.stringify(elem) === JSON.stringify(property));
-        if (elemId === -1) {
-            propertyList.push(property);
-            elemId = propertyList.length - 1;
-        }
-        return {
-            id: elemId,
-            list: propertyList,
-        };
+        propertyList[propertyList.length] = property;
+        return propertyList.length - 1;
     }
     const chartIds = [];
     /**
@@ -27223,7 +27208,25 @@
         }
         return document;
     }
-    function getDefaultXLSXStructure() {
+    function convertBorderDescr(descr) {
+        if (!descr) {
+            return undefined;
+        }
+        return {
+            style: descr.style,
+            color: { rgb: descr.color },
+        };
+    }
+    function getDefaultXLSXStructure(data) {
+        const xlsxBorders = Object.values(data.borders).map((border) => {
+            return {
+                left: convertBorderDescr(border.left),
+                right: convertBorderDescr(border.right),
+                bottom: convertBorderDescr(border.bottom),
+                top: convertBorderDescr(border.top),
+            };
+        });
+        const borders = [{}, ...xlsxBorders];
         return {
             relsFiles: [],
             sharedStrings: [],
@@ -27246,7 +27249,7 @@
                 },
             ],
             fills: [{ reservedAttribute: "none" }, { reservedAttribute: "gray125" }],
-            borders: [{}],
+            borders,
             numFmts: [],
             dxfs: [],
         };
@@ -31197,7 +31200,17 @@
             }
         }
         exportForExcel(data) {
-            this.export(data);
+            for (const sheet of data.sheets) {
+                for (const filterTable of this.getFilterTables(sheet.id)) {
+                    if (zoneToDimension(filterTable.zone).numberOfRows === 1) {
+                        continue;
+                    }
+                    sheet.filterTables.push({
+                        range: zoneToXc(filterTable.zone),
+                        filters: [],
+                    });
+                }
+            }
         }
     }
 
@@ -35065,12 +35078,13 @@
                 case "AlterZone":
                     break;
                 case "ZonesSelected":
+                    const sheetId = this.getters.getActiveSheetId();
                     let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
                     if (event.mode === "updateAnchor") {
                         const oldZone = event.previousAnchor.zone;
                         const newZone = event.anchor.zone;
                         // altering a zone should not move the viewport in a dimension that wasn't changed
-                        const { top, bottom, left, right } = this.getters.getActiveMainViewport();
+                        const { top, bottom, left, right } = this.getMainInternalViewport(sheetId);
                         if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
                             col = left > col || col > right ? left : col;
                         }
@@ -35078,10 +35092,9 @@
                             row = top > row || row > bottom ? top : row;
                         }
                     }
-                    const sheetId = this.getters.getActiveSheetId();
                     col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
                     row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+                    this.refreshViewport(sheetId, { col, row });
                     break;
             }
         }
@@ -35105,16 +35118,16 @@
                     this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
                     break;
                 case "SHIFT_VIEWPORT_DOWN":
-                    const { top } = this.getActiveMainViewport();
                     const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
+                    const { top, viewportHeight, offsetCorrectionY } = this.getMainInternalViewport(sheetId);
+                    const topRowDims = this.getters.getRowDimensions(sheetId, top);
+                    this.shiftVertically(topRowDims.start + viewportHeight - offsetCorrectionY);
                     break;
                 case "SHIFT_VIEWPORT_UP": {
-                    const { top } = this.getActiveMainViewport();
                     const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
+                    const { top, viewportHeight, offsetCorrectionY } = this.getMainInternalViewport(sheetId);
+                    const topRowDims = this.getters.getRowDimensions(sheetId, top);
+                    this.shiftVertically(topRowDims.end - offsetCorrectionY - viewportHeight);
                     break;
                 }
                 case "REMOVE_COLUMNS_ROWS":
@@ -35476,17 +35489,6 @@
             const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
             Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
         }
-        /**
-         * Clip the vertical offset within the allowed range.
-         * Not above the sheet, nor below the sheet.
-         */
-        clipOffsetY(offsetY) {
-            const { height } = this.getMainViewportRect();
-            const maxOffset = height - this.sheetViewHeight;
-            offsetY = Math.min(offsetY, maxOffset);
-            offsetY = Math.max(offsetY, 0);
-            return offsetY;
-        }
         getViewportOffset(sheetId) {
             return {
                 x: this.viewports[sheetId]?.bottomRight.offsetScrollbarX || 0,
@@ -35542,12 +35544,15 @@
          * viewport top.
          */
         shiftVertically(offset) {
-            const { top } = this.getActiveMainViewport();
+            const sheetId = this.getters.getActiveSheetId();
+            const { top } = this.getMainInternalViewport(sheetId);
             const { scrollX } = this.getActiveSheetScrollInfo();
             this.setSheetViewOffset(scrollX, offset);
             const { anchor } = this.getters.getSelection();
-            const deltaRow = this.getActiveMainViewport().top - top;
-            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+            if (anchor.cell.row >= this.getters.getPaneDivisions(sheetId).ySplit) {
+                const deltaRow = this.getMainInternalViewport(sheetId).top - top;
+                this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+            }
         }
         getVisibleFigures() {
             const sheetId = this.getters.getActiveSheetId();
@@ -46319,8 +46324,7 @@
             attrs.push(["t", "b"]);
         }
         else if (forceString || !isNumber(value)) {
-            const { id } = pushElement(content, sharedStrings);
-            value = id.toString();
+            value = pushElement(content, sharedStrings);
             attrs.push(["t", "s"]);
         }
         return { attrs, node: escapeXml /*xml*/ `<v>${value}</v>` };
@@ -46445,8 +46449,7 @@
         if (rule.style.fillColor) {
             dxf.fill = { fgColor: { rgb: rule.style.fillColor } };
         }
-        const { id } = pushElement(dxf, dxfs);
-        ruleAttributes.push(["dxfId", id]);
+        ruleAttributes.push(["dxfId", pushElement(dxf, dxfs)]);
         return escapeXml /*xml*/ `
     <conditionalFormatting sqref="${cf.ranges.join(" ")}">
       <cfRule ${formatAttributes(ruleAttributes)}>
@@ -47250,7 +47253,7 @@
      */
     function getXLSX(data) {
         const files = [];
-        const construct = getDefaultXLSXStructure();
+        const construct = getDefaultXLSXStructure(data);
         files.push(createWorkbook(data, construct));
         files.push(...createWorksheets(data, construct));
         files.push(createStylesSheet(construct));
@@ -48093,9 +48096,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.31';
-    __info__.date = '2024-04-05T14:12:33.930Z';
-    __info__.hash = '052efd4';
+    __info__.version = '16.3.32';
+    __info__.date = '2024-04-10T12:34:13.525Z';
+    __info__.hash = '692623d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
