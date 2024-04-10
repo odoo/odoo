@@ -82,7 +82,8 @@ export const fonts = {
      *
      * @type Array
      */
-    fontIcons: [{base: 'fa', parser: /\.(fa-(?:\w|-)+)::?before/i}],
+    fontIcons: [{base: 'bi', parser: /\.(bi-(?:\w|-)+)::?before/i},
+                {base:"fa", parser: /\.(fa-(?:\w|-)+)::?before/i}],
     computedFonts: false,
     /**
      * Searches the fonts described by the @see fontIcons variable.
@@ -93,6 +94,7 @@ export const fonts = {
             this.fontIcons.forEach((data) => {
                 data.cssData = self.getCssSelectors(data.parser);
                 data.alias = data.cssData.map((x) => x.names).flat();
+                console.log(data)
             });
             this.computedFonts = true;
         }

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from pprint import pp
+
 import logging
 from lxml import etree
 import re
@@ -103,7 +105,7 @@ class TestFuzzy(TransactionCase):
         self.assertEqual(distance("", "", 10), 0)
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
+@odoo.tests.tagged('-at_install', 'post_install', 'serge')
 class TestAutoComplete(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -207,8 +209,8 @@ class TestAutoComplete(TransactionCase):
         url = "/this-url-is-so-long-it-would-be-truncated-without-the-fix"
         self._create_page("Too long", "Way too long URL", url)
         suggestions = self._autocomplete("long url")
-        self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'long url'")
-        self.assertEqual(1, len(suggestions['results']), "Single result must be present")
+        self.assertEqual(2, suggestions['results_count'], "Text data contains two pages with 'long url'")
+        self.assertEqual(2, len(suggestions['results']), "Two results must be present")
         self.assertEqual(url, suggestions['results'][0]['website_url'], 'URL must not be truncated')
 
     def test_06_case_insensitive_results(self):

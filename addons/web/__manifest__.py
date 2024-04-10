@@ -52,6 +52,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_core'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/libs/bootstrap-icons-1.11.3/font/bootstrap-icons.scss',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
@@ -145,6 +146,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap_frontend'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/libs/bootstrap-icons-1.11.3/font/bootstrap-icons.scss',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
@@ -253,6 +255,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/libs/bootstrap-icons-1.11.3/font/bootstrap-icons.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/fonts/fonts.scss',
