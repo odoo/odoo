@@ -271,7 +271,7 @@
                 <field name="tz_mismatch" invisible="1"/>
                 <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div class="o_hr_leave_content">
+                <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <div name="title" class="o_hr_leave_title" invisible="1">
                             <field name="employee_id" readonly="1" force_save="1" invisible="1"/>
@@ -389,6 +389,9 @@
             <xpath expr="//group[@name='col_left']" position="attributes">
                 <attribute name="colspan">5</attribute>
             </xpath>
+            <xpath expr="//div[hasclass('o_hr_leave_content')]" position="attributes">
+                <attribute name="class" remove="row my-n4" separator=" "/>
+            </xpath>
             <xpath expr="//div[hasclass('o_hr_leave_column')]" position="attributes">
                 <attribute name="class" remove="col_left col-md-6" separator=" "/>
             </xpath>
@@ -489,7 +492,7 @@
         <field name="arch" type="xml">
             <calendar js_class="time_off_calendar"
                     string="Time Off Request"
-                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard)d"
+                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
                     event_open_popup="true"
                     date_start="date_from"
                     date_stop="date_to"
