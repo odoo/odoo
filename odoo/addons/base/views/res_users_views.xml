@@ -38,7 +38,6 @@
             <field name="arch" type="xml">
                 <!-- the user list is editable, but one cannot add or delete rows -->
                 <tree string="Users" editable="bottom" create="false" delete="false">
-                    <field name="user_id" invisible="1"/>
                     <field name="user_login" force_save="1"/>
                     <field name="new_passwd" password="True" width="20px"/>
                 </tree>
@@ -138,16 +137,13 @@
             <field name="arch" type="xml">
                 <form string="Users">
                     <sheet>
-                        <field name="id" invisible="1"/>
                         <div class="alert alert-info text-center mb-3" invisible="id &gt; 0" role="alert">
                             You are inviting a new user.
                         </div>
-                        <field name="avatar_128" invisible="1"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image": "avatar_128"}'/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
-                            <field name="email" invisible="1"/>
                             <label for="login" string="Email Address"/>
                             <h2>
                                 <field name="login"
@@ -176,7 +172,6 @@
                     <header>
                     </header>
                     <sheet>
-                        <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
@@ -189,7 +184,6 @@
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <field name="active_partner" required="0" readonly="1" invisible="1"/>
                         <div class="alert alert-info text-center o_form_header"
                             invisible="active and active_partner or not active and not active_partner or active and not active_partner"
                             role="alert">
@@ -201,12 +195,10 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <field name="avatar_128" invisible="1"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
-                            <field name="email" invisible="1"/>
                             <label for="login" string="Email Address"/>
                             <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
@@ -214,7 +206,6 @@
                                         readonly="1"
                                         required="0"
                                         invisible="not id"/>
-                                <field name="share" invisible="1"/>
                             </group>
                         </div>
                         <notebook colspan="4">
@@ -222,14 +213,12 @@
                                 <group string="Multi Companies" invisible="companies_count &lt;= 1">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
-                                    <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
                                 <field name="groups_id"/>
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
                                     <group string="Localization" name="preferences">
-                                        <field name="active" invisible="1"/>
                                         <label for="lang" />
                                         <div class="o_row">
                                             <field name="lang" required="1"/>
@@ -241,7 +230,6 @@
                                                 title="Add a language"/>
                                         </div>
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
-                                        <field name="tz_offset" invisible="1"/>
                                     </group>
                                     <group string="Menus Customization" groups="base.group_no_one"
                                         invisible="share">
@@ -426,7 +414,6 @@
             <field name="arch" type="xml">
                 <form string="Users" edit="1">
                     <widget name="notification_alert"/>
-                    <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" readonly="0" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
@@ -451,9 +438,7 @@
                                         />
                                     </div>
                                     <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
-                                    <field name="tz_offset" invisible="1"/>
                                 </group>
-                                <field name="share" invisible="1"/>
                             </group>
                             <group name="signature">
                                 <field name="signature" readonly="0" options="{'style-inline': true, 'codeview': true}"/>

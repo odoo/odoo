@@ -58,7 +58,6 @@
             <field name="arch" type="xml">
                 <tree string="Contacts" sample="1" multi_edit="1">
                     <field name="complete_name" string="Name"/>
-                    <field name="function" column_invisible="True"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="mobile" optional="hide"/>
                     <field name="email" optional="show"/>
@@ -69,9 +68,6 @@
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                    <field name="is_company" column_invisible="True"/>
-                    <field name="parent_id" readonly="1" column_invisible="True"/>
-                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -81,22 +77,6 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <form string="Contact">
-                    <!-- Invisible fields allows other modules to populate partner (ex.: creation from a lead) -->
-                    <field name="avatar_128" invisible="1"/>
-                    <field name="city" invisible="1"/>
-                    <field name="comment" invisible="1"/>
-                    <field name="country_id" invisible="1"/>
-                    <field name="is_company" invisible="1"/>
-                    <field name="name" invisible="1"/>
-                    <field name="state_id" invisible="1"/>
-                    <field name="street" invisible="1"/>
-                    <field name="street2" invisible="1"/>
-                    <field name="title" invisible="1"/>
-                    <field name="type" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="website" invisible="1"/>
-                    <field name="zip" invisible="1"/>
-
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
@@ -112,7 +92,6 @@
                     </div>
                     <group>
                         <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
-                        <field name="user_ids" invisible="1"/>
                         <field name="email" widget="email" context="{'gravatar_image': True}" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                         <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
@@ -128,14 +107,12 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
-                    <field name="parent_id" invisible="1"/>
                     <group>
                         <group>
                             <label for="type" invisible="not parent_id" groups="base.group_no_one"/>
@@ -175,14 +152,8 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="avatar_128" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title mb24">
-                        <field name="is_company" invisible="1"/>
-                        <field name="commercial_partner_id" invisible="1"/>
-                        <field name="active" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="country_code" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
                             <field id="company" options="{'line_breaks': False}" widget="text" class="text-break" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
@@ -230,12 +201,10 @@
                                 invisible="is_company"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
-                            <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="title" options='{"no_open": True}' placeholder="e.g. Mister"
                                 invisible="is_company"/>
-                            <field name="active_lang_count" invisible="1"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"
                                    placeholder='e.g. "B2B", "VIP", "Consulting", ...'/>
@@ -298,7 +267,6 @@
                                 <form string="Contact / Address">
                                     <sheet>
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
-                                        <field name="parent_id" invisible="1"/>
                                         <div class="text-muted oe_edit_only">
                                             <p class="mb-0" invisible="type != 'contact'">
                                                 <span>Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).</span>
@@ -338,14 +306,12 @@
                                                 <field name="email" widget="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
-                                                <field name="company_id" invisible="1"/>
                                             </group>
                                         </group>
                                         <group>
                                             <field name="comment" placeholder="Internal notes..." nolabel="1" colspan="2"/>
                                         </group>
-                                        <field name="lang" invisible="True"/>
-                                        <field name="user_id" invisible="True"/>
+                                        <field name="lang" invisible="True"/>  <!-- Need to add lang to save default value from parented record -->
                                     </sheet>
                                 </form>
                             </field>
@@ -383,8 +349,6 @@
             <field name="arch" type="xml">
                 <form string="Private Address Form">
                     <sheet>
-                        <field name="type" invisible="1"/>
-                        <field name="parent_id" invisible="1"/>
                         <label for="name" class="oe_edit_only"/>
                         <field name="name" required="0"/>
                         <group>
@@ -413,7 +377,6 @@
                                 <tree editable="bottom">
                                     <field name="bank_id"/>
                                     <field name="acc_number"/>
-                                    <field name="acc_holder_name" column_invisible="True"/>
                                 </tree>
                             </field>
                         </group>
@@ -714,7 +677,6 @@
                 <tree string="Industry" editable="bottom">
                     <field name="name"/>
                     <field name="full_name"/>
-                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>
