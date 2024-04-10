@@ -80,6 +80,7 @@ export class PosStore extends Reactive {
         "pos_data",
         "dialog",
         "printer",
+        "action",
     ];
     constructor() {
         super();
@@ -97,6 +98,7 @@ export class PosStore extends Reactive {
             printer,
             bus_service,
             pos_data,
+            action,
         }
     ) {
         this.env = env;
@@ -107,6 +109,7 @@ export class PosStore extends Reactive {
         this.printer = printer;
         this.bus = bus_service;
         this.data = pos_data;
+        this.action = action;
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 
@@ -1371,7 +1374,7 @@ export class PosStore extends Reactive {
         });
     }
     /**
-     * @param {Object?} partner leave undefined to create a new partner
+     * @param {import("@point_of_sale/app/models/res_partner").ResPartner?} partner leave undefined to create a new partner
      */
     editPartner(partner) {
         this.dialog.add(FormViewDialog, {
@@ -1383,6 +1386,27 @@ export class PosStore extends Reactive {
                 this.data.read("res.partner", record.config.resIds);
             },
         });
+    }
+    /**
+     * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
+     */
+    async editProduct(product) {
+        this.action.doAction(
+            product
+                ? "point_of_sale.product_product_action_edit_pos"
+                : "point_of_sale.product_product_action_add_pos",
+            {
+                props: {
+                    resId: product?.id,
+                    onSave: (record) => {
+                        this.data.read("product.product", [record.evalContext.id]);
+                        this.action.doAction({
+                            type: "ir.actions.act_window_close",
+                        });
+                    },
+                },
+            }
+        );
     }
     async closePos() {
         const customerDisplayService = this.env.services.customer_display;
