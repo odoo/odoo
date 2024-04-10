@@ -279,23 +279,7 @@ export async function start({ asTab = false } = {}) {
         }
     }
     const wc = await mountWithCleanup(WebClient, { target, env });
-    // Let fixture behave like web client, so it has expected display flex for scrollable
-    target.classList.add("o_web_client");
-    target.style.display = "flex";
-    target.style.position = "fixed";
-    target.style.overflow = "auto";
-    target.style.top = "30px"; // just a bit so HOOT toolbar can be interacted while tests are running
-    target.style.height = "calc(100% - 30px)";
-    target.style.bottom = "0";
-    target.style.left = "0";
     after(() => {
-        target.classList.remove("o_web_client");
-        target.style.display = "";
-        target.style.position = "";
-        target.style.overflow = "";
-        target.style.top = "";
-        target.style.left = "";
-        cancelAllTimers(); // prevent any RPCs at end of test
         mailGlobal.elligibleEnvs.clear();
     });
     odoo.__WOWL_DEBUG__ = { root: wc };
