@@ -60,6 +60,11 @@
                                     <a t-att-href="navbar__back_url" t-att-title="navbar__back_title" t-out="navbar__back_text"/>
                                 </li>
                             </t>
+                            <t t-if="not hide_submenu">
+                                <li class="breadcrumb-item" aria-current="page">
+                                    <a class="pe-3" t-field="event.name" t-att-href="'/event/%s/register' % (slug(event))"/>
+                                </li>
+                            </t>
                             <t t-else="">
                                 <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
                             </t>
