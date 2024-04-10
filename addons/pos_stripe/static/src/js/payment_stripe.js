@@ -243,7 +243,13 @@ export class PaymentStripe extends PaymentInterface {
             }
             return data.client_secret;
         } catch (error) {
+<<<<<<< HEAD
             const message = error.code === 200 ? error.data.message : error.message;
+||||||| parent of b33d5250a157 (temp)
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+=======
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message || error.message;
+>>>>>>> b33d5250a157 (temp)
             this._showError(message, 'Fetch Secret');
             return false;
         }
