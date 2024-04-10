@@ -1,6 +1,4 @@
-/* @odoo-module */
-
-import { PersonaService } from "@mail/core/common/persona_service";
+import { Persona } from "@mail/core/common/persona_model";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -8,13 +6,13 @@ import { patch } from "@web/core/utils/patch";
 
 const { DateTime } = luxon;
 
-patch(PersonaService.prototype, {
-    outOfOfficeText(persona) {
-        if (!persona.out_of_office_date_end) {
+patch(Persona.prototype, {
+    get outOfOfficeText() {
+        if (!this.out_of_office_date_end) {
             return "";
         }
         const currentDate = new Date();
-        const date = deserializeDateTime(persona.out_of_office_date_end);
+        const date = deserializeDateTime(this.out_of_office_date_end);
         // const options = { day: "numeric", month: "short" };
         if (currentDate.getFullYear() !== date.year) {
             // options.year = "numeric";
