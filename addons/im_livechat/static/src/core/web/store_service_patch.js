@@ -34,11 +34,11 @@ patch(Store.prototype, {
         }
         const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
         if (chatWindow.hidden) {
-            this.env.services["mail.chat_window"].makeVisible(chatWindow);
+            chatWindow.makeVisible();
         } else if (chatWindow.folded) {
-            this.env.services["mail.chat_window"].toggleFold(chatWindow);
+            chatWindow.toggleFold();
         }
-        this.env.services["mail.chat_window"].focus(chatWindow);
+        chatWindow.focus();
         return true;
     },
     /**

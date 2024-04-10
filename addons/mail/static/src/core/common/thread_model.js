@@ -929,6 +929,18 @@ export class Thread extends Record {
         this.setAsDiscussThread();
     }
 
+    openChatWindow(replaceNewMessageChatWindow) {
+        const chatWindow = this.store.ChatWindow.insert({
+            folded: false,
+            thread: this,
+            replaceNewMessageChatWindow,
+        });
+        chatWindow.autofocus++;
+        this.state = "open";
+        chatWindow.notifyState();
+        return chatWindow;
+    }
+
     pin() {
         if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
             return;

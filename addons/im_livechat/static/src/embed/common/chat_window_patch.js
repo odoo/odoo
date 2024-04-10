@@ -15,9 +15,7 @@ patch(ChatWindow.prototype, {
         super.setup(...arguments);
         this.livechatService = useService("im_livechat.livechat");
         this.chatbotService = useState(useService("im_livechat.chatbot"));
-        this.livechatState = useState({
-            hasFeedbackPanel: false,
-        });
+        this.livechatState = useState({ hasFeedbackPanel: false });
     },
 
     async close() {
@@ -26,7 +24,7 @@ patch(ChatWindow.prototype, {
         }
         if (this.livechatService.state === SESSION_STATE.PERSISTED) {
             this.livechatState.hasFeedbackPanel = true;
-            this.chatWindowService.show(this.props.chatWindow, { notifyState: false });
+            this.props.chatWindow.show({ notifyState: false });
         } else {
             this.thread?.delete();
             await super.close();
