@@ -145,6 +145,16 @@ export class PosOrder extends Base {
         let minutes = "" + d.getMinutes();
         minutes = minutes.length < 2 ? "0" + minutes : minutes;
 
+        orderChange.new.sort((a, b) => {
+            const sequenceA = a.pos_categ_sequence;
+            const sequenceB = b.pos_categ_sequence;
+            if (sequenceA === 0 && sequenceB === 0) {
+                return a.pos_categ_id - b.pos_categ_id;
+            }
+
+            return sequenceA - sequenceB;
+        });
+
         for (const printer of unwatchedPrinter) {
             const changes = this._getPrintingCategoriesChanges(
                 printer.config.product_categories_ids,

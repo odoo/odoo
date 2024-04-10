@@ -142,7 +142,7 @@ class PosSession(models.Model):
             },
             'pos.category': {
                 'domain': [('id', 'in', self.config_id._get_available_categories().ids)] if config_id.limit_categories and config_id.iface_available_categ_ids else [],
-                'fields': ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color']
+                'fields': ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence']
             },
             'pos.bill': {
                 'domain': OR([
