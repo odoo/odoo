@@ -14,7 +14,6 @@ export class DiscussCoreWeb {
         this.busService = services.bus_service;
         this.notificationService = services.notification;
         this.ui = services.ui;
-        this.chatWindowService = services["mail.chat_window"];
         this.discussCoreCommonService = services["discuss.core.common"];
         this.store = services["mail.store"];
         try {
@@ -71,9 +70,7 @@ export class DiscussCoreWeb {
                         const chatWindow = this.store.discuss.chatWindows.find((chatWindow) =>
                             chatWindow.thread?.eq(thread)
                         );
-                        if (chatWindow) {
-                            this.chatWindowService.close(chatWindow, { notifyState: false });
-                        }
+                        chatWindow?.close({ notifyState: false });
                     } else {
                         this.store.ChatWindow.insert({
                             thread,
@@ -103,14 +100,7 @@ export class DiscussCoreWeb {
 }
 
 export const discussCoreWeb = {
-    dependencies: [
-        "bus_service",
-        "discuss.core.common",
-        "mail.chat_window",
-        "mail.store",
-        "notification",
-        "ui",
-    ],
+    dependencies: ["bus_service", "discuss.core.common", "mail.store", "notification", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
