@@ -454,6 +454,7 @@
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
         t-on-dblclick="onDblClick"
+        t-on-contextmenu="onContextMenu"
       />
 
       <div
@@ -923,7 +924,6 @@
       t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel="onMouseWheel"
-      t-on-contextmenu="onInputContextMenu"
       t-ref="grid">
       <GridOverlay
         onCellClicked.bind="onCellClicked"
@@ -941,6 +941,7 @@
         onComposerContentFocused="props.onComposerContentFocused"
         onComposerCellFocused="props.onGridComposerCellFocused"
         gridDims="env.model.getters.getSheetViewDimensionWithHeaders()"
+        onInputContextMenu.bind="onInputContextMenu"
       />
       <canvas t-ref="canvas"/>
       <t
@@ -3957,7 +3958,7 @@ https://fontawesome.com/license -->
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.28';
-  __info__.date = '2024-04-05T14:13:15.167Z';
-  __info__.hash = '7127826';
+  __info__.version = '16.4.29';
+  __info__.date = '2024-04-10T12:35:17.012Z';
+  __info__.hash = 'c022445';
 -->
