@@ -289,7 +289,7 @@ options.registry.Donation = options.Class.extend({
                 this.$target.find('.s_donation_donate_btn').before(sliderTemplate);
             }
             const prefilledOptions = this.$target[0].dataset.prefilledOptions;
-            let donationAmounts = 0;
+            let donationAmounts = [];
             let showDescriptions = false;
             if (prefilledOptions) {
                 donationAmounts = JSON.parse(this.$target[0].dataset.donationAmounts);
