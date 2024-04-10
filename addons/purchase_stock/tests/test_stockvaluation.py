@@ -3310,3 +3310,61 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 25.0, 'reconciled': True},
         ])
         self.assertTrue(all(aml.full_reconcile_id for aml in in_stock_amls))
+
+    def test_bill_with_zero_qty(self):
+        """
+        FIFO standard
+        Receive two different product
+        Bill them, but:
+            Set the quantity of the first AML to zero
+        Bill again the PO (for the "canceled" line in the first bill)
+        """
+        product1 = self.product1
+        product2 = self.product1_copy
+
+        self.cat.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product2
+            po_line.product_qty = 1
+            po_line.price_unit = 20.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 1
+        receipt.button_validate()
+
+        action = po.action_create_invoice()
+        bill01 = self.env["account.move"].browse(action["res_id"])
+        bill01.invoice_date = fields.Date.today()
+        bill01.invoice_line_ids.filtered(lambda l: l.product_id == product2).quantity = 0
+        bill01.action_post()
+
+        self.assertEqual(bill01.state, 'posted')
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product1.id, 'qty_invoiced': 1.0},
+            {'product_id': product2.id, 'qty_invoiced': 0.0},
+        ])
+
+        bill02 = self._bill(po)
+        self.assertEqual(bill02.state, 'posted')
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product1.id, 'qty_invoiced': 1.0},
+            {'product_id': product2.id, 'qty_invoiced': 1.0},
+        ])
+
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id), ('balance', '!=', 0)], order='id')
+        self.assertRecordValues(stock_in_amls, [
+            {'product_id': product1.id, 'debit': 10.0, 'credit': 0.0},
+            {'product_id': product1.id, 'debit': 0.0, 'credit': 10.0},
+            {'product_id': product2.id, 'debit': 20.0, 'credit': 0.0},
+            {'product_id': product2.id, 'debit': 0.0, 'credit': 20.0},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
