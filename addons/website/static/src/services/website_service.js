@@ -187,7 +187,7 @@ export const websiteService = {
                 return isDesigner === true;
             },
             get is404() {
-                return currentMetadata.viewXmlid === "website.page_404";
+                return currentMetadata.viewXmlid?.match('page_404');
             },
             get currentLocation() {
                 const path = decodeURIComponent(this.contentWindow.location.pathname);

@@ -156,13 +156,18 @@ var initTourSteps = function (eventName) {
 };
 
 var browseTalksSteps = [{
-    content: 'Browse Talks',
-    trigger: 'a:contains("Talks")',
+    content: 'Browse Talks Menu',
+    trigger: 'a[href*="#"]:contains("Talks")',
+    run: "click",
+}, {
+    content: 'Browse Talks Submenu',
+    trigger: 'a.dropdown-item span:contains("Talks")',
     run: "click",
 }, {
     content: 'Check we are on the talk list page',
     trigger: 'h5:contains("Book your talks")',
 }];
+
 
 var browseBackSteps = [{
     content: 'Browse Back',
@@ -174,8 +179,8 @@ var browseBackSteps = [{
 }];
 
 var browseMeetSteps = [{
-    content: 'Browse Meet',
-    trigger: 'a:contains("Community")',
+    content: 'Browse Rooms Menu',
+    trigger: 'a:contains("Rooms")',
     run: "click",
 }, {
     content: 'Check we are on the community page',
@@ -189,9 +194,9 @@ registry.category("web_tour.tours").add('wevent_register', {
         initTourSteps('Online Reveal'),
         browseTalksSteps,
         discoverTalkSteps('What This Event Is All About', true, true),
-        browseTalksSteps,
+        browseBackSteps,
         discoverTalkSteps('Live Testimonial', false, false, false),
-        browseTalksSteps,
+        browseBackSteps,
         discoverTalkSteps('Our Last Day Together!', true, false, true),
         browseBackSteps,
         browseMeetSteps,

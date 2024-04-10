@@ -12,8 +12,8 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         run: "click",
     },
     {
-        content: 'Go to "Get A Booth" page',
-        trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
+        content: 'Go to "Become exhibitor" page',
+        trigger: 'a:contains("Become exhibitor")',
         run: "click",
     },
     {
