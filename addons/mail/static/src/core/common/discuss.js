@@ -42,7 +42,6 @@ export class Discuss extends Component {
         super.setup();
         this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
-        this.personaService = useService("mail.persona");
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -118,7 +117,7 @@ export class Discuss extends Component {
     async renameGuest(name) {
         const newName = name.trim();
         if (this.store.self.name !== newName) {
-            await this.personaService.updateGuestName(this.store.self, newName);
+            await this.store.self.updateGuestName(newName);
         }
     }
 }
