@@ -114,7 +114,6 @@ export class Message extends Component {
         this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
-        this.attachmentService = useService("mail.attachment");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
@@ -393,7 +392,7 @@ export class Message extends Component {
     }
 
     async onClickAttachmentUnlink(attachment) {
-        await this.attachmentService.delete(toRaw(attachment));
+        await toRaw(attachment).remove();
     }
 
     onClickMarkAsUnread() {
