@@ -13,7 +13,6 @@ export class MessageReactionButton extends Component {
 
     setup() {
         super.setup();
-        this.messageService = useState(useService("mail.message"));
         this.store = useState(useService("mail.store"));
         this.emojiPickerRef = useRef("emoji-picker");
         this.emojiPicker = useEmojiPicker(this.emojiPickerRef, {
@@ -23,7 +22,7 @@ export class MessageReactionButton extends Component {
                         content === emoji && personas.find((persona) => persona.eq(this.store.self))
                 );
                 if (!reaction) {
-                    this.messageService.react(this.props.message, emoji);
+                    this.props.message.react(emoji);
                 }
             },
         });

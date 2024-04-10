@@ -11,7 +11,6 @@ export class MailCoreCommon {
         this.env = env;
         this.busService = services.bus_service;
         this.attachmentService = services["mail.attachment"];
-        this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
@@ -81,13 +80,7 @@ export class MailCoreCommon {
 }
 
 export const mailCoreCommon = {
-    dependencies: [
-        "bus_service",
-        "mail.attachment",
-        "mail.message",
-        "mail.messaging",
-        "mail.store",
-    ],
+    dependencies: ["bus_service", "mail.attachment", "mail.messaging", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services
