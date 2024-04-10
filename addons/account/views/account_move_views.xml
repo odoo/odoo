@@ -1329,10 +1329,14 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="groupy_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <separator/>
                         <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                        <filter string="Company" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Sequence Prefix" name="group_by_sequence_prefix" context="{'group_by': 'sequence_prefix'}" invisible="1"/>
                     </group>
                </search>
