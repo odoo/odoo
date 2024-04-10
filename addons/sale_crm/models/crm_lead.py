@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -101,3 +101,12 @@ class CrmLead(models.Model):
         # add all the orders from all lead to merge
         fields_info['order_ids'] = lambda fname, leads: [(4, order.id) for order in leads.order_ids]
         return fields_info
+
+    def _update_revenues_from_so(self, order):
+        for opportunity in self:
+            if (
+                (opportunity.expected_revenue or 0) < order.amount_untaxed
+                and order.currency_id == opportunity.company_id.currency_id
+            ):
+                opportunity.expected_revenue = order.amount_untaxed
+                opportunity._track_set_log_message(_('Expected revenue has been updated based on the linked Sales Orders.'))
