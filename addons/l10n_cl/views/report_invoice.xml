@@ -236,7 +236,7 @@
     </template>
 
     <template id="tax_totals_widget" inherit_id="account.document_tax_totals" primary="True">
-        <t t-foreach="tax_totals['subtotals']" t-as="subtotal" position="replace">
+        <t t-foreach="tax_totals.get('subtotals')" t-as="subtotal" position="replace">
             <t t-set="subtotal_amounts" t-value="o._l10n_cl_get_amounts()"/>
             <t t-set="withholdings" t-value="o._l10n_cl_get_withholdings()"/>
             <t t-if="subtotal_amounts['subtotal_amount_taxable'] != 0.0">
