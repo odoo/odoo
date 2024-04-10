@@ -99,6 +99,29 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }],
     slidesTourTools.addImageToSection('Introduction', 'Overview', true),
     slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),
+    slidesTourTools.addQuizToSection(
+        'Introduction',
+        {
+            name: 'quiz',
+            questions: [
+                {
+                    title: 'In which year was this course created?',
+                    options: [{ title: '2024', isCorrect: true }, { title: '2023' }],
+                },
+                {
+                    title: 'Which one would you prefer more in your leisure time?',
+                    options: [{ title: 'Coding' }, { title: 'Sleeping', isCorrect: true }],
+                },
+            ],
+        },
+        true
+    ),
+    [
+        {
+            content: "eLearning: wait for the page to no longer be in questions creation mode.",
+            trigger: ':iframe a.o_wslides_js_quiz_add_question:not(.d-none)',
+        },
+    ]
 //     [
 // {
 //     content: 'eLearning: move new course inside introduction',

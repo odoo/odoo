@@ -10,6 +10,16 @@ const testPngImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAC
 const testPdf = 'JVBERi0xLjEKJWPDtsO2bW1lbnQKMSAwIG9iago8PC9UeXBlIC9DYXRhbG9nCi9QYWdlcyAyIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFJdCi9Db3VudCAxCi9NZWRpYUJveCBbMCAwIDIxMCAyOTddCj4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovUmVzb3VyY2VzCjw8L0ZvbnQKPDwvRjEKPDwvVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL0Jhc2VGb250IC9UaW1lcy1Sb21hbgo+Pgo+Pgo+PgovQ29udGVudHMgNCAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDQ4Pj4Kc3RyZWFtCkJUCi9GMSA0OCBUZgo1MCAxMzAgVGQKKFRFU1QpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDUKMDAwMDAwMDAwMCA2NTUzNSBmCjAwMDAwMDAwMjEgMDAwMDAgbgowMDAwMDAwMDY5IDAwMDAwIG4KMDAwMDAwMDE0OSAwMDAwMCBuCjAwMDAwMDAyOTggMDAwMDAgbgp0cmFpbGVyCjw8L1Jvb3QgMSAwIFIKL1NpemUgNQo+PgpzdGFydHhyZWYKMzgxCiUlRU9G';
 
 /*
+ * Helpers
+ */
+
+const addSectionContent = (prefix, sectionName) => [{
+    content: 'eLearning: add content to section',
+    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
+    run: "click",
+}]
+
+/*
  * PUBLISHER / CONTENT CREATION
  */
 
@@ -28,21 +38,15 @@ var addSection = function (sectionName, backend = false) {
     content: 'eLearning: create section',
     trigger: prefix + 'footer.modal-footer button:contains("Save")',
     run: "click",
-}, {
-	content: 'eLearning: section created empty',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '")',
-    run: "click",
-}];
+},
+...addSectionContent(prefix, sectionName)];
 };
 
 var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	var base_steps = [
+	...addSectionContent(prefix, sectionName),
 {
-	content: 'eLearning: add content to section',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
-    run: "click",
-}, {
 	content: 'eLearning: click on video',
 	trigger: prefix + 'a[data-slide-category=video]',
     run: "click",
@@ -77,11 +81,8 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 var addArticleToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ':iframe ' : '';
 	return [
+    ...addSectionContent(prefix, sectionName),
 {
-	content: 'eLearning: add content to section',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
-    run: "click",
-}, {
 	content: 'eLearning: click on article',
 	trigger: prefix + 'a[data-slide-category=article]',
     run: "click",
@@ -131,11 +132,8 @@ const compareBase64Content = async (url, name, type, expectedContent) => {
 const addImageToSection = (sectionName, pageName, backend) => {
     const prefix = backend ? ':iframe ' : '';
     return [
+    ...addSectionContent(prefix, sectionName),
 {
-    content: 'eLearning: add content to section',
-    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
-    run: "click",
-}, {
     content: 'eLearning: click on image',
     trigger: `${prefix}a[data-slide-category=infographic]`,
     run: "click",
@@ -196,11 +194,8 @@ const addImageToSection = (sectionName, pageName, backend) => {
 const addPdfToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ':iframe ' : '';
     return [
+    ...addSectionContent(prefix, sectionName),
 {
-    content: 'eLearning: add content to section',
-    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
-    run: "click",
-}, {
     content: 'eLearning: click on document',
     trigger: `${prefix}a[data-slide-category=document]`,
     run: "click",
@@ -322,12 +317,100 @@ var addNewCourseTag = function (courseTagName, backend) {
 }];
 };
 
+/**
+ * Adds a new quiz to the given section name.
+ *
+ * @param {string} sectionName
+ * @param {{name: string, questions: {title: string, options: {title: string, isCorrect: boolean}[]}[]}} quizConfig
+ * @param {boolean} backend
+ */
+const addQuizToSection = (sectionName, quizConfig, backend) => {
+    const prefix = backend ? ':iframe ' : '';
+    return [
+    ...addSectionContent(prefix, sectionName),
+{
+    content: 'eLearning: click on quiz',
+    trigger: prefix + 'a[data-slide-category=quiz]',
+    run: "click",
+}, {
+    content: 'eLearning: fill quiz title',
+    trigger: prefix + 'input[name=name]',
+    run: `edit ${quizConfig.name}`,
+}, {
+    content: 'eLearning: fill quiz completion time',
+    trigger: prefix + 'input[name=duration]',
+    run: "edit 10",
+}, {
+    content: 'eLearning: create and publish slide',
+    trigger: prefix + 'footer.modal-footer button:contains("Publish")',
+    run: "click",
+},
+    ...addQuizQuestionsSteps(quizConfig.questions, prefix),
+];
+};
+
+/**
+ * Helper function to add options to a quiz question.
+ *
+ * @param {string} prefix
+ * @param {{title: string, isCorrect: boolean}} option
+ * @param {Number} index
+ */
+const addQuizQuestionsOptionSteps = (prefix, option, index) => [
+    {
+        content: `eLearning: enter option ${index + 1}`,
+        trigger: `${prefix}div.list-group .o_wslides_js_quiz_answer:nth-of-type(${index + 1}) input`,
+        run: `edit ${option.title}`,
+    },
+    ...(option.isCorrect ? [{
+            content: 'eLearning: select the correct option',
+            trigger: `${prefix}div.list-group .o_wslides_js_quiz_answer:nth-of-type(${index + 1}) i`,
+            run: "click",
+    },] : []),
+];
+
+/**
+ * When invoked from inside a QUIZ this function adds questions to it.
+ *
+ * @param {{title: string, options: {title: string, isCorrect: boolean}[]}[]} questions
+ * @param {string} prefix
+ */
+const addQuizQuestionsSteps = (questions, prefix) => {
+    return questions.flatMap(({ title, options }, questionIdx, questions) => {
+        return [
+            {
+                content: 'eLearning: add a question',
+                trigger: `${prefix}input[name="question-name"]`,
+                run: `edit ${title}`,
+            },
+            // filling options, and selecting the one having isCorrect: true.
+            ...options.flatMap((option, index) => addQuizQuestionsOptionSteps(prefix, option, index)),
+
+            // On the last iteration when we are adding the last question,
+            // we no longer wish to click SAVE & NEW, rather just SAVE.
+            ...(questionIdx === questions.length - 1 ? [{
+                content: 'eLearning: save the question',
+                trigger: `${prefix}a.o_wslides_js_quiz_validate_question`,
+                run: "click",
+            }] : [{
+                content: 'eLearning: click SAVE & NEW button',
+                trigger: `${prefix}.o_wslides_js_quiz_validate_question_and_new`,
+                run: "click",
+            }, {
+                content: 'eLearning: wait before adding the next question',
+                trigger: `${prefix}.o_wslides_quiz_question_sequence:contains(${questionIdx + 2})`,
+            }]),
+        ];
+    });
+};
+
 export default {
 	addSection: addSection,
 	addImageToSection: addImageToSection,
 	addPdfToSection: addPdfToSection,
 	addVideoToSection: addVideoToSection,
 	addArticleToSection: addArticleToSection,
+	addQuizToSection: addQuizToSection,
 	addExistingCourseTag: addExistingCourseTag,
 	addNewCourseTag: addNewCourseTag,
 };
