@@ -1216,7 +1216,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "new message", message_type: "comment" },
+            post_data: { body: "What do you want?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
