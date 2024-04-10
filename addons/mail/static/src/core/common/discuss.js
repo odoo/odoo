@@ -40,7 +40,6 @@ export class Discuss extends Component {
 
     setup() {
         super.setup();
-        this.messaging = useState(useService("mail.messaging"));
         this.store = useState(useService("mail.store"));
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();

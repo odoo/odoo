@@ -1,16 +1,17 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 
-import { Messaging, messagingService } from "@mail/core/common/messaging_service";
+import { Store, storeService } from "@mail/core/common/store_service";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
-messagingService.dependencies.push("im_livechat.livechat");
+storeService.dependencies.push("im_livechat.initialized");
 
-patch(Messaging.prototype, {
+patch(Store.prototype, {
     async initialize() {
+        const livechatInitialized = this.env.services["im_livechat.initialized"];
+        await livechatInitialized.ready;
         const livechatService = this.env.services["im_livechat.livechat"];
-        await livechatService.initializedDeferred;
         if (livechatService.state === SESSION_STATE.PERSISTED) {
             await super.initialize();
             if (!livechatService.thread) {
@@ -30,7 +31,7 @@ patch(Messaging.prototype, {
         if (livechatService.savedState?.threadData) {
             messagingData.Thread.push(livechatService.savedState.threadData);
         }
-        this.store.insert(messagingData);
+        this.insert(messagingData);
         this.isReady.resolve();
     },
     get initMessagingParams() {

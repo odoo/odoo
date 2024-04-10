@@ -1,12 +1,13 @@
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 import { EventBus, reactive } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
+let rpc;
 const STEP_DELAY = 500;
 export class ChatBotService {
     /** @type {number} */
@@ -22,16 +23,16 @@ export class ChatBotService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
-     * "mail.messaging": import("@mail/core/common/messaging_service").Messaging,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * }} services
      */
     setup(env, services) {
         this.env = env;
+        rpc = rpcWithEnv(env);
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
         this.store = services["mail.store"];
-        services["mail.messaging"].isReady.then(async () => {
+        services["mail.store"].isReady.then(async () => {
             if (this.chatbot) {
                 await this.livechatService.thread.isLoadedDeferred;
                 // wait for messages to be fully inserted
@@ -159,7 +160,7 @@ export class ChatBotService {
 }
 
 export const chatBotService = {
-    dependencies: ["im_livechat.livechat", "mail.messaging", "mail.store"],
+    dependencies: ["im_livechat.livechat", "mail.store"],
     start(env, services) {
         return new ChatBotService(env, services);
     },

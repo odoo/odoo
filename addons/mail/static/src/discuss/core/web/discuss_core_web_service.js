@@ -16,7 +16,6 @@ export class DiscussCoreWeb {
         this.ui = services.ui;
         this.chatWindowService = services["mail.chat_window"];
         this.discussCoreCommonService = services["discuss.core.common"];
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
         try {
             this.sidebarCategoriesBroadcast = new browser.BroadcastChannel(
@@ -108,7 +107,6 @@ export const discussCoreWeb = {
         "bus_service",
         "discuss.core.common",
         "mail.chat_window",
-        "mail.messaging",
         "mail.store",
         "notification",
         "ui",

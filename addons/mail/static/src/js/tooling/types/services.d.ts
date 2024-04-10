@@ -9,7 +9,6 @@ declare module "services" {
     import { discussTypingService } from "@mail/discuss/typing/common/typing_service"
     import { mailCoreCommon } from "@mail/core/common/mail_core_common_service";
     import { mailCoreWeb } from "@mail/core/web/mail_core_web_service";
-    import { messagingService } from "@mail/core/common/messaging_service";
     import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
     import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
@@ -28,7 +27,6 @@ declare module "services" {
         "mail.chat_window": typeof chatWindowService;
         "mail.core.common": typeof mailCoreCommon;
         "mail.core.web": typeof mailCoreWeb;
-        "mail.messaging": typeof messagingService;
         "mail.notification.permission": typeof notificationPermissionService;
         "mail.out_of_focus": typeof outOfFocusService;
         "mail.sound_effects": typeof soundEffects;

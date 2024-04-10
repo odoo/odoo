@@ -40,9 +40,8 @@ commandProviderRegistry.add("mail.partner", {
      * @param {import("@web/env").OdooEnv} env
      */
     async provide(env, options) {
-        const messaging = env.services["mail.messaging"];
-        await messaging.store.channels.fetch();
         const store = env.services["mail.store"];
+        await store.channels.fetch();
         const suggestionService = env.services["mail.suggestion"];
         const commands = [];
         const mentionedChannels = store.getNeedactionChannels();
@@ -80,7 +79,7 @@ commandProviderRegistry.add("mail.partner", {
                 });
             });
         }
-        const searchResults = await messaging.searchPartners(options.searchValue);
+        const searchResults = await store.searchPartners(options.searchValue);
         suggestionService
             .sortPartnerSuggestions(searchResults, options.searchValue)
             .filter((partner) => !displayedPartnerIds.has(partner.id))
@@ -120,9 +119,8 @@ commandProviderRegistry.add("discuss.channel", {
      * @param {import("@web/env").OdooEnv} env
      */
     async provide(env, options) {
-        const messaging = env.services["mail.messaging"];
-        await messaging.store.channels.fetch();
         const store = env.services["mail.store"];
+        await store.channels.fetch();
         const commands = [];
         const recentChannels = store.getRecentChannels();
         // We don't want to display the same thread twice in the command palette.
@@ -152,7 +150,7 @@ commandProviderRegistry.add("discuss.channel", {
             ["channel_type", "=", "channel"],
             ["name", "ilike", cleanTerm(options.searchValue)],
         ];
-        const channelsData = await messaging.orm.searchRead(
+        const channelsData = await env.services.orm.searchRead(
             "discuss.channel",
             domain,
             ["channel_type", "name", "avatar_cache_key"],
