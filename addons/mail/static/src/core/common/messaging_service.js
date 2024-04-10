@@ -101,7 +101,6 @@ export const messagingService = {
         "mail.store",
         "orm",
         "im_status",
-        "mail.attachment", // FIXME: still necessary until insert is managed by this service
         "mail.persona", // FIXME: still necessary until insert is managed by this service
     ],
     /**
