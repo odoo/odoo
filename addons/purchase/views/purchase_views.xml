@@ -290,6 +290,7 @@
                                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
                                                 <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
+                                                <field name="discount"/>
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
@@ -322,6 +323,7 @@
                                      <field name="price_tax"/>
                                      <field name="price_total"/>
                                      <field name="price_unit"/>
+                                     <field name="discount"/>
                                      <field name="display_type"/>
                                      <field name="taxes_id"/>
                                      <field name="tax_calculation_rounding_method"/>
@@ -348,7 +350,7 @@
                                                              <span>
                                                                  Quantity:
                                                                  <t t-esc="record.product_qty.value"/>
-                                                                 <t t-esc="record.product_uom.value" groups="uom.group_uom"/>
+                                                                 <small> <t t-esc="record.product_uom.value" groups="uom.group_uom"/></small>
                                                              </span>
                                                          </div>
                                                          <div class="col-4" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
@@ -365,6 +367,13 @@
                                                                  Unit Price:
                                                                  <t t-esc="record.price_unit.value"/>
                                                              </span>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row" t-if="record.discount.raw_value">
+                                                         <div class="col-12 text-muted">
+                                                            <span>
+                                                                Discount: <t t-out="record.discount.value"/>%
+                                                            </span>
                                                          </div>
                                                      </div>
                                                  </t>
