@@ -32,7 +32,7 @@ class OnlineEventCase(EventCase):
         })
 
     def _get_menus(self):
-        return {'Introduction', 'Community', 'Info', 'Location'}
+        return {'Home', 'Practical', 'Rooms'}
 
     def _assert_website_menus(self, event, menus_in=None, menus_out=None):
         self.assertTrue(event.menu_id)
@@ -41,20 +41,17 @@ class OnlineEventCase(EventCase):
             menus_in = list(self._get_menus())
 
         menus = self.env['website.menu'].search([('parent_id', '=', event.menu_id.id)])
+        menus |= menus.child_id  # add child menus to simplify checks, containing notably talks submenus
         self.assertTrue(len(menus) >= len(menus_in))
         self.assertTrue(all(menu_name in menus.mapped('name') for menu_name in menus_in))
         if menus_out:
             self.assertTrue(all(menu_name not in menus.mapped('name') for menu_name in menus_out))
 
-        for page_specific in ['Introduction', 'Location']:
-            view = self.env['ir.ui.view'].search(
-                [('name', '=', f'{page_specific} {event.name}')]
-            )
-            if page_specific in menus_in:
-                self.assertTrue(bool(view))
-            else:
-                self.assertFalse(bool(view))
-
+        home_view = self.env['ir.ui.view'].search([('name', '=', f'Home {event.name}')])
+        if 'Home' in menus_in:
+            self.assertTrue(bool(home_view))
+        else:
+            self.assertFalse(bool(home_view))
 
 class TestEventOnlineCommon(OnlineEventCase):
 

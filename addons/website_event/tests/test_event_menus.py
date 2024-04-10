@@ -12,7 +12,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
 
     @users('admin')
     def test_menu_copy(self):
-        """ Test that the content of the introduction and location menu are
+        """ Test that the content of the introduction(Home) menu is
         correctly copied when duplicating an event """
 
         event = self.env['event.event'].create({
@@ -23,33 +23,22 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         })
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
-        self.assertTrue(event.location_menu)
-        self.env['ir.ui.view'].create([{
+        self.env['ir.ui.view'].create({
             'arch_db': '<xpath expr="//div[@id=\'oe_structure_website_event_intro_2\']" position="replace"><p>This is an intro</p></xpath>',
             'inherit_id': event.introduction_menu_ids.view_id.id,
             'key': 'website_event.intro-test-child',
-        }, {
-            'arch_db': '<xpath expr="//div[@id=\'oe_structure_website_event_location_2\']" position="replace"><p>This is a location</p></xpath>',
-            'inherit_id': event.location_menu_ids.view_id.id,
-            'key': 'website_event.location-test-child',
-        }])
+        })
         event_copy = event.copy()
         self.assertTrue(event_copy.website_menu)
         self.assertTrue(event_copy.introduction_menu)
-        self.assertTrue(event.location_menu)
 
         # The menu used should be different
         self.assertNotEqual(event.introduction_menu_ids, event_copy.introduction_menu_ids)
-        self.assertNotEqual(event.location_menu_ids, event_copy.location_menu_ids)
 
         # The child in the view should be different
         self.assertNotEqual(
             event.introduction_menu_ids.view_id.inherit_children_ids,
             event_copy.introduction_menu_ids.view_id.inherit_children_ids,
-        )
-        self.assertNotEqual(
-            event.location_menu_ids.view_id.inherit_children_ids,
-            event_copy.location_menu_ids.view_id.inherit_children_ids,
         )
 
         # The content of the views should be the same
@@ -58,19 +47,10 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             event_copy.introduction_menu_ids.view_id.arch_db,
         )
         self.assertEqual(
-            event.location_menu_ids.view_id.arch_db,
-            event_copy.location_menu_ids.view_id.arch_db,
-        )
-        self.assertEqual(
             event.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db,
             event_copy.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db,
         )
-        self.assertEqual(
-            event.location_menu_ids.view_id.inherit_children_ids[0].arch_db,
-            event_copy.location_menu_ids.view_id.inherit_children_ids[0].arch_db,
-        )
         self.assertIn("This is an intro", event_copy.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db)
-        self.assertIn("This is a location", event_copy.location_menu_ids.view_id.inherit_children_ids[0].arch_db)
 
     @users('admin')
     def test_menu_deletion(self):
@@ -126,13 +106,12 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         })
         self.assertTrue(event.website_menu)
         self.assertTrue(event.introduction_menu)
-        self.assertTrue(event.location_menu)
         self.assertTrue(event.register_menu)
         self.assertFalse(event.community_menu)
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
 
         event.community_menu = True
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info', 'Community'])
+        self._assert_website_menus(event, ['Home', 'Rooms', 'Practical'])
 
         # test create without any requested menus
         event = self.env['event.event'].create({
@@ -143,14 +122,13 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         })
         self.assertFalse(event.website_menu)
         self.assertFalse(event.introduction_menu)
-        self.assertFalse(event.location_menu)
         self.assertFalse(event.register_menu)
         self.assertFalse(event.community_menu)
         self.assertFalse(event.menu_id)
 
         # test update of website_menu triggering 3 sub menus
         event.write({'website_menu': True})
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -161,17 +139,17 @@ class TestEventMenus(OnlineEventCase, HttpCase):
             'website_menu': True,
             'community_menu': False,
         })
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
 
         # simulate menu removal from frontend: aka unlinking a menu
-        event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction').unlink()
+        event.menu_id.child_id.filtered(lambda menu: menu.name == 'Home').unlink()
 
         self.assertTrue(event.website_menu)
-        self._assert_website_menus(event, ['Location', 'Info'], menus_out=['Introduction', 'Community'])
+        self._assert_website_menus(event, ['Practical'], menus_out=['Home', 'Rooms'])
 
         # re-created from backend
         event.introduction_menu = True
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info'], menus_out=['Community'])
+        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Rooms'])
 
     def test_submenu_url(self):
         """ Test that the different URL of a submenu page of an event are accessible """
@@ -194,8 +172,8 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         )
 
         # Use previous URL for submenu page
-        old_event_1.introduction_menu_ids.menu_id.url = f"/event/test-event-{old_event_1.id}/page/introduction-test-event"
-        old_event_2.introduction_menu_ids.menu_id.url = f"/event/test-event-{old_event_2.id}/page/introduction-test-event"
+        old_event_1.introduction_menu_ids.menu_id.url = f"/event/test-event-{old_event_1.id}/page/home-test-event"
+        old_event_2.introduction_menu_ids.menu_id.url = f"/event/test-event-{old_event_2.id}/page/home-test-event"
         old_event_menus = (old_event_1 + old_event_2).introduction_menu_ids
         self.assertEqual(len(old_event_menus.view_id), 2, "Each menu should have a view")
 
@@ -204,7 +182,7 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         self.assertEqual(len(new_event_menus.view_id), 2, "Each menu should have a view")
 
         # Menu without views
-        menu_without_view = event_3._create_menu(1, 'custom', f"/event/test-event-{event_3.id}/page/introduction-test-event", 'website_event.template_intro', 'introduction')
+        menu_without_view = event_3._create_menu(1, 'custom', f"/event/test-event-{event_3.id}/page/home-test-event", 'website_event.template_intro', 'introduction')
         self.assertEqual(
             len(self.env['website.event.menu'].search([('menu_id', 'in', menu_without_view.ids)]).view_id), 0,
             "The menu should not have a view assigned because an URL has been given manually"
@@ -236,13 +214,14 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         )
 
         # Skip the register and community menus since they already have a unique URL
-        event_1_menus = event_1.menu_id.child_id.filtered(
-            lambda menu: menu.name in ["Introduction", "Location"]
+        event_1_home_menu = event_1.menu_id.child_id.filtered(
+            lambda menu: menu.name == "Home"
         )
-        event_2_menus = event_2.menu_id.child_id.filtered(
-            lambda menu: menu.name in ["Introduction", "Location"]
+        event_2_home_menu = event_2.menu_id.child_id.filtered(
+            lambda menu: menu.name == "Home"
         )
-        for event_1_menu, event_2_menu in zip(event_1_menus, event_2_menus):
+
+        for event_1_menu, event_2_menu in zip(event_1_home_menu, event_2_home_menu):
             end_url_1 = event_1_menu.url.split("/")[-1]
             end_url_2 = event_2_menu.url.split("/")[-1]
             self.assertNotEqual(end_url_1, end_url_2)
