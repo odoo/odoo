@@ -1117,8 +1117,8 @@ test("pager, ungrouped, with count limit reached", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1129,8 +1129,8 @@ test("pager, ungrouped, with count limit reached", async () => {
     await contains(".o_pager_limit").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("4");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("4");
     expect(["search_count"]).toVerifySteps();
 });
 
@@ -1153,8 +1153,8 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1165,8 +1165,8 @@ test("pager, ungrouped, with count limit reached, click next", async () => {
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("3-4");
-    expect(queryText(".o_pager_limit")).toBe("4");
+    expect(".o_pager_value").toHaveText("3-4");
+    expect(".o_pager_limit").toHaveText("4");
     expect(["web_search_read"]).toVerifySteps();
 });
 
@@ -1191,8 +1191,8 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1203,15 +1203,15 @@ test("pager, ungrouped, with count limit reached, click next (2)", async () => {
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("3-4");
-    expect(queryText(".o_pager_limit")).toBe("4+");
+    expect(".o_pager_value").toHaveText("3-4");
+    expect(".o_pager_limit").toHaveText("4+");
     expect(["web_search_read"]).toVerifySteps();
 
     await contains(".o_pager_next").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(queryText(".o_pager_value")).toBe("5-5");
-    expect(queryText(".o_pager_limit")).toBe("5");
+    expect(".o_pager_value").toHaveText("5-5");
+    expect(".o_pager_limit").toHaveText("5");
     expect(["web_search_read"]).toVerifySteps();
 });
 
@@ -1236,8 +1236,8 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1248,8 +1248,8 @@ test("pager, ungrouped, with count limit reached, click previous", async () => {
     await contains(".o_pager_previous").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(queryText(".o_pager_value")).toBe("5-5");
-    expect(queryText(".o_pager_limit")).toBe("5");
+    expect(".o_pager_value").toHaveText("5-5");
+    expect(".o_pager_limit").toHaveText("5");
     expect(["search_count", "web_search_read"]).toVerifySteps();
 });
 
@@ -1273,8 +1273,8 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1286,16 +1286,16 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     await contains("input.o_pager_value").edit("2-4");
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
-    expect(queryText(".o_pager_value")).toBe("2-4");
-    expect(queryText(".o_pager_limit")).toBe("4+");
+    expect(".o_pager_value").toHaveText("2-4");
+    expect(".o_pager_limit").toHaveText("4+");
     expect(["web_search_read"]).toVerifySteps();
 
     await contains("span.o_pager_value").click();
     await contains("input.o_pager_value").edit("2-14");
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
-    expect(queryText(".o_pager_value")).toBe("2-5");
-    expect(queryText(".o_pager_limit")).toBe("5");
+    expect(".o_pager_value").toHaveText("2-5");
+    expect(".o_pager_limit").toHaveText("5");
     expect(["web_search_read"]).toVerifySteps();
 });
 
@@ -1316,8 +1316,8 @@ test("count_limit attrs set in arch", async () => {
     });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("3+");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("3+");
     expect([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -1328,8 +1328,8 @@ test("count_limit attrs set in arch", async () => {
     await contains(".o_pager_limit").click();
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(queryText(".o_pager_value")).toBe("1-2");
-    expect(queryText(".o_pager_limit")).toBe("4");
+    expect(".o_pager_value").toHaveText("1-2");
+    expect(".o_pager_limit").toHaveText("4");
     expect(["search_count"]).toVerifySteps();
 });
 
@@ -2351,7 +2351,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
 
     // verify that the quick create m2m field contains the column value
     expect(".o_tag_badge_text").toHaveCount(1);
-    expect(queryText(".o_tag_badge_text")).toBe("gold");
+    expect(".o_tag_badge_text").toHaveText("gold");
 
     await editKanbanRecordQuickCreateInput("foo", "new partner");
     await validateKanbanRecord();
@@ -2410,7 +2410,7 @@ test.tags("desktop")("quick create record validation: stays open when invalid", 
     expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
     expect("[name=display_name]").toHaveClass("o_field_invalid");
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(queryText(".o_notification")).toBe("Invalid fields:\nDisplay Name");
+    expect(".o_notification").toHaveText("Invalid fields:\nDisplay Name");
 });
 
 test.tags("desktop")("quick create record with default values and onchanges", async () => {
@@ -6003,7 +6003,7 @@ test.tags("desktop")("quick create column and examples", async () => {
     expect(".modal .o_notebook_headers li").toHaveCount(2, {
         message: "should have two examples (in the menu)",
     });
-    expect(queryText(".modal .o_notebook_headers")).toBe("A first example\nA second example", {
+    expect(".modal .o_notebook_headers").toHaveText("A first example\nA second example", {
         message: "example names should be correct",
     });
     expect(".modal .o_notebook_content .tab-pane").toHaveCount(1, {
@@ -6169,7 +6169,7 @@ test.tags("desktop")("quick create column's apply button's display text", async 
     // click to see the examples
     await contains(".o_column_quick_create .o_kanban_examples").click();
 
-    expect(queryText(".modal footer.modal-footer button.btn-primary")).toBe(applyExamplesText, {
+    expect(".modal footer.modal-footer button.btn-primary").toHaveText(applyExamplesText, {
         message: "the primary button should display the value of applyExamplesText",
     });
 });
@@ -6413,7 +6413,7 @@ test.tags("desktop")("no content helper when no data", async () => {
 
     expect(".o_view_nocontent").toHaveCount(1, { message: "should display the no content helper" });
 
-    expect(queryText(".o_view_nocontent")).toBe('<p class="hello">click to add a partner</p>', {
+    expect(".o_view_nocontent").toHaveText('<p class="hello">click to add a partner</p>', {
         message: "should have rendered no content helper from action",
     });
 
@@ -6810,7 +6810,7 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
     });
 
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(queryText(".o_kanban_group .o_column_title")).toBe("December 2022");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
     expect(".o_kanban_group").toHaveCount(1);
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
 });
@@ -7116,7 +7116,7 @@ test.tags("desktop")("sample data does not change after reload with sample data"
     const kanbanText = queryFirst(".o_kanban_view").innerText;
     await contains(".o_control_panel .o_switch_view.o_kanban").click();
 
-    expect(queryText(".o_kanban_view")).toBe(kanbanText, {
+    expect(".o_kanban_view").toHaveText(kanbanText, {
         message: "the content should be the same after reloading the view",
     });
 });
@@ -7573,8 +7573,8 @@ test("field tag with modifiers but no widget", async () => {
             </kanban>`,
     });
 
-    expect(queryText(".o_kanban_record:first")).toBe("");
-    expect(queryText(".o_kanban_record:eq(1)")).toBe("blip");
+    expect(".o_kanban_record:first").toHaveText("");
+    expect(".o_kanban_record:eq(1)").toHaveText("blip");
 });
 
 test("field tag with widget and class attributes", async () => {
@@ -11681,7 +11681,7 @@ test("can use JSON in kanban template", async () => {
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     expect(".o_kanban_record span").toHaveCount(3);
-    expect(queryText(".o_kanban_record:not(.o_kanban_ghost)")).toBe("ged");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveText("ged");
 });
 
 test("Color '200' (gray) can be used twice (for false value and another value) in progress bar", async () => {
@@ -11721,19 +11721,19 @@ test("Color '200' (gray) can be used twice (for false value and another value) i
     await contains(".o_kanban_group:nth-child(2) .progress-bar").click();
 
     expect(getKanbanCounters()).toEqual(["2", "1"]);
-    expect(queryText(".o_kanban_group:nth-child(2) .o_kanban_record")).toBe("ABC");
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("ABC");
     expect(".o_kanban_group:nth-child(2) .o_kanban_load_more").toHaveCount(0);
 
     await contains(".o_kanban_group:nth-child(2) .progress-bar:nth-child(2)").click();
 
     expect(getKanbanCounters()).toEqual(["2", "1"]);
-    expect(queryText(".o_kanban_group:nth-child(2) .o_kanban_record")).toBe("GHI");
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("GHI");
     expect(".o_kanban_group:nth-child(2) .o_kanban_load_more").toHaveCount(0);
 
     await contains(".o_kanban_group:nth-child(2) .progress-bar:nth-child(4)").click();
 
     expect(getKanbanCounters()).toEqual(["2", "1"]);
-    expect(queryText(".o_kanban_group:nth-child(2) .o_kanban_record")).toBe("");
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("");
     expect(".o_kanban_group:nth-child(2) .o_kanban_load_more").toHaveCount(0);
     expect([
         "/web/webclient/translations",
@@ -12017,9 +12017,9 @@ test.tags("desktop")("no leak of TransactionInProgress (grouped case)", async ()
     });
 
     expect(".o_kanban_group:nth-child(1) .o_kanban_record").toHaveCount(1);
-    expect(queryText(".o_kanban_group:nth-child(1) .o_kanban_record")).toBe("yop");
+    expect(".o_kanban_group:nth-child(1) .o_kanban_record").toHaveText("yop");
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(1);
-    expect(queryText(".o_kanban_group:nth-child(2) .o_kanban_record")).toBe("blip");
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveText("blip");
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
 
     expect([]).toVerifySteps();
@@ -12246,7 +12246,7 @@ test("column quick create - title and placeholder", async function (assert) {
         groupBy: ["product_id"],
     });
 
-    expect(queryText(".o_column_quick_create .o_quick_create_folded")).toBe("Product");
+    expect(".o_column_quick_create .o_quick_create_folded").toHaveText("Product");
 
     await contains("button.o_kanban_add_column").click();
 
@@ -12829,8 +12829,8 @@ test("sample server: _mockWebReadGroup API", async () => {
 
     expect(".o_kanban_view .o_view_sample_data").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(1);
-    expect(queryText(".o_kanban_group .o_column_title")).toBe("December 2022");
-    expect(queryText(".o_kanban_group .o_column_title")).toBe("December 2022");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
 });
 
