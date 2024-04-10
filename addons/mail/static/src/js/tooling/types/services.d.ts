@@ -1,7 +1,6 @@
 /* add this file in jsconfig.json, in typeRoots array */
 declare module "services" {
     import { activityService } from "@mail/core/web/activity_service";
-    import { attachmentService } from "@mail/core/common/attachment_service";
     import { attachmentUploadService } from "@mail/core/common/attachment_upload_service";
     import { channelMemberService } from "@mail/core/common/channel_member_service";
     import { chatWindowService } from "@mail/core/common/chat_window_service";
@@ -28,7 +27,6 @@ declare module "services" {
         "discuss.rtc": typeof rtcService;
         "discuss.typing": typeof discussTypingService;
         "mail.activity": typeof activityService;
-        "mail.attachment": typeof attachmentService;
         "mail.attachment_upload": typeof attachmentUploadService;
         "mail.chat_window": typeof chatWindowService;
         "mail.core.common": typeof mailCoreCommon;
