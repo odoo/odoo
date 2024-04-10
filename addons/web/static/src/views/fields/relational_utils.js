@@ -214,6 +214,9 @@ export class Many2XAutocomplete extends Component {
             this.props.setInputFloats(true);
         }
     }
+    onCancel() {
+        this.props.setInputFloats(false);
+    }
 
     onSelect(option, params = {}) {
         if (option.action) {
