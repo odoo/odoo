@@ -78,6 +78,9 @@ export class PartnerAutoCompleteCharField extends CharField {
             }
         });
         this.props.record.update(data.company);
+        if (this.props.setDirty) {
+            this.props.setDirty(false);
+        }
     }
 }
 

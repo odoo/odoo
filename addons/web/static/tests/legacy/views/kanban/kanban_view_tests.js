@@ -3632,6 +3632,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("quick create record: cancel when modal is opened", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = '<form><field name="product_id"/></form>';
+        serverData.views["product,false,form"] = '<form><field name="name"/></form>';
 
         // patch setTimeout s.t. the autocomplete dropdown opens directly
         patchWithCleanup(browser, {
@@ -3657,7 +3658,7 @@ QUnit.module("Views", (hooks) => {
 
         await editInput(target, ".o_kanban_quick_create input", "test");
         await triggerEvent(target, ".o_kanban_quick_create input", "input");
-        await triggerEvent(target, ".o_kanban_quick_create input", "blur");
+        await click(target, ".o_m2o_dropdown_option_create_edit");
 
         // When focusing out of the many2one, a modal to add a 'product' will appear.
         // The following assertions ensures that a click on the body element that has 'modal-open'

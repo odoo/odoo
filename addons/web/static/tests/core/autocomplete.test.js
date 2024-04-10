@@ -144,7 +144,7 @@ test("open dropdown on input", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 });
 
-test("close dropdown on escape keydown", async () => {
+test("cancel result on escape keydown", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -152,6 +152,7 @@ test("close dropdown on escape keydown", async () => {
                 value="'Hello'"
                 sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
                 onSelect="() => {}"
+                autoSelect="true"
             />
         `;
         static props = {};
@@ -159,13 +160,16 @@ test("close dropdown on escape keydown", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
 
     await contains(".o-autocomplete input").click();
+    await contains(".o-autocomplete input").edit("H", { confirm: false });
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(".o-autocomplete input").press("Escape");
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
 });
 
 test("select input text on first focus", async () => {
@@ -183,7 +187,7 @@ test("select input text on first focus", async () => {
     expect(getSelection().toString()).toBe("Bar");
 });
 
-test("scroll outside should close dropdown", async () => {
+test("scroll outside should cancel result", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -193,6 +197,7 @@ test("scroll outside should close dropdown", async () => {
                         value="'Hello'"
                         sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
                         onSelect="() => {}"
+                        autoSelect="true"
                     />
                 </div>
             </div>
@@ -202,13 +207,16 @@ test("scroll outside should close dropdown", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
 
     await contains(".o-autocomplete input").click();
+    await contains(".o-autocomplete input").edit("H", { confirm: false });
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(".autocomplete_container").scroll({ top: 10 });
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
 });
 
 test("scroll inside should keep dropdown open", async () => {
@@ -239,7 +247,35 @@ test("scroll inside should keep dropdown open", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 });
 
-test("losing focus should close dropdown", async () => {
+test("losing focus should cancel result", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+                autoSelect="true"
+            />
+        `;
+        static props = {};
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
+
+    await contains(".o-autocomplete input").click();
+    await contains(".o-autocomplete input").edit("H", { confirm: false });
+    await runAllTimers();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    await contains(document.body).click();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
+});
+
+test("click out after clearing input", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -254,13 +290,16 @@ test("losing focus should close dropdown", async () => {
 
     await mountWithCleanup(Parent);
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("Hello");
 
     await contains(".o-autocomplete input").click();
+    await contains(".o-autocomplete input").clear({ confirm: false });
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
 
     await contains(document.body).click();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
+    expect(".o-autocomplete input").toHaveValue("");
 });
 
 test("open twice should not display previous results", async () => {
