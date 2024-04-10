@@ -119,6 +119,7 @@ const getCurrentParams = createJobScopedGetter(
     (previous) => ({
         ...previous,
         actions: deepCopy(previous?.actions || {}),
+        topbar_actions: deepCopy(previous?.topbar_actions || []),
         menus: deepCopy(previous?.menus || []),
         models: [...(previous?.models || [])], // own instance getters, no need to deep copy
         routes: [...(previous?.routes || [])], // functions, no need to deep copy
@@ -261,6 +262,8 @@ export class MockServer {
     // Data
     /** @type {Record<string, ActionDefinition>} */
     actions = {};
+    /** @type {Record<string, ActionDefinition>[]} */
+    topbar_actions = [];
     /** @type {MenuDefinition[]} */
     menus = [DEFAULT_MENU];
     /** @type {Record<string, Model>} */
@@ -368,6 +371,9 @@ export class MockServer {
     configure(params) {
         if (params.actions) {
             Object.assign(this.actions, params.actions);
+        }
+        if (params.topbar_actions) {
+            this.topbar_actions.push(...params.topbar_actions);
         }
         if (params.lang) {
             serverState.lang = params.lang;
@@ -906,6 +912,11 @@ export class MockServer {
             }
             return result;
         }
+        if (action.type === "ir.actions.act_window") {
+            action["children_ids"] = this.topbar_actions.filter(
+                (el) => el && el.parent_action_id === params.action_id
+            );
+        }
         return action;
     }
 
@@ -1019,6 +1030,16 @@ export function defineActions(actions) {
         { actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
         "add"
     ).actions;
+}
+
+/**
+ * @param {ActionDefinition[]} actions
+ */
+export function defineTopBarActions(actions) {
+    return defineParams(
+        { topbar_actions: Object.fromEntries(actions.map((a) => [a.id || a.xml_id, { ...a }])) },
+        "add"
+    ).topbar_actions;
 }
 
 /**

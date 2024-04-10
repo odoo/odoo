@@ -96,12 +96,15 @@ export class ControlPanel extends Component {
             topbarInfos: {
                 showTopBar:
                     !!this.env.config.fromParentAction ||
-                    !!JSON.parse(localStorage.getItem(this.topBarLocalStorageKeyActionIdResId)),
+                    !!JSON.parse(
+                        browser.localStorage.getItem(this.topBarLocalStorageKeyActionIdResId)
+                    ),
                 topBarActions: this.env.config.topBarActions,
                 newActionIsShared: false,
                 newActionName: `Custom ${this.currentTopBarAction?.name || "Topbar Action"}`,
                 visibleTopBarActions:
-                    JSON.parse(localStorage.getItem(this.localStorageKeyActionIdResId)) || {},
+                    JSON.parse(browser.localStorage.getItem(this.localStorageKeyActionIdResId)) ||
+                    {},
                 currentTopBarAction: this.currentTopBarAction,
             },
         });
@@ -269,9 +272,9 @@ export class ControlPanel extends Component {
 
     onClickShowTopBar() {
         if (this.state.topbarInfos.showTopBar) {
-            localStorage.removeItem(this.topBarLocalStorageKeyActionIdResId);
+            browser.localStorage.removeItem(this.topBarLocalStorageKeyActionIdResId);
         } else {
-            localStorage.setItem(this.topBarLocalStorageKeyActionIdResId, true);
+            browser.localStorage.setItem(this.topBarLocalStorageKeyActionIdResId, true);
         }
         this.state.topbarInfos.showTopBar = !this.state.topbarInfos.showTopBar;
     }
@@ -379,7 +382,7 @@ export class ControlPanel extends Component {
         } else {
             this.state.topbarInfos.visibleTopBarActions[actionIdStr] = true;
         }
-        localStorage.setItem(
+        browser.localStorage.setItem(
             this.localStorageKeyActionIdResId,
             JSON.stringify(this.state.topbarInfos.visibleTopBarActions)
         );
@@ -471,7 +474,7 @@ export class ControlPanel extends Component {
         this.state.topbarInfos.topBarActions.push(enrichedNewTopBarAction);
         const topBarActionIdStr = topBarActionId.toString();
         visibleTopBarActions[topBarActionIdStr] = true;
-        localStorage.setItem(
+        browser.localStorage.setItem(
             this.localStorageKeyActionIdResId,
             JSON.stringify(visibleTopBarActions)
         );
@@ -505,7 +508,7 @@ export class ControlPanel extends Component {
         if (visibleTopBarActions[actionIdStr]) {
             delete visibleTopBarActions[actionIdStr];
         }
-        localStorage.setItem(
+        browser.localStorage.setItem(
             this.localStorageKeyActionIdResId,
             JSON.stringify(visibleTopBarActions)
         );

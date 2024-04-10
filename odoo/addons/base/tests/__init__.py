@@ -30,6 +30,7 @@ from . import test_ir_model
 from . import test_ir_module
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
+from . import test_ir_topbar_actions
 from . import test_ir_default
 from . import test_mail
 from . import test_menu

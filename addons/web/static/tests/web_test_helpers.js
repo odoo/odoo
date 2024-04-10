@@ -70,6 +70,7 @@ export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
     defineActions,
+    defineTopBarActions,
     defineMenus,
     defineModels,
     defineParams,
