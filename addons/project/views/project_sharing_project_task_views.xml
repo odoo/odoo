@@ -182,7 +182,9 @@
                     </group>
                     <notebook>
                         <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true}"/>
+                            <!-- Portal users get some commands disabled, notably /image, as they don't have access to ir.attachment -->
+                            <!-- workaround : They may copy/paste or drag/drop the image into description field -->
+                            <field name="description" type="html" options="{'collaborative': true, 'allowCommandImage': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks">
                             <field name="child_ids" context="{
