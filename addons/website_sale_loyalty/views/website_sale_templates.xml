@@ -148,7 +148,7 @@
     </template>
 
     <template id="reduction_coupon_code" inherit_id="website_sale.reduction_code">
-        <xpath expr="//t[@t-set='force_coupon']" position="after">
+        <xpath expr="//div[@id='coupon_form']" position="before">
             <t t-set="_placeholder" t-value="'Discount code or gift card'"/>
         </xpath>
     </template>
