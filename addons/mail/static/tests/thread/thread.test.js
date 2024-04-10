@@ -163,7 +163,7 @@ test("do not display day separator if all messages of the day are empty", async 
     await contains(".o-mail-DateSection", { count: 0 });
 });
 
-test("scroll position is kept when navigating from one channel to another", async () => {
+test("scroll position is kept when navigating from one channel to another [CAN FAIL DUE TO WINDOW SIZE]", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();
     const channelId_1 = pyEnv["discuss.channel"].create({
