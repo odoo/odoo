@@ -11,6 +11,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { reactive } from "@odoo/owl";
 
 export const AUTOCLOSE_DELAY = 3000;
+export const AUTOCLOSE_DELAY_LONG = 8000;
 
 export const uploadService = {
     dependencies: ['notification'],
@@ -160,10 +161,12 @@ export const uploadService = {
                             file.uploaded = true;
                             await onUploaded(attachment);
                         }
-                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
+                        // If there's an error, display the error message for longer
+                        let message_autoclose_delay = file.hasError ? AUTOCLOSE_DELAY_LONG : AUTOCLOSE_DELAY;
+                        setTimeout(() => deleteFile(file.id), message_autoclose_delay);
                     } catch (error) {
                         file.hasError = true;
-                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
+                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY_LONG);
                         throw error;
                     }
                 }
