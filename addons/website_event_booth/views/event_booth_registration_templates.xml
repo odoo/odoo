@@ -8,7 +8,7 @@
                     <a class="d-inline d-md-none btn btn-light me-2" t-attf-href="/event/#{slug(event)}/booth?#{keep_query('booth_category_id', 'booth_ids')}" title="Go back">
                         <i class="oi oi-chevron-left" role="img"/>
                     </a>
-                    <h4 class="my-0">Get A Booth</h4>
+                    <h3 class="my-0">Get A Booth</h3>
                 </div>
                 <t t-call="website_event_booth.event_booth_order_progress">
                     <t t-set="step" t-value="'STEP_DETAILS_FORM'"/>
