@@ -1,7 +1,9 @@
 import { Record } from "@mail/core/common/record";
+import { assignDefined, rpcWithEnv } from "@mail/utils/common/misc";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 
+let rpc;
 export class Attachment extends FileModelMixin(Record) {
     static id = "id";
     /** @type {Object.<number, import("models").Attachment>} */
@@ -15,6 +17,7 @@ export class Attachment extends FileModelMixin(Record) {
         return super.insert(...arguments);
     }
     static new(data) {
+        rpc = rpcWithEnv(this.store.env);
         /** @type {import("models").Attachment} */
         const attachment = super.new(data);
         Record.onChange(attachment, ["extension", "name"], () => {
@@ -40,6 +43,28 @@ export class Attachment extends FileModelMixin(Record) {
             return undefined;
         }
         return `${this.create_date.monthLong}, ${this.create_date.year}`;
+    }
+
+    /** Remove the given attachment globally. */
+    delete() {
+        if (this.tmpUrl) {
+            URL.revokeObjectURL(this.tmpUrl);
+        }
+        super.delete();
+    }
+
+    /**
+     * Delete the given attachment on the server as well as removing it
+     * globally.
+     */
+    async remove() {
+        if (this.id > 0) {
+            await rpc(
+                "/mail/attachment/delete",
+                assignDefined({ attachment_id: this.id }, { access_token: this.accessToken })
+            );
+        }
+        this.delete();
     }
 }
 
