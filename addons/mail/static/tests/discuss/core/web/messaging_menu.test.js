@@ -163,12 +163,12 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "new message", message_type: "comment" },
+            post_data: { body: "it's a good idea", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-NotificationItem-text", { text: "You: new message" });
+    await contains(".o-mail-NotificationItem-text", { text: "You: it's a good idea" });
 });
 
 test("counter is taking into account non-fetched channels", async () => {
@@ -231,7 +231,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     ).toBe(false);
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "new message", message_type: "comment" },
+            post_data: { body: "good to know", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })

@@ -989,7 +989,7 @@ test("chat should show unread counter on receiving new messages", async () => {
         id: channelId,
         message: {
             author: await pyEnv["res.partner"].mail_partner_format([partnerId])[partnerId],
-            body: "new message",
+            body: "Interesting idea",
             id: 126,
             model: "discuss.channel",
             res_id: channelId,

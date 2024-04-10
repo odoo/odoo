@@ -718,7 +718,7 @@ test("chat window should open when receiving a new DM", async () => {
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "new message", message_type: "comment" },
+            post_data: { body: "Hi, are you here?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
@@ -746,7 +746,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
     await contains(".o-mail-ChatWindowContainer");
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "new message", message_type: "comment" },
+            post_data: { body: "Hello, I'm new", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
