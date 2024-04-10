@@ -10,6 +10,7 @@ export class AutopopupService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.chatbot": import("@im_livechat/embed/common/chatbot/chatbot_service").ChatBotService,
+     * "im_livechat.initialized": import("@im_livechat/embed/common/livechat_initialized_service").livechatInitializedService,
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * ui: typeof import("@web/core/ui/ui_service").uiService.start,
@@ -19,6 +20,7 @@ export class AutopopupService {
         env,
         {
             "im_livechat.chatbot": chatbotService,
+            "im_livechat.initialized": livechatInitializedService,
             "im_livechat.livechat": livechatService,
             "mail.store": storeService,
             ui,
@@ -29,7 +31,7 @@ export class AutopopupService {
         this.chatbotService = chatbotService;
         this.ui = ui;
 
-        livechatService.initializedDeferred.then(() => {
+        livechatInitializedService.ready.then(() => {
             if (this.allowAutoPopup && livechatService.state === SESSION_STATE.NONE) {
                 browser.setTimeout(async () => {
                     if (!this.storeService.ChatWindow.get({ thread: livechatService.thread })) {
@@ -52,7 +54,13 @@ export class AutopopupService {
 }
 
 export const autoPopupService = {
-    dependencies: ["im_livechat.livechat", "im_livechat.chatbot", "mail.store", "ui"],
+    dependencies: [
+        "im_livechat.livechat",
+        "im_livechat.initialized",
+        "im_livechat.chatbot",
+        "mail.store",
+        "ui",
+    ],
 
     start(env, services) {
         return new AutopopupService(env, services);

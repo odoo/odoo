@@ -4,6 +4,10 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
 const storeServicePatch = {
+    setup() {
+        super.setup();
+        this.employees = {};
+    },
     async getChat(person) {
         const { employeeId } = person;
         if (!employeeId) {

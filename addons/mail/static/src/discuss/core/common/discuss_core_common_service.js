@@ -14,7 +14,6 @@ export class DiscussCoreCommon {
         this.notificationService = services.notification;
         this.orm = services.orm;
         this.presence = services.presence;
-        this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
 
@@ -263,7 +262,6 @@ export class DiscussCoreCommon {
 export const discussCoreCommon = {
     dependencies: [
         "bus_service",
-        "mail.messaging",
         "mail.out_of_focus",
         "mail.store",
         "notification",
