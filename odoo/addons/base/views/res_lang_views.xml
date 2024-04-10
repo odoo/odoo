@@ -12,7 +12,6 @@
                     <field name="name"/>
                     <field name="code" groups="base.group_no_one"/>
                     <field name="iso_code" groups="base.group_no_one"/>
-                    <field name="url_code" groups="base.group_no_one" column_invisible="True"/>
                     <field name="direction" groups="base.group_no_one"/>
                     <field name="active"/>
                     <button name="%(base.action_view_base_language_install)d"
@@ -59,7 +58,6 @@
                             <group>
                                 <field name="code"/>
                                 <field name="iso_code"/>
-                                <field name="url_code" invisible="1" required="0"/>
                                 <field name="active" widget="boolean_toggle"/>
                             </group>
                             <group>

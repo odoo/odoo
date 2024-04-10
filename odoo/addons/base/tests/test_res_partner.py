@@ -669,6 +669,7 @@ class TestPartnerForm(TransactionCase):
             child.name = "Second Child"
             self.assertEqual(child.lang, 'fr_FR', "Child contact's lang should be the same as its parent.")
         partner = partner_form.save()
+        self.assertEqual(partner.child_ids.mapped('lang'), ['de_DE', 'fr_FR'])
 
         # check final values (kept from form input)
         self.assertEqual(partner.lang, 'fr_FR')

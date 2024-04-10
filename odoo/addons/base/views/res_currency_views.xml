@@ -136,7 +136,6 @@
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <form string="Currency">
-                    <field name="is_current_company_currency" invisible="1"/>
                     <div class="alert alert-info text-center" role="alert" invisible="not is_current_company_currency">
                         This is your company's currency.
                     </div>

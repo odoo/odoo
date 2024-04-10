@@ -6,8 +6,6 @@
             <field name="model">res.company</field>
             <field name="arch" type="xml">
                 <form string="Company" duplicate="0">
-                  <field name="all_child_ids" invisible="1"/>
-                  <field name="uninstalled_l10n_module_ids" invisible="1"/>
 
                   <div class="alert alert-info" role="alert" invisible="not uninstalled_l10n_module_ids">
                     Localization features are available for this country:
@@ -45,7 +43,6 @@
                                         <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="country_code" invisible="1"/>
                                     </div>
                                     <field name="vat"/>
                                     <field name="company_registry"/>
@@ -57,8 +54,6 @@
                                     <field name="email"/>
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                     <field name="parent_id" groups="base.group_no_one"/>
-                                    <field name="parent_id" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
                                     <field name="color" widget="color_picker"/>
                                 </group>
                                 <group name="social_media"/>
@@ -81,7 +76,6 @@
                     <field name="name"/>
                     <field name="partner_id" required="0"/>
                     <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="active" column_invisible="True"/>
                 </tree>
             </field>
         </record>

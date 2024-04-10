@@ -28,7 +28,6 @@
                             <group name="communication_details">
                                 <field name="phone" class="o_force_ltr"/>
                                 <field name="email" widget="email"/>
-                                <field name="active" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -84,8 +83,6 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
-                            <field name="sequence" invisible="1"/>
-                            <field name="acc_type" invisible="1"/>
                             <field name="acc_number"/>
                             <field name="bank_id"/>
                             <field name="acc_holder_name"/>
@@ -93,10 +90,8 @@
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="country_code" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
                             <field name="allow_out_payment" widget="boolean_toggle"/>
-                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -114,7 +109,6 @@
                     <field name="bank_name" string="Bank"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id"/>
-                    <field name="acc_holder_name" column_invisible="True"/>
                     <field name="allow_out_payment" widget="boolean_toggle"/>
                 </tree>
             </field>
