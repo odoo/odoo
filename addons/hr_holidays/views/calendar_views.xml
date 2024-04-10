@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_calendar_event_form_inherit" model="ir.ui.view">
+        <field name="name">view.calendar.event.form.inherit</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='videocall_location']" position="attributes">
+                <attribute name="invisible">res_model == 'hr.leave'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='videocall_location_div']" position="attributes">
+                <attribute name="invisible">res_model == 'hr.leave'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
