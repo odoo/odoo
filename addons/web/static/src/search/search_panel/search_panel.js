@@ -1,7 +1,15 @@
 import { useBus } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-import { Component, onMounted, onWillUpdateProps, onWillStart, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUpdateProps,
+    onWillStart,
+    useRef,
+    useState,
+    reactive,
+} from "@odoo/owl";
 
 //-------------------------------------------------------------------------
 // Helpers
@@ -57,6 +65,7 @@ export class SearchPanel extends Component {
         this.root = useRef("root");
         this.scrollTop = 0;
         this.hasImportedState = false;
+        this.dropdownStates = {};
 
         this.importState(this.props.importedState);
 
@@ -234,6 +243,8 @@ export class SearchPanel extends Component {
             } else {
                 categoryState[value.id] = true;
             }
+        } else {
+            this.getDropdownState(category.id).close();
         }
         if (category.activeValueId !== value.id) {
             this.env.searchModel.toggleCategoryValue(category.id, value.id);
@@ -366,5 +377,17 @@ export class SearchPanel extends Component {
         resizeStoppingEvents.forEach((stoppingEvent) => {
             document.addEventListener(stoppingEvent, stopResize, true);
         });
+    }
+
+    getDropdownState(sectionId) {
+        if (!this.dropdownStates[sectionId]) {
+            const state = reactive({
+                isOpen: false,
+                open: () => (state.isOpen = true),
+                close: () => (state.isOpen = false),
+            });
+            this.dropdownStates[sectionId] = reactive(state);
+        }
+        return this.dropdownStates[sectionId];
     }
 }
