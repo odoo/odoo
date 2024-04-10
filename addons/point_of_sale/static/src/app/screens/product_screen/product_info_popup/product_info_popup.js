@@ -22,4 +22,8 @@ export class ProductInfoPopup extends Component {
         const isCashierManager = this.pos.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }
+    editProduct() {
+        this.pos.editProduct(this.props.product);
+        this.props.close();
+    }
 }
