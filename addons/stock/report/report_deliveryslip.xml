@@ -71,17 +71,17 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id">Customizable Desk</span>
-                                    <p t-if="move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
                                         <span t-field="move.description_picking">Description on transfer</span>
                                     </p>
                                 </td>
                                 <td>
                                     <span t-field="move.product_uom_qty">3.00</span>
-                                    <span t-field="move.product_uom">units</span>
+                                    <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                 </td>
                                 <td>
                                     <span t-field="move.quantity_done">3.00</span>
-                                    <span t-field="move.product_uom">units</span>
+                                    <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -174,14 +174,14 @@
                                 <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
                                     <td class="w-auto">
                                         <span t-field="bo_line.product_id">Office Chair</span>
-                                        <p t-if="bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
+                                        <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
                                             <span t-field="bo_line.description_picking">Description on transfer</span>
                                         </p>
                                     </td>
                                     <td/>
                                     <td class="text-center w-auto">
                                         <span t-field="bo_line.product_uom_qty">3.00</span>
-                                        <span t-field="bo_line.product_uom">units</span>
+                                        <span t-field="bo_line.product_uom" groups="uom.group_uom">units</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -196,7 +196,7 @@
                         <div class="offset-8">
                             <img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/>
                         </div>
-                        <div class="offset-8 text-center">
+                        <div t-if="o.partner_id" class="offset-8 text-center">
                             <p t-field="o.partner_id.name">John Doe</p>
                         </div>
                     </div>

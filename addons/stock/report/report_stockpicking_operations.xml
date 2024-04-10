@@ -79,7 +79,7 @@
                                     <strong>Status:</strong>
                                     <p t-field="o.state">Draft</p>
                                 </div>
-                                <div class="col-auto" name="div_sched_date">
+                                <div t-if="o.scheduled_date" class="col-auto" name="div_sched_date">
                                     <strong>Scheduled Date:</strong>
                                     <p t-field="o.scheduled_date">2023-09-24</p>
                                 </div>
@@ -131,7 +131,7 @@
                                             <div>
                                                 <span t-field="ml.location_dest_id">WH/Outgoing</span>
                                                 <t t-if="ml.result_package_id">
-                                                    <span t-field="ml.result_package_id">Shelf 1</span>
+                                                    <span t-field="ml.result_package_id">Package B</span>
                                                 </t>
                                             </div>
                                         </td>
