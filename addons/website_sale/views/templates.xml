@@ -2122,13 +2122,13 @@
             </div>
             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart" class="mt-4">
+            <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div t-if="payment_methods_sudo or tokens_sudo"
                         id="payment_method"
-                        class="o_not_editable">
+                        class="o_not_editable mt-4">
                     <t t-call="payment.form"/>
                 </div>
-                <div t-else="" class="alert alert-warning">
+                <div t-else="" class="alert alert-warning mt-4">
                     <t t-set="hide_payment_button" t-value="True"/>
                     <strong>No suitable payment option could be found.</strong><br/>
                     <div t-if="not request.env.is_admin()">
@@ -2155,7 +2155,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </t>
         </t>
     </template>
 
