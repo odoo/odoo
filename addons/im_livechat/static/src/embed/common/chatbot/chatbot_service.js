@@ -87,9 +87,6 @@ export class ChatBotService {
             await this.postWelcomeSteps();
             this.save();
         }
-        if (this.savedState) {
-            this._restore();
-        }
         if (!this.currentStep?.expectAnswer) {
             this._triggerNextStep();
         } else if (this.livechatService.thread?.isLastMessageFromCustomer) {

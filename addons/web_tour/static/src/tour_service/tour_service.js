@@ -299,12 +299,9 @@ export const tourService = {
          * @param {Tour} tour
          */
         function setupShadowObservers(tour) {
-            const shadowDOMs = tour.steps.reduce((acc, step) => {
-                if (step.shadow_dom) {
-                    acc.add(step.shadow_dom);
-                }
-                return acc;
-            }, new Set());
+            const shadowDOMs = new Set(
+                tour.steps.filter((step) => step.shadow_dom).map((step) => step.shadow_dom)
+            );
             if (shadowDOMs.size > 0) {
                 observeShadows(shadowDOMs);
             }
