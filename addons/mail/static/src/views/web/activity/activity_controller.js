@@ -36,7 +36,7 @@ export class ActivityController extends Component {
 
         this.dialog = useService("dialog");
         this.action = useService("action");
-        this.activity = useService("mail.activity");
+        this.store = useService("mail.store");
         this.ui = useState(useService("ui"));
         usePager(() => {
             const { count, hasLimitedCount, limit, offset } = this.model.root;
@@ -69,7 +69,7 @@ export class ActivityController extends Component {
             multiSelect: false,
             context: this.props.context,
             onSelected: async (resIds) => {
-                await this.activity.schedule(this.props.resModel, resIds);
+                await this.store.scheduleActivity(this.props.resModel, resIds);
                 this.model.load(this.getSearchProps());
             },
         });
