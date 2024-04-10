@@ -1,4 +1,4 @@
-import { rpcWithEnv } from "@mail/utils/common/misc";
+import { compareDatetime, rpcWithEnv } from "@mail/utils/common/misc";
 import { Store as BaseStore, makeStore, Record } from "@mail/core/common/record";
 import { reactive } from "@odoo/owl";
 
@@ -17,6 +17,7 @@ import { escape } from "@web/core/utils/strings";
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     FETCH_LIMIT = 30;
+    DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
 
     /** @returns {import("models").Store|import("models").Store[]} */
     static insert() {
@@ -487,6 +488,19 @@ export class Store extends BaseStore {
             }
             return partner;
         }
+    }
+
+    /**
+     * List of known partner ids with a direct chat, ordered
+     * by most recent interest (1st item being the most recent)
+     *
+     * @returns {[integer]}
+     */
+    getRecentChatPartnerIds() {
+        return Object.values(this.Thread.records)
+            .filter((thread) => thread.channel_type === "chat" && thread.correspondent)
+            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
+            .map((thread) => thread.correspondent.id);
     }
 
     async joinChannel(id, name) {

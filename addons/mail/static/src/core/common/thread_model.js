@@ -1,4 +1,3 @@
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { AND, Record } from "@mail/core/common/record";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 import { compareDatetime, rpcWithEnv } from "@mail/utils/common/misc";
@@ -428,7 +427,7 @@ export class Thread extends Record {
     }
 
     get avatarUrl() {
-        return this.module_icon ?? DEFAULT_AVATAR;
+        return this.module_icon ?? this.store.DEFAULT_AVATAR;
     }
 
     get allowDescription() {

@@ -1,6 +1,6 @@
 import { AND, Record } from "@mail/core/common/record";
-import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { imageUrl } from "@web/core/utils/urls";
+import { rpcWithEnv } from "@mail/utils/common/misc";
 
 /**
  * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
@@ -12,6 +12,7 @@ import { imageUrl } from "@web/core/utils/urls";
  * @property {ImStatus} im_status
  */
 
+let rpc;
 export class Persona extends Record {
     static id = AND("type", "id");
     /** @type {Object.<number, import("models").Persona>} */
@@ -23,6 +24,10 @@ export class Persona extends Record {
     /** @returns {import("models").Persona|import("models").Persona[]} */
     static insert(data) {
         return super.insert(...arguments);
+    }
+    static new() {
+        rpc = rpcWithEnv(this.store.env);
+        return super.new(...arguments);
     }
 
     channelMembers = Record.many("ChannelMember");
@@ -89,13 +94,20 @@ export class Persona extends Record {
         if (this.userId) {
             return imageUrl("res.users", this.userId, "avatar_128", { unique: this.write_date });
         }
-        return DEFAULT_AVATAR;
+        return this.store.DEFAULT_AVATAR;
     }
 
     searchChat() {
         return Object.values(this.store.Thread.records).find(
             (thread) => thread.channel_type === "chat" && thread.correspondent?.eq(this)
         );
+    }
+
+    async updateGuestName(name) {
+        await rpc("/mail/guest/update_name", {
+            guest_id: this.id,
+            name,
+        });
     }
 }
 
