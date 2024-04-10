@@ -20,7 +20,7 @@ export class SaleOrderLineProductField extends Many2OneField {
             isInternalUpdate = true;
             return updateRecord.call(this, value);
         };
-        useEffect(value => {   
+        useEffect(value => {
             if (!isMounted) {
                 isMounted = true;
             } else if (value && isInternalUpdate) {
