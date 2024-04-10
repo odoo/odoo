@@ -1014,7 +1014,8 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvent(input, null, "focus");
         await click(input);
         await editInput(input, null, "go");
-        await triggerEvent(input, null, "blur");
+        await triggerHotkey("tab");
+        await nextTick();
 
         assert.containsNone(document.body, ".modal");
         assert.containsOnce(target, ".o_field_many2many_tags .badge");
@@ -1028,7 +1029,8 @@ QUnit.module("Fields", (hooks) => {
         await click(input);
         await editInput(input, null, "r");
         await triggerEvent(input, null, "keydown", { key: "ArrowDown" });
-        await triggerEvent(input, null, "blur");
+        await triggerHotkey("tab");
+        await nextTick();
         assert.strictEqual(
             target.querySelectorAll(".o_field_many2many_tags .badge")[1].textContent,
             "red",
