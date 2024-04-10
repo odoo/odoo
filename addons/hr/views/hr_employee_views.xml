@@ -245,7 +245,7 @@
                     <field name="work_email"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="show"/>
+                    <field name="activity_date_deadline" widget="remaining_days" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="department_id"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
