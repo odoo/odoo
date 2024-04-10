@@ -1080,7 +1080,7 @@
         if (typeof o1 !== typeof o2)
             return false;
         if (typeof o1 !== "object")
-            return o1 === o2;
+            return false;
         // Objects can have different keys if the values are undefined
         const keys = new Set();
         Object.keys(o1).forEach((key) => keys.add(key));
@@ -4710,6 +4710,7 @@
                     if (this.state.link.url) {
                         this.save();
                     }
+                    ev.preventDefault();
                     break;
                 case "Escape":
                     this.cancel();
@@ -24689,29 +24690,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return width;
         return Math.round((width / WIDTH_FACTOR) * 100) / 100;
     }
-    function convertBorderDescr(descr) {
-        if (!descr) {
-            return undefined;
-        }
-        return {
-            style: descr[0],
-            color: { rgb: descr[1] },
-        };
-    }
     function extractStyle(cell, data) {
         let style = {};
         if (cell.style) {
             style = data.styles[cell.style];
         }
         const format = extractFormat(cell, data);
-        const exportedBorder = {};
-        if (cell.border) {
-            const border = data.borders[cell.border];
-            exportedBorder.left = convertBorderDescr(border.left);
-            exportedBorder.right = convertBorderDescr(border.right);
-            exportedBorder.bottom = convertBorderDescr(border.bottom);
-            exportedBorder.top = convertBorderDescr(border.top);
-        }
         const styles = {
             font: {
                 size: (style === null || style === void 0 ? void 0 : style.fontSize) || DEFAULT_FONT_SIZE,
@@ -24725,7 +24709,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 }
                 : { reservedAttribute: "none" },
             numFmt: format ? { format: format, id: 0 /* id not used for export */ } : undefined,
-            border: exportedBorder || {},
+            border: cell.border || 0,
             alignment: {
                 vertical: "center",
                 horizontal: style.align,
@@ -24754,23 +24738,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return undefined;
     }
     function normalizeStyle(construct, styles) {
-        const { id: fontId } = pushElement(styles["font"], construct.fonts);
-        const { id: fillId } = pushElement(styles["fill"], construct.fills);
-        const { id: borderId } = pushElement(styles["border"], construct.borders);
         // Normalize this
         const numFmtId = convertFormat(styles["numFmt"], construct.numFmts);
         const style = {
-            fontId,
-            fillId,
-            borderId,
+            fontId: pushElement(styles.font, construct.fonts),
+            fillId: pushElement(styles.fill, construct.fills),
+            borderId: styles.border,
             numFmtId,
             alignment: {
                 vertical: styles.alignment.vertical,
                 horizontal: styles.alignment.horizontal,
             },
         };
-        const { id } = pushElement(style, construct.styles);
-        return id;
+        return pushElement(style, construct.styles);
     }
     function convertFormat(format, numFmtStructure) {
         if (!format) {
@@ -24778,8 +24758,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         let formatId = XLSX_FORMAT_MAP[format.format];
         if (!formatId) {
-            const { id } = pushElement(format, numFmtStructure);
-            formatId = id + FIRST_NUMFMT_ID;
+            formatId = pushElement(format, numFmtStructure) + FIRST_NUMFMT_ID;
         }
         return formatId;
     }
@@ -24804,20 +24783,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return id;
     }
     function pushElement(property, propertyList) {
-        for (let [key, value] of Object.entries(propertyList)) {
-            if (JSON.stringify(value) === JSON.stringify(property)) {
-                return { id: parseInt(key, 10), list: propertyList };
+        let len = propertyList.length;
+        const operator = typeof property === "object" ? deepEquals : (a, b) => a === b;
+        for (let i = 0; i < len; i++) {
+            if (operator(property, propertyList[i])) {
+                return i;
             }
         }
-        let elemId = propertyList.findIndex((elem) => JSON.stringify(elem) === JSON.stringify(property));
-        if (elemId === -1) {
-            propertyList.push(property);
-            elemId = propertyList.length - 1;
-        }
-        return {
-            id: elemId,
-            list: propertyList,
-        };
+        propertyList[propertyList.length] = property;
+        return propertyList.length - 1;
     }
     const chartIds = [];
     /**
@@ -25491,7 +25465,25 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return document;
     }
-    function getDefaultXLSXStructure() {
+    function convertBorderDescr(descr) {
+        if (!descr) {
+            return undefined;
+        }
+        return {
+            style: descr[0],
+            color: { rgb: descr[1] },
+        };
+    }
+    function getDefaultXLSXStructure(data) {
+        const xlsxBorders = Object.values(data.borders).map((border) => {
+            return {
+                left: convertBorderDescr(border.left),
+                right: convertBorderDescr(border.right),
+                bottom: convertBorderDescr(border.bottom),
+                top: convertBorderDescr(border.top),
+            };
+        });
+        const borders = [{}, ...xlsxBorders];
         return {
             relsFiles: [],
             sharedStrings: [],
@@ -25514,7 +25506,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 },
             ],
             fills: [{ reservedAttribute: "none" }, { reservedAttribute: "gray125" }],
-            borders: [{}],
+            borders,
             numFmts: [],
             dxfs: [],
         };
@@ -36993,12 +36985,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "AlterZoneCorner":
                     break;
                 case "ZonesSelected":
+                    const sheetId = this.getters.getActiveSheetId();
                     let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
                     if (event.mode === "updateAnchor") {
                         const oldZone = event.previousAnchor.zone;
                         const newZone = event.anchor.zone;
                         // altering a zone should not move the viewport in a dimension that wasn't changed
-                        const { top, bottom, left, right } = this.getters.getActiveMainViewport();
+                        const { top, bottom, left, right } = this.getMainInternalViewport(sheetId);
                         if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
                             col = left > col || col > right ? left : col;
                         }
@@ -37006,10 +36999,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             row = top > row || row > bottom ? top : row;
                         }
                     }
-                    const sheetId = this.getters.getActiveSheetId();
                     col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
                     row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+                    this.refreshViewport(sheetId, { col, row });
                     break;
             }
         }
@@ -37034,16 +37026,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
                     break;
                 case "SHIFT_VIEWPORT_DOWN":
-                    const { top } = this.getActiveMainViewport();
                     const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
+                    const { top, viewportHeight, offsetCorrectionY } = this.getMainInternalViewport(sheetId);
+                    const topRowDims = this.getters.getRowDimensions(sheetId, top);
+                    this.shiftVertically(topRowDims.start + viewportHeight - offsetCorrectionY);
                     break;
                 case "SHIFT_VIEWPORT_UP": {
-                    const { top } = this.getActiveMainViewport();
                     const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
+                    const { top, viewportHeight, offsetCorrectionY } = this.getMainInternalViewport(sheetId);
+                    const topRowDims = this.getters.getRowDimensions(sheetId, top);
+                    this.shiftVertically(topRowDims.end - offsetCorrectionY - viewportHeight);
                     break;
                 }
                 case "REMOVE_COLUMNS_ROWS":
@@ -37402,17 +37394,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
             Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
         }
-        /**
-         * Clip the vertical offset within the allowed range.
-         * Not above the sheet, nor below the sheet.
-         */
-        clipOffsetY(offsetY) {
-            const { height } = this.getMainViewportRect();
-            const maxOffset = height - this.sheetViewHeight;
-            offsetY = Math.min(offsetY, maxOffset);
-            offsetY = Math.max(offsetY, 0);
-            return offsetY;
-        }
         getViewportOffset(sheetId) {
             var _a, _b;
             return {
@@ -37466,12 +37447,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * viewport top.
          */
         shiftVertically(offset) {
-            const { top } = this.getActiveMainViewport();
+            const sheetId = this.getters.getActiveSheetId();
+            const { top } = this.getMainInternalViewport(sheetId);
             const { scrollX } = this.getActiveSheetScrollInfo();
             this.setSheetViewOffset(scrollX, offset);
             const { anchor } = this.getters.getSelection();
-            const deltaRow = this.getActiveMainViewport().top - top;
-            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+            if (anchor.cell.row >= this.getters.getPaneDivisions(sheetId).ySplit) {
+                const deltaRow = this.getMainInternalViewport(sheetId).top - top;
+                this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+            }
         }
         getVisibleFigures() {
             const sheetId = this.getters.getActiveSheetId();
@@ -41791,8 +41775,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             attrs.push(["t", "b"]);
         }
         else if (forceString || !isNumber(value)) {
-            const { id } = pushElement(content, sharedStrings);
-            value = id.toString();
+            value = pushElement(content, sharedStrings);
             attrs.push(["t", "s"]);
         }
         return { attrs, node: escapeXml /*xml*/ `<v>${value}</v>` };
@@ -41917,8 +41900,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         if (rule.style.fillColor) {
             dxf.fill = { fgColor: { rgb: rule.style.fillColor } };
         }
-        const { id } = pushElement(dxf, dxfs);
-        ruleAttributes.push(["dxfId", id]);
+        ruleAttributes.push(["dxfId", pushElement(dxf, dxfs)]);
         return escapeXml /*xml*/ `
     <conditionalFormatting sqref="${cf.ranges.join(" ")}">
       <cfRule ${formatAttributes(ruleAttributes)}>
@@ -42629,7 +42611,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     function getXLSX(data) {
         const files = [];
-        const construct = getDefaultXLSXStructure();
+        const construct = getDefaultXLSXStructure(data);
         files.push(createWorkbook(data, construct));
         files.push(...createWorksheets(data, construct));
         files.push(createStylesSheet(construct));
@@ -43339,9 +43321,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.37';
-    __info__.date = '2024-04-05T14:11:32.281Z';
-    __info__.hash = 'e95827b';
+    __info__.version = '16.0.38';
+    __info__.date = '2024-04-10T12:32:46.699Z';
+    __info__.hash = '6c7d510';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
