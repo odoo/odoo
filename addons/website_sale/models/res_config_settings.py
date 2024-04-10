@@ -92,6 +92,14 @@ class ResConfigSettings(models.TransientModel):
     enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
 
+    selectable_pricelist_ids = fields.Many2many(
+        comodel_name='product.pricelist',
+        relation='selectable_pricelists',
+        related='website_id.selectable_pricelist_ids',
+        string='Pricelists',
+        readonly=False,
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('website_id.account_on_checkout')
@@ -109,6 +117,25 @@ class ResConfigSettings(models.TransientModel):
                 record.website_id.auth_signup_uninvited = 'b2c'
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
+
+    #=== ONCHANGE METHODS ===#
+
+    @api.onchange('selectable_pricelist_ids')
+    def onchange_selectable_pricelist_ids(self):
+        for res_config in self:
+            ProductPricelist = self.env['product.pricelist']
+            website_id = res_config.website_id.id
+            selectable_pricelists = ProductPricelist.search([
+                ('id', 'in', res_config.selectable_pricelist_ids.ids),
+            ])
+            selectable_pricelists.update({
+                'selectable': True,
+                'website_id': website_id,
+            })
+            unselected_pricelists = ProductPricelist.search(
+                [('website_id', '=', website_id)]) - selectable_pricelists
+            unselected_pricelists.update({'selectable': False})
+
 
     #=== CRUD METHODS ===#
 

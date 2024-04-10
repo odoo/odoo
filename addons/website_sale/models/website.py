@@ -163,6 +163,12 @@ class Website(models.Model):
         inverse_name='website_id',
     )
 
+    selectable_pricelist_ids = fields.Many2many(
+        comodel_name='product.pricelist',
+        relation='selectable_pricelists',
+        check_company=True,
+    )
+
     #=== COMPUTE METHODS ===#
 
     @api.depends('all_pricelist_ids')

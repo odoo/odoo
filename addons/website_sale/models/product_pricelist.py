@@ -35,6 +35,15 @@ class ProductPricelist(models.Model):
              "Otherwise, the pricelist will not apply to any website."
     )
     code = fields.Char(string="E-commerce Promotional Code", groups='base.group_user')
+
+    website_ids = fields.Many2many(
+        string="Website",
+        comodel_name='website',
+        ondelete='restrict',
+        check_company=True,
+        tracking=20,
+    )
+
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     #=== CONSTRAINT METHODS ===#
