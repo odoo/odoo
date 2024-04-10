@@ -43,7 +43,6 @@ export class Chatter extends Component {
         this.attachmentBox = useRef("attachment-box");
         this.store = useState(useService("mail.store"));
         this.orm = useService("orm");
-        this.messageService = useService("mail.message");
         this.state = useState({
             composerType: false,
             jumpThreadPresent: 0,
@@ -102,7 +101,7 @@ export class Chatter extends Component {
         if (threadId === false) {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({
-                    id: this.messageService.getNextTemporaryId(),
+                    id: this.store.getNextTemporaryId(),
                     author: this.store.self,
                     body: _t("Creating a new record..."),
                     message_type: "notification",

@@ -114,7 +114,6 @@ export class Message extends Component {
         this.messageActions = useMessageActions();
         this.store = useState(useService("mail.store"));
         this.shadowBody = useRef("shadowBody");
-        this.messageService = useState(useService("mail.message"));
         this.attachmentService = useService("mail.attachment");
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
@@ -381,7 +380,7 @@ export class Message extends Component {
                 message,
                 messageComponent: Message,
                 prompt: _t("Are you sure you want to delete this message?"),
-                onConfirm: () => this.messageService.delete(message),
+                onConfirm: () => message.remove(),
             },
             { context: this }
         );

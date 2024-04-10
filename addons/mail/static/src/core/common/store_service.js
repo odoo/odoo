@@ -350,6 +350,41 @@ export class Store extends BaseStore {
         }, 0);
     }
 
+    /** @returns {number} */
+    getLastMessageId() {
+        return Object.values(this.Message.records).reduce(
+            (lastMessageId, message) => Math.max(lastMessageId, message.id),
+            0
+        );
+    }
+
+    getMentionsFromText(body, { mentionedChannels = [], mentionedPartners = [] } = {}) {
+        if (this.self.type !== "partner") {
+            // mentions are not supported for guests
+            return {};
+        }
+        const validMentions = {};
+        const partners = [];
+        const threads = [];
+        for (const partner of mentionedPartners) {
+            const index = body.indexOf(`@${partner.name}`);
+            if (index === -1) {
+                continue;
+            }
+            partners.push(partner);
+        }
+        for (const thread of mentionedChannels) {
+            const index = body.indexOf(`#${thread.displayName}`);
+            if (index === -1) {
+                continue;
+            }
+            threads.push(thread);
+        }
+        validMentions.partners = partners;
+        validMentions.threads = threads;
+        return validMentions;
+    }
+
     /**
      * Get the parameters to pass to the message post route.
      */
@@ -365,7 +400,7 @@ export class Store extends BaseStore {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions =
             this.self.type === "partner"
-                ? this.env.services["mail.message"].getMentionsFromText(body, {
+                ? this.getMentionsFromText(body, {
                       mentionedChannels,
                       mentionedPartners,
                   })
@@ -403,6 +438,10 @@ export class Store extends BaseStore {
             thread_id: thread.id,
             thread_model: thread.model,
         };
+    }
+
+    getNextTemporaryId() {
+        return this.getLastMessageId() + 0.01;
     }
 
     /**
@@ -506,6 +545,13 @@ export class Store extends BaseStore {
             loadMore: messages.length === this.FETCH_LIMIT,
             messages: this.Message.insert(messages, { html: true }),
         };
+    }
+
+    async unstarAll() {
+        // apply the change immediately for faster feedback
+        this.discuss.starred.counter = 0;
+        this.discuss.starred.messages = [];
+        await this.env.services.orm.call("mail.message", "unstar_all");
     }
 }
 Store.register();

@@ -14,7 +14,6 @@ export class DiscussCoreCommon {
         this.notificationService = services.notification;
         this.orm = services.orm;
         this.presence = services.presence;
-        this.messageService = services["mail.message"];
         this.messagingService = services["mail.messaging"];
         this.store = services["mail.store"];
     }
@@ -74,7 +73,7 @@ export class DiscussCoreCommon {
             );
             this.busService.subscribe("discuss.channel/transient_message", (payload) => {
                 const { body, thread } = payload;
-                const lastMessageId = this.messageService.getLastMessageId();
+                const lastMessageId = this.store.getLastMessageId();
                 const message = this.store.Message.insert(
                     {
                         author: this.store.odoobot,
@@ -258,7 +257,6 @@ export class DiscussCoreCommon {
 export const discussCoreCommon = {
     dependencies: [
         "bus_service",
-        "mail.message",
         "mail.messaging",
         "mail.out_of_focus",
         "mail.store",

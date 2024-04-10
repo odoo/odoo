@@ -991,7 +991,7 @@ export class Thread extends Record {
             mentionedPartners,
             thread: this,
         });
-        const tmpId = this.store.env.services["mail.message"].getNextTemporaryId();
+        const tmpId = this.store.getNextTemporaryId();
         params.context = { ...user.context, ...params.context, temporary_id: tmpId };
         if (parentId) {
             params.post_data.parent_id = parentId;
@@ -1012,7 +1012,7 @@ export class Thread extends Record {
             }
             const prettyContent = await prettifyMessageContent(
                 body,
-                this.store.env.services["mail.message"].getMentionsFromText(body, {
+                this.store.getMentionsFromText(body, {
                     mentionedChannels,
                     mentionedPartners,
                 })

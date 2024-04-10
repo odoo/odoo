@@ -34,7 +34,7 @@ patch(Message.prototype, {
     },
 
     async openMissingFieldsLetterAction() {
-        const letterIds = await this.messageService.orm.searchRead(
+        const letterIds = await this.env.services.orm.searchRead(
             "snailmail.letter",
             [["message_id", "=", this.message.id]],
             ["id"]

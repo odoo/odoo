@@ -23,7 +23,6 @@ export class MessageReactionMenu extends Component {
         this.root = useRef("root");
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
-        this.messageService = useService("mail.message");
         this.state = useState({
             reaction: this.props.message.reactions[0],
         });
