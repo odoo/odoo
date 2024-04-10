@@ -49,6 +49,10 @@ export class ChannelMember extends Record {
     /** @type {number} */
     typingTimeoutId;
 
+    get name() {
+        return this.persona.nameOrDisplayName;
+    }
+
     /**
      * @returns {string}
      */
