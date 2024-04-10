@@ -50,13 +50,15 @@ for module in _ALLOWED_MODULES:
     __import__(module)
 
 
-_UNSAFE_ATTRIBUTES = {
+_UNSAFE_ATTRIBUTES = [
     # Frames
     'f_builtins', 'f_code', 'f_globals', 'f_locals',
     # Python 2 functions
     'func_code', 'func_globals',
     # Code object
-    'co_code',
+    'co_code', '_co_code_adaptive',
+    # Method resolution order,
+    'mro',
     # Tracebacks
     'tb_frame',
     # Generators
@@ -65,7 +67,7 @@ _UNSAFE_ATTRIBUTES = {
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators
     'ag_await', 'ag_code', 'ag_frame',
-}
+]
 
 
 def to_opcodes(opnames, _opmap=opmap):
