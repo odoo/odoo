@@ -96,7 +96,7 @@ export class PosData extends Reactive {
 
     async loadMissingRecords(missingRecords) {
         for (const [model, ids] of Object.entries(missingRecords)) {
-            await this.read(model, Array.from(ids), [], {}, false);
+            await this.read(model, Array.from(ids), this.fields[model], {}, false);
         }
     }
 
