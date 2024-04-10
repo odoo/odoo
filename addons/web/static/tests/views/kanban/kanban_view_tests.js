@@ -3218,6 +3218,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("quick create record: cancel when modal is opened", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = '<form><field name="product_id"/></form>';
+        serverData.views["product,false,form"] = '<form><field name="name"/></form>';
 
         // patch setTimeout s.t. the autocomplete dropdown opens directly
         patchWithCleanup(browser, {
@@ -3243,7 +3244,7 @@ QUnit.module("Views", (hooks) => {
 
         await editInput(target, ".o_kanban_quick_create input", "test");
         await triggerEvent(target, ".o_kanban_quick_create input", "input");
-        await triggerEvent(target, ".o_kanban_quick_create input", "blur");
+        await click(target, ".o_m2o_dropdown_option_create_edit");
 
         // When focusing out of the many2one, a modal to add a 'product' will appear.
         // The following assertions ensures that a click on the body element that has 'modal-open'
@@ -10397,8 +10398,7 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                `<kanban>
+            arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -13610,13 +13610,14 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".my_kanban_compiler");
     });
 
-    QUnit.test("can quick create a column when pressing enter when input is focused", async (assert) => {
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                `<kanban>
+    QUnit.test(
+        "can quick create a column when pressing enter when input is focused",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
                     <field name="product_id"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -13624,23 +13625,24 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            groupBy: ["product_id"],
-        });
+                groupBy: ["product_id"],
+            });
 
-        assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsN(target, ".o_kanban_group", 2);
 
-        await createColumn();
-        
-        // We don't use the editInput helper as it would trigger a change event automatically.
-        // We need to wait for the enter key to trigger the event.
-        const input = target.querySelector(".o_column_quick_create input");
-        input.value = "New Column";
-        await triggerEvent(input, null, "input");
+            await createColumn();
 
-        await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
-            key: "Enter",
-        });
+            // We don't use the editInput helper as it would trigger a change event automatically.
+            // We need to wait for the enter key to trigger the event.
+            const input = target.querySelector(".o_column_quick_create input");
+            input.value = "New Column";
+            await triggerEvent(input, null, "input");
 
-        assert.containsN(target, ".o_kanban_group", 3);
-    });
+            await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
+                key: "Enter",
+            });
+
+            assert.containsN(target, ".o_kanban_group", 3);
+        }
+    );
 });
