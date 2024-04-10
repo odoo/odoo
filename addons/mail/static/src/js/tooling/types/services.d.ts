@@ -2,7 +2,6 @@
 declare module "services" {
     import { activityService } from "@mail/core/web/activity_service";
     import { attachmentUploadService } from "@mail/core/common/attachment_upload_service";
-    import { channelMemberService } from "@mail/core/common/channel_member_service";
     import { chatWindowService } from "@mail/core/common/chat_window_service";
     import { discussCoreCommon } from "@mail/discuss/core/common/discuss_core_common_service";
     import { discussCorePublic } from "@mail/discuss/core/public/discuss_core_public_service";
@@ -19,7 +18,6 @@ declare module "services" {
     import { suggestionService } from "@mail/core/common/suggestion_service";
 
     export interface Services {
-        "discuss.channel.member": typeof channelMemberService;
         "discuss.core.common": typeof discussCoreCommon;
         "discuss.core.public": typeof discussCorePublic;
         "discuss.core.web": typeof discussCoreWeb;
