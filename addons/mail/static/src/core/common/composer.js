@@ -96,7 +96,6 @@ export class Composer extends Component {
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
         );
-        this.messageService = useState(useService("mail.message"));
         this.ui = useState(useService("ui"));
         this.mainActionsRef = useRef("main-actions");
         this.ref = useRef("textarea");
@@ -481,7 +480,7 @@ export class Composer extends Component {
         const body = this.props.composer.textInputContent;
         const validMentions =
             this.store.self.type === "partner"
-                ? this.messageService.getMentionsFromText(body, {
+                ? this.store.getMentionsFromText(body, {
                       mentionedChannels: this.props.composer.mentionedChannels,
                       mentionedPartners: this.props.composer.mentionedPartners,
                   })
@@ -629,7 +628,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         if (composer.textInputContent || composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.edit(composer.message, value, composer.attachments, {
+                composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
                     mentionedPartners: composer.mentionedPartners,
                 })
@@ -638,7 +637,7 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: composer.message,
                 messageComponent: this.props.messageComponent,
-                onConfirm: () => this.messageService.delete(this.message),
+                onConfirm: () => this.message.remove(),
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
