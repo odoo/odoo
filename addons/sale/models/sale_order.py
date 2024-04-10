@@ -1332,14 +1332,15 @@ class SaleOrder(models.Model):
                         continue
                     inv_amt = order_amt = 0
                     for invoice_line in order_line.invoice_lines:
+                        sign = 1 if invoice_line.move_id.is_inbound() else -1
                         if invoice_line.move_id == move:
-                            inv_amt += invoice_line.price_total
+                            inv_amt += invoice_line.price_total * sign
                         elif invoice_line.move_id.state != 'cancel':  # filter out canceled dp lines
-                            order_amt += invoice_line.price_total
+                            order_amt += invoice_line.price_total * sign
                     if inv_amt and order_amt:
                         # if not inv_amt, this order line is not related to current move
                         # if no order_amt, dp order line was not invoiced
-                        delta_amount += (inv_amt * (1 if move.is_inbound() else -1)) + order_amt
+                        delta_amount += inv_amt + order_amt
 
                 if not move.currency_id.is_zero(delta_amount):
                     receivable_line = move.line_ids.filtered(
