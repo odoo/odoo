@@ -1199,6 +1199,8 @@ export class PosStore extends Reactive {
     }
 
     push_orders(opts = {}) {
+        // The 'printedOrders' is added to prevent printed orders from being reverted to draft
+        opts = Object.assign({ printedOrders: true }, opts);
         return this.pushOrderMutex.exec(() => this._flush_orders(this.db.get_orders(), opts));
     }
 
@@ -1209,7 +1211,7 @@ export class PosStore extends Reactive {
 
     // Send validated orders to the backend.
     // Resolves to the backend ids of the synced orders.
-    async _flush_orders(orders, options) {
+    async _flush_orders(orders, options = {}) {
         try {
             const server_ids = await this._save_to_server(orders, options);
             for (let i = 0; i < server_ids.length; i++) {
@@ -1218,7 +1220,7 @@ export class PosStore extends Reactive {
             }
             return server_ids;
         } catch (error) {
-            if (!(error instanceof ConnectionLostError)) {
+            if (!(error instanceof ConnectionLostError) && !options.printedOrders) {
                 for (const order of orders) {
                     const reactiveOrder = this.orders.find((o) => o.uid === order.id);
                     reactiveOrder.finalized = false;
