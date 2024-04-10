@@ -1572,6 +1572,9 @@ class GroupsView(models.Model):
             user_type_readonly = str({})
             sorted_tuples = sorted(self.get_groups_by_application(),
                                    key=lambda t: t[0].xml_id != 'base.module_category_user_type')
+
+            invisible_information = "All fields linked to groups must be present in the view due to the overwrite of create and write. The implied groups are calculated using this values."
+
             for app, kind, gs, category_name in sorted_tuples:  # we process the user type first
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
@@ -1587,7 +1590,8 @@ class GroupsView(models.Model):
                     # as it's used in domain of attrs of other fields,
                     # and the normal user category type field node is wrapped in a `groups="base.no_one"`,
                     # and is therefore removed when not in debug mode.
-                    xml0.append(E.field(name=field_name, invisible="1", on_change="1"))
+                    xml0.append(E.field(name=field_name, invisible="True", on_change="1"))
+                    xml0.append(etree.Comment(invisible_information))
                     user_type_field_name = field_name
                     user_type_readonly = f'{user_type_field_name} != {group_employee.id}'
                     attrs['widget'] = 'radio'
@@ -1608,7 +1612,8 @@ class GroupsView(models.Model):
                     xml_by_category[category_name].append(E.newline())
                     # add duplicate invisible field so default values are saved on create
                     if attrs.get('groups') == 'base.group_no_one':
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="True", groups='!base.group_no_one')))
+                        xml0.append(etree.Comment(invisible_information))
 
                 else:
                     # application separator with boolean fields
@@ -1623,11 +1628,13 @@ class GroupsView(models.Model):
                         dest_group = left_group if group_count % 2 == 0 else right_group
                         if g == group_no_one:
                             # make the group_no_one invisible in the form view
-                            dest_group.append(E.field(name=field_name, invisible="1", **attrs))
+                            dest_group.append(E.field(name=field_name, invisible="True", **attrs))
+                            dest_group.append(etree.Comment(invisible_information))
                         else:
                             dest_group.append(E.field(name=field_name, **attrs))
                         # add duplicate invisible field so default values are saved on create
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="True", groups='!base.group_no_one')))
+                        xml0.append(etree.Comment(invisible_information))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))

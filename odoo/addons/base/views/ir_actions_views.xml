@@ -57,7 +57,6 @@
             <field name="model">ir.actions.report</field>
             <field name="arch" type="xml">
                 <form string="Report">
-                    <field name="binding_model_id" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="create_action" type="object"
@@ -313,7 +312,6 @@
             <field name="arch" type="xml">
                 <form string="Server Action">
                     <header>
-                        <field name="binding_model_id" invisible="1"/>
                         <button name="create_action" string="Create Contextual Action" type="object"
                                 class="btn-primary"
                                 invisible="binding_model_id"
@@ -344,10 +342,7 @@
                         <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
                             <field name="evaluation_type" class="oe_inline"/>
                             <field name="update_path" widget="DynamicModelFieldSelectorChar" class="oe_inline" options="{'model': 'model_name'}"/>
-                            <field name="update_field_id" invisible="1"/>
-                            <field name="value_field_to_show" invisible="1"/>
-                            <field name="update_related_model_id" invisible="1"/>
-                            <field name="update_field_type" invisible="1"/>
+                            <field name="update_field_id" invisible="True"/>  <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                             <span invisible="evaluation_type != 'value' or not update_field_type == 'many2many'">by</span>
                             <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or not update_field_type == 'many2many'" required="update_field_type == 'many2many'"/>
                             <span invisible="evaluation_type != 'value' or update_field_type == 'many2many'">to</span>
@@ -376,17 +371,13 @@
                         </div>
                         <group name="action_wrapper">
                             <group name="action_content">
-                                <field name="model_name" invisible="1"/>
-                                <field name="available_model_ids" invisible="1"/>
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" groups="!base.group_no_one" invisible="context.get('default_model_id')"
                                        domain="[('id', 'in', available_model_ids)]"/>
 
-                                <field name="type" invisible="1"/>
                                 <field name="crud_model_id"
                                     options="{'no_create': True, 'no_open': True}"
                                     invisible="state != 'object_create'"
                                     required="state == 'object_create'"/>
-                                <field name="crud_model_name" invisible="1"/>
                                 <field name="value" widget="char" string="Name" invisible="state != 'object_create'"
                                        help="The name of the record to create" placeholder="e.g. Follow-up"/>
                                 <field name="link_field_id"

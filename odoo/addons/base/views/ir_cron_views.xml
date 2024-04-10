@@ -44,7 +44,6 @@
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="numbercall"/>
-                    <field name="user_id" column_invisible="True"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -56,7 +55,6 @@
             <field name="arch" type="xml">
                 <calendar string="Scheduled Actions" date_start="nextcall" color="user_id">
                     <field name="name"/>
-                    <field name="user_id" filters="1" invisible="1"/>
                 </calendar>
             </field>
         </record>

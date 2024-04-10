@@ -5,8 +5,8 @@
         <field name="model">res.lang</field>
         <field name="inherit_id" ref="base.res_lang_form"/>
         <field name="arch" type="xml">
-            <field name="url_code" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <field name="iso_code" position="after">
+                <field name="url_code" required="0"/>
             </field>
         </field>
     </record>
@@ -16,8 +16,8 @@
         <field name="model">res.lang</field>
         <field name="inherit_id" ref="base.res_lang_tree"/>
         <field name="arch" type="xml">
-            <field name="url_code" position="attributes">
-                <attribute name="column_invisible">0</attribute>
+            <field name="iso_code" position="after">
+                <field name="url_code" groups="base.group_no_one"/>
             </field>
         </field>
     </record>

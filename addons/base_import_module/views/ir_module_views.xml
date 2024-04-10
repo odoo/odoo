@@ -28,24 +28,11 @@
                 </xpath>
             </field>
         </record>
-        <record model="ir.ui.view" id="module_tree_apps_inherit">
-            <field name="name">Apps List Data Modules</field>
-            <field name="model">ir.module.module</field>
-            <field name="inherit_id" ref="base.module_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='category_id']" position="after">
-                    <field name="module_type" column_invisible="1"/>
-                </xpath>
-            </field>
-        </record>
         <record model="ir.ui.view" id="module_form_apps_inherit">
             <field name="name">Apps</field>
             <field name="model">ir.module.module</field>
             <field name="inherit_id" ref="base.module_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='has_iap']" position="after">
-                    <field name="module_type" invisible="1"/>
-                </xpath>
                 <xpath expr="//page[@name='technical_data']" position="attributes">
                     <attribute name="invisible">module_type != 'official'</attribute>
                 </xpath>
