@@ -6,6 +6,7 @@ from odoo import fields, Command
 from odoo.tests import Form
 from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 
+
 class TestPurchaseOldRules(PurchaseTestCommon):
 
     def create_picking_out(self, warehouse):
@@ -67,7 +68,6 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         reception_route_3 = cls.warehouse_3_steps.reception_route_id
         reception_route_3.rule_ids[0].write({'action': 'pull_push'})
         reception_route_3.rule_ids[1].write({'action': 'pull_push'})
-        reception_route_3.rule_ids.location_dest_from_rule = True
         buy_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_3_steps.in_type_id).write({
             'location_dest_id': reception_route_3.rule_ids[0].location_src_id.id,
         })
@@ -89,7 +89,6 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         })
         reception_route_2 = cls.warehouse_2_steps.reception_route_id
         reception_route_2.rule_ids[0].write({'action': 'pull_push'})
-        reception_route_2.rule_ids.location_dest_from_rule = True
         buy_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_2_steps.in_type_id).write({
             'location_dest_id': reception_route_2.rule_ids[0].location_src_id.id,
         })
@@ -113,7 +112,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
 
         picking_ids = self.env['stock.picking'].search([('group_id', '=', self.group.id)])
 
-        internal = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.int_type_id and r.group_id.id == self.group.id)
+        storage = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.store_type_id and r.group_id.id == self.group.id)
         pick = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.pick_type_id and r.group_id.id == self.group.id)
 
         # Check status of Purchase Order
@@ -122,7 +121,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         purchase_order.button_cancel()
 
         # Check the status of picking after canceling po.
-        for res in internal:
+        for res in storage:
             self.assertEqual(res.state, 'cancel')
         self.assertNotEqual(pick.state, 'cancel')
         self.assertNotEqual(picking_out.state, 'cancel')
@@ -132,7 +131,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             Ex.
                 1) Set 2 steps of receiption and delivery on the warehouse.
                 2) Create Delivery order with mto move and confirm the order, related RFQ should be generated.
-                3) Cancel 'confirm' purchase order should cancel releted < Receiption Picking IN, INT>
+                3) Cancel 'confirm' purchase order should cancel releted < Receiption Picking IN, STOR>
                   not < PICK, SHIP >
         """
         picking_out = self.create_picking_out(self.warehouse_2_steps)
@@ -276,13 +275,13 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
         # Check scheduled date of Internal Type shipment
-        incoming_shipment1 = self.env['stock.picking'].search([('move_ids.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', warehouse.int_type_id.id), ('location_id', '=', warehouse.wh_input_stock_loc_id.id), ('location_dest_id', '=', warehouse.wh_qc_stock_loc_id.id)])
+        incoming_shipment1 = self.env['stock.picking'].search([('move_ids.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', warehouse.qc_type_id.id), ('location_id', '=', warehouse.wh_input_stock_loc_id.id), ('location_dest_id', '=', warehouse.wh_qc_stock_loc_id.id)])
         incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
         self.assertEqual(incoming_shipment1.date_deadline, incoming_shipment1_date)
         old_deadline1 = incoming_shipment1.date_deadline
 
-        incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', warehouse.int_type_id.id), ('location_id', '=', warehouse.wh_qc_stock_loc_id.id), ('location_dest_id', '=', warehouse.lot_stock_id.id)])
+        incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', warehouse.store_type_id.id), ('location_id', '=', warehouse.wh_qc_stock_loc_id.id), ('location_dest_id', '=', warehouse.lot_stock_id.id)])
         incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_ids[0].rule_id.delay)
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
         self.assertEqual(incoming_shipment2.date_deadline, incoming_shipment2_date)

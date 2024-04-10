@@ -52,6 +52,8 @@ class TestSubcontractingBasic(TransactionCase):
             "pack_type_id",
             "out_type_id",
             "in_type_id",
+            "qc_type_id",
+            "store_type_id",
             "int_type_id"
         ]
         for operation_type in operation_types:
