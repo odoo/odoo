@@ -45,13 +45,26 @@ class AccountMove(models.Model):
     def _compute_l10n_din5008_addresses(self):
         for record in self:
             record.l10n_din5008_addresses = data = []
-            if record.partner_shipping_id == record.partner_id:
-                data.append((_("Invoicing and Shipping Address:"), record.partner_shipping_id))
-            elif record.move_type in ("in_invoice", "in_refund") or not record.partner_shipping_id:
-                data.append((_("Invoicing and Shipping Address:"), record.partner_id))
-            else:
-                data.append((_("Shipping Address:"), record.partner_shipping_id))
-                data.append((_("Invoicing Address:"), record.partner_id))
+            commercial_partner = record.partner_id.commercial_partner_id
+            delivery_partner = record.partner_shipping_id
+            invoice_partner = record.partner_id
+
+            different_partner_count = len({partner.id for partner in [commercial_partner, delivery_partner, invoice_partner] if partner})
+            # To avoid repetition in the address block.
+            if different_partner_count <= 1:
+                continue
+            elif different_partner_count == 3:
+                data.extend([(_("Shipping Address:"), delivery_partner), (_("Invoicing Address:"), invoice_partner)])
+                continue
+            elif commercial_partner == invoice_partner:
+                data.append((_("Shipping Address:"), delivery_partner))
+                continue
+            elif commercial_partner == delivery_partner:
+                data.append((_("Invoicing Address:"), invoice_partner))
+                continue
+            elif invoice_partner == delivery_partner:
+                data.append((_("Invoicing and Shipping Address:"), invoice_partner))
+                continue
 
     def check_field_access_rights(self, operation, field_names):
         field_names = super().check_field_access_rights(operation, field_names)
