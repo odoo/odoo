@@ -1,4 +1,4 @@
-import { CorePlugin, Model } from "@odoo/o-spreadsheet";
+import { CorePlugin, Model, UID } from "@odoo/o-spreadsheet";
 import { ChartOdooMenuPlugin, OdooChartCorePlugin, OdooChartUIPlugin } from "@spreadsheet/chart";
 import { CurrencyPlugin } from "@spreadsheet/currency/plugins/currency";
 import {AccountingPlugin} from "addons/spreadsheet_account/static/src/plugins/accounting_plugin";

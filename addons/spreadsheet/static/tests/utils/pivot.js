@@ -3,7 +3,7 @@
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { nextTick } from "@web/../tests/helpers/utils";
 
-import { OdooPivot } from "@spreadsheet/pivot/pivot_data_source";
+import { OdooPivot } from "@spreadsheet/pivot/odoo_pivot";
 import { getBasicServerData, getBasicPivotArch } from "./data";
 import { createModelWithDataSource } from "./model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";

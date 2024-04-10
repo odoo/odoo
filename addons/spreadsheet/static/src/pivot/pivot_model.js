@@ -12,9 +12,8 @@ const { toString, toNumber, toBoolean, isDateField, pivotTimeAdapter } = helpers
 const { DEFAULT_LOCALE } = constants;
 
 /**
- * @typedef {import("@spreadsheet").Field} Field
- * @typedef {import("@spreadsheet").SPTableColumn} SPTableColumn
- * @typedef {import("@spreadsheet").SPTableRow} SPTableRow
+ * @typedef {import("@odoo/o-spreadsheet").PivotTableColumn} PivotTableColumn
+ * @typedef {import("@odoo/o-spreadsheet").PivotTableRow} PivotTableRow
  */
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
@@ -438,10 +437,10 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the row structure
-     * @returns {SPTableRow[]}
+     * @returns {PivotTableRow[]}
      */
     _getSpreadsheetRows(tree) {
-        /**@type {SPTableRow[]}*/
+        /**@type {PivotTableRow[]}*/
         let rows = [];
         const group = tree.root;
         const indent = group.labels.length;
@@ -463,7 +462,7 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the col structure
-     * @returns {SPTableColumn[][]}
+     * @returns {PivotTableColumn[][]}
      */
     _getSpreadsheetCols() {
         const colGroupBys = this.metaData.fullColGroupBys;
@@ -541,6 +540,10 @@ export class OdooPivotModel extends PivotModel {
         return this.getDefinition().measures.map((measure) => {
             if (measure.type === "many2one" && !measure.aggregator) {
                 return `${measure.name}:count_distinct`;
+            }
+            if (measure.name === "__count") {
+                // Remove aggregator that is not supported by python
+                return "__count";
             }
             return measure.nameWithAggregator;
         });
