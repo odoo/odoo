@@ -7,13 +7,14 @@ import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
 
 /**
- * @typedef {import("@spreadsheet/data_sources/metadata_repository").Field} Field
+ * @typedef {import("@spreadsheet").OdooField} OdooField
+ * @typedef {import("@spreadsheet").OdooFields} OdooFields
  */
 
 /**
  * @typedef {Object} OdooModelMetaData
  * @property {string} resModel
- * @property {Record<string, Field>} [fields]
+ * @property {OdooFields} [fields]
  *
  * @typedef {Object} OdooModelSearchParams
  * @property {Object} context
@@ -75,7 +76,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
     }
 
     /**
-     * @returns {Record<string, Field>} List of fields
+     * @returns {OdooFields} List of fields
      */
     getFields() {
         this._assertMetaDataLoaded();
@@ -84,7 +85,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
 
     /**
      * @param {string} field Field name
-     * @returns {Field | undefined} Field
+     * @returns {OdooField | undefined} Field
      */
     getField(field) {
         this._assertMetaDataLoaded();
