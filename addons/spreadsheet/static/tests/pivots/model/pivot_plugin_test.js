@@ -219,7 +219,10 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.equal(getCellValue(model, "G10"), "#ERROR");
         assert.equal(getCellValue(model, "G11"), "#ERROR");
         assert.equal(getEvaluatedCell(model, "G10").message, "Field non-existing does not exist");
-        assert.equal(getEvaluatedCell(model, "G11").message, "Field non-existing does not exist");
+        assert.equal(
+            getEvaluatedCell(model, "G11").message,
+            "Dimensions don't match the pivot definition"
+        );
     });
 
     QUnit.test("invalid group dimensions", async function (assert) {
@@ -1210,8 +1213,8 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         const { model, pivotId } = await createSpreadsheetWithPivot();
         model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "second" });
         model.dispatch("DUPLICATE_PIVOT", { pivotId, newPivotId: "third" });
-        assert.deepEqual(model.getters.getPivotCoreDefinition("second").formulaId, "2");
-        assert.deepEqual(model.getters.getPivotCoreDefinition("third").formulaId, "3");
+        assert.deepEqual(model.getters.getPivotFormulaId("second"), "2");
+        assert.deepEqual(model.getters.getPivotFormulaId("third"), "3");
     });
 
     QUnit.test("Cannot duplicate unknown pivot", async (assert) => {

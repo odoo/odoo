@@ -1,4 +1,3 @@
-/** @odoo-module */
 //@ts-check
 
 import { Domain } from "@web/core/domain";
@@ -9,15 +8,16 @@ import { OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
-const { pivotRegistry } = registries;
+const { pivotRegistry, supportedPivotExplodedFormulaRegistry } = registries;
 const { pivotTimeAdapter } = helpers;
 
 /**
- * @typedef {import("@spreadsheet").Pivot<OdooPivotRuntimeDefinition>} IPivot
- * @typedef {import("./pivot_runtime").PivotMeasure} PivotMeasure
+ * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
+ * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
  * @typedef {import("@spreadsheet").WebPivotModelParams} WebPivotModelParams
- * @typedef {import("@spreadsheet").Fields} Fields
- * @typedef {import("@spreadsheet").OdooPivotDefinition} OdooPivotDefinition
+ * @typedef {import("@spreadsheet").OdooPivot<OdooPivotRuntimeDefinition>} IPivot
+ * @typedef {import("@spreadsheet").OdooFields} OdooFields
+ * @typedef {import("@spreadsheet").OdooPivotCoreDefinition} OdooPivotCoreDefinition
  * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
  * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
  */
@@ -31,7 +31,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @override
      * @param {Object} services Services (see DataSource)
      * @param {Object} params
-     * @param {OdooPivotDefinition} params.definition
+     * @param {OdooPivotCoreDefinition} params.definition
      * @param {OdooGetters} params.getters
      */
     constructor(services, { definition, getters }) {
@@ -45,6 +45,8 @@ export class OdooPivot extends OdooViewsDataSource {
             },
         };
         super(services, params);
+        /** @type {"ODOO"} */
+        this.type = "ODOO";
         this._rawDefinition = definition;
         /** @type {OdooPivotRuntimeDefinition | undefined} */
         this._runtimeDefinition = undefined;
@@ -52,10 +54,15 @@ export class OdooPivot extends OdooViewsDataSource {
         this._model = undefined;
         /** @type {OdooGetters} */
         this.getters = getters;
+        this.needsReevaluation = false;
         this.setup();
     }
 
     setup() {}
+
+    init(params) {
+        this.load(params);
+    }
 
     async _load() {
         await super._load();
@@ -92,24 +99,25 @@ export class OdooPivot extends OdooViewsDataSource {
      * - measure header 'PIVOT.HEADER(1,"stage_id",2,"user_id",6,"measure","expected_revenue")
      * - positional header 'PIVOT.HEADER(1,"#stage_id",1,"#user_id",1)'
      *
-     * @param {(string | number)[]} domainArgs arguments of the function (except the first one which is the pivot id)
-     * @returns {string | number | boolean}
+     * @param {string[]} domainArgs arguments of the function (except the first one which is the pivot id)
+     * @returns {FPayload}
      */
-    computePivotHeaderValue(domainArgs) {
+    getPivotHeaderValueAndFormat(domainArgs) {
         this.assertIsValid();
         if (domainArgs.length === 0) {
-            return _t("Total");
+            return { value: _t("Total") };
         }
         if (domainArgs.at(-2) === "measure") {
             const measureName = domainArgs.at(-1).toString();
-            return this.getMeasure(measureName).displayName;
+            return { value: this.getMeasure(measureName).displayName };
         }
         const field = domainArgs.at(-2).toString();
         const value = this._model.getGroupByCellValue(
             field,
             this._model.getLastPivotGroupValue(domainArgs)
         );
-        return value;
+        const format = this._getPivotFieldFormat(field);
+        return { value, format };
     }
 
     /**
@@ -148,7 +156,7 @@ export class OdooPivot extends OdooViewsDataSource {
      * @param {string} fieldName
      * @returns {string | undefined}
      */
-    getPivotFieldFormat(fieldName) {
+    _getPivotFieldFormat(fieldName) {
         const { field, granularity } = this.parseGroupField(fieldName);
         switch (field.type) {
             case "integer":
@@ -167,31 +175,30 @@ export class OdooPivot extends OdooViewsDataSource {
         }
     }
 
-    getPivotMeasureFormat(measureName) {
+    /**
+     * @param {string} measureName
+     * @param {string[]} domain
+     * @returns {FPayload}
+     */
+    getPivotCellValueAndFormat(measureName, domain) {
+        this.assertIsValid();
+        const value = this._model.getPivotCellValue(measureName, domain);
         const measure = this.getMeasure(measureName);
+        let format;
         switch (measure.aggregator) {
             case "count":
             case "count_distinct":
-                return "0";
+                format = "0";
+                break;
             default:
-                return this.getPivotFieldFormat(measure.name);
+                format = measure.name === "__count" ? "0" : this._getPivotFieldFormat(measure.name);
         }
+        return { value, format };
     }
 
     //--------------------------------------------------------------------------
     // Odoo specific
     //--------------------------------------------------------------------------
-
-    /**
-     * @param {string} measure Field name of the measures
-     * @param {Array<string | number>} domain
-     *
-     * @returns {string | number | boolean}
-     */
-    getPivotCellValue(measure, domain) {
-        this.assertIsValid();
-        return this._model.getPivotCellValue(measure, domain);
-    }
 
     /**
      * @param {string} groupFieldString
@@ -202,7 +209,7 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string[]}
+     * @param {string[]} domain
      */
     getPivotCellDomain(domain) {
         this.assertIsValid();
@@ -248,8 +255,8 @@ export class OdooPivot extends OdooViewsDataSource {
 
 export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
     /**
-     * @param {OdooPivotDefinition} definition
-     * @param {Fields} fields
+     * @param {OdooPivotCoreDefinition} definition
+     * @param {OdooFields} fields
      */
     constructor(definition, fields) {
         super(definition, fields);
@@ -261,6 +268,15 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._model = definition.model;
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
+        /**
+         * month_number is currently not supported in Odoo, remove it
+         */
+        for (const dimension of this.columns.concat(this.rows)) {
+            if (dimension.granularity === "month_number") {
+                dimension.granularity = undefined;
+                dimension.nameWithGranularity = dimension.name;
+            }
+        }
     }
 
     get sortedColumn() {
@@ -281,7 +297,7 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
 
     /**
      * Only for Web pivot model compatibility
-     * @param {Fields} [fields]
+     * @param {OdooFields} [fields]
      *
      * @returns {WebPivotModelParams}
      */
@@ -307,7 +323,19 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
     }
 }
 
+const MEASURES_TYPES = ["integer", "float", "monetary"];
+
 pivotRegistry.add("ODOO", {
-    cls: OdooPivot,
+    ui: OdooPivot,
     definition: OdooPivotRuntimeDefinition,
+    externalData: true,
+    onIterationEndEvaluation: () => {},
+    granularities: ["year", "quarter", "month", "week", "day"],
+    isMeasureCandidate: (field) =>
+        ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
+        field.name !== "id" &&
+        field.store,
+    isGroupable: (field) => field.groupable,
 });
+
+supportedPivotExplodedFormulaRegistry.add("ODOO", true);
