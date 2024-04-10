@@ -17,7 +17,8 @@ class ReportMoOverview(models.AbstractModel):
         for po_line in po_lines:
             line_qty = po_line.product_qty
             for move in po_line.move_dest_ids:
-                linked_production = self.env['stock.move'].browse(move._rollup_move_dests()).raw_material_production_id
+                # Get the newest associated MO
+                linked_production = self.env['stock.move'].browse(move._rollup_move_dests()).raw_material_production_id[-1:]
                 # Only create specific lines for moves directly linked to a manufacturing order
                 if not linked_production:
                     continue
