@@ -985,3 +985,56 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
         self.assertEqual(svl[0].unit_cost, 67.5)
         self.assertEqual(svl[1].unit_cost, 135000000)
+
+    def test_mo_overview_mto_purchase_with_backorders(self):
+        self.warehouse.reception_steps = 'two_steps'
+        # Enable MTO route for Component
+        self.env.ref('stock.route_warehouse0_mto').active = True
+        route_buy = self.warehouse.buy_pull_id.route_id.id
+        route_mto = self.warehouse.mto_pull_id.route_id.id
+        self.component_a.write({
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id},
+            )],
+            'route_ids': [
+                Command.link(route_buy),
+                Command.link(route_mto),
+            ],
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.component_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 2.0,
+                }),
+            ],
+        })
+        with Form(self.env['mrp.production']) as prod_form:
+            prod_form.product_id = self.component_b
+            prod_form.bom_id = bom
+            prod_form.product_qty = 3
+            production = prod_form.save()
+        production.action_confirm()
+        self.assertEqual(production.purchase_order_count, 1)
+        purchase = production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+        self.assertEqual(len(purchase), 1)
+
+        with Form(production) as prod_form:
+            prod_form.qty_producing = 1
+            production = prod_form.save()
+        backorder_action = production.button_mark_done()
+        backorder_wizard = Form(self.env['mrp.production.backorder'].with_context(**backorder_action['context']))
+        backorder_wizard.save().action_backorder()
+
+        backorder = production.procurement_group_id.mrp_production_ids - production
+        self.assertEqual(len(backorder), 1)
+        self.assertEqual(backorder.product_qty, 2)
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(backorder.id)
+        self.assertEqual(report_values['summary']['quantity'], backorder.product_qty)
+        self.assertEqual(report_values['components'][0]['summary']['quantity'], 4)
+        replenishments = report_values['components'][0]['replenishments']
+        self.assertEqual(len(replenishments), 1)
+        self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
