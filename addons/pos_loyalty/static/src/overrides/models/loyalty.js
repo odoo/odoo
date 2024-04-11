@@ -832,7 +832,6 @@ patch(Order.prototype, {
                         const lineQty = line.reward_product_id
                             ? -line.get_quantity()
                             : line.get_quantity();
-                        totalProductQty += lineQty;
                         if (qtyPerProduct[line.reward_product_id || line.get_product().id]) {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] +=
                                 lineQty;
@@ -842,6 +841,7 @@ patch(Order.prototype, {
                         }
                         if (!line.is_reward_line) {
                             orderedProductPaid += line.get_price_with_tax();
+                            totalProductQty += lineQty;
                         }
                     }
                 }
