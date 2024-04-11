@@ -62,12 +62,15 @@ class PaymentLinkWizard(models.TransientModel):
         for payment_link in self:
             related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
             base_url = related_document.get_base_url()  # Don't generate links for the wrong website
-            url_params = {
-                'amount': self.amount,
-                'access_token': self._get_access_token(),
-                **self._get_additional_link_values(),
-            }
-            payment_link.link = f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
+            payment_link.link = payment_link._generate_link(base_url, related_document)
+
+    def _generate_link(self, base_url, related_document):
+        url_params = {
+            'amount': self.amount,
+            'access_token': self._get_access_token(),
+            **self._get_additional_link_values(),
+        }
+        return f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
 
     def _get_additional_link_values(self):
         """ Return the additional values to append to the payment link.
