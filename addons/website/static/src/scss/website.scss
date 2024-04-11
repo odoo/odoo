@@ -1622,6 +1622,12 @@ $ribbon-padding: 100px;
     height: 0px;
 }
 
+.o_cookies_bar_toggle {
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
 // Search results
 .o_search_result_item_detail {
     flex: 1;
