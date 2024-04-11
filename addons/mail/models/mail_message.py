@@ -1015,7 +1015,7 @@ class Message(models.Model):
                     thread["module_icon"] = modules.module.get_module_icon(self.env[message_sudo.model]._original_module)
                 vals["thread"] = thread
             if for_current_user:
-                allowed_tracking_ids = message_sudo.tracking_value_ids._filter_tracked_field_access(self.env)
+                allowed_tracking_ids = message_sudo.tracking_value_ids._filter_has_field_access(self.env)
                 displayed_tracking_ids = allowed_tracking_ids
                 if record and hasattr(record, '_track_filter_for_display'):
                     displayed_tracking_ids = record._track_filter_for_display(displayed_tracking_ids)

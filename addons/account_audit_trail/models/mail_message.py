@@ -28,7 +28,7 @@ class Message(models.Model):
         (self - move_messages).account_audit_log_preview = False
         for message in move_messages:
             title = message.subject or message.preview
-            tracking_value_ids = message.sudo().tracking_value_ids._filter_tracked_field_access(self.env)
+            tracking_value_ids = message.sudo().tracking_value_ids._filter_has_field_access(self.env)
             if not title and tracking_value_ids:
                 title = _("Updated")
             if not title and message.subtype_id and not message.subtype_id.internal:

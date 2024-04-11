@@ -3470,7 +3470,7 @@ class MailThread(models.AbstractModel):
         if check_tracking:
             tracking_values = self.env['mail.tracking.value'].sudo().search(
                 [('mail_message_id', '=', message.id)]
-            )._filter_tracked_field_access(self.env)
+            )._filter_has_field_access(self.env)
             if tracking_values and hasattr(record_wlang, '_track_filter_for_display'):
                 tracking_values = record_wlang._track_filter_for_display(tracking_values)
             tracking = [
@@ -4093,20 +4093,15 @@ class MailThread(models.AbstractModel):
         if message.subtype_id and message.subtype_id.description:
             tracking_message = return_line + message.subtype_id.description + return_line
 
-        def _free_access(tracking):
-            model = self.env[tracking.mail_message_id.model]
-            field = model._fields.get(tracking.field_id.name)
-            return field and not field.groups
-
-        for value in message.sudo().tracking_value_ids.filtered(_free_access):
-            if value.field_id.ttype == 'boolean':
-                old_value = str(bool(value.old_value_integer))
-                new_value = str(bool(value.new_value_integer))
+        for tracking in message.sudo().tracking_value_ids._filter_free_field_access():
+            if tracking.field_id.ttype == 'boolean':
+                old_value = str(bool(tracking.old_value_integer))
+                new_value = str(bool(tracking.new_value_integer))
             else:
-                old_value = value.old_value_char if value.old_value_char else str(value.old_value_integer)
-                new_value = value.new_value_char if value.new_value_char else str(value.new_value_integer)
+                old_value = tracking.old_value_char or str(tracking.old_value_integer)
+                new_value = tracking.new_value_char or str(tracking.new_value_integer)
 
-            tracking_message += value.field_id.field_description + ': ' + old_value
+            tracking_message += tracking.field_id.field_description + ': ' + old_value
             if old_value != new_value:
                 tracking_message += ' → ' + new_value
             tracking_message += return_line
