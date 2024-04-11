@@ -1604,7 +1604,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onScrollWebsiteAnimate(ev) {
-        this._scrollWebsiteAnimate(ev.currentTarget);
+        // Note: Do not rely on ev.currentTarget which might be lost by Chrome.
+        this._scrollWebsiteAnimate(this.$scrollingElement[0]);
     },
 });
 
