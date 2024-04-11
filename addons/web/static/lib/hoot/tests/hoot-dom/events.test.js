@@ -882,6 +882,55 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue(42);
     });
 
+    test("press arrow keys on input", async () => {
+        await mountOnFixture(/* xml */ `<input value="value" />`);
+
+        click("input");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press("left");
+
+        expect("input").toHaveProperty("selectionStart", 4);
+        expect("input").toHaveProperty("selectionEnd", 4);
+
+        press("left");
+        press("left");
+        press("right");
+
+        expect("input").toHaveProperty("selectionStart", 3);
+        expect("input").toHaveProperty("selectionEnd", 3);
+
+        press(["control", "a"]);
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press("right");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press(["ctrl", "a"]);
+        press("down");
+
+        expect("input").toHaveProperty("selectionStart", 5);
+        expect("input").toHaveProperty("selectionEnd", 5);
+
+        press(["ctrl", "a"]);
+        press("left");
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 0);
+
+        press(["ctrl", "a"]);
+        press("up");
+
+        expect("input").toHaveProperty("selectionStart", 0);
+        expect("input").toHaveProperty("selectionEnd", 0);
+    });
+
     test("press 'Enter' on form input", async () => {
         await mountOnFixture(/* xml */ `
             <form t-on-submit.prevent="">
