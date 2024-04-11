@@ -96,6 +96,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             {"email": self.organizer_user.partner_id.email, "responseStatus": "accepted"},
             {"email": self.attendee_user.partner_id.email, "responseStatus": response_status},
         ]
+        updated_event_id = updated_event_google_values['id']
+        updated_event_google_values['id'] = updated_event_id[:updated_event_id.index('_') + 1] + 'R' + updated_event_id[updated_event_id.index('_') + 1:]
         recurrence_google_values["recurrence"] = [rrule1]
         updated_event_google_values["recurrence"] = [rrule2]
         return [
@@ -1874,8 +1876,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.attendee_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_this_event_option_synced_by_organizer(self, mock_get_events):
@@ -1899,8 +1904,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.organizer_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_all_events_option_synced_by_attendee(self, mock_get_events):
@@ -1924,8 +1932,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["accepted", "accepted", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.attendee_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_all_events_option_synced_by_organizer(self, mock_get_events):
@@ -1949,8 +1960,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["accepted", "accepted", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.organizer_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_following_events_option_synced_by_attendee(self, mock_get_events):
@@ -1980,8 +1994,11 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.attendee_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
 
     @patch.object(GoogleCalendarService, 'get_events')
     def test_accepting_recurrent_event_with_all_following_option_synced_by_organizer(self, mock_get_events):
@@ -2011,5 +2028,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
         with self.mock_datetime_and_now("2024-04-22"):
             self.organizer_user.sudo()._sync_google_calendar(self.google_service)
-            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
-                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
