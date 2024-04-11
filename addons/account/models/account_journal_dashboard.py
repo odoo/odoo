@@ -382,16 +382,16 @@ class account_journal(models.Model):
 
         # Number to reconcile
         self._cr.execute("""
-            SELECT st_line_move.journal_id,
+            SELECT st_line.journal_id,
                    COUNT(st_line.id)
               FROM account_bank_statement_line st_line
               JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
-             WHERE st_line_move.journal_id IN %s
+             WHERE st_line.journal_id IN %s
+               AND st_line.company_id IN %s
                AND NOT st_line.is_reconciled
                AND st_line_move.to_check IS NOT TRUE
                AND st_line_move.state = 'posted'
-               AND st_line_move.company_id IN %s
-          GROUP BY st_line_move.journal_id
+          GROUP BY st_line.journal_id
         """, [tuple(bank_cash_journals.ids), tuple(self.env.companies.ids)])
         number_to_reconcile = {
             journal_id: count
@@ -703,8 +703,8 @@ class account_journal(models.Model):
                              JOIN account_move move ON move.id = stl.move_id
                             WHERE stl.statement_id IS NULL
                               AND move.state != 'cancel'
-                              AND move.journal_id = journal.id
-                              AND move.company_id = ANY(%s)
+                              AND stl.journal_id = journal.id
+                              AND stl.company_id = ANY(%s)
                               AND stl.internal_index >= COALESCE(statement.first_line_index, '')
                             LIMIT 1
                    ) without_statement ON TRUE

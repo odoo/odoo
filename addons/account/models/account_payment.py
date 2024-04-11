@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
+from odoo.tools import create_index
 
 
 class AccountPayment(models.Model):
@@ -18,7 +19,18 @@ class AccountPayment(models.Model):
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
         index=True,
         check_company=True)
-
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        inherited=True,
+        related='move_id.journal_id', store=True, readonly=False, precompute=True,
+        index=False,  # covered by account_payment_journal_id_company_id_idx
+    )
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        inherited=True,
+        related='move_id.company_id', store=True, readonly=False, precompute=True,
+        index=False,  # covered by account_payment_journal_id_company_id_idx
+    )
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
         compute='_compute_reconciliation_status')
     is_matched = fields.Boolean(string="Is Matched With a Bank Statement", store=True,
@@ -168,6 +180,22 @@ class AccountPayment(models.Model):
             "The payment amount cannot be negative.",
         ),
     ]
+
+    def init(self):
+        super().init()
+        create_index(
+            self.env.cr,
+            indexname='account_payment_journal_id_company_id_idx',
+            tablename='account_payment',
+            expressions=['journal_id', 'company_id']
+        )
+        create_index(
+            self.env.cr,
+            indexname='account_payment_unmatched_idx',
+            tablename='account_payment',
+            expressions=['journal_id', 'company_id'],
+            where="NOT is_matched OR is_matched IS NULL"
+        )
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -440,7 +468,8 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
+            if pay.partner_bank_id not in pay.available_partner_bank_ids:
+                pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
 
     @api.depends('partner_id', 'journal_id', 'destination_journal_id')
     def _compute_is_internal_transfer(self):
@@ -703,12 +732,15 @@ class AccountPayment(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
+    def default_get(self, fields_list):
+        self_ctx = self.with_context(is_payment=True)
+        defaults = super(AccountPayment, self_ctx).default_get(fields_list)
+        if 'journal_id' in fields_list and not defaults.get('journal_id'):
+            defaults['journal_id'] = self_ctx.env['account.move']._search_default_journal().id
+        return defaults
+
     def new(self, values=None, origin=None, ref=None):
-        payment = super().new(values, origin, ref)
-        if not any(values.values()) and not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
-            payment.move_id.payment_id = payment
-            payment.move_id._compute_journal_id()
-        return payment
+        return super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -726,20 +758,19 @@ class AccountPayment(models.Model):
 
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
-            vals['journal_id'] = vals.get('journal_id') or self.move_id.with_context(is_payment=True)._search_default_journal().id
 
-        payments = super().create([{
+        payments = super(AccountPayment, self.with_context(is_payment=True)).create([{
             'name': False,
             **vals,
         } for vals in vals_list])
 
-        for i, pay in enumerate(payments):
+        for i, (pay, vals) in enumerate(zip(payments, vals_list)):
             # Write payment_id on the journal entry plus the fields being stored in both models but having the same
             # name, e.g. partner_bank_id. The ORM is currently not able to perform such synchronization and make things
             # more difficult by creating related fields on the fly to handle the _inherits.
             # Then, when partner_bank_id is in vals, the key is consumed by account.payment but is never written on
             # account.move.
-            to_write = {'payment_id': pay.id}
+            to_write = {'payment_id': pay.id, 'name': False}
             for k, v in vals_list[i].items():
                 if k in self._fields and self._fields[k].store and k in pay.move_id._fields and pay.move_id._fields[k].store:
                     to_write[k] = v
@@ -752,13 +783,13 @@ class AccountPayment(models.Model):
                         force_balance=force_balance_vals_list[i],
                     )
                 ]
-
-            pay.move_id.write(to_write)
+            with self.env.protecting(self.env['account.move']._get_protected_vals(vals, pay)):
+                pay.move_id.write(to_write)
             self.env.add_to_compute(self.env['account.move']._fields['name'], pay.move_id)
 
         # We need to reset the cached name, since it was recomputed on the delegate account.move model
         payments.invalidate_recordset(fnames=['name'])
-        return payments
+        return payments.with_env(self.env)  # clear the context
 
     def write(self, vals):
         # OVERRIDE
@@ -932,6 +963,7 @@ class AccountPayment(models.Model):
 
             paired_payment = payment.copy({
                 'journal_id': payment.destination_journal_id.id,
+                'company_id': payment.company_id.id,
                 'destination_journal_id': payment.journal_id.id,
                 'payment_type': payment.payment_type == 'outbound' and 'inbound' or 'outbound',
                 'move_id': None,
