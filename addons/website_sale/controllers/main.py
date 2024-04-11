@@ -1770,7 +1770,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/shop')
 
         if order and not order.amount_total and not tx_sudo:
-            order._validate_zero_amount_cart()
+            if order.state != 'sale':
+                order._validate_zero_amount_cart()
 
             # clean context and session, then redirect to the portal page
             request.website.sale_reset()
