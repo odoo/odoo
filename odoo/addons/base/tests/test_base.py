@@ -149,11 +149,11 @@ class TestGroups(TransactionCase):
         b = self.env['res.groups'].create({'name': 'B'})
         c = self.env['res.groups'].create({'name': 'G', 'implied_ids': [Command.set((a + b).ids)]})
         d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [Command.set(c.ids)]})
-        self.assertTrue((a + b + c + d)._check_m2m_recursion('implied_ids'))
+        self.assertTrue((a + b + c + d)._check_recursion('implied_ids'))
 
         # create a cycle and check
         a.implied_ids = d
-        self.assertFalse(a._check_m2m_recursion('implied_ids'))
+        self.assertFalse(a._check_recursion('implied_ids'))
 
     def test_res_group_copy(self):
         a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})

@@ -189,7 +189,7 @@ class PricelistItem(models.Model):
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
-    def _check_recursion(self):
+    def _check_pricelist_recursion(self):
         if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
             raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
 

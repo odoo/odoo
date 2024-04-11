@@ -5590,23 +5590,29 @@ class BaseModel(metaclass=MetaModel):
         valid_ids = set([r[0] for r in self._cr.fetchall()] + new_ids)
         return self.browse(i for i in self._ids if i in valid_ids)
 
-    def _check_recursion(self, parent=None):
+    def _check_recursion(self, field_name=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
-        by following the parent relationship using the **parent** field until a
-        loop is detected or until a top-level record is found.
+        by following the relation field until a loop is detected or until a
+        top-level record is found.
 
         Since EXCLUSIVE LOCK is not added for sake of performance, loops may be
         created by concurrent transactions
 
-        :param parent: optional parent field name (default: ``self._parent_name``)
+        :param field_name: optional relation field name (default: ``self._parent_name``)
         :return: **True** if no loop was found, **False** otherwise.
         """
-        if not parent:
-            parent = self._parent_name
+        if not field_name:
+            field_name = self._parent_name
+        field = self._fields.get(field_name)
+        if not (field and field.type in ('many2many', 'many2one') and
+                field.comodel_name == self._name and field.store):
+            raise ValueError('invalid field_name: %r, the field must be a many2one or many2many on itself' % (field_name,))
 
-        self.flush_model([parent])
-        return tools.check_relation_loop(self._cr, self._table, 'id', parent, self.ids)
+        self.flush_model([field_name])
+        if field.type == 'many2one':
+            return tools.check_relation_loop(self._cr, self._table, 'id', field_name, self.ids)
+        return tools.check_relation_loop(self._cr, field.relation, field.column1, field.column2, self.ids)
 
     def _check_m2m_recursion(self, field_name):
         """
@@ -5619,14 +5625,8 @@ class BaseModel(metaclass=MetaModel):
         :param field_name: field to check
         :return: **True** if no loop was found, **False** otherwise.
         """
-        field = self._fields.get(field_name)
-        if not (field and field.type == 'many2many' and
-                field.comodel_name == self._name and field.store):
-            # field must be a many2many on itself
-            raise ValueError('invalid field_name: %r' % (field_name,))
-
-        self.flush_model([field_name])
-        return tools.check_relation_loop(self._cr, field.relation, field.column1, field.column2, self.ids)
+        warnings.warn("Since 18.0, deprecated method, use _check_recursion instead", DeprecationWarning, 2)
+        return self._check_recursion(field_name)
 
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
