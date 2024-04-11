@@ -315,6 +315,7 @@ odoo.define('website.tour.form_editor', function (require) {
             run: 'text Management Service',
         }, {
             content: "Mark the field as not required",
+            extra_trigger: "we-list table input:eq(3)[name='Management Service']",
             trigger: 'we-button[data-name="required_opt"] we-checkbox',
         }, {
             content: "Check the resulting field",
@@ -360,7 +361,7 @@ odoo.define('website.tour.form_editor', function (require) {
             run: 'text 44 - UK',
         }, {
             content: "Check that the input value is the full option value",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='44 - UK']",
             run: () => {
                 const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
                 if (!addedOptionEl) {
