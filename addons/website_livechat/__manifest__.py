@@ -31,6 +31,9 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',
         ],
+        'web.assets_frontend': [
+            'website_livechat/static/src/patch/assets_frontend/website.scss',
+        ],
         'web.assets_backend': [
             'website_livechat/static/src/**/*',
             ('remove', 'website_livechat/static/src/scss/**/*'),
