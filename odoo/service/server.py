@@ -360,6 +360,8 @@ class ThreadedServer(CommonServer):
         # Variable keeping track of the number of calls to the signal handler defined
         # below. This variable is monitored by ``quit_on_signals()``.
         self.quit_signals_received = 0
+        # Event set ready when at least once registry has been preloaded
+        self._registry_ready = threading.Event()
 
         #self.socket = None
         self.httpd = None
@@ -486,6 +488,7 @@ class ThreadedServer(CommonServer):
 
     def http_thread(self):
         self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
+        self._registry_ready.wait()
         self.httpd.serve_forever()
 
     def http_spawn(self):
@@ -557,9 +560,11 @@ class ThreadedServer(CommonServer):
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
+        self._registry_ready.clear()
         self.start(stop=stop)
 
-        rc = preload_registries(preload)
+        rc = preload_registries(preload, self._registry_ready)
+        self._registry_ready.set()
 
         if stop:
             if config['test_enable']:
@@ -1273,7 +1278,7 @@ def load_test_file_py(registry, test_file):
     finally:
         threading.current_thread().testing = False
 
-def preload_registries(dbnames):
+def preload_registries(dbnames, registry_ready_event=None):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
     dbnames = dbnames or []
@@ -1282,6 +1287,8 @@ def preload_registries(dbnames):
         try:
             update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module)
+            if registry_ready_event:
+                registry_ready_event.set()
 
             # run test_file if provided
             if config['test_file']:
