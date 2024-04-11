@@ -129,7 +129,7 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
                 "script_step_id": question_step.id,
             },
             {
-                "name": "Go to the /chabtot-redirect page",
+                "name": "Go to the /chatbot-redirect page",
                 "redirect_link": "/chatbot-redirect",
                 "script_step_id": question_step.id,
             },
@@ -137,11 +137,11 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         livechat_channel = self.env["im_livechat.channel"].create({
             'name': 'Redirection Channel',
             'rule_ids': [Command.create({
-                'regex_url': '/',
+                'regex_url': '/contactus',
                 'chatbot_script_id': chatbot_redirect_script.id,
             })]
         })
         default_website = self.env.ref("website.default_website")
         default_website.channel_id = livechat_channel.id
         self.env.ref("website.default_website").channel_id = livechat_channel.id
-        self.start_tour("/", "website_livechat.chatbot_redirect")
+        self.start_tour("/contactus", "website_livechat.chatbot_redirect")
