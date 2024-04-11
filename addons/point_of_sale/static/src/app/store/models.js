@@ -2487,4 +2487,7 @@ export class Order extends PosModel {
     _generateTicketCode() {
         return random5Chars();
     }
+    _getOrderOptions() {
+        return {};
+    }
 }
