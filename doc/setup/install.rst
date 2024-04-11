@@ -131,8 +131,8 @@ daemon and automatically start it.
             is no official release for Debian Jessie, you can find ours on
             http://nightly.odoo.com/extra/.
 
-Configuration
-'''''''''''''
+Configuration        
+'''''''''''''            
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
 :file:`/etc/odoo/openerp-server.conf`
