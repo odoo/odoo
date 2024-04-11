@@ -3,8 +3,12 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.exceptions import ValidationError
-from odoo.tests import HttpCase, tagged, TransactionCase
-from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
+from odoo.fields import Command
+from odoo.tests import HttpCase, tagged
+
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
+    TestSaleProductAttributeValueCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -366,3 +370,88 @@ class TestWebsiteSaleCoupon(HttpCase):
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
+
+    def test_03_remove_coupon_with_different_taxes_on_products(self):
+        """
+        Tests the removal of a coupon from an order containing products with various tax rates,
+        ensuring that the system correctly handles multiple coupon lines created
+        for each unique tax scenario.
+
+        Background:
+            An order may include products with different tax implications,
+            such as non-taxed products, products with a single tax rate,
+            and products with multiple tax rates. When a coupon is applied,
+            it creates separate coupon lines for each distinct tax situation
+            (non-taxed, individual taxes, and combinations of taxes).
+            This test verifies that the coupon deletion process accurately removes
+            all associated coupon lines, maintaining the financial accuracy of the order.
+
+        Steps:
+            1. Create an order with products subject to different tax scenarios:
+            - Non-taxed product 'Product A'
+            - Product 'Product B' with Tax A
+            - Product 'Product C' with Tax B
+            - Product 'Product D' subject to both Tax A and Tax B
+            2. Apply a coupon, which generates four distinct coupon lines
+                to reflect each tax scenario.
+            3. Remove the coupon and verify that all coupon lines are removed and
+                that no coupons remain applied.
+        """
+        # Create 2 Taxes
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15,
+        })
+        tax_b = tax_a.copy({'name': 'Tax B'})
+
+        # Create 4 products subject to different tax
+        products_data = [
+            ('Product A', []),
+            ('Product B', [tax_a.id]),
+            ('Product C', [tax_b.id]),
+            ('Product D', [tax_a.id, tax_b.id]),
+        ]
+
+        products = self.env['product.product'].create(
+            [{
+                'name': name,
+                'list_price': 100,
+                'sale_ok': True,
+                'taxes_id': [Command.set(taxes_id)],
+            } for name, taxes_id in products_data]
+        )
+
+        order = self.empty_order
+        order.write({
+            'website_id': self.env['website'].browse(1),
+            'order_line': [Command.create({'product_id': product.id}) for product in products],
+        })
+
+        msg = "There should only be 4 lines for the 4 products."
+        self.assertEqual(len(order.order_line), 4, msg=msg)
+
+        # 2. Apply the coupon
+        self._apply_promo_code(order, self.coupon.code)
+
+        msg = (
+            "4 additional lines should have been added to the sale orders"
+            "after application of the coupon for each separate tax situation."
+        )
+        self.assertEqual(len(order.order_line), 8, msg=msg)
+
+        # 3. Remove the coupon
+        coupon_line = order.website_order_line.filtered(
+            lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
+        )
+        order._cart_update(
+            line_id=None,
+            product_id=coupon_line.product_id.id,
+            add_qty=None,
+            set_qty=0,
+        )
+
+        msg = "All coupon lines should have been removed from the order."
+        self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
+        self.assertEqual(len(order.order_line), 4, msg=msg)
