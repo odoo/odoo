@@ -1159,7 +1159,21 @@ export class PosStore extends Reactive {
         const pricelist = this.getDefaultPricelist();
         let price = p === false ? product.get_price(pricelist, 1) : p;
 
+<<<<<<< HEAD
         let taxes = product.taxes_id;
+||||||| parent of 05c853d3a9cb (temp)
+    push_single_order(order) {
+        const order_id = this.db.add_order(order.export_as_JSON());
+        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)]));
+    }
+=======
+    push_single_order(order) {
+        const order_id = this.db.add_order(order.export_as_JSON());
+        return this.pushOrderMutex.exec(() =>
+            this._flush_orders([this.db.get_order(order_id)], order._getOrderOptions())
+        );
+    }
+>>>>>>> 05c853d3a9cb (temp)
 
         // Fiscal position.
         const order = this.get_order();
