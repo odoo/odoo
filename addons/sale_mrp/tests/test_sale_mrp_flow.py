@@ -1872,7 +1872,6 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         })
 
         # Create the quants
-        self.env['stock.quant']._update_available_quantity(self.variant_KIT, self.stock_location, 1)
         self.env['stock.quant']._update_available_quantity(self.comp_kit_a, self.stock_location, 2)
         self.env['stock.quant']._update_available_quantity(self.comp_kit_b, self.stock_location, 1)
         self.env['stock.quant']._update_available_quantity(self.variant_NOKIT, self.stock_location, 1)
