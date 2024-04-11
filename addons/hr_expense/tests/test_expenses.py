@@ -163,15 +163,15 @@ class TestExpenses(TestExpenseCommon):
             {'balance': -1760.00, 'account_id': default_account_payable_id, 'name': False,                                'date': date(2021, 10, 31),           'invoice_date': date(2021, 10, 10)},
 
             # company_account expense 2 move
-            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                         'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
-            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': date(2021, 12, 12)},
+            {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': False},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                'date': date(2021, 10, 12),           'invoice_date': False},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                         'date': date(2021, 10, 12),           'invoice_date': False},
+            {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: PB 160 + 2*15% 2', 'date': date(2021, 10, 12),           'invoice_date': False},
 
             # company_account expense 1 move
-            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
-            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
-            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': date(2021, 12, 12)},
+            {'balance':   869.57, 'account_id': product_c_account_id,       'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': False},
+            {'balance':   130.43, 'account_id': tax_account_id,             'name': '15%',                                'date': date(2021, 10, 11),           'invoice_date': False},
+            {'balance': -1000.00, 'account_id': company_payment_account_id, 'name': 'expense_employee: PC 1000 + 15%',    'date': date(2021, 10, 11),           'invoice_date': False},
         ])
 
         # Own_account partial payment
@@ -926,14 +926,14 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertRecordValues(expense_sheet.account_move_ids[0].attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
-            'name': 'file1.png',
+            'name': 'file2.png',
             'res_model': 'account.move',
             'res_id': expense_sheet.account_move_ids[0].id
         }])
 
         self.assertRecordValues(expense_sheet.account_move_ids[1].attachment_ids, [{
             'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
-            'name': 'file2.png',
+            'name': 'file1.png',
             'res_model': 'account.move',
             'res_id': expense_sheet.account_move_ids[1].id
         }])
