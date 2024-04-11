@@ -161,7 +161,7 @@
                             </div>
                         </tr>
                         <tr>
-                            <div t-if="task.total_hours_spent > 0 and timesheets_by_subtask" name="total_time">
+                            <div t-if="task.total_hours_spent and task.subtask_effective_hours" name="total_time">
                                 <t t-if="is_uom_day">
                                     <td><strong>Total Days: </strong></td>
                                     <td class="text-end">
