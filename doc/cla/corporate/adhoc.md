@@ -27,3 +27,5 @@ Maximiliano Mezzavilla mem@adhoc.com.ar https://github.com/mem-adhoc
 Alexis Lopez loa@adhoc.com.ar https://github.com/ALopez-Adhoc
 Rocio Marina Vega rov@adhoc.com.ar https://github.com/rov-adhoc
 Camila Vives cav@adhoc.com.ar https://github.com/cav-adhoc
+Celina Devigili ced@adhoc.com.ar https://github.com/ced-adhoc
+Matías Velazquez mav@adhoc.com.ar https://github.com/mav-adhoc
