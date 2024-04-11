@@ -23,7 +23,7 @@ class ProductReplenish(models.TransientModel):
             action = self.env.ref('mrp.action_mrp_production_form')
             return [{
                 'label': production.name,
-                'url': f'#action={action.id}&id={production.id}&model=mrp.production'
+                'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
             }]
         return super()._get_replenishment_order_notification_link(production)
 
