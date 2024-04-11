@@ -913,7 +913,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                             }
                         }
                         const lineQty = (line.reward_product_id ? -line.get_quantity() : line.get_quantity());
-                        totalProductQty += lineQty;
                         if (qtyPerProduct[line.reward_product_id || line.get_product().id]) {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] += lineQty;
                         } else {
@@ -921,6 +920,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         }
                         if(!line.is_reward_line){
                             orderedProductPaid += line.get_price_with_tax();
+                            totalProductQty += lineQty;
                         }
                     }
                 }
