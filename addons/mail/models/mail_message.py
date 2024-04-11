@@ -85,9 +85,6 @@ class Message(models.Model):
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
     body = fields.Html('Contents', default='', sanitize_style=True)
-    description = fields.Char(
-        'Short description', compute="_compute_description",
-        help='Message description: either the subject, or the beginning of the body')
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
@@ -190,18 +187,14 @@ class Message(models.Model):
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
 
-    @api.depends('body', 'subject')
-    def _compute_description(self):
-        for message in self:
-            if message.subject:
-                message.description = message.subject
-            else:
-                message.description = message._get_message_preview(max_char=30)
-
     @api.depends('body')
     def _compute_preview(self):
+        """ Returns an un-formatted version of the message body. Output is capped
+        at 100 chars with a ' [...]' suffix if applicable. It is the longest
+        known mail client preview length (Outlook 2013)."""
         for message in self:
-            message.preview = message._get_message_preview()
+            plaintext_ct = tools.html_to_inner_content(message.body)
+            message.preview = textwrap.shorten(plaintext_ct, 190)
 
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
@@ -1219,15 +1212,6 @@ class Message(models.Model):
                 not msg.attachment_ids and
                 not msg.tracking_value_ids
         )
-
-    def _get_message_preview(self, max_char=190):
-        """Returns an unformatted version of the message body. Unless `max_char=0` is passed,
-        output will be capped at max_char characters with a ' [...]' suffix if applicable.
-        Default `max_char` is the longest known mail client preview length (Outlook 2013)."""
-        self.ensure_one()
-
-        plaintext_ct = tools.html_to_inner_content(self.body)
-        return textwrap.shorten(plaintext_ct, max_char) if max_char else plaintext_ct
 
     @api.model
     def _get_record_name(self, values):
