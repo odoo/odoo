@@ -1862,6 +1862,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
 
+        if not order_sudo.only_services and not order_sudo.carrier_id:
+            raise ValidationError(_("No shipping method is selected."))
+
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
         )
