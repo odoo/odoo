@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
@@ -21,9 +20,36 @@ class TestLoyalty(TransactionCase):
             'reward_ids': [(0, 0, {})],
         })
 
+    def test_loyalty_program_default_values(self):
+        # Test that the default values are correctly set when creating a new program
+        program = self.env['loyalty.program'].create({'name': "Test"})
+        self._check_promotion_default_values(program)
+
+    def _check_promotion_default_values(self, program):
+        self.assertEqual(program.program_type, 'promotion')
+        self.assertEqual(program.trigger, 'auto')
+        self.assertEqual(program.portal_visible, False)
+        self.assertTrue(program.rule_ids)
+        self.assertTrue(len(program.rule_ids) == 1)
+        self.assertEqual(program.rule_ids.reward_point_amount, 1)
+        self.assertEqual(program.rule_ids.reward_point_mode, 'order')
+        self.assertEqual(program.rule_ids.minimum_amount, 50)
+        self.assertEqual(program.rule_ids.minimum_qty, 0)
+        self.assertTrue(program.reward_ids)
+        self.assertTrue(len(program.reward_ids) == 1)
+        self.assertEqual(program.reward_ids.required_points, 1)
+        self.assertEqual(program.reward_ids.discount, 10)
+        self.assertFalse(program.communication_plan_ids)
+
+    def test_loyalty_program_default_values_in_form(self):
+        # Test that the default values are correctly set when creating a new program in a form
+        with Form(self.env['loyalty.program']) as program_form:
+            program_form.name = 'Test'
+            program = program_form.save()
+        self._check_promotion_default_values(program)
 
     def test_discount_product_unlink(self):
-        # Test that we can not unlink dicount line product id
+        # Test that we can not unlink discount line product id
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
                 with self.cr.savepoint():
