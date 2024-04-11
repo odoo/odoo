@@ -2241,21 +2241,21 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _rollup_move_dests(self, seen=False):
         if not seen:
             seen = OrderedSet()
-        if self.id in seen:
+        unseen = OrderedSet(self.ids) - seen
+        if not unseen:
             return seen
-        seen.add(self.id)
-        for dst in self.move_dest_ids:
-            dst._rollup_move_dests(seen)
+        seen.update(unseen)
+        self.filtered(lambda m: m.id in unseen).move_dest_ids._rollup_move_dests(seen)
         return seen
 
     def _rollup_move_origs(self, seen=False):
         if not seen:
             seen = OrderedSet()
-        if self.id in seen:
+        unseen = OrderedSet(self.ids) - seen
+        if not unseen:
             return seen
-        seen.add(self.id)
-        for org in self.move_orig_ids:
-            org._rollup_move_origs(seen)
+        seen.update(unseen)
+        self.filtered(lambda m: m.id in unseen).move_orig_ids._rollup_move_origs(seen)
         return seen
 
     def _get_forecast_availability_outgoing(self, warehouse):
