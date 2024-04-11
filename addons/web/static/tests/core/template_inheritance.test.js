@@ -1,7 +1,6 @@
-/** @odoo-module alias=@web/../tests/core/template_inheritance_tests default=false */
-
+import { test, expect } from "@odoo/hoot";
 import { applyInheritance } from "@web/core/template_inheritance";
-import { patchWithCleanup } from "../helpers/utils";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 const parser = new DOMParser();
 const serializer = new XMLSerializer();
@@ -17,15 +16,13 @@ export function _applyInheritance(arch, inherits) {
     return serializer.serializeToString(modifiedTemplate);
 }
 
-QUnit.module("Template Inheritance", {});
-
-QUnit.test("no operation", async (assert) => {
+test("no operation", async () => {
     const arch = `<t t-name="web.A"> <div><h2>Title</h2>text</div> </t>`;
     const operations = `<t/>`;
-    assert.strictEqual(_applyInheritance(arch, operations), arch);
+    expect(_applyInheritance(arch, operations)).toBe(arch);
 });
 
-QUnit.test("single operation: replace", async (assert) => {
+test("single operation: replace", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div><h2>Title</h2>text</div> </t>`,
@@ -38,12 +35,12 @@ QUnit.test("single operation: replace", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: replace (debug mode)", async (assert) => {
-    patchWithCleanup(odoo, { debug: true });
+test("single operation: replace (debug mode)", async () => {
+    serverState.debug = "1";
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div><h2>Title</h2>text</div> </t>`,
@@ -55,11 +52,11 @@ QUnit.test("single operation: replace (debug mode)", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: replace root (and use a $0)", async (assert) => {
+test("single operation: replace root (and use a $0)", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
@@ -109,11 +106,11 @@ QUnit.test("single operation: replace root (and use a $0)", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: replace (mode inner)", async (assert) => {
+test("single operation: replace (mode inner)", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div> A <span/> B <span/> C </div> </t>`,
@@ -125,12 +122,12 @@ QUnit.test("single operation: replace (mode inner)", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: replace (mode inner) (debug mode)", async (assert) => {
-    patchWithCleanup(odoo, { debug: true });
+test("single operation: replace (mode inner) (debug mode)", async () => {
+    serverState.debug = "1";
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div> A <span/> B <span/> C </div> </t>`,
@@ -142,11 +139,11 @@ QUnit.test("single operation: replace (mode inner) (debug mode)", async (assert)
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations, "/test/url"), result);
+        expect(_applyInheritance(arch, operations, "/test/url")).toBe(result);
     }
 });
 
-QUnit.test("single operation: before", async (assert) => {
+test("single operation: before", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div>AAB is the best<h2>Title</h2>text</div> </t>`,
@@ -174,11 +171,11 @@ QUnit.test("single operation: before", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: inside", async (assert) => {
+test("single operation: inside", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div>AAB is the best <h2>Title</h2> <div/> </div> </t>`,
@@ -214,11 +211,11 @@ QUnit.test("single operation: inside", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: after", async (assert) => {
+test("single operation: after", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div> AAB is the best <h2>Title</h2> <div id="1"/> <div id="2"/> </div> </t>`,
@@ -238,11 +235,11 @@ QUnit.test("single operation: after", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: attributes", async (assert) => {
+test("single operation: attributes", async (assert) => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div attr1="12" attr2="a b" attr3="to remove" /> </t>`,
@@ -270,12 +267,12 @@ QUnit.test("single operation: attributes", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("single operation: attributes", async (assert) => {
-    patchWithCleanup(odoo, { debug: true });
+test("single operation: attributes (debug mode)", async () => {
+    serverState.debug = "1";
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div attr1="12" attr2="a b" attr3="to remove" /> </t>`,
@@ -293,11 +290,11 @@ QUnit.test("single operation: attributes", async (assert) => {
         },
     ];
     for (const { arch, operations, result } of toTest) {
-        assert.strictEqual(_applyInheritance(arch, operations), result);
+        expect(_applyInheritance(arch, operations)).toBe(result);
     }
 });
 
-QUnit.test("xpath with hasclass", async (assert) => {
+test("xpath with hasclass", async () => {
     const toTest = [
         {
             arch: `<t><div class="abc"/></t>`,
@@ -367,9 +364,9 @@ QUnit.test("xpath with hasclass", async (assert) => {
     ];
     for (const { arch, operations, result, isError } of toTest) {
         if (isError) {
-            assert.throws(() => _applyInheritance(arch, operations));
+            expect(() => _applyInheritance(arch, operations)).toThrow();
         } else {
-            assert.strictEqual(_applyInheritance(arch, operations), result);
+            expect(_applyInheritance(arch, operations)).toBe(result);
         }
     }
 });
