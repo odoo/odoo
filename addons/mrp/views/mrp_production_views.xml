@@ -44,7 +44,6 @@
                 <tree string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
-                        <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign"  type="object" string="Check availability"/>
                         <button name="action_cancel" type="object" string="Cancel"/>
                     </header>
@@ -134,6 +133,17 @@
             <field name="code">
             if records:
                 action = records.button_scrap()</field>
+        </record>
+
+        <record id="action_print_labels" model="ir.actions.server">
+            <field name="name">Print Labels</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = records.action_open_label_type()</field>
         </record>
 
         <record id="action_plan_with_components_availability" model="ir.actions.server">
@@ -638,10 +648,11 @@
                     <field name="origin"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
-                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]"/>
                     <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
+                    <separator/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Confirmed" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
@@ -652,7 +663,7 @@
                     <filter string="MO Pending" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
                     <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
-                    <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
+                    <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
                     <filter string="Late Availability" name="late" domain="[('components_availability_state', '=', 'late')]"/>
