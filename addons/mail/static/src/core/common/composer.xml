@@ -46,7 +46,7 @@
                             t-on-focusout="() => this.props.composer.isFocused = false"
                             t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                             t-on-paste="onPaste"
-                            t-model="props.composer.textInputContent"
+                            t-model="props.composer.text"
                             t-att-placeholder="placeholder"
                             t-att-readOnly="!state.active"
                         />
@@ -57,7 +57,7 @@
                         -->
                         <textarea
                             class="o-mail-Composer-fake position-absolute"
-                            t-model="props.composer.textInputContent"
+                            t-model="props.composer.text"
                             t-ref="fakeTextarea"
                             disabled="1"
                         />

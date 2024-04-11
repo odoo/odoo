@@ -164,7 +164,7 @@ export class Composer extends Component {
                 this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.textInputContent, this.ref.el]
+            () => [this.props.composer.text, this.ref.el]
         );
         useEffect(
             () => {
@@ -178,7 +178,7 @@ export class Composer extends Component {
         );
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
-            if (!this.props.composer.textInputContent) {
+            if (!this.props.composer.text) {
                 this.restoreContent();
             }
         });
@@ -296,7 +296,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.textInputContent && attachments.length === 0) ||
+            (!this.props.composer.text && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -406,7 +406,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && composer.textInputContent === "") {
+                if (this.props.messageEdition && composer.text === "") {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
@@ -477,7 +477,7 @@ export class Composer extends Component {
             }
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        const body = this.props.composer.textInputContent;
+        const body = this.props.composer.text;
         const validMentions =
             this.store.self.type === "partner"
                 ? this.store.getMentionsFromText(body, {
@@ -559,7 +559,7 @@ export class Composer extends Component {
         const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (
-            this.props.composer.textInputContent.trim() ||
+            this.props.composer.text.trim() ||
             (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
             (this.message && this.message.attachments.length > 0)
         ) {
@@ -567,7 +567,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.textInputContent);
+            await cb(this.props.composer.text);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -626,7 +626,7 @@ export class Composer extends Component {
 
     async editMessage() {
         const composer = toRaw(this.props.composer);
-        if (composer.textInputContent || composer.message.attachments.length > 0) {
+        if (composer.text || composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
@@ -646,10 +646,10 @@ export class Composer extends Component {
 
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
-        const textContent = composer.textInputContent;
-        const firstPart = textContent.slice(0, composer.selection.start);
-        const secondPart = textContent.slice(composer.selection.end, textContent.length);
-        composer.textInputContent = firstPart + str + secondPart;
+        const text = composer.text;
+        const firstPart = text.slice(0, composer.selection.start);
+        const secondPart = text.slice(composer.selection.end, text.length);
+        composer.text = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         if (!this.ui.isSmall) {
             composer.autofocus++;
@@ -667,7 +667,7 @@ export class Composer extends Component {
         const fullComposerContent =
             document
                 .querySelector(".o_mail_composer_form_view .note-editable")
-                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? composer.textInputContent;
+                ?.innerText.replace(/(\t|\n)+/g, "\n") ?? composer.text;
         browser.localStorage.setItem(composer.localId, fullComposerContent);
     }
 
@@ -675,7 +675,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         const fullComposerContent = browser.localStorage.getItem(composer.localId);
         if (fullComposerContent) {
-            composer.textInputContent = fullComposerContent;
+            composer.text = fullComposerContent;
         }
     }
 }

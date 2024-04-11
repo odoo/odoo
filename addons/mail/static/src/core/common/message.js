@@ -475,13 +475,13 @@ export class Message extends Component {
 
     enterEditMode() {
         const message = toRaw(this.props.message);
-        const messageContent = convertBrToLineBreak(message.body);
+        const text = convertBrToLineBreak(message.body);
         message.composer = {
             mentionedPartners: message.recipients,
-            textInputContent: messageContent,
+            text,
             selection: {
-                start: messageContent.length,
-                end: messageContent.length,
+                start: text.length,
+                end: text.length,
                 direction: "none",
             },
         };
