@@ -1,8 +1,10 @@
 /** @odoo-module alias=website.s_popup **/
 
 import config from "web.config";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-import {getCookie, setCookie} from "web.utils.cookies";
+import { getCookie, setCookie, deleteCookie } from "web.utils.cookies";
+import { cloneContentEls, onceAllImagesLoaded } from "website.utils";
 import dom from "web.dom";
 import {setUtmsHtmlDataset} from '@website/js/content/inject_dom';
 
@@ -69,7 +71,7 @@ const SharedPopupWidget = publicWidget.Widget.extend({
 publicWidget.registry.SharedPopup = SharedPopupWidget;
 
 const PopupWidget = publicWidget.Widget.extend({
-    selector: '.s_popup',
+    selector: ".s_popup:not(#website_cookies_bar)",
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',
@@ -305,6 +307,77 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         'click #cookies-consent-essential, #cookies-consent-all': '_onAcceptClick',
     }),
 
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.toggleEl) {
+            this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
+            this.toggleEl.remove();
+        }
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _showPopup() {
+        this._super(...arguments);
+        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
+        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+            this.toggleEl = cloneContentEls(`
+            <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex align-items-center position-fixed pe-auto">
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+            </button>
+            `).firstElementChild;
+            this.el.insertAdjacentElement("beforebegin", this.toggleEl);
+            this._toggleCookiesBar();
+            this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
+            this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
+        }
+    },
+    /**
+     * Toggles the cookies bar with a button so that the page is readable.
+     *
+     * @private
+     */
+    _toggleCookiesBar() {
+        const popupEl = this.el.querySelector(".modal");
+        $(popupEl).modal("toggle");
+        // As we're using Bootstrap's events, the PopupWidget prevents the modal
+        // from being shown after hiding it: override that behavior.
+        this._popupAlreadyShown = false;
+        deleteCookie(this.el.id);
+
+        const hidden = !popupEl.classList.contains("show");
+        this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
+        this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
+            ? _t("Show the cookies bar")
+            : _t("Hide the cookies bar");
+        if (hidden || !popupEl.classList.contains("s_popup_bottom")) {
+            this.toggleEl.style.removeProperty("--cookies-bar-toggle-inset-block-end");
+        } else {
+            // Lazy-loaded images don't have a height yet. We need to await them
+            onceAllImagesLoaded($(popupEl)).then(() => {
+                const popupHeight = popupEl.querySelector(".modal-content").offsetHeight;
+                const toggleMargin = 8;
+                // Avoid having the toggleEl over another button, but if the
+                // cookies bar is too tall, place it at the bottom anyway.
+                const bottom = document.body.offsetHeight > popupHeight + this.toggleEl.offsetHeight + toggleMargin
+                    ? `calc(
+                        ${getComputedStyle(popupEl.querySelector(".modal-dialog")).paddingBottom}
+                        + ${popupHeight + toggleMargin}px
+                    )`
+                    : "";
+                this.toggleEl.style.setProperty("--cookies-bar-toggle-inset-block-end", bottom);
+            });
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -316,6 +389,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
     _onAcceptClick(ev) {
         this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
         this._onHideModal();
+        this.toggleEl && this.toggleEl.remove();
     },
     /**
      * @override
