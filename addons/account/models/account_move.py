@@ -2419,9 +2419,9 @@ class AccountMove(models.Model):
                 for command, line_id, *line_vals in vals['invoice_line_ids']
                 if command == Command.UPDATE
             }
-            for command, line_id, line_vals in vals['line_ids']:
+            for command, line_id, *line_vals in vals['line_ids']:
                 if command == Command.UPDATE and line_id in update_vals:
-                    line_vals.update(update_vals.pop(line_id))
+                    line_vals[0].update(update_vals.pop(line_id))
             for line_id, line_vals in update_vals.items():
                 vals['line_ids'] += [Command.update(line_id, line_vals)]
             for command, line_id, *line_vals in vals['invoice_line_ids']:

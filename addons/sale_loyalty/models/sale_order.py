@@ -101,7 +101,8 @@ class SaleOrder(models.Model):
         claimable_rewards = self._get_claimable_rewards()
         if len(claimable_rewards) == 1:
             coupon = next(iter(claimable_rewards))
-            if len(claimable_rewards[coupon]) == 1:
+            rewards = claimable_rewards[coupon]
+            if len(rewards) == 1 and not rewards.multi_product:
                 self._apply_program_reward(claimable_rewards[coupon], coupon)
                 return True
         elif not claimable_rewards:
