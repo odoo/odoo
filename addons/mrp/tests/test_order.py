@@ -3704,7 +3704,7 @@ class TestMrpOrder(TestMrpCommon):
         """
         self.product_2.tracking = 'serial'
         bom = self.env["mrp.bom"].create({
-            'product_tmpl_id': self.product_5.product_tmpl_id.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1.0,
             'bom_line_ids': [(0, 0, {
                 'product_id': self.product_2.id,
@@ -3716,7 +3716,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         # create the MO and confirm it
         mo = self.env['mrp.production'].create({
-            'product_id': self.product_5.id,
+            'product_id': self.product_6.id,
             'bom_id': bom.id,
             'product_uom_qty': 1.0,
         })
@@ -3872,8 +3872,8 @@ class TestMrpOrder(TestMrpCommon):
         the expected duration remains as manually set and does not revert to the original value.
         """
         production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_5
-        production_form.bom_id = self.bom_2
+        production_form.product_id = self.product_6
+        production_form.bom_id = self.bom_4
         production_form.product_qty = 1.0
         production = production_form.save()
         production.action_confirm()
