@@ -45,11 +45,7 @@ class UseSuggestion {
             () => {
                 this.detect();
             },
-            () => [
-                this.composer.selection.start,
-                this.composer.selection.end,
-                this.composer.textInputContent,
-            ]
+            () => [this.composer.selection.start, this.composer.selection.end, this.composer.text]
         );
     }
     /** @type {import("@mail/core/common/composer").Composer} */
@@ -85,7 +81,7 @@ class UseSuggestion {
     }
     detect() {
         const { start, end } = this.composer.selection;
-        const content = this.composer.textInputContent;
+        const text = this.composer.text;
         if (start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
@@ -95,7 +91,7 @@ class UseSuggestion {
         // consider the chars before the current cursor position
         let numberOfSpaces = 0;
         for (let index = start - 1; index >= 0; --index) {
-            if (/\s/.test(content[index])) {
+            if (/\s/.test(text[index])) {
                 numberOfSpaces++;
                 if (numberOfSpaces === 2) {
                     // The consideration stops after the second space since
@@ -113,10 +109,10 @@ class UseSuggestion {
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(this.thread);
         for (const candidatePosition of candidatePositions) {
-            if (candidatePosition < 0 || candidatePosition >= content.length) {
+            if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
             }
-            const candidateChar = content[candidatePosition];
+            const candidateChar = text[candidatePosition];
             if (
                 !supportedDelimiters.find(
                     ([delimiter, allowedPosition]) =>
@@ -126,14 +122,14 @@ class UseSuggestion {
             ) {
                 continue;
             }
-            const charBeforeCandidate = content[candidatePosition - 1];
+            const charBeforeCandidate = text[candidatePosition - 1];
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
             Object.assign(this.search, {
                 delimiter: candidateChar,
                 position: candidatePosition,
-                term: content.substring(candidatePosition + 1, start),
+                term: text.substring(candidatePosition + 1, start),
             });
             this.state.count++;
             return;
@@ -145,12 +141,12 @@ class UseSuggestion {
     }
     insert(option) {
         const position = this.composer.selection.start;
-        const content = this.composer.textInputContent;
-        let before = content.substring(0, this.search.position + 1);
-        let after = content.substring(position, content.length);
+        const text = this.composer.text;
+        let before = text.substring(0, this.search.position + 1);
+        let after = text.substring(position, text.length);
         if (this.search.delimiter === ":") {
-            before = content.substring(0, this.search.position);
-            after = content.substring(position, content.length);
+            before = text.substring(0, this.search.position);
+            after = text.substring(position, text.length);
         }
         if (option.partner) {
             this.composer.mentionedPartners.add({
@@ -168,7 +164,7 @@ class UseSuggestion {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
         this.clearSearch();
-        this.composer.textInputContent = before + option.label + " " + after;
+        this.composer.text = before + option.label + " " + after;
         this.composer.selection.start = before.length + option.label.length + 1;
         this.composer.selection.end = before.length + option.label.length + 1;
         this.composer.forceCursorMove = true;
