@@ -323,10 +323,10 @@ class AccountMove(models.Model):
         return self._get_edi_document(edi_format).sudo().attachment_id
 
     # this override is to make sure that the main attachment is not the edi xml otherwise the attachment viewer will not work correctly
-    def _message_set_main_attachment_id(self, attachment_ids):
-        if self.message_main_attachment_id and len(attachment_ids) > 1 and self.message_main_attachment_id in self.edi_document_ids.attachment_id:
-            self.message_main_attachment_id = self.env['ir.attachment']
-        super()._message_set_main_attachment_id(attachment_ids)
+    def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
+        if not force and len(attachments) > 1 and self.message_main_attachment_id in self.edi_document_ids.attachment_id:
+            force = True
+        super()._message_set_main_attachment_id(attachments, force=force, filter_xml=filter_xml)
 
     ####################################################
     # Business operations

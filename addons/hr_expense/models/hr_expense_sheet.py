@@ -715,10 +715,8 @@ class HrExpenseSheet(models.Model):
         for sheet in own_account_sheets:
             sheet.accounting_date = sheet.accounting_date or sheet._calculate_default_accounting_date()
         moves_sudo = self.env['account.move'].sudo().create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
-        # Set the main attachment on the moves directly to avoid recomputing the
-        # `register_as_main_attachment` on the moves which triggers the OCR again
         for move_sudo in moves_sudo:
-            move_sudo.message_main_attachment_id = move_sudo.attachment_ids[0] if move_sudo.attachment_ids else None
+            move_sudo._message_set_main_attachment_id(move_sudo.attachment_ids, force=True, filter_xml=False)
         payments_sudo = self.env['account.payment'].with_context(**skip_context).sudo().create([
             expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids
         ])
