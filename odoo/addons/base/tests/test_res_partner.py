@@ -822,6 +822,87 @@ class TestPartnerRecursion(TransactionCase):
         print(t1)  # 0.0027043330192100257
         print(t2)  # 0.012238458992214873
 
+    def test_107_res_partner_recursion_m2m_performance(self):
+        # old approach
+        from collections import defaultdict
+        from odoo.tools import SQL
+        import itertools
+
+        from odoo.tools import check_relation_loop
+
+        def _check_m2m_recursion_legacy(cr, table, col1, col2, col1_in):
+            succs = defaultdict(set)  # transitive closure of successors
+            preds = defaultdict(set)  # transitive closure of predecessors
+            todo, done = set(col1_in), set()
+            while todo:
+                # retrieve the respective successors of the nodes in 'todo'
+                cr.execute(SQL(
+                    """ SELECT %(col1)s, %(col2)s FROM %(rel)s
+                        WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL """,
+                    rel=SQL.identifier(table),
+                    col1=SQL.identifier(col1),
+                    col2=SQL.identifier(col2),
+                    ids=tuple(todo),
+                ))
+                done.update(todo)
+                todo.clear()
+                for id1, id2 in cr.fetchall():
+                    # connect id1 and its predecessors to id2 and its successors
+                    for x, y in itertools.product([id1] + list(preds[id1]),
+                                                  [id2] + list(succs[id2])):
+                        if x == y:
+                            return False  # we found a cycle here!
+                        succs[x].add(y)
+                        preds[y].add(x)
+                    if id2 not in done:
+                        todo.add(id2)
+            return True
+
+        cr = self.env.cr
+
+        cr.execute(
+            """
+            CREATE TABLE test_recursion_m2m (
+                col1 INTEGER NOT NULL,
+                col2 INTEGER NOT NULL,
+                PRIMARY KEY(col1, col2)
+            );
+            CREATE INDEX ON test_recursion_m2m (col2, col1);
+            """
+        )
+
+        children_per_node = 2
+        node_per_level = 5
+        depth = 10
+
+        def generate_net_relations(children_per_node, node_per_level, depth):
+            relations = []
+            for d in range(depth):
+                node_start = d * node_per_level
+                child_start = node_start + node_per_level
+                for i in range(node_per_level):
+                    node1 = node_start + i
+                    for j in range(children_per_node):
+                        node2 = child_start + (i + j) % node_per_level
+                        relations.append((node1, node2))
+            return relations
+
+        net_relations = generate_net_relations(children_per_node, node_per_level, depth)
+
+        cr.execute(SQL(
+            """
+            INSERT INTO test_recursion_m2m (col1, col2) VALUES %s
+            """,
+            SQL(', ').join(net_relations)
+        ))
+        col1_in = list(range(5))
+
+        import timeit
+        t1 = timeit.timeit("check_relation_loop(cr, 'test_recursion_m2m', 'col1', 'col2', col1_in)", number=10, globals=locals())
+        t2 = timeit.timeit("_check_m2m_recursion_legacy(cr, 'test_recursion_m2m', 'col1', 'col2', col1_in)", number=10, globals=locals())
+        print(t1)  # 0.06295079200026521
+        print(t2)  # 0.0111943329998212
+
 
     def test_110_res_partner_recursion_multi_update(self):
         """ multi-write on several partners in same hierarchy must not trigger a false cycle detection """
