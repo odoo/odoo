@@ -201,59 +201,50 @@ class AccountBalance(models.Model):
 
     ##create/get/delete_bills payment
     @api.model
-    def create_bill_payment(self, bill_id, target_journal_id, payment_date, payment_method_line):
-        # Verify the specified bill exists
-        BillModel = self.env['account.move']
-        target_bill = BillModel.browse(bill_id)
-        if not target_bill.exists():
-            raise ValueError(f"Bill with ID {bill_id} was not found.")
+    def create_bill_payment(self, bill_ids, journal_id, payment_date, payment_method_line_id):
 
-        # Determine the outstanding amount to be paid on the bill
-        payment_amount = target_bill.amount_residual
+        AccountMove = self.env['account.move']
+        bills = AccountMove.browse(bill_ids)
 
-        # Set up the context as expected by the payment register wizard for processing a single bill
-        wizard_context = {
-            'active_model': 'account.move',
-            'active_id': bill_id,
-            # 'active_ids': [single_bill_id],
+        # Validation
+        if not bills.exists():
+            raise UserError("No valid bills found with the provided IDs.")
+        if any(bill.state != 'posted' for bill in bills):
+            raise UserError("All bills must be posted to proceed with payment.")
+
+        total_amount = sum(bill.amount_residual for bill in bills)
+
+        # Preparing payment values
+        payment_vals = {
+            'payment_type': 'outbound',
+            'payment_method_line_id': payment_method_line_id,
+            'partner_type': 'supplier',
+            'partner_id': bills[0].partner_id.id,
+            'amount': total_amount,
+            'currency_id': bills[0].currency_id.id,
+            'date': payment_date,
+            'journal_id': journal_id,
+            'payment_reference': ' '.join([bill.ref for bill in bills if bill.ref]),
+            'reconciled_invoice_ids': [(4, bill.id, None) for bill in bills],
         }
 
-        # Prepare the payment register wizard with the appropriate context
-        PaymentWizard = self.env['account.payment.register'].with_context(**wizard_context).create({
-            'payment_date': payment_date,
-            'journal_id': target_journal_id,
-            'payment_method_line_id': payment_method_line,
-            'amount': payment_amount,
-        })
+        # Creating the payment
+        payment = self.env['account.payment'].create(payment_vals)
+        payment.action_post()  # Posting the payment to validate it
 
-        # Execute the payment creation as done through the UI
-        PaymentWizard.action_create_payments()
-
-        # Locate the payment record linked to the bill, assuming it can be uniquely identified
-        linked_payment = self.env['account.payment'].search([
-            ('state', '=', 'posted'),
-            ('payment_type', '=', 'outbound'),
-            ('payment_date', '=', payment_date),
-            # Assuming 'reconciled_invoice_ids' can be used to find the linked payment
-            ('reconciled_invoice_ids', '=', target_bill.id),
-        ], limit=1)
-
-        if not linked_payment:
-            raise ValueError(f"Unable to locate a payment record for bill ID {bill_id}.")
-
-        # Compile and return the details of the payment made
-        payment_details = {
-            'id': linked_payment.id,
-            'amount': linked_payment.amount,
-            'date': linked_payment.payment_date,
-            'partner_id': linked_payment.partner_id.id,
-            'partner_type': linked_payment.partner_type,
-            'payment_type': linked_payment.payment_type,
-            'payment_method_line_id': linked_payment.payment_method_line_id.id,
-            'journal_id': linked_payment.journal_id.id,
+        # Returning the created payment information
+        payment_data = {
+            'id': payment.id,
+            'amount': payment.amount,
+            'date': payment.date,
+            'partner_id': payment.partner_id.id,
+            'partner_type': payment.partner_type,
+            'payment_type': payment.payment_type,
+            'payment_method_line_id': payment.payment_method_line_id.id,
+            'journal_id': payment.journal_id.id,
         }
 
-        return payment_details
+        return payment_data
 
     @api.model
     def setup_payment_journal(self, journal_name, account_id, journal_type, payment_method_name):
