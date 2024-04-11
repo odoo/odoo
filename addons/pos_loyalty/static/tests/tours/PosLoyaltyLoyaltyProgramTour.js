@@ -184,3 +184,25 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
             ProductScreen.totalAmountIs("80.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrderLines", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+          ProductScreen.confirmOpeningPopup(),
+          ProductScreen.clickHomeCategory(),
+
+          ProductScreen.clickPartnerButton(),
+          ProductScreen.clickCustomer('Test Partner'),
+
+          ProductScreen.addOrderline('Desk Organizer', '1'),
+          ProductScreen.addOrderline('Whiteboard Pen', '1'),
+
+          PosLoyalty.isRewardButtonHighlighted(true),
+          PosLoyalty.claimReward("100% on the cheapest product"),
+
+          PosLoyalty.orderTotalIs('5.10'),
+          PosLoyalty.finalizeOrder('Cash', '5.10'),
+        ].flat()
+});
