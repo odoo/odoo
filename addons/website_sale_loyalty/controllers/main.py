@@ -94,7 +94,7 @@ class WebsiteSale(main.WebsiteSale):
                     (program_sudo.trigger == 'with_code' and program_sudo.program_type != 'promo_code')
                     or (program_sudo.trigger == 'auto' and program_sudo.applies_on == 'future')
                 ):
-                    return self.pricelist(code)
+                    return self.pricelist(code, **post)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon)
         return request.redirect(redirect)
