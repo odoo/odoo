@@ -246,11 +246,28 @@ class Delivery(WebsiteSale):
             'id': dm.id,
             'name': dm.name,
             'description': dm.website_description,
-            'minorAmount': payment_utils.to_minor_currency_units(
-                Delivery._get_rate(dm, order_sudo, is_express_checkout_flow=True)['price'],
-                order_sudo.currency_id,
-            ),
-        } for dm in order_sudo._get_delivery_methods()], key=lambda dm: dm['minorAmount'])
+            'minorAmount': payment_utils.to_minor_currency_units(price, order_sudo.currency_id),
+        } for dm, price in Delivery._get_delivery_methods_express_checkout(order_sudo).items()
+        ], key=lambda dm: dm['minorAmount'])
+
+    @staticmethod
+    def _get_delivery_methods_express_checkout(order_sudo):
+        """ Return available delivery methods and their prices for the given order.
+
+        :param sale.order order_sudo: The sudoed sales order.
+        :rtype: dict
+        :return: A dict with a `delivery.carrier` recordset as key, and a rate shipment price as
+                 value.
+        """
+        res = {}
+        for dm in order_sudo._get_delivery_methods():
+            rate = Delivery._get_rate(dm, order_sudo, is_express_checkout_flow=True)
+            if rate['success']:
+                fname = f'{dm.delivery_type}_use_locations'
+                if hasattr(dm, fname) and getattr(dm, fname):
+                    continue  # Express checkout doesn't allow selecting locations.
+                res[dm] = rate['price']
+        return res
 
     @staticmethod
     def _get_rate(delivery_method, order, is_express_checkout_flow=False):
