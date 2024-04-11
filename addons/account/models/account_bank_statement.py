@@ -35,7 +35,7 @@ class AccountBankStatement(models.Model):
     # keeping this order is important because the validity of the statements are based on their order
     first_line_index = fields.Char(
         comodel_name='account.bank.statement.line',
-        compute='_compute_date_index', store=True, index=True,
+        compute='_compute_date_index', store=True,
     )
 
     balance_start = fields.Monetary(
@@ -109,6 +109,12 @@ class AccountBankStatement(models.Model):
                      indexname='account_bank_statement_journal_id_date_desc_id_desc_idx',
                      tablename='account_bank_statement',
                      expressions=['journal_id', 'date DESC', 'id DESC'])
+        create_index(
+            self.env.cr,
+            indexname='account_bank_statement_first_line_index_idx',
+            tablename='account_bank_statement',
+            expressions=['journal_id', 'first_line_index'],
+        )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS

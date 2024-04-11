@@ -171,9 +171,8 @@ class AccountPayment(models.Model):
             self.env.cr.execute("""
                   SELECT payment.id
                     FROM account_payment payment
-                    JOIN account_move move ON movE.id = payment.move_id
-                   WHERE journal_id = %(journal_id)s
-                   AND payment.check_number IS NOT NULL
+                   WHERE payment.journal_id = %(journal_id)s
+                     AND payment.check_number IS NOT NULL
                 ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1
             """, {

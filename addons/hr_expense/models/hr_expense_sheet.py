@@ -776,7 +776,6 @@ class HrExpenseSheet(models.Model):
 
         if self.payment_mode == 'company_account':
             to_return['date'] = most_recent_expense or today
-            to_return['invoice_date'] = today
         else:
             to_return['invoice_date'] = self.accounting_date
 

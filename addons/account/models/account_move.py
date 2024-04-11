@@ -719,25 +719,21 @@ class AccountMove(models.Model):
             if move.journal_id.company_id not in move.company_id.parent_ids:
                 move.company_id = (move.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('move_type')
+    @api.depends('move_type', 'payment_id', 'statement_line_id')
     def _compute_journal_id(self):
-        for record in self.filtered(lambda r: r.journal_id.type not in r._get_valid_journal_types()):
-            record.journal_id = record._search_default_journal()
+        for move in self.filtered(lambda r: r.journal_id.type not in r._get_valid_journal_types()):
+            move.journal_id = move._search_default_journal()
 
     def _get_valid_journal_types(self):
         if self.is_sale_document(include_receipts=True):
             return ['sale']
         elif self.is_purchase_document(include_receipts=True):
             return ['purchase']
-        elif self.payment_id or self.env.context.get('is_payment'):
+        elif self.payment_id or self.statement_line_id or self.env.context.get('is_payment') or self.env.context.get('is_statement_line'):
             return ['bank', 'cash']
         return ['general']
 
     def _search_default_journal(self):
-        if self.payment_id and self.payment_id.journal_id:
-            return self.payment_id.journal_id
-        if self.statement_line_id and self.statement_line_id.journal_id:
-            return self.statement_line_id.journal_id
         if self.statement_line_ids.statement_id.journal_id:
             return self.statement_line_ids.statement_id.journal_id[:1]
 
@@ -2721,6 +2717,14 @@ class AccountMove(models.Model):
             if command[0] == Command.SET:
                 yield from self.env['account.move.line'].browse(command[2]).move_id.ids
 
+    def _get_protected_vals(self, vals, records):
+        protected = set()
+        for fname in vals:
+            field = records._fields.get(fname)
+            if field.inverse or (field.compute and not field.readonly):
+                protected.update(self.pool.field_computed.get(field, [field]))
+        return [(protected, rec) for rec in records]
+
     @api.model_create_multi
     def create(self, vals_list):
         if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
@@ -2782,14 +2786,9 @@ class AccountMove(models.Model):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
-        to_protect = []
-        for fname in vals:
-            field = self._fields[fname]
-            if field.compute and not field.readonly:
-                to_protect.append(field)
         stolen_moves = self.browse(set(move for move in self._stolen_move(vals)))
         container = {'records': self | stolen_moves}
-        with self.env.protecting(to_protect, self), self._check_balanced(container):
+        with self.env.protecting(self._get_protected_vals(vals, self)), self._check_balanced(container):
             with self._sync_dynamic_lines(container):
                 res = super(AccountMove, self.with_context(
                     skip_account_move_synchronization=True,
@@ -2961,6 +2960,7 @@ class AccountMove(models.Model):
             return "WHERE FALSE", {}
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
+        is_payment = self.payment_id or self.env.context.get('is_payment')
 
         if not relaxed:
             domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
@@ -2968,7 +2968,7 @@ class AccountMove(models.Model):
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
-                domain += [('payment_id', '!=' if self.payment_id else '=', False)]
+                domain += [('payment_id', '!=' if is_payment else '=', False)]
             reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
@@ -2991,7 +2991,7 @@ class AccountMove(models.Model):
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
         elif self.journal_id.payment_sequence:
-            if self.payment_id:
+            if is_payment:
                 where_string += " AND payment_id IS NOT NULL "
             else:
                 where_string += " AND payment_id IS NULL "
@@ -3007,7 +3007,7 @@ class AccountMove(models.Model):
             starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
-        if self.journal_id.payment_sequence and self.payment_id:
+        if self.journal_id.payment_sequence and self.payment_id or self.env.context.get('is_payment'):
             starting_sequence = "P" + starting_sequence
         return starting_sequence
 
