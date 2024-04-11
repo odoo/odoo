@@ -477,6 +477,48 @@ class TestSaleOrder(SaleCommon):
             self.sale_order.order_line.flush_recordset(['discount'])
             patched.assert_not_called()
 
+    def test_so_is_not_invoiceable_if_only_discount_line_is_to_invoice(self):
+        self.sale_order.order_line.product_id.invoice_policy = 'delivery'
+        self.sale_order.action_confirm()
+
+        self.assertEqual(self.sale_order.invoice_status, 'no')
+        standard_lines = self.sale_order.order_line
+
+        self.env['sale.order.discount'].create({
+            'sale_order_id': self.sale_order.id,
+            'discount_amount': 33,
+            'discount_type': 'amount',
+        }).action_apply_discount()
+
+        # Only the discount line is invoiceable (there are lines not invoiced and not invoiceable)
+        discount_line = self.sale_order.order_line - standard_lines
+        self.assertEqual(discount_line.invoice_status, 'to invoice')
+        self.assertEqual(self.sale_order.invoice_status, 'no')
+
+    def test_so_is_invoiceable_if_only_discount_line_remains_to_invoice(self):
+        self.sale_order.order_line.product_id.invoice_policy = 'delivery'
+        self.sale_order.action_confirm()
+
+        self.assertEqual(self.sale_order.invoice_status, 'no')
+        standard_lines = self.sale_order.order_line
+
+        for sol in standard_lines:
+            sol.qty_delivered = sol.product_uom_qty
+        self.sale_order._create_invoices()
+
+        self.assertEqual(self.sale_order.invoice_status, 'invoiced')
+
+        self.env['sale.order.discount'].create({
+            'sale_order_id': self.sale_order.id,
+            'discount_amount': 33,
+            'discount_type': 'amount',
+        }).action_apply_discount()
+
+        # Only the discount line is invoiceable (there are no other lines remaining to invoice)
+        discount_line = (self.sale_order.order_line - standard_lines)
+        self.assertEqual(discount_line.invoice_status, 'to invoice')
+        self.assertEqual(self.sale_order.invoice_status, 'to invoice')
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
