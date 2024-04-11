@@ -1755,29 +1755,22 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(show_line)
 
     def _get_default_payment_link_values(self):
+        """ Override of `payment` to compute the default values of the payment link wizard. """
         self.ensure_one()
-        amount_max = self.amount_total - self.amount_paid
 
-        # Always default to the minimum value needed to confirm the order:
-        # - order is not confirmed yet
-        # - can be confirmed online
-        # - we have still not paid enough for confirmation.
         prepayment_amount = self._get_prepayment_required_amount()
-        if (
-            self.state in ('draft', 'sent')
-            and self.require_payment
-            and self.currency_id.compare_amounts(prepayment_amount, self.amount_paid) > 0
-        ):
-            amount = prepayment_amount - self.amount_paid
-        else:
-            amount = amount_max
-
+        remaining_balance = self.amount_total - self.amount_paid
+        if self.state in ('draft', 'sent') and self.require_payment:
+            suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
+        else:  # The order is confirmed or doesn't require payment.
+            suggested_amount = remaining_balance
         return {
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_invoice_id.id,
-            'amount': amount,
-            'amount_max': amount_max,
+            'amount': suggested_amount,
+            'amount_max': remaining_balance,
             'amount_paid': self.amount_paid,
+            'prepayment_amount': prepayment_amount,
         }
 
     # EDI #
@@ -2012,16 +2005,17 @@ class SaleOrder(models.Model):
         }
 
     def _get_prepayment_required_amount(self):
-        """ Return the minimum amount needed to confirm automatically the quotation.
+        """ Return the minimum amount needed to automatically confirm the quotation.
 
         Note: self.ensure_one()
 
-        :return: The minimum amount needed to confirm automatically the quotation.
+        :return: The minimum amount needed to automatically confirm the quotation.
         :rtype: float
         """
         self.ensure_one()
-        if self.prepayment_percent == 1.0 or not self.require_payment:
-            return self.amount_total
+
+        if not self.require_payment:
+            return 0
         else:
             return self.currency_id.round(self.amount_total * self.prepayment_percent)
 
