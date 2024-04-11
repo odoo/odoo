@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting help="Subcontract the production of some products" documentation="/applications/inventory_and_mrp/manufacturing/management/subcontracting.html">
+                            <setting help="Delegate part of the production process to subcontractors" documentation="/applications/inventory_and_mrp/manufacturing/management/subcontracting.html">
                                 <field name="module_mrp_subcontracting"/>
                             </setting>
                             <setting id="process_mrp_barcodes" help="Process manufacturing orders from the barcode application">
@@ -53,7 +53,7 @@
                             <setting id="mrp_byproduct" help="Produce residual products (A + B -> C + D)" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
                                 <field name="group_mrp_byproducts"/>
                             </setting>
-                            <setting id="mrp_reception_report" help="View and allocate manufactured quantities">
+                            <setting id="mrp_reception_report" help="View and allocate production quantities to customer orders or other manufacturing orders">
                                 <field name="group_mrp_reception_report"/>
                             </setting>
                         </block>
@@ -65,7 +65,7 @@
                                 <field name="use_manufacturing_lead"/>
                                 <div class="content-group" invisible="not use_manufacturing_lead">
                                     <div class="mt16" >
-                                        <field name="manufacturing_lead" class="oe_inline"/> days
+                                        <field name="manufacturing_lead" class="oe_inline" widget="integer"/> days before
                                     </div>
                                 </div>
                             </setting>
