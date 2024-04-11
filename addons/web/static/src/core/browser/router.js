@@ -110,6 +110,20 @@ function pathFromActionState(state) {
     return path.join("/");
 }
 
+export const router = {
+    get current() {
+        return state;
+    },
+    // TODO: stop debouncing these and remove the ugly hack to have the correct title for history entries
+    preProcessURL: (url) => url,
+    postProcessURL: (url) => url,
+    pushState: makeDebouncedPush("push"),
+    replaceState: makeDebouncedPush("replace"),
+    cancelPushes: () => browser.clearTimeout(pushTimeout),
+    addLockedKey: (key) => _lockedKeys.add(key),
+    skipLoad: false,
+};
+
 /**
  * @param {{ [key: string]: any }} state
  * @returns
@@ -138,11 +152,11 @@ export function stateToUrl(state) {
         }
     }
     const search = objectToUrlEncodedString(omit(state, "actionStack", ...PATH_KEYS));
-    return `/odoo${path}${search ? `?${search}` : ""}`;
+    return router.postProcessURL(`/odoo${path}${search ? `?${search}` : ""}`);
 }
 
 export function urlToState(urlObj) {
-    const { pathname, hash, search } = urlObj;
+    const { pathname, hash, search } = router.preProcessURL(urlObj);
     const state = parseSearchQuery(search);
 
     // ** url-retrocompatibility **
@@ -332,18 +346,6 @@ function makeDebouncedPush(mode) {
 }
 
 startRouter();
-
-export const router = {
-    get current() {
-        return state;
-    },
-    // TODO: stop debouncing these and remove the ugly hack to have the correct title for history entries
-    pushState: makeDebouncedPush("push"),
-    replaceState: makeDebouncedPush("replace"),
-    cancelPushes: () => browser.clearTimeout(pushTimeout),
-    addLockedKey: (key) => _lockedKeys.add(key),
-    skipLoad: false,
-};
 
 export function objectToQuery(obj) {
     const query = {};
