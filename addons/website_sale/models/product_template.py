@@ -471,13 +471,13 @@ class ProductTemplate(models.Model):
         list_price = product_or_template._price_compute('list_price')[product_or_template.id]
         price_extra = product_or_template._get_attributes_extra_price()
         if product_or_template.currency_id != currency:
-            price_extra = self.currency_id._convert(
+            price_extra = product_or_template.currency_id._convert(
                 from_amount=price_extra,
                 to_currency=currency,
                 company=self.env.company,
                 date=date,
             )
-            list_price = self.currency_id._convert(
+            list_price = product_or_template.currency_id._convert(
                 from_amount=list_price,
                 to_currency=currency,
                 company=self.env.company,
@@ -485,7 +485,7 @@ class ProductTemplate(models.Model):
             )
             compare_list_price = product_or_template.currency_id._convert(
                 from_amount=compare_list_price,
-                to_currency=self.currency_id,
+                to_currency=currency,
                 company=self.env.company,
                 date=date,
                 round=False)
