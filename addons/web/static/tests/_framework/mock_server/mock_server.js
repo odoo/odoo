@@ -7,6 +7,7 @@ import {
     registerDebugInfo,
 } from "@odoo/hoot";
 import { mockFetch, mockWebSocket } from "@odoo/hoot-mock";
+import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isIterable } from "@web/core/utils/arrays";
 import { deepCopy, isObject } from "@web/core/utils/objects";
@@ -568,10 +569,17 @@ export class MockServer {
 
         let result = null;
         for (const [callback, routeParams, routeOptions] of listeners) {
-            result = await callback.call(this, request, routeParams);
+            try {
+                result = await callback.call(this, request, routeParams);
+            } catch (error) {
+                result = ensureError(error);
+            }
             if (!isNil(result) || (options.alwaysReturns ?? routeOptions.alwaysReturns)) {
                 if (options.pure ?? routeOptions.pure) {
                     return result;
+                }
+                if (result instanceof RPCError) {
+                    return { error: result, result: null };
                 }
                 if (result instanceof Error) {
                     return {
