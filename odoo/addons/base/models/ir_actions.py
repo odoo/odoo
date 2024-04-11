@@ -492,6 +492,7 @@ class IrActionsServer(models.Model):
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - float_compare: utility function to compare floats based on specific precision
+#  - b64encode, b64decode: functions to encode/decode binary data
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - _logger: _logger.info(message): logger to emit messages in server logs
 #  - UserError: exception class for raising user-facing warning messages
