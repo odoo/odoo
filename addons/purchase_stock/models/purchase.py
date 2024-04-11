@@ -446,8 +446,13 @@ class PurchaseOrderLine(models.Model):
                         note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
-                picking = pickings and pickings[0] or False
+                # Give priority to the pickings related to the line
+                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                if line_pickings:
+                    picking = line_pickings[0]
+                else:
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    picking = pickings and pickings[0] or False
                 if not picking:
                     if not line.product_qty > line.qty_received:
                         continue
