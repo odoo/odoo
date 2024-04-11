@@ -319,6 +319,16 @@
         }, {
             content: "Mark the field as not required",
             trigger: 'we-button[data-name="required_opt"] we-checkbox',
+            run: function () {
+                // We need this 'setTimeout' to ensure that the 'blur' event of
+                // the input has enough time to be executed. Without it, the
+                // click on the 'we-checkbox' takes priority, and the 'blur'
+                // event is not executed (see the '_onListItemBlurInput'
+                // function of the 'we-list' widget)."
+                setTimeout(() => {
+                    this.$anchor[0].click();
+                }, 500);
+            },
         }, {
             content: "Check the resulting field",
             trigger: "iframe .s_website_form_field.s_website_form_custom:not(.s_website_form_required)" +
@@ -365,10 +375,15 @@
             content: "Check that the input value is the full option value",
             trigger: 'we-list table input:eq(3)',
             run: () => {
-                const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
-                if (!addedOptionEl) {
-                    console.error('The number option was not correctly added');
-                }
+                // We need this 'setTimeout' to ensure that the 'input' event of
+                // the input has enough time to be executed (see the
+                // '_onListItemBlurInput' function of the 'we-list' widget).
+                setTimeout(() => {
+                    const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
+                    if (!addedOptionEl) {
+                        console.error('The number option was not correctly added');
+                    }
+                }, 500);
             },
         }, {
             content: "Check the resulting snippet",
