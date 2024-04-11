@@ -629,7 +629,7 @@ class TestAr(AccountTestInvoicingCommon):
             pos_number = data.get('l10n_ar_afip_pos_number')
         values = {'name': '%s %s' % (afip_ws.replace('WS', ''), pos_number),
                   'type': 'sale',
-                  'code': afip_ws,
+                  'code': pos_number,
                   'l10n_ar_afip_pos_system': self._get_afip_pos_system_real_name().get(afip_ws),
                   'l10n_ar_afip_pos_number': pos_number,
                   'l10n_latam_use_documents': True,
