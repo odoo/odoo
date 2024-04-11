@@ -43,6 +43,13 @@ export function makeEnv() {
 
 const serviceRegistry = registry.category("services");
 
+serviceRegistry.addValidation({
+    start: Function,
+    dependencies: { type: Array, element: String, optional: true },
+    async: { type: [{ type: Array, element: String }, { value: true }], optional: true },
+    "*": true,
+});
+
 export const SERVICES_METADATA = {};
 let startServicesPromise = null;
 

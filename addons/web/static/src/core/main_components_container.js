@@ -3,6 +3,13 @@ import { registry } from "@web/core/registry";
 import { useRegistry } from "@web/core/registry_hook";
 import { ErrorHandler } from "@web/core/utils/components";
 
+const mainComponents = registry.category("main_components");
+
+mainComponents.addValidation({
+    Component: { validate: (c) => c.prototype instanceof Component },
+    props: { type: Object, optional: true }
+});
+
 export class MainComponentsContainer extends Component {
     static components = { ErrorHandler };
     static props = {};
@@ -17,7 +24,6 @@ export class MainComponentsContainer extends Component {
     `;
 
     setup() {
-        const mainComponents = registry.category("main_components");
         this.Components = useRegistry(mainComponents);
     }
 
