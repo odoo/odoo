@@ -467,7 +467,9 @@ class ProductTemplate(models.Model):
         pricelist = website.pricelist_id
         currency = website.currency_id
 
-        compare_list_price = product_or_template.compare_list_price
+        compare_list_price = product_or_template.compare_list_price if self.env.user.has_group(
+            'website_sale.group_product_price_comparison'
+        ) else None
         list_price = product_or_template._price_compute('list_price')[product_or_template.id]
         price_extra = product_or_template._get_attributes_extra_price()
         if product_or_template.currency_id != currency:
@@ -825,6 +827,7 @@ class ProductTemplate(models.Model):
             price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['price'], monetary_options
             )
+        list_price = None
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
@@ -834,7 +837,7 @@ class ProductTemplate(models.Model):
                 combination_info['compare_list_price'], monetary_options
             )
 
-        return price, list_price if combination_info['has_discounted_price'] else None
+        return price, list_price
 
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
