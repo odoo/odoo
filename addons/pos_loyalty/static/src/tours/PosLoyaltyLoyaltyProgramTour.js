@@ -2,6 +2,7 @@
 
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -205,3 +206,47 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyNextOrderCouponExpirationDate", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            
+            ProductScreen.exec.addOrderline('Desk Organizer', '3');
+            PosLoyalty.exec.finalizeOrder('Cash', '15.3');
+            return getSteps();
+        }
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyDontGrantPointsForRewardOrderLines", {
+        test: true,
+        url: "/pos/web",
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickHomeCategory();
+            
+            ProductScreen.do.clickPartnerButton();
+            ProductScreen.do.clickCustomer('Test Partner');
+            
+            ProductScreen.exec.addOrderline('Desk Organizer', '1');
+            ProductScreen.exec.addOrderline('Whiteboard Pen', '1');
+            
+            PosLoyalty.do.clickRewardButton();
+            SelectionPopup.do.clickItem("100% on the cheapest product");
+            
+            PosLoyalty.check.orderTotalIs('5.10');
+            PosLoyalty.exec.finalizeOrder('Cash', '5.10');
+            return getSteps();
+        }
+    });    
+startSteps();
