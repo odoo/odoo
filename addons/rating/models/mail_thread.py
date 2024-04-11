@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -174,7 +173,6 @@ class MailThread(models.AbstractModel):
     def message_post(self, **kwargs):
         rating_id = kwargs.pop('rating_id', False)
         rating_value = kwargs.pop('rating_value', False)
-        rating_feedback = kwargs.pop('rating_feedback', False)
         message = super(MailThread, self).message_post(**kwargs)
 
         # create rating.rating record linked to given rating_value. Using sudo as portal users may have
@@ -182,7 +180,7 @@ class MailThread(models.AbstractModel):
         if rating_value:
             self.env['rating.rating'].sudo().create({
                 'rating': float(rating_value) if rating_value is not None else False,
-                'feedback': rating_feedback,
+                'feedback': tools.html2plaintext(kwargs.get('body', '')),
                 'res_model_id': self.env['ir.model']._get_id(self._name),
                 'res_id': self.id,
                 'message_id': message.id,
