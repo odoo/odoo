@@ -21,6 +21,11 @@ import {
 } from "@odoo/owl";
 const viewRegistry = registry.category("views");
 
+viewRegistry.addValidation({
+    Controller: { validate: (c) => c.prototype instanceof Component }, 
+    "*": true,
+});
+
 /** @typedef {Object} Config
  *  @property {integer|false} actionId
  *  @property {string|false} actionType

@@ -4,6 +4,16 @@ import { registry } from "@web/core/registry";
 import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
+viewWidgetRegistry.addValidation({
+    component: { validate: (c) => c.prototype instanceof Component },
+    extractProps: { type: Function, optional: true },
+    additionalClasses: { type: Array, element: String, optional: true },
+    fieldDependencies: {
+        type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
+        optional: true,
+    },
+});
+
 /**
  * A Component that supports rendering `<widget />` tags in a view arch
  * It should have minimum legacy support that is:

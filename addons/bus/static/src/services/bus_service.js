@@ -19,7 +19,6 @@ import { EventBus } from "@odoo/owl";
  */
 export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab"],
-    async: true,
 
     start(env, { multi_tab: multiTab, "bus.parameters": params }) {
         const bus = new EventBus();
