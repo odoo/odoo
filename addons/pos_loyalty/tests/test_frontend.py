@@ -1603,3 +1603,43 @@ class TestUi(TestPointOfSaleHttpCommon):
             'PosLoyaltyMinAmountAndSpecificProductTour',
             login='accountman',
         )
+
+    def test_dont_grant_points_reward_order_lines(self):
+        """
+        Make sure that points granted per unit are only given
+        for the product -non reward- lines!
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'reward_point_amount': 1,
+                'reward_point_mode': 'unit',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'required_points': 2,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyDontGrantPointsForRewardOrderLines",
+            login="accountman",
+        )
+
+        loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner.id)
+
+        self.assertTrue(loyalty_card)
+        self.assertFalse(loyalty_card.points)
