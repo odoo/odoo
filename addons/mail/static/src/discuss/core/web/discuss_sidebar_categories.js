@@ -65,7 +65,7 @@ export class DiscussSidebarCategories extends Component {
             return (
                 (thread.displayToSelf || thread.isLocallyPinned) &&
                 (!this.state.quickSearchVal ||
-                    cleanTerm(thread.name).includes(cleanTerm(this.state.quickSearchVal)))
+                    cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
             );
         });
     }
