@@ -1824,7 +1824,7 @@ class SaleOrder(models.Model):
         )
         res = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
-            res[product.id] = {'price': pricelist.get(product.id)}
+            res[product.id]['price'] = pricelist.get(product.id)
             if product.sale_line_warn != 'no-message' and product.sale_line_warn_msg:
                 res[product.id]['warning'] = product.sale_line_warn_msg
             if product.sale_line_warn == "block":

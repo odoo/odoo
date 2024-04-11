@@ -96,7 +96,7 @@ class ProductCatalogMixin(models.AbstractModel):
 
         for product, record_lines in self._get_product_catalog_record_lines(product_ids).items():
             order_line_info[product.id] = {
-               **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
+               **record_lines._get_product_catalog_lines_data(**kwargs),
                'productType': product.type,
             }
             product_ids.remove(product.id)
