@@ -56,12 +56,12 @@
                         </div>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasCallFeature and !chatWindow.isCallSettingsMenuOpen">
-                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowCallSettingsMenu cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Member List" t-on-click="chatWindow.onClickShowCallSettingsMenu">
+                        <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandShowCallSettingsMenu cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall}"  title="Show Call Settings" t-on-click="chatWindow.onClickShowCallSettingsMenu">
                             <i class="fa fa-gear"/>
                         </div>
                     </t>
                     <t t-if="chatWindow.thread and chatWindow.thread.hasCallFeature and chatWindow.isCallSettingsMenuOpen">
-                        <div class="o_ChatWindowHeader_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Member List" t-on-click="chatWindow.onClickHideCallSettingsMenu">
+                        <div class="o_ChatWindowHeader_command cursor-pointer d-flex align-items-center h-100 px-3 py-0 m-0" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall, 'opacity-50 opacity-100-hover': !messaging.device.isSmall }" title="Hide Call Settings" t-on-click="chatWindow.onClickHideCallSettingsMenu">
                             <i class="fa fa-gear"/>
                         </div>
                     </t>
