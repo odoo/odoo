@@ -173,7 +173,7 @@ class Orderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': order.display_name,
-                        'url': f'#action={action.id}&id={order.id}&model=purchase.order',
+                        'url': f'/web#action={action.id}&id={order.id}&model=purchase.order',
                     }],
                     'sticky': False,
                 }

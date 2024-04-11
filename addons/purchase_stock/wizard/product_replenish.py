@@ -73,7 +73,7 @@ class ProductReplenish(models.TransientModel):
             action = self.env.ref('purchase.action_rfq_form')
             return [{
                 'label': order_line.order_id.display_name,
-                'url': f'#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
+                'url': f'/web#action={action.id}&id={order_line.order_id.id}&model=purchase.order',
             }]
         return super()._get_replenishment_order_notification_link(order_line)
 
