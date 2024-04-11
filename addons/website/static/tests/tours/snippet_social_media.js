@@ -170,6 +170,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
         trigger: 'we-list table input:eq(3)',
         run: 'text_blur https://instagram.com/odoo.official/',
     },
+    ...preventRaceConditionStep,
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnSnippet({
