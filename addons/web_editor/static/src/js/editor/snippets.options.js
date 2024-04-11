@@ -1971,6 +1971,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
         'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
         'change table input': '_onListItemChange',
+        'mousedown': '_onWeListMousedown',
     },
 
     /**
@@ -2276,8 +2277,24 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _onListItemChange() {
-        this._notifyCurrentState();
+    _onListItemChange(ev) {
+        const timeSinceMousedown = ev.timeStamp - this.mousedownTime;
+        if (timeSinceMousedown < 500) {
+            // Without this "setTimeOut", "click" events are not triggered when
+            // clicking directly on a "we-button" of the "we-list" without first
+            // focusing out the input.
+            setTimeout(() => {
+                this._notifyCurrentState();
+            }, 500);
+        } else {
+            this._notifyCurrentState();
+        }
+    },
+    /**
+     * @private
+     */
+    _onWeListMousedown(ev) {
+        this.mousedownTime = ev.timeStamp;
     },
     /**
      * @private
