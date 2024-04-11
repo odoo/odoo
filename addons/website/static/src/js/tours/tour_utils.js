@@ -471,6 +471,28 @@ function switchWebsite(websiteId, websiteName) {
     }];
 }
 
+/**
+ * Toggles the mobile preview on or off.
+ *
+ * @param {Boolean} toggleOn true to toggle the mobile preview on, false to
+ *     toggle it off.
+ * @returns {Array}
+ */
+function toggleMobilePreview(toggleOn) {
+    const onOrOff = toggleOn ? "on" : "off";
+    const mobileOnSelector = ".o_is_mobile";
+    const mobileOffSelector = ":not(.o_is_mobile)";
+    return [{
+        content: `Toggle the mobile preview ${onOrOff}`,
+        trigger: ".o_we_website_top_actions [data-action='mobile']",
+        extra_trigger: `iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+    }, {
+        content: `Check that the mobile preview is ${onOrOff}`,
+        trigger: `iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,
+        isCheck: true,
+    }];
+}
+
 export default {
     addMedia,
     assertCssVariable,
@@ -502,4 +524,5 @@ export default {
     selectNested,
     selectSnippetColumn,
     switchWebsite,
+    toggleMobilePreview,
 };
