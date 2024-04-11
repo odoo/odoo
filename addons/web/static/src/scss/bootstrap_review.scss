@@ -93,8 +93,13 @@
 }
 
 // Force field label pointer to cursor
-.form-check, .form-select {
+.form-check {
     @include o-field-pointer();
+}
+
+// Update the border color when hovering form-select elements
+.form-select:where(:not(:disabled)):hover {
+    border-color: $form-check-input-checked-border-color;
 }
 
 // Disable RTL for the dropdown position
