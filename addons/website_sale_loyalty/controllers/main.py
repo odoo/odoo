@@ -96,7 +96,7 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.applies_on == 'future'
                         and program_sudo.program_type not in ('ewallet', 'loyalty'))
                 ):
-                    return self.pricelist(code)
+                    return self.pricelist(code, **post)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon)
         return request.redirect(redirect)
