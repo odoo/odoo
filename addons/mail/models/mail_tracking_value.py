@@ -34,17 +34,34 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    def _filter_tracked_field_access(self, env):
-        """ Return the subset of ``self`` for which the user in ``env`` has
-        access to the corresponding field.
-        """
+    def _filter_has_field_access(self, env):
+        """ Return the subset of self for which the user in env has access. As
+        this model is admin-only, it is generally accessed as sudo and we need
+        to distinguish context environment from tracking values environment.
+
+        If tracking is linked to a field, user should have access to the field.
+        Otherwise only members of "base.group_system" can access it. """
+
         def has_field_access(tracking):
-            field = None
-            if tracking.field_id:
-                field = env[tracking.field_id.model]._fields.get(tracking.field_id.name)
-            return field.is_accessible(env) if field else env.is_system()
+            if not tracking.field_id:
+                return env.is_system()
+            model_field = env[tracking.field_id.model]._fields.get(tracking.field_id.name)
+            return model_field.is_accessible(env)
 
         return self.filtered(has_field_access)
+
+    def _filter_free_field_access(self):
+        """ Return the subset of self which is available for all users: trackings
+        linked to an existing field without access group. It is used notably
+        when sending tracking summary through notifications. """
+
+        def has_free_access(tracking):
+            if not tracking.field_id:
+                return False
+            model_field = self.env[tracking.field_id.model]._fields.get(tracking.field_id.name)
+            return model_field and not model_field.groups
+
+        return self.filtered(has_free_access)
 
     @api.model
     def _create_tracking_values(self, initial_value, new_value, col_name, col_info, record):
