@@ -27,14 +27,21 @@ class PaymentLinkWizard(models.TransientModel):
                     )
 
     def _prepare_query_params(self, *args):
-        """ Override of `payment` to add `sale_order_id` to the query params. """
+        """ Override of `payment` to add SO related values to the query params. """
         res = super()._prepare_query_params(*args)
         if self.res_model != 'sale.order':
             return res
 
+        sale_order = self.env['sale.order'].browse(self.res_id)
         # The other order-related values are read directly from the sales order in the controller.
         return {
-            'amount': self.amount,
-            'access_token': self._prepare_access_token(),
-            'sale_order_id': self.res_id,
+            'link_amount': self.amount,
+            'access_token': sale_order._portal_ensure_token(),
+            'showPaymentModal': 'true',
         }
+
+    def _prepare_url(self, base_url, related_document):
+        if self.res_model == 'sale.order':
+            return f'{base_url}/my/orders/{related_document.id}'
+
+        return super()._prepare_url(base_url, related_document)
