@@ -2,9 +2,11 @@ odoo.define('website.s_popup', function (require) {
 'use strict';
 
 const config = require('web.config');
+const { _t } = require("@web/core/l10n/translation");
 const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
 const utils = require('web.utils');
+const { cloneContentEls } = require("website.utils");
 
 // TODO In master, export this class too or merge it with PopupWidget
 const SharedPopupWidget = publicWidget.Widget.extend({
@@ -91,7 +93,7 @@ const SharedPopupWidget = publicWidget.Widget.extend({
 publicWidget.registry.SharedPopup = SharedPopupWidget;
 
 const PopupWidget = publicWidget.Widget.extend({
-    selector: '.s_popup',
+    selector: ".s_popup:not(#website_cookies_bar)",
     events: {
         'click .js_close_popup': '_onCloseClick',
         'hide.bs.modal': '_onHideModal',
@@ -201,6 +203,81 @@ const PopupWidget = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.popup = PopupWidget;
+
+publicWidget.registry.cookies_bar = PopupWidget.extend({
+    selector: "#website_cookies_bar",
+
+    /**
+     * @override
+     */
+    start() {
+        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
+        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
+            this.toggleEl = cloneContentEls(`
+            <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex align-items-center justify-content-center position-absolute">
+                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
+            </button>
+            `).firstElementChild;
+            this._onToggleCookiesBar = this._toggleCookiesBar.bind(this);
+            this.toggleEl.addEventListener("click", this._onToggleCookiesBar);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.toggleEl) {
+            this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
+            this.toggleEl.remove();
+        }
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _showPopup() {
+        this._super(...arguments);
+        if (this.toggleEl) {
+            this._toggleCookiesBar();
+        }
+    },
+    /**
+     * Toggles the cookies bar with a button so that the page is readable.
+     *
+     * @private
+     */
+    _toggleCookiesBar() {
+        const popupEl = this.el.querySelector(".modal");
+        $(popupEl).modal("toggle");
+        // As we're using Bootstrap's events, the PopupWidget prevents the modal
+        // from being shown after hiding it: override that behavior.
+        this._popupAlreadyShown = false;
+        utils.set_cookie(this.el.id, false, -1);
+
+        const hidden = !popupEl.classList.contains("show");
+        // Keep a margin with the bottom of the page (if the modal is hidden) or
+        // with the modal (if it is shown).
+        const insetBlock = hidden ? "1rem" : `calc(-1*(${this.toggleEl.offsetHeight}px + .5rem))`;
+        (hidden ? document.body : this.el.querySelector(".modal-content"))
+            .appendChild(this.toggleEl);
+        this.toggleEl.querySelector(".fa").className = `fa ${hidden ? "fa-eye" : "fa-eye-slash"}`;
+        this.toggleEl.querySelector(".o_cookies_bar_toggle_label").innerText = hidden
+            ? _t("Show the cookies bar")
+            : _t("Hide the cookies bar");
+        this.toggleEl.style.insetInlineEnd = hidden || this.el.querySelector(".s_popup_size_full")
+            ? "1rem"
+            : "0";
+        this.toggleEl.style.insetBlock = !hidden && popupEl.classList.contains("s_popup_bottom")
+            ? `${insetBlock} auto`
+            : `auto ${insetBlock}`;
+    },
+});
 
 // Try to update the scrollbar based on the current context (modal state)
 // and only if the modal overflowing has changed
