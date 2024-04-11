@@ -194,6 +194,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (gridColumnsEl) {
             gridColumnsEl.dataset.selector = ".row:not(.s_col_no_resize) > div";
         }
+
+        // Remove the input-border-width-sm and input-border-width-lg from the input-border-width
+        ['input-border-width-sm', 'input-border-width-lg'].forEach(variable => {
+            const element = $html.find(
+                `[data-selector='theme-input'] we-input[data-customize-website-variable][data-variable='${variable}']`
+            )[0];
+            element.remove();
+        });
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
