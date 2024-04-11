@@ -75,7 +75,7 @@ const {
     console: { dir: $dir, groupCollapsed: $groupCollapsed, groupEnd: $groupEnd, log: $log },
     DataTransfer,
     document,
-    Math: { ceil: $ceil },
+    Math: { ceil: $ceil, max: $max, min: $min },
     Object: { assign: $assign, values: $values },
     String,
     Touch,
@@ -912,6 +912,29 @@ const _keyDown = (target, eventInit) => {
 
     if (isEditable(target)) {
         switch (key) {
+            case "ArrowDown":
+            case "ArrowLeft":
+            case "ArrowUp":
+            case "ArrowRight": {
+                const { selectionStart, selectionEnd, value } = target;
+                if (isNil(selectionStart) || isNil(selectionEnd)) {
+                    break;
+                }
+                const start = key === "ArrowLeft" || key === "ArrowUp";
+                let selectionTarget;
+                if (ctrlKey) {
+                    // Move to the start/end of the line
+                    selectionTarget = start ? 0 : value.length;
+                } else {
+                    // Move the cursor left or right
+                    selectionTarget = start ? selectionStart - 1 : selectionEnd + 1;
+                }
+                target.selectionStart = target.selectionEnd = $max(
+                    $min(selectionTarget, value.length),
+                    0
+                );
+                break;
+            }
             case "Backspace": {
                 const { selectionStart, selectionEnd, value } = target;
                 if (fullClear) {
@@ -981,6 +1004,10 @@ const _keyDown = (target, eventInit) => {
                 // Select all
                 if (isEditable(target)) {
                     dispatch(target, "select");
+                    if (!isNil(target.selectionStart) && !isNil(target.selectionEnd)) {
+                        target.selectionStart = 0;
+                        target.selectionEnd = target.value.length;
+                    }
                 } else {
                     const selection = globalThis.getSelection();
                     const range = $createRange();

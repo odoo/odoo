@@ -1600,7 +1600,7 @@ export class Matchers {
                       }`
                     : `%elements% do not have the correct property${expectsValue ? " value" : ""}`),
             details: (actual) => {
-                const propValue = actual[property];
+                const propValue = actual[0][property];
                 const details = [
                     [Markup.green("Expected:"), value],
                     [Markup.red("Received:"), propValue],
