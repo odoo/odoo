@@ -367,6 +367,9 @@ class SaleOrder(models.Model):
                 "Your cart is not ready to be paid, please verify previous steps."
             ))
 
+        if not self.only_services and not self.carrier_id:
+            raise ValidationError(_("No shipping method is selected."))
+
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         product_ids = set(self.website_order_line.product_id.ids)
