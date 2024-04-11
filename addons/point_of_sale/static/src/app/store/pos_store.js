@@ -1129,7 +1129,9 @@ export class PosStore extends Reactive {
 
     push_single_order(order) {
         const order_id = this.db.add_order(order.export_as_JSON());
-        return this.pushOrderMutex.exec(() => this._flush_orders([this.db.get_order(order_id)]));
+        return this.pushOrderMutex.exec(() =>
+            this._flush_orders([this.db.get_order(order_id)], order._getOrderOptions())
+        );
     }
 
     // Send validated orders to the backend.
