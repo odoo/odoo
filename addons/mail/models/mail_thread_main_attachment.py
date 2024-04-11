@@ -16,16 +16,30 @@ class MailMainAttachmentMixin(models.AbstractModel):
     def _message_post_after_hook(self, message, msg_values):
         """ Set main attachment field if necessary """
         super()._message_post_after_hook(message, msg_values)
-        self.sudo()._message_set_main_attachment_id([
-            attachment_command[1]
-            for attachment_command in (msg_values['attachment_ids'] or [])
-        ])
+        self.sudo()._message_set_main_attachment_id(
+            self.env["ir.attachment"].browse([
+                attachment_command[1]
+                for attachment_command in (msg_values['attachment_ids'] or [])
+            ])
+        )
 
-    def _message_set_main_attachment_id(self, attachment_ids):
-        if attachment_ids and not self.message_main_attachment_id:
+    def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
+        """ Update 'main' attachment.
+
+        :param list attachments: new main attachment IDS; if several attachments
+          are given, we search for pdf or image first;
+        :param boolean force: if set, replace an existing attachment; otherwise
+          update is skipped;
+        :param filter_xml: filters out xml (and octet-stream) attachments, as in
+          most cases you don't want that kind of file to end up as main attachment
+          of records;
+        """
+        if attachments and (force or not self.message_main_attachment_id):
             # we filter out attachment with 'xml' and 'octet' types
-            attachments = self.env['ir.attachment'].browse(attachment_ids).filtered(lambda r: not r.mimetype.endswith('xml')
-                                                                                              and not r.mimetype.endswith('application/octet-stream'))
+            if filter_xml:
+                attachments = attachments.filtered(
+                    lambda r: not r.mimetype.endswith('xml') and not r.mimetype.endswith('application/octet-stream')
+                )
 
             # Assign one of the attachments as the main according to the following priority: pdf, image, other types.
             if attachments:
