@@ -16,21 +16,21 @@
                         <div class="d-flex flex-column m-4">
                             <h1>Payment Successful</h1>
                             <div class="buttons my-3">
-                                <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => this.pos.printReceipt()">
-                                    <i t-attf-class="fa {{printer.state.isPrinting ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doPrint.call()">
+                                    <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
-                            <form t-on-submit.prevent="onSendEmail" class="send-email d-flex">
+                            <form t-on-submit.prevent="() => doSendEmail.call()" class="send-email d-flex">
                                 <div class="input-email input-group">
-                                    <input type="email" class="form-control py-3 bg-view" t-attf-placeholder="Email: {{currentOrder.getEmailItems().join(', ')}}" t-model="orderUiState.inputEmail" />
+                                    <input type="email" class="form-control py-3 bg-view" t-attf-placeholder="Email: {{currentOrder.getEmailItems().join(', ')}}" t-model="state.inputEmail" />
                                     <button class="send btn px-5" t-att-class="isValidEmail() ? 'highlight btn btn-primary' : 'btn-secondary disabled'" type="submit">
-                                        <i class="fa fa-paper-plane" aria-hidden="true" t-ref="order-mail-receipt-button" />
+                                        <i t-attf-class="fa {{doSendEmail.status !== 'loading' ? 'fa-paper-plane' : 'fa-fw fa-spin fa-circle-o-notch'}}" aria-hidden="true" />
                                     </button>
                                 </div>
                             </form>
                             <div class="notice mt-2">
-                                <div t-if="orderUiState.emailSuccessful !== null" t-attf-class="{{ orderUiState.emailSuccessful ? 'successful text-success' : 'failed text-danger' }}">
-                                    <t t-esc="orderUiState.emailNotice"></t>
+                                <div t-if="doSendEmail.status !== 'idle'" t-attf-class="{{ emailNotice.class }}">
+                                    <t t-esc="emailNotice.message"></t>
                                 </div>
                             </div>
                         </div>
