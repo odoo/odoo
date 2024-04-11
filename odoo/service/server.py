@@ -557,9 +557,9 @@ class ThreadedServer(CommonServer):
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
-        self.start(stop=stop)
-
-        rc = preload_registries(preload)
+        with Registry._lock:
+            self.start(stop=stop)
+            rc = preload_registries(preload)
 
         if stop:
             if config['test_enable']:
