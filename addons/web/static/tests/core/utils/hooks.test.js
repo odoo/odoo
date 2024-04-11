@@ -110,7 +110,8 @@ describe("useAutofocus", () => {
     });
 
     test("returns also a ref when screen has touch but it does not focus", async () => {
-        expect(1);
+        expect.assertions(2);
+
         class MyComponent extends Component {
             static template = xml`
                 <span>

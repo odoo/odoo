@@ -426,7 +426,7 @@ describe("sets", () => {
         expect(() => evaluateExpr("set(expr)", { expr: null })).toThrow();
 
         expect(() => evaluateExpr("set([], [])")).toThrow(); // valid but not supported by py_js
-        expect(() => evaluateExpr("set({ 'a' })").toThrow()); // valid but not supported by py_js
+        expect(() => evaluateExpr("set({ 'a' })")).toThrow(); // valid but not supported by py_js
     });
 
     test("set intersection", () => {

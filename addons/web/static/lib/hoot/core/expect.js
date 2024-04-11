@@ -112,6 +112,29 @@ const $now = performance.now.bind(performance);
 const afterTest = (test, options) => {
     currentResult.duration = $now() - currentResult.ts;
 
+    // Expect without matchers
+    if (unconsumedMatchers.size) {
+        let times;
+        switch (unconsumedMatchers.size) {
+            case 1:
+                times = "once";
+                break;
+            case 2:
+                times = "twice";
+                break;
+            default:
+                times = `${unconsumedMatchers.size} times`;
+        }
+        registerAssertion(
+            new Assertion({
+                label: "expect",
+                message: `called ${times} without calling any matchers`,
+                pass: false,
+            })
+        );
+        unconsumedMatchers.clear();
+    }
+
     // Steps
     if (currentResult.steps.length) {
         registerAssertion(
@@ -443,6 +466,9 @@ const ELEMENTS_REGEX = /%(elements?)%/i;
 const NOT_REGEX = /\[([\w\s]*)!([\w\s]*)\]/;
 const RECEIVED_REGEX = /%(received)%/i;
 
+/** @type {Set<Matchers>} */
+const unconsumedMatchers = new Set();
+
 /** @type {TestResult | null} */
 let currentResult = null;
 let currentStack = "";
@@ -536,6 +562,8 @@ export class Matchers {
         this.#received = received;
         this.#headless = headless;
         this.#modifiers = modifiers;
+
+        unconsumedMatchers.add(this);
     }
 
     //-------------------------------------------------------------------------
@@ -556,6 +584,7 @@ export class Matchers {
         if (this.#modifiers.not) {
             throw matcherModifierError("not", `matcher is already negated`);
         }
+        unconsumedMatchers.delete(this);
         return new Matchers(this.#received, { ...this.#modifiers, not: true }, this.#headless);
     }
 
@@ -575,6 +604,7 @@ export class Matchers {
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
+        unconsumedMatchers.delete(this);
         return new Matchers(this.#received, { ...this.#modifiers, rejects: true }, this.#headless);
     }
 
@@ -594,6 +624,7 @@ export class Matchers {
                 `matcher value has already been wrapped in a promise resolver`
             );
         }
+        unconsumedMatchers.delete(this);
         return new Matchers(this.#received, { ...this.#modifiers, resolves: true }, this.#headless);
     }
 
@@ -1876,6 +1907,7 @@ export class Matchers {
     }
 
     #saveStack() {
+        unconsumedMatchers.delete(this);
         if (!this.#headless) {
             currentStack = new Error().stack;
         }
