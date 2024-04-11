@@ -25,11 +25,6 @@ class SaleOrder(models.Model):
         return res + self.order_line.filtered(
             lambda line: line.is_delivery or line.reward_id.reward_type == 'shipping')
 
-    def _get_lines_impacting_invoice_status(self):
-        return super()._get_lines_impacting_invoice_status().filtered(
-            lambda line: not line.is_reward_line
-        )
-
     def _get_not_rewarded_order_lines(self):
         """Exclude delivery lines from consideration for reward points."""
         order_line = super()._get_not_rewarded_order_lines()

@@ -129,25 +129,6 @@ class SaleOrder(models.Model):
         values = self._prepare_delivery_line_vals(carrier, price_unit)
         return self.env['sale.order.line'].sudo().create(values)
 
-    @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
-    def _compute_invoice_status(self):
-        super()._compute_invoice_status()
-        for order in self:
-            if order.invoice_status in ['no', 'invoiced']:
-                continue
-            order_lines = order._get_lines_impacting_invoice_status()
-            if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_lines):
-                order.invoice_status = 'no'
-
-    def _get_lines_impacting_invoice_status(self):
-        return self.order_line.filtered(
-            lambda line:
-                not line.is_delivery
-                and not line.is_downpayment
-                and not line.display_type
-                and line.invoice_status != 'invoiced'
-        )
-
     @api.depends('order_line.product_uom_qty', 'order_line.product_uom')
     def _compute_shipping_weight(self):
         for order in self:
