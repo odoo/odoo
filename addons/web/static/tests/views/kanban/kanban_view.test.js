@@ -964,7 +964,12 @@ test.tags("desktop")("kanban with kanban-tooltip template", async () => {
             </kanban>`,
     });
 
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)"), ["yop", "blip", "gnap", "blip"]);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
+        "yop",
+        "blip",
+        "gnap",
+        "blip",
+    ]);
 
     expect(".o_popover").toHaveCount(0);
     hover(queryFirst(".o_kanban_record"));
@@ -973,7 +978,7 @@ test.tags("desktop")("kanban with kanban-tooltip template", async () => {
     await runAllTimers();
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
-    expect(queryText(".o_popover"), "yop");
+    expect(".o_popover").toHaveText("yop");
 
     hover(queryFirst(".o_control_panel"));
     await animationFrame();
@@ -7822,7 +7827,7 @@ test.tags("desktop")("resequence all when creating new record + partial resequen
     // dragging column 2 to column 4 should only resequence [5, 6, 7] to [6, 7, 5]
     // with offset 1.
     await contains(".o_kanban_group:nth-child(2) .o_column_title").dragAndDrop(
-        queryFirst(".o_kanban_group:nth-child(4)")
+        ".o_kanban_group:nth-child(4)"
     );
     expect([JSON.stringify({ ids: [6, 7, 5], offset: 1 })]).toVerifySteps();
 });
