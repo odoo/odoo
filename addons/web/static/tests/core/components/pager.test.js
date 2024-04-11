@@ -153,7 +153,7 @@ test("pager disabling", async () => {
     expect("button").toHaveCount(2);
     expect("button:nth-child(1)").toHaveAttribute("disabled");
     expect("button:nth-child(2)").toHaveAttribute("disabled");
-    expect("span.o_pager_value").toHaveCount;
+    expect("span.o_pager_value").toHaveCount(1);
 
     reloadPromise.resolve();
     await animationFrame();
