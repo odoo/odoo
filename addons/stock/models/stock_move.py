@@ -608,7 +608,10 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
-                move_to_recompute_state |= self - move_to_unreserve - receipt_moves_to_reassign
+                move_to_recompute_state |= self - receipt_moves_to_reassign
+                if vals['product_uom_qty']:
+                    # Ensure that recomputes happen if qty = 0
+                    move_to_recompute_state -= move_to_unreserve
         # propagate product_packaging_id changes in the stock move chain
         if 'product_packaging_id' in vals:
             self._propagate_product_packaging(vals['product_packaging_id'])
@@ -968,7 +971,7 @@ class StockMove(models.Model):
             'confirmed': 1,
         }
         moves_todo = self\
-            .filtered(lambda move: move.state not in ['cancel', 'done'] and not (move.state == 'assigned' and not move.product_uom_qty))\
+            .filtered(lambda move: move.state not in ['cancel', 'done'] and move.product_uom_qty)\
             .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         if not moves_todo:
             return 'assigned'
@@ -976,7 +979,7 @@ class StockMove(models.Model):
         if moves_todo[:1].picking_id and moves_todo[:1].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
             if most_important_move.state == 'confirmed':
-                return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
+                return 'confirmed'
             elif most_important_move.state == 'partially_available':
                 return 'confirmed'
             else:
