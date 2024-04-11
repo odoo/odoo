@@ -1508,6 +1508,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': datetime(2020, 1, 6),
             'stop': datetime(2020, 1, 6),
             'need_sync': False,
+            'user_id': self.env.uid
         })
         recurrence = self.env['calendar.recurrence'].create({
             'google_id': google_id,
@@ -1535,7 +1536,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 2)
-        self.assertFalse(events.mapped('attendee_ids'))
+        # Only the event organizer must remain as attendee.
+        self.assertEqual(len(events.mapped('attendee_ids')), 1)
+        self.assertEqual(events.mapped('attendee_ids')[0].partner_id, self.env.user.partner_id)
         self.assertGoogleAPINotCalled()
 
     @patch_api
@@ -2176,3 +2179,49 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             ]).sorted(key=lambda r: r.event_id.start)
             for i, expected_state in enumerate(expected_states):
                 self.assertEqual(attendees[i].state, expected_state)
+            for i, event in enumerate(recurrence.calendar_event_ids.sorted("start")):
+                self.assertEqual(event.attendee_ids[1].state, expected_states[i])
+
+    @patch_api
+    def test_keep_organizer_attendee_writing_recurrence_from_google(self):
+        """
+        When receiving recurrence updates from google in 'write_from_google', make
+        sure the organizer is kept as attendee of the events. This will guarantee
+        that the newly updated events will not disappear from the calendar view.
+        """
+        def check_organizer_as_single_attendee(self, recurrence, organizer):
+            """ Ensure that the organizer is the single attendee of the recurrent events. """
+            for event in recurrence.calendar_event_ids:
+                self.assertTrue(len(event.attendee_ids) == 1, 'Should have only one attendee.')
+                self.assertEqual(event.attendee_ids[0].partner_id, organizer.partner_id, 'The single attendee must be the organizer.')
+
+        # Generate a regular recurrence with only the organizer as attendee.
+        recurrence_id = "rec_id"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-10",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 4, 11, 9, 0),
+            stop=datetime(2024, 4, 11, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id])],
+        )
+        check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
+
+        # Update the recurrence without specifying its attendees, the organizer must be kept as
+        # attendee after processing it, thus the new events will be kept in its calendar view.
+        values = [{
+            'summary': 'updated_rec',
+            'id': recurrence_id,
+            'recurrence': ['RRULE:FREQ=DAILY;INTERVAL=1;COUNT=3'],
+            'start': {'dateTime': '2024-04-13T8:00:00+01:00'},
+            'end': {'dateTime': '2024-04-13T9:00:00+01:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': self.organizer_user.partner_id.email},
+            'attendees': [],
+            'updated': self.now,
+        }]
+        self.env['calendar.recurrence'].with_user(self.organizer_user)._sync_google2odoo(GoogleEvent(values))
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "The new recurrence must have three events.")
+        check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
+        self.assertGoogleAPINotCalled()
