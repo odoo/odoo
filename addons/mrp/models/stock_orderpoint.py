@@ -32,7 +32,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': production.name,
-                        'url': f'#action={action.id}&id={production.id}&model=mrp.production'
+                        'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
                     }],
                     'sticky': False,
                 }

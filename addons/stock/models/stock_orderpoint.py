@@ -481,7 +481,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'message': '%s',
                     'links': [{
                         'label': move.picking_id.name,
-                        'url': f'#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
+                        'url': f'/web#action={action.id}&id={move.picking_id.id}&model=stock.picking&view_type=form'
                     }],
                     'sticky': False,
                 }
