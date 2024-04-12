@@ -367,11 +367,7 @@ export class ListRenderer extends Component {
         widths.forEach(({ type, value }, i) => {
             const headerEl = this.tableRef.el.querySelector(`th:nth-child(${i + columnOffset})`);
             if (type === "absolute") {
-                if (this.isEmpty) {
-                    headerEl.style.width = value;
-                } else {
-                    headerEl.style.minWidth = value;
-                }
+                headerEl.style.width = value;
             } else if (type === "relative" && this.isEmpty) {
                 headerEl.style.width = `${((value / sumOfRelativeWidths) * 100).toFixed(2)}%`;
             }
@@ -411,26 +407,45 @@ export class ListRenderer extends Component {
         );
 
         let totalWidth = getTotalWidth();
-        for (let index = 1; totalWidth > allowedWidth; index++) {
-            // Find the largest columns
-            const largestCols = sortedThs.slice(0, index);
-            const currentWidth = getWidth(largestCols[0]);
-            for (; currentWidth === getWidth(sortedThs[index]); index++) {
-                largestCols.push(sortedThs[index]);
+        if (totalWidth > allowedWidth) {
+            for (let index = 1; totalWidth > allowedWidth; index++) {
+                // Find the largest columns
+                const largestCols = sortedThs.slice(0, index);
+                const currentWidth = getWidth(largestCols[0]);
+                for (; currentWidth === getWidth(sortedThs[index]); index++) {
+                    largestCols.push(sortedThs[index]);
+                }
+
+                // Compute the number of px to remove from the largest columns
+                const nextLargest = sortedThs[index];
+                const toRemove = Math.ceil((totalWidth - allowedWidth) / largestCols.length);
+                const shrinkAmount = Math.min(toRemove, currentWidth - getWidth(nextLargest));
+
+                // Shrink the largest columns
+                const canKeepShrinking = shrinkColumns(largestCols, shrinkAmount);
+                if (!canKeepShrinking) {
+                    break;
+                }
+
+                totalWidth = getTotalWidth();
             }
-
-            // Compute the number of px to remove from the largest columns
-            const nextLargest = sortedThs[index];
-            const toRemove = Math.ceil((totalWidth - allowedWidth) / largestCols.length);
-            const shrinkAmount = Math.min(toRemove, currentWidth - getWidth(nextLargest));
-
-            // Shrink the largest columns
-            const canKeepShrinking = shrinkColumns(largestCols, shrinkAmount);
-            if (!canKeepShrinking) {
-                break;
+        } else if (allowedWidth > totalWidth) {
+            // The available space is larger than the necessary space for the current table content,
+            // so we'll distribute the available space between all "relative" columns, in order to
+            // prevent "absolute" columns from taking more space then what they should.
+            const widths = this.columns.map((col) => this.calculateColumnWidth(col));
+            let indicesOfColsToExpand = widths
+                .map(({ type }, index) => ({ index, type }))
+                .filter(({ type }) => type === "relative")
+                .map(({ index }) => index);
+            if (indicesOfColsToExpand.length === 0) {
+                // Special case: all columns are "absolute", so distribute the space among them
+                indicesOfColsToExpand = widths.map((_, index) => index);
             }
-
-            totalWidth = getTotalWidth();
+            const extraWidth = (allowedWidth - totalWidth) / indicesOfColsToExpand.length;
+            for (const i of indicesOfColsToExpand) {
+                columnWidths[i] += extraWidth;
+            }
         }
 
         // We are no longer computing widths, so restore the normal style

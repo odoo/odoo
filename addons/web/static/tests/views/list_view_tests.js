@@ -4773,6 +4773,7 @@ QUnit.module("Views", (hooks) => {
                     <tree editable="top">
                         <field name="bar"/>
                         <field name="foo"/>
+                        <field name="m2o"/>
                         <field name="int_field"/>
                         <field name="qux"/>
                         <field name="date"/>
@@ -4800,6 +4801,42 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.debug("column widths with data, too much available space", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="bar"/>
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="qux"/>
+                </tree>`,
+        });
+
+        assert.containsN(target, ".o_data_row", 4);
+        // both foo and m2o columns contain short values
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("td[name=foo]")), ["yop",
+        "blip",
+        "gnap",
+        "blip"]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("td[name=m2o]")), ["Value 1",
+        "Value 2",
+        "Value 1",
+        "Value 1"]);
+        // fixed width columns don't expand
+        assert.strictEqual(
+            target.querySelector("thead .o_list_record_selector").offsetWidth,
+            41
+        );
+        assert.strictEqual(target.querySelector("thead th[data-name=bar]").offsetWidth, 70);
+        assert.strictEqual(target.querySelector("thead th[data-name=qux]").offsetWidth, 92);
+        // relative width columns expand
+        assert.ok(target.querySelector("thead th[data-name=foo]").offsetWidth > 200);
+        assert.ok(target.querySelector("thead th[data-name=m2o]").offsetWidth > 200);
+    });
 
     QUnit.test(
         "width of some of the fields should be hardcoded if no data",
