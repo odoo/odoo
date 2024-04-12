@@ -356,11 +356,9 @@ export class ProductScreen extends Component {
                 false
             );
 
-            // FIXME handle correct response pattern
-            const models = result.related;
-            const posOrder = result.posOrder;
+            const posOrder = result["pos.order"];
 
-            if (!models) {
+            if (!result["pos.category"] && !result["product.product"]) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Demo products are no longer available"),
                     body: _t(
@@ -370,7 +368,7 @@ export class ProductScreen extends Component {
             }
 
             for (const dataName of ["pos.category", "product.product", "pos.order"]) {
-                if (!models[dataName] && Object.keys(posOrder).length === 0) {
+                if (!result[dataName] && Object.keys(posOrder).length === 0) {
                     this._showLoadDemoDataMissingDataError(dataName);
                 }
             }
@@ -387,9 +385,7 @@ export class ProductScreen extends Component {
 
     _showLoadDemoDataMissingDataError(missingData) {
         console.error(
-            "Missing '",
-            missingData,
-            "' in pos.session:load_product_frontend server answer."
+            `Missing '${missingData}' in pos.session:load_product_frontend server answer.`
         );
     }
 
