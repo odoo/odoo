@@ -60,7 +60,8 @@ export function areSimilarElements(node, node2) {
         isNotNoneValue(getComputedStyle(node, ':before').getPropertyValue('content')) ||
         isNotNoneValue(getComputedStyle(node, ':after').getPropertyValue('content')) ||
         isNotNoneValue(getComputedStyle(node2, ':before').getPropertyValue('content')) ||
-        isNotNoneValue(getComputedStyle(node2, ':after').getPropertyValue('content'))
+        isNotNoneValue(getComputedStyle(node2, ':after').getPropertyValue('content')) ||
+        isFontAwesome(node) || isFontAwesome(node2)
     ) {
         return false;
     }
