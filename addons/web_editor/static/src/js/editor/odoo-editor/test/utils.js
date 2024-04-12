@@ -221,12 +221,14 @@ export function nodeLength(node) {
  *
  * This is used in the function `testEditor`.
  */
-export function renderTextualSelection(doc = document) {
-    const selection = doc.getSelection();
+export function renderTextualSelection(editor) {
+    const selection = editor.document.getSelection();
     if (selection.rangeCount === 0) {
         return;
     }
+    editor.observerUnactive('renderTextualSelection');
     insertSelectionChars(selection.anchorNode, selection.anchorOffset, selection.focusNode, selection.focusOffset);
+    editor.observerActive('renderTextualSelection');
 }
 
 /**
@@ -297,7 +299,6 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         } else {
             document.getSelection().removeAllRanges();
         }
-        editor.observerUnactive('beforeUnitTests');
 
         // we have to sanitize after having put the cursor
         sanitize(editor.editable);
@@ -306,7 +307,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             if (spec.removeCheckIds) {
                 removeCheckIds(testContainer);
             }
-            renderTextualSelection();
+            renderTextualSelection(editor);
             const beforeEditValue = testNode.innerHTML;
             window.chai.expect(beforeEditValue).to.be.equal(
                 spec.contentBeforeEdit,
@@ -318,18 +319,16 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         }
 
         if (spec.stepFunction) {
-            editor.observerActive('beforeUnitTests');
             try {
                 await spec.stepFunction(editor);
             } catch (e) {
                 e.message = (isMobileTest ? '[MOBILE VERSION] ' : '') + e.message;
                 throw e;
             }
-            editor.observerUnactive('afterUnitTests');
         }
 
         if (spec.contentAfterEdit) {
-            renderTextualSelection();
+            renderTextualSelection(editor);
             if (spec.removeCheckIds) {
                 removeCheckIds(testContainer);
             }
@@ -354,7 +353,7 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     if (!error) {
         try {
             if (spec.contentAfter) {
-                renderTextualSelection();
+                renderTextualSelection(editor);
                 if (spec.removeCheckIds) {
                     removeCheckIds(testContainer);
                 }
