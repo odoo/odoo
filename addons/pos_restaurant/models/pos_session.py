@@ -36,7 +36,7 @@ class PosSession(models.Model):
         results = super().get_onboarding_data()
 
         if self.config_id.module_pos_restaurant:
-            response = self.load_data(['restaurant.floor'], True)
+            response = self.load_data(['restaurant.floor', 'restaurant.table'], True)
             results.update(response['data'])
 
         return results
