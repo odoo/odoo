@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -9,11 +8,10 @@ import {
     start,
     startServer,
     step,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { MailThread } from "../../mock_server/mock_models/mail_thread";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -71,31 +69,26 @@ test('click on "add followers" button', async () => {
             return res;
         },
     });
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action, options) {
-                if (action?.res_model === "mail.wizard.invite") {
-                    step("action:open_view");
-                    expect(action.context.default_res_model).toBe("res.partner");
-                    expect(action.context.default_res_id).toBe(partnerId_1);
-                    expect(action.res_model).toBe("mail.wizard.invite");
-                    expect(action.type).toBe("ir.actions.act_window");
-                    pyEnv["mail.followers"].create({
-                        partner_id: partnerId_3,
-                        email: "bla@bla.bla",
-                        is_active: true,
-                        name: "Wololo",
-                        res_id: partnerId_1,
-                        res_model: "res.partner",
-                    });
-                    options.onClose();
-                    return;
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        doAction(action, options) {
+            if (action?.res_model !== "mail.wizard.invite") {
+                return super.doAction(...arguments);
+            }
+            step("action:open_view");
+            expect(action.context.default_res_model).toBe("res.partner");
+            expect(action.context.default_res_id).toBe(partnerId_1);
+            expect(action.res_model).toBe("mail.wizard.invite");
+            expect(action.type).toBe("ir.actions.act_window");
+            pyEnv["mail.followers"].create({
+                partner_id: partnerId_3,
+                email: "bla@bla.bla",
+                is_active: true,
+                name: "Wololo",
+                res_id: partnerId_1,
+                res_model: "res.partner",
+            });
+            options.onClose();
+        },
     });
     await start();
     await openFormView("res.partner", partnerId_1);

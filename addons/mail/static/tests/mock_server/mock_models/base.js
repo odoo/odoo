@@ -5,7 +5,7 @@ import { parseModelParams } from "../mail_mock_server";
 patch(models.ServerModel.prototype, {
     /**
      * @override
-     * @type {typeof import("@web/../tests/_framework/mock_server/mock_model").Model["prototype"]["get_views"]}
+     * @type {typeof models.ServerModel["prototype"]["get_views"]}
      */
     get_views() {
         const result = super.get_views(...arguments);

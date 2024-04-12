@@ -69,13 +69,13 @@ test("expr well sent, onConfirm and onClose", async () => {
 
 test("expr well sent but wrong, so notification when onConfirm", async () => {
     const expression = `foo == 'bar' and bar = True`;
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, options) {
             expect(message).toBe("Expression is invalid. Please correct it");
             expect(options).toEqual({ type: "danger" });
             expect.step("notification");
         },
-    }));
+    });
     await makeExpressionEditorDialog({
         expression,
     });

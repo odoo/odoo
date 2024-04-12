@@ -50,7 +50,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
 
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(RPCErrorDialog);
             expect(props).toEqual({
@@ -66,7 +66,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
                 traceback: error.stack,
             });
         },
-    }));
+    });
     await makeMockEnv();
     Promise.reject(error);
     await animationFrame();
@@ -89,7 +89,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     };
     error.data = errorData;
 
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(CustomDialog);
             expect(props).toEqual({
@@ -103,7 +103,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
                 traceback: error.stack,
             });
         },
-    }));
+    });
     await makeMockEnv();
     errorDialogRegistry.add("strange_error", CustomDialog);
     Promise.reject(error);
@@ -131,7 +131,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     };
     error.exceptionName = "normal_error";
     error.data = errorData;
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(NormalDialog);
             expect(props).toEqual({
@@ -145,7 +145,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
                 traceback: error.stack,
             });
         },
-    }));
+    });
     await makeMockEnv();
     errorDialogRegistry.add("strange_error", CustomDialog);
     errorDialogRegistry.add("normal_error", NormalDialog);
@@ -155,14 +155,14 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 });
 
 test("handle CONNECTION_LOST_ERROR", async () => {
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message) {
             expect.step(`create (${message})`);
             return () => {
                 expect.step(`close`);
             };
         },
-    }));
+    });
     const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
     onRpc("/web/webclient/version_info", async () => {
         expect.step("version_info");
@@ -278,7 +278,7 @@ test("handle uncaught promise errors", async () => {
     error.message = "This is an error test";
     error.name = "TestError";
 
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(ClientErrorDialog);
             expect(props).toEqual({
@@ -287,7 +287,7 @@ test("handle uncaught promise errors", async () => {
                 traceback: error.stack,
             });
         },
-    }));
+    });
     await makeMockEnv();
 
     Promise.reject(error);
@@ -302,13 +302,13 @@ test("handle uncaught client errors", async () => {
     error.message = "This is an error test";
     error.name = "TestError";
 
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(ClientErrorDialog);
             expect(props.name).toBe("UncaughtClientError > TestError");
             expect(props.message).toBe("Uncaught Javascript Error > This is an error test");
         },
-    }));
+    });
     await makeMockEnv();
 
     setTimeout(() => {
@@ -325,12 +325,12 @@ test("handle uncaught CORS errors", async () => {
     error.message = "This is a cors error";
     error.name = "CORS Error";
 
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add(dialogClass, props) {
             expect(dialogClass).toBe(NetworkErrorDialog);
             expect(props.message).toBe("Uncaught CORS Error");
         },
-    }));
+    });
     await makeMockEnv();
 
     // CORS error event has no colno, no lineno and no filename

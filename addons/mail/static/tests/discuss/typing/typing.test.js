@@ -1,15 +1,3 @@
-import { describe, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
-import { Store } from "@mail/core/common/store_service";
-import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
-import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
-import { rpcWithEnv } from "@mail/utils/common/misc";
-import { advanceTime } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
 import {
     assertSteps,
     click,
@@ -21,7 +9,17 @@ import {
     start,
     startServer,
     step,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { Store } from "@mail/core/common/store_service";
+import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
+import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
+import { describe, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+
+import { rpcWithEnv } from "@mail/utils/common/misc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();

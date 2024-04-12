@@ -1,6 +1,3 @@
-import { pttExtensionHookService } from "@mail/discuss/call/common/ptt_extension_service";
-import { describe, test } from "@odoo/hoot";
-import { mockService } from "@web/../tests/web_test_helpers";
 import {
     click,
     contains,
@@ -9,7 +6,9 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, test } from "@odoo/hoot";
+import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -18,14 +17,10 @@ test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    mockService("discuss.ptt_extension", (...args) => {
-        const service = pttExtensionHookService.start(...args);
-        Object.defineProperty(service, "isEnabled", {
-            get() {
-                return false;
-            },
-        });
-        return service;
+    mockService("discuss.ptt_extension", {
+        get isEnabled() {
+            return false;
+        },
     });
     await start();
     await openDiscuss(channelId);

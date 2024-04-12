@@ -249,13 +249,11 @@ test("statusbar with tooltip for help text", async () => {
 });
 
 test("statusbar with required modifier", async () => {
-    mockService("notification", () => {
-        return {
-            add: () => {
-                expect.step("Show error message");
-                return () => {};
-            },
-        };
+    mockService("notification", {
+        add() {
+            expect.step("Show error message");
+            return () => {};
+        },
     });
     await mountView({
         type: "form",

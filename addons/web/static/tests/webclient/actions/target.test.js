@@ -308,14 +308,12 @@ describe("new", () => {
     });
 
     test('actions in target="new" do not update page title', async () => {
-        mockService("title", () => {
-            return {
-                setParts({ action }) {
-                    if (action) {
-                        expect.step(action);
-                    }
-                },
-            };
+        mockService("title", {
+            setParts({ action }) {
+                if (action) {
+                    expect.step(action);
+                }
+            },
         });
 
         await mountWithCleanup(WebClient);

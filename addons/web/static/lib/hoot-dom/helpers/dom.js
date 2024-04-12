@@ -1968,7 +1968,6 @@ export async function waitUntil(predicate, options) {
  * @template T
  * @param {T} target
  * @param {string[]} [whiteList]
- * @returns {(cleanup: boolean) => void}
  * @example
  *  afterEach(watchKeys(window, ["odoo"]));
  */
@@ -1976,9 +1975,9 @@ export function watchKeys(target, whiteList) {
     const acceptedKeys = new Set([...$ownKeys(target), ...(whiteList || [])]);
 
     /**
-     * @param {boolean} [cleanup=true]
+     * @param {{ cleanup?: boolean }} [options]
      */
-    return function checkKeys(cleanup = true) {
+    return function checkKeys(options) {
         if (!isInDOM(target)) {
             return;
         }
@@ -1986,7 +1985,7 @@ export function watchKeys(target, whiteList) {
             (key) => $isNaN($parseFloat(key)) && !acceptedKeys.has(key)
         );
         if (keysDiff.length) {
-            if (cleanup) {
+            if (options?.cleanup) {
                 for (const key of keysDiff) {
                     delete target[key];
                 }

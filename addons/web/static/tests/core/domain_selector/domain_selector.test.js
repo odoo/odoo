@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllAttributes, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 
 import {
@@ -42,7 +42,6 @@ import {
     models,
     mountWithCleanup,
     onRpc,
-    patchDate,
 } from "@web/../tests/web_test_helpers";
 import { SELECTORS } from "./domain_selector_helpers";
 
@@ -264,7 +263,8 @@ test("building a domain with an invalid operator", async () => {
 });
 
 test("building a domain with an expression for value", async () => {
-    patchDate("2023-04-20 17:00:00", 0);
+    mockDate("2023-04-20 17:00:00", 0);
+
     await makeDomainSelector({
         domain: `[("datetime", ">=", context_today())]`,
         update(domain) {
@@ -684,7 +684,8 @@ test("between operator (5)", async () => {
 });
 
 test("expressions in between operator", async () => {
-    patchDate("2023-01-01 00:00:00", 0);
+    mockDate("2023-01-01 00:00:00", 0);
+
     await makeDomainSelector({
         domain: `["&", ("datetime", ">=", context_today()), ("datetime", "<=", "2023-01-10 00:00:00")]`,
         update(domain) {
@@ -945,7 +946,8 @@ test("support of connector '!' (debug mode)", async () => {
 
 test("support properties", async () => {
     expect.assertions(25);
-    patchDate("2023-10-05 15:00:00", 0);
+
+    mockDate("2023-10-05 15:00:00", 0);
 
     Partner._fields.properties = fields.Properties({
         string: "Properties",

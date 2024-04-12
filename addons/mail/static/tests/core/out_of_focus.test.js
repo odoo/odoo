@@ -1,4 +1,3 @@
-import { describe, test } from "@odoo/hoot";
 import {
     assertSteps,
     contains,
@@ -8,11 +7,10 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
-import { presenceService } from "@bus/services/presence_service";
-import { rpc } from "@web/core/network/rpc";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+} from "@mail/../tests/mail_test_helpers";
+import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, test } from "@odoo/hoot";
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -23,10 +21,7 @@ test("Spaces in notifications are not encoded", async () => {
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
+    mockService("presence", { isOdooFocused: () => false });
     const pyEnv = await startServer();
     const bobUserId = pyEnv["res.users"].create({ name: "bob" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
@@ -37,7 +32,8 @@ test("Spaces in notifications are not encoded", async () => {
             Command.create({ partner_id: bobPartnerId }),
         ],
     });
-    await start();
+    const env = await start();
+    const rpc = rpcWithEnv(env);
     await assertSteps([
         `/mail/action - ${JSON.stringify({
             init_messaging: {},

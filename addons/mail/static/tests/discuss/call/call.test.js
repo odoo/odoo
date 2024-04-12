@@ -152,14 +152,14 @@ test("should display invitations", async () => {
             step(`/mail/action - ${JSON.stringify(args)}`);
         }
     });
-    mockService("mail.sound_effects", () => ({
+    mockService("mail.sound_effects", {
         play(name) {
             step(`play - ${name}`);
         },
         stop(name) {
             step(`stop - ${name}`);
         },
-    }));
+    });
     await start();
     await assertSteps([
         `/mail/action - ${JSON.stringify({

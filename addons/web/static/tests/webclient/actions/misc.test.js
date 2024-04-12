@@ -230,12 +230,10 @@ test("properly handle case when action id does not exist", async () => {
     patchWithCleanup(console, {
         warn: () => {},
     });
-    mockService("notification", () => {
-        return {
-            add(message) {
-                expect(message).toBe("No action with id '4448' could be found");
-            },
-        };
+    mockService("notification", {
+        add(message) {
+            expect(message).toBe("No action with id '4448' could be found");
+        },
     });
     await mountWithCleanup(WebClient);
     await getService("action").doAction(4448);

@@ -123,11 +123,11 @@ test("WarningDialog", async () => {
 });
 
 test("RedirectWarningDialog", async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doAction(actionId) {
             expect.step(actionId);
         },
-    }));
+    });
     expect(".o_dialog").toHaveCount(0);
     const env = await makeDialogMockEnv();
     await mountWithCleanup(RedirectWarningDialog, {

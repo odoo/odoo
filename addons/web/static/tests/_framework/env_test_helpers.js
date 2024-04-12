@@ -5,8 +5,11 @@ import { translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer } from "./mock_server/mock_server";
+import { patch } from "@web/core/utils/patch";
 
 /**
+ * @typedef {Record<keyof Services, any>} Dependencies
+ *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
  * @typedef {import("@web/core/registry").Registry} Registry
@@ -130,10 +133,28 @@ export async function makeDialogMockEnv(partialEnv) {
 /**
  * @template {keyof Services} T
  * @param {T} name
- * @param {(env: OdooEnv, dependencies: Record<keyof Services, any>) => Services[T]} serviceFactory
+ * @param {Partial<Services[T]> |
+ *  (env: OdooEnv, dependencies: Dependencies) => Services[T]
+ * } serviceFactory
  */
 export function mockService(name, serviceFactory) {
-    registry.category("services").add(name, { start: serviceFactory }, { force: true });
+    const serviceRegistry = registry.category("services");
+    const originalService = serviceRegistry.get(name, null);
+    serviceRegistry.add(
+        name,
+        {
+            ...originalService,
+            start() {
+                if (typeof serviceFactory === "function") {
+                    return serviceFactory(...arguments);
+                }
+                const service = originalService.start(...arguments);
+                patch(service, serviceFactory);
+                return service;
+            },
+        },
+        { force: true }
+    );
 }
 
 /**

@@ -1,9 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
-import { config as transitionConfig } from "@web/core/transition";
 import {
     assertSteps,
     click,
@@ -21,11 +15,21 @@ import {
     startServer,
     step,
     triggerEvents,
-} from "../mail_test_helpers";
-import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import {
+    Command,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+import { config as transitionConfig } from "@web/core/transition";
+
 import { rpcWithEnv } from "@mail/utils/common/misc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();

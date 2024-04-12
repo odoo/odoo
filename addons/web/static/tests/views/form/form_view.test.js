@@ -1763,13 +1763,13 @@ test(`trying to leave an invalid form view should not change the navbar`, async 
 });
 
 test(`rendering stat buttons with action`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             expect.step("doActionButton");
             expect(params.name).toBe("someaction");
             expect(params.type).toBe("action");
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -1849,7 +1849,7 @@ test(`rendering stat buttons without action`, async () => {
 });
 
 test(`readonly stat buttons stays disabled`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         async doActionButton(params) {
             if (params.name == "action_to_perform") {
                 expect.step("action_to_perform");
@@ -1858,7 +1858,7 @@ test(`readonly stat buttons stays disabled`, async () => {
                 });
             }
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -2868,7 +2868,7 @@ test(`form views in dialogs do not have class o_xxl_form_view`, async () => {
 test.tags("desktop")(`buttons in form view`, async () => {
     expect.errors(1);
 
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             expect.step(params.name);
             if (params.name === "post") {
@@ -2878,7 +2878,7 @@ test.tags("desktop")(`buttons in form view`, async () => {
                 throw makeServerError({ message: "doActionButton error" });
             }
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -2994,11 +2994,11 @@ test.tags("desktop")(`nested buttons in form view header`, async () => {
 });
 
 test(`button in form view and long willStart`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             params.onClose();
         },
-    }));
+    });
 
     let rpcCount = 0;
     class AsyncField extends CharField {
@@ -3051,13 +3051,13 @@ test.tags("desktop")(`buttons in form view, new record`, async () => {
     // this test simulates a situation similar to the settings forms.
 
     let resId = null;
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             expect.step("execute_action");
             expect(params.resId).toBe(resId);
             params.onClose();
         },
-    }));
+    });
 
     onRpc("web_save", ({ parent }) => {
         const result = parent();
@@ -3096,13 +3096,13 @@ test(`buttons in form view, new record, with field id in view`, async () => {
     // values in the record (data.id was set to null)
 
     let resId = null;
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             expect.step("execute_action");
             expect(params.resId).toBe(resId);
             params.onClose();
         },
-    }));
+    });
 
     onRpc("web_save", ({ parent }) => {
         const result = parent();
@@ -3132,11 +3132,11 @@ test(`buttons in form view, new record, with field id in view`, async () => {
 });
 
 test(`buttons with data-hotkey attribute`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(params) {
             expect.step(params.name);
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -4027,11 +4027,11 @@ test(`editing a translatable field in a duplicate record overrides translations`
 });
 
 test(`clicking on stat buttons in edit mode`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {
             expect.step("doActionButton");
         },
-    }));
+    });
 
     onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
     onRpc(({ method }) => expect.step(method));
@@ -4067,9 +4067,9 @@ test(`clicking on stat buttons in edit mode`, async () => {
 });
 
 test(`clicking on stat buttons save and reload in edit mode`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {},
-    }));
+    });
 
     onRpc("web_save", ({ args }) => {
         // simulate an override of the model...
@@ -4103,11 +4103,11 @@ test(`clicking on stat buttons save and reload in edit mode`, async () => {
 });
 
 test(`buttons with attr "special" do not trigger a save`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {
             expect.step("doActionButton");
         },
-    }));
+    });
 
     onRpc("web_save", () => expect.step("web_save"));
     await mountView({
@@ -4132,11 +4132,11 @@ test(`buttons with attr "special" do not trigger a save`, async () => {
 });
 
 test(`buttons with attr "special=save" save`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {
             expect.step("execute_action");
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -5947,14 +5947,14 @@ test(`context of onchanges contains the context of changed fields`, async () => 
 });
 
 test(`clicking on a stat button with a context`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
             // action, with magic keys but without previous context
             expect(buttonContext).toEqual({ test: 2 });
             expect.step("doActionButton");
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -5979,12 +5979,12 @@ test(`clicking on a stat button with a context`, async () => {
 test(`clicking on a stat button with x2many in context`, async () => {
     Partner._records[1].type_ids = [12];
 
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton({ buttonContext }) {
             expect(buttonContext).toEqual({ test: [12] });
             expect.step("doActionButton");
         },
-    }));
+    });
 
     await mountView({
         type: "form",
@@ -6009,14 +6009,14 @@ test(`clicking on a stat button with x2many in context`, async () => {
 });
 
 test(`clicking on a stat button with no context`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
             // action, with magic keys but without previous context
             expect(buttonContext).toEqual({});
             expect.step("doActionButton");
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -6827,14 +6827,14 @@ test(`open one2many form containing many2many_tags`, async () => {
 });
 
 test(`display toolbar`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doAction(id, { additionalContext }) {
             expect.step("doAction");
             expect(id).toBe(29);
             expect(additionalContext.active_id).toBe(1);
             expect(additionalContext.active_ids).toEqual([1]);
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -6866,12 +6866,12 @@ test(`display toolbar`, async () => {
 });
 
 test(`execute ActionMenus actions`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doAction(id, { additionalContext, onClose }) {
             expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
             onClose(); // simulate closing of target new action's dialog
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -6902,12 +6902,12 @@ test(`execute ActionMenus actions`, async () => {
 });
 
 test(`execute ActionMenus actions (create)`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doAction(id, { additionalContext, onClose }) {
             expect.step(JSON.stringify({ action_id: id, context: additionalContext }));
             onClose(); // simulate closing of target new action's dialog
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -7043,12 +7043,12 @@ test(`do not activate an hidden tab when switching between records`, async () =>
 });
 
 test(`support anchor tags with action type`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(action) {
             expect.step("doActionButton");
             expect(action.name).toBe("42");
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -7631,11 +7631,11 @@ test(`translate event correctly handled with multiple controllers`, async () => 
 
 test.tags("desktop")(`buttons are disabled until status bar action is resolved`, async () => {
     const deferred = new Deferred();
-    mockService("action", () => ({
+    mockService("action", {
         async doActionButton() {
             await deferred;
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -7681,11 +7681,11 @@ test.tags("desktop")(`buttons are disabled until status bar action is resolved`,
 });
 
 test(`buttons with "confirm" attribute save before calling the method`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {
             expect.step("execute_action");
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -7743,11 +7743,11 @@ test(`buttons with "confirm-title" and "confirm-label" attributes`, async () => 
 });
 
 test(`buttons with "confirm" attribute: click twice on "Ok"`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton() {
             expect.step("execute_action"); // should be called only once
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -8166,7 +8166,7 @@ test.tags("desktop")(`process the context for subview not inline`, async () => {
 
 test(`Can switch to form view on inline tree`, async () => {
     const id = 2;
-    mockService("action", () => ({
+    mockService("action", {
         doAction(action, options) {
             expect.step("doAction");
             expect(action).toEqual({
@@ -8177,7 +8177,7 @@ test(`Can switch to form view on inline tree`, async () => {
             });
             expect(options.props).toEqual({ resIds: [id] });
         },
-    }));
+    });
 
     Partner._records[0].child_ids = [id];
     await mountView({
@@ -8228,12 +8228,12 @@ test(`can toggle column in x2many in sub form view`, async () => {
 });
 
 test(`rainbowman attributes correctly passed on button click`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton({ effect }) {
             expect.step("doActionButton");
             expect(effect).toBe("{'message': 'Congrats!'}");
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -8523,12 +8523,12 @@ test.tags("desktop")(`keep editing after call_button fail`, async () => {
     expect.errors(1);
 
     let values = null;
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton({ name, type }) {
             expect([name, type]).toEqual(["post", "object"]);
             throw makeServerError();
         },
-    }));
+    });
 
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -8869,7 +8869,7 @@ test(`one2many create record dialog shouldn't have a 'remove' button`, async () 
 });
 
 test(`"bare" buttons in template should not trigger button click`, async () => {
-    mockService("action", () => ({
+    mockService("action", {
         doActionButton(args) {
             expect.step("doActionButton");
             delete args.onClose;
@@ -8887,7 +8887,7 @@ test(`"bare" buttons in template should not trigger button click`, async () => {
                 special: "save",
             });
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -9059,14 +9059,13 @@ test(`resequence list lines when discardable lines are present`, async () => {
 });
 
 test(`reload company when creating records of model res.company`, async () => {
-    mockService("action", () => ({
-        doAction(actionRequest) {
+    mockService("action", {
+        async doAction(actionRequest) {
             if (actionRequest === "reload_context") {
                 expect.step("reload company");
-                return Promise.resolve();
             }
         },
-    }));
+    });
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
@@ -9082,14 +9081,13 @@ test(`reload company when creating records of model res.company`, async () => {
 });
 
 test(`reload company when writing on records of model res.company`, async () => {
-    mockService("action", () => ({
-        doAction(actionRequest) {
+    mockService("action", {
+        async doAction(actionRequest) {
             if (actionRequest === "reload_context") {
                 expect.step("reload company");
-                return Promise.resolve();
             }
         },
-    }));
+    });
 
     ResCompany._records = [{ id: 1, name: "Test Company" }];
 
@@ -10661,11 +10659,11 @@ test(`setting : without field`, async () => {
 });
 
 test(`action button in x2many should display a notification if the record is virtual`, async () => {
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, { type }) {
             expect.step(`${type}:${message}`);
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -10688,11 +10686,11 @@ test(`action button in x2many should display a notification if the record is vir
 });
 
 test(`open form view action in x2many should display a notification if the record is virtual`, async () => {
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, { type }) {
             expect.step(`${type}:${message}`);
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",
@@ -11553,13 +11551,13 @@ test(`an empty json object does not pass the required check`, async () => {
     }
     fieldsRegistry.add("json", { component: JsonField });
 
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, params) {
             expect.step("notification");
             expect(message.toString()).toBe("<ul><li>json_field</li></ul>");
             expect(params).toEqual({ title: "Invalid fields: ", type: "danger" });
         },
-    }));
+    });
 
     await mountView({
         resModel: "partner",

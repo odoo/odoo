@@ -66,18 +66,21 @@ export {
 export { Command } from "./_framework/mock_server/mock_model";
 export {
     MockServer,
+    authenticate,
     defineActions,
     defineMenus,
     defineModels,
     defineParams,
-    getServerWebSockets,
+    logout,
     makeMockServer,
     onRpc,
     stepAllNetworkCalls,
+    withUser,
 } from "./_framework/mock_server/mock_server";
 export { makeServerError } from "./_framework/mock_server/mock_server_utils";
 export { serverState } from "./_framework/mock_server_state.hoot";
-export { patchDate, patchTimeZone, patchWithCleanup } from "./_framework/patch_test_helpers";
+export { configureModuleSet } from "./_framework/module_set.hoot";
+export { patchWithCleanup } from "./_framework/patch_test_helpers";
 export { preventResizeObserverError } from "./_framework/resize_observer_error_catcher";
 export {
     deleteFavorite,

@@ -1,7 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 import {
     click,
     contains,
@@ -13,10 +9,19 @@ import {
     start,
     startServer,
     triggerHotkey,
-} from "../../../mail_test_helpers";
-import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+} from "@mail/../tests/mail_test_helpers";
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, expect, test } from "@odoo/hoot";
+import {
+    Command,
+    getService,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
+
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();

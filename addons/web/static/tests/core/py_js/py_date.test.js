@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { patchDate } from "@web/../tests/web_test_helpers";
+import { mockDate } from "@odoo/hoot-mock";
 
 import { evaluateExpr } from "@web/core/py_js/py";
 import { PyDate, PyTimeDelta } from "@web/core/py_js/py_date";
@@ -60,7 +60,7 @@ describe("datetime.datetime", () => {
     });
 
     test("to_utc", () => {
-        patchDate("2021-09-17 10:00:00", +6);
+        mockDate("2021-09-17 10:00:00", +6);
 
         const expr = "datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()";
 
@@ -68,7 +68,7 @@ describe("datetime.datetime", () => {
     });
 
     test("to_utc in october with winter/summer change", () => {
-        patchDate("2021-10-17 10:00:00", "Europe/Brussels");
+        mockDate("2021-10-17 10:00:00", "Europe/Brussels");
 
         const expr = "datetime.datetime(2022, 10, 17).to_utc()";
         expect(JSON.stringify(evaluateExpr(expr))).toBe(`"2022-10-16 22:00:00"`);
@@ -414,7 +414,7 @@ describe("misc", () => {
     });
 
     test("current_date", () => {
-        patchDate("2021-09-20 10:00:00");
+        mockDate("2021-09-20 10:00:00");
         expect(evaluateExpr("current_date")).toBe("2021-09-20");
     });
 });

@@ -1,12 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { getOrigin } from "@web/core/utils/urls";
-import { actionService } from "@web/webclient/actions/action_service";
 import {
     SIZES,
     assertSteps,
@@ -22,7 +13,12 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Deferred, mockDate, mockTimeZone, tick } from "@odoo/hoot-mock";
+import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 
@@ -967,21 +963,16 @@ test("Notification Error", async () => {
         res_partner_id: partnerId,
     });
     const openResendActionDef = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action, options) {
-                if (action?.res_model !== "res.partner") {
-                    step("do_action");
-                    expect(action).toBe("mail.mail_resend_message_action");
-                    expect(options.additionalContext.mail_message_to_resend).toBe(messageId);
-                    openResendActionDef.resolve();
-                    return;
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        doAction(action, options) {
+            if (action?.res_model === "res.partner") {
+                return super.doAction(...arguments);
+            }
+            step("do_action");
+            expect(action).toBe("mail.mail_resend_message_action");
+            expect(options.additionalContext.mail_message_to_resend).toBe(messageId);
+            openResendActionDef.resolve();
+        },
     });
     await start();
     await openFormView("res.partner", threadId);
@@ -1378,21 +1369,16 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
         model: "res.partner",
         res_id: partnerId,
     });
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action) {
-                if (action?.res_model !== "res.partner") {
-                    expect(action.type).toBe("ir.actions.act_window");
-                    expect(action.res_model).toBe("some.model");
-                    expect(action.res_id).toBe(250);
-                    step("do-action:openFormView_some.model_250");
-                    return;
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        doAction(action) {
+            if (action?.res_model === "res.partner") {
+                return super.doAction(...arguments);
+            }
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.res_model).toBe("some.model");
+            expect(action.res_id).toBe(250);
+            step("do-action:openFormView_some.model_250");
+        },
     });
     await start();
     await openFormView("res.partner", partnerId);

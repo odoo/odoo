@@ -159,10 +159,8 @@ test("should trigger a notification if wkhtmltopdf is to upgrade", async () => {
             return Promise.resolve();
         },
     });
-    mockService("notification", () => {
-        return {
-            add: () => expect.step("notify"),
-        };
+    mockService("notification", {
+        add: () => expect.step("notify"),
     });
 
     onRpc("/report/check_wkhtmltopdf", () => "upgrade");
@@ -196,10 +194,8 @@ test("should open the report client action if wkhtmltopdf is broken", async () =
             return Promise.resolve();
         },
     });
-    mockService("notification", () => {
-        return {
-            add: () => expect.step("notify"),
-        };
+    mockService("notification", {
+        add: () => expect.step("notify"),
     });
 
     onRpc("/report/check_wkhtmltopdf", () => "broken");
@@ -246,12 +242,10 @@ test("send context in case of html report", async () => {
             return Promise.resolve();
         },
     });
-    mockService("notification", () => {
-        return {
-            add(message, options) {
-                expect.step(options.type || "notification");
-            },
-        };
+    mockService("notification", {
+        add(message, options) {
+            expect.step(options.type || "notification");
+        },
     });
 
     onRpc("/report/html/some_report", async (request) => {

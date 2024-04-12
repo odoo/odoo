@@ -5,12 +5,23 @@ import { makeErrorFromResponse } from "@web/core/network/rpc";
  * That way they can be easily be parsed, e.g. by combining args & kwargs @see parseModelParams
  */
 const IS_KWARGS = Symbol("is_kwargs");
+
+/**
+ * @template T
+ * @param {T} kwargs
+ */
 export function isKwargs(kwargs) {
-    return kwargs?.[IS_KWARGS];
+    return Boolean(kwargs?.[IS_KWARGS]);
 }
-export function Kwargs(obj) {
-    obj[IS_KWARGS] = true;
-    return obj;
+
+/**
+ * @template T
+ * @param {T} kwargs
+ * @returns {T}
+ */
+export function Kwargs(kwargs) {
+    kwargs[IS_KWARGS] = true;
+    return kwargs;
 }
 
 /**

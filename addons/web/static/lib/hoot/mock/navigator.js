@@ -244,6 +244,7 @@ export class MockPermissionStatus extends EventTarget {
         makePublicListeners(this, ["change"]);
 
         this.#permission = currentPermissions[name];
+        permissionStatuses.add(this);
     }
 
     get name() {
@@ -265,7 +266,6 @@ export const mockNavigator = createMock(navigator, {
     clipboard: { value: mockClipboard },
     maxTouchPoints: { get: () => 0 },
     permissions: { value: mockPermissions },
-    platform: { get: () => "MacIntel" },
     sendBeacon: { value: (...args) => currentSendBeacon(...args) },
     serviceWorker: { get: () => undefined },
     userAgent: { get: () => currentUserAgent },

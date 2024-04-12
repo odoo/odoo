@@ -1,9 +1,9 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     defineParams,
     makeMockEnv,
-    patchDate,
-    patchTimeZone,
+    patchTranslations,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -29,12 +29,16 @@ const formats = {
 const dateFormat = strftimeToLuxonFormat(formats.date);
 const timeFormat = strftimeToLuxonFormat(formats.time);
 
+beforeEach(() => {
+    patchTranslations();
+});
+
 test("formatDate/formatDateTime specs", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
     });
-    patchDate("2009-05-04 11:34:56", +1);
+    mockDate("2009-05-04 11:34:56", +1);
 
     const utc = DateTime.utc(); // 2009-05-04T11:34:56.000Z
     const local = DateTime.local(); // 2009-05-04T12:34:56.000+01:00
@@ -56,7 +60,7 @@ test("formatDate/formatDateTime specs, at midnight", async () => {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
     });
-    patchDate("2009-05-03 23:00:00", +1);
+    mockDate("2009-05-03 23:00:00", +1);
 
     const utc = DateTime.utc(); // 2009-05-03T23:00:00.000Z
     const local = DateTime.local(); // 2009-05-04T00:00:00.000+01:00
@@ -78,29 +82,29 @@ test("formatDateTime in different timezone", async () => {
         dateFormat: "MM/dd/yyyy",
         dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
     });
-    patchDate("2009-05-04 00:00:00", 0);
+    mockDate("2009-05-04 00:00:00", 0);
     expect(formatDateTime(DateTime.utc())).toBe("05/04/2009 00:00:00");
     expect(formatDateTime(DateTime.utc(), { tz: "Asia/Kolkata" })).toBe("05/04/2009 05:30:00");
 });
 
 test("parseDate(Time) outputs DateTime objects in local TZ", async () => {
     await makeMockEnv();
-    patchTimeZone(+1);
+    mockTimeZone(+1);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000+01:00");
     expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+01:00");
 
-    patchTimeZone(+5.5);
+    mockTimeZone(+5.5);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000+05:30");
     expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+05:30");
 
-    patchTimeZone(-11);
+    mockTimeZone(-11);
     expect(parseDate("01/13/2019").toISO()).toBe("2019-01-13T00:00:00.000-11:00");
     expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000-11:00");
 });
 
 test("parseDateTime in different timezone", async () => {
     await makeMockEnv();
-    patchTimeZone(+1);
+    mockTimeZone(+1);
     expect(parseDateTime("01/13/2019 10:05:45").toISO()).toBe("2019-01-13T10:05:45.000+01:00");
     expect(parseDateTime("01/13/2019 10:05:45", { tz: "Asia/Kolkata" }).toISO()).toBe(
         "2019-01-13T10:05:45.000+05:30"
@@ -224,7 +228,7 @@ test("parseDateTime with escaped characters (eg. Basque locale)", async () => {
 });
 
 test("parse smart date input", async () => {
-    patchDate("2020-01-01 00:00:00", 0);
+    mockDate("2020-01-01 00:00:00", 0);
 
     const format = "yyyy-MM-dd HH:mm";
     // with parseDate
@@ -256,7 +260,7 @@ test("parse smart date input", async () => {
 });
 
 test("parseDateTime ISO8601 Format", async () => {
-    patchTimeZone(+1);
+    mockTimeZone(+1);
     expect(parseDateTime("2017-05-15T12:00:00.000+06:00").toISO()).toBe(
         "2017-05-15T07:00:00.000+01:00"
     );
@@ -278,14 +282,14 @@ test("serializeDate", async () => {
 });
 
 test("serializeDate, with DateTime.now()", async () => {
-    patchDate("2022-02-21 15:11:42");
+    mockDate("2022-02-21 15:11:42");
     const date = DateTime.now();
     expect(date.toFormat("yyyy-MM-dd")).toBe("2022-02-21");
     expect(serializeDate(date)).toBe("2022-02-21");
 });
 
 test("serializeDate, with DateTime.now(), midnight", async () => {
-    patchDate("2022-02-20 23:00:00");
+    mockDate("2022-02-20 23:00:00");
     const date = DateTime.now();
     expect(date.toFormat("yyyy-MM-dd")).toBe("2022-02-21");
     expect(serializeDate(date)).toBe("2022-02-21");
@@ -305,14 +309,14 @@ test("serializeDateTime", async () => {
 });
 
 test("serializeDateTime, with DateTime.now()", async () => {
-    patchDate("2022-02-21 15:11:42");
+    mockDate("2022-02-21 15:11:42");
     const date = DateTime.now();
     expect(date.toFormat("yyyy-MM-dd HH:mm:ss")).toBe("2022-02-21 16:11:42");
     expect(serializeDateTime(date)).toBe("2022-02-21 15:11:42");
 });
 
 test("serializeDateTime, with DateTime.now(), midnight", async () => {
-    patchDate("2022-02-20 23:00:00");
+    mockDate("2022-02-20 23:00:00");
     const date = DateTime.now();
     expect(date.toFormat("yyyy-MM-dd HH:mm:ss")).toBe("2022-02-21 00:00:00");
     expect(serializeDateTime(date)).toBe("2022-02-20 23:00:00");
@@ -405,7 +409,7 @@ test("parseDate with textual month notation", async () => {
 });
 
 test("parseDate (various entries)", async () => {
-    patchDate("2020-07-15 12:30:00", 0);
+    mockDate("2020-07-15 12:30:00", 0);
     patchWithCleanup(localization, {
         dateFormat,
         timeFormat,
@@ -518,7 +522,7 @@ test("parseDate (various entries)", async () => {
 });
 
 test("parseDateTime (various entries)", async () => {
-    patchDate("2020-07-15 11:30:00", 0);
+    mockDate("2020-07-15 11:30:00", 0);
     patchWithCleanup(localization, {
         dateFormat,
         timeFormat,

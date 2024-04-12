@@ -1,4 +1,4 @@
-import { Command } from "@web/../tests/web_test_helpers";
+import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -6,18 +6,17 @@ import {
     openDiscuss,
     start,
     startServer,
-} from "../../../mail_test_helpers";
-import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
-import { tick } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+} from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
+import { Command, withUser } from "@web/../tests/web_test_helpers";
+
 import { rpcWithEnv } from "@mail/utils/common/misc";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
 
 test("bus subscription updated when joining/leaving thread as non member", async () => {
     const pyEnv = await startServer();

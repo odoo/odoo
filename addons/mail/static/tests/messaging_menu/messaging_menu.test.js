@@ -3,8 +3,6 @@ import { describe, expect, test } from "@odoo/hoot";
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
-import { browser } from "@web/core/browser/browser";
-import { getOrigin } from "@web/core/utils/urls";
 import {
     SIZES,
     assertSteps,
@@ -22,18 +20,18 @@ import {
     step,
     triggerEvents,
     triggerHotkey,
-} from "../mail_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { Deferred } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
     patchWithCleanup,
     serverState,
+    withUser,
 } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@odoo/hoot-mock";
+import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
+import { getOrigin } from "@web/core/utils/urls";
 import { rpcWithEnv } from "@mail/utils/common/misc";
 
 describe.current.tags("desktop");
@@ -363,8 +361,7 @@ test("grouped notifications by document model", async () => {
             notification_type: "email",
         },
     ]);
-    mockService("action", () => ({
-        ...actionService.start(getMockEnv()),
+    mockService("action", {
         doAction(action) {
             step("do_action");
             expect(action.name).toBe("Mail Failures");
@@ -383,7 +380,7 @@ test("grouped notifications by document model", async () => {
                 JSON.stringify([["message_has_error", "=", true]])
             );
         },
-    }));
+    });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", {
@@ -882,14 +879,13 @@ test("click on expand from chat window should close the chat window and open the
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    mockService("action", () => ({
-        ...actionService.start(getMockEnv()),
+    mockService("action", {
         doAction(action) {
             step("do_action");
             expect(action.res_id).toBe(partnerId);
             expect(action.res_model).toBe("res.partner");
         },
-    }));
+    });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Frodo Baggins" });

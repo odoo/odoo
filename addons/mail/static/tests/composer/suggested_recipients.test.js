@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -11,11 +10,10 @@ import {
     start,
     startServer,
     step,
-} from "../mail_test_helpers";
-import { mockService } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
+import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -65,29 +63,21 @@ test("Opening full composer in 'send message' mode should copy selected suggeste
         partner_ids: [partnerId],
     });
     const def = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action) {
-                if (action?.res_model !== "res.fake") {
-                    step("do-action");
-                    expect(action.name).toBe("Compose Email");
-                    expect(action.context.default_subtype_xmlid).toBe("mail.mt_comment");
-                    expect(action.context.default_partner_ids).toHaveLength(2);
-                    const [johnTestPartnerId] = pyEnv["res.partner"].search([
-                        ["email", "=", "john@test.be"],
-                    ]);
-                    expect(action.context.default_partner_ids).toEqual([
-                        johnTestPartnerId,
-                        partnerId,
-                    ]);
-                    def.resolve();
-                    return Promise.resolve();
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model === "res.fake") {
+                return super.doAction(...arguments);
+            }
+            step("do-action");
+            expect(action.name).toBe("Compose Email");
+            expect(action.context.default_subtype_xmlid).toBe("mail.mt_comment");
+            expect(action.context.default_partner_ids).toHaveLength(2);
+            const [johnTestPartnerId] = pyEnv["res.partner"].search([
+                ["email", "=", "john@test.be"],
+            ]);
+            expect(action.context.default_partner_ids).toEqual([johnTestPartnerId, partnerId]);
+            def.resolve();
+        },
     });
     await start();
     await openFormView("res.fake", fakeId);
@@ -116,22 +106,17 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
         partner_ids: [partnerId],
     });
     const def = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action) {
-                if (action?.res_model !== "res.fake") {
-                    step("do-action");
-                    expect(action.name).toBe("Log note");
-                    expect(action.context.default_subtype_xmlid).toBe("mail.mt_note");
-                    expect(action.context.default_partner_ids).toBeEmpty();
-                    def.resolve();
-                    return Promise.resolve();
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model === "res.fake") {
+                return super.doAction(...arguments);
+            }
+            step("do-action");
+            expect(action.name).toBe("Log note");
+            expect(action.context.default_subtype_xmlid).toBe("mail.mt_note");
+            expect(action.context.default_partner_ids).toBeEmpty();
+            def.resolve();
+        },
     });
     await start();
     await openFormView("res.fake", fakeId);

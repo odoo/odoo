@@ -11,15 +11,19 @@ import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time"
 
 const {
     AbortController,
+    BroadcastChannel,
     document,
     EventTarget,
     Headers,
+    Map,
     Math: { max: $max, min: $min },
     Object: { assign: $assign, entries: $entries, fromEntries: $fromEntries },
     ProgressEvent,
     Request,
     Response,
+    Set,
     SharedWorker,
+    URL,
     WebSocket,
     Worker,
 } = globalThis;
@@ -64,6 +68,7 @@ const makeWorkerScope = (worker) => {
 const BODY_SYMBOL = Symbol("body");
 const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
+    blob: "application/octet-stream",
     contentType: "Content-Type",
     json: "application/json",
     text: "text/plain",
@@ -89,6 +94,39 @@ let mockWebSocketConnection = null;
 // Exports
 //-----------------------------------------------------------------------------
 
+export function cleanupNetwork() {
+    // Requests
+    for (const controller of openRequestControllers) {
+        controller.abort();
+    }
+    openRequestControllers.clear();
+    mockFetchFn = null;
+
+    // Websockets
+    for (const ws of openServerWebsockets) {
+        ws.close();
+    }
+    openServerWebsockets.clear();
+    mockWebSocketConnection = null;
+
+    // Workers
+    for (const worker of openWorkers) {
+        if ("port" in worker) {
+            worker.port.close();
+        } else {
+            worker.terminate();
+        }
+    }
+    openWorkers.clear();
+    mockWorkerConnection = null;
+
+    // Other APIs
+    mockCookie.__clear();
+    mockHistory.__clear();
+    mockLocation.__clear();
+    MockBroadcastChannel.__clear();
+}
+
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
     if (!mockFetchFn) {
@@ -104,8 +142,21 @@ export async function mockedFetch(input, init) {
     logRequest(() => (typeof init.body === "string" ? JSON.parse(init.body) : init));
 
     openRequestControllers.add(controller);
-    const result = await mockFetchFn(input, init);
+    let failed = false;
+    let result;
+    try {
+        result = await mockFetchFn(input, init);
+    } catch (err) {
+        result = err;
+        failed = true;
+    }
+    if (!openRequestControllers.has(controller)) {
+        return new Promise(() => {});
+    }
     openRequestControllers.delete(controller);
+    if (failed) {
+        throw result;
+    }
 
     /** @type {Headers} */
     let headers;
@@ -125,23 +176,36 @@ export async function mockedFetch(input, init) {
                 : await result.text()
         );
         return result;
-    } else if (result instanceof Response) {
+    }
+
+    if (result instanceof Response) {
         // Actual fetch
         logResponse(() => "(go to network tab for request content)");
         return result;
-    } else if (typeof init.body === "string" && !headers.get(HEADER.contentType)) {
+    }
+
+    if (typeof init.body === "string" && !headers.get(HEADER.contentType)) {
         // String response: considered as plain text
         logResponse(() => init.body);
         return new MockResponse(result, {
             headers: { [HEADER.contentType]: HEADER.text },
         });
-    } else {
-        // JSON response (i.e. anything that isn't a string)
-        logResponse(() => JSON.parse(JSON.stringify(result)));
-        return new MockResponse(JSON.stringify(result), {
-            headers: { [HEADER.contentType]: headers.get(HEADER.contentType) || HEADER.json },
+    }
+
+    if (result instanceof Blob) {
+        // Blob response
+        logResponse(() => result);
+        return new MockResponse(result, {
+            headers: { [HEADER.contentType]: HEADER.blob },
         });
     }
+
+    // Default case: JSON response (i.e. anything that isn't a string)
+    const strBody = JSON.stringify(result === undefined ? null : result);
+    logResponse(() => JSON.parse(strBody));
+    return new MockResponse(strBody, {
+        headers: { [HEADER.contentType]: headers.get(HEADER.contentType) || HEADER.json },
+    });
 }
 
 /**
@@ -173,14 +237,6 @@ export async function mockedFetch(input, init) {
  */
 export function mockFetch(fetchFn) {
     mockFetchFn = fetchFn;
-
-    return function restoreFetch() {
-        for (const controller of openRequestControllers) {
-            controller.abort();
-        }
-
-        mockFetchFn = null;
-    };
 }
 
 /**
@@ -195,14 +251,6 @@ export function mockFetch(fetchFn) {
  */
 export function mockWebSocket(onWebSocketConnected) {
     mockWebSocketConnection = onWebSocketConnected;
-
-    return function restoreWebSocket() {
-        for (const ws of openServerWebsockets) {
-            ws.close();
-        }
-
-        mockWebSocketConnection = null;
-    };
 }
 
 /**
@@ -223,27 +271,27 @@ export function mockWebSocket(onWebSocketConnected) {
  */
 export function mockWorker(onWorkerConnected) {
     mockWorkerConnection = onWorkerConnected;
+}
 
-    return function restoreWorker() {
-        for (const worker of openWorkers) {
-            if ("port" in worker) {
-                worker.port.close();
-            } else {
-                worker.terminate();
-            }
+export class MockBroadcastChannel extends BroadcastChannel {
+    static #instances = [];
+
+    constructor() {
+        super(...arguments);
+
+        MockBroadcastChannel.#instances.push(this);
+    }
+
+    static __clear() {
+        while (MockBroadcastChannel.#instances.length) {
+            MockBroadcastChannel.#instances.pop().close();
         }
-
-        mockWorkerConnection = null;
-    };
+    }
 }
 
 export class MockCookie {
     /** @type {Record<string, string>} */
     #jar = {};
-
-    clear() {
-        this.#jar = {};
-    }
 
     get() {
         return $entries(this.#jar)
@@ -262,6 +310,10 @@ export class MockCookie {
                 this.#jar[key] = value;
             }
         }
+    }
+
+    __clear() {
+        this.#jar = {};
     }
 }
 
@@ -592,6 +644,12 @@ export class MockSharedWorker extends EventTarget {
     }
 }
 
+export class MockURL extends URL {
+    constructor(url, base) {
+        super(url, base || mockLocation.origin + mockLocation.pathname);
+    }
+}
+
 export class MockWebSocket extends EventTarget {
     /** @type {ServerWebSocket | null} */
     #serverWs = null;
@@ -805,18 +863,6 @@ export class ServerWebSocket extends EventTarget {
     }
 }
 
-export class ClearableBroadcastChannel extends BroadcastChannel {
-    static instances = [];
-
-    constructor() {
-        super(...arguments);
-        ClearableBroadcastChannel.instances.push(this);
-    }
-
-    static cleanup() {
-        for (const channel of ClearableBroadcastChannel.instances) {
-            channel.close();
-        }
-        ClearableBroadcastChannel.instances = [];
-    }
-}
+export const mockCookie = new MockCookie();
+export const mockLocation = new MockLocation();
+export const mockHistory = new MockHistory(mockLocation);
