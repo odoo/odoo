@@ -721,6 +721,7 @@ export class Rtc {
                     this.state.serverInfo.url,
                     this.state.serverInfo.jsonWebToken,
                     {
+                        channelUUID: this.state.serverInfo.channelUUID,
                         iceServers: this.state.iceServers,
                     }
                 );

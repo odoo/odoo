@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
+
+
 def get_twilio_credentials(env) -> (str, str):
     """
     To be overridable if we need to obtain credentials from another source.
@@ -14,12 +17,17 @@ def get_twilio_credentials(env) -> (str, str):
 
 def get_sfu_url(env) -> str | None:
     sfu_url = env['ir.config_parameter'].sudo().get_param("mail.sfu_server_url")
+    if not sfu_url:
+        sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:
         return sfu_url.rstrip("/")
 
 
 def get_sfu_key(env) -> str | None:
-    return env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
+    sfu_key = env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
+    if not sfu_key:
+        return os.getenv("ODOO_SFU_KEY")
+    return sfu_key
 
 
 class StoreData():
