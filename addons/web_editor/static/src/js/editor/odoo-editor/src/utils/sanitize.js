@@ -6,7 +6,7 @@ import {
     fillEmpty,
     getListMode,
     isBlock,
-    isEmptyBlock,
+    getAdjacentNextSiblings,
     isVisibleEmpty,
     moveNodes,
     preserveCursor,
@@ -241,24 +241,39 @@ class Sanitize {
                 node.parentElement.tagName === 'LI' &&
                 !node.parentElement.classList.contains('nav-item')
             ) {
+                const previous = node.previousSibling;
+                const nextSiblings = getAdjacentNextSiblings(node);
                 const classes = node.classList;
                 const parent = node.parentElement;
                 const restoreCursor = shouldPreserveCursor(node, this.root) && preserveCursor(this.root.ownerDocument);
-                if (isEmptyBlock(node)) {
-                    node.remove();
-                } else if (classes.length) {
-                    const spanEl = document.createElement('span');
-                    spanEl.setAttribute('class', classes);
-                    spanEl.append(...node.childNodes);
-                    node.replaceWith(spanEl);
+                if (previous) {
+                    const newLi = document.createElement('li');
+                    newLi.classList.add('oe-nested');
+                    parent.after(newLi);
+                    newLi.append(node, ...nextSiblings);
+                    if (classes.length) {
+                        const spanEl = document.createElement('span');
+                        spanEl.setAttribute('class', classes);
+                        spanEl.append(...node.childNodes);
+                        node.replaceWith(spanEl);
+                    } else {
+                        unwrapContents(node);
+                    }
                 } else {
-                    unwrapContents(node);
+                    if (classes.length) {
+                        const spanEl = document.createElement('span');
+                        spanEl.setAttribute('class', classes);
+                        spanEl.append(...node.childNodes);
+                        node.replaceWith(spanEl);
+                    } else {
+                        unwrapContents(node);
+                    }
                 }
-                node.remove();
                 fillEmpty(parent);
                 if (restoreCursor) {
                     restoreCursor(new Map([[node, parent]]));
                 }
+                node = parent;
             }
 
             // Transform <li> into <p> if they are not in a <ul> / <ol>
