@@ -1,10 +1,7 @@
 // @ts-check
 
 import { navigateTo } from "../actions/helpers";
-import {
-  getFirstPivotFunction,
-  getNumberOfPivotFormulas,
-} from "./pivot_helpers";
+import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers";
 
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
@@ -80,7 +77,6 @@ export function SET_FILTER_MATCHING_CONDITION(position, env) {
     const matchingFilters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
     const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
-        SEE_RECORDS_PIVOT_VISIBLE(position, env) &&
         (pivotFunction === "PIVOT.VALUE" ||
             pivotFunction === "PIVOT.HEADER" ||
             pivotFunction === "PIVOT") &&
