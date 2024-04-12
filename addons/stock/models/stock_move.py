@@ -1594,11 +1594,21 @@ class StockMove(models.Model):
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    forced_package_id = move.package_level_id.package_id or None
-                    available_quantity = move._get_available_quantity(move.location_id, package_id=forced_package_id)
+                    forced_package_ids = move.package_level_id.package_id
+                    if not forced_package_ids and not self.env.context.get('bypass_entire_pack'):
+                        reuse_package_ids = move.picking_id.package_level_ids.filtered(lambda pl: pl.state == 'draft' and move.product_id in pl.package_id.quant_ids.product_id).package_id
+                        forced_package_ids = (*reuse_package_ids, None)
+                    available_quantity = 0
+                    for package in forced_package_ids or (None,):
+                        available_quantity += move._get_available_quantity(move.location_id, package_id=package)
                     if available_quantity <= 0:
                         continue
-                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
+                    taken_quantity = 0
+                    for package in forced_package_ids or (None,):
+                        if taken_quantity > need or taken_quantity > available_quantity:
+                            continue
+                        taken_quantity += move._update_reserved_quantity(need - taken_quantity, available_quantity - taken_quantity, move.location_id, package_id=package, strict=False)
+
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
