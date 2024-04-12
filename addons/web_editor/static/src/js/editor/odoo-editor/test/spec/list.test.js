@@ -2808,6 +2808,16 @@ describe('List', () => {
                     it('should treat two blocks in a list item and keep the blocks', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
+                                '<ul><li><p>abc</p></li><li><p>def[]</p><p>ghi</p></li><li><p>klm</p></li></ul>',
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ul><li>abc</li><li>def[]</li><li class="oe-nested">ghi</li><li>klm</li></ul>',
+                            stepFunction: deleteForward,
+                            contentAfter:
+                                '<ul><li>abc</li><li>def[]ghi</li><li>klm</li></ul>',
+                        });
+                        await testEditor(BasicEditor, {
+                            contentBefore:
                                 '<ul><li><h1>abc</h1></li><li><h2>def[]</h2><h3>ghi</h3></li><li><h4>klm</h4></li></ul>',
                             stepFunction: deleteForward,
                             // Paragraphs in list items are treated as nonsense.
@@ -5432,35 +5442,112 @@ describe('List', () => {
                     it('should treat two blocks in a list item and keep blocks', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
-                                '<ol><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ol>',
+                                '<ol><li><p>abc</p></li><li><p>def</p><p>[]ghi</p></li><li><p>klm</p></li></ol>',
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ol><li>abc</li><li>def</li><li class="oe-nested">[]ghi</li><li>klm</li></ol>',
                             stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ol><li>abc</li><li>def</li></ol><p>[]ghi</p><ol><li>klm</li></ol>',
+                        });
+                        await testEditor(BasicEditor, {
+                            contentBefore:
+                                '<ol><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ol>',
                             // Paragraphs in list items are treated as nonsense.
                             // Headings aren't, as they do provide extra information.
+                            contentBeforeEdit:
+                                '<ol><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ol>',
+                            stepFunction: deleteBackward,
                             contentAfter:
                                 '<ol><li><h1>abc</h1></li><li><h2>def[]ghi</h2></li><li><h4>klm</h4></li></ol>',
+                        });
+                    });
+                    it('should merge a bold list item into a non-formatted list item', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore:
+                                '<ol><li><p>abc</p></li><li><p><b>de</b>fg</p><p><b>[]hij</b>klm</p></li><li><p>nop</p></li></ol>',
+                            // Two paragraphs in a list item = Two list items.
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ol><li>abc</li><li><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li>nop</li></ol>',
+                            stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ol><li>abc</li><li><b>de</b>fg</li></ol><p><b>[]hij</b>klm</p><ol><li>nop</li></ol>',
                         });
                     });
                     it('should treat two blocks in a list item and keep blocks', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore:
-                                '<ul><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ul>',
+                                '<ul><li><p>abc</p></li><li><p>def</p><p>[]ghi</p></li><li><p>klm</p></li></ul>',
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ul><li>abc</li><li>def</li><li class="oe-nested">[]ghi</li><li>klm</li></ul>',
                             stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ul><li>abc</li><li>def</li></ul><p>[]ghi</p><ul><li>klm</li></ul>',
+                        });
+                        await testEditor(BasicEditor, {
+                            contentBefore:
+                                '<ul><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ul>',
                             // Paragraphs in list items are treated as nonsense.
                             // Headings aren't, as they do provide extra information.
+                            contentBeforeEdit:
+                                '<ul><li><h1>abc</h1></li><li><h2>def</h2><h3>[]ghi</h3></li><li><h4>klm</h4></li></ul>',
+                            stepFunction: deleteBackward,
                             contentAfter:
                                 '<ul><li><h1>abc</h1></li><li><h2>def[]ghi</h2></li><li><h4>klm</h4></li></ul>',
+                        });
+                    });
+                    it('should merge a bold list item into a non-formatted list item', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore:
+                                '<ul><li><p>abc</p></li><li><p><b>de</b>fg</p><p><b>[]hij</b>klm</p></li><li><p>nop</p></li></ul>',
+                            // Two paragraphs in a list item = Two list items.
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ul><li>abc</li><li><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li>nop</li></ul>',
+                            stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ul><li>abc</li><li><b>de</b>fg</li></ul><p><b>[]hij</b>klm</p><ul><li>nop</li></ul>',
                         });
                     });
                     it('should treat two blocks in a list item and keep blocks', async () => {
                         await testEditor(BasicEditor, {
                             removeCheckIds: true,
                             contentBefore:
-                                '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def</h2><h3>[]ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
+                                '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p>def</p><p>[]ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
+                            // Paragraphs in list items are treated as nonsense.
+                            contentBeforeEdit:
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def</li><li class="oe-nested">[]ghi</li><li class="o_checked">klm</li></ul>',
                             stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">def</li></ul><p>[]ghi</p><ul class="o_checklist"><li class="o_checked">klm</li></ul>',
+                        });
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore:
+                                '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def</h2><h3>[]ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
                             // Paragraphs in list items are treated as nonsense.
                             // Headings aren't, as they do provide extra information.
+                            contentBeforeEdit:
+                                '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def</h2><h3>[]ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
+                            stepFunction: deleteBackward,
                             contentAfter:
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def[]ghi</h2></li><li class="o_checked"><h4>klm</h4></li></ul>',
+                        });
+                    });
+                    it('should merge a bold list item into a non-formatted list item', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore:
+                                '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p><b>de</b>fg</p><p><b>[]hij</b>klm</p></li><li class="o_checked"><p>nop</p></li></ul>',
+                            contentBeforeEdit:
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li><li class="oe-nested"><b>[]hij</b>klm</li><li class="o_checked">nop</li></ul>',
+                            // Two paragraphs in a list item = Two list items.
+                            // Paragraphs in list items are treated as nonsense.
+                            stepFunction: deleteBackward,
+                            contentAfter:
+                                '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li></ul><p><b>[]hij</b>klm</p><ul class="o_checklist"><li class="o_checked">nop</li></ul>',
                         });
                     });
                 });
@@ -6269,14 +6356,14 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><p>[]<br></p></li></ol>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><br>[]</p>',
                             });
                         });
                         it('should remove a list set to bold', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ol><li><p><b>[]<br></b></p></li></ol>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><b>[]<br></b></p>',
                             });
                         });
                     });
@@ -6419,14 +6506,14 @@ describe('List', () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><p>[]<br></p></li></ul>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><br>[]</p>',
                             });
                         });
                         it('should remove a list set to bold', async () => {
                             await testEditor(BasicEditor, {
                                 contentBefore: '<ul><li><p><b>[]<br></b></p></li></ul>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><b>[]<br></b></p>',
                             });
                         });
                     });
@@ -6604,7 +6691,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>[]<br></p></li></ul>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><br>[]</p>',
                             });
                         });
                         it('should remove a checklist set to bold', async () => {
@@ -6612,7 +6699,7 @@ describe('List', () => {
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p><b>[]<br></b></p></li></ul>',
                                 stepFunction: insertParagraphBreak,
-                                contentAfter: '<p>[]<br></p>',
+                                contentAfter: '<p><b>[]<br></b></p>',
                             });
                         });
                     });
