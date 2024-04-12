@@ -25,7 +25,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onMounted, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useRef, useState, useEffect } from "@odoo/owl";
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -216,6 +216,18 @@ export class KanbanRecord extends Component {
             // FIXME: this needs to be changed to an attribute on the root node...
             this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
         });
+        useEffect(
+            (color) => {
+                if (!color) {
+                    return;
+                }
+                const classList = this.rootRef.el.firstElementChild.classList;
+                const colorClasses = [...classList].filter((c) => c.startsWith("oe_kanban_color_"));
+                colorClasses.forEach((cls) => classList.remove(cls));
+                classList.add(getColorClass(color));
+            },
+            () => [this.props.record.data[this.props.archInfo.colorField]]
+        );
     }
 
     get record() {
