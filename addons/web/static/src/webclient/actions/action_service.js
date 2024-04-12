@@ -723,9 +723,13 @@ export function makeActionManager(env, router = _router) {
      * @param {number} [options.index]
      */
     function _computeStackIndex(options) {
-        if (options.clearBreadcrumbs) {
+        if (options.newApp) {
             return 0;
-        } else if (options.stackPosition === "replaceCurrentAction") {
+        }
+        if (options.clearBreadcrumbs) {
+            return controllerStack.length > 0 ? 1 : 0;
+        }
+        if (options.stackPosition === "replaceCurrentAction") {
             const currentController = controllerStack[controllerStack.length - 1];
             if (currentController) {
                 return controllerStack.findIndex(
@@ -976,7 +980,7 @@ export function makeActionManager(env, router = _router) {
 
         const closingProm = _executeCloseAction();
 
-        if (options.clearBreadcrumbs && !options.noEmptyTransition) {
+        if ((options.clearBreadcrumbs || options.newApp) && !options.noEmptyTransition) {
             const def = new Deferred();
             env.bus.trigger("ACTION_MANAGER:UPDATE", {
                 id: ++id,
@@ -1083,6 +1087,7 @@ export function makeActionManager(env, router = _router) {
         return _updateUI(controller, {
             index: options.index,
             clearBreadcrumbs: options.clearBreadcrumbs,
+            newApp: options.newApp,
             onClose: options.onClose,
             stackPosition: options.stackPosition,
             onActionReady: options.onActionReady,
@@ -1135,6 +1140,7 @@ export function makeActionManager(env, router = _router) {
             const updateUIOptions = {
                 index: options.index,
                 clearBreadcrumbs: options.clearBreadcrumbs,
+                newApp: options.newApp,
                 stackPosition: options.stackPosition,
                 onClose: options.onClose,
                 onActionReady: options.onActionReady,
@@ -1173,6 +1179,7 @@ export function makeActionManager(env, router = _router) {
 
         const updateUIOptions = {
             clearBreadcrumbs: options.clearBreadcrumbs,
+            newApp: options.newApp,
             stackPosition: options.stackPosition,
             onClose: options.onClose,
             index: options.index,
@@ -1262,6 +1269,7 @@ export function makeActionManager(env, router = _router) {
         const actionProm = _loadAction(actionRequest, options.additionalContext);
         let action = await keepLast.add(actionProm);
         action = _preprocessAction(action, options.additionalContext);
+        // not sure if the action.taget === "main" should leave the breadcrumbs with the app or remove everything
         options.clearBreadcrumbs = action.target === "main" || options.clearBreadcrumbs;
         switch (action.type) {
             case "ir.actions.act_url":

@@ -60,12 +60,18 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             if (!menu.actionID) {
                 return;
             }
-            await env.services.action.doAction(menu.actionID, {
-                clearBreadcrumbs: true,
+            const isApp = menu.appID === menu.id;
+            const options = {
                 onActionReady: () => {
                     setCurrentMenu(menu);
                 },
-            });
+            };
+            if (isApp) {
+                options.newApp = true;
+            } else {
+                options.clearBreadcrumbs = true;
+            }
+            await env.services.action.doAction(menu.actionID, options);
         },
         setCurrentMenu,
         async reload() {
