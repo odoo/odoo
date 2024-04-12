@@ -58,17 +58,6 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
         });
     }
 
-    calculateColumnWidth(column) {
-        if (column.name != 'skill_level_id') {
-            return {
-                type: 'absolute',
-                value: '90px',
-            }
-        }
-
-        return super.calculateColumnWidth(column);
-    }
-
     get showTimeline() {
         return this.SkillsRight && !this.props.list.context.no_timeline;
     }

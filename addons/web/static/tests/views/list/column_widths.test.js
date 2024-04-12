@@ -1,6 +1,7 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { queryAll, queryAllProperties, queryFirst, queryRect, resize } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
+import { queryAllProperties, queryOne, queryRect, resize } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -9,8 +10,11 @@ import {
     mountView,
     pagerNext,
     serverState,
+    toggleMenuItem,
+    toggleSearchBarMenu,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 
 describe.current.tags("desktop");
 
@@ -25,6 +29,7 @@ class Foo extends models.Model {
     qux = fields.Float();
     m2o = fields.Many2one({ relation: "bar" });
     o2m = fields.One2many({ relation: "bar" });
+    foo_o2m = fields.One2many({ relation: "foo" });
     m2m = fields.Many2many({ relation: "bar" });
     text = fields.Text();
     amount = fields.Monetary({ currency_field: "currency_id" });
@@ -116,70 +121,94 @@ class Currency extends models.Model {
 
 defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
-test(`editable rendering with handle and no data`, async () => {
+beforeEach(() => resize({ width: 800 }));
+
+function getColumnWidths(root) {
+    return queryAllProperties(".o_list_table thead th", "offsetWidth", { root });
+}
+
+// width computation
+test(`width computation: no record, lot of fields`, async () => {
     Foo._records = [];
-
     await mountView({
-        resModel: "foo",
         type: "list",
-        arch: `
-            <tree editable="bottom">
-                <field name="int_field" widget="handle"/>
-                <field name="currency_id"/>
-                <field name="m2o"/>
-            </tree>
-        `,
-    });
-    expect(`thead th`).toHaveCount(4, { message: "there should be 4 th" });
-    expect(`thead th:eq(0)`).toHaveClass("o_list_record_selector");
-    expect(`thead th:eq(1)`).toHaveClass("o_handle_cell");
-    expect(`thead th:eq(0)`).toHaveText("", {
-        message: "the handle field shouldn't have a header description",
-    });
-    expect(`thead th:eq(2)`).toHaveAttribute("style", "width: 50%;");
-    expect(`thead th:eq(3)`).toHaveAttribute("style", "width: 50%;");
-});
-
-test(`column widths should depend on the content when there is data`, async () => {
-    Foo._records[0].foo = "Some very very long value for a char field";
-
-    await mountView({
         resModel: "foo",
-        type: "list",
         arch: `
-            <tree editable="top">
+            <tree>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
+                <field name="m2o"/>
                 <field name="qux"/>
                 <field name="date"/>
                 <field name="datetime"/>
-            </tree>
-        `,
-        limit: 2,
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </tree>`,
     });
-    expect(Math.floor(queryRect(`thead .o_list_record_selector:eq(0)`).width)).toBe(41);
-    const widthPage1 = Math.floor(queryRect(`th[data-name=foo]`).width);
-
-    await pagerNext();
-    expect(Math.floor(queryRect(`thead .o_list_record_selector:eq(0)`).width)).toBe(41);
-    const widthPage2 = Math.floor(queryRect(`th[data-name=foo]`).width);
-    expect(widthPage1).toBeGreaterThan(widthPage2, {
-        message: "column widths should be computed dynamically according to the content",
-    });
+    expect(getColumnWidths()).toEqual([40, 120, 120, 92, 120, 92, 92, 146, 120, 120]);
 });
 
-test(`width of some of the fields should be hardcoded if no data`, async () => {
+test(`width computation: no record, few fields`, async () => {
     Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 146, 468, 146]);
+});
 
+test(`width computation: no record, all fields with a max width`, async () => {
+    Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="qux"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 253, 253, 253]);
+});
+
+test(`width computation: with records, lot of fields`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="m2o"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 120, 120, 92, 120, 92, 92, 146, 120, 120]);
+});
+
+test(`width computation: with records, lot of fields, grouped`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <tree>
                 <field name="bar"/>
                 <field name="foo"/>
                 <field name="int_field"/>
+                <field name="m2o"/>
                 <field name="qux"/>
                 <field name="date"/>
                 <field name="datetime"/>
@@ -187,104 +216,88 @@ test(`width of some of the fields should be hardcoded if no data`, async () => {
                 <field name="currency_id" width="25px"/>
             </tree>
         `,
+        groupBy: ["int_field"],
     });
-    expect(`.o_resize`).toHaveCount(8);
-    expect(Math.floor(queryRect(`th[data-name="bar"]`).width)).toBe(70);
-    expect(Math.floor(queryRect(`th[data-name="int_field"]`).width)).toBe(74);
-    expect(Math.floor(queryRect(`th[data-name="qux"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`th[data-name="date"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`th[data-name="datetime"]`).width)).toBe(146);
-    expect(Math.floor(queryRect(`th[data-name="amount"]`).width)).toBe(104);
-    expect(`th[data-name="foo"]`).toHaveAttribute("style", /width: 100%/);
-    expect(Math.floor(queryRect(`th[data-name="currency_id"]`).width)).toBe(25);
+    expect(`.o_resize`).toHaveCount(9);
+    expect(getColumnWidths()).toEqual([40, 120, 120, 92, 120, 92, 92, 146, 120, 25]);
 });
 
-test(`width of some fields should be hardcoded if no data, and list initially invisible`, async () => {
-    Foo._fields.foo_o2m = fields.One2many({ relation: "foo" });
-
+test(`width computation: with records, few fields`, async () => {
     await mountView({
-        resModel: "foo",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <notebook>
-                        <page string="Page1"></page>
-                        <page string="Page2">
-                            <field name="foo_o2m">
-                                <tree editable="bottom">
-                                    <field name="bar"/>
-                                    <field name="foo"/>
-                                    <field name="int_field"/>
-                                    <field name="qux"/>
-                                    <field name="date"/>
-                                    <field name="datetime"/>
-                                    <field name="amount"/>
-                                    <field name="currency_id" width="25px"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-        mode: "edit",
-    });
-    expect(`.o_field_one2many`).toHaveCount(0);
-
-    await contains(`.nav-item:eq(-1) .nav-link`).click();
-    expect(`.o_field_one2many .o_resize`).toHaveCount(8);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="bar"]`).width)).toBe(70);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="int_field"]`).width)).toBe(74);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="qux"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="date"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="datetime"]`).width)).toBe(146);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="amount"]`).width)).toBe(104);
-    expect(`.o_field_one2many th[data-name="foo"]`).toHaveAttribute("style", /width: 100%/);
-    expect(Math.floor(queryRect(`.o_field_one2many th[data-name="currency_id"]`).width)).toBe(25);
-    expect(Math.floor(queryRect(`.o_list_actions_header`).width)).toBe(32);
-});
-
-test(`empty editable list with the handle widget and no content help`, async () => {
-    // no records for the foo model
-    Foo._records = [];
-
-    await mountView({
-        resModel: "foo",
         type: "list",
+        resModel: "foo",
         arch: `
-            <tree editable="bottom">
-                <field name="int_field" widget="handle"/>
+            <tree>
+                <field name="bar"/>
                 <field name="foo"/>
-            </tree>
-        `,
-        noContentHelp: '<p class="hello">click to add a foo</p>',
+                <field name="int_field"/>
+            </tree>`,
     });
-    expect(`.o_view_nocontent`).toHaveCount(1, { message: "should have no content help" });
-
-    // click on create button
-    await contains(`.o_list_button_add`).click();
-    expect(`thead > tr > th.o_handle_cell`).toHaveStyle(
-        { width: "33px" },
-        {
-            message: "While creating first record, width should be applied to handle widget.",
-        }
-    );
-
-    // creating one record
-    await contains(`.o_selected_row [name='foo'] input`).edit("test_foo", { confirm: false });
-    await contains(`.o_list_button_save`).click();
-    expect(`thead > tr > th.o_handle_cell`).toHaveStyle(
-        { width: "33px" },
-        {
-            message:
-                "After creation of the first record, width of the handle widget should remain as it is",
-        }
-    );
+    expect(getColumnWidths()).toEqual([40, 146, 468, 146]);
 });
 
-test(`editable list: overflowing table`, async () => {
+test(`width computation: with records, no relative fields`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="qux"/>
+                <field name="date"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 204, 204, 204, 149]);
+});
+
+test(`width computation: with records, very long text field`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim " +
+        "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
+        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
+        "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
+        "sunt in culpa qui officia deserunt mollit anim id est laborum";
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="text"/>
+                <field name="qux"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 120, 548, 92]);
+});
+
+test(`width computation: with records, lot of fields, long texts`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt";
+    Foo._records[1].foo = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="text"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 120, 120, 92, 92, 92, 120, 146, 120, 120]);
+});
+
+test(`width computation: editable list, overflowing table`, async () => {
     class Abc extends models.Model {
         titi = fields.Char();
         grosminet = fields.Char();
@@ -323,61 +336,125 @@ test(`editable list: overflowing table`, async () => {
     expect(`table`).toHaveRect(queryRect`.o_list_renderer`, {
         message: "Table should not be stretched by its content",
     });
+    expect(getColumnWidths()).toEqual([40, 120, 640]);
 });
 
-test(`editable list: overflowing table (3 columns)`, async () => {
-    const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Donec est massa, gravida eget dapibus ac, eleifend eget libero.
-                    Suspendisse feugiat sed massa eleifend vestibulum. Sed tincidunt
-                    velit sed lacinia lacinia. Nunc in fermentum nunc. Vestibulum ante
-                    ipsum primis in faucibus orci luctus et ultrices posuere cubilia
-                    Curae; Nullam ut nisi a est ornare molestie non vulputate orci.
-                    Nunc pharetra porta semper. Mauris dictum eu nulla a pulvinar. Duis
-                    eleifend odio id ligula congue sollicitudin. Curabitur quis aliquet
-                    nunc, ut aliquet enim. Suspendisse malesuada felis non metus
-                    efficitur aliquet.`;
-
-    class Abc extends models.Model {
-        titi = fields.Char();
-        grosminet1 = fields.Char();
-        grosminet2 = fields.Char();
-        grosminet3 = fields.Char();
-
-        _records = [
-            {
-                id: 1,
-                titi: "Tiny text",
-                grosminet1: longText,
-                grosminet2: longText + longText,
-                grosminet3: longText + longText + longText,
-            },
-        ];
-    }
-    defineModels([Abc]);
+test(`width computation: with records, few fields, long texts`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
+    Foo._records[1].foo =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt. Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
 
     await mountView({
-        resModel: "abc",
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 120, 314, 325]);
+});
+
+test(`width computation: list with handle field`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="int_field" widget="handle"/>
+                <field name="foo"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 33, 727]);
+});
+
+test(`width computation: editable list, no record, with handle field`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
-                <field name="titi"/>
-                <field name="grosminet1" class="large"/>
-                <field name="grosminet3" class="large"/>
-                <field name="grosminet2" class="large"/>
+            <tree editable="bottom">
+                <field name="int_field" widget="handle"/>
+                <field name="currency_id"/>
+                <field name="m2o"/>
             </tree>
         `,
     });
-    expect(`table`).toHaveRect(queryRect`.o_list_renderer`);
-
-    const largeCells = queryAll(`.o_data_cell.large`);
-    expect(Math.abs(largeCells[0].offsetWidth - largeCells[1].offsetWidth) <= 1).toBe(true);
-    expect(Math.abs(largeCells[1].offsetWidth - largeCells[2].offsetWidth) <= 1).toBe(true);
-    expect(queryFirst(`.o_data_cell:not(.large)`).offsetWidth < largeCells[0].offsetWidth).toBe(
-        true
-    );
+    expect(`thead th`).toHaveCount(4, { message: "there should be 4 th" });
+    expect(`thead th:eq(0)`).toHaveClass("o_list_record_selector");
+    expect(`thead th:eq(1)`).toHaveClass("o_handle_cell");
+    expect(`thead th:eq(0)`).toHaveText("", {
+        message: "the handle field shouldn't have a header description",
+    });
+    expect(getColumnWidths()).toEqual([40, 33, 363, 363]);
 });
 
-test(`empty list: state with nameless and stringless buttons`, async () => {
+test(`width computation: widget with columnWidth in its definition`, async () => {
+    class MyWidget extends Component {
+        static template = xml`<span>My custom widget</span>`;
+        static props = ["*"];
+    }
+    const myWidget = {
+        columnWidth: 171,
+        component: MyWidget,
+    };
+    registry.category("view_widgets").add("my_widget", myWidget);
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <widget name="my_widget"/>
+                <field name="foo"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 171, 589]);
+});
+
+test(`width computation: list with width attribute in arch`, async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <tree>
+                <field name="int_field" width="52px"/>
+                <field name="foo" width="63px"/>
+                <field name="qux"/>
+                <field name="currency_id"/>
+            </tree>`,
+    });
+    expect(getColumnWidths()).toEqual([40, 52, 63, 146, 499]);
+});
+
+test(`width computation: width attribute in arch and overflowing table`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim " +
+        "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
+        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
+        "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
+        "sunt in culpa qui officia deserunt mollit anim id est laborum";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="datetime"/>
+                <field name="int_field" width="200px"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+    expect(getColumnWidths()).toEqual([40, 146, 200, 414]);
+});
+
+test(`width computation: no record, nameless and stringless buttons`, async () => {
     Foo._records = [];
 
     await mountView({
@@ -391,11 +468,679 @@ test(`empty list: state with nameless and stringless buttons`, async () => {
             </tree>
         `,
     });
-    expect(`th:contains(Foo)`).toHaveAttribute("style", /width: 50%/);
-    expect(`th:eq(-1)`).toHaveAttribute("style", /width: 50%/);
+    expect(getColumnWidths()).toEqual([40, 380, 380]);
 });
 
-test(`list: column: resize, reorder, resize again`, async () => {
+test(`width computation: no record, datetime field with date widget`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="top">
+                <field name="datetime" widget="date"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+    expect(getColumnWidths()).toEqual([40, 92, 668]);
+});
+
+test(`width computation: x2many`, async () => {
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+        <form>
+            <sheet>
+                <field name="foo_o2m">
+                    <tree>
+                        <field name="bar"/>
+                        <field name="foo"/>
+                        <field name="qux"/>
+                    </tree>
+                </field>
+            </sheet>
+        </form>`,
+    });
+
+    // the form sheet's padding differs depending on screen size
+    const tableWidth = queryOne(".o_field_widget[name=foo_o2m] table").clientWidth;
+    expect(getColumnWidths()).toEqual([146, tableWidth - 146 - 146 - 32, 146, 32]);
+});
+
+test(`width computation: x2many, column_invisible`, async () => {
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="bar"/>
+                    <field name="foo_o2m">
+                        <tree>
+                            <field name="bar"/>
+                            <field name="int_field" column_invisible="not parent.bar"/>
+                            <field name="foo"/>
+                            <field name="qux"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>`,
+    });
+
+    // the form sheet's padding differs depending on screen size
+    const tableWidth = queryOne(".o_field_widget[name=foo_o2m] table").clientWidth;
+    expect(getColumnWidths()).toEqual([146, tableWidth - 146 - 146 - 32, 146, 32]);
+    await contains(".o_field_widget[name=bar] input").click();
+    expect(getColumnWidths()).toEqual([146, 146, tableWidth - 146 - 146 - 146 - 32, 146, 32]);
+});
+
+test(`width computation: x2many, no record, initially invisible`, async () => {
+    resize({ width: 1000 });
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Page1"></page>
+                        <page string="Page2">
+                            <field name="foo_o2m">
+                                <tree editable="bottom">
+                                    <field name="bar"/>
+                                    <field name="foo"/>
+                                    <field name="int_field"/>
+                                    <field name="qux"/>
+                                    <field name="date"/>
+                                    <field name="datetime"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id" width="25px"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+        mode: "edit",
+    });
+    expect(`.o_field_one2many`).toHaveCount(0);
+    await contains(`.nav-item:eq(-1) .nav-link`).click();
+    expect(getColumnWidths()).toEqual([139, 139, 126, 126, 92, 146, 139, 25, 32]);
+});
+
+test(`width computation: x2many, editable list, initially invisible, overflowing`, async () => {
+    Foo._fields.o2m = fields.One2many({ relation: "abc" });
+    Foo._records = [{ id: 1, o2m: [1] }];
+
+    class Abc extends models.Model {
+        titi = fields.Char();
+        grosminet = fields.Char();
+
+        _records = [
+            {
+                id: 1,
+                titi: "Tiny text",
+                grosminet:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                    "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
+                    "Vivamus ac lectus velit.",
+            },
+        ];
+    }
+    defineModels([Abc]);
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <notebook>
+                        <page string="Page1"></page>
+                        <page string="Page2">
+                            <field name="o2m">
+                                <tree editable="bottom">
+                                    <field name="titi"/>
+                                    <field name="grosminet"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_field_one2many`).toHaveCount(0);
+
+    await contains(`.nav-item:eq(-1) .nav-link`).click();
+    expect(`.o_field_one2many`).toHaveCount(1);
+    expect(getColumnWidths()).toEqual([120, 614, 32]);
+});
+
+test(`width computation: x2many, editable list, with invisible modifier on x2many`, async () => {
+    Foo._fields.o2m = fields.One2many({ relation: "abc" });
+    Foo._records = [{ id: 1, bar: true, o2m: [1] }];
+    class Abc extends models.Model {
+        titi = fields.Char();
+        grosminet = fields.Char();
+
+        _records = [
+            {
+                id: 1,
+                titi: "Tiny text",
+                grosminet:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                    "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
+                    "Vivamus ac lectus velit.",
+            },
+        ];
+    }
+    defineModels([Abc]);
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="bar"/>
+                    <field name="o2m" invisible="bar">
+                        <tree editable="bottom">
+                            <field name="titi"/>
+                            <field name="grosminet"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_field_one2many`).toHaveCount(0);
+
+    await contains(`.o_field_boolean input`).click();
+    expect(`.o_field_one2many`).toHaveCount(1);
+    // the form sheet's padding differs depending on screen size
+    const tableWidth = queryOne(".o_field_widget[name=o2m] table").clientWidth;
+    expect(getColumnWidths()).toEqual([120, tableWidth - 120 - 32, 32]);
+});
+
+test.todo(`width computation: widths are re-computed on window resize`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
+        "ipsum purus bibendum est.";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="datetime"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+    const initialTextWidth = queryRect(`th[data-name="text"]`).width;
+    const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
+
+    resize({ width: queryRect(getFixture()).width / 2 });
+    await animationFrame();
+    const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
+    const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
+    expect(postResizeTextWidth).toBeLessThan(initialTextWidth);
+    expect(selectorWidth).toBe(postResizeSelectorWidth);
+});
+
+test(`width computation: button columns don't have a max width`, async () => {
+    // set a long foo value s.t. the column can be squeezed
+    Foo._records[0].foo = "Lorem ipsum dolor sit amet";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="foo"/>
+                <button name="b1" string="Do This"/>
+                <button name="b2" string="Do That"/>
+                <button name="b3" string="Or Rather Do Something Else"/>
+            </tree>
+        `,
+    });
+
+    expect(queryAllProperties(".o_list_table", "offsetWidth")[0]).toBe(800);
+    let columnWidths = getColumnWidths();
+    expect(columnWidths[1]).toBeGreaterThan(120);
+    expect(columnWidths[2]).toBeGreaterThan(330);
+
+    // simulate a window resize (buttons column width should not be squeezed)
+    resize({ width: 300 });
+    await runAllTimers();
+    await animationFrame();
+    const tableWidth = queryAllProperties(".o_list_table", "offsetWidth")[0];
+    expect(tableWidth).toBeGreaterThan(300);
+    expect(tableWidth).toBeLessThan(800);
+    columnWidths = getColumnWidths();
+    // indices 0 and 1 because selectors aren't displayed on small screens
+    expect(columnWidths[0]).toBe(120);
+    expect(columnWidths[1]).toBeGreaterThan(330);
+});
+
+// freeze column widths
+test(`freeze widths: add first record`, async () => {
+    Foo._records = []; // in this scenario, we start with no records
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="top">
+                <field name="datetime"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(`.o_list_button_add`).click();
+    expect(`.o_data_row`).toHaveCount(1);
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: edit a record`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="datetime"/>
+                <field name="text"/>
+                <field name="foo"/>
+            </tree>
+        `,
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(`.o_data_row:eq(0) > .o_data_cell:eq(1)`).click();
+    expect(`.o_selected_row`).toHaveCount(1);
+    const longVal =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
+        "ipsum purus bibendum est.";
+    await contains(`.o_field_widget[name=text] .o_input`).edit(longVal, { confirm: false });
+    await contains(`.o_list_button_save`).click();
+    expect(`.o_selected_row`).toHaveCount(0);
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: switch records in edition`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="m2o"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(`.o_data_row:eq(0) > .o_data_cell:eq(1)`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    expect(getColumnWidths()).toEqual(initialWidths);
+
+    await contains(`.o_data_row:eq(1) > .o_data_cell:eq(1)`).click();
+    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: switch mode`, async () => {
+    // Warning: this test is css dependant
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="top">
+                <field name="foo"/>
+                <field name="int_field" readonly="1"/>
+                <field name="m2o"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </tree>
+        `,
+    });
+    const startWidths = getColumnWidths();
+    const startWidth = queryRect(`table`).width;
+
+    // start edition of first row
+    await contains(`td:not(.o_list_record_selector)`).click();
+    const editionWidths = getColumnWidths();
+    const editionWidth = queryRect(`table`).width;
+
+    // leave edition
+    await contains(`.o_list_button_save`).click();
+    const readonlyWidths = getColumnWidths();
+    const readonlyWidth = queryRect(`table`).width;
+    expect(editionWidth).toBe(startWidth, {
+        message: "table should have kept the same width when switching from readonly to edit mode",
+    });
+    expect(editionWidths).toEqual(startWidths, {
+        message:
+            "width of columns should remain unchanged when switching from readonly to edit mode",
+    });
+    expect(readonlyWidth).toBe(editionWidth, {
+        message: "table should have kept the same width when switching from edit to readonly mode",
+    });
+    expect(readonlyWidths).toEqual(editionWidths, {
+        message:
+            "width of columns should remain unchanged when switching from edit to readonly mode",
+    });
+});
+
+test(`freeze widths: switch mode (lot of fields)`, async () => {
+    // Warning: this test is css dependant
+    serverState.multiLang = true;
+
+    Foo._fields.foo = fields.Char({ translate: true });
+    Foo._fields.boolean = fields.Boolean();
+
+    // the width is hardcoded to make sure we have the same condition
+    // between debug mode and non debug mode
+    resize({ width: 1200 });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="top">
+                <field name="foo" required="1"/>
+                <field name="int_field" readonly="1"/>
+                <field name="boolean"/>
+                <field name="date"/>
+                <field name="text"/>
+                <field name="amount"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="m2o"/>
+                <field name="m2m" widget="many2many_tags"/>
+            </tree>
+        `,
+    });
+    const startHeight = queryRect(`.o_data_row:eq(0)`).height;
+    const startWidth = queryRect(`.o_data_row:eq(0)`).width;
+
+    // start edition of first row
+    await contains(`.o_data_row > td:not(.o_list_record_selector)`).click();
+    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
+    const editionHeight = queryRect(`.o_data_row:eq(0)`).height;
+    const editionWidth = queryRect(`.o_data_row:eq(0)`).width;
+
+    // leave edition
+    await contains(`.o_list_button_save`).click();
+    const readonlyHeight = queryRect(`.o_data_row:eq(0)`).height;
+    const readonlyWidth = queryRect(`.o_data_row:eq(0)`).width;
+    expect(startHeight).toBe(editionHeight);
+    expect(startHeight).toBe(readonlyHeight);
+    expect(startWidth).toBe(editionWidth);
+    expect(startWidth).toBe(readonlyWidth);
+});
+
+test(`freeze widths: navigate with the pager`, async () => {
+    Foo._records[0].foo = "Some very very long value for a char field";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="top">
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="datetime"/>
+            </tree>
+        `,
+        limit: 2,
+    });
+
+    const initialWidths = getColumnWidths();
+    await pagerNext();
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: toggle a filter`, async () => {
+    Foo._records[0].foo = "Some very very long value for a char field";
+    Foo._records[3].text = "Some very very long value for a char field";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree limit="2">
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="text"/>
+            </tree>
+        `,
+        searchViewArch: `
+            <search>
+                <filter string="My Filter" name="my_filter" domain="[['id', '>', '2']]"/>
+            </search>
+        `,
+        limit: 2,
+    });
+
+    const initialWidths = getColumnWidths();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: add a record in empty list with handle widget`, async () => {
+    Foo._records = [];
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="int_field" widget="handle"/>
+                <field name="foo"/>
+            </tree>
+        `,
+        noContentHelp: '<p class="hello">click to add a foo</p>',
+    });
+    expect(`.o_view_nocontent`).toHaveCount(1, { message: "should have no content help" });
+    const initialWidths = getColumnWidths();
+
+    // click on create button
+    await contains(`.o_list_button_add`).click();
+    expect(getColumnWidths()).toEqual(initialWidths);
+
+    // creating one record
+    await contains(`.o_selected_row [name='foo'] input`).edit("test_foo", { confirm: false });
+    await contains(`.o_list_button_save`).click();
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test(`freeze widths: edit multiple records`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree multi_edit="1">
+                <field name="datetime"/>
+                <field name="text"/>
+            </tree>
+        `,
+    });
+
+    const initialWidths = getColumnWidths();
+
+    // select two records and edit
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
+    expect(`.o_selected_row`).toHaveCount(1);
+
+    const longVal =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
+        "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
+        "bibendum est.";
+    await contains(`.o_field_widget[name=text] textarea`).edit(longVal);
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal .btn-primary`).click();
+    expect(`.o_selected_row`).toHaveCount(0);
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test("freeze widths: toggle optional fields", async () => {
+    Foo._records[0].foo = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <tree>
+                <field name="date"/>
+                <field name="text"/>
+                <field name="qux" optional="hide"/>
+                <field name="datetime" optional="show"/>
+                <field name="foo" optional="hide"/>
+            </tree>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 92, 490, 146, 32]);
+
+    await contains(".o_optional_columns_dropdown_toggle").click();
+    await contains(".dropdown-item input:eq(0)").click();
+    expect(getColumnWidths()).toEqual([40, 92, 344, 146, 146, 32]);
+
+    await contains(".dropdown-item input:eq(1)").click();
+    expect(getColumnWidths()).toEqual([40, 92, 490, 146, 32]);
+
+    await contains(".dropdown-item input:eq(2)").click();
+    expect(getColumnWidths()).toEqual([40, 92, 120, 92, 424, 32]);
+
+    await contains(".dropdown-item input:eq(1)").click();
+    expect(getColumnWidths()).toEqual([40, 92, 120, 92, 146, 278, 32]);
+});
+
+test("freeze widths: x2many, add first record", async () => {
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <field name="foo_o2m">
+                    <tree editable="top">
+                        <field name="date"/>
+                        <field name="foo"/>
+                    </tree>
+                </field>
+            </form>`,
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect(".o_data_row").toHaveCount(1);
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test("freeze widths: x2many, edit a record", async () => {
+    Foo._records[0].foo_o2m = [2];
+
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <field name="foo_o2m">
+                    <tree editable="top">
+                        <field name="date"/>
+                        <field name="foo"/>
+                    </tree>
+                </field>
+            </form>`,
+        resId: 1,
+        mode: "edit",
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(".o_data_row .o_data_cell").click();
+    expect(getColumnWidths()).toEqual(initialWidths);
+
+    const longVal =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
+        "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum " +
+        "purus bibendum est.";
+    await contains(".o_field_widget[name=foo] input").edit(longVal);
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test("freeze widths: x2many, remove last record", async () => {
+    Foo._records[0].foo_o2m = [2];
+
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <field name="foo_o2m">
+                    <tree editable="top">
+                        <field name="date"/>
+                        <field name="foo"/>
+                    </tree>
+                </field>
+            </form>`,
+        resId: 1,
+        mode: "edit",
+    });
+
+    const initialWidths = getColumnWidths();
+    await contains(".o_data_row .o_list_record_remove").click();
+    expect(getColumnWidths()).toEqual(initialWidths);
+});
+
+test("freeze widths: x2many, toggle optional field", async () => {
+    Foo._records[0].foo_o2m = [2];
+
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <field name="foo_o2m">
+                    <tree editable="top">
+                        <field name="date" required="1"/>
+                        <field name="foo"/>
+                        <field name="int_field" optional="1"/>
+                    </tree>
+                </field>
+            </form>`,
+    });
+
+    expect(getColumnWidths()).toEqual([92, 644, 32]);
+
+    // create a record to store the current widths, but discard it directly to keep
+    // the list empty (otherwise, the browser automatically computes the optimal widths)
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect(getColumnWidths()).toEqual([92, 644, 32]);
+
+    await contains(".o_optional_columns_dropdown_toggle").click();
+    await contains(".dropdown-item input").click();
+    expect(getColumnWidths()).toEqual([92, 498, 146, 32]);
+});
+
+// manually resize columns
+test(`resize, reorder, resize again`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -408,29 +1153,29 @@ test(`list: column: resize, reorder, resize again`, async () => {
     });
 
     // 1. Resize column foo to middle of column int_field.
-    const originalWidths = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const originalWidths = getColumnWidths();
     await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
-    let widthsAfterResize = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    let widthsAfterResize = getColumnWidths();
     expect(widthsAfterResize[0]).toBe(originalWidths[0]);
     expect(widthsAfterResize[1]).toBeGreaterThan(originalWidths[1]);
 
     // 2. Reorder column foo.
     await contains(`th:eq(1)`).click();
-    const widthsAfterReorder = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const widthsAfterReorder = getColumnWidths();
     expect(widthsAfterResize[0]).toBe(widthsAfterReorder[0]);
     expect(widthsAfterResize[1]).toBe(widthsAfterReorder[1]);
 
     // 3. Resize again, this time check sizes while dragging and after drop.
     const { moveTo, drop } = await contains(`th:eq(1) .o_resize`, { visible: false }).drag();
     await moveTo(`th:eq(2)`);
-    widthsAfterResize = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    widthsAfterResize = getColumnWidths();
     expect(widthsAfterResize[1]).toBeGreaterThan(widthsAfterReorder[1]);
 
     await drop();
     expect(widthsAfterResize[1]).toBeGreaterThan(widthsAfterReorder[1]);
 });
 
-test(`list: resize column and toggle one checkbox`, async () => {
+test(`resize column and toggle one checkbox`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -444,20 +1189,16 @@ test(`list: resize column and toggle one checkbox`, async () => {
 
     // 1. Resize column foo to middle of column int_field.
     await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
-    const widthsAfterResize = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const widthsAfterResize = getColumnWidths();
 
     // 2. Column size should be the same after selecting a row
     await contains(`tbody .o_list_record_selector`).click();
-    const widthsAfterSelectRow = queryAllProperties(`.o_list_table th`, "offsetWidth");
-    expect(widthsAfterResize[0]).toBe(widthsAfterSelectRow[0], {
-        message: "Width must not have been changed after selecting a row",
-    });
-    expect(widthsAfterResize[1]).toBe(widthsAfterSelectRow[1], {
+    expect(getColumnWidths()).toEqual(widthsAfterResize, {
         message: "Width must not have been changed after selecting a row",
     });
 });
 
-test(`list: resize column and toggle check all`, async () => {
+test(`resize column and toggle check all`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -471,20 +1212,16 @@ test(`list: resize column and toggle check all`, async () => {
 
     // 1. Resize column foo to middle of column int_field.
     await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
-    const widthsAfterResize = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const widthsAfterResize = getColumnWidths();
 
     // 2. Column size should be the same after selecting all
     await contains(`thead .o_list_record_selector`).click();
-    const widthsAfterSelectAll = queryAllProperties(`.o_list_table th`, "offsetWidth");
-    expect(widthsAfterResize[0]).toBe(widthsAfterSelectAll[0], {
-        message: "Width must not have been changed after selecting all",
-    });
-    expect(widthsAfterResize[1]).toBe(widthsAfterSelectAll[1], {
+    expect(getColumnWidths()).toEqual(widthsAfterResize, {
         message: "Width must not have been changed after selecting all",
     });
 });
 
-test(`editable list: resize column headers`, async () => {
+test(`resize column headers in editable list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -495,15 +1232,15 @@ test(`editable list: resize column headers`, async () => {
             </tree>
         `,
     });
-    const originalWidths = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const originalWidths = getColumnWidths();
     await contains(`th:eq(1) .o_resize`, { visible: false }).dragAndDrop(`th:eq(2)`);
 
-    const finalWidths = queryAllProperties(`.o_list_table th`, "offsetWidth");
+    const finalWidths = getColumnWidths();
     expect(finalWidths[0]).toBe(originalWidths[0]);
     expect(finalWidths[2]).toBe(originalWidths[2]);
 });
 
-test.todo(`editable list: resize column headers (2)`, async () => {
+test.todo(`resize column headers in editable list (2)`, async () => {
     // This test will ensure that, on resize list header,
     // the resized element have the correct size and other elements are not resized
     Foo._records[0].foo = "a".repeat(200);
@@ -622,7 +1359,7 @@ test(`resize column with x2many list with several fields in form notebook`, asyn
     );
 });
 
-test(`editable list: unnamed columns cannot be resized`, async () => {
+test(`resize: unnamed columns cannot be resized`, async () => {
     Foo._records = [{ id: 1, o2m: [1] }];
     Bar._records = [{ id: 1, display_name: "Oui" }];
 
@@ -653,506 +1390,4 @@ test(`editable list: unnamed columns cannot be resized`, async () => {
     expect(`.o_field_one2many th:eq(1) .o_resize`).toHaveCount(0, {
         message: "Columns without name should not have a resize handle",
     });
-});
-
-test(`width of some of the fields should be hardcoded if no data (grouped case)`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="top">
-                <field name="bar"/>
-                <field name="foo"/>
-                <field name="int_field"/>
-                <field name="qux"/>
-                <field name="date"/>
-                <field name="datetime"/>
-                <field name="amount"/>
-                <field name="currency_id" width="25px"/>
-            </tree>
-        `,
-        groupBy: ["int_field"],
-    });
-    expect(`.o_resize`).toHaveCount(8);
-    expect(Math.floor(queryRect(`th[data-name="bar"]`).width)).toBe(70);
-    expect(Math.floor(queryRect(`th[data-name="int_field"]`).width)).toBe(74);
-    expect(Math.floor(queryRect(`th[data-name="qux"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`th[data-name="date"]`).width)).toBe(92);
-    expect(Math.floor(queryRect(`th[data-name="datetime"]`).width)).toBe(146);
-    expect(Math.floor(queryRect(`th[data-name="amount"]`).width)).toBe(104);
-    expect(`th[data-name="foo"]`).toHaveAttribute("style", /width: 100%/);
-    expect(Math.floor(queryRect(`th[data-name="currency_id"]`).width)).toBe(25);
-});
-
-test(`column width should depend on the widget`, async () => {
-    Foo._records = []; // the width heuristic only applies when there are no records
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="top">
-                <field name="datetime" widget="date"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    expect(Math.floor(queryRect(`th[data-name="datetime"]`).width)).toBe(92);
-});
-
-test(`column widths are kept when adding first record`, async () => {
-    Foo._records = []; // in this scenario, we start with no records
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="top">
-                <field name="datetime"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const width = Math.floor(queryRect(`th[data-name="datetime"]`).width);
-
-    await contains(`.o_list_button_add`).click();
-    expect(`.o_data_row`).toHaveCount(1);
-    expect(Math.floor(queryRect(`th[data-name="datetime"]`).width)).toBe(width);
-});
-
-test(`column widths are kept when editing a record`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="bottom">
-                <field name="datetime"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const width = Math.floor(queryRect(`th[data-name="datetime"]`).width);
-
-    await contains(`.o_data_row:eq(0) > .o_data_cell:eq(1)`).click();
-    expect(`.o_selected_row`).toHaveCount(1);
-
-    const longVal =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
-        "ipsum purus bibendum est.";
-    await contains(`.o_field_widget[name=text] .o_input`).edit(longVal, { confirm: false });
-    await contains(`.o_list_button_save`).click();
-    expect(`.o_selected_row`).toHaveCount(0);
-    expect(Math.floor(queryRect(`th[data-name="datetime"]`).width)).toBe(width);
-});
-
-test(`column widths are kept when switching records in edition`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="bottom">
-                <field name="m2o"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const width = Math.floor(queryRect(`th[data-name="m2o"]`).width);
-
-    await contains(`.o_data_row:eq(0) > .o_data_cell:eq(1)`).click();
-    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
-    expect(Math.floor(queryRect(`th[data-name="m2o"]`).width)).toBe(width);
-
-    await contains(`.o_data_row:eq(1) > .o_data_cell:eq(1)`).click();
-    expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
-    expect(Math.floor(queryRect(`th[data-name="m2o"]`).width)).toBe(width);
-});
-
-test.todo(`column widths are re-computed on window resize`, async () => {
-    Foo._records[0].text =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
-        "ipsum purus bibendum est.";
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="bottom">
-                <field name="datetime"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const initialTextWidth = queryRect(`th[data-name="text"]`).width;
-    const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
-
-    resize({ width: queryRect(getFixture()).width / 2 });
-    await animationFrame();
-    const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
-    const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
-    expect(postResizeTextWidth).toBeLessThan(initialTextWidth);
-    expect(selectorWidth).toBe(postResizeSelectorWidth);
-});
-
-test(`columns with an absolute width are never narrower than that width`, async () => {
-    Foo._records[0].text =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim " +
-        "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
-        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
-        "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
-        "sunt in culpa qui officia deserunt mollit anim id est laborum";
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="bottom">
-                <field name="datetime"/>
-                <field name="int_field" width="200px"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const width = queryRect(`th[data-name="int_field"]`).width;
-    expect(Math.floor(width)).toBe(200);
-});
-
-test(`list view with data: text columns are not crushed`, async () => {
-    const longText =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do " +
-        "eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim " +
-        "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
-        "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
-        "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
-        "sunt in culpa qui officia deserunt mollit anim id est laborum";
-
-    Foo._records[0].foo = longText;
-    Foo._records[0].text = longText;
-    Foo._records[1].foo = "short text";
-    Foo._records[1].text = "short text";
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<tree><field name="foo"/><field name="text"/></tree>`,
-    });
-    const fooWidth = Math.ceil(queryRect(`th[data-name="foo"]`).width);
-    const textWidth = Math.ceil(queryRect(`th[data-name="text"]`).width);
-    expect(fooWidth).toBe(textWidth, {
-        message: "both columns should have been given the same width",
-    });
-
-    const firstRowHeight = queryRect(`.o_data_row:eq(0)`).height;
-    const secondRowHeight = queryRect(`.o_data_row:eq(1)`).height;
-    expect(firstRowHeight).toBeGreaterThan(secondRowHeight, {
-        message:
-            "in the first row, the (long) text field should be properly displayed on several lines",
-    });
-});
-
-test(`button in a list view with a default relative width`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree>
-                <field name="foo"/>
-                <button name="the_button" icon="fa-heart" width="0.1"/>
-            </tree>
-        `,
-    });
-    expect(`.o_data_cell button:eq(0)`).not.toHaveAttribute("style", /width/, {
-        message: "width attribute should not change the CSS style",
-    });
-});
-
-test(`button columns in a list view don't have a max width`, async () => {
-    // set a long foo value s.t. the column can be squeezed
-    Foo._records[0].foo = "Lorem ipsum dolor sit amet";
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree>
-                <field name="foo"/>
-                <button name="b1" string="Do This"/>
-                <button name="b2" string="Do That"/>
-                <button name="b3" string="Or Rather Do Something Else"/>
-            </tree>
-        `,
-    });
-
-    // simulate a window resize (buttons column width should not be squeezed)
-    resize({ width: 300 });
-    await animationFrame();
-    expect(`th:eq(1)`).toHaveStyle(
-        { maxWidth: "92px" },
-        {
-            message: "max-width should be set on column foo to the minimum column width (92px)",
-        }
-    );
-    expect(`th:eq(2)`).toHaveStyle(
-        { maxWidth: "none" },
-        {
-            message: "no max-width should be harcoded on the buttons column",
-        }
-    );
-});
-
-test(`column width should not change when switching mode`, async () => {
-    // Warning: this test is css dependant
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="top">
-                <field name="foo"/>
-                <field name="int_field" readonly="1"/>
-                <field name="m2o"/>
-                <field name="m2m" widget="many2many_tags"/>
-            </tree>
-        `,
-    });
-    const startWidths = queryAllProperties(`thead th`, "offsetWidth");
-    const startWidth = queryRect(`table`).width;
-
-    // start edition of first row
-    await contains(`td:not(.o_list_record_selector)`).click();
-    const editionWidths = queryAllProperties(`thead th`, "offsetWidth");
-    const editionWidth = queryRect(`table`).width;
-
-    // leave edition
-    await contains(`.o_list_button_save`).click();
-    const readonlyWidths = queryAllProperties(`thead th`, "offsetWidth");
-    const readonlyWidth = queryRect(`table`).width;
-    expect(editionWidth).toBe(startWidth, {
-        message: "table should have kept the same width when switching from readonly to edit mode",
-    });
-    expect(editionWidths).toEqual(startWidths, {
-        message:
-            "width of columns should remain unchanged when switching from readonly to edit mode",
-    });
-    expect(readonlyWidth).toBe(editionWidth, {
-        message: "table should have kept the same width when switching from edit to readonly mode",
-    });
-    expect(readonlyWidths).toEqual(editionWidths, {
-        message:
-            "width of columns should remain unchanged when switching from edit to readonly mode",
-    });
-});
-
-test(`column widths are kept when editing multiple records`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree multi_edit="1">
-                <field name="datetime"/>
-                <field name="text"/>
-            </tree>
-        `,
-    });
-    const width = queryRect(`th[data-name="datetime"]`).width;
-
-    // select two records and edit
-    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
-    expect(`.o_selected_row`).toHaveCount(1);
-
-    const longVal =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed blandit, " +
-        "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
-        "bibendum est.";
-    await contains(`.o_field_widget[name=text] textarea`).edit(longVal);
-    expect(`.modal`).toHaveCount(1);
-
-    await contains(`.modal .btn-primary`).click();
-    expect(`.o_selected_row`).toHaveCount(0);
-    expect(`th[data-name="datetime"]`).toHaveRect({ width });
-});
-
-test(`row height and width should not change when switching mode`, async () => {
-    // Warning: this test is css dependant
-    serverState.multiLang = true;
-
-    Foo._fields.foo = fields.Char({ translate: true });
-    Foo._fields.boolean = fields.Boolean();
-
-    // the width is hardcoded to make sure we have the same condition
-    // between debug mode and non debug mode
-    resize({ width: 1200 });
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <tree editable="top">
-                <field name="foo" required="1"/>
-                <field name="int_field" readonly="1"/>
-                <field name="boolean"/>
-                <field name="date"/>
-                <field name="text"/>
-                <field name="amount"/>
-                <field name="currency_id" column_invisible="1"/>
-                <field name="m2o"/>
-                <field name="m2m" widget="many2many_tags"/>
-            </tree>
-        `,
-    });
-    const startHeight = queryRect(`.o_data_row:eq(0)`).height;
-    const startWidth = queryRect(`.o_data_row:eq(0)`).width;
-
-    // start edition of first row
-    await contains(`.o_data_row > td:not(.o_list_record_selector)`).click();
-    expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
-    const editionHeight = queryRect(`.o_data_row:eq(0)`).height;
-    const editionWidth = queryRect(`.o_data_row:eq(0)`).width;
-
-    // leave edition
-    await contains(`.o_list_button_save`).click();
-    const readonlyHeight = queryRect(`.o_data_row:eq(0)`).height;
-    const readonlyWidth = queryRect(`.o_data_row:eq(0)`).width;
-    expect(startHeight).toBe(editionHeight);
-    expect(startHeight).toBe(readonlyHeight);
-    expect(startWidth).toBe(editionWidth);
-    expect(startWidth).toBe(readonlyWidth);
-});
-
-test(`editable list: list view in an initially unselected notebook page`, async () => {
-    Foo._fields.o2m = fields.One2many({ relation: "abc" });
-    Foo._records = [{ id: 1, o2m: [1] }];
-
-    class Abc extends models.Model {
-        titi = fields.Char();
-        grosminet = fields.Char();
-
-        _records = [
-            {
-                id: 1,
-                titi: "Tiny text",
-                grosminet:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                    "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
-                    "Vivamus ac lectus velit.",
-            },
-        ];
-    }
-    defineModels([Abc]);
-
-    await mountView({
-        resModel: "foo",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <notebook>
-                        <page string="Page1"></page>
-                        <page string="Page2">
-                            <field name="o2m">
-                                <tree editable="bottom">
-                                    <field name="titi"/>
-                                    <field name="grosminet"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-    expect(`.o_field_one2many`).toHaveCount(0);
-
-    await contains(`.nav-item:eq(-1) .nav-link`).click();
-    expect(`.o_field_one2many`).toHaveCount(1);
-    expect(queryRect(`.tab-pane:eq(-1) th:eq(0)`).width).toBeGreaterThan(80);
-    expect(queryRect(`.tab-pane:eq(-1) th:eq(1)`).width).toBeGreaterThan(500);
-});
-
-test(`editable list: list view hidden by an invisible modifier`, async () => {
-    Foo._fields.o2m = fields.One2many({ relation: "abc" });
-    Foo._records = [{ id: 1, bar: true, o2m: [1] }];
-    class Abc extends models.Model {
-        titi = fields.Char();
-        grosminet = fields.Char();
-
-        _records = [
-            {
-                id: 1,
-                titi: "Tiny text",
-                grosminet:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                    "Ut at nisi congue, facilisis neque nec, pulvinar nunc. " +
-                    "Vivamus ac lectus velit.",
-            },
-        ];
-    }
-    defineModels([Abc]);
-
-    await mountView({
-        resModel: "foo",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <field name="bar"/>
-                    <field name="o2m" invisible="bar">
-                        <tree editable="bottom">
-                            <field name="titi"/>
-                            <field name="grosminet"/>
-                        </tree>
-                    </field>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-    expect(`.o_field_one2many`).toHaveCount(0);
-
-    await contains(`.o_field_boolean input`).click();
-    expect(`.o_field_one2many`).toHaveCount(1);
-    expect(queryRect(`th:eq(0)`).width).toBeGreaterThan(80);
-    expect(queryRect(`th:eq(1)`).width).toBeGreaterThan(700);
-});
-
-test(`editable list: updating list state while invisible`, async () => {
-    Foo._onChanges = {
-        bar(record) {
-            record.o2m = [[5], [0, null, { display_name: "Whatever" }]];
-        },
-    };
-
-    await mountView({
-        resModel: "foo",
-        type: "form",
-        arch: `
-            <form>
-                <sheet>
-                    <field name="bar"/>
-                    <notebook>
-                        <page string="Page 1"></page>
-                        <page string="Page 2">
-                            <field name="o2m">
-                                <tree editable="bottom">
-                                    <field name="display_name"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        `,
-        resId: 1,
-    });
-    expect(`.o_field_one2many`).toHaveCount(0);
-
-    await contains(`.o_field_boolean input`).click();
-    expect(`.o_field_one2many`).toHaveCount(0);
-
-    await contains(`.nav-item:eq(-1) .nav-link`).click();
-    expect(`.o_field_one2many`).toHaveCount(1);
-    expect(`.o_field_one2many .o_data_row:eq(0)`).toHaveText("Whatever");
-    expect(`th:eq(0)`).toHaveAttribute("style", /width: /);
 });

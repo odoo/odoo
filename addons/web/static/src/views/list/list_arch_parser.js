@@ -113,6 +113,7 @@ export class ListArchParser {
                     className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                     optional: node.getAttribute("optional") || false,
                     type: "field",
+                    fieldType: fieldInfo.type,
                     hasLabel: !(
                         fieldInfo.field.label === false ||
                         exprToBoolean(fieldInfo.attrs.nolabel) === true
