@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools import float_is_zero, format_list
 
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -276,9 +276,11 @@ class StockPickingBatch(models.Model):
             if not batch.picking_ids <= batch.allowed_picking_ids:
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
                 raise UserError(_(
-                    "The following transfers cannot be added to batch transfer %s. "
+                    "The following transfers cannot be added to batch transfer %(batch)s. "
                     "Please check their states and operation types.\n\n"
-                    "Incompatibilities: %s", batch.name, ', '.join(erroneous_pickings.mapped('name'))))
+                    "Incompatibilities: %(incompatible_transfers)s",
+                    batch=batch.name,
+                    incompatible_transfers=format_list(self.env, erroneous_pickings.mapped('name'))))
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:

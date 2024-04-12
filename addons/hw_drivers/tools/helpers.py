@@ -120,7 +120,7 @@ def check_certificate():
         _logger.info(message)
         return {"status": CertificateStatus.NEED_REFRESH}
     else:
-        message = _('Your certificate %s is valid until %s', cn, cert_end_date)
+        message = _('Your certificate %(certificate)s is valid until %(end_date)s', certificate=cn, end_date=cert_end_date)
         _logger.info(message)
         return {"status": CertificateStatus.OK, "message": message}
 

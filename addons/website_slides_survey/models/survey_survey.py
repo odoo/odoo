@@ -5,6 +5,7 @@ import ast
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import format_list
 
 
 
@@ -32,7 +33,14 @@ class Survey(models.Model):
         # even if they don't have access to those surveys hence the sudo usage
         certifications = self.sudo().slide_ids.filtered(lambda slide: slide.slide_type == "certification").mapped('survey_id').exists()
         if certifications:
-            certifications_course_mapping = [_('- %s (Courses - %s)', certi.title, '; '.join(certi.slide_channel_ids.mapped('name'))) for certi in certifications]
+            certifications_course_mapping = [
+                _(
+                    "- %(certification)s (Courses - %(courses)s)",
+                    certification=certi.title,
+                    courses=format_list(self.env, certi.slide_channel_ids.mapped("name")),
+                )
+                for certi in certifications
+            ]
             raise ValidationError(_(
                 'Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n%s',
                 '\n'.join(certifications_course_mapping)))

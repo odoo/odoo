@@ -70,15 +70,15 @@ class HrLeave(models.Model):
 Please create one time off for each contract.
 
 Time off:
-%s
+%(time_off)s
 
 Contracts:
-%s""",
-                      holiday.display_name,
-                      '\n'.join(_(
-                          "Contract %s from %s to %s, status: %s",
-                          contract.name,
-                          format_date(self.env, contract.date_start),
-                          format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
-                          state_labels[contract.state]
+%(contracts)s""",
+                      time_off=holiday.display_name,
+                      contracts='\n'.join(_(
+                          "Contract %(contract)s from %(start_date)s to %(end_date)s, status: %(status)s",
+                          contract=contract.name,
+                          start_date=format_date(self.env, contract.date_start),
+                          end_date=format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
+                          status=state_labels[contract.state]
                       ) for contract in contracts)))

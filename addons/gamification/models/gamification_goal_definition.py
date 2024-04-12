@@ -91,7 +91,11 @@ class GoalDefinition(models.Model):
                 msg = e
                 if isinstance(e, SyntaxError):
                     msg = (e.msg + '\n' + e.text)
-                raise exceptions.UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s", definition.name, msg))
+                raise exceptions.UserError(_(
+                    "The domain for the definition %(definition)s seems incorrect, please check it.\n\n%(error_message)s",
+                    definition=definition.name,
+                    error_message=msg,
+                ))
         return True
 
     def _check_model_validity(self):

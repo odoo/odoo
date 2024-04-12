@@ -154,7 +154,7 @@ test("uploading a file that is too heavy will send a notification", async () => 
             expect.step("notification");
             // Message is a bit weird because values (2 and 4 bytes) are simplified to 2 decimals in regards to megabytes
             expect(message).toBe(
-                "The selected file (4B) is over the maximum allowed file size (2B)."
+                "The selected file (4B) is larger than the maximum allowed file size (2B)."
             );
         },
     });

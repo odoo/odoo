@@ -263,9 +263,13 @@ patch(uploadService, {
                 service.incrementId();
                 const file = service.addFile({
                     id: service.fileId,
-                    name: records.length > 1 ?
-                    _t("Uploading %s '%s' images.", records.length, records[0].query) :
-                    _t("Uploading '%s' image.", records[0].query),
+                    name:
+                        records.length > 1
+                            ? _t("Uploading %(count)s '%(query)s' images.", {
+                                  count: records.length,
+                                  query: records[0].query,
+                              })
+                            : _t("Uploading '%s' image.", records[0].query),
                 });
 
                 try {

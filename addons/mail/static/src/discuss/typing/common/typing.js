@@ -24,8 +24,14 @@ export class Typing extends Component {
             return _t("%s is typing...", typingMemberNames[0]);
         }
         if (typingMemberNames.length === 2) {
-            return _t("%s and %s are typing...", typingMemberNames[0], typingMemberNames[1]);
+            return _t("%(user1)s and %(user2)s are typing...", {
+                user1: typingMemberNames[0],
+                user2: typingMemberNames[1],
+            });
         }
-        return _t("%s, %s and more are typing...", typingMemberNames[0], typingMemberNames[1]);
+        return _t("%(user1)s, %(user2)s and more are typing...", {
+            user1: typingMemberNames[0],
+            user2: typingMemberNames[1],
+        });
     }
 }

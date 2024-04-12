@@ -189,7 +189,7 @@ class ExportXlsxWriter:
         self.monetary_format = f'#,##0.{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
-            raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
+            raise UserError(_('There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.', count=row_count, limit=self.worksheet.xls_rowmax))
 
     def __enter__(self):
         self.write_header()

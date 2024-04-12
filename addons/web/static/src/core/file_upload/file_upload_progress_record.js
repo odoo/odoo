@@ -25,7 +25,7 @@ export class FileUploadProgressRecord extends Component {
             const mbTotal = Math.round(fileUpload.total / 1000000);
             return {
                 left: _t("Uploading... (%s%)", percent),
-                right: _t("(%s/%sMB)", mbLoaded, mbTotal),
+                right: _t("(%(mbLoaded)s/%(mbTotal)sMB)", { mbLoaded, mbTotal }),
             };
         }
     }

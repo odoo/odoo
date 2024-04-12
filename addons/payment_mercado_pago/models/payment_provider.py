@@ -71,7 +71,8 @@ class PaymentProvider(models.Model):
                         error_message = response_content.get('message')
                         raise ValidationError("Mercado Pago: " + _(
                             "The communication with the API failed. Mercado Pago gave us the"
-                            " following information: '%s' (code %s)", error_message, error_code
+                            " following information: '%(error_message)s' (code %(error_code)s)",
+                            error_message=error_message, error_code=error_code,
                         ))
                     except ValueError:  # The response can be empty when the access token is wrong.
                         raise ValidationError("Mercado Pago: " + _(

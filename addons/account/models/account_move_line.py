@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import frozendict, format_date, float_compare, Query
+from odoo.tools import frozendict, format_date, float_compare, format_list, Query
 from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -503,7 +503,7 @@ class AccountMoveLine(models.Model):
                 name = line.move_id.payment_reference or ''
                 if n_terms > 1:
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
-                    name = _('%s installment #%s', name, index+1).lstrip()
+                    name = _('%(name)s installment #%(number)s', name=name, number=index + 1).lstrip()
                 line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
@@ -1260,7 +1260,7 @@ class AccountMoveLine(models.Model):
             journal = line.move_id.journal_id
 
             if account.deprecated and not self.env.context.get('skip_account_deprecation_check'):
-                raise UserError(_('The account %s (%s) is deprecated.', account.name, account.code))
+                raise UserError(_('The account %(name)s (%(code)s) is deprecated.', name=account.name, code=account.code))
 
             account_currency = account.currency_id
             if account_currency and account_currency != line.company_currency_id and account_currency != line.currency_id:
@@ -1305,11 +1305,11 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.product_uom_id and line.product_id and line.product_uom_id.category_id != line.product_id.product_tmpl_id.uom_id.category_id:
                 raise UserError(_(
-                    "The Unit of Measure (UoM) '%s' you have selected for product '%s', "
-                    "is incompatible with its category : %s.",
-                    line.product_uom_id.name,
-                    line.product_id.name,
-                    line.product_id.product_tmpl_id.uom_id.category_id.name
+                    "The Unit of Measure (UoM) '%(uom)s' you have selected for product '%(product)s', "
+                    "is incompatible with its category : %(category)s.",
+                    uom=line.product_uom_id.name,
+                    product=line.product_id.name,
+                    category=line.product_id.product_tmpl_id.uom_id.category_id.name
                 ))
 
     def _affect_tax_report(self):
@@ -1329,7 +1329,7 @@ class AccountMoveLine(models.Model):
             if line.matched_debit_ids or line.matched_credit_ids:
                 raise UserError(_("You cannot do this modification on a reconciled journal entry. "
                                   "You can just change some non legal fields or you must unreconcile first.\n"
-                                  "Journal Entry (id): %s (%s)", line.move_id.name, line.move_id.id))
+                                  "Journal Entry (id): %(entry)s (%(id)s)", entry=line.move_id.name, id=line.move_id.id))
 
     @api.constrains('tax_ids', 'tax_repartition_line_id')
     def _check_caba_non_caba_shared_tags(self):
@@ -1586,10 +1586,10 @@ class AccountMoveLine(models.Model):
         violated_fields = set(vals) & inalterable_fields
         if hashed_moves and violated_fields:
             raise UserError(_(
-                "You cannot edit the following fields: %s.\n"
-                "The following entries are already hashed:\n%s",
-                ', '.join(f['string'] for f in self.fields_get(violated_fields).values()),
-                '\n'.join(hashed_moves.mapped('name')),
+                "You cannot edit the following fields: %(fields)s.\n"
+                "The following entries are already hashed:\n%(entries)s",
+                fields=format_list(self.env, [f['string'] for f in self.fields_get(violated_fields).values()]),
+                entries='\n'.join(hashed_moves.mapped('name')),
             ))
 
         line_to_write = self

@@ -328,8 +328,8 @@ class AccountPayment(models.Model):
 
         if not self.outstanding_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
-                self.payment_method_line_id.name, self.journal_id.display_name))
+                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %(payment_method)s payment method in the %(journal)s journal.",
+                payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
 
         # Compute amounts.
         write_off_line_vals_list = write_off_line_vals or []

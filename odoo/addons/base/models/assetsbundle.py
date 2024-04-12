@@ -466,7 +466,11 @@ class AssetsBundle(object):
                     inherit_mode = template_tree.get('t-inherit-mode', 'primary')
                     if inherit_mode not in ['primary', 'extension']:
                         addon = asset.url.split('/')[1]
-                        return asset.generate_error(_("Invalid inherit mode. Module %r and template name %r", addon, template_name))
+                        return asset.generate_error(_(
+                            'Invalid inherit mode. Module "%(module)s" and template name "%(template_name)s"',
+                            module=addon,
+                            template_name=template_name,
+                        ))
                 if inherit_mode == "extension":
                     if block is None or block["type"] != "extensions":
                         block = {"type": "extensions", "extensions": OrderedDict()}

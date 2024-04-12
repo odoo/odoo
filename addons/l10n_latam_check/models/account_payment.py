@@ -148,12 +148,12 @@ class AccountPayment(models.Model):
         for rec in self.filtered('l10n_latam_check_id'):
             if rec.currency_id != rec.l10n_latam_check_id.currency_id:
                 msgs.append(_(
-                    'The currency of the payment (%s) and the currency of the check (%s) must be the same.') % (
-                        rec.currency_id.name, rec.l10n_latam_check_id.currency_id.name))
+                    'The currency of the payment (%(payment_currency)s) and the currency of the check (%(check_currency)s) must be the same.',
+                        payment_currency=rec.currency_id.name, check_currency=rec.l10n_latam_check_id.currency_id.name))
             if not rec.currency_id.is_zero(rec.l10n_latam_check_id.amount - rec.amount):
                 msgs.append(_(
-                    'The amount of the payment (%s) does not match the amount of the selected check (%s). '
-                    'Please try to deselect and select the check again.', rec.amount, rec.l10n_latam_check_id.amount))
+                    'The amount of the payment (%(payment_amount)s) does not match the amount of the selected check (%(check_amount)s). '
+                    'Please try to deselect and select the check again.', payment_amount=rec.amount, check_amount=rec.l10n_latam_check_id.amount))
             if rec.payment_method_line_id.code in ['in_third_party_checks', 'out_third_party_checks']:
                 if rec.l10n_latam_check_id.state != 'posted':
                     msgs.append(_('Selected check "%s" is not posted', rec.l10n_latam_check_id.display_name))
@@ -163,13 +163,13 @@ class AccountPayment(models.Model):
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.destination_journal_id):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
-                        'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.',
-                        rec.l10n_latam_check_id.display_name, rec.journal_id.name
+                        'Check "%(check)s" is not anymore in journal "%(journal)s", it seems it has been moved by another payment.',
+                        check=rec.l10n_latam_check_id.display_name, journal=rec.journal_id.name
                         if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id:
-                    msgs.append(_("Check '%s' is on journal '%s', it can't be received it again",
-                                rec.l10n_latam_check_id.display_name, rec.journal_id.name))
+                    msgs.append(_("Check '%(check)s' is on journal '%(journal)s', it can't be received it again",
+                                check=rec.l10n_latam_check_id.display_name, journal=rec.journal_id.name))
             # moved third party check
             if rec.l10n_latam_check_id:
                 date = rec.date or fields.Datetime.now()
@@ -180,10 +180,10 @@ class AccountPayment(models.Model):
                 ], order="date desc, id desc", limit=1)
                 if last_operation and last_operation[0].date > date:
                     msgs.append(_(
-                        "It seems you're trying to move a check with a date (%s) prior to last operation done with "
-                        "the check (%s). This may be wrong, please double check it. By continue, the last operation on "
-                        "the check will remain being %s",
-                        format_date(self.env, date), last_operation.display_name, last_operation.display_name))
+                        "It seems you're trying to move a check with a date (%(date)s) prior to last operation done "
+                        "with the check (%(last_operation)s). This may be wrong, please double check it. By continue, "
+                        "the last operation on the check will remain being %(last_operation)s",
+                        date=format_date(self.env, date), last_operation=last_operation.display_name))
         return msgs
 
     @api.depends('is_internal_transfer')

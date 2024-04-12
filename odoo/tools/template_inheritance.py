@@ -244,9 +244,9 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             separator = separator.strip()
                             if separator not in ('and', 'or'):
                                 raise ValueError(_(
-                                    "Invalid separator %s for python expression %s; "
+                                    "Invalid separator %(separator)s for python expression %(expression)s; "
                                     "valid values are 'and' and 'or'",
-                                    repr(separator), repr(attribute),
+                                    separator=repr(separator), expression=repr(attribute),
                                 ))
                             if remove:
                                 if re.match(rf'^\(*{remove}\)*$', value):

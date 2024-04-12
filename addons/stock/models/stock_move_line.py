@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 
 from odoo import _, api, fields, tools, models, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import OrderedSet, groupby
+from odoo.tools import OrderedSet, format_list, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
@@ -202,7 +202,11 @@ class StockMoveLine(models.Model):
                                                              '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])
                         quants = lots.quant_ids.filtered(lambda q: q.quantity != 0 and q.location_id.usage in ['customer', 'internal', 'transit'])
                         if quants:
-                            message = _('Serial number (%s) already exists in location(s): %s. Please correct the serial number encoded.', self.lot_name, ', '.join(quants.location_id.mapped('display_name')))
+                            message = _(
+                                'Serial number (%(serial_number)s) already exists in location(s): %(location_list)s. Please correct the serial number encoded.',
+                                serial_number=self.lot_name,
+                                location_list=format_list(self.env, quants.location_id.mapped('display_name'))
+                            )
                 elif self.lot_id:
                     counter = Counter([line.lot_id.id for line in move_lines_to_check])
                     if counter.get(self.lot_id.id) and counter[self.lot_id.id] > 1:
@@ -525,10 +529,10 @@ class StockMoveLine(models.Model):
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             quantity = float_round(ml.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, quantity, precision_digits=precision_digits) != 0:
-                raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision '
-                                  'defined on the unit of measure "%s". Please change the quantity done or the '
+                raise UserError(_('The quantity done for the product "%(product)s" doesn\'t respect the rounding precision '
+                                  'defined on the unit of measure "%(unit)s". Please change the quantity done or the '
                                   'rounding precision of your unit of measure.',
-                                  ml.product_id.display_name, ml.product_uom_id.name))
+                                  product=ml.product_id.display_name, unit=ml.product_uom_id.name))
 
             quantity_float_compared = float_compare(ml.quantity, 0, precision_rounding=ml.product_uom_id.rounding)
             if quantity_float_compared > 0:

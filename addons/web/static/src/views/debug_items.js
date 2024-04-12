@@ -222,7 +222,7 @@ export function viewRawRecord({ component, env }) {
         callback: async () => {
             const records = await component.model.orm.read(resModel, [resId]);
             env.services.dialog.add(RawRecordDialog, {
-                title: _t("Raw Record Data: %s(%s)", resModel, resId),
+                title: _t("Raw Record Data: %(model)s(%(id)s)", { model: resModel, id: resId }),
                 record: records[0],
             });
         },

@@ -29,6 +29,10 @@
             {
                 "selector": "ClassDeclaration[superClass.name='Component']:not(:has(ClassBody.body > PropertyDefinition[key.name='template'][static='true']))",
                 "message": "Component should declare static template"
+            },
+            {
+                "selector": "CallExpression[callee.name='_t'] > :first-child[value=/(.*%s){2,}/]",
+                "message": "Usage of _t function with multiple unnamed placeholders"
             }
         ],
         "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all" }]

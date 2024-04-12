@@ -127,10 +127,15 @@ class HrWorkEntry(models.Model):
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
             contracts = employee._get_contracts(contract_start, contract_end, states=['open', 'pending', 'close'])
             if not contracts:
-                raise ValidationError(_("%s does not have a contract from %s to %s.", employee.name, contract_start, contract_end))
+                raise ValidationError(_(
+                    "%(employee)s does not have a contract from %(date_start)s to %(date_end)s.",
+                    employee=employee.name,
+                    date_start=contract_start,
+                    date_end=contract_end,
+                ))
             elif len(contracts) > 1:
-                raise ValidationError(_("%s has multiple contracts from %s to %s. A work entry cannot overlap multiple contracts.",
-                                        employee.name, contract_start, contract_end))
+                raise ValidationError(_("%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A work entry cannot overlap multiple contracts.",
+                                        employee=employee.name, date_start=contract_start, date_end=contract_end))
             return dict(vals, contract_id=contracts[0].id)
         return vals
 

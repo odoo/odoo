@@ -1732,7 +1732,10 @@ options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
         const fieldName = this.$target[0]
             .querySelector("input.s_website_form_input").getAttribute("name");
         const spanEl = document.createElement("span");
-        spanEl.innerText = _t("The field '%s' is mandatory for the action '%s'.", fieldName, currentActionName);
+        spanEl.innerText = _t("The field “%(field)s” is mandatory for the action “%(action)s”.", {
+            field: fieldName,
+            action: currentActionName,
+        });
         uiFragment.querySelector("we-alert").appendChild(spanEl);
     },
 });

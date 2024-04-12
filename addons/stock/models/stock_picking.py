@@ -13,7 +13,7 @@ from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby, SQL
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, format_list, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 
@@ -1177,7 +1177,11 @@ class Picking(models.Model):
             if pickings_without_moves:
                 message += _('Transfers %s: Please add some items to move.', ', '.join(pickings_without_moves.mapped('name')))
             if pickings_without_lots:
-                message += _('\n\nTransfers %s: You need to supply a Lot/Serial number for products %s.', ', '.join(pickings_without_lots.mapped('name')), ', '.join(products_without_lots.mapped('display_name')))
+                message += _(
+                    '\n\nTransfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s.',
+                    transfer_list=format_list(self.env, pickings_without_lots.mapped('name')),
+                    product_list=format_list(self.env, products_without_lots.mapped('display_name')),
+                )
             if message:
                 raise UserError(message.lstrip())
 

@@ -42,7 +42,11 @@ class LoyaltyProgram(models.Model):
                 if not program.mail_template_id:
                     mail_template_label = program._fields.get('mail_template_id').get_description(self.env)['string']
                     pos_report_print_label = program._fields.get('pos_report_print_id').get_description(self.env)['string']
-                    raise UserError(_("You must set '%s' before setting '%s'.", mail_template_label, pos_report_print_label))
+                    raise UserError(_(
+                        "You must set '%(mail_template)s' before setting '%(report)s'.",
+                        mail_template=mail_template_label,
+                        report=pos_report_print_label,
+                    ))
                 else:
                     if not program.communication_plan_ids:
                         program.communication_plan_ids = self.env['loyalty.mail'].create({

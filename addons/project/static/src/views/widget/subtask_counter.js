@@ -24,11 +24,17 @@ export class SubtaskCounter extends Component {
     }
 
     get counterTitle() {
-        return _t("%s sub-tasks closed out of %s", this.closedSubtaskCount, this.subtaskCount);
+        return _t("%(closedCount)s sub-tasks closed out of %(totalCount)s", {
+            closedCount: this.closedSubtaskCount,
+            totalCount: this.subtaskCount,
+        });
     }
 
     get counterDisplay() {
-        return _t("%s/%s", this.closedSubtaskCount, this.subtaskCount);
+        return _t("%(count1)s/%(count2)s", {
+            count1: this.closedSubtaskCount,
+            count2: this.subtaskCount,
+        });
     }
 }
 

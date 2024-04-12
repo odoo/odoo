@@ -11,7 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import check_barcode_encoding, groupby, SQL
+from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -591,7 +591,7 @@ class StockQuant(models.Model):
         )
         for product, _location, lot, qty in groups:
             if float_compare(abs(qty), 1, precision_rounding=product.uom_id.rounding) > 0:
-                raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s', product.display_name, lot.name))
+                raise ValidationError(_('The serial number has already been assigned: \n Product: %(product)s, Serial Number: %(serial_number)s', product=product.display_name, serial_number=lot.name))
 
     @api.constrains('location_id')
     def check_location_id(self):
@@ -1434,12 +1434,12 @@ class StockQuant(models.Model):
             if quants:
                 if not source_location_id:
                     # trying to assign an already existing SN
-                    message =  _('The Serial Number (%s) is already used in these location(s): %s.\n\n'
-                                 'Is this expected? For example this can occur if a delivery operation is validated '
-                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
-                                 'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
-                                 'prevent inconsistent data.',
-                                 lot_id.name, ', '.join(sn_locations.mapped('display_name')))
+                    message = _('The Serial Number (%(serial_number)s) is already used in location(s): %(location_list)s.\n\n'
+                                'Is this expected? For example, this can occur if a delivery operation is validated '
+                                'before its corresponding receipt operation is validated. In this case the issue will be solved '
+                                'automatically once all steps are completed. Otherwise, the serial number should be corrected to '
+                                'prevent inconsistent data.',
+                                serial_number=lot_id.name, location_list=format_list(self.env, sn_locations.mapped('display_name')))
 
                 elif source_location_id and source_location_id not in sn_locations:
                     # using an existing SN in the wrong location
@@ -1455,13 +1455,18 @@ class StockQuant(models.Model):
                                 recommended_location = location
                                 break
                     if recommended_location and recommended_location.company_id == company_id:
-                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
-                                    'Source location for this move will be changed to %s',
-                                    lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
+                        message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
+                                    'Source location for this move will be changed to %(recommended_location)s',
+                                    serial_number=lot_id.name,
+                                    source_location=source_location_id.display_name,
+                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')),
+                                    recommended_location=recommended_location.display_name)
                     else:
-                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s.\n\n'
+                        message = _('Serial number (%(serial_number)s) is not located in %(source_location)s, but is located in location(s): %(other_locations)s.\n\n'
                                     'Please correct this to prevent inconsistent data.',
-                                    lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
+                                    serial_number=lot_id.name,
+                                    source_location=source_location_id.display_name,
+                                    other_locations=format_list(self.env, sn_locations.mapped('display_name')))
                         recommended_location = None
         return message, recommended_location
 

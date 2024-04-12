@@ -426,7 +426,10 @@ export class BaseImportModel {
                     if (error.record !== undefined) {
                         this._addMessage("danger", [
                             error.rows.from === error.rows.to
-                                ? _t('Error at row %s: "%s"', error.record, error.message)
+                                ? _t('Error at row %(row)s: "%(error)s"', {
+                                      row: error.record,
+                                      error: error.message,
+                                  })
                                 : _t("%s at multiple rows", error.message),
                         ]);
                     }

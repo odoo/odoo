@@ -54,9 +54,11 @@ class MassSMSTest(models.TransientModel):
                     _('Test SMS successfully sent to %s', sent_sms.get('res_id')))
             elif sent_sms.get('state'):
                 notification_messages.append(
-                    _('Test SMS could not be sent to %s: %s',
-                    sent_sms.get('res_id'),
-                    error_messages.get(sent_sms['state'], _("An error occurred.")))
+                    _(
+                        "Test SMS could not be sent to %(destination)s: %(state)s",
+                        destination=sent_sms.get("res_id"),
+                        state=error_messages.get(sent_sms["state"], _("An error occurred.")),
+                    )
                 )
 
         if notification_messages:

@@ -151,8 +151,12 @@ class ResourceCalendar(models.Model):
         week_type_str = _("second") if week_type else _("first")
         first_day = date_utils.start_of(today, 'week')
         last_day = date_utils.end_of(today, 'week')
-        self.two_weeks_explanation = _("The current week (from %s to %s) correspond to the  %s one.", first_day,
-                                       last_day, week_type_str)
+        self.two_weeks_explanation = _(
+            "The current week (from %(first_day)s to %(last_day)s) corresponds to week number %(number)s.",
+            first_day=first_day,
+            last_day=last_day,
+            number=week_type_str,
+        )
 
     def _get_global_attendances(self):
         return self.attendance_ids.filtered(lambda attendance:

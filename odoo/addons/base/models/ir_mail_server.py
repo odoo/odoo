@@ -192,11 +192,11 @@ class IrMailServer(models.Model):
                                         for line in usage_details_per_server[server])
         if is_multiple_server_usage:
             raise UserError(
-                _('You cannot archive these Outgoing Mail Servers (%s) because they are still used in the following case(s):\n%s',
-                  error_server_usage, error_usage_details))
+                _('You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n%(usage_details)s',
+                  server_usage=error_server_usage, usage_details=error_usage_details))
         raise UserError(
-            _('You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n%s',
-              error_server_usage, error_usage_details))
+            _('You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n%(usage_details)s',
+              server_usage=error_server_usage, usage_details=error_usage_details))
 
     def _active_usages_compute(self):
         """Compute a dict server id to list of user-friendly outgoing mail servers usage of this record set.
@@ -717,8 +717,12 @@ class IrMailServer(models.Model):
         except smtplib.SMTPServerDisconnected:
             raise
         except Exception as e:
-            params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s", *params)
+            msg = _(
+                "Mail delivery failed via SMTP server '%(server)s'.\n%(exception_name)s: %(message)s",
+                server=smtp_server,
+                exception_name=e.__class__.__name__,
+                message=e,
+            )
             _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
