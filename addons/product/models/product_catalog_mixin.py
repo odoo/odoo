@@ -104,7 +104,11 @@ class ProductCatalogMixin(models.AbstractModel):
         products = self.env['product.product'].browse(product_ids)
         product_data = self._get_product_catalog_order_data(products, **kwargs)
         for product_id, data in product_data.items():
-            order_line_info[product_id] = {**default_data, **data}
+            order_line_info[product_id] = {
+                **default_data,
+                **data,
+                'productType': products.browse(product_id).type,
+            }
         return order_line_info
 
     def _get_action_add_from_catalog_extra_context(self):
