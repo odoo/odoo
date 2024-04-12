@@ -210,14 +210,17 @@ class IrQWeb(models.AbstractModel, QWeb):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
         code = self._flushText(options, indent)
+        exclude = el.get('t-exclude', False)
+        context_exclude = f".with_context(_asset_exclude='{exclude}')" if exclude else ''
         code.append(self._indent(dedent("""
-            t_call_assets_nodes = self._get_asset_nodes(%(xmlid)s, css=%(css)s, js=%(js)s, debug=values.get("debug"), async_load=%(async_load)s, defer_load=%(defer_load)s, lazy_load=%(lazy_load)s, media=%(media)s)
+            t_call_assets_nodes = self%(context_exclude)s._get_asset_nodes(%(xmlid)s, css=%(css)s, js=%(js)s, debug=values.get("debug"), async_load=%(async_load)s, defer_load=%(defer_load)s, lazy_load=%(lazy_load)s, media=%(media)s)
             for index, (tagName, attrs, content) in enumerate(t_call_assets_nodes):
                 if index:
                     yield '\\n        '
                 yield '<'
                 yield tagName
             """).strip() % {
+                'context_exclude': context_exclude,
                 'xmlid': repr(el.get('t-call-assets')),
                 'css': self._compile_bool(el.get('t-css', True)),
                 'js': self._compile_bool(el.get('t-js', True)),
@@ -260,7 +263,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id", "lang")),
+        tools.ormcache_context('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id", "lang", "_asset_exclude")),
     )
     def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
@@ -286,7 +289,11 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         files = []
         remains = []
+        # TODO Maybe turn into a parameter in master ?
+        exclude = self._context.get('_asset_exclude')
         for path, *_ in asset_paths:
+            if exclude and path.startswith(exclude):
+                continue
             ext = path.split('.')[-1]
             is_js = ext in SCRIPT_EXTENSIONS
             is_css = ext in STYLE_EXTENSIONS
