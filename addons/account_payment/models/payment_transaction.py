@@ -198,12 +198,12 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
+        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
         if self.source_transaction_id:
             for invoice in self.source_transaction_id.invoice_ids:
-                invoice.message_post(body=message)
+                invoice.message_post(body=message, author_id=author.id)
             payment_id = self.source_transaction_id.payment_id
             if payment_id:
-                payment_id.message_post(body=message)
+                payment_id.message_post(body=message, author_id=author.id)
         for invoice in self.invoice_ids:
-            invoice.message_post(body=message)
+            invoice.message_post(body=message, author_id=author.id)
