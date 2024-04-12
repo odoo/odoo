@@ -202,49 +202,55 @@ class AccountBalance(models.Model):
     ##create/get/delete_bills payment
     @api.model
     def create_bill_payment(self, bill_ids, journal_id, payment_date, payment_method_line_id):
-
         AccountMove = self.env['account.move']
         bills = AccountMove.browse(bill_ids)
 
-        # Validation
         if not bills.exists():
             raise UserError("No valid bills found with the provided IDs.")
         if any(bill.state != 'posted' for bill in bills):
             raise UserError("All bills must be posted to proceed with payment.")
 
-        total_amount = sum(bill.amount_residual for bill in bills)
-
-        # Preparing payment values
-        payment_vals = {
-            'payment_type': 'outbound',
-            'payment_method_line_id': payment_method_line_id,
-            'partner_type': 'supplier',
-            'partner_id': bills[0].partner_id.id,
-            'amount': total_amount,
-            'currency_id': bills[0].currency_id.id,
-            'date': payment_date,
+        payment_register = self.env['account.payment.register'].with_context({
+            'active_model': 'account.move',
+            'active_ids': bill_ids,
+        }).create({
+            'payment_date': payment_date,
             'journal_id': journal_id,
-            'payment_reference': ' '.join([bill.ref for bill in bills if bill.ref]),
-            'reconciled_invoice_ids': [(4, bill.id, None) for bill in bills],
-        }
+            'payment_method_line_id': payment_method_line_id,
+        })
 
-        # Creating the payment
-        payment = self.env['account.payment'].create(payment_vals)
-        payment.action_post()  # Posting the payment to validate it
+        payment_register.action_create_payments()
 
-        # Returning the created payment information
-        payment_data = {
-            'id': payment.id,
-            'amount': payment.amount,
-            'date': payment.date,
-            'partner_id': payment.partner_id.id,
-            'partner_type': payment.partner_type,
-            'payment_type': payment.payment_type,
-            'payment_method_line_id': payment.payment_method_line_id.id,
-            'journal_id': payment.journal_id.id,
-        }
+        payment_data_list = []  # Initialize an empty list to store payment data
 
-        return payment_data
+        for bill in bills:
+            # Adjust the lambda to the correct field and value for 'payable' account types
+            account_move_lines_to_reconcile = bill.line_ids.filtered(
+                lambda line: not line.reconciled and line.account_id.account_type == 'payable'
+            )
+
+            # Search for move lines linked to this bill that are not yet reconciled
+            move_lines_to_reconcile = self.env['account.move.line'].search([
+                ('move_id', 'in', bill_ids),
+                ('reconciled', '=', True),
+            ])
+
+            # Payments are linked to move lines, so you can reconcile them through move lines
+            if move_lines_to_reconcile:
+
+                for move_line in move_lines_to_reconcile:
+                    payment = move_line.payment_id
+                    payment_data = {
+                        'bill_number': move_line.move_name,
+                        'id': move_line.id,
+                        'amount': move_line.credit,
+                        'date': move_line.date,
+                        'partner_id': move_line.partner_id.id,
+                        'journal_id': move_line.journal_id.id,
+                    }
+                    payment_data_list.append(payment_data)
+
+            return payment_data_list
 
     @api.model
     def setup_payment_journal(self, journal_name, account_id, journal_type, payment_method_name):
