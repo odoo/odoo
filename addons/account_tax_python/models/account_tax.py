@@ -72,10 +72,10 @@ class AccountTaxPython(models.Model):
                 safe_eval(tax.python_applicable, local_dict, mode="exec", nocopy=True)
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
-                    "You entered invalid code %r in %r taxes\n\nError : %s",
-                    tax.python_applicable,
-                    tax_data['name'],
-                    e
+                    'You entered invalid code "%(code)s" in "%(tax_type)s" taxes\n\nError : %(error_message)s',
+                    code=tax.python_applicable,
+                    tax_type=tax_data['name'],
+                    error_message=e,
                 )) from e
             is_applicable = local_dict.get('result', False)
             if not is_applicable:
@@ -85,10 +85,10 @@ class AccountTaxPython(models.Model):
                 safe_eval(tax.python_compute, local_dict, mode="exec", nocopy=True)
             except Exception as e: # noqa: BLE001
                 raise UserError(_(
-                    "You entered invalid code %r in %r taxes\n\nError : %s",
-                    tax.python_compute,
-                    tax_data['name'],
-                    e
+                    'You entered invalid code "%(code)s" in "%(tax_type)s" taxes\n\nError : %(error_message)s',
+                    code=tax.python_compute,
+                    tax_type=tax_data['name'],
+                    error_message=e,
                 )) from e
             return local_dict.get('result', 0.0)
         return super()._eval_tax_amount(tax_data, evaluation_context)

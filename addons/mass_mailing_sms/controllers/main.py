@@ -70,8 +70,8 @@ class MailingSMSController(http.Controller):
             else:
                 blacklist_rec = request.env['phone.blacklist'].sudo().add(tocheck_number)
                 blacklist_rec._message_log(
-                    body=_('Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)',
-                           trace.mass_mailing_id.id, trace.mass_mailing_id.mailing_model_id.display_name))
+                    body=_('Blacklist through SMS Marketing unsubscribe (mailing ID: %(mailing_id)s - model: %(model)s)',
+                           mailing_id=trace.mass_mailing_id.id, model=trace.mass_mailing_id.mailing_model_id.display_name))
             lists_optin = request.env['mailing.subscription'].sudo().search([
                 ('contact_id.phone_sanitized', '=', tocheck_number),
                 ('list_id', 'not in', mailing_list_ids.ids),

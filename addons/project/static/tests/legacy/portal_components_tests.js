@@ -61,7 +61,7 @@ QUnit.module("Project", ({ beforeEach }) => {
                 assert.step("notification");
                 assert.strictEqual(
                     message,
-                    "The selected file (4B) is over the maximum allowed file size (2B)."
+                    "The selected file (4B) is larger than the maximum allowed file size (2B)."
                 );
             },
         });

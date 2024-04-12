@@ -32,6 +32,7 @@ class TestPyLint(TransactionCase):
         # custom checkers
         'sql-injection',
         'gettext-variable',
+        'gettext-placeholders',
         'raise-unlink-override',
     ]
 

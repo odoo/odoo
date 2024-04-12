@@ -560,9 +560,8 @@ export class PropertiesField extends Component {
         const dialogProps = {
             title: _t("Delete Property Field"),
             body: _t(
-                'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.',
-                this.parentName,
-                this.parentString
+                'Are you sure you want to delete this property field? It will be removed for everyone using the "%(parentName)s" %(parentFieldLabel)s.',
+                { parentName: this.parentName, parentFieldLabel: this.parentString }
             ),
             confirmLabel: _t("Delete"),
             confirm: () => {

@@ -32,7 +32,7 @@ class QrInvoiceWizard(models.TransientModel):
                 return _("No invoice could be printed in the %s format.", inv_format)
             if nb_inv == 1:
                 return _("One invoice could be printed in the %s format.", inv_format)
-            return _("%s invoices could be printed in the %s format.", nb_inv, inv_format)
+            return _("%(amount)s invoices could be printed in the %(format)s format.", amount=nb_inv, format=inv_format)
 
         if not self._context.get('active_ids'):
             raise UserError(_("No invoice was found to be printed."))

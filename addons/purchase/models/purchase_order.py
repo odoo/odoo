@@ -947,7 +947,7 @@ class PurchaseOrder(models.Model):
             if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
                 order.mail_reminder_confirmed = True
                 date_planned = order.get_localized_date_planned(confirmed_date).date()
-                order.message_post(body=_("%s confirmed the receipt will take place on %s.", order.partner_id.name, date_planned))
+                order.message_post(body=_("%(vendor)s confirmed the receipt will take place on %(date)s.", vendor=order.partner_id.name, date=date_planned))
 
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""

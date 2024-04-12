@@ -2069,13 +2069,13 @@ class AccountMove(models.Model):
                 move = self.browse(move_id)
                 error_msg += _(
                     "\n\n"
-                    "The move (%s) is not balanced.\n"
-                    "The total of debits equals %s and the total of credits equals %s.\n"
-                    "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
-                    move.display_name,
-                    format_amount(self.env, sum_debit, move.company_id.currency_id),
-                    format_amount(self.env, sum_credit, move.company_id.currency_id),
-                    move.journal_id.name)
+                    "The move (%(move)s) is not balanced.\n"
+                    "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
+                    "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move.",
+                    move=move.display_name,
+                    debit_total=format_amount(self.env, sum_debit, move.company_id.currency_id),
+                    credit_total=format_amount(self.env, sum_credit, move.company_id.currency_id),
+                    journal=move.journal_id.name)
             raise UserError(error_msg)
 
     def _get_unbalanced_moves(self, container):
@@ -3547,7 +3547,11 @@ class AccountMove(models.Model):
                 except RedirectWarning:
                     raise
                 except Exception:
-                    message = _("Error importing attachment '%s' as invoice (decoder=%s)", file_data['filename'], decoder.__name__)
+                    message = _(
+                        "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
+                        file_name=file_data['filename'],
+                        decoder=decoder.__name__,
+                    )
                     invoice.sudo().message_post(body=message)
                     _logger.exception(message)
 
@@ -4175,10 +4179,10 @@ class AccountMove(models.Model):
                 and invoice.currency_id.compare_amounts(invoice.quick_edit_total_amount, invoice.amount_total) != 0
             ):
                 validation_msgs.add(_(
-                    "The current total is %s but the expected total is %s. In order to post the invoice/bill, "
+                    "The current total is %(current_total)s but the expected total is %(expected_total)s. In order to post the invoice/bill, "
                     "you can adjust its lines or the expected Total (tax inc.).",
-                    formatLang(self.env, invoice.amount_total, currency_obj=invoice.currency_id),
-                    formatLang(self.env, invoice.quick_edit_total_amount, currency_obj=invoice.currency_id),
+                    current_total=formatLang(self.env, invoice.amount_total, currency_obj=invoice.currency_id),
+                    expected_total=formatLang(self.env, invoice.quick_edit_total_amount, currency_obj=invoice.currency_id),
                 ))
             if invoice.partner_bank_id and not invoice.partner_bank_id.active:
                 validation_msgs.add(_(
@@ -4208,7 +4212,7 @@ class AccountMove(models.Model):
 
         for move in self:
             if move.state in ['posted', 'cancel']:
-                validation_msgs.add(_('The entry %s (id %s) must be in draft.', move.name, move.id))
+                validation_msgs.add(_('The entry %(name)s (id %(id)s) must be in draft.', name=move.name, id=move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
                 validation_msgs.add(_('You need to add a line before posting.'))
             if not soft and move.auto_post != 'no' and move.date > fields.Date.context_today(self):

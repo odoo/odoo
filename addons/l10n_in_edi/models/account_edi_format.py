@@ -101,7 +101,7 @@ class AccountEdiFormat(models.Model):
                     error_message.append(_("HSN code is not set in product %s", line.product_id.name))
                 elif not re.match("^[0-9]+$", hsn_code):
                     error_message.append(_(
-                        "Invalid HSN Code (%s) in product %s", hsn_code, line.product_id.name
+                        "Invalid HSN Code (%(hsn_code)s) in product %(product)s", hsn_code=hsn_code, product=line.product_id.name,
                     ))
             else:
                 error_message.append(_("product is required to get HSN code"))

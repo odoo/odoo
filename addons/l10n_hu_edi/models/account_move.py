@@ -580,9 +580,9 @@ class AccountMove(models.Model):
         for processing_result in results['processing_results']:
             invoice = self.filtered(lambda m: str(m.l10n_hu_edi_batch_upload_index) == processing_result['index'])
             if not invoice:
-                _logger.error(_('Could not match NAV transaction_code %s, index %s to an invoice in Odoo',
-                                self[0].l10n_hu_edi_transaction_code,
-                                processing_result['index']))
+                _logger.error(_('Could not match NAV transaction_code %(code)s, index %(index)s to an invoice in Odoo',
+                                code=self[0].l10n_hu_edi_transaction_code,
+                                index=processing_result['index']))
                 continue
 
             invoice._l10n_hu_edi_process_query_transaction_result(processing_result, results['annulment_status'])

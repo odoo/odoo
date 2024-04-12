@@ -17,7 +17,7 @@ from psycopg2.sql import Identifier, SQL, Placeholder
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique, OrderedSet
+from odoo.tools import format_list, pycompat, unique, OrderedSet
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -645,10 +645,18 @@ class IrModelFields(models.Model):
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
-                raise UserError(_("Unknown field name %r in related field %r", name, self.related))
+                raise UserError(_(
+                    'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
+                    field_name=name,
+                    related_field=self.related,
+                ))
             model_name = field.relation
             if index < last and not field.relation:
-                raise UserError(_("Non-relational field name %r in related field %r", name, self.related))
+                raise UserError(_(
+                    'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
+                    field_name=name,
+                    related_field=self.related,
+                ))
         return field
 
     @api.constrains('related')
@@ -657,9 +665,17 @@ class IrModelFields(models.Model):
             if rec.state == 'manual' and rec.related:
                 field = rec._related_field()
                 if field.ttype != rec.ttype:
-                    raise ValidationError(_("Related field %r does not have type %r", rec.related, rec.ttype))
+                    raise ValidationError(_(
+                        'Related field "%(related_field)s" does not have type "%(type)s"',
+                        related_field=rec.related,
+                        type=rec.ttype,
+                    ))
                 if field.relation != rec.relation:
-                    raise ValidationError(_("Related field %r does not have comodel %r", rec.related, rec.relation))
+                    raise ValidationError(_(
+                        'Related field "%(related_field)s" does not have comodel "%(comodel)s"',
+                        related_field=rec.related,
+                        comodel=rec.relation,
+                    ))
 
     @api.onchange('related')
     def _onchange_related(self):
@@ -702,9 +718,17 @@ class IrModelFields(models.Model):
                         raise UserError(_("Compute method cannot depend on field 'id'"))
                     field = model._fields.get(name)
                     if field is None:
-                        raise UserError(_("Unknown field %r in dependency %r", name, seq.strip()))
+                        raise UserError(_(
+                            'Unknown field "%(field)s" in dependency "%(dependency)s"',
+                            field=name,
+                            dependency=seq.strip(),
+                        ))
                     if index < last and not field.relational:
-                        raise UserError(_("Non-relational field %r in dependency %r", name, seq.strip()))
+                        raise UserError(_(
+                            'Non-relational field "%(field)s" in dependency "%(dependency)s"',
+                            field=name,
+                            dependency=seq.strip(),
+                        ))
                     model = model[name]
 
     @api.onchange('compute')
@@ -871,8 +895,8 @@ class IrModelFields(models.Model):
             if not uninstalling:
                 field, dep = failed_dependencies[0]
                 raise UserError(_(
-                    "The field '%s' cannot be removed because the field '%s' depends on it.",
-                    field, dep,
+                    "The field '%(field)s' cannot be removed because the field '%(other_field)s' depends on it.",
+                    field=field, other_field=dep,
                 ))
             else:
                 self = self.union(*[
@@ -902,9 +926,9 @@ class IrModelFields(models.Model):
         except Exception:
             if not uninstalling:
                 raise UserError(_(
-                    "Cannot rename/delete fields that are still present in views:\nFields: %s\nView: %s",
-                    ", ".join(str(f) for f in fields),
-                    view.name,
+                    "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
+                    fields=format_list(self.env, [str(f) for f in fields]),
+                    view=view.name,
                 ))
             else:
                 # uninstall mode
@@ -984,7 +1008,7 @@ class IrModelFields(models.Model):
                     ('model', '=', vals['relation']),
                     ('name', '=', vals['relation_field']),
                 ]):
-                    raise UserError(_("Many2one %s on model %s does not exist!", vals['relation_field'], vals['relation']))
+                    raise UserError(_("Many2one %(field)s on model %(model)s does not exist!", field=vals['relation_field'], model=vals['relation']))
 
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
@@ -1709,8 +1733,8 @@ class IrModelSelection(models.Model):
             else:
                 # this shouldn't happen... simply a sanity check
                 raise ValueError(_(
-                    "The ondelete policy %r is not valid for field %r",
-                    ondelete, selection
+                    'The ondelete policy "%(policy)s" is not valid for field "%(field)s"',
+                    policy=ondelete, field=selection,
                 ))
 
     def _get_records(self):
@@ -2222,7 +2246,7 @@ class IrModelData(models.Model):
         if self.env[model].search([('id', '=', res_id)]):
             return model, res_id
         if raise_on_access_error:
-            raise AccessError(_('Not enough access rights on the external ID %r', '%s.%s', (module, xml_id)))
+            raise AccessError(_('Not enough access rights on the external ID "%(module)s.%(xml_id)s"', module=module, xml_id=xml_id))
         return model, False
 
     def copy_data(self, default=None):

@@ -238,7 +238,7 @@ class AccountMove(models.Model):
             error_msg = ""
             for move, error_list in errors:
                 error_list = '\n'.join(error_list)
-                error_msg += _("Invalid invoice configuration on %s:\n%s\n\n", move, error_list)
+                error_msg += _("Invalid invoice configuration on %(invoice)s:\n%(error_list)s\n\n", invoice=move, error_list=error_list)
             raise UserError(error_msg)
         return {
             'type': 'ir.actions.client',

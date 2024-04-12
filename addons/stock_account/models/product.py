@@ -38,12 +38,12 @@ class ProductTemplate(models.Model):
 
                 # Empty out the stock with the current cost method.
                 description = _(
-                    "Due to a change of product category (from %s to %s), the costing method has changed for product template %s: from %s to %s.",
-                    product_template.categ_id.display_name,
-                    new_product_category.display_name,
-                    product_template.display_name,
-                    product_template.cost_method,
-                    new_product_category.property_cost_method)
+                    "Due to a change of product category (from %(old_category)s to %(new_category)s), the costing method has changed for product %(product)s: from %(old_method)s to %(new_method)s.",
+                    old_category=product_template.categ_id.display_name,
+                    new_category=new_product_category.display_name,
+                    product=product_template.display_name,
+                    old_method=product_template.cost_method,
+                    new_method=new_product_category.property_cost_method)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
@@ -252,7 +252,11 @@ class ProductProduct(models.Model):
             svl_vals = {
                 'company_id': company_id.id,
                 'product_id': product.id,
-                'description': _('Product value manually modified (from %s to %s)', product.standard_price, rounded_new_price),
+                'description': _(
+                    'Product value manually modified (from %(original_price)s to %(new_price)s)',
+                    original_price=product.standard_price,
+                    new_price=rounded_new_price,
+                ),
                 'value': value,
                 'quantity': 0,
             }
@@ -739,9 +743,7 @@ class ProductCategory(models.Model):
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
         First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.
-        """,
-        tracking=True,
-    )
+        """)
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
@@ -868,12 +870,12 @@ class ProductCategory(models.Model):
                 # Empty out the stock with the current cost method.
                 if new_cost_method:
                     description = _(
-                        "Costing method change for product category %s: from %s to %s.",
-                        product_category.display_name, product_category.property_cost_method, new_cost_method)
+                        "Costing method change for product category %(category)s: from %(old_method)s to %(new_method)s.",
+                        category=product_category.display_name, old_method=product_category.property_cost_method, new_method=new_cost_method)
                 else:
                     description = _(
-                        "Valuation method change for product category %s: from %s to %s.",
-                        product_category.display_name, product_category.property_valuation, new_valuation)
+                        "Valuation method change for product category %(category)s: from %(old_method)s to %(new_method)s.",
+                        category=product_category.display_name, old_method=product_category.property_valuation, new_method=new_valuation)
                 out_svl_vals_list, products_orig_quantity_svl, products = Product\
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)

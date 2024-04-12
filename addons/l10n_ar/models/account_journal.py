@@ -150,7 +150,7 @@ class AccountJournal(models.Model):
             j.l10n_ar_afip_pos_system not in ['II_IM', 'RLI_RLM', 'RAW_MAW'])
         if journals:
             raise ValidationError("\n".join(
-                _("The pos system %s can not be used on a purchase journal (id %s)", x.l10n_ar_afip_pos_system, x.id)
+                _("The pos system %(system)s can not be used on a purchase journal (id %(id)s)", system=x.l10n_ar_afip_pos_system, id=x.id)
                 for x in journals
             ))
 

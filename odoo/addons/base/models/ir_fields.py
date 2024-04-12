@@ -461,9 +461,9 @@ class IrFieldsConverter(models.AbstractModel):
             if ids:
                 if len(ids) > 1:
                     warnings.append(ImportWarning(_(
-                        "Found multiple matches for value %r in field %%(field)r (%d matches)",
-                        str(value).replace('%', '%%'),
-                        len(ids),
+                        'Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)',
+                        value=str(value).replace('%', '%%'),
+                        match_count=len(ids),
                     )))
                 id, _name = ids[0]
             else:
