@@ -372,9 +372,11 @@ class StockMoveLine(models.Model):
         if updates or 'product_uom_qty' in vals:
             for ml in self.filtered(lambda ml: ml.state in ['partially_available', 'assigned'] and ml.product_id.type == 'product'):
 
-                if 'product_uom_qty' in vals:
-                    new_product_uom_qty = ml.product_uom_id._compute_quantity(
-                        vals['product_uom_qty'], ml.product_id.uom_id, rounding_method='HALF-UP')
+                if 'product_uom_qty' in vals or 'product_uom_id' in vals:
+                    new_ml_uom = updates.get('product_uom_id', ml.product_uom_id)
+                    new_product_uom_qty = new_ml_uom._compute_quantity(
+                        vals.get('product_uom_qty', ml.product_uom_qty), ml.product_id.uom_id, rounding_method='HALF-UP')
+
                     # Make sure `product_uom_qty` is not negative.
                     if float_compare(new_product_uom_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
