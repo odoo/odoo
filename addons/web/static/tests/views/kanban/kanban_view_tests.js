@@ -8933,6 +8933,45 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("kanban with colorpicker and node with color attribute", async (assert) => {
+        serverData.models.category.fields.colorpickerField = {
+            string: "Color index",
+            type: "integer",
+        };
+
+        serverData.models.category.records[0].colorpickerField = 3;
+
+        await makeView({
+            type: "kanban",
+            resModel: "category",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="colorpickerField"/>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <div class="oe_kanban_colorpicker" data-field="colorpickerField"/>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div color="colorpickerField">
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(route, { method, args }) {
+                if (method === "web_save") {
+                    assert.step(`write-color-${args[1].colorpickerField}`);
+                }
+            },
+        });
+        assert.hasClass(getCard(target, 0).querySelector("[color='colorpickerField']"), "oe_kanban_color_3");
+        await toggleRecordDropdown(target, 0);
+        await click(target, '.oe_kanban_colorpicker li[title="Raspberry"] a.oe_kanban_color_9');
+        assert.verifySteps(["write-color-9"], "should write on the color field");
+        assert.hasClass(getCard(target, 0).querySelector("[color='colorpickerField']"), "oe_kanban_color_9");
+    });
+
     QUnit.test("colorpicker doesnt appear when missing access rights", async (assert) => {
         await makeView({
             type: "kanban",
