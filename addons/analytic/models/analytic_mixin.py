@@ -32,7 +32,8 @@ class AnalyticMixin(models.AbstractModel):
         if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
             query = fr"""
                 CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_accounts_gin_index
-                                        ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'));
+                                        ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'))
+                                    WHERE jsonb_typeof(analytic_distribution) = 'object'
             """
             self.env.cr.execute(query)
         super().init()
