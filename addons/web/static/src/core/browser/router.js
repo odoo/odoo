@@ -232,7 +232,7 @@ export function startRouter() {
         reload: false,
         state: {},
     };
-    _lockedKeys = new Set(["debug"]);
+    _lockedKeys = new Set(["debug", "lang"]);
 }
 
 /**
