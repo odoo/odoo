@@ -124,9 +124,9 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._log_message_on_linked_documents(message)
-        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
+        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
         for order in self.sale_order_ids or self.source_transaction_id.sale_order_ids:
-            order.message_post(body=message)
+            order.message_post(body=message, author_id=author.id)
 
 
     def _send_invoice(self):
