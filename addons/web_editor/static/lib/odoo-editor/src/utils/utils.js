@@ -1142,7 +1142,7 @@ export const padLinkWithZws = (editable, link) => {
         // never in a nav.
         return;
     }
-    const selection = editable.ownerDocument.getSelection();
+    const selection = editable.ownerDocument.getSelection() || {};
     const { anchorOffset, focusOffset } = selection;
     let extraAnchorOffset = 0;
     let extraFocusOffset = 0;
