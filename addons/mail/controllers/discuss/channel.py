@@ -42,9 +42,16 @@ class ChannelController(http.Controller):
     @add_guest_to_context
     def discuss_channel_info(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
+        allChannels = request.env["discuss.channel"].search([("channel_type", "=", channel.channel_type)])
+        filteredChannels = request.env["discuss.channel"].browse([])
+        if allChannels:
+            for record in allChannels:
+                if record.create_date.date() == channel.create_date.date():
+                    filteredChannels |= record
+
+        if not filteredChannels:
             return
-        return channel._channel_info()[0]
+        return filteredChannels._channel_info()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

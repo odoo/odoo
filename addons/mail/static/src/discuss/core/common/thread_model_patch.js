@@ -88,6 +88,10 @@ const threadPatch = {
             const data = await rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
                 this.update(data);
+                for (let index = 0; index < data.length; index++) {
+                    const newThread = this.store.Thread.insert(data[index]);
+                    newThread.isLocallyPinned = true;
+                }
             } else {
                 this.delete();
             }
