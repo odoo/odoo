@@ -363,6 +363,7 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
+    columnWidth: ({ type }) => (type === "datetime" ? 304 : 190),
 };
 
 registry

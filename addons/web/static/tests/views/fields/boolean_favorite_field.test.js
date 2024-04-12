@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -198,6 +199,29 @@ test.tags("desktop")("FavoriteField in editable list view without label", async 
     expect(`.o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star-o`).toHaveCount(1, {
         message: "should not be favorite",
     });
+});
+
+test.tags("desktop")("FavoriteField in list has a fixed width if no label", async () => {
+    onRpc("has_group", () => true);
+    Partner._fields.char = fields.Char();
+
+    await mountView({
+        resModel: "partner",
+        type: "list",
+        arch: `
+            <tree editable="bottom">
+                <field name="bar" widget="boolean_favorite" nolabel="1"/>
+                <field name="bar" widget="boolean_favorite"/>
+                <field name="char"/>
+            </tree>
+        `,
+    });
+    const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
+    const columnLabels = queryAllTexts(".o_list_table thead th");
+    expect(columnWidths[1]).toBe(29);
+    expect(columnLabels[1]).toBe("");
+    expect(columnWidths[2]).toBeGreaterThan(29);
+    expect(columnLabels[2]).toBe("Bar");
 });
 
 test("FavoriteField in kanban view with readonly attribute", async () => {
