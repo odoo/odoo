@@ -1112,9 +1112,8 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 }
 export const isLinkEligibleForZwnbsp = link => {
-    return !(
-        link.textContent.trim() === '' ||
-        [link, ...link.querySelectorAll('*')].some(isBlock) ||
+    return link.isContentEditable && !(
+        [link, ...link.querySelectorAll('*')].some(el => el.nodeName === 'IMG' || isBlock(el)) ||
         link.matches('nav a, a.nav-link')
     )
 }

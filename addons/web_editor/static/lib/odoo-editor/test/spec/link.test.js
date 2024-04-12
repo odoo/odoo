@@ -790,8 +790,8 @@ describe('Link', () => {
             });
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a<a href="exist"></a>b</p>',
-                contentBeforeEdit: '<p>a<a href="exist"></a>b</p>',
-                contentAfterEdit: '<p>a<a href="exist"></a>b</p>',
+                contentBeforeEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
+                contentAfterEdit: '<p>a\ufeff<a href="exist">\ufeff</a>\ufeffb</p>',
                 contentAfter: '<p>ab</p>',
             });
         });
