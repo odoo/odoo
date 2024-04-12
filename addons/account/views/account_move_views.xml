@@ -826,6 +826,12 @@
                                         <span class="o_stat_text">Cash Basis Entries</span>
                                     </div>
                             </button>
+                            <button type="object" class="oe_stat_button" name="action_view_lpc_notes" icon="fa-plus" invisible="lpc_note_sum == 0">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="lpc_note_sum"/></span>
+                                    <span class="o_stat_text">Late Pay Charges</span>
+                                </div>
+                            </button>
                         </div>
 
                         <!-- Payment status for invoices / receipts -->

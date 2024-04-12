@@ -618,6 +618,11 @@ class AccountMove(models.Model):
 
     taxes_legal_notes = fields.Html(string='Taxes Legal Notes', compute='_compute_taxes_legal_notes')
 
+    # === Late payment charge (lpc) fields === #
+    lpc_origin_id = fields.Many2one('account.move', readonly=True, copy=False, index='btree_not_null')
+    lpc_note_ids = fields.One2many('account.move', 'lpc_origin_id')
+    lpc_note_sum = fields.Monetary('Total amount of Late payment', compute='_compute_lpc_note_sum')
+
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",
     )]
@@ -1819,6 +1824,14 @@ class AccountMove(models.Model):
                 for tax in OrderedSet(move.line_ids.tax_ids)
                 if not is_html_empty(tax.invoice_legal_notes)
             )
+
+    @api.depends('lpc_note_ids')
+    def _compute_lpc_note_sum(self):
+        data = self.env['account.move']._read_group([('lpc_origin_id', 'in', self.ids)],
+                                                        ['lpc_origin_id'], ['amount_total_signed:sum'])
+        data_map = {lpc_origin.id: total_amount for lpc_origin, total_amount in data}
+        for inv in self:
+            inv.lpc_note_sum = abs(data_map.get(inv.id, 0.0))
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -4541,6 +4554,16 @@ class AccountMove(models.Model):
         if other_moves:
             other_moves._post(soft=False)
         return False
+
+    def action_view_lpc_notes(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Late Pay Charges'),
+            'res_model': 'account.move',
+            'view_mode': 'tree,form',
+            'domain': [('lpc_origin_id', '=', self.id)],
+        }
 
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present

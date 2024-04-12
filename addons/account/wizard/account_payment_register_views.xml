@@ -12,6 +12,8 @@
                     <field name="can_edit_wizard" invisible="1" force_save="1"/>
                     <field name="can_group_payments" invisible="1" force_save="1"/>
                     <field name="early_payment_discount_mode" invisible="1" force_save="1"/>
+                    <field name="lpc_eligibility" invisible="1" force_save="1"/>
+                    <field name="lpc_product_id" invisible="1" force_save="1"/>
                     <field name="payment_type" invisible="1" force_save="1"/>
                     <field name="partner_type" invisible="1" force_save="1"/>
                     <field name="source_amount" invisible="1" force_save="1"/>
@@ -35,6 +37,9 @@
 
                     <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
                         <p><b>Early Payment Discount of <field name="payment_difference"/> has been applied.</b></p>
+                    </div>
+                    <div role="alert" class="alert alert-warning" invisible="not lpc_eligibility">
+                        <p><b>Late pay penalty is applied</b>, and a new debit note will be created. For more information, refer to the debit note.</p>
                     </div>
                     <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
                         <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
@@ -67,6 +72,8 @@
                                        options="{'no_create': True, 'no_open': True}"
                                        groups="base.group_multi_currency"/>
                             </div>
+                            <field name="account_lpc_income_id" invisible='lpc_product_id or not lpc_eligibility'/>
+                            <field name="account_lpc_expense_id" invisible='lpc_product_id or not lpc_eligibility'/>
                             <field name="payment_date"/>
                             <field name="communication"
                                    invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>

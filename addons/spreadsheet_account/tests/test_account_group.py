@@ -10,7 +10,7 @@ class SpreadsheetAccountGroupTest(AccountTestInvoicingCommon):
         self.assertEqual(self.env["account.account"].get_account_group([]), [])
 
     def test_fetch_account_one_group(self):
-        self.assertEqual(self.env["account.account"].get_account_group(['income_other']), [['450000']])
+        self.assertEqual(self.env["account.account"].get_account_group(['income_other']), [['450000', '451001']])
 
     def test_group_with_no_account(self):
         self.env['account.account']\
@@ -35,7 +35,7 @@ class SpreadsheetAccountGroupTest(AccountTestInvoicingCommon):
 
         self.assertEqual(
             [sorted(x) for x in self.env['account.account'].get_account_group(['income_other'])],
-            [['123', '450000', '789']],
+            [['123', '450000', '451001', '789']],
         )
 
     def test_response_is_ordered(self):

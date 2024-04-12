@@ -248,12 +248,14 @@ class AccountTestInvoicingCommon(ProductCommon):
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'income'),
-                    ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
+                    ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id),
+                    ('id', '!=', company.account_journal_interest_income_account_id.id),
                 ], limit=1),
             'default_account_expense': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'expense'),
-                    ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
+                    ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id),
+                    ('id', '!=', company.account_journal_interest_expense_account_id.id),
                 ], limit=1),
             'default_account_receivable': cls.env['ir.property'].with_company(company)._get(
                 'property_account_receivable_id', 'res.partner'

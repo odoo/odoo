@@ -731,6 +731,18 @@ class AccountChartTemplate(models.AbstractModel):
                 'code': '999997',
                 'account_type': 'income_other',
             },
+            'account_journal_interest_income_account_id': {
+                'name': _("Interest Income"),
+                'prefix': '451',
+                'code_digits': code_digits,
+                'account_type': 'income_other',
+            },
+            'account_journal_interest_expense_account_id': {
+                'name': _("Interest Expense"),
+                'prefix': '444',
+                'code_digits': code_digits,
+                'account_type': 'expense',
+            },
             'default_cash_difference_income_account_id': {
                 'name': _("Cash Difference Gain"),
                 'prefix': '999',

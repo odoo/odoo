@@ -196,6 +196,22 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.account_journal_early_pay_discount_gain_account_id',
         domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
     )
+    account_journal_late_pay_charges_expense_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Late Pay Expense',
+        readonly=False,
+        related='company_id.account_lpc_product_id.property_account_expense_id',
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+    )
+    account_journal_late_pay_charges_income_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Late Pay Income',
+        readonly=False,
+        check_company=True,
+        related='company_id.account_lpc_product_id.property_account_income_id',
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+    )
 
     # Accounts for allocation of discounts
     account_discount_income_allocation_id = fields.Many2one(
