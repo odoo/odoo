@@ -380,13 +380,12 @@ const getView = (model, args, kwargs) => {
     if (!arch) {
         throw viewNotFoundError(model._name, viewType, viewId);
     }
-    // var viewOptions = params.viewOptions || {};
     const view = parseView(model, {
         arch,
         context: kwargs.context,
     });
     if (kwargs.options.toolbar) {
-        view.toolbar = model.toolbar || {};
+        view.toolbar = model._toolbar;
     }
     if (viewId !== undefined) {
         view.id = viewId;
@@ -1232,6 +1231,7 @@ export class Model extends Array {
                     model._parent_name = previous._parent_name;
                     model._rec_name = previous._rec_name;
                     model._records = JSON.parse(JSON.stringify(previous._records));
+                    model._toolbar = JSON.parse(JSON.stringify(previous._toolbar));
                     model._views = { ...previous._views };
                 }
 
@@ -1338,6 +1338,13 @@ export class Model extends Array {
         assignArray(this.definition, value);
     }
 
+    static get _toolbar() {
+        return this.definition._toolbar;
+    }
+    static set _toolbar(value) {
+        this.definition._toolbar = value;
+    }
+
     static get _views() {
         return this.definition._views;
     }
@@ -1376,6 +1383,8 @@ export class Model extends Array {
     _rec_name = null;
     /** @type {Partial<ModelRecord>[]} */
     _records = [];
+    /** @type {Record<"print" | "action", ActionDefinition[]>} */
+    _toolbar = {};
     /** @type {Record<string, string>} */
     _views = {};
 
