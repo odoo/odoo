@@ -8,6 +8,7 @@ import { memoize } from '@web/core/utils/functions';
 import { Component, onMounted, useRef, useState, markup } from '@odoo/owl';
 import { _t } from '@web/core/l10n/translation';
 import { user } from "@web/core/user";
+import {localization} from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 
@@ -34,7 +35,10 @@ class HistoryDialog extends Component {
         revisionsData: [],
         revisionContent: null,
         revisionComparison: null,
-        revisionId: null
+        revisionContentMetadata: "",
+        revisionComparisonMetadata: "",
+        revisionId: null,
+        currentRevision: null
     });
 
     setup() {
@@ -47,7 +51,17 @@ class HistoryDialog extends Component {
     }
 
     async init() {
-        this.state.revisionsData = this.props.historyMetadata;
+        let previousLoopDate;
+        for(let metadata of this.props.historyMetadata) {
+            const date = DateTime.fromISO(metadata.create_date, { zone: 'utc' }).startOf('day').ts;
+            if(!previousLoopDate || date !== previousLoopDate) {
+                this.state.revisionsData.push({...metadata,...{detailedData:[], allRevisionIds:[]}});
+            }
+            const lasRevDataIndex = this.state.revisionsData.length - 1;
+            this.state.revisionsData[lasRevDataIndex].detailedData.push(metadata);
+            this.state.revisionsData[lasRevDataIndex].allRevisionIds.push(metadata.revision_id);
+            previousLoopDate = date;
+        }
         await this.updateCurrentRevision(this.props.historyMetadata[0]['revision_id']);
     }
 
@@ -60,9 +74,19 @@ class HistoryDialog extends Component {
             return;
         }
         this.state.revisionId = revisionId;
+        this.state.currentRevision = this.props.historyMetadata.find(entry => entry.revision_id === this.state.revisionId);
         this.state.revisionContent = await this.getRevisionContent(revisionId);
         this.state.revisionComparison = await this.getRevisionComparison(
             revisionId
+        );
+        this.state.revisionContentMetadata = _t(
+            "This is an old version of the document, before %s changed it on %s",
+            this.state.currentRevision['create_user_name'],
+            this.getRevisionDateTime(this.state.currentRevision)
+        );
+        this.state.revisionComparisonMetadata = _t(
+            "Here you can see all the changes that occured since %s",
+            this.getRevisionDateTime(this.state.currentRevision)
         );
     }
 
@@ -98,8 +122,23 @@ class HistoryDialog extends Component {
     /**
      * Getters
      **/
-    getRevisionDate(revision) {
-        return formatDateTime(DateTime.fromISO(revision['create_date'], { zone: 'utc' }).setZone(user.tz));
+    getRevisionDate(revision, format=localization.dateFormat) {
+        if (!revision) {
+            return "";
+        }
+        return formatDateTime(
+            DateTime.fromISO(
+                revision['create_date'],
+                { zone: 'utc'}
+            ).setZone(user.tz),
+            {format: format}
+        );
+    }
+    getRevisionHour(revision) {
+        return this.getRevisionDate(revision, localization.timeFormat)
+    }
+    getRevisionDateTime(revision) {
+        return this.getRevisionDate(revision, localization.dateTimeFormat)
     }
 }
 

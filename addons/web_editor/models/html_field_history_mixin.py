@@ -137,4 +137,4 @@ class HtmlFieldHistory(models.AbstractModel):
             field_name, revision_id
         )
 
-        return generate_comparison(self[field_name] or "", restored_content)
+        return generate_comparison(restored_content, self[field_name] or "")
