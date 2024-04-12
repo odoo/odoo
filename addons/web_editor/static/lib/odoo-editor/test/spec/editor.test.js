@@ -2973,13 +2973,13 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><a>[]ab</a></p>',
                         stepFunction: editor => editor.document.execCommand('insertParagraph'),
-                        contentAfterEdit: '<p><br></p><p>\ufeff<a>[]\ufeffab\ufeff</a>\ufeff</p>',
+                        contentAfterEdit: '<p><br></p><p>\ufeff<a class="o_link_in_selection">[]\ufeffab\ufeff</a>\ufeff</p>',
                         contentAfter: '<p><br></p><p><a>[]ab</a></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>ab<a>[]cd</a></p>',
                         stepFunction: editor => editor.document.execCommand('insertParagraph'),
-                        contentAfterEdit: '<p>ab</p><p>\ufeff<a>[]\ufeffcd\ufeff</a>\ufeff</p>',
+                        contentAfterEdit: '<p>ab</p><p>\ufeff<a class="o_link_in_selection">[]\ufeffcd\ufeff</a>\ufeff</p>',
                         contentAfter: '<p>ab</p><p><a>[]cd</a></p>',
                     });
                 });
@@ -2987,7 +2987,7 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><a>a[]b</a></p>',
                         stepFunction: editor => editor.document.execCommand('insertParagraph'),
-                        contentAfterEdit: '<p>\ufeff<a>\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a>\ufeff[]b\ufeff</a>\ufeff</p>',
+                        contentAfterEdit: '<p>\ufeff<a>\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
                         contentAfter: '<p><a>a</a></p><p><a>[]b</a></p>',
                     });
                 });
