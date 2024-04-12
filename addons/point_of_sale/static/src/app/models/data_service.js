@@ -288,9 +288,8 @@ export class PosData extends Reactive {
             this.setOnline();
             return result;
         } catch (error) {
-            //FIXME sometime there is two time the same record in the queue
             const uuids = this.network.unsyncData.map((d) => d.uuid);
-            if (queue && !uuids.includes(uuid)) {
+            if (queue && !uuids.includes(uuid) && method !== "sync_from_ui") {
                 this.network.unsyncData.push({
                     args: [...arguments],
                     date: DateTime.now(),

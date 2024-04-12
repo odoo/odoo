@@ -826,6 +826,13 @@ export class PosStore extends Reactive {
     getPendingOrder() {
         // With the relational model, the record ID looks like this: pos.order_2.
         // If the ID is a string, this means that it has not yet been sent to the server.
+        const paidOrdersNotSent = this.models["pos.order"].filter(
+            (order) =>
+                order.finalized &&
+                typeof order.id === "string" &&
+                !this.pendingOrder.create.has(order.id) &&
+                !this.pendingOrder.write.has(order.id)
+        );
         const orderToCreate = this.models["pos.order"].filter(
             (order) => this.pendingOrder.create.has(order.id) && order.lines.length > 0
         );
@@ -836,6 +843,7 @@ export class PosStore extends Reactive {
         return {
             orderToCreate,
             orderToUpdate,
+            paidOrdersNotSent,
         };
     }
 
@@ -857,8 +865,8 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
-            const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-            const orders = [...orderToCreate, ...orderToUpdate];
+            const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
+            const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
             this.preSyncAllOrders(orders);
             const idsToDelete = [...this.pendingOrder.delete];
             const context = this.getSyncAllOrdersContext(orders);
