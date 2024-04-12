@@ -1,6 +1,6 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
 import {
     getService,
     makeMockEnv,
@@ -112,6 +112,8 @@ describe("useAutofocus", () => {
     test("returns also a ref when screen has touch but it does not focus", async () => {
         expect.assertions(2);
 
+        mockTouch(true);
+
         class MyComponent extends Component {
             static template = xml`
                 <span>
@@ -127,11 +129,8 @@ describe("useAutofocus", () => {
             }
         }
 
-        // TODO: mockTouch?
-        patchWithCleanup(window, { ontouchstart: () => {} });
-
         await mountWithCleanup(MyComponent);
-        expect(document.body).toBeFocused();
+        expect("input").not.toBeFocused();
     });
 
     test("works when screen has touch and you provide mobile param", async () => {

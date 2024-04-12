@@ -1,17 +1,29 @@
-import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
-export { SIZES } from "@web/core/ui/ui_service";
-export * from "./mail_test_helpers_contains";
 import { busModels } from "@bus/../tests/bus_test_helpers";
+import { mailGlobal } from "@mail/utils/common/misc";
+import { after, before, getFixture } from "@odoo/hoot";
+import { getMockEnv, restoreRegistry } from "@web/../tests/_framework/env_test_helpers";
+import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import {
     MockServer,
+    authenticate,
     defineModels,
+    getService,
+    makeMockEnv,
     makeMockServer,
     mountWithCleanup,
     patchWithCleanup,
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
+import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
+import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
+import { session } from "@web/session";
+import { WebClient } from "@web/webclient/webclient";
+import { DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
+import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
@@ -23,8 +35,8 @@ import { M2xAvatarUser } from "./mock_server/mock_models/m2x_avatar_user";
 import { MailActivity } from "./mock_server/mock_models/mail_activity";
 import { MailActivitySchedule } from "./mock_server/mock_models/mail_activity_schedule";
 import { MailActivityType } from "./mock_server/mock_models/mail_activity_type";
-import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
 import { MailCannedResponse } from "./mock_server/mock_models/mail_canned_response";
+import { MailComposeMessage } from "./mock_server/mock_models/mail_composer_message";
 import { MailFollowers } from "./mock_server/mock_models/mail_followers";
 import { MailGuest } from "./mock_server/mock_models/mail_guest";
 import { MailLinkPreview } from "./mock_server/mock_models/mail_link_preview";
@@ -41,23 +53,8 @@ import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
-import { WebClient } from "@web/webclient/webclient";
-import { browser } from "@web/core/browser/browser";
-import {
-    getMockEnv,
-    makeMockEnv,
-    restoreRegistry,
-} from "@web/../tests/_framework/env_test_helpers";
-import { cancelAllTimers } from "@odoo/hoot-mock";
-import { after, before, getFixture } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
-import { authenticate } from "@web/../tests/_framework/mock_server/mock_server";
-import { session } from "@web/session";
-import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
-import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
-import { mailGlobal } from "@mail/utils/common/misc";
-import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
-import { DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";
+export { SIZES } from "@web/core/ui/ui_service";
+export * from "./mail_test_helpers_contains";
 
 before(prepareRegistriesWithCleanup);
 export const registryNamesToCloneWithCleanup = [];
@@ -124,8 +121,8 @@ export function registerArchs(newArchs) {
 }
 
 export async function openDiscuss(activeId, { target } = {}) {
-    const env = target ?? getMockEnv();
-    await env.services.action.doAction({
+    const actionService = target?.services.action ?? getService("action");
+    await actionService.doAction({
         context: { active_id: activeId },
         id: DISCUSS_ACTION_ID,
         tag: "mail.action_discuss",
@@ -159,7 +156,6 @@ export async function openListView(resModel, params) {
 }
 
 export async function openView({ res_model, res_id, views, ...params }) {
-    const env = getMockEnv();
     const [[viewId, type]] = views;
     const action = {
         res_model,
@@ -178,7 +174,7 @@ export async function openView({ res_model, res_id, views, ...params }) {
         viewId: params?.arch || viewId,
         ...params,
     });
-    await env.services.action.doAction(action, { props: options });
+    await getService("action").doAction(action, { props: options });
 }
 /** @type {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} */
 let pyEnv;
@@ -243,12 +239,15 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
 
 let NEXT_ENV_ID = 1;
 
+/**
+ * @param {{ asTab?: boolean }} [options]
+ */
 export async function start({ asTab = false } = {}) {
     if (!MockServer.current) {
         await startServer();
     }
     let target = getFixture();
-    const pyEnv = MockServer.current.env;
+    const pyEnv = MockServer.env;
     if ("res.users" in pyEnv) {
         const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
         authenticate(adminUser.login, adminUser.password);
@@ -272,17 +271,13 @@ export async function start({ asTab = false } = {}) {
     } else {
         const envId = NEXT_ENV_ID++;
         mailGlobal.elligibleEnvs.add(envId);
-        try {
-            env = await makeMockEnv({ envId });
-        } catch {
-            env = Object.assign(getMockEnv(), { envId });
-        }
+        env = getMockEnv() || (await makeMockEnv());
+        Object.assign(env, { envId });
     }
-    const wc = await mountWithCleanup(WebClient, { target, env });
+    await mountWithCleanup(WebClient, { target, env });
     after(() => {
         mailGlobal.elligibleEnvs.clear();
     });
-    odoo.__WOWL_DEBUG__ = { root: wc };
     return Object.assign(getMockEnv(), { target });
 }
 

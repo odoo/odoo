@@ -1,13 +1,11 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/core/common/chat_window_service";
+import { describe, expect, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     SIZES,
     assertSteps,
@@ -29,10 +27,10 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+
 import { rpcWithEnv } from "@mail/utils/common/misc";
-import { mockDate } from "@odoo/hoot-mock";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -701,7 +699,7 @@ test("chat window should open when receiving a new DM", async () => {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -729,7 +727,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: serverState.odoobotId }),
         ],

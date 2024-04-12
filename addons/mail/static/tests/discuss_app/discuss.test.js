@@ -1,7 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     assertSteps,
     click,
@@ -20,13 +17,15 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { Command, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { presenceService } from "@bus/services/presence_service";
+import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+
 import { rpcWithEnv } from "@mail/utils/common/misc";
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -936,17 +935,14 @@ test("auto-focus composer on opening thread [REQUIRE FOCUS]", async () => {
 test("no out-of-focus notification on receiving self messages in chat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
-    mockService("title", () => ({
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("title", {
         setParts(parts) {
             if (parts._chat) {
                 step("set_title_part");
             }
         },
-    }));
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await contains(".o_menu_systray i[aria-label='Messages']");
@@ -979,17 +975,14 @@ test("out-of-focus notif on needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
-    mockService("title", () => ({
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("title", {
         setParts(parts) {
             if (parts._chat) {
                 step(`set_title_part:${parts._chat}`);
             }
         },
-    }));
+    });
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1027,17 +1020,14 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
-    mockService("title", () => ({
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("title", {
         setParts(parts) {
             if (parts._chat) {
                 step(`set_title_part:${parts._chat}`);
             }
         },
-    }));
+    });
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1074,21 +1064,14 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    mockService("presence", () => ({
-        start() {
-            return {
-                ...super.start(),
-                isOdooFocused: () => false,
-            };
-        },
-    }));
-    mockService("title", () => ({
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("title", {
         setParts(parts) {
             if (parts._chat) {
                 step("set_title_part");
             }
         },
-    }));
+    });
     onRpcBefore("/mail/action", async (args) => {
         if (args.init_messaging) {
             step("init_messaging");
@@ -1134,11 +1117,8 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             ],
         },
     ]);
-    mockService("presence", () => ({
-        ...presenceService.start(),
-        isOdooFocused: () => false,
-    }));
-    mockService("title", () => ({
+    mockService("presence", { isOdooFocused: () => false });
+    mockService("title", {
         setParts(parts) {
             if (!parts._chat) {
                 return;
@@ -1155,7 +1135,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
                 expect(parts._chat).toBe("3 Messages");
             }
         },
-    }));
+    });
     const env = await start();
     rpc = rpcWithEnv(env);
     await openDiscuss();

@@ -187,13 +187,13 @@ test("save filters created via autocompletion works", async () => {
 });
 
 test("favorites have unique descriptions (the submenus of the favorite menu are correctly updated)", async () => {
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, options) {
             expect.step("notification");
             expect(message).toBe("A filter with same name already exists.");
             expect(options).toEqual({ type: "danger" });
         },
-    }));
+    });
 
     onRpc("create_or_replace", ({ args, route }) => {
         expect.step(route);
@@ -247,13 +247,13 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
 });
 
 test("undefined name for filter shows notification and not error", async () => {
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, options) {
             expect.step("notification");
             expect(message).toBe("A name for your favorite filter is required.");
             expect(options).toEqual({ type: "danger" });
         },
-    }));
+    });
 
     onRpc("create_or_replace", () => 7); // fake serverSideId
 
