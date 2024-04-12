@@ -18,6 +18,7 @@ from odoo import api, models
 from odoo import registry, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.addons.http_routing.models import ir_http
@@ -220,7 +221,7 @@ class Http(models.AbstractModel):
             except pytz.UnknownTimeZoneError:
                 context.pop('tz')
 
-        request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
+        request.website = request.env(context=clean_context(request.context))['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
         # This is mainly to avoid access errors in website controllers where there is no
         # context (eg: /shop), and it's not going to propagate to the global context of the tab
@@ -241,7 +242,7 @@ class Http(models.AbstractModel):
         super(Http, cls)._add_dispatch_parameters(func)
 
         if request.routing_iteration == 1:
-            request.website = request.website.with_context(request.context)
+            request.website = request.website.with_context(clean_context(request.context))
 
     @classmethod
     def _get_frontend_langs(cls):
