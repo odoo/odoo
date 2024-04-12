@@ -7,16 +7,32 @@
     }
     &.o_grid {
         &.o_spc-none div.row {
-            margin-bottom: 0px;
+            margin-bottom: 0;
+
+            & > div {
+                padding: 0;
+            }
         }
+
         &.o_spc-small div.row > div {
-            margin-bottom: $spacer;
+            margin-bottom: $grid-gutter-width * .5;
+            padding: 0 $grid-gutter-width * .25;
         }
+
         &.o_spc-medium div.row > div {
-            margin-bottom: $spacer * 2;
+            margin-bottom: $grid-gutter-width;
+            padding: 0 $grid-gutter-width * .5;
         }
+
         &.o_spc-big div.row > div {
-            margin-bottom: $spacer * 3;
+            margin-bottom: $grid-gutter-width * 2;
+            padding: 0 $grid-gutter-width;
+        }
+
+        .img {
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
         }
     }
     &.o_masonry {
