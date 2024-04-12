@@ -86,3 +86,21 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(D.application_count, 3) # A, B, C
         self.assertEqual(E.application_count, 0) # Should not match with G
         self.assertEqual(F.application_count, 1) # B
+
+    def test_application_no_partner_duplicate(self):
+        """ Test that when applying, the existing partner
+            doesn't get duplicated.
+        """
+        applicant_data = {
+            'name': 'Test - CEO',
+            'partner_name': 'Test',
+            'email_from': 'test@thisisatest.com',
+        }
+        # First application, a partner should be created
+        self.env['hr.applicant'].create(applicant_data)
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        self.assertEqual(partner_count, 1)
+        # Second application, no partner should be created
+        self.env['hr.applicant'].create(applicant_data)
+        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
+        self.assertEqual(partner_count, 1)
