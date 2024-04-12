@@ -1873,9 +1873,11 @@ class IrModelConstraint(models.Model):
             conname = '%s_%s' % (model._table, key)
             module = constraint_module.get(key)
             record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
+            xml_id = '%s.constraint_%s' % (module, conname)
             if record:
-                xml_id = '%s.constraint_%s' % (module, conname)
                 data_list.append(dict(xml_id=xml_id, record=record))
+            else:
+                self.env['ir.model.data']._load_xmlid(xml_id)
         if data_list:
             self.env['ir.model.data']._update_xmlids(data_list)
 
