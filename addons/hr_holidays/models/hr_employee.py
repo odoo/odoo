@@ -385,7 +385,11 @@ class HrEmployee(models.Model):
     @api.model
     def _get_contextual_employee(self):
         ctx = self.env.context
-        return self.browse(ctx.get('employee_id') or ctx.get('default_employee_id')) or self.env.user.employee_id
+        if 'employee_id' in ctx:
+            return self.browse(ctx.get('employee_id'))
+        if 'default_employee_id' in ctx:
+            return self.browse(ctx.get('default_employee_id'))
+        return self.env.user.employee_id
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
         employees = self or self._get_contextual_employee()

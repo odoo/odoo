@@ -1168,3 +1168,37 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_status_id = self.holidays_type_2
         leave = leave_form.save()
         self.assertEqual(leave.number_of_days, 1.0)
+
+    def test_filter_time_off_type_multiple_employees(self):
+        """ This test mimics the behavior of creating time off for multiple employees.
+        We check that the time off types that the user can select are correct.
+        In this example, we use a time off type that requires allocations.
+        Only the current user has an allocation for the time off type.
+        This time off type should not appear when multiple employees are select (user included or not).
+        """
+        self.assertFalse(self.env['hr.leave.allocation'].search([['holiday_status_id', '=', self.holidays_type_2.id]]))
+
+        self.env.user.employee_id = self.employee_hruser_id
+        allocation = self.env['hr.leave.allocation'].create({
+            'holiday_type': 'employee',
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'allocation_type': 'regular'
+        })
+
+        self.assertEqual(allocation.state, 'validate')
+
+        search_domain = ['|',
+                        ['requires_allocation', '=', 'no'],
+                        '&',
+                            ['has_valid_allocation', '=', True],
+                            '&',
+                                ['max_leaves', '>', '0'],
+                                '|',
+                                ['allows_negative', '=', True],
+                                '&',
+                                    ['virtual_remaining_leaves', '>', 0],
+                                    ['allows_negative', '=', False]]
+
+        search_result = self.env['hr.leave.type'].with_context(employee_id=False).name_search(args=search_domain)
+        self.assertFalse(self.holidays_type_2.id in [alloc_id for (alloc_id, _) in search_result])
