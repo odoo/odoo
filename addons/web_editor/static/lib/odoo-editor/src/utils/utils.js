@@ -510,11 +510,13 @@ export function insertSelectionChars(anchorNode, anchorOffset, focusNode, focusO
  * the selection.
  *
  * @param {Element} root
- * @param {Selection} [sel] if undefined, the current selection is used.
- * @param {boolean} [doFormat=false] if true, the HTML is formatted.
+ * @param {Object} [options={}]
+ * @param {Selection} [options.selection] if undefined, the current selection is used.
+ * @param {boolean} [options.doFormat] if true, the HTML is formatted.
+ * @param {boolean} [options.includeOids] if true, the HTML is formatted.
  */
-export function logSelection(root, sel, doFormat = false) {
-    sel = sel || root.ownerDocument.getSelection();
+export function logSelection(root, options = {}) {
+    const sel = options.selection || root.ownerDocument.getSelection();
     if (!root.contains(sel.anchorNode) || !root.contains(sel.focusNode)) {
         console.warn('The selection is not contained in the root.');
         return;
@@ -524,6 +526,9 @@ export function logSelection(root, sel, doFormat = false) {
     let anchorClone, focusClone;
     const cloneTree = node => {
         const clone = node.cloneNode();
+        if (options.includeOids) {
+            clone.oid = node.oid;
+        }
         anchorClone = anchorClone || (node === sel.anchorNode && clone);
         focusClone = focusClone || (node === sel.focusNode && clone);
         for (const child of node.childNodes || []) {
@@ -540,7 +545,7 @@ export function logSelection(root, sel, doFormat = false) {
     rootClone.removeAttribute('data-last-history-steps');
 
     // Format the HTML by splitting and indenting to highlight the structure.
-    if (doFormat) {
+    if (options.doFormat) {
         const formatHtml = (node, spaces = 0) => {
             node.before(document.createTextNode('\n' + ' '.repeat(spaces)));
             for (const child of [...node.childNodes]) {
@@ -548,6 +553,13 @@ export function logSelection(root, sel, doFormat = false) {
             }
             if (node.nodeType !== Node.TEXT_NODE) {
                 node.appendChild(document.createTextNode('\n' + ' '.repeat(spaces)));
+            }
+            if (options.includeOids) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    node.textContent += ` (${node.oid})`;
+                } else {
+                    node.setAttribute('oid', node.oid);
+                }
             }
         }
         formatHtml(rootClone);
