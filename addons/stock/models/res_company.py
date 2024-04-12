@@ -217,11 +217,12 @@ class Company(models.Model):
         if not self.env.user.has_group('base.group_multi_company'):
             return
         other_companies = self.env['res.company'].search([('id', '!=', self.id)])
+        other_companies.partner_id.with_company(self).write({
+            'property_stock_customer': inter_company_location.id,
+            'property_stock_supplier': inter_company_location.id,
+        })
         for company in other_companies:
-            company.partner_id.with_company(self).write({
-                'property_stock_customer': inter_company_location.id,
-                'property_stock_supplier': inter_company_location.id,
-            })
+            # Still need to insert those one by one, as the env company must be different every time
             self.partner_id.with_company(company).write({
                 'property_stock_customer': inter_company_location.id,
                 'property_stock_supplier': inter_company_location.id,
