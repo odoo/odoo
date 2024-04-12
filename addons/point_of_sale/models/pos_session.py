@@ -1912,8 +1912,7 @@ class PosSession(models.Model):
         ])
 
     def get_onboarding_data(self):
-        response = self.load_data(['pos.category', 'product.product'], True)
-        response['data']['pos.order'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
+        response = self.load_data(['pos.category', 'product.product', 'pos.order'], True)
         return response['data']
 
     def _get_attributes_by_ptal_id(self):
