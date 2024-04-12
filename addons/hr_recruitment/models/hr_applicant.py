@@ -320,23 +320,17 @@ class Applicant(models.Model):
             if not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(_('You must define a Contact Name for this applicant.'))
-                applicant.partner_id = self.env['res.partner'].create({
-                    'is_company': False,
-                    'name': applicant.partner_name,
-                    'email': applicant.email_from,
-                    'mobile': applicant.partner_mobile,
-                    'phone': applicant.partner_phone,
-                })
-            else:
-                if applicant.email_from and \
-                    tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
-                    # change email on a partner will trigger other heavy code, so avoid to change the email when
-                    # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
-                    applicant.partner_id.email = applicant.email_from
-                if applicant.partner_mobile:
-                    applicant.partner_id.mobile = applicant.partner_mobile
-                if applicant.partner_phone:
-                    applicant.partner_id.phone = applicant.partner_phone
+                applicant.partner_id = self.env['res.partner'].find_or_create(applicant.email_from)
+            if applicant.partner_name and not applicant.partner_id.name:
+                applicant.partner_id.name = applicant.partner_name
+            if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
+                # change email on a partner will trigger other heavy code, so avoid to change the email when
+                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+                applicant.partner_id.email = applicant.email_from
+            if applicant.partner_mobile:
+                applicant.partner_id.mobile = applicant.partner_mobile
+            if applicant.partner_phone:
+                applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends('partner_phone')
     def _compute_partner_phone_sanitized(self):
