@@ -5,21 +5,29 @@
 export class DataServiceOptions {
     get databaseTable() {
         return [
-            { name: "pos.order", key: "uuid", condition: (record) => record.finalized },
+            {
+                name: "pos.order",
+                key: "uuid",
+                condition: (record) => record.finalized && typeof record.id === "number",
+            },
             {
                 name: "pos.order.line",
                 key: "uuid",
-                condition: (record) => record.order_id?.finalized,
+                condition: (record) =>
+                    record.order_id?.finalized && typeof record.order_id.id === "number",
             },
             {
                 name: "pos.payment",
                 key: "uuid",
-                condition: (record) => record.pos_order_id?.finalized,
+                condition: (record) =>
+                    record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
             {
                 name: "pos.pack.operation.lot",
                 key: "id",
-                condition: (record) => record.pos_order_line_id?.order_id?.finalized,
+                condition: (record) =>
+                    record.pos_order_line_id?.order_id?.finalized &&
+                    typeof record.pos_order_line_id.order_id.id === "number",
             },
             {
                 name: "product.product",
