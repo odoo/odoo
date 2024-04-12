@@ -815,6 +815,37 @@ class TestMrpOrder(TestMrpCommon):
         self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.reserved_uom_qty')), 0)
 
+    def test_product_produce_7(self):
+        """ Plan 2 finished products, reserve and produce 3. Post the current production.
+        Simulate an unlock and edit and, on the opened moves, set the consumed quantity
+        to 5, and to 4. Check the component quantity removed from inventory is correct."""
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, _, _, p1, p2 = self.generate_mo(qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 20)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 2
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(sum(mo.move_finished_ids.move_line_ids.mapped('qty_done')), 2)
+        self.assertTrue(mo.is_locked)
+
+        mo.action_toggle_is_locked()
+        self.assertFalse(mo.is_locked)
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5
+        mo = mo_form.save()
+        self.assertAlmostEqual(sum(mo.move_finished_ids.move_line_ids.mapped('qty_done')), 5)
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 4
+        mo = mo_form.save()
+        self.assertAlmostEqual(sum(mo.move_finished_ids.move_line_ids.mapped('qty_done')), 4)
+
     def test_consumption_strict_1(self):
         """ Checks the constraints of a strict BOM without tracking when playing around
         quantities to consume."""
