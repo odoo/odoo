@@ -2,6 +2,7 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
+from odoo.tools import float_compare
 
 class TestReturnPicking(TestStockCommon):
 
@@ -207,3 +208,31 @@ class TestReturnPicking(TestStockCommon):
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         self.assertEqual(stock_return_picking.product_return_moves.quantity, 6)
+
+    def test_stock_return_a_fifth_of_UOM(self):
+        product = self.productA
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_kg.rounding = 0.01
+        product.uom_id = uom_kg
+        delivery_picking = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move = self.MoveObj.create({
+            'name': "OUT move",
+            'product_id': self.productA.id,
+            'product_uom_qty': 0.2,
+            'picking_id': delivery_picking.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        out_move.quantity = 0.2
+        delivery_picking.button_validate()
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=delivery_picking.id, active_model='stock.picking').create({})
+        res = return_wizard.create_returns()
+        return_picking = self.PickingObj.browse(res["res_id"])
+        self.assertEqual(float_compare(return_picking.move_ids.quantity, 0.2, precision_rounding=0.01), 0,
+                         "return quantity should be equal to delivered quantity: 0.2 kg")
+        self.assertEqual(return_picking.move_ids.quantity, out_move.quantity)
+        return_picking.button_validate()
