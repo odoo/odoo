@@ -917,6 +917,7 @@ export class OdooEditor extends EventTarget {
 
         // sanitize and mark current position as sanitized
         sanitize(target, this.editable);
+        this._resetLinkInSelection();
         this._pluginCall('sanitizeElement',
                          [target.parentElement || target]);
         this.options.onPostSanitize(target);
@@ -4162,19 +4163,7 @@ export class OdooEditor extends EventTarget {
             // re-trigger the _onSelectionChange.
             return;
         }
-        // Apply the o_link_in_selection class if the selection is in a single
-        // link, remove it otherwise.
-        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
-            .map(node => closestElement(node, 'a:not(.btn)'));
-        const singleLinkInSelection = anchorLink === focusLink && anchorLink;
-        if (singleLinkInSelection && isLinkEligibleForZwnbsp(singleLinkInSelection)) {
-            singleLinkInSelection.classList.add('o_link_in_selection');
-        }
-        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
-            if (link !== singleLinkInSelection) {
-                link.classList.remove('o_link_in_selection');
-            }
-        };
+        this._resetLinkInSelection();
         // Compute the current selection on selectionchange but do not record it. Leave
         // that to the command execution or the 'input' event handler.
         this._computeHistorySelection();
@@ -4191,6 +4180,24 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    /**
+     * Apply the o_link_in_selection class if the selection is in a single link,
+     * remove it otherwise.
+     */
+    _resetLinkInSelection() {
+        const selection = this.document.getSelection();
+        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+            .map(node => closestElement(node, 'a:not(.btn)'));
+        const singleLinkInSelection = anchorLink === focusLink && anchorLink && isLinkEligibleForZwnbsp(this.editable, anchorLink) && anchorLink;
+        if (singleLinkInSelection) {
+            singleLinkInSelection.classList.add('o_link_in_selection');
+        }
+        for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
+            if (link !== singleLinkInSelection) {
+                link.classList.remove('o_link_in_selection');
+            }
+        };
+    }
     /**
      * Returns true if the current selection is inside the editable.
      *
