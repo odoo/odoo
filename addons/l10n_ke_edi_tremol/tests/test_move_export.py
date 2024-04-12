@@ -40,7 +40,7 @@ class TestKeMoveExport(AccountTestInvoicingCommon):
         msg = b'1' + b';'.join([                       # 0x31, command to add a line
             line_dict.get('name', b''.ljust(36)),      # 36 characters for the name
             line_dict.get('vat_class', b'A'),          # 1 symbol for vat class (a because the tax is 16.0%)
-            line_dict.get('price', b'1'),              # up to 13 symbols for the unit price, tax included
+            line_dict.get('price', b'1'),              # up to 15 symbols for the unit price, tax included (up to 5 decimal places)
             line_dict.get('uom', b'   '),              # 3 symbols for uom
             line_dict.get('item_code', b''.ljust(10)), # 10 symbols for item code (only reported when the tax is not 16.0%)
             line_dict.get('item_desc', b''.ljust(20)), # item description (only reported when the tex is not 16.0%)
