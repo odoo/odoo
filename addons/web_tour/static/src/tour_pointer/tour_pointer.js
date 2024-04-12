@@ -108,7 +108,11 @@ export class TourPointer extends Component {
                         lastAnchor = anchor;
                         el.style.bottom = "";
                         el.style.right = "";
-                        reposition(anchor, el, null, {
+                        const iframe = [...el.ownerDocument.getElementsByTagName("iframe")].find(
+                            (iframe) =>
+                                iframe.contentDocument && iframe.contentDocument.contains(anchor)
+                        );
+                        reposition(anchor, el, iframe, {
                             position: this.position,
                             margin: 6,
                             onPositioned: (popper, position) => {
