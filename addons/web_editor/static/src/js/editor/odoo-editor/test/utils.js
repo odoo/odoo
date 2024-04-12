@@ -288,6 +288,8 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     });
     const selection = parseTextualSelection(testNode);
 
+    // We disable the `toSanitize` option so we set the test selection on the
+    // raw, unsanitized HTML. We'll sanitize after having set the selection.
     const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
     let error = false;
     try {
@@ -295,13 +297,26 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
         editor.testMode = true;
         if (selection) {
             await setTestSelection(selection);
-            editor._recordHistorySelection();
         } else {
             document.getSelection().removeAllRanges();
         }
 
-        // we have to sanitize after having put the cursor
+        // Now the selection is set we can finally sanitize.
         sanitize(editor.editable);
+
+        // In normal circumstances the editor sanitizes its content in its
+        // constructor, before initializing the history. For the purposes of
+        // setting the test's selection, we only sanitize now, which means the
+        // changes made by `sanitize` are included in a step (which could well
+        // be rolled back if what the step function does triggers it), and the
+        // sanitization can be undone. This is not how the editor normally
+        // behaves. To make it closer to reality, we now reset the history.
+        editor.historyReset();
+        editor.historyStep();
+
+        if (selection) {
+            editor._recordHistorySelection();
+        }
 
         if (spec.contentBeforeEdit) {
             if (spec.removeCheckIds) {
