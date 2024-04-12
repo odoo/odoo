@@ -315,14 +315,11 @@ export class MockServer {
             this.configure(params);
         }
 
-        const restoreFetch = mockFetch((input, init) => this.handle(input, init));
-        const restoreWebSocket = mockWebSocket((ws) => this.websockets.push(ws));
+        mockFetch((input, init) => this.handle(input, init));
+        mockWebSocket((ws) => this.websockets.push(ws));
 
         after(() => {
             MockServer.current = null;
-
-            restoreFetch();
-            restoreWebSocket();
         });
     }
 

@@ -1,12 +1,11 @@
-import { MockServer, serverState } from "@web/../tests/web_test_helpers";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
 import {
+    isKwargs,
     Kwargs,
     MockServerError,
-    isKwargs,
 } from "@web/../tests/_framework/mock_server/mock_server_utils";
-import { authenticate, logout } from "@web/../tests/_framework/mock_server/mock_server";
+import { authenticate, logout, MockServer, serverState } from "@web/../tests/web_test_helpers";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
 export const DISCUSS_ACTION_ID = 104;

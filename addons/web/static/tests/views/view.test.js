@@ -611,7 +611,7 @@ test("rendering with given arch, fields, searchViewId, searchViewArch, searchVie
 
 test("can click on action-bound links -- 1", async () => {
     expect.assertions(4);
-    mockService("action", () => ({
+    mockService("action", {
         async doAction(actionRequest, options) {
             expect(actionRequest).toEqual({
                 type: "ir.actions.client",
@@ -619,7 +619,7 @@ test("can click on action-bound links -- 1", async () => {
             });
             expect(options).toEqual({});
         },
-    }));
+    });
     Animal._views[["toy", 1]] = /* xml */ `
         <toy>
             <a type="action" data-method="setTheControl" data-model="animal">link</a>
@@ -638,7 +638,7 @@ test("can click on action-bound links -- 1", async () => {
 
 test("can click on action-bound links -- 2", async () => {
     expect.assertions(3);
-    mockService("action", () => ({
+    mockService("action", {
         async doAction(actionRequest, options) {
             expect(actionRequest).toBe("myLittleAction");
             expect(options).toEqual({
@@ -647,7 +647,7 @@ test("can click on action-bound links -- 2", async () => {
                 },
             });
         },
-    }));
+    });
     Animal._views[["toy", 1]] = /* xml */ `
         <toy>
             <a type="action" name="myLittleAction" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }">
@@ -663,7 +663,7 @@ test("can click on action-bound links -- 2", async () => {
 
 test("can click on action-bound links -- 3", async () => {
     expect.assertions(3);
-    mockService("action", () => ({
+    mockService("action", {
         async doAction(actionRequest, options) {
             expect(actionRequest).toEqual({
                 domain: [["field", "=", "val"]],
@@ -680,7 +680,7 @@ test("can click on action-bound links -- 3", async () => {
                 },
             });
         },
-    }));
+    });
     Animal._views[["toy", 1]] = /* xml */ `
         <toy>
             <a type="action" title="myTitle" data-model="animal" data-resId="66" data-views="[[55, 'toy']]" data-domain="[['field', '=', 'val']]" data-context="{ &quot;somekey&quot;: &quot;somevalue&quot; }">
@@ -824,7 +824,7 @@ test("banner does not reload on render", async () => {
 test("click on action-bound links in banner (concurrency)", async () => {
     expect.assertions(1);
     const prom = new Deferred();
-    mockService("action", () => ({
+    mockService("action", {
         async doAction(actionRequest) {
             expect(actionRequest).toEqual({
                 type: "ir.actions.client",
@@ -832,7 +832,7 @@ test("click on action-bound links in banner (concurrency)", async () => {
             });
             return true;
         },
-    }));
+    });
     Animal._views[["toy", 1]] = /* xml */ `
         <toy banner_route="/banner_route">
             <Banner t-if="env.config.bannerRoute" />
@@ -863,9 +863,9 @@ test("click on action-bound links in banner (concurrency)", async () => {
 
 test("real life banner", async () => {
     expect.assertions(6);
-    mockService("action", () => ({
+    mockService("action", {
         async doAction() {},
-    }));
+    });
     Animal._views[["toy", 1]] = /* xml */ `
         <toy banner_route="/mybody/isacage">
             <Banner t-if="env.config.bannerRoute" />

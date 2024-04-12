@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -11,13 +10,11 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { mockService, serverState } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+} from "@mail/../tests/mail_test_helpers";
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { describe, expect, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
+import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
@@ -443,26 +440,21 @@ test("click on (non-channel/non-partner) origin thread link should redirect to f
         res_partner_id: serverState.partnerId,
     });
     const def = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action) {
-                if (action?.res_model === "res.fake") {
-                    // Callback of doing an action (action manager).
-                    // Expected to be called on click on origin thread link,
-                    // which redirects to form view of record related to origin thread
-                    step("do-action");
-                    expect(action.type).toBe("ir.actions.act_window");
-                    expect(action.views).toEqual([[false, "form"]]);
-                    expect(action.res_model).toBe("res.fake");
-                    expect(action.res_id).toBe(fakeId);
-                    def.resolve();
-                    return Promise.resolve();
-                }
-                return ogService.doAction.call(this, ...arguments);
-            },
-        };
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model !== "res.fake") {
+                return super.doAction(...arguments);
+            }
+            // Callback of doing an action (action manager).
+            // Expected to be called on click on origin thread link,
+            // which redirects to form view of record related to origin thread
+            step("do-action");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.views).toEqual([[false, "form"]]);
+            expect(action.res_model).toBe("res.fake");
+            expect(action.res_id).toBe(fakeId);
+            def.resolve();
+        },
     });
     await start();
     await openDiscuss();

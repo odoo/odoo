@@ -1,6 +1,3 @@
-import { describe, expect, test, getFixture } from "@odoo/hoot";
-
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import {
     SIZES,
     assertSteps,
@@ -19,11 +16,11 @@ import {
     startServer,
     step,
     triggerHotkey,
-} from "../../mail_test_helpers";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
+import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -605,24 +602,20 @@ test("post message on draft record", async () => {
 
 test("schedule activities on draft record should prompt with scheduling an activity (proceed with action)", async () => {
     const wizardOpened = new Deferred();
-    mockService("action", () => {
-        const ogService = actionService.start(getMockEnv());
-        return {
-            ...ogService,
-            doAction(action, options) {
-                if (action.res_model === "res.partner") {
-                    return ogService.doAction(action, options);
-                } else if (action.res_model === "mail.activity.schedule") {
-                    step("mail.activity.schedule");
-                    expect(action.context.active_model).toBe("res.partner");
-                    expect(Number(action.context.active_id)).toBeGreaterThan(0);
-                    options.onClose();
-                    wizardOpened.resolve();
-                } else {
-                    step("Unexpected action" + action.res_model);
-                }
-            },
-        };
+    mockService("action", {
+        doAction(action, options) {
+            if (action.res_model === "res.partner") {
+                return super.doAction(...arguments);
+            } else if (action.res_model === "mail.activity.schedule") {
+                step("mail.activity.schedule");
+                expect(action.context.active_model).toBe("res.partner");
+                expect(Number(action.context.active_id)).toBeGreaterThan(0);
+                options.onClose();
+                wizardOpened.resolve();
+            } else {
+                step("Unexpected action" + action.res_model);
+            }
+        },
     });
     await start();
     await openFormView("res.partner", undefined, {

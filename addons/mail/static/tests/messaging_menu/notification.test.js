@@ -1,4 +1,3 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -8,11 +7,10 @@ import {
     startServer,
     step,
     triggerEvents,
-} from "../mail_test_helpers";
-import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
-import { getMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { actionService } from "@web/webclient/actions/action_service";
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -103,8 +101,7 @@ test("open non-channel failure", async () => {
             notification_type: "email",
         },
     ]);
-    mockService("action", () => ({
-        ...actionService.start(getMockEnv()),
+    mockService("action", {
         doAction(action) {
             step("do_action");
             expect(action.name).toBe("Mail Failures");
@@ -123,7 +120,7 @@ test("open non-channel failure", async () => {
                 JSON.stringify([["message_has_error", "=", true]])
             );
         },
-    }));
+    });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");

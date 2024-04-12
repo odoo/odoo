@@ -31,6 +31,7 @@ import { Suite, suiteError } from "./suite";
 import { Tag } from "./tag";
 import { Test, testError } from "./test";
 import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
+import { cleanupNetwork } from "../mock/network";
 
 /**
  * @typedef {{
@@ -837,11 +838,12 @@ export class TestRunner {
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent),
-            watchListeners(window, document, document.documentElement, document.head, document.body)
+            watchListeners()
         );
         this.__beforeEach(this.fixture.setup);
         this.__afterEach(
             cleanupWindow,
+            cleanupNetwork,
             cleanupNavigator,
             this.fixture.cleanup,
             cleanupDOM,

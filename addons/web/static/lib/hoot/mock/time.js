@@ -232,8 +232,8 @@ export function cancelAllTimers() {
     }
 }
 
-export async function cleanupTime() {
-    await runAllTimers(true);
+export function cleanupTime() {
+    cancelAllTimers();
 
     setDateParams(DEFAULT_DATE);
     timeZone = DEFAULT_TIMEZONE;
@@ -396,6 +396,8 @@ export function mockedSetTimeout(callback, ms, ...args) {
  */
 export function mockTimeZone(tz) {
     timeZone = tz ?? DEFAULT_TIMEZONE;
+
+    mockTimeZone.onCall?.(tz);
 }
 
 /**

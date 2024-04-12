@@ -13,10 +13,11 @@ import {
 import { redirect } from "@web/core/utils/urls";
 import { tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "../web_test_helpers";
+import { on } from "@odoo/hoot-dom";
 
-const _urlToState = (url) => urlToState(new URL(url, browser.location.origin));
+const _urlToState = (url) => urlToState(new URL(url));
 
-async function createRouter(params = {}) {
+function createRouter(params = {}) {
     if (params.onPushState) {
         const onPushState = params.onPushState;
         delete params.onPushState;
@@ -1329,7 +1330,7 @@ describe("urlToState", () => {
 
 describe("pushState", () => {
     test("can push in same timeout", async () => {
-        await createRouter();
+        createRouter();
 
         expect(router.current).toEqual({});
 
@@ -1343,7 +1344,7 @@ describe("pushState", () => {
     });
 
     test("can lock keys", async () => {
-        await createRouter();
+        createRouter();
 
         router.addLockedKey(["k1"]);
 
@@ -1365,7 +1366,7 @@ describe("pushState", () => {
     });
 
     test("can re-lock keys in same final call", async () => {
-        await createRouter();
+        createRouter();
 
         router.addLockedKey(["k1"]);
 
@@ -1378,7 +1379,7 @@ describe("pushState", () => {
     });
 
     test("can replace search state", async () => {
-        await createRouter();
+        createRouter();
 
         router.pushState({ k1: 2 });
         await tick();
@@ -1390,7 +1391,7 @@ describe("pushState", () => {
     });
 
     test("can replace search state with locked keys", async () => {
-        await createRouter();
+        createRouter();
 
         router.addLockedKey("k1");
 
@@ -1404,7 +1405,7 @@ describe("pushState", () => {
     });
 
     test("can merge hash", async () => {
-        await createRouter();
+        createRouter();
 
         router.pushState({ k1: 2 });
         await tick();
@@ -1418,7 +1419,7 @@ describe("pushState", () => {
     test("undefined keys are not pushed", async () => {
         redirect("/odoo");
         const onPushState = () => expect.step("pushed state");
-        await createRouter({ onPushState });
+        createRouter({ onPushState });
 
         router.pushState({ k1: undefined });
         await tick();
@@ -1427,7 +1428,7 @@ describe("pushState", () => {
     });
 
     test("undefined keys destroy previous non locked keys", async () => {
-        await createRouter();
+        createRouter();
 
         router.pushState({ k1: 1 });
         await tick();
@@ -1440,7 +1441,7 @@ describe("pushState", () => {
 
     test("do not re-push when hash is same", async () => {
         const onPushState = () => expect.step("pushed state");
-        await createRouter({ onPushState });
+        createRouter({ onPushState });
 
         router.pushState({ k1: 1, k2: 2 });
         await tick();
@@ -1453,7 +1454,7 @@ describe("pushState", () => {
 
     test("do not re-push when hash is same (with integers as strings)", async () => {
         const onPushState = () => expect.step("pushed state");
-        await createRouter({ onPushState });
+        createRouter({ onPushState });
 
         router.pushState({ k1: 1, k2: "2" });
         await tick();
@@ -1465,7 +1466,7 @@ describe("pushState", () => {
     });
 
     test("pushState adds action-related keys to last entry in actionStack", async () => {
-        await createRouter();
+        createRouter();
 
         router.pushState({ action: 1, resId: 2, actionStack: [{ action: 1, resId: 2 }] });
         await tick();
@@ -1506,10 +1507,8 @@ describe("pushState", () => {
 describe("History", () => {
     test("properly handles history.back and history.forward", async () => {
         redirect("/");
-        const stepFn = () => expect.step("ROUTE_CHANGE");
-        routerBus.addEventListener("ROUTE_CHANGE", stepFn);
-        after(() => routerBus.removeEventListener("ROUTE_CHANGE", stepFn));
-        await createRouter();
+        after(on(routerBus, "ROUTE_CHANGE", () => expect.step("ROUTE_CHANGE")));
+        createRouter();
 
         router.pushState({ k1: 1 });
         await tick();
@@ -1544,7 +1543,7 @@ describe("History", () => {
 
     test("unserialized parts of action stack are preserved when going back/forward", async () => {
         redirect("/odoo");
-        await createRouter();
+        createRouter();
         expect(router.current).toEqual({});
         router.pushState({
             actionStack: [{ action: "some-path", displayName: "A cool display name" }],
@@ -1581,7 +1580,7 @@ describe("Retrocompatibility", () => {
     test("parse an url with hash (key/values)", async () => {
         Object.assign(browser.location, { pathname: "/web" });
         browser.location.hash = "#a=114&k=c.e&f=1&g=91";
-        await createRouter();
+        createRouter();
         expect(browser.location.search).toBe("?a=114&k=c.e&f=1&g=91");
         expect(browser.location.hash).toBe("");
         expect(router.current).toEqual({ a: 114, k: "c.e", f: 1, g: 91 });
@@ -1592,7 +1591,7 @@ describe("Retrocompatibility", () => {
         Object.assign(browser.location, { pathname: "/web" });
         browser.location.hash = "#g=91";
         browser.location.search = "?a=114&t=c.e&f=1";
-        await createRouter();
+        createRouter();
         expect(browser.location.search).toBe("?a=114&t=c.e&f=1&g=91");
         expect(browser.location.hash).toBe("");
         expect(router.current).toEqual({ a: 114, t: "c.e", f: 1, g: 91 });
@@ -1602,7 +1601,7 @@ describe("Retrocompatibility", () => {
     test("parse an url with hash (anchor link)", async () => {
         redirect("/odoo#anchor");
         browser.location.hash = "#anchor";
-        await createRouter();
+        createRouter();
         expect(browser.location.search).toBe("");
         expect(browser.location.hash).toBe("#anchor");
         expect(browser.location.pathname).toBe("/odoo");
@@ -1613,7 +1612,7 @@ describe("Retrocompatibility", () => {
         redirect("/odoo?a=114&g=c.e&f=1#anchor");
         browser.location.hash = "#anchor";
         browser.location.search = "?a=114&g=c.e&f=1";
-        await createRouter();
+        createRouter();
         expect(browser.location.search).toBe("?a=114&g=c.e&f=1");
         expect(browser.location.hash).toBe("#anchor");
         expect(router.current).toEqual({ a: 114, g: "c.e", f: 1 });

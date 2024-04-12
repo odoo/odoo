@@ -1,15 +1,14 @@
 import { expect, test } from "@odoo/hoot";
 import { click, edit, queryAll, queryFirst, select } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
+    defineParams,
     fields,
     models,
-    patchTimeZone,
     mountView,
     onRpc,
-    defineParams,
 } from "@web/../tests/web_test_helpers";
 
 import {
@@ -44,7 +43,7 @@ class Partner extends models.Model {
 defineModels([Partner]);
 
 test("DatetimeField in form view", async () => {
-    patchTimeZone(+2); // UTC+2
+    mockTimeZone(+2); // UTC+2
 
     await mountView({
         type: "form",
@@ -100,7 +99,7 @@ test("DatetimeField in form view", async () => {
 });
 
 test("DatetimeField only triggers fieldChange when a day is picked and when an hour/minute is selected", async () => {
-    patchTimeZone(+2);
+    mockTimeZone(+2);
 
     Partner._onChanges.datetime = () => {};
 
@@ -150,7 +149,7 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
 });
 
 test("DatetimeField with datetime formatted without second", async () => {
-    patchTimeZone(0);
+    mockTimeZone(0);
 
     Partner._fields.datetime = fields.Datetime({
         string: "A datetime",
@@ -182,7 +181,7 @@ test("DatetimeField with datetime formatted without second", async () => {
 });
 
 test("DatetimeField in editable list view", async () => {
-    patchTimeZone(+2);
+    mockTimeZone(+2);
     onRpc("has_group", () => true);
 
     await mountView({
@@ -336,7 +335,7 @@ test.tags("desktop")(
 test("DatetimeField remove value", async () => {
     expect.assertions(4);
 
-    patchTimeZone(+2);
+    mockTimeZone(+2);
 
     onRpc("web_save", ({ args }) => {
         expect(args[1].datetime).toBe(false, { message: "the correct value should be saved" });
@@ -370,7 +369,7 @@ test("DatetimeField remove value", async () => {
 });
 
 test("DatetimeField with date/datetime widget (with day change) does not care about widget", async () => {
-    patchTimeZone(-4);
+    mockTimeZone(-4);
     onRpc("has_group", () => true);
 
     Partner._records[0].p = [2];
@@ -403,7 +402,7 @@ test("DatetimeField with date/datetime widget (with day change) does not care ab
 });
 
 test("DatetimeField with date/datetime widget (without day change) does not care about widget", async () => {
-    patchTimeZone(-4);
+    mockTimeZone(-4);
 
     Partner._records[0].p = [2];
     Partner._records[1].datetime = "2017-02-08 10:00:00"; // without timezone
@@ -442,7 +441,7 @@ test("datetime field: hit enter should update value", async () => {
     //     - we press enter to validate our entry
     //     - we click outside the field to validate our entry
     //     - we save
-    patchTimeZone(+2);
+    mockTimeZone(+2);
 
     await mountView({
         type: "form",
