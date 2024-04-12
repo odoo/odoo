@@ -19,7 +19,7 @@ class AccountMoveSend(models.TransientModel):
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_enable_ubl_cii_xml')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
-    ubl_partner_warning = fields.Char(
+    ubl_partner_warning = fields.Json(
         string="Partner warning",
         compute="_compute_ubl_warnings",
     )
@@ -84,14 +84,17 @@ class AccountMoveSend(models.TransientModel):
             not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
                 lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
             )
-            if len(not_configured_partners) == 1:
-                wizard.ubl_partner_warning = _("This partner is missing Peppol EAS or Peppol Endpoint field. "
-                                        "Please check those in its Accounting tab or the generated file will be incomplete.")
-            if len(not_configured_partners) > 1:
-                names = ', '.join(not_configured_partners[:5].mapped('display_name'))
-                wizard.ubl_partner_warning = _("The following partners are missing Peppol EAS or Peppol Endpoint field: %s. "
-                                        "Please check those in their Accounting tab. "
-                                        "Otherwise, the generated files will be incomplete.", names)
+            if not_configured_partners:
+                wizard.ubl_partner_warning = {
+                    'ubl_partner_warning': {
+                        'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
+                                     "Please check those in their Accounting tab. "
+                                     "Otherwise, the generated files will be incomplete."),
+                        'level': 'info',
+                        'action_text': _("View Partner(s)"),
+                        'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
+                    }
+                }
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
