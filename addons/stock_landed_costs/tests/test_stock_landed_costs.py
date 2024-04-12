@@ -205,6 +205,13 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             po.action_create_invoice()
             bill = po.invoice_ids
             bill.invoice_date = fields.Date.today()
+
+            self.env['account.move.line'].create({
+                'move_id': bill.id,
+                'display_type': 'line_section',
+                'name': 'Great Section',
+            })
+
             bill._post()
 
             landed_cost_aml = bill.invoice_line_ids.filtered(lambda l: l.product_id == self.landed_cost)
