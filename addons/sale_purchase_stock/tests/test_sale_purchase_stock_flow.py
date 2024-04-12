@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, Form
-
+from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 
 class TestSalePurchaseStockFlow(TransactionCase):
 
@@ -83,3 +82,68 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         sm.move_line_ids.qty_done = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
+
+
+@tagged('post_install', '-at_install')
+class TestSaleStockMargin(TestStockValuationCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
+        cls.mto_route.active = True
+
+        cls.vendor = cls.env['res.partner'].create({'name': 'Super Vendor'})
+
+        cls.mto_product = cls.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+            'route_ids': [(6, 0, (cls.mto_route + cls.buy_route).ids)],
+            'seller_ids': [(0, 0, {
+                'partner_id': cls.vendor.id,
+            })],
+        })
+        cls.mto_product.categ_id.property_cost_method = 'fifo'
+
+    def test_mto_purchase_price(self):
+        """
+        Sell a MTO+Buy product -> a PO is generated
+        SO pruchase price updated to reflect price changes on PO
+        """
+
+        sale_margin = self.env['ir.module.module']._get('sale_margin')
+        if sale_margin.state != 'installed':
+            self.skipTest("sale_margin module is not installed")
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.user.partner_id
+        with so_form.order_line.new() as line:
+            line.product_id = self.mto_product
+        so = so_form.save()
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+
+        self.assertEqual(so.order_line.purchase_price, 0)
+
+        po.order_line.price_unit = 35
+        po.button_confirm()
+        po.picking_ids.move_line_ids.qty_done = 1
+        po.picking_ids.button_validate()
+
+        self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
+            'invoice_date': po.date_order,
+            'date': po.date_order,
+            'partner_id': self.vendor.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Test',
+                'price_unit': 160.0,
+                'product_id': self.mto_product.id,
+                'purchase_line_id': po.order_line.id,
+                'quantity': 1.0,
+            })]
+        }).action_post()
+
+        self.assertEqual(so.order_line.purchase_price, 160)

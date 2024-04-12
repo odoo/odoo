@@ -170,6 +170,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
     def test_sale_stock_margin_6(self):
         """ Test that the purchase price doesn't change when there is a service product in the SO"""
+        self.env['ir.config_parameter'].set_param('sale_stock_margin.manual_cost', True)
         service = self.env['product.product'].create({
             'name': 'Service',
             'type': 'service',

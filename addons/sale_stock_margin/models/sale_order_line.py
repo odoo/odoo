@@ -7,10 +7,14 @@ from odoo import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    @api.depends('move_ids', 'move_ids.stock_valuation_layer_ids', 'move_ids.picking_id.state')
+    @api.depends('move_ids', 'move_ids.stock_valuation_layer_ids', 'move_ids.picking_id.state',
+    'product_id.standard_price')
     def _compute_purchase_price(self):
         lines_without_moves = self.browse()
+        manual_cost = self.env['ir.config_parameter'].get_param('sale_stock_margin.manual_cost')
         for line in self:
+            if line.purchase_price and manual_cost:
+                continue
             product = line.product_id.with_company(line.company_id)
             if not line.move_ids:
                 lines_without_moves |= line
