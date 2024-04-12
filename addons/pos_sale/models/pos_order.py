@@ -45,6 +45,7 @@ class PosOrder(models.Model):
         return invoice_vals
 
     @api.model
+<<<<<<< HEAD
     def sync_from_ui(self, orders):
         data = super().sync_from_ui(orders)
         if len(orders) == 0:
@@ -52,6 +53,18 @@ class PosOrder(models.Model):
 
         order_ids = self.browse([o['id'] for o in data["pos.order"]])
         for order in order_ids:
+||||||| parent of 58022461399c (temp)
+    def create_from_ui(self, orders, draft=False):
+        order_ids = super(PosOrder, self).create_from_ui(orders, draft)
+        for order in self.sudo().browse([o['id'] for o in order_ids]):
+=======
+    def create_from_ui(self, orders, draft=False):
+        order_ids = super(PosOrder, self).create_from_ui(orders, draft)
+        if draft:
+            return order_ids
+
+        for order in self.sudo().browse([o['id'] for o in order_ids]):
+>>>>>>> 58022461399c (temp)
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
