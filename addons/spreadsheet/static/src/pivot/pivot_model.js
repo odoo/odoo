@@ -25,7 +25,10 @@ function isNotSupported(fieldType) {
 
 function throwUnsupportedFieldError(field) {
     throw new EvaluationError(
-        sprintf(_t("Field %s is not supported because of its type (%s)"), field.string, field.type)
+        sprintf(_t("Field %(field)s is not supported because of its type (%(type)s)"), {
+            field: field.string,
+            type: field.type,
+        })
     );
 }
 
@@ -327,7 +330,10 @@ export class OdooPivotModel extends PivotModel {
             });
         if (!displayName) {
             throw new EvaluationError(
-                _t("Unable to fetch the label of %s of model %s", resId, resModel)
+                _t("Unable to fetch the label of %(id)s of model %(model)s", {
+                    id: resId,
+                    model: resModel,
+                })
             );
         }
         return displayName;

@@ -15,7 +15,7 @@ class UoM(models.Model):
                 'title': _('Warning!'),
                 'message': _(
                     "This rounding precision is higher than the Decimal Accuracy"
-                    " (%s digits).\nThis may cause inconsistencies in computations.\n"
-                    "Please set a precision between %s and 1.",
-                    precision, 1.0 / 10.0**precision),
+                    " (%(digits)s digits).\nThis may cause inconsistencies in computations.\n"
+                    "Please set a precision between %(min_precision)s and 1.",
+                    digits=precision, min_precision=1.0 / 10.0**precision),
             }}

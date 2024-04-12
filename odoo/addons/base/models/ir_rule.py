@@ -213,8 +213,8 @@ class IrRule(models.Model):
         }
         user_description = f"{self.env.user.name} (id={self.env.user.id})"
         operation_error = _("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
-            "Sorry, %s doesn't have '%s' access to:", user_description, operations[operation])
-        failing_model = _("- %s (%s)", description, model)
+            "Sorry, %(user)s doesn't have '%(operation)s' access to:", user=user_description, operation=operations[operation])
+        failing_model = _("- %(description)s (%(model)s)", description=description, model=model)
 
         resolution_info = _("If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.")
 

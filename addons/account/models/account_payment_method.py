@@ -152,8 +152,8 @@ class AccountPaymentMethodLine(models.Model):
         res = self._cr.fetchall()
         if res:
             (name, payment_type) = res[0]
-            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
-                              "and with the same name (%s) on a single journal.", payment_type, name))
+            raise UserError(_("You can't have two payment method lines of the same payment type (%(payment_type)s) "
+                              "and with the same name (%(name)s) on a single journal.", payment_type=payment_type, name=name))
 
     def unlink(self):
         """

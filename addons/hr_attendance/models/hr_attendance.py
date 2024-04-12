@@ -124,10 +124,10 @@ class HrAttendance(models.Model):
                 )
             else:
                 attendance.display_name = _(
-                    "%s : (%s-%s)",
-                    format_duration(attendance.worked_hours),
-                    format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
-                    format_datetime(self.env, attendance.check_out, dt_format="HH:mm"),
+                    "%(worked_hours)s : (%(check_in)s-%(check_out)s)",
+                    worked_hours=format_duration(attendance.worked_hours),
+                    check_in=format_datetime(self.env, attendance.check_in, dt_format="HH:mm"),
+                    check_out=format_datetime(self.env, attendance.check_out, dt_format="HH:mm"),
                 )
 
     def _get_employee_calendar(self):

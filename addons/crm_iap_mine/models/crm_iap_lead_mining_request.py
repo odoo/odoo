@@ -82,8 +82,16 @@ class CRMLeadMiningRequest(models.Model):
             company_credits = CREDIT_PER_COMPANY * record.lead_number
             contact_credits = CREDIT_PER_CONTACT * record.contact_number
             total_contact_credits = contact_credits * record.lead_number
-            record.lead_contacts_credits = _("Up to %d additional credits will be consumed to identify %d contacts per company.", contact_credits*company_credits, record.contact_number)
-            record.lead_credits = _('%d credits will be consumed to find %d companies.', company_credits, record.lead_number)
+            record.lead_contacts_credits = _(
+                "Up to %(credit_count)d additional credits will be consumed to identify %(contact_count)d contacts per company.",
+                credit_count=contact_credits * company_credits,
+                contact_count=record.contact_number,
+            )
+            record.lead_credits = _(
+                "%(credit_count)d credits will be consumed to find %(company_count)d companies.",
+                credit_count=company_credits,
+                company_count=record.lead_number,
+            )
             record.lead_total_credits = _("This makes a total of %d credits for this request.", total_contact_credits + company_credits)
 
     @api.depends('lead_ids.lead_mining_request_id')

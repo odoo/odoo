@@ -349,11 +349,11 @@ class Module(models.Model):
             modules.check_manifest_dependencies(terp)
         except Exception as e:
             if newstate == 'to install':
-                msg = _('Unable to install module "%s" because an external dependency is not met: %s', module_name, e.args[0])
+                msg = _('Unable to install module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
             elif newstate == 'to upgrade':
-                msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s', module_name, e.args[0])
+                msg = _('Unable to upgrade module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
             else:
-                msg = _('Unable to process module "%s" because an external dependency is not met: %s', module_name, e.args[0])
+                msg = _('Unable to process module "%(module)s" because an external dependency is not met: %(dependency)s', module=module_name, dependency=e.args[0])
             raise UserError(msg)
 
     def _state_update(self, newstate, states_to_update, level=100):
@@ -372,7 +372,10 @@ class Module(models.Model):
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise UserError(_("You try to install module %r that depends on module %r.\nBut the latter module is not available in your system.", module.name, dep.name))
+                    raise UserError(_(
+                        'You try to install module "%(module)s" that depends on module "%(dependency)s".\nBut the latter module is not available in your system.',
+                        module=module.name, dependency=dep.name,
+                    ))
                 if dep.depend_id.state == newstate:
                     ready_mods += dep.depend_id
                 else:
@@ -423,7 +426,11 @@ class Module(models.Model):
         for module in install_mods:
             for exclusion in module.exclusion_ids:
                 if exclusion.name in install_names:
-                    raise UserError(_('Modules %r and %r are incompatible.', module.shortdesc, exclusion.exclusion_id.shortdesc))
+                    raise UserError(_(
+                        'Modules "%(module)s" and "%(incompatible_module)s" are incompatible.',
+                        module=module.shortdesc,
+                        incompatible_module=exclusion.exclusion_id.shortdesc,
+                    ))
 
         # check category exclusions
         def closure(module):
@@ -443,7 +450,7 @@ class Module(models.Model):
             if modules and not any(modules <= closure(module) for module in modules):
                 labels = dict(self.fields_get(['state'])['state']['selection'])
                 raise UserError(
-                    _('You are trying to install incompatible modules in category %r:%s', category.name, ''.join(
+                    _('You are trying to install incompatible modules in category "%(category)s":%(module_list)s', category=category.name, module_list=''.join(
                         f"\n- {module.shortdesc} ({labels[module.state]})"
                         for module in modules
                     ))
@@ -703,7 +710,7 @@ class Module(models.Model):
                 continue
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise UserError(_('You try to upgrade the module %s that depends on the module: %s.\nBut this module is not available in your system.', module.name, dep.name))
+                    raise UserError(_('You try to upgrade the module %(module)s that depends on the module: %(dependency)s.\nBut this module is not available in your system.', module=module.name, dependency=dep.name))
                 if dep.state == 'uninstalled':
                     to_install += self.search([('name', '=', dep.name)]).ids
 

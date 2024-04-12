@@ -1,7 +1,7 @@
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, find_xml_value
+from odoo.tools import float_repr, find_xml_value, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang
 from odoo.tools.zeep import Client
@@ -134,7 +134,7 @@ class AccountEdiCommon(models.AbstractModel):
             try:
                 tax._validate_repartition_lines()
             except ValidationError as e:
-                error_msg = _("Tax '%s' is invalid: %s", tax.name, e.args[0])  # args[0] gives the error message
+                error_msg = _("Tax '%(tax_name)s' is invalid: %(error_message)s", tax_name=tax.name, error_message=e.args[0])  # args[0] gives the error message
                 raise ValidationError(error_msg)
 
     def _get_tax_unece_codes(self, invoice, tax):
@@ -232,7 +232,7 @@ class AccountEdiCommon(models.AbstractModel):
         :return: an Error message or None
         """
         if not record:
-            return custom_warning_message or _("The element %s is required on %s.", record, ', '.join(field_names))
+            return custom_warning_message or _("The element %(record)s is required on %(field_list)s.", record=record, field_list=format_list(self.env, field_names))
 
         if not isinstance(field_names, (list, tuple)):
             field_names = (field_names,)
@@ -244,15 +244,19 @@ class AccountEdiCommon(models.AbstractModel):
 
         # field is not present
         if custom_warning_message or isinstance(record, dict):
-            return custom_warning_message or _("The element %s is required on %s.", record, ', '.join(field_names))
+            return custom_warning_message or _(
+                "The element %(record)s is required on %(field_list)s.",
+                record=record,
+                field_list=format_list(self.env, field_names),
+            )
 
         display_field_names = record.fields_get(field_names)
         if len(field_names) == 1:
             display_field = f"'{display_field_names[field_names[0]]['string']}'"
-            return _("The field %s is required on %s.", display_field, record.display_name)
+            return _("The field %(field)s is required on %(record)s.", field=display_field, record=record.display_name)
         else:
-            display_fields = ', '.join(f"'{display_field_names[x]['string']}'" for x in display_field_names)
-            return _("At least one of the following fields %s is required on %s.", display_fields, record.display_name)
+            display_fields = format_list(self.env, [f"'{display_field_names[x]['string']}'" for x in display_field_names])
+            return _("At least one of the following fields %(field_list)s is required on %(record)s.", field_list=display_fields, record=record.display_name)
 
     # -------------------------------------------------------------------------
     # COMMON CONSTRAINTS
@@ -463,9 +467,9 @@ class AccountEdiCommon(models.AbstractModel):
                     tax_ids += tax.ids
                 else:
                     logs.append(
-                        _("Could not retrieve the tax: %s %% for line '%s'.",
-                            float(tax_categ_percent_el.text),
-                            name)
+                        _("Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'.",
+                            tax_percentage=float(tax_categ_percent_el.text),
+                            line=name),
                     )
 
             line_vals += [Command.create({
@@ -718,7 +722,7 @@ class AccountEdiCommon(models.AbstractModel):
                 tax = self.env['account.tax'].search(domain + [('price_include', '=', True)], limit=1)
 
             if not tax:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", amount, invoice_line.name))
+                logs.append(_("Could not retrieve the tax: %(amount)s %% for line '%(line)s'.", amount=amount, line=invoice_line.name))
             else:
                 inv_line_vals['taxes'].append(tax.id)
                 if tax.price_include:

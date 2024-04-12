@@ -123,5 +123,9 @@ class PosPaymentMethod(models.Model):
                     'company_id': company_id,
                 })
                 if not payment_method_id:
-                    raise ValidationError(_('Could not create an online payment method (company_id=%d, pos_config_id=%d)', company_id, pos_config_id))
+                    raise ValidationError(_(
+                        "Could not create an online payment method (company_id=%(company_id)d, pos_config_id=%(pos_config_id)d)",
+                        company_id=company_id,
+                        pos_config_id=pos_config_id,
+                    ))
         return payment_method_id

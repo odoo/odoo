@@ -288,9 +288,8 @@ import wUtils from '@website/js/utils';
                             this.fileInputError.limit
                         )
                         : _t(
-                            "Please fill in the form correctly. The file \"%s\" is too big. (Maximum %s MB)", 
-                            this.fileInputError.fileName,
-                            this.fileInputError.limit
+                            "Please fill in the form correctly. The file “%(file name)s” is too large. (Maximum %(max)s MB)", 
+                            { "file name": this.fileInputError.fileName, max:this.fileInputError.limit }
                         );
                     this.update_status("error", errorMessage);
                     delete this.fileInputError;

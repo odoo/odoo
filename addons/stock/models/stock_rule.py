@@ -116,7 +116,12 @@ class StockRule(models.Model):
         for rule in self:
             route = rule.route_id
             if route.company_id and rule.company_id.id != route.company_id.id:
-                raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
+                raise ValidationError(_(
+                    "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
+                    rule=rule.display_name,
+                    rule_company=rule.company_id.display_name,
+                    route_company=route.company_id.display_name,
+                ))
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -163,8 +168,18 @@ class StockRule(models.Model):
             if self.procure_method == 'mts_else_mto' and self.location_src_id:
                 suffix += _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.", source)
             message_dict = {
-                'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.', destination, operation, source) + suffix,
-                'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.', source, operation, destination)
+                'pull': _(
+                    'When products are needed in <b>%(destination)s</b>, <br/> <b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill the need.',
+                    destination=destination,
+                    operation=operation,
+                    source_location=source,
+                ) + suffix,
+                'push': _(
+                    'When products arrive in <b>%(source_location)s</b>, <br/> <b>%(operation)s</b> are created to send them to <b>%(destination)s</b>.',
+                    source_location=source,
+                    operation=operation,
+                    destination=destination,
+                ),
             }
         return message_dict
 
@@ -482,8 +497,8 @@ class ProcurementGroup(models.Model):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                error = _('No rule has been found to replenish %r in %r.\nVerify the routes configuration on the product.',
-                    procurement.product_id.display_name, procurement.location_id.display_name)
+                error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
+                    product=procurement.product_id.display_name, location=procurement.location_id.display_name)
                 procurement_errors.append((procurement, error))
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action

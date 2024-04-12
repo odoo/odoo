@@ -231,8 +231,8 @@ class PaymentTransaction(models.Model):
         status = response_content.get('status')
         if status == 'received':
             self._log_message_on_linked_documents(_(
-                "A request was sent to void the transaction with reference %s (%s).",
-                self.reference, self.provider_id.name
+                "A request was sent to void the transaction with reference %(reference)s (%(provider)s).",
+                reference=self.reference, provider=self.provider_id.name,
             ))
 
         if child_void_tx:

@@ -576,7 +576,7 @@ class AccountEdiFormat(models.Model):
 
             else:
                 results[inv] = {
-                    'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),
+                    'error': _("[%(error_code)s] %(error_message)s", error_code=respl.CodigoErrorRegistro, error_message=respl.DescripcionErrorRegistro),
                     'blocking_level': 'error',
                 }
 

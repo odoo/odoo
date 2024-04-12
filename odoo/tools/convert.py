@@ -669,7 +669,12 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
     if any(msg['type'] == 'error' for msg in result['messages']):
         # Report failed import and abort module install
         warning_msg = "\n".join(msg['message'] for msg in result['messages'])
-        raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
+        raise Exception(_(
+            "Module loading %(module)s failed: file %(file)s could not be processed:\n%(message)s",
+            module=module,
+            file=fname,
+            message=warning_msg,
+        ))
 
 def convert_xml_import(env, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
     doc = etree.parse(xmlfile)

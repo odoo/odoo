@@ -124,7 +124,7 @@ class KarmaTracking(models.Model):
             'from_date': from_date,
             'end_date': end_date,
             'origin_ref': f'res.users,{self.env.user.id}',
-            'reason': _('Consolidation from %s to %s', from_date.date(), end_date.date()),
+            'reason': _('Consolidation from %(from_date)s to %(end_date)s', from_date=from_date.date(), end_date=end_date.date()),
         })
 
         trackings = self.search([

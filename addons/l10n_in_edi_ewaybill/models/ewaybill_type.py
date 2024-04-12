@@ -26,4 +26,4 @@ class EWayBillType(models.Model):
     def _compute_display_name(self):
         """Show name and sub_type in name"""
         for ewaybill_type in self:
-            ewaybill_type.display_name = _("%s (Sub-Type: %s)", ewaybill_type.name, ewaybill_type.sub_type)
+            ewaybill_type.display_name = _("%(name)s (Sub-Type: %(type)s)", name=ewaybill_type.name, type=ewaybill_type.sub_type)

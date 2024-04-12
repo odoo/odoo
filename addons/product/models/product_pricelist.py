@@ -369,7 +369,7 @@ class Pricelist(models.Model):
         ])
         if linked_items:
             raise UserError(_(
-                'You cannot delete those pricelist(s):\n(%s)\n, they are used in other pricelist(s):\n%s',
-                '\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
-                '\n'.join(linked_items.pricelist_id.mapped('display_name'))
+                'You cannot delete pricelist(s):\n(%(pricelists)s)\nThey are used within pricelist(s):\n%(other_pricelists)s',
+                pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
+                other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
             ))

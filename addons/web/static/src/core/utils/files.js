@@ -15,9 +15,8 @@ export function checkFileSize(fileSize, notificationService) {
     if (fileSize > maxUploadSize) {
         notificationService.add(
             _t(
-                "The selected file (%sB) is over the maximum allowed file size (%sB).",
-                humanNumber(fileSize),
-                humanNumber(maxUploadSize)
+                "The selected file (%(size)sB) is larger than the maximum allowed file size (%(maxSize)sB).",
+                { size: humanNumber(fileSize), maxSize: humanNumber(maxUploadSize) }
             ),
             {
                 type: "danger",

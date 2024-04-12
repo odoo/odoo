@@ -118,9 +118,9 @@ class AccountMove(models.Model):
                 paid_status = statuses['qr_statuses'][0]
                 if 'qris_payment_customername' in paid_status and 'qris_payment_methodby' in paid_status:
                     message = _(
-                        "This invoice was paid by %s using QRIS with the payment method %s.",
-                        paid_status['qris_payment_customername'],
-                        paid_status['qris_payment_methodby'],
+                        "This invoice was paid by %(customer)s using QRIS with the payment method %(method)s.",
+                        customer=paid_status['qris_payment_customername'],
+                        method=paid_status['qris_payment_methodby'],
                     )
                 else:
                     message = _("This invoice was paid using QRIS.")

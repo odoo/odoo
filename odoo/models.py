@@ -57,10 +57,10 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, CountingStream, date_utils, discardattr,
-    DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
-    get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
-    partition, populate, Query, ReversedIterable, split_every, unique, SQL,
-    pycompat,
+    DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
+    frozendict, get_lang, LastOrderedSet, lazy_classproperty, OrderedSet,
+    ormcache, partition, populate, Query, ReversedIterable, split_every, unique,
+    SQL, pycompat,
 )
 from .tools.lru import LRU
 from .tools.translate import _, _lt
@@ -7182,7 +7182,7 @@ def convert_pgerror_not_null(model, fields, info, e):
 
     field_name = e.diag.column_name
     field = fields[field_name]
-    message = _(u"Missing required value for the field '%s' (%s)", field['string'], field_name)
+    message = _("Missing required value for the field '%(name)s' (%(technical_name)s)", name=field['string'], technical_name=field_name)
     return {
         'message': message,
         'field': field_name,
@@ -7215,16 +7215,20 @@ def convert_pgerror_unique(model, fields, info, e):
         field_name = ufields[0]
         field = fields[field_name]
         message = _(
-            u"The value for the field '%s' already exists (this is probably '%s' in the current model).",
-            field_name,
-            field['string']
+            "The value for the field '%(field)s' already exists (this is probably '%(other_field)s' in the current model).",
+            field=field_name,
+            other_field=field['string'],
         )
         return {
             'message': message,
             'field': field_name,
         }
     field_strings = [fields[fname]['string'] for fname in ufields]
-    message = _(u"The values for the fields '%s' already exist (they are probably '%s' in the current model).") % (', '.join(ufields), ', '.join(field_strings))
+    message = _(
+        "The values for the fields '%(fields)s' already exist (they are probably '%(other_fields)s' in the current model).",
+        fields=format_list(model.env, ufields),
+        other_fields=format_list(model.env, field_strings),
+    )
     return {
         'message': message,
         # no field, unclear which one we should pick and they could be in any order

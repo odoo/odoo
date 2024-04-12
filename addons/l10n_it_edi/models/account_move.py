@@ -1341,7 +1341,7 @@ class AccountMove(models.Model):
             for filename in filename_move:
                 unsent_move = filename_move[filename]
                 unsent_move.l10n_it_edi_state = False
-                text_message = _("Error uploading the e-invoice file %s.\n%s", filename, e.message)
+                text_message = _("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=e.message)
                 html_message = nl2br(escape(text_message))
                 unsent_move.l10n_it_edi_header = text_message
                 unsent_move.sudo().message_post(body=html_message)
@@ -1354,7 +1354,7 @@ class AccountMove(models.Model):
             if 'error' in vals:
                 sent_move.l10n_it_edi_state = False
                 sent_move.l10n_it_edi_transaction = False
-                message = nl2br(escape(_("Error uploading the e-invoice file %s.\n%s", filename, vals['error'])))
+                message = nl2br(escape(_("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=vals['error'])))
             else:
                 is_demo = vals['id_transaction'] == 'demo'
                 sent_move.l10n_it_edi_state = 'processing'
@@ -1422,7 +1422,7 @@ class AccountMove(models.Model):
                 f'{server_url}/api/l10n_it_edi/1/in/TrasmissioneFatture',
                 params={'ids_transaction': self.mapped("l10n_it_edi_transaction")})
         except AccountEdiProxyError as pe:
-            raise UserError(_("An error occurred while downloading updates from the Proxy Server: (%s) %s", pe.code, pe.message)) from pe
+            raise UserError(_("An error occurred while downloading updates from the Proxy Server: (%(code)s) %(message)s", code=pe.code, message=pe.message)) from pe
 
         for _id_transaction, notification in notifications.items():
             encrypted_update_content = notification.get('file')
@@ -1453,7 +1453,7 @@ class AccountMove(models.Model):
                     f'{server_url}/api/l10n_it_edi/1/ack',
                     params={'transaction_ids': transaction_ids, 'states': states})
             except AccountEdiProxyError as pe:
-                raise UserError(_("An error occurred while downloading updates from the Proxy Server: (%s) %s", pe.code, pe.message)) from pe
+                raise UserError(_("An error occurred while downloading updates from the Proxy Server: (%(code)s) %(message)s", code=pe.code, message=pe.message)) from pe
 
     def _l10n_it_edi_parse_notification(self, notification):
         sdi_state = notification.get('state', '')
@@ -1556,14 +1556,14 @@ class AccountMove(models.Model):
                 error_description_copy = error_description
                 if error_code == DUPLICATE_MOVE:
                     error_description_copy = _(
-                        "The e-invoice file %s is duplicated.\n"
-                        "Original message from the SdI: %s",
-                        filename, error_description_copy)
+                        "The e-invoice file %(file)s is duplicated.\n"
+                        "Original message from the SdI: %(message)s",
+                        file=filename, message=error_description_copy)
                 elif error_code == DUPLICATE_FILENAME:
                     error_description_copy = _(
-                        "The e-invoice filename %s is duplicated. Please check the FatturaPA Filename sequence.\n"
-                        "Original message from the SdI: %s",
-                        filename, error_description_copy)
+                        "The e-invoice filename %(file)s is duplicated. Please check the FatturaPA Filename sequence.\n"
+                        "Original message from the SdI: %(message)s",
+                        file=filename, message=error_description_copy)
                 error_descriptions.append(error_description_copy)
 
             return self._l10n_it_edi_format_errors(_('The e-invoice has been refused by the SdI.'), error_descriptions)
@@ -1571,28 +1571,28 @@ class AccountMove(models.Model):
         elif partner._l10n_it_edi_is_public_administration():
             pa_specific_map = {
                 'forwarded': nl2br(escape(_(
-                    "The e-invoice file %s was succesfully sent to the SdI.\n"
-                    "%s has 15 days to accept or reject it.",
-                    filename, partner_name))),
+                    "The e-invoice file %(file)s was succesfully sent to the SdI.\n"
+                    "%(partner)s has 15 days to accept or reject it.",
+                    file=filename, partner=partner_name))),
                 'forward_attempt': nl2br(escape(_(
-                    "The e-invoice file %s can't be forward to %s (Public Administration) by the SdI at the moment.\n"
+                    "The e-invoice file %(file)s can't be forward to %(partner)s (Public Administration) by the SdI at the moment.\n"
                     "It will try again for 10 days, after which it will be considered accepted, but "
                     "you will still have to send it by post or e-mail.",
-                    filename, partner_name))),
+                    file=filename, partner=partner_name))),
                 'accepted_by_pa_partner_after_expiry': nl2br(escape(_(
-                    "The e-invoice file %s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
-                    "The %s (Public Administration) had 15 days to either accept or refused this document,"
+                    "The e-invoice file %(file)s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
+                    "The %(partner)s (Public Administration) had 15 days to either accept or refused this document,"
                     "but since they did not reply, it's now considered accepted.",
-                    filename, partner_name))),
+                    file=filename, partner=partner_name))),
                 'rejected_by_pa_partner': nl2br(escape(_(
-                    "The e-invoice file %s has been refused by %s (Public Administration).\n"
+                    "The e-invoice file %(file)s has been refused by %(partner)s (Public Administration).\n"
                     "You have 5 days from now to issue a full refund for this invoice, "
                     "then contact the PA partner to create a new one according to their "
                     "requests and submit it.",
-                    filename, partner_name))),
+                    file=filename, partner=partner_name))),
                 'accepted_by_pa_partner': _(
-                    "The e-invoice file %s has been accepted by %s (Public Administration), a payment will be issued soon",
-                    filename, partner_name),
+                    "The e-invoice file %(file)s has been accepted by %(partner)s (Public Administration), a payment will be issued soon",
+                    file=filename, partner=partner_name),
             }
             if pa_specific_message := pa_specific_map.get(new_state):
                 return pa_specific_message
@@ -1605,17 +1605,17 @@ class AccountMove(models.Model):
                 "It is not yet considered accepted, please wait further notifications.",
                 filename))),
             'forwarded': _(
-                "The e-invoice file %s was accepted and succesfully forwarded it to %s by the SdI.",
-                filename, partner_name),
+                "The e-invoice file %(file)s was accepted and succesfully forwarded it to %(partner)s by the SdI.",
+                file=filename, partner=partner_name),
             'forward_attempt': nl2br(escape(_(
-                "The e-invoice file %s has been accepted by the SdI.\n"
-                "The SdI is trying to forward it to %s.\n"
+                "The e-invoice file %(file)s has been accepted by the SdI.\n"
+                "The SdI is trying to forward it to %(partner)s.\n"
                 "It will try for up to 2 days, after which you'll eventually "
                 "need to send it the invoice to the partner by post or e-mail.",
-                filename, partner_name))),
+                file=filename, partner=partner_name))),
             'forward_failed': nl2br(escape(_(
-                "The e-invoice file %s couldn't be forwarded to %s.\n"
+                "The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
                 "Please remember to send it via post or e-mail.",
-                filename, partner_name)))
+                file=filename, partner=partner_name)))
         }
         return new_state_messages_map.get(new_state)

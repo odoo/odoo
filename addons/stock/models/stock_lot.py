@@ -103,9 +103,9 @@ class StockLot(models.Model):
                 cross_lots.add((product, name))
                 continue
             if (product, name) in cross_lots:
-                error_message_lines.append(_(" - Product: %s, Serial Number: %s", product.display_name, name))
+                error_message_lines.append(_(" - Product: %(product)s, Lot/Serial Number: %(lot)s", product=product.display_name, lot=name))
         if error_message_lines:
-            raise ValidationError(_('The combination of serial number and product must be unique across a company and no company defined.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
+            raise ValidationError(_("The combination of lot/serial number and product must be unique within a company including when no company is defined.\nThe following combinations contain duplicates:\n") + '\n'.join(error_message_lines))
 
     def _check_create(self):
         active_picking_id = self.env.context.get('active_picking_id', False)

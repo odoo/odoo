@@ -12,8 +12,8 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             if self.company_id.country_code == 'SA':
                 record.company_informations += _(
-                    '\nBuilding Number: %s, Plot Identification: %s\nNeighborhood: %s',
-                    self.company_id.l10n_sa_edi_building_number,
-                    self.company_id.l10n_sa_edi_plot_identification,
-                    self.company_id.street2,
+                    '\nBuilding Number: %(building_number)s, Plot Identification: %(plot_identification)s\nNeighborhood: %(neighborhood)s',
+                    building_number=self.company_id.l10n_sa_edi_building_number,
+                    plot_identification=self.company_id.l10n_sa_edi_plot_identification,
+                    neighborhood=self.company_id.street2,
                 )

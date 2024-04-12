@@ -5,6 +5,7 @@ from lxml import etree
 from datetime import datetime
 from odoo import models, fields, _, api
 from odoo.exceptions import UserError
+from odoo.tools import format_list
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.primitives.asymmetric.ec import ECDSA
 from cryptography.hazmat.primitives import hashes
@@ -398,9 +399,6 @@ class AccountEdiFormat(models.Model):
             Override to add ZATCA compliance checks on the Invoice
         """
 
-        def _set_missing_partner_fields(missing_fields, name):
-            return _("- Please, set the following fields on the %s: %s", name, ', '.join(missing_fields))
-
         journal = invoice.journal_id
         company = invoice.company_id
 
@@ -432,9 +430,19 @@ class AccountEdiFormat(models.Model):
         customer_missing_info = self._l10n_sa_check_buyer_missing_info(invoice)
 
         if supplier_missing_info:
-            errors.append(_set_missing_partner_fields(supplier_missing_info, _("Supplier")))
+            errors.append(
+                _(
+                    "- Please, set the following fields on the Supplier: %(missing_fields)s",
+                    missing_fields=format_list(self.env, supplier_missing_info),
+                )
+            )
         if customer_missing_info:
-            errors.append(_set_missing_partner_fields(customer_missing_info, _("Customer")))
+            errors.append(
+                _(
+                    "- Please, set the following fields on the Customer: %(missing_fields)s",
+                    missing_fields=format_list(self.env, customer_missing_info),
+                )
+            )
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
             errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
         if invoice.move_type in ('in_refund', 'out_refund') and not invoice._l10n_sa_check_refund_reason():

@@ -701,7 +701,11 @@ class ResCompany(models.Model):
                         'restricted_by_hash_table': 'V',
                         'journal_name': f"{journal.name} ({prefix}...)",
                         'status': 'corrupted',
-                        'msg_cover': _("Corrupted data on journal entry with id %s (%s).", corrupted_move.id, corrupted_move.name),
+                        'msg_cover': _(
+                            "Corrupted data on journal entry with id %(id)s (%(name)s).",
+                            id=corrupted_move.id,
+                            name=corrupted_move.name,
+                        ),
                     })
                 else:
                     results.append({

@@ -243,9 +243,8 @@ export class DynamicList extends DataPoint {
             resIds.length < this.count
         ) {
             const msg = _t(
-                `Only the first %s records have been deleted (out of %s selected)`,
-                resIds.length,
-                this.count
+                "Only the first %(count)s records have been deleted (out of %(total)s selected)",
+                { count: resIds.length, total: this.count }
             );
             this.model.notification.add(msg, { title: _t("Warning") });
         }
@@ -409,9 +408,11 @@ export class DynamicList extends DataPoint {
             resIds.length < this.count
         ) {
             const msg = _t(
-                "Of the %s records selected, only the first %s have been archived/unarchived.",
-                resIds.length,
-                this.count
+                "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s have been archived/unarchived.",
+                {
+                    selectedRecords: resIds.length,
+                    firstRecords: this.count,
+                }
             );
             this.model.notification.add(msg, { title: _t("Warning") });
         }

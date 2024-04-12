@@ -100,8 +100,8 @@ class PaymentTransaction(models.Model):
         tx_details = authorize_api.get_transaction_details(self.provider_reference)
         if 'err_code' in tx_details:  # Could not retrieve the transaction details.
             raise ValidationError("Authorize.Net: " + _(
-                "Could not retrieve the transaction details. (error code: %s; error_details: %s)",
-                tx_details['err_code'], tx_details.get('err_msg')
+                "Could not retrieve the transaction details. (error code: %(error_code)s; error_details: %(error_message)s)",
+                error_code=tx_details['err_code'], error_message=tx_details.get('err_msg'),
             ))
 
         refund_tx = self.env['payment.transaction']
@@ -139,8 +139,8 @@ class PaymentTransaction(models.Model):
             tx_to_process._handle_notification_data('authorize', data)
         else:
             raise ValidationError("Authorize.net: " + _(
-                "The transaction is not in a status to be refunded. (status: %s, details: %s)",
-                tx_status, tx_details.get('messages', {}).get('message')
+                "The transaction is not in a status to be refunded. (status: %(status)s, details: %(message)s)",
+                status=tx_status, message=tx_details.get('messages', {}).get('message'),
             ))
         return refund_tx
 

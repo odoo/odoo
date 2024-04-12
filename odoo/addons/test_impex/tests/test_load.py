@@ -620,7 +620,7 @@ class test_m2o(ImporterCase):
         result = self.import_(['value'], [[record2.display_name]])
         self.assertEqual(
             result['messages'],
-            [message(u"Found multiple matches for value 'export.integer:42' in field 'Value' (2 matches)",
+            [message('Found multiple matches for value "export.integer:42" in field "Value" (2 matches)',
                      type='warning')])
         self.assertEqual(len(result['ids']), 1)
         self.assertEqual([
@@ -1315,11 +1315,11 @@ class test_unique(ImporterCase):
         )
         self.assertIsNotNone(m)
         self.assertItemsEqual(
-            m.group(1).split(', '),
+            m.group(1).split(' and '),
             ['value2', 'value3']
         )
         self.assertItemsEqual(
-            m.group(2).split(', '),
+            m.group(2).split(' and '),
             ['Value2', 'Value3']
         )
 

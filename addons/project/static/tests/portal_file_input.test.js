@@ -14,7 +14,7 @@ import { PortalFileInput } from "@project/project_sharing/components/portal_file
 mockService("notification", () => ({
     add(message) {
         expect.step("notification");
-        expect(message).toBe("The selected file (4B) is over the maximum allowed file size (2B).");
+        expect(message).toBe("The selected file (4B) is larger than the maximum allowed file size (2B).");
     },
 }));
 mockService("http", () => ({

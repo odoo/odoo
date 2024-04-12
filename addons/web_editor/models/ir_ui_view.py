@@ -81,7 +81,11 @@ class IrUiView(models.Model):
                     self._copy_custom_snippet_translations(record, field)
 
         except (ValueError, TypeError):
-            raise ValidationError(_("Invalid field value for %s: %s", Model._fields[field].string, el.text_content().strip()))
+            raise ValidationError(_(
+                "Invalid field value for %(field_name)s: %(value)s",
+                field_name=Model._fields[field].string,
+                value=el.text_content().strip(),
+            ))
 
     def save_oe_structure(self, el):
         self.ensure_one()

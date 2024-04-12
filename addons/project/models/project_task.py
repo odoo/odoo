@@ -340,7 +340,11 @@ class Task(models.Model):
 
     def _search_is_closed(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_('The search does not support the %s operator or %s value.', operator, value))
+            raise NotImplementedError(_(
+                "The search does not support operator %(operator)s or value %(value)s.",
+                operator=operator,
+                value=value,
+            ))
         if (operator == '!=' and value) or (operator == '=' and not value):
             searched_states = self.OPEN_STATES
         else:
@@ -1387,7 +1391,11 @@ class Task(models.Model):
 
     def _search_has_late_and_unreached_milestone(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_('The search does not support the %s operator or %s value.', operator, value))
+            raise NotImplementedError(_(
+                "The search does not support operator %(operator)s or value %(value)s.",
+                operator=operator,
+                value=value,
+            ))
         domain = [
             ('allow_milestones', '=', True),
             ('milestone_id', '!=', False),

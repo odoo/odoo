@@ -5,6 +5,7 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools import format_list
 
 
 class ResConfigSettings(models.TransientModel):
@@ -126,7 +127,7 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             if setting.predictive_lead_scoring_fields:
                 field_names = [_('Stage')] + [field.name for field in setting.predictive_lead_scoring_fields]
-                setting.predictive_lead_scoring_field_labels = _('%s and %s', ', '.join(field_names[:-1]), field_names[-1])
+                setting.predictive_lead_scoring_field_labels = format_list(self.env, field_names)
             else:
                 setting.predictive_lead_scoring_field_labels = _('Stage')
 

@@ -210,7 +210,11 @@ class StockWarehouseOrderpoint(models.Model):
     def action_stock_replenishment_info(self):
         self.ensure_one()
         action = self.env['ir.actions.actions']._for_xml_id('stock.action_stock_replenishment_info')
-        action['name'] = _('Replenishment Information for %s in %s', self.product_id.display_name, self.warehouse_id.display_name)
+        action['name'] = _(
+            'Replenishment Information for %(product)s in %(warehouse)s',
+            product=self.product_id.display_name,
+            warehouse=self.warehouse_id.display_name,
+        )
         res = self.env['stock.replenishment.info'].create({
             'orderpoint_id': self.id,
         })

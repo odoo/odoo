@@ -1242,7 +1242,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not env.cache.contains(record, self):
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
-                    _("(Record: %s, User: %s)", record, env.uid),
+                    _("(Record: %(record)s, User: %(user)s)", record=record, user=env.uid),
                 ])) from None
             value = env.cache.get(record, self)
 
@@ -2128,11 +2128,11 @@ class Html(_String):
                     _logger.info(diff_str)
 
                     raise UserError(_(
-                        "The field value you're saving (%s %s) includes content that is "
+                        "The field value you're saving (%(model)s %(field)s) includes content that is "
                         "restricted for security reasons. It is possible that someone "
                         "with higher privileges previously modified it, and you are therefore "
                         "not able to modify it yourself while preserving the content.",
-                        record._description, self.string,
+                        model=record._description, field=self.string,
                     ))
 
         return html_sanitize(value, **sanitize_vals)
@@ -2416,7 +2416,7 @@ class Binary(Field):
         try:
             return psycopg2.Binary(str(value).encode('ascii'))
         except UnicodeEncodeError:
-            raise UserError(_("ASCII characters are required for %s in %s") % (value, self.name))
+            raise UserError(_("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
@@ -4463,7 +4463,11 @@ class One2many(_RelationalMulti):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]
             if self.inverse_name not in comodel._fields:
-                raise UserError(_("No inverse field %r found for %r") % (self.inverse_name, self.comodel_name))
+                raise UserError(_(
+                    'No inverse field "%(inverse_field)s" found for "%(comodel)s"',
+                    inverse_field=self.inverse_name,
+                    comodel=self.comodel_name
+                ))
 
     def get_domain_list(self, records):
         comodel = records.env.registry[self.comodel_name]

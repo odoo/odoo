@@ -632,8 +632,8 @@ class Meeting(models.Model):
                                     "all attendees must have an email address. However, some events do "
                                     "not respect this condition. As long as the events are incorrect, "
                                     "the calendars will not be synchronized."
-                                    "\nEither update the events/attendees or archive these events %s:"
-                                    "\n%s", details, invalid_events))
+                                    "\nEither update the events/attendees or archive these events %(details)s:"
+                                    "\n%(invalid_events)s", details=details, invalid_events=invalid_events))
 
     def _microsoft_values_occurence(self, initial_values={}):
         values = initial_values

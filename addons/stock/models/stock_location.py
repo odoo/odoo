@@ -211,7 +211,11 @@ class Location(models.Model):
 
     def _search_is_empty(self, operator, value):
         if operator not in ('=', '!=') or not isinstance(value, bool):
-            raise NotImplementedError(_('The search does not support the %(operator)s operator or %(value)s value.'), operator=operator, value=value)
+            raise NotImplementedError(_(
+                "The search does not support the %(operator)s operator or %(value)s value.",
+                operator=operator,
+                value=value,
+            ))
         groups = self.env['stock.quant']._read_group([
             ('location_id.usage', 'in', ['internal', 'transit'])],
             ['location_id'], ['quantity:sum'])
@@ -249,8 +253,8 @@ class Location(models.Model):
                     warehouses = self.env['stock.warehouse'].search([('active', '=', True), '|', ('lot_stock_id', '=', location.id), ('view_location_id', '=', location.id)], limit=1)
                     if warehouses:
                         raise UserError(_(
-                            "You cannot archive the location %s as it is used by your warehouse %s",
-                            location.display_name, warehouses.display_name))
+                            "You cannot archive location %(location)s because it is used by warehouse %(warehouse)s",
+                            location=location.display_name, warehouse=warehouses.display_name))
 
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
@@ -528,4 +532,9 @@ class StockRoute(models.Model):
 
             for rule in route.rule_ids:
                 if route.company_id.id != rule.company_id.id:
-                    raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
+                    raise ValidationError(_(
+                        "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
+                        rule=rule.display_name,
+                        rule_company=rule.company_id.display_name,
+                        route_company=route.company_id.display_name,
+                    ))

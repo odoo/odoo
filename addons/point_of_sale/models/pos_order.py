@@ -232,9 +232,9 @@ class PosOrder(models.Model):
             invoice_lines.append((0, None, invoice_lines_values))
             if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
-                    'name': _('Price discount from %s -> %s',
-                              float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
-                              float_repr(line.price_unit, self.currency_id.decimal_places)),
+                    'name': _('Price discount from %(original_price)s to %(discounted_price)s',
+                              original_price=float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
+                              discounted_price=float_repr(line.price_unit, self.currency_id.decimal_places)),
                     'display_type': 'line_note',
                 }))
             if line.customer_note:
@@ -818,7 +818,7 @@ class PosOrder(models.Model):
         ).create({
             'journal_id': self.config_id.journal_id.id,
             'date': fields.Date.context_today(self),
-            'ref': _('Reversal of POS closing entry %s for order %s from session %s', self.session_move_id.name, self.name, self.session_id.name),
+            'ref': _('Reversal of POS closing entry %(entry)s for order %(order)s from session %(session)s', entry=self.session_move_id.name, order=self.name, session=self.session_id.name),
             'invoice_line_ids': [(0, 0, aml_value) for aml_value in move_lines],
         })
         reversal_entry.action_post()
@@ -1440,8 +1440,8 @@ class PosOrderLine(models.Model):
             account = line.product_id._get_product_accounts()['income'] or self.order_id.config_id.journal_id.default_account_id
             if not account:
                 raise UserError(_(
-                    "Please define income account for this product: '%s' (id:%d).",
-                    line.product_id.name, line.product_id.id,
+                    "Please define income account for this product: '%(product)s' (id:%(id)d).",
+                    product=line.product_id.name, id=line.product_id.id,
                 ))
 
             if fiscal_position:

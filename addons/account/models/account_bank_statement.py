@@ -123,7 +123,7 @@ class AccountBankStatement(models.Model):
     @api.depends('create_date')
     def _compute_name(self):
         for stmt in self:
-            stmt.name = _("%s Statement %s", stmt.journal_id.code, stmt.date)
+            stmt.name = _("%(journal_code)s Statement %(date)s", journal_code=stmt.journal_id.code, date=stmt.date)
 
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):

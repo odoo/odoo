@@ -1118,10 +1118,10 @@ class SaleOrder(models.Model):
                 and self._best_global_discount_already_applied(applied_global_reward, global_reward)
             ):
                 return {'error': _(
-                    'This discount (%s) is not compatible with "%s". '
+                    'This discount (%(discount)s) is not compatible with "%(other_discount)s". '
                     'Please remove it in order to apply this one.',
-                    global_reward.description,
-                    applied_global_reward.program_id.reward_ids.description,
+                    discount=global_reward.description,
+                    other_discount=applied_global_reward.program_id.reward_ids.description,
                 )}
         # Check for applicability from the program's triggers/rules.
         # This step should also compute the amount of points to give for that program on that order.

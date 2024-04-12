@@ -169,10 +169,10 @@ class HolidaysAllocation(models.Model):
                 if allocation.env.context.get('is_employee_allocation'):
                     if allocation.holiday_status_id:
                         allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                        title = _("%s allocation request (%s %s)",
-                            allocation.holiday_status_id.name,
-                            allocation_duration,
-                            allocation.type_request_unit)
+                        title = _("%(status)s allocation request (%(duration)s %(unit)s)",
+                            status=allocation.holiday_status_id.name,
+                            duration=allocation_duration,
+                            unit=allocation.type_request_unit)
                     else:
                         title = _("Allocation Request")
                 allocation.name = title
@@ -203,9 +203,18 @@ class HolidaysAllocation(models.Model):
     def _compute_description_validity(self):
         for allocation in self:
             if allocation.date_to:
-                name_validity = _("%s (from %s to %s)", allocation.name, allocation.date_from.strftime("%b %d %Y"), allocation.date_to.strftime("%b %d %Y"))
+                name_validity = _(
+                    "%(allocation_name)s (from %(date_from)s to %(date_to)s)",
+                    allocation_name=allocation.name,
+                    date_from=allocation.date_from.strftime("%b %d %Y"),
+                    date_to=allocation.date_to.strftime("%b %d %Y"),
+                )
             else:
-                name_validity = _("%s (from %s to No Limit)", allocation.name, allocation.date_from.strftime("%b %d %Y"))
+                name_validity = _(
+                    "%(allocation_name)s (from %(date_from)s to No Limit)",
+                    allocation_name=allocation.name,
+                    date_from=allocation.date_from.strftime("%b %d %Y"),
+                )
             allocation.name_validity = name_validity
 
     @api.depends('employee_id', 'holiday_status_id')
@@ -608,11 +617,11 @@ class HolidaysAllocation(models.Model):
                     second=allocation.employee_ids[1].sudo().name,
                     amount=len(allocation.employee_ids) - 2)
 
-            allocation.display_name = _("Allocation of %s: %.2f %s to %s",
-                allocation.holiday_status_id.sudo().name,
-                allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
-                _('hours') if allocation.type_request_unit == 'hour' else _('days'),
-                target,
+            allocation.display_name = _("Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s",
+                leave_type=allocation.holiday_status_id.sudo().name,
+                amount=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
+                unit=_('hours') if allocation.type_request_unit == 'hour' else _('days'),
+                target=target,
             )
 
     def _add_lastcalls(self):

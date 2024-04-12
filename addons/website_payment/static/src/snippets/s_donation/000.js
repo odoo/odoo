@@ -1,5 +1,4 @@
-/** @odoo-module **/
-
+import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { rpc } from "@web/core/network/rpc";
@@ -137,9 +136,12 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
                 if (!amount) {
                     errorMessage = _t("Please select or enter an amount");
                 } else if (amount < parseFloat(minAmount)) {
-                    const before = this.currency.position === "before" ? this.currency.symbol : "";
-                    const after = this.currency.position === "after" ? this.currency.symbol : "";
-                    errorMessage = _t("The minimum donation amount is %s%s%s", before, minAmount, after);
+                    errorMessage = _t(
+                        "The minimum donation amount is %(amount)s",
+                        {
+                            amount: formatCurrency(minAmount, this.currency.id),
+                        }
+                    );
                 }
                 if (errorMessage) {
                     $(ev.currentTarget).before($('<p>', {

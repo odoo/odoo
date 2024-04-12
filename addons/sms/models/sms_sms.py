@@ -119,7 +119,7 @@ class SmsSms(models.Model):
             if success_sms > 0:
                 notification_title = _('Success')
                 notification_type = 'success'
-                notification_message = _('%s out of the %s selected SMS Text Messages have successfully been resent.', success_sms, len(self))
+                notification_message = _('%(count)s out of the %(total)s selected SMS Text Messages have successfully been resent.', count=success_sms, total=len(self))
             else:
                 notification_message = _('The SMS Text Messages could not be resent.')
         else:

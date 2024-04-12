@@ -54,7 +54,11 @@ class AccountTourUploadBill(models.TransientModel):
 
         values = [('sample', _('Try a sample vendor bill')), ('upload', _('Upload your own bill'))]
         if journal_alias.alias_name and journal_alias.alias_domain:
-            values.append(('email', _('Send a bill to \n%s@%s', journal_alias.alias_name, journal_alias.alias_domain)))
+            values.append(('email', _(
+                'Send a bill to \n%(alias_name)s@%(alias_domain)s',
+                alias_name=journal_alias.alias_name,
+                alias_domain=journal_alias.alias_domain,
+            )))
         else:
             values.append(('email_no_alias', _('Send a bill by email')))
         return values

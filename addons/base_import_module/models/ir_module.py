@@ -410,7 +410,7 @@ class IrModule(models.Model):
         except requests.exceptions.HTTPError:
             raise UserError(_('The module %s cannot be downloaded') % module_name)
         except requests.exceptions.ConnectionError:
-            raise UserError(_('Connection to %s failed, the module %s cannot be downloaded.', APPS_URL, module_name))
+            raise UserError(_('Connection to %(url)s failed, the module %(module)s cannot be downloaded.', url=APPS_URL, module=module_name))
 
     @api.model
     def _get_missing_dependencies(self, zip_data):

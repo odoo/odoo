@@ -297,9 +297,9 @@ class HolidaysType(models.Model):
             if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
                 name = "{name} ({count})".format(
                     name=name,
-                    count=_('%g remaining out of %g') % (
-                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
-                        float_round(record.max_leaves, precision_digits=2) or 0.0,
+                    count=_('%(remaining)g remaining out of %(maximum)g',
+                        remaining=float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
+                        maximum=float_round(record.max_leaves, precision_digits=2) or 0.0,
                     ) + (_(' hours') if record.request_unit == 'hour' else _(' days')),
             )
             record.display_name = name

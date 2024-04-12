@@ -26,7 +26,7 @@ class AccountAccountTag(models.Model):
         for tag in self:
             name = tag.name
             if tag.applicability == "taxes" and tag.country_id and tag.country_id != self.env.company.account_fiscal_country_id:
-                name = _("%s (%s)", tag.name, tag.country_id.code)
+                name = _("%(tag)s (%(country_code)s)", tag=tag.name, country_code=tag.country_id.code)
             tag.display_name = name
 
     @api.model
