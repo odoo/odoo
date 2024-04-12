@@ -373,7 +373,7 @@ class StockMoveLine(models.Model):
                             Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                             Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                     Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
-                next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+                next_moves = ml.move_id._get_next_moves().filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
         return mls
@@ -457,7 +457,7 @@ class StockMoveLine(models.Model):
                 ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, in_date=in_date)
 
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
-                next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+                next_moves |= ml.move_id._get_next_moves().filtered(lambda move: move.state not in ('done', 'cancel'))
 
                 # Log a note
                 if ml.picking_id:

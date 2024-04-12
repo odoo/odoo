@@ -13,7 +13,7 @@ class MrpProduction(models.Model):
         groups='sales_team.group_sale_salesman')
     sale_line_id = fields.Many2one('sale.order.line', 'Origin sale order line')
 
-    @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_ids')
+    @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id', 'procurement_group_id.group_dest_ids.sale_id')
     def _compute_sale_order_count(self):
         for production in self:
             production.sale_order_count = len(production.get_sale_orders())
@@ -39,5 +39,4 @@ class MrpProduction(models.Model):
         return action
 
     def get_sale_orders(self):
-        return self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_ids | self.procurement_group_id.sale_ids
-    # TODO : on done, if proc->sale_ids->picking->move is mtso, assign (missing <= produced) qty
+        return self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id | self.procurement_group_id.group_dest_ids.sale_id

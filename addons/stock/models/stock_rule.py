@@ -324,13 +324,15 @@ class StockRule(models.Model):
 
         procure_method = self.procure_method if self.procure_method != 'mts_else_mto' else 'make_to_stock'
         move_dest_ids = []
+
+        # TODO : Fix following behavior since we now work with chained PG
         mts_move_dest_ids = self.env['stock.move']
-        if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():
+        if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():  # FIXME : we may still want to keep the pg-link even if we don't do reservation such that the second condition is too much
             # make_to_stock moves MAY have dest moves but SHOULD NOT have orig moves, in other words, a make_to_stock move CAN NOT be a destination move
             for m in values['move_dest_ids']:
                 if m.procure_method == 'make_to_stock' and not m.group_id:
                     mts_move_dest_ids |= m
-                else:
+                else:  # !!! not if == (m != mts OR m.group_id)
                     move_dest_ids.append((4, m.id))
 
         if group_id and mts_move_dest_ids:
@@ -448,14 +450,14 @@ class ProcurementGroup(models.Model):
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
-    # required_by_group_ids
-    group_orig_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_dest_ids', 'group_orig_ids', 'Origin Procurement Groups'
-                                      copy=False,
-                                      help="The procurement groups that relies on the fulfillment of the current procurement group.")
     # fulfilled_by_group_ids
-    group_dest_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_orig_ids', 'group_dest_ids', 'Destination Procurement Groups'
+    group_orig_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_dest_ids', 'group_orig_ids', 'Origin Procurement Groups',
                                       copy=False,
                                       help="The procurement groups on which the current procurement group relies.")
+    # required_by_group_ids
+    group_dest_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_orig_ids', 'group_dest_ids', 'Destination Procurement Groups',
+                                      copy=False,
+                                      help="The procurement groups that relies on the fulfillment of the current procurement group.")
 
     @api.model
     def _skip_procurement(self, procurement):

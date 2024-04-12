@@ -98,6 +98,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
+                """ EXTRACT : create_po """
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
@@ -110,6 +111,7 @@ class StockRule(models.Model):
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
+                """EXTRACT : update_po """
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
                     missing_origins = origins - set(po.origin.split(', '))
@@ -120,6 +122,29 @@ class StockRule(models.Model):
 
             procurements_to_merge = self._get_procurements_to_merge(procurements)
             procurements = self._merge_procurements(procurements_to_merge)
+
+            """ EXTRACT : create_or_update_purchase_order_procurement_group"""
+            # Here, in all case there's a purchase order
+            # TODO: in specific method ?.. if mtso and 'group_id' in procurement.values =>
+            #   (?) Create PG if not set on PO ?
+            #   ( ) Link procurement.values.group_id.id in PO.group_id.group_dest_ids
+            group_dest_ids = self.env['procurement.group']
+            for procurement in procurements:
+                move_dest_ids = procurement.values.get('move_dest_ids')
+                for move in move_dest_ids:
+                    if move.procure_method == 'make_to_stock':
+                        group_dest_ids |= move.group_id
+            if group_dest_ids:
+                if po.group_id:
+                    po.group_id.group_dest_ids |= group_dest_ids
+                else:
+                    # TODO : Extract in purchase_order
+                    po.group_id = self.group_id.create({
+                        'name': po.name,
+                        'partner_id': po.partner_id.id,
+                        'group_dest_ids': [Command.link(pg.id) for pg in group_dest_ids],
+                        'purchase_order_id': po.id,
+                    })
 
             po_lines_by_product = {}
             grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
@@ -301,11 +326,10 @@ class StockRule(models.Model):
     def _prepare_purchase_order_group(self, values):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and values.get('group_id') and values['group_id']) or False
+                (gpo == 'propagate' and values.get('group_id')) or False
         return group
 
     def _make_po_get_domain(self, company_id, values, partner):
-        # if values.get(group_id).procure_method != 'mts_else_mto':
         group = self._prepare_purchase_order_group(values)
 
         domain = (

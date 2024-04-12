@@ -9,12 +9,13 @@ class StockRule(models.Model):
     def _get_linked_mo_id(self, procurement, rule, bom):
         # When similar MOs are created through MTSO from SOs, create a MO for each SO, update existing MO if possible
         # However, when they're created from an orderpoint, 'merge them' if possible
-        if procurement.values.get('group_id') and procurement.values['group_id'].sale_ids and not procurement.values.get('orderpoint_id'):
+        if procurement.values.get('group_id') and procurement.values['group_id'].get('group_dest_ids') and procurement.values['group_id'].get('group_dest_ids').sale_id and not procurement.values.get('orderpoint_id'):
             sale_mo_ids = procurement.values['group_id'].sale_ids.mrp_production_ids
             mo = sale_mo_ids.filtered(lambda mo: mo.bom_id.id == bom.id and mo.state not in ('done', 'cancel'))
             if len(mo) > 1:
                 mo = mo[-1]  # Take the most recent
-            return mo  # FIXME : Check me, may have to indent this part (case mo is False)
+            if mo:
+                return mo
         return super()._get_linked_mo_id(procurement, rule, bom)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):

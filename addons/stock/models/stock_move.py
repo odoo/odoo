@@ -503,7 +503,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         already_propagate_ids.update(self.ids)
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
-            moves_to_update = (move.move_dest_ids | move.move_orig_ids | move.group_id.stock_move_ids.filtered(lambda m: m.rule_id.procure_method == 'mts_else_mto'))
+            moves_to_update = (move.move_dest_ids | move.move_orig_ids | move.group_id.stock_move_ids.filtered(lambda m: m._is_mtso()))
             if move.date_deadline:
                 delta = move.date_deadline - fields.Datetime.to_datetime(new_deadline)
             else:
@@ -687,7 +687,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # propagate product_packaging_id changes in the stock move chain
         if 'product_packaging_id' in vals:
             self._propagate_product_packaging(vals['product_packaging_id'])
-        if 'date_deadline' in vals and self.rule_id.procure_method != 'mts_else_mto':
+        if 'date_deadline' in vals and self._is_mtso():  # FIXME
             self._set_date_deadline(vals.get('date_deadline'))
         if 'move_orig_ids' in vals:
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
@@ -1026,7 +1026,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
             move_to_propagate_ids = set()
             move_to_mts_ids = set()
-            for m in move.move_dest_ids - new_move:
+            for m in move._get_next_moves() - new_move:
                 if new_move and move.location_final_id and m.location_id == move.location_final_id:
                     move_to_propagate_ids.add(m.id)
                 elif not m.location_id._child_of(move.location_dest_id):
@@ -1429,16 +1429,17 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.move_orig_ids:
                 move_waiting.add(move.id)
             else:
-                if move.procure_method == 'make_to_order' or (move.rule_id and move.rule_id.procure_method == 'mts_else_mto'):
+                if move.procure_method == 'make_to_order' or move._is_mtso():
                     move_create_proc.add(move.id)
-                else:
-                    move_to_confirm.add(move.id)
+                if move.procure_method == 'make_to_stock':
+                    move_to_confirm.add(move.id) # Check Me, inconsistent with move_crate_proc
             if move._should_be_assigned():
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
                 to_assign[key].add(move.id)
 
         move_create_proc, move_waiting = self.browse(move_create_proc), self.browse(move_waiting)
 
+        # --> def prepare_procurements
         # create procurements for make to order moves
         procurement_requests = []
         procurement_quantities = move_create_proc._prepare_procurement_qty()
@@ -1446,8 +1447,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             if float_is_zero(quantity, precision_rounding=move.product_uom.rounding):
                 move_to_confirm.add(move.id)
                 continue
-            elif float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) > 0 and float_compare(quantity, move.product_qty, precision_rounding=move.product_uom.rounding) < 0:
-                move._action_assign(force_qty=move.product_qty - quantity)  # FIXME : see arm comments
+            # elif float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) > 0 and float_compare(quantity, move.product_qty, precision_rounding=move.product_uom.rounding) < 0:
+                # move._action_assign(force_qty=move.product_qty - quantity)  # FIXME : see arm comments
             values = move._prepare_procurement_values()
             origin = move._prepare_procurement_origin()
             procurement_requests.append(self.env['procurement.group'].Procurement(
@@ -1457,7 +1458,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         # TODO: if move_dest_ids with procure_method = make_to stock in procurement_requests.values, set the pg id on current move (if possible)
-        # for procurement in procurement_requests:
+        # for procurement in procurement_requests
 
         move_to_confirm = self.browse(move_to_confirm)
         move_create_proc -= move_to_confirm
@@ -1528,7 +1529,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         mtso_products_by_locations = defaultdict(set)
         mtso_moves = self.env['stock.move']
         for move in self:
-            if move.rule_id and move.rule_id.procure_method == 'mts_else_mto':
+            if move._is_mtso():
                 mtso_moves |= move
                 mtso_products_by_locations[move.location_id].add(move.product_id.id)
 
@@ -2372,3 +2373,10 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    def _is_mtso(self):
+        self.ensure_one()
+        return self.rule_id and self.rule_id.procure_method == 'mts_else_mto'
+
+    def _get_next_moves(self):
+        return self.move_dest_ids + self.group_id.group_dest_ids.stock_move_ids

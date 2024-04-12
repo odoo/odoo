@@ -8,25 +8,22 @@ from odoo.tools.float_utils import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
+    @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id', 'procurement_group_id.group_orig_ids.purchase_order_id')
     def _compute_purchase_order_count(self):
         super(SaleOrder, self)._compute_purchase_order_count()
 
     def _get_purchase_orders(self):
-        # Made for one SO at a time... -_-"
-        # po_per_so = self.env['procurement.group']._read_group([('sale_ids', 'in', self.ids),('purchase_order_ids', '!=', False)], ['sale_ids'], ['purchase_order_ids:recordset'])
         mtso_purchase_orders = self._get_mtso_purchase_orders()
         return super()._get_purchase_orders() | self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id | self.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id | mtso_purchase_orders
 
     def _get_mtso_purchase_orders(self):
-        domain = [('sale_ids', 'in', self.ids), ('purchase_order_ids', '!=', False)]
-        return self.env['procurement.group'].search_fetch(domain, ['purchase_order_ids']).purchase_order_ids
+        return self.procurement_group_id.group_orig_ids.purchase_order_id
 
     def _action_cancel(self):
         """When Sale Orders have MTSO moves that have triggered the creation/update of Purchase Order lines,
         on the cancellation of those Sale Orders, decrease the qty of and/or cancel the Purchase Order lines.
         In the case all of the PO lines of a PO are cancelled, also cancel the PO."""
-        so_mtso_moves = self.order_line.move_ids.filtered(lambda m: m.rule_id.procure_method == 'mts_else_mto')
+        so_mtso_moves = self.order_line.move_ids.filtered(lambda m: m._is_mtso())
         linked_po = self._get_mtso_purchase_orders().filtered(lambda po: po.state not in ('done', 'cancel'))
         if not so_mtso_moves or not linked_po.order_line:
             return super()._action_cancel()

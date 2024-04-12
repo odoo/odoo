@@ -4,7 +4,7 @@
 from datetime import timedelta
 from collections import defaultdict
 
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -324,7 +324,7 @@ class SaleOrderLine(models.Model):
         return {
             'name': self.order_id.name,
             'move_type': self.order_id.picking_policy,
-            'sale_ids': [Command.link(self.order_id.id)],
+            'sale_id': self.order_id.id,
             'partner_id': self.order_id.partner_shipping_id.id,
         }
 

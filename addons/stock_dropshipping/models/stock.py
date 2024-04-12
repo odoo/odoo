@@ -4,6 +4,7 @@
 from odoo import api, models, fields
 from odoo.osv import expression
 
+
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
