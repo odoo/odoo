@@ -210,13 +210,14 @@ patch(PosStore.prototype, {
     },
     getPendingOrder() {
         const context = this.getSyncAllOrdersContext();
-        const { orderToCreate, orderToUpdate } = super.getPendingOrder();
+        const { orderToCreate, orderToUpdate, paidOrdersNotSent } = super.getPendingOrder();
 
         if (!this.config.module_pos_restaurant || !context.table_ids || !context.table_ids.length) {
-            return { orderToCreate, orderToUpdate };
+            return { orderToCreate, orderToUpdate, paidOrdersNotSent };
         }
 
         return {
+            paidOrdersNotSent,
             orderToCreate: orderToCreate.filter(
                 (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
             ),
