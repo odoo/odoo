@@ -38,15 +38,15 @@ test("attach document widget calls action with attachment ids", async () => {
         },
     });
 
-    mockService("http", () => ({
-        post: (route, params) => {
+    mockService("http", {
+        post(route, params) {
             expect.step("post");
             expect(route).toBe("/web/binary/upload_attachment");
             expect(params.model).toBe("partner");
             expect(params.id).toBe(1);
             return '[{ "id": 5 }, { "id": 2 }]';
         },
-    }));
+    });
 
     onRpc(async ({ args, kwargs, method, model }) => {
         expect.step(method);
@@ -97,15 +97,15 @@ test("attach document widget calls action with attachment ids on a new record", 
         },
     });
 
-    mockService("http", () => ({
-        post: (route, params) => {
+    mockService("http", {
+        post(route, params) {
             expect.step("post");
             expect(route).toBe("/web/binary/upload_attachment");
             expect(params.model).toBe("partner");
             expect(params.id).toBe(2);
             return '[{ "id": 5 }, { "id": 2 }]';
         },
-    }));
+    });
 
     onRpc(async (params) => {
         expect.step(params.method);

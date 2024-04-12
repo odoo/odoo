@@ -16,12 +16,12 @@ import { session } from "@web/session";
 // -----------------------------------------------------------------------------
 
 async function createFileInput({ mockPost, mockAdd, props }) {
-    mockService("notification", () => ({
+    mockService("notification", {
         add: mockAdd || (() => {}),
-    }));
-    mockService("http", () => ({
+    });
+    mockService("http", {
         post: mockPost || (() => {}),
-    }));
+    });
     await mountWithCleanup(FileInput, { props });
 }
 

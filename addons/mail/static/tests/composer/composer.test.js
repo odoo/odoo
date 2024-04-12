@@ -1,6 +1,3 @@
-import { describe, beforeEach, expect, test } from "@odoo/hoot";
-
-import { Composer } from "@mail/core/common/composer";
 import {
     SIZES,
     click,
@@ -20,10 +17,17 @@ import {
     start,
     startServer,
     triggerHotkey,
-} from "../mail_test_helpers";
-import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+} from "@mail/../tests/mail_test_helpers";
+import { Composer } from "@mail/core/common/composer";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import {
+    Command,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
