@@ -130,13 +130,13 @@ test("can execute the callback of settings", async () => {
         name: "Change My Preferences",
         res_id: 0,
     }));
-    mockService("action", () => ({
+    mockService("action", {
         async doAction(actionId) {
             expect.step(String(actionId.res_id));
             expect.step(actionId.name);
             return true;
         },
-    }));
+    });
 
     userMenuRegistry.add("profile", preferencesItem);
     await mountWithCleanup(UserMenu);

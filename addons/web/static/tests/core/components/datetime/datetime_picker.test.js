@@ -1,11 +1,11 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { Component, xml, useState } from "@odoo/owl";
-import { assertDateTimePicker, getPickerCell } from "../../datetime/datetime_test_helpers";
-import { defineParams, mountWithCleanup, patchDate } from "@web/../tests/web_test_helpers";
-import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { click, queryAllTexts, resize, select } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
+import { Component, useState, xml } from "@odoo/owl";
+import { defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
+import { assertDateTimePicker, getPickerCell } from "../../datetime/datetime_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -36,9 +36,7 @@ defineParams({
     },
 });
 
-beforeEach(() => {
-    patchDate("2023-04-25T12:45:01");
-});
+beforeEach(() => mockDate("2023-04-25T12:45:01"));
 
 test("default params", async () => {
     await mountWithCleanup(DateTimePicker);

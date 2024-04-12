@@ -5,8 +5,8 @@
  */
 
 export { setRandomSeed } from "./mock/math";
-export { mockPermission, mockUserAgent, mockSendBeacon } from "./mock/navigator";
-export { mockFetch, mockWebSocket, mockWorker } from "./mock/network";
+export { mockPermission, mockSendBeacon, mockUserAgent } from "./mock/navigator";
+export { mockFetch, mockLocation, mockWebSocket, mockWorker } from "./mock/network";
 export { flushNotifications } from "./mock/notification";
 export {
     Deferred,
@@ -22,4 +22,4 @@ export {
     setFrameRate,
     tick,
 } from "./mock/time";
-export { mockLocation, mockTouch } from "./mock/window";
+export { mockTouch, watchListeners } from "./mock/window";

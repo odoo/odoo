@@ -1,8 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-
-/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
-let rpc;
-
+import { mockDate } from "@odoo/hoot-mock";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     SIZES,
     assertSteps,
@@ -24,10 +22,10 @@ import {
     step,
     triggerHotkey,
 } from "../mail_test_helpers";
-import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+
 import { rpcWithEnv } from "@mail/utils/common/misc";
-import { mockDate } from "@odoo/hoot-mock";
+/** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
+let rpc;
 
 describe.current.tags("desktop");
 defineMailModels();

@@ -2,16 +2,14 @@ import { busModels } from "@bus/../tests/bus_test_helpers";
 import { mailGlobal } from "@mail/utils/common/misc";
 import { after, before, getFixture } from "@odoo/hoot";
 import { Component, onRendered, onWillDestroy, status } from "@odoo/owl";
-import {
-    getMockEnv,
-    makeMockEnv,
-    restoreRegistry,
-} from "@web/../tests/_framework/env_test_helpers";
+import { getMockEnv, restoreRegistry } from "@web/../tests/_framework/env_test_helpers";
 import { authenticate, defineParams } from "@web/../tests/_framework/mock_server/mock_server";
 import { parseViewProps } from "@web/../tests/_framework/view_test_helpers";
 import {
     MockServer,
     defineModels,
+    getService,
+    makeMockEnv,
     makeMockServer,
     mountWithCleanup,
     patchWithCleanup,
@@ -125,8 +123,8 @@ export function registerArchs(newArchs) {
 }
 
 export async function openDiscuss(activeId, { target } = {}) {
-    const env = target ?? getMockEnv();
-    await env.services.action.doAction({
+    const actionService = target?.services.action ?? getService("action");
+    await actionService.doAction({
         context: { active_id: activeId },
         id: DISCUSS_ACTION_ID,
         tag: "mail.action_discuss",
@@ -160,7 +158,6 @@ export async function openListView(resModel, params) {
 }
 
 export async function openView({ res_model, res_id, views, ...params }) {
-    const env = getMockEnv();
     const [[viewId, type]] = views;
     const action = {
         res_model,
@@ -179,7 +176,7 @@ export async function openView({ res_model, res_id, views, ...params }) {
         viewId: params?.arch || viewId,
         ...params,
     });
-    await env.services.action.doAction(action, { props: options });
+    await getService("action").doAction(action, { props: options });
 }
 /** @type {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} */
 let pyEnv;
@@ -244,21 +241,28 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
 
 let NEXT_ENV_ID = 1;
 
-export async function start({ asTab = false, authenticateAs, env: pEnv } = {}) {
+/**
+ * @param {{
+ *  asTab?: boolean;
+ *  authenticateAs?: any | { login: string; password: string; };
+ *  env?: Partial<OdooEnv>;
+ * }} [options]
+ */
+export async function start(options) {
     if (!MockServer.current) {
         await startServer();
     }
     let target = getFixture();
-    const pyEnv = MockServer.current.env;
-    if (authenticateAs !== undefined) {
-        if (authenticateAs === false) {
+    const pyEnv = MockServer.env;
+    if (options?.authenticateAs !== undefined) {
+        if (options.authenticateAs === false) {
             // no authentication => new guest
             const guestId = pyEnv["mail.guest"].create({});
             authenticateGuest(pyEnv["mail.guest"].read(guestId)[0]);
-        } else if (authenticateAs._name === "mail.guest") {
-            authenticateGuest(authenticateAs);
+        } else if (options.authenticateAs._name === "mail.guest") {
+            authenticateGuest(options.authenticateAs);
         } else {
-            authenticate(authenticateAs.login, authenticateAs.password);
+            authenticate(options.authenticateAs.login, options.authenticateAs.password);
         }
     } else if ("res.users" in pyEnv) {
         if (pyEnv.cookie.get("dgid")) {
@@ -275,31 +279,32 @@ export async function start({ asTab = false, authenticateAs, env: pEnv } = {}) {
             storeData: ResUsers._init_store_data(),
         });
     }
+    const envId = NEXT_ENV_ID++;
+    const envOptions = { ...options?.env, envId };
     let env;
-    if (asTab) {
+
+    mailGlobal.elligibleEnvs.add(envId);
+
+    if (options?.asTab) {
         restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
         target.style.width = "100%";
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
-        env = await makeMockEnv({ envId }, { makeNew: true });
+        env = await makeMockEnv(envOptions, { makeNew: true });
     } else {
-        const envId = NEXT_ENV_ID++;
-        mailGlobal.elligibleEnvs.add(envId);
-        try {
-            env = await makeMockEnv({ envId });
-        } catch {
-            env = Object.assign(getMockEnv(), { envId });
+        env = getMockEnv();
+        if (env) {
+            Object.assign(env, envOptions);
+        } else {
+            env = await makeMockEnv(envOptions);
         }
     }
-    const wc = await mountWithCleanup(WebClient, { target, env });
+    await mountWithCleanup(WebClient, { target, env });
     after(() => {
         mailGlobal.elligibleEnvs.clear();
     });
-    odoo.__WOWL_DEBUG__ = { root: wc };
     return Object.assign(getMockEnv(), { target });
 }
 

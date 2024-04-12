@@ -8,15 +8,15 @@ import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 describe.current.tags("headless");
 
 test("handles connection error when behind a server", async () => {
-    const restoreFetch = mockFetch(() => new Response("", { status: 502 }));
-    after(restoreFetch);
+    mockFetch(() => new Response("", { status: 502 }));
+
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
 });
 
 test("handles connection error when network unavailable", async () => {
-    const restoreFetch = mockFetch(() => Promise.reject());
-    after(restoreFetch);
+    mockFetch(() => Promise.reject());
+
     const error = new ConnectionLostError("/some_url");
     await expect(download({ data: {}, url: "/some_url" })).rejects.toThrow(error);
 });
@@ -32,11 +32,7 @@ test("handles business error from server", async () => {
         message: "Odoo Server Error",
     };
 
-    const restoreFetch = mockFetch(() => {
-        const blob = new Blob([JSON.stringify(serverError)], { type: "text/html" });
-        return new Response(blob, { status: 200 });
-    });
-    after(restoreFetch);
+    mockFetch(() => new Blob([JSON.stringify(serverError)], { type: "text/html" }));
 
     let error = null;
     try {
@@ -54,11 +50,7 @@ test("handles business error from server", async () => {
 test("handles arbitrary error", async () => {
     const serverError = /* xml */ `<html><body><div>HTML error message</div></body></html>`;
 
-    const restoreFetch = mockFetch(() => {
-        const blob = new Blob([JSON.stringify(serverError)], { type: "text/html" });
-        return new Response(blob, { status: 200 });
-    });
-    after(restoreFetch);
+    mockFetch(() => new Blob([JSON.stringify(serverError)], { type: "text/html" }));
 
     let error = null;
     try {
@@ -80,17 +72,15 @@ test("handles success download", async () => {
     // This test relies on a implementation detail of the lowest layer of download
     // That is, a link will be created with the download attribute
 
-    const restoreFetch = mockFetch((_, { body }) => {
+    mockFetch((_, { body }) => {
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("someKey")).toBe("someValue");
         expect(body.has("token")).toBe(true);
         expect(body.has("csrf_token")).toBe(true);
         expect.step("fetching file");
 
-        const blob = new Blob(["some plain text file"], { type: "text/plain" });
-        return new Response(blob, { status: 200 });
+        return new Blob(["some plain text file"], { type: "text/plain" });
     });
-    after(restoreFetch);
 
     const deferred = new Deferred();
 

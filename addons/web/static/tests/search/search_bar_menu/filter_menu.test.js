@@ -698,13 +698,13 @@ test("display of is (not) (not) set in facets", async () => {
 
 test("Add a custom filter: notification on invalid domain", async () => {
     patchWithCleanup(odoo, { debug: true });
-    mockService("notification", () => ({
+    mockService("notification", {
         add(message, options) {
             expect.step("notification");
             expect(message).toBe("Domain is invalid. Please correct it");
             expect(options).toEqual({ type: "danger" });
         },
-    }));
+    });
 
     onRpc("/web/domain/validate", () => false);
     await mountWithSearch(SearchBar, {

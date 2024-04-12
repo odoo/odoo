@@ -93,11 +93,11 @@ test("upload abort removes component", async () => {
 });
 
 test("upload can be aborted by clicking on cross", async () => {
-    mockService("dialog", () => ({
+    mockService("dialog", {
         add() {
             fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
         },
-    }));
+    });
     await mountWithCleanup(Parent);
     const fileUploadService = await getService("file_upload");
     fileUploadService.upload("/test/", []);

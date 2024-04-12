@@ -1511,15 +1511,15 @@ test("click on a button type='unarchive' to unarchive a record in a column", asy
 });
 
 test.tags("desktop")("kanban with an action id as on_create attrs", async () => {
-    mockService("action", () => ({
-        doAction: (action, options) => {
+    mockService("action", {
+        doAction(action, options) {
             // simplified flow in this test: simulate a target new action which
             // creates a record and closes itself
             expect.step(`doAction ${action}`);
             Partner._records.push({ id: 299, foo: "new" });
             options.onClose();
         },
-    }));
+    });
 
     stepAllNetworkCalls();
 
@@ -4253,14 +4253,12 @@ test("Do not open record when clicking on `a` with `href`", async () => {
 
     Partner._records = [{ id: 1, foo: "yop" }];
 
-    mockService("action", () => {
-        return {
-            async switchView() {
-                // when clicking on a record in kanban view,
-                // it switches to form view.
-                expect.step("switchView");
-            },
-        };
+    mockService("action", {
+        async switchView() {
+            // when clicking on a record in kanban view,
+            // it switches to form view.
+            expect.step("switchView");
+        },
     });
 
     await mountView({
@@ -7454,9 +7452,11 @@ test("buttons with modifiers", async () => {
 test("support styling of anchor tags with action type", async function (assert) {
     expect.assertions(3);
 
-    mockService("action", () => ({
-        doActionButton: (action) => expect(action.name).toBe("42"),
-    }));
+    mockService("action", {
+        doActionButton(action) {
+            expect(action.name).toBe("42");
+        },
+    });
 
     await mountView({
         type: "kanban",
@@ -7481,13 +7481,11 @@ test("button executes action and reloads", async () => {
     stepAllNetworkCalls();
 
     let count = 0;
-    mockService("action", () => {
-        return {
-            doActionButton({ onClose }) {
-                count++;
-                onClose();
-            },
-        };
+    mockService("action", {
+        doActionButton({ onClose }) {
+            count++;
+            onClose();
+        },
     });
 
     await mountView({
@@ -7528,13 +7526,11 @@ test("button executes action and check domain", async () => {
         Partner._records[i].active = true;
     }
 
-    mockService("action", () => {
-        return {
-            doActionButton({ onClose }) {
-                Partner._records[0].active = false;
-                onClose();
-            },
-        };
+    mockService("action", {
+        doActionButton({ onClose }) {
+            Partner._records[0].active = false;
+            onClose();
+        },
     });
 
     await mountView({
@@ -7996,7 +7992,7 @@ test("kanban with colorpicker and node with color attribute", async () => {
     await contains(`.oe_kanban_colorpicker li[title="Raspberry"] a.oe_kanban_color_9`).click();
     expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
     expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
-})
+});
 
 test("edit the kanban color with translated colors resulting in the same terms", async () => {
     Category._records[0].color = 12;
@@ -10336,17 +10332,15 @@ test.tags("desktop")("set cover image", async () => {
             </kanban>`,
     });
 
-    mockService("action", () => {
-        return {
-            switchView(_viewType, { mode, resModel, res_id, view_type }) {
-                expect({ mode, resModel, res_id, view_type }).toBe({
-                    mode: "readonly",
-                    resModel: "partner",
-                    res_id: 1,
-                    view_type: "form",
-                });
-            },
-        };
+    mockService("action", {
+        switchView(_viewType, { mode, resModel, res_id, view_type }) {
+            expect({ mode, resModel, res_id, view_type }).toBe({
+                mode: "readonly",
+                resModel: "partner",
+                res_id: 1,
+                view_type: "form",
+            });
+        },
     });
 
     await toggleKanbanRecordDropdown(0);
@@ -11070,13 +11064,11 @@ test("kanban widget can extract props from attrs", async () => {
 });
 
 test("action/type attributes on kanban arch, type='object'", async () => {
-    mockService("action", () => {
-        return {
-            doActionButton(params) {
-                expect.step(`doActionButton type ${params.type} name ${params.name}`);
-                params.onClose();
-            },
-        };
+    mockService("action", {
+        doActionButton(params) {
+            expect.step(`doActionButton type ${params.type} name ${params.name}`);
+            params.onClose();
+        },
     });
 
     stepAllNetworkCalls();
@@ -11107,13 +11099,11 @@ test("action/type attributes on kanban arch, type='object'", async () => {
 });
 
 test("action/type attributes on kanban arch, type='action'", async () => {
-    mockService("action", () => {
-        return {
-            doActionButton(params) {
-                expect.step(`doActionButton type ${params.type} name ${params.name}`);
-                params.onClose();
-            },
-        };
+    mockService("action", {
+        doActionButton(params) {
+            expect.step(`doActionButton type ${params.type} name ${params.name}`);
+            params.onClose();
+        },
     });
 
     stepAllNetworkCalls();
@@ -12919,33 +12909,31 @@ test.tags("desktop")("scroll on group unfold and progressbar click", async () =>
 test.tags("desktop")("action button in controlPanel with display='always'", async () => {
     const domain = [["id", "=", 1]];
 
-    mockService("action", () => {
-        return {
-            doActionButton: async (params) => {
-                const { buttonContext, context, name, resModel, resIds, type } = params;
-                expect.step("execute_action");
-                // Action's own properties
-                expect(name).toBe("display");
-                expect(type).toBe("object");
+    mockService("action", {
+        async doActionButton(params) {
+            const { buttonContext, context, name, resModel, resIds, type } = params;
+            expect.step("execute_action");
+            // Action's own properties
+            expect(name).toBe("display");
+            expect(type).toBe("object");
 
-                // The action's execution context
-                expect(buttonContext).toEqual({
-                    active_domain: domain,
-                    active_ids: [],
-                    active_model: "partner",
-                });
+            // The action's execution context
+            expect(buttonContext).toEqual({
+                active_domain: domain,
+                active_ids: [],
+                active_model: "partner",
+            });
 
-                expect(context).toEqual({
-                    a: true,
-                    allowed_company_ids: [1],
-                    lang: "en",
-                    tz: "taht",
-                    uid: 7,
-                });
-                expect(resModel).toBe("partner");
-                expect(resIds).toEqual([]);
-            },
-        };
+            expect(context).toEqual({
+                a: true,
+                allowed_company_ids: [1],
+                lang: "en",
+                tz: "taht",
+                uid: 7,
+            });
+            expect(resModel).toBe("partner");
+            expect(resIds).toEqual([]);
+        },
     });
 
     await mountView({
