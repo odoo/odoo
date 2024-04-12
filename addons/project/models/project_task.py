@@ -746,6 +746,7 @@ class Task(models.Model):
                 task_mapping = self.env.context.get('task_mapping')
                 task_mapping[old_task.id] = new_task.id
                 new_tasks = task_mapping.values()
+                original_task_state = old_task.state
                 old_task.write({
                     'depend_on_ids': [Command.unlink(t.id) for t in old_task.depend_on_ids if t.id in new_tasks],
                     'dependent_ids': [Command.unlink(t.id) for t in old_task.dependent_ids if t.id in new_tasks],
@@ -754,6 +755,8 @@ class Task(models.Model):
                     'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.depend_on_ids],
                     'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in old_task.dependent_ids],
                 })
+                if old_task.state != original_task_state:
+                    old_task.write({'state': original_task_state})
             if old_task.allow_milestones:
                 milestone_mapping = self.env.context.get('milestone_mapping', {})
                 new_task.milestone_id = milestone_mapping.get(new_task.milestone_id.id, new_task.milestone_id.id)
