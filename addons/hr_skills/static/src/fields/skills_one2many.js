@@ -26,7 +26,7 @@ SkillsListRenderer.template = 'hr_skills.SkillsListRenderer';
 
 export class SkillsX2ManyField extends X2ManyField {
     async onAdd({ context, editable } = {}) {
-        const employeeId = this.props.record.resId;
+        const employeeId = this.props.record.resModel === "res.users" ? this.props.record.data.employee_id[0] : this.props.record.resId;
         return super.onAdd({
             editable,
             context: {
