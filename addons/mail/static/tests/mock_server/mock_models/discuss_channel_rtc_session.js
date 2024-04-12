@@ -12,16 +12,14 @@ export class DiscussChannelRtcSession extends models.ServerModel {
 
         const sessionIds = super.create(...arguments);
         const channelInfo = this._mail_rtc_session_format_by_channel(sessionIds);
-        const notifications = [];
         for (const [channelId, sessionData] of Object.entries(channelInfo)) {
             const [channel] = DiscussChannel.search_read([["id", "=", Number(channelId)]]);
-            notifications.push([
+            BusBus._add_to_queue(
                 channel,
                 "discuss.channel/rtc_sessions_update",
                 { id: channel.id, rtcSessions: [["ADD", sessionData]] },
-            ]);
+            );
         }
-        BusBus._sendmany(notifications);
         return sessionIds;
     }
 
@@ -102,7 +100,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [channel] = DiscussChannel.search_read([
             ["id", "=", sessionData.channelMember.thread.id],
         ]);
-        BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
+        BusBus._add_to_queue(channel, "discuss.channel.rtc.session/update_and_broadcast", {
             data: sessionData,
             channelId: channel.id,
         });

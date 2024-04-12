@@ -309,7 +309,7 @@ class AssetsBundle(object):
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
         if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
-            self.env['bus.bus']._sendone('broadcast', 'bundle_changed', {
+            self.env['bus.bus']._add_to_queue('broadcast', 'bundle_changed', {
                 'server_version': release.version # Needs to be dynamically imported
             })
             _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, unique)

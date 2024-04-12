@@ -30,7 +30,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
             await start({ mockRPC });
-            pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "calendar.alarm", [
+            pyEnv["bus.bus"]._add_to_queue(pyEnv.currentPartner, "calendar.alarm", [
                 {
                     alarm_id: 1,
                     event_id: 2,
@@ -72,7 +72,7 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
             await start({ mockRPC });
-            pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "calendar.alarm", [
+            pyEnv["bus.bus"]._add_to_queue(pyEnv.currentPartner, "calendar.alarm", [
                 {
                     alarm_id: 1,
                     event_id: 2,
@@ -103,7 +103,7 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
             await start({ mockRPC });
-            pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "calendar.alarm", [
+            pyEnv["bus.bus"]._add_to_queue(pyEnv.currentPartner, "calendar.alarm", [
                 {
                     alarm_id: 1,
                     event_id: 2,

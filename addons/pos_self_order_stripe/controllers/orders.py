@@ -44,12 +44,12 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
             order.action_pos_order_paid()
 
             if order.config_id.self_ordering_mode == 'kiosk':
-                request.env['bus.bus']._sendone(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
+                request.env['bus.bus']._add_to_queue(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
                     'payment_result': 'Success',
                     'order': order._export_for_self_order(),
                 })
         else:
-            request.env['bus.bus']._sendone(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
+            request.env['bus.bus']._add_to_queue(f'pos_config-{order.config_id.access_token}', 'PAYMENT_STATUS', {
                 'payment_result': 'fail',
                 'order': order._export_for_self_order(),
             })

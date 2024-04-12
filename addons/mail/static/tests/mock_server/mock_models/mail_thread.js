@@ -219,7 +219,7 @@ export class MailThread extends models.ServerModel {
         );
         // Send bus notifications to update status of notifications in the web client
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "mail.message/notification_update", {
+        BusBus._add_to_queue(partner, "mail.message/notification_update", {
             elements: MailMessage._message_notification_format(
                 notifications.map((notification) => notification.mail_message_id)
             ),
@@ -400,12 +400,11 @@ export class MailThread extends models.ServerModel {
 
         const message = MailMessage._filter([["id", "=", message_id]])[0];
         const messageFormat = MailMessage._message_format([message_id])[0];
-        const notifications = [];
         if (this._name === "discuss.channel") {
             // members
             const channels = DiscussChannel._filter([["id", "=", message.res_id]]);
             for (const channel of channels) {
-                notifications.push([
+                BusBus._add_to_queue(
                     [channel, "members"],
                     "mail.record/insert",
                     {
@@ -415,15 +414,15 @@ export class MailThread extends models.ServerModel {
                             model: "discuss.channel",
                         },
                     },
-                ]);
-                notifications.push([
+                );
+                BusBus._add_to_queue(
                     channel,
                     "discuss.channel/new_message",
                     {
                         id: channel.id,
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
-                ]);
+                );
                 if (message.author_id === this.env.user?.partner_id) {
                     DiscussChannel._channel_seen(ids, message.id);
                 }
@@ -435,16 +434,15 @@ export class MailThread extends models.ServerModel {
                 if (partner.user_ids.length > 0) {
                     const [user] = ResUsers.search_read([["id", "=", partner.user_ids[0]]]);
                     if (user.notification_type === "inbox") {
-                        notifications.push([
+                        BusBus._add_to_queue(
                             partner,
                             "mail.message/inbox",
                             MailMessage._message_format_personalize([message_id])[0]
-                        ]);
+                        );
                     }
                 }
             }
         }
-        BusBus._sendmany(notifications);
     }
 
     /**

@@ -355,8 +355,8 @@ class Channel(models.Model):
         notification = Markup('<div class="o_mail_notification">%s</div>') % _('left the channel')
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
-        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+        self.env['bus.bus']._add_to_queue(partner, 'discuss.channel/leave', channel_info)
+        self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {
             'Thread': {
                 'channelMembers': [('DELETE', {'id': member.id})],
                 'id': self.id,
@@ -485,7 +485,7 @@ class Channel(models.Model):
         channel_data = {'id': self.id, 'model': 'discuss.channel'}
         if members:
             channel_data['invitedMembers'] = [('DELETE', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
-            self.env['bus.bus']._sendone(self, 'mail.record/insert', {'Thread': channel_data})
+            self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {'Thread': channel_data})
         return channel_data
 
     # ------------------------------------------------------------
@@ -733,7 +733,7 @@ class Channel(models.Model):
                             (fields.Datetime.now() if pinned else None, message_to_update.id))
         message_to_update.invalidate_recordset(['pinned_at'])
 
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
+        self.env['bus.bus']._add_to_queue(self, 'mail.record/insert', {
             'Message': {
                 'id': message_id,
                 'pinned_at': fields.Datetime.to_string(message_to_update.pinned_at),
@@ -1009,9 +1009,9 @@ class Channel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
+            self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
+            self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
 
     def _channel_seen(self, last_message_id=None, allow_older=False):
         """
@@ -1073,7 +1073,7 @@ class Channel(models.Model):
             target = current_partner or current_guest
             if self.channel_type in self._types_allowing_seen_infos():
                 target = self
-            self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
+            self.env['bus.bus']._add_to_queue(target, 'discuss.channel.member/seen', data)
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
@@ -1104,7 +1104,7 @@ class Channel(models.Model):
                 )
             """
             self.env.cr.execute(query, (last_message_id, member.id))
-            self.env['bus.bus']._sendone(channel, 'discuss.channel.member/fetched', {
+            self.env['bus.bus']._add_to_queue(channel, 'discuss.channel.member/fetched', {
                 'channel_id': channel.id,
                 'id': member.id,
                 'last_message_id': last_message_id,
@@ -1115,7 +1115,7 @@ class Channel(models.Model):
         self.ensure_one()
         member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         member.write({'custom_channel_name': name})
-        self.env['bus.bus']._sendone(member.partner_id, 'mail.record/insert', {
+        self.env['bus.bus']._add_to_queue(member.partner_id, 'mail.record/insert', {
             'Thread': {
                 'custom_channel_name': name,
                 'id': self.id,
@@ -1157,7 +1157,7 @@ class Channel(models.Model):
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel._channel_info()[0]
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
+        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
         return new_channel
 
     @api.model
@@ -1238,7 +1238,7 @@ class Channel(models.Model):
             written in this channel.
             `content` is HTML, dynamic parts should be escaped by the caller.
         """
-        self.env['bus.bus']._sendone(partner_to, 'discuss.channel/transient_message', {
+        self.env['bus.bus']._add_to_queue(partner_to, 'discuss.channel/transient_message', {
             'body': f"<span class='o_mail_notification'>{content}</span>",
             'thread': {'model': self._name, 'id': self.id},
         })

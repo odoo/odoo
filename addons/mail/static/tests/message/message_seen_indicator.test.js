@@ -197,7 +197,7 @@ test("'channel_fetch' notification received is correctly handled", async () => {
 
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+    pyEnv["bus.bus"]._add_to_queue(channel, "discuss.channel.member/fetched", {
         id: pyEnv["discuss.channel.member"].search([
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],
@@ -232,7 +232,7 @@ test("'channel_seen' notification received is correctly handled", async () => {
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+    pyEnv["bus.bus"]._add_to_queue(channel, "discuss.channel.member/seen", {
         id: pyEnv["discuss.channel.member"].search([
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],
@@ -267,7 +267,7 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 });
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
+    pyEnv["bus.bus"]._add_to_queue(channel, "discuss.channel.member/fetched", {
         id: pyEnv["discuss.channel.member"].search([
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],
@@ -278,7 +278,7 @@ test("'channel_fetch' notification then 'channel_seen' received are correctly ha
     });
     await contains(".o-mail-MessageSeenIndicator i");
     // Simulate received channel seen notification
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
+    pyEnv["bus.bus"]._add_to_queue(channel, "discuss.channel.member/seen", {
         id: pyEnv["discuss.channel.member"].search([
             ["channel_id", "=", channelId],
             ["partner_id", "=", partnerId],

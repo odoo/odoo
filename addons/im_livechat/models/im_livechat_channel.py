@@ -104,14 +104,14 @@ class ImLivechatChannel(models.Model):
     def action_join(self):
         self.ensure_one()
         self.user_ids = [Command.link(self.env.user.id)]
-        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+        self.env["bus.bus"]._add_to_queue(self.env.user.partner_id, "mail.record/insert", {
             "LivechatChannel": {"id": self.id, "name": self.name, "hasSelfAsMember": True}
         })
 
     def action_quit(self):
         self.ensure_one()
         self.user_ids = [Command.unlink(self.env.user.id)]
-        self.env["bus.bus"]._sendone(self.env.user.partner_id, "mail.record/insert", {
+        self.env["bus.bus"]._add_to_queue(self.env.user.partner_id, "mail.record/insert", {
             "LivechatChannel": {"id": self.id, "name": self.name, "hasSelfAsMember": False}
         })
 

@@ -268,7 +268,7 @@ class ChannelMember(models.Model):
         if self.fold_state == state:
             return
         self.fold_state = state
-        self.env['bus.bus']._sendone(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
+        self.env['bus.bus']._add_to_queue(self.partner_id or self.guest_id, 'discuss.Thread/fold_state', {
             'foldStateCount': state_count,
             'id': self.channel_id.id,
             'model': 'discuss.channel',
@@ -413,5 +413,5 @@ class ChannelMember(models.Model):
         if members:
             channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
             channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
-            self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
+            self.env['bus.bus']._add_to_queue(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members

@@ -4512,7 +4512,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             payload["Message"]["translationValue"] = False
-        self.env["bus.bus"]._sendone(message._bus_notification_target(), "mail.record/insert", payload)
+        self.env["bus.bus"]._add_to_queue(message._bus_notification_target(), "mail.record/insert", payload)
 
     # ------------------------------------------------------
     # CONTROLLERS

@@ -53,7 +53,7 @@ class LinkPreview(models.Model):
         if link_preview_values:
             link_previews += link_previews.create(link_preview_values)
         if link_previews:
-            self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
+            self.env['bus.bus']._add_to_queue(message._bus_notification_target(), 'mail.record/insert', {
                 'Message': {
                     'linkPreviews': link_previews.sorted(key=lambda preview: list(urls).index(preview.source_url))._link_preview_format(),
                     'id': message.id,

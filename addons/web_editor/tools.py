@@ -204,7 +204,7 @@ def handle_history_divergence(record, html_field_name, vals):
                 'notificationName': 'html_field_write',
                 'notificationPayload': {'last_step_id': None},
             }
-            request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+            request.env['bus.bus']._add_to_queue(channel, 'editor_collaboration', bus_data)
         return
     incoming_history_ids = incoming_history_matches[1].split(',')
     last_step_id = incoming_history_ids[-1]
@@ -217,7 +217,7 @@ def handle_history_divergence(record, html_field_name, vals):
         'notificationPayload': {'last_step_id': last_step_id},
     }
     if request:
-        request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
+        request.env['bus.bus']._add_to_queue(channel, 'editor_collaboration', bus_data)
 
     if record[html_field_name]:
         server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')

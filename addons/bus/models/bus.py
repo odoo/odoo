@@ -8,12 +8,12 @@ import os
 import selectors
 import threading
 import time
-from psycopg2 import InterfaceError, sql
+from psycopg2 import InterfaceError
 
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
-from odoo.tools import date_utils
+from odoo.tools import date_utils, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -94,40 +94,45 @@ class ImBus(models.Model):
         domain = [('create_date', '<', timeout_ago)]
         return self.sudo().search(domain).unlink()
 
-    @api.model
-    def _sendmany(self, notifications):
-        channels = set()
-        values = []
-        for target, notification_type, message in notifications:
-            channel = channel_with_db(self.env.cr.dbname, target)
-            channels.add(channel)
-            values.append({
-                'channel': json_dump(channel),
-                'message': json_dump({
-                    'type': notification_type,
-                    'payload': message,
-                })
-            })
-        self.sudo().create(values)
-        if channels:
+    def _ensure_hooks(self):
+        if 'bus.bus.values' not in self.env.cr.precommit.data:
+            self.env.cr.precommit.data['bus.bus.values'] = []
+            @self.env.cr.precommit.add
+            def create_bus():
+                self.sudo().create(self.env.cr.precommit.data.pop('bus.bus.values'))
+
+        if 'bus.bus.channels' not in self.env.cr.postcommit.data:
+            self.env.cr.postcommit.data['bus.bus.channels'] = set()
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, notifications will be fetched in the
             # bus table. If the transaction is not commited yet, there will be
             # nothing to fetch, and the websocket will return no notification.
             @self.env.cr.postcommit.add
             def notify():
+                payloads = get_notify_payloads(list(self.env.cr.postcommit.data.pop('bus.bus.channels')))
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
-                    query = sql.SQL("SELECT {}('imbus', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
-                    payloads = get_notify_payloads(list(channels))
                     if len(payloads) > 1:
                         _logger.info("The imbus notification payload was too large, "
                                      "it's been split into %d payloads.", len(payloads))
                     for payload in payloads:
-                        cr.execute(query, (payload,))
+                        cr.execute(SQL(
+                            "SELECT %s('imbus', %s)",
+                            SQL.identifier(ODOO_NOTIFY_FUNCTION),
+                            payload,
+                        ))
 
     @api.model
-    def _sendone(self, channel, notification_type, message):
-        self._sendmany([[channel, notification_type, message]])
+    def _add_to_queue(self, target, notification_type, message):
+        channel = channel_with_db(self.env.cr.dbname, target)
+        self._ensure_hooks()
+        self.env.cr.postcommit.data['bus.bus.channels'].add(channel)
+        self.env.cr.precommit.data['bus.bus.values'].append({
+            'channel': json_dump(channel),
+            'message': json_dump({
+                'type': notification_type,
+                'payload': message,
+            })
+        })
 
     @api.model
     def _poll(self, channels, last=0):

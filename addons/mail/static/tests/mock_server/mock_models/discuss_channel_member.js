@@ -27,15 +27,12 @@ export class DiscussChannelMember extends models.ServerModel {
         const DiscussChannel = this.env["discuss.channel"];
 
         const members = this._filter([["id", "in", ids]]);
-        const notifications = [];
         for (const member of members) {
             const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
             const [data] = this._discuss_channel_member_format([member.id]);
             Object.assign(data, { isTyping: is_typing });
-            notifications.push([channel, "discuss.channel.member/typing_status", data]);
-            notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
+            BusBus._add_to_queue(channel, "discuss.channel.member/typing_status", data);
         }
-        BusBus._sendmany(notifications);
     }
 
     _compute_is_pinned() {
@@ -78,7 +75,7 @@ export class DiscussChannelMember extends models.ServerModel {
         } else {
             [target] = MailGuest.search_read([["id", "=", member.guest_id[0]]]);
         }
-        BusBus._sendone(target, "discuss.Thread/fold_state", {
+        BusBus._add_to_queue(target, "discuss.Thread/fold_state", {
             foldStateCount: state_count,
             id: member.channel_id[0],
             model: "discuss.channel",

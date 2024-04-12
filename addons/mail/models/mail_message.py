@@ -790,7 +790,7 @@ class Message(models.Model):
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
         notifications.write({'is_read': True})
 
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/mark_as_read', {
+        self.env['bus.bus']._add_to_queue(self.env.user.partner_id, 'mail.message/mark_as_read', {
             'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
@@ -811,7 +811,7 @@ class Message(models.Model):
         notifications.write({'is_read': True})
 
         # notifies changes in messages through the bus.
-        self.env['bus.bus']._sendone(partner_id, 'mail.message/mark_as_read', {
+        self.env['bus.bus']._add_to_queue(partner_id, 'mail.message/mark_as_read', {
             'message_ids': notifications.mail_message_id.ids,
             'needaction_inbox_counter': self.env.user.partner_id._get_needaction_count(),
         })
@@ -823,7 +823,7 @@ class Message(models.Model):
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
         partner.starred_message_ids -= starred_messages
-        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
+        self.env['bus.bus']._add_to_queue(partner, 'mail.message/toggle_star', {
             'message_ids': starred_messages.ids,
             'starred': False,
         })
@@ -841,7 +841,7 @@ class Message(models.Model):
         else:
             partner.starred_message_ids -= self
 
-        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
+        self.env['bus.bus']._add_to_queue(partner, 'mail.message/toggle_star', {
             'message_ids': [self.id],
             'starred': starred,
         })
@@ -880,7 +880,7 @@ class Message(models.Model):
             "message": {"id": self.id},
         }
         payload = {"Message": {"id": self.id, "reactions": [(group_command, group_values)]}}
-        self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
+        self.env["bus.bus"]._add_to_queue(self._bus_notification_target(), "mail.record/insert", payload)
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API

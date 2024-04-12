@@ -981,7 +981,7 @@ test("chat should show unread counter on receiving new messages", async () => {
     await contains(".o-mail-NotificationItem .badge", { count: 0, text: "1" });
     // simulate receiving a new message
     const channel = pyEnv["discuss.channel"].search_read([["id", "=", channelId]])[0];
-    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
+    pyEnv["bus.bus"]._add_to_queue(channel, "discuss.channel/new_message", {
         id: channelId,
         message: {
             author: await pyEnv["res.partner"].mail_partner_format([partnerId])[partnerId],
@@ -1081,7 +1081,7 @@ test("messaging menu should show new needaction messages from chatter", async ()
     });
     const [formattedMessage] = pyEnv["mail.message"]._message_format(messageId);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", formattedMessage);
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/inbox", formattedMessage);
     await contains(".o-mail-NotificationItem-text", { text: "Frodo Baggins: @Mitchel Admin" });
 });
 

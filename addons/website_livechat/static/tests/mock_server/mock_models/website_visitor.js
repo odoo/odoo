@@ -46,7 +46,7 @@ export class WebsiteVisitor extends models.ServerModel {
             }
             const [partner] = ResPartner.read(serverState.partnerId);
             // notify operator
-            BusBus._sendone(
+            BusBus._add_to_queue(
                 partner,
                 "website_livechat.send_chat_request",
                 DiscussChannel._channel_info([livechatId])[0]

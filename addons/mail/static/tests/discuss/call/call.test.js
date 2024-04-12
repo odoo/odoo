@@ -171,7 +171,7 @@ test("should display invitations", async () => {
     ]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
-    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.record/insert", {
         Thread: {
             id: channelId,
             model: "discuss.channel",
@@ -191,7 +191,7 @@ test("should display invitations", async () => {
     await contains(".o-discuss-CallInvitation");
     await assertSteps(["play - incoming-call"]);
     // Simulate stop receiving call invitation
-    pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.record/insert", {
         Thread: {
             id: channelId,
             model: "discuss.channel",

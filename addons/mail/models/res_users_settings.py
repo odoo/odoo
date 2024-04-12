@@ -27,7 +27,7 @@ class ResUsersSettings(models.Model):
 
     def set_res_users_settings(self, new_settings):
         formated = super().set_res_users_settings(new_settings)
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings', formated)
+        self.env['bus.bus']._add_to_queue(self.user_id.partner_id, 'res.users.settings', formated)
         return formated
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
@@ -51,4 +51,4 @@ class ResUsersSettings(models.Model):
                 'partner_id': partner_id,
                 'guest_id': guest_id,
             })
-        self.env['bus.bus']._sendone(self.user_id.partner_id, 'res.users.settings.volumes', volume_setting._discuss_users_settings_volume_format())
+        self.env['bus.bus']._add_to_queue(self.user_id.partner_id, 'res.users.settings.volumes', volume_setting._discuss_users_settings_volume_format())

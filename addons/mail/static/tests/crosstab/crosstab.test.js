@@ -197,7 +197,7 @@ test("Message delete notification", async () => {
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });

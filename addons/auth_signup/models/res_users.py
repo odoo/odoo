@@ -137,7 +137,7 @@ class ResUsers(models.Model):
             invite_partner = user.create_uid.partner_id
             if invite_partner:
                 # notify invite user that new user is connected
-                self.env['bus.bus']._sendone(invite_partner, 'res.users/connection', {
+                self.env['bus.bus']._add_to_queue(invite_partner, 'res.users/connection', {
                     'username': user.name,
                     'partnerId': user.partner_id.id,
                 })

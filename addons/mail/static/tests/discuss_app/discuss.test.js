@@ -455,7 +455,7 @@ test("receive new needaction messages", async () => {
     });
     const [message1] = pyEnv["mail.message"]._message_format(messageId_1);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message1);
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/inbox", message1);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "not empty 1" });
@@ -475,7 +475,7 @@ test("receive new needaction messages", async () => {
         res_partner_id: serverState.partnerId,
     });
     const [message2] = pyEnv["mail.message"]._message_format(messageId_2);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", message2);
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/inbox", message2);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-content", { text: "not empty 1" });

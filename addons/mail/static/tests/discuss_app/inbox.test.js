@@ -611,7 +611,7 @@ test("emptying inbox doesn't display rainbow man in another thread", async () =>
     await openDiscuss(channelId);
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "mail.message/mark_as_read", {
+    pyEnv["bus.bus"]._add_to_queue(partner, "mail.message/mark_as_read", {
         message_ids: [messageId],
         needaction_inbox_counter: 0,
     });
