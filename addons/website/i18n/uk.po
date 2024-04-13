@@ -9544,6 +9544,15 @@ msgid "The chosen name already exists"
 msgstr "Вибрана назва вже існує"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
 msgstr "Компанія, до якої належить цей веб-сайт"
@@ -11373,6 +11382,14 @@ msgid ""
 msgstr ""
 "Ви не можете видалити типовий веб-сайт %s. Спробуйте натомість змінити його "
 "налаштування"
+
+#. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
 
 #. module: website
 #. odoo-python
