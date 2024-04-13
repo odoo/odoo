@@ -867,7 +867,6 @@ class AccountGroup(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True, check_company=True)
-    parent_path = fields.Char(index=True)  # unused, can be removed
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
