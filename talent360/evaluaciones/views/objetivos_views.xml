@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+    <!--OBJETIVOS-->
+    <record id="objetivo_action" model="ir.actions.act_window">
+        <field name="name">objetivo.action</field>
+        <field name="res_model">objetivo</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="objetivo_tree" model="ir.ui.view">
+        <field name="name">objetivo.tree</field>
+        <field name="model">objetivo</field>
+
+        <field name="arch" type="xml">
+            <tree>
+                <field name="titulo"/>
+                <field name="descripcion"/>
+                <field name="metrica"/>
+                <field name="tipo"/>
+                <field name="peso"/>
+                <field name="piso_minimo"/>
+                <field name="piso_maximo"/>
+                <field name="resultado"/>
+                <field name="usuario_ids"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
