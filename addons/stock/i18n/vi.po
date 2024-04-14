@@ -5,8 +5,8 @@
 # Translators:
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-25 11:22+0000\n"
 "PO-Revision-Date: 2023-07-25 12:22+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,7 +150,7 @@ msgstr "# Trả hàng"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(name)s (copy)(%(id)s)"
-msgstr ""
+msgstr "%(name)s (bản sao)(%(id)s)"
 
 #. module: stock
 #. odoo-python
@@ -4606,6 +4606,13 @@ msgid "Locations"
 msgstr "Vị trí"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "Khoá/Mở khoá"
@@ -4625,7 +4632,7 @@ msgstr "Lô"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
 msgid "Lot Label Report"
-msgstr ""
+msgstr "Báo cáo nhãn lô"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -7388,7 +7395,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Quy tắc %s thuộc về %s trong khi tuyến cung ứng thuộc về %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8541,7 +8548,7 @@ msgstr "Vị trí đầu tiên trong trình tự là mặc định."
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "The following replenishment order have been generated"
-msgstr ""
+msgstr "Đơn đặt hàng bổ sung sau đây đã được tạo"
 
 #. module: stock
 #. odoo-javascript
@@ -10366,6 +10373,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Bạn không thể đóng gói các sản phẩm vào cùng một kiện hàng khi chúng được "
+"chuyển đến từ các điều chuyển khác nhau với các loại hoạt động khác nhau."
 
 #. module: stock
 #. odoo-python
@@ -10547,7 +10556,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
+msgstr "Bạn cần chọn một tuyến cung ứng để bổ sung sản phẩm"
 
 #. module: stock
 #. odoo-python
