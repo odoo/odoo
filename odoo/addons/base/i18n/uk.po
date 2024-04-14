@@ -10218,7 +10218,7 @@ msgstr "'%s' здається, не є номером для поля'%%(field)s
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr "'%s' здається повинна бути дійсна дата для поля '%%(field)s'"
+msgstr "'%s' здається повинна бути дійсна дата для поля '%%(поле)я'"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -29534,6 +29534,12 @@ msgid "Scheduled Actions Triggers"
 msgstr "Тригери запланованих дій"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
 msgid "Scheduler User"
 msgstr "Запланований користувач"
@@ -29822,6 +29828,14 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
+msgid ""
+"This is the legacy integration with UPS that is no longer supported. Please "
+"install the new \"UPS Shipping\" module and uninstall this one as soon as "
+"possible. This integration will stop working in 2024."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_delivery_ups_rest
 msgid "Send your shippings through UPS and track them online"
 msgstr "Відправляйте ваші доставки через UPS та відслідковуйте їх онлайн"
 
@@ -32245,6 +32259,14 @@ msgstr ""
 "%s"
 
 #. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
 msgstr "Роздільник тисяч"
@@ -32824,6 +32846,11 @@ msgstr "Коди товару UNSPSC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
+msgid "UPS Shipping (Legacy)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
 msgstr "Доставка UPS"
 
@@ -34475,6 +34502,14 @@ msgstr ""
 "Пов’язані активні користувачі : %(names)s"
 
 #. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
@@ -34539,6 +34574,14 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the %s record."
 msgstr "Ви не можете видалити запис %s."
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0

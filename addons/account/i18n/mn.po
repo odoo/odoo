@@ -8,14 +8,13 @@
 # Onii Onii <onii0223@yahoo.com>, 2021
 # Odgarig Byambatsogt <odgarig@gmail.com>, 2021
 # baaska sh <sh.baaskash@gmail.com>, 2021
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2021
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2021
 # Minj P <pminj322@gmail.com>, 2021
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2021
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2021
 # Nomin Erdenchimeg <nomin.bmde@gmail.com>, 2021
 # Otgonbayar.A <gobi.mn@gmail.com>, 2021
 # Насан-Очир <nasaaskii@gmail.com>, 2021
-# hish, 2021
 # Tsog Tsog <ts.tsogoo@gmail.com>, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # Батболд <batbold.ts@gmail.com>, 2021
@@ -29,6 +28,7 @@
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
 # Munkhbaatar Gombosuren, 2023
 # Torbat Jargalsaikhan, 2023
+# hish, 2024
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Torbat Jargalsaikhan, 2023\n"
+"Last-Translator: hish, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10180,6 +10180,14 @@ msgid "Please define a payment method line on your payment."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
@@ -15575,6 +15583,8 @@ msgid ""
 "You can only set an account having the payable type on payment terms lines "
 "for vendor bill."
 msgstr ""
+"Та нийлүүлэгчийн нэхэмжлэлийн мөр дээр зөвхөн \"Өглөг\" төрөлтэй дансны "
+"төрөлд хамаарагдах дансыг сонгох боломжтой."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15583,6 +15593,8 @@ msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
 msgstr ""
+"Та захиалагчийн нэхэмжлэлийн мөр дээр зөвхөн \"Авлага\" төрөлтэй дансны "
+"төрөлд хамаарагдах дансыг сонгох боломжтой."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -15780,9 +15792,23 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
 msgstr ""
 
 #. module: account
@@ -15791,6 +15817,14 @@ msgstr ""
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
 msgstr ""
 
 #. module: account

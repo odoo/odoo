@@ -941,7 +941,7 @@ msgstr "Takoj, ko bo mogoče"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign"
-msgstr ""
+msgstr "Dodelitev"
 
 #. module: stock
 #. openerp-web
@@ -949,7 +949,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "Assign All"
-msgstr ""
+msgstr "Dodelite vse"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -2022,7 +2022,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
 msgid "Define a new warehouse"
-msgstr ""
+msgstr "Opredelite novo skladiše"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -2572,7 +2572,7 @@ msgstr "Pričakovano"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "Expected Delivery:"
-msgstr ""
+msgstr "Pričakovana dostava:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_product_expiry
@@ -3556,7 +3556,7 @@ msgstr ""
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr ""
+msgstr "Ni mogoče rezervirati več izdelkov %s, kot jih imate na zalogi."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -4493,7 +4493,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "No negative quantities allowed"
-msgstr ""
+msgstr "Negativne količine niso dovoljene."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
@@ -4578,7 +4578,7 @@ msgstr "Običajno"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Ni na voljo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -4816,7 +4816,7 @@ msgstr "Naroči enkrat "
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed"
-msgstr ""
+msgstr "Podpisano naročilo"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5478,7 +5478,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "Posodobljena količina izdelka"
 
 #. module: stock
 #. openerp-web
@@ -5658,7 +5658,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "Dajte v paket"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5754,7 +5754,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quantities Already Set"
-msgstr ""
+msgstr "Že nastavljene količine"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6233,7 +6233,7 @@ msgstr "Rezervirana količina"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Reserved from stock"
-msgstr ""
+msgstr "Rezervirano iz zaloge"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6454,7 +6454,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "Sales History"
-msgstr ""
+msgstr "Zgodovina prodaje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -6667,6 +6667,8 @@ msgid ""
 "Serial number (%s) already exists in location(s): %s. Please correct the "
 "serial number encoded."
 msgstr ""
+"Serijska številka (%s) že obstaja na lokaciji (-ah):%s. Prosimo, popravite v"
+" šifrantu serijskih številk."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6676,6 +6678,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Serijska številka (%s) se nahaja v %s, ampak se nahaja na lokaciji(-ah):%s.\n"
+"\n"
+"Prosimo, popravite to, da preprečite nekonsistentne podatke."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6685,6 +6690,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %s"
 msgstr ""
+"Serijska številka (%s) se ne nahaja v %s, ampak se nahaja na lokaciji(-ah):%s.\n"
+"\n"
+"Izvorna lokacija za to potezo bo spremenjena na %s"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -7645,6 +7653,7 @@ msgid ""
 "This analysis gives you an overview of the current stock level of your "
 "products."
 msgstr ""
+"Ta analiza vam omogoča pregled trenutnega stanja zalog vaših izdelkov."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7770,6 +7779,9 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Ta izdelek je bil uporabljen pri vsaj enem popisu zalog. Ni priporočljivo "
+"spreminjati vrste izdelka, saj lahko povzroči neskladnost.  Namesto tega "
+"izdelek arhivirajte in ustvarite novega."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7798,7 +7810,7 @@ msgstr "Količina je prikazana v privzeti enoti mere izdelka."
 #: code:addons/stock/static/src/js/inventory_singleton_list_controller.js:0
 #, python-format
 msgid "This record already exists."
-msgstr ""
+msgstr "Ta zapis že obstaja"
 
 #. module: stock
 #: code:addons/stock/report/report_stock_reception.py:0
@@ -8466,7 +8478,7 @@ msgstr "Proge skladišča"
 #: code:addons/stock/static/src/xml/report_stock_forecasted.xml:0
 #, python-format
 msgid "Warehouse:"
-msgstr ""
+msgstr "Skladišče:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -8696,6 +8708,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Izdelka, povezanega s serijsko številko ali številko serije, ne smete "
+"spremeniti, če je bilo s to številko že ustvarjenih nekaj premikov zalog. To"
+" bi povzročilo neskladja v zalogah."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -8723,6 +8738,11 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
+"Uporabljate enoto mere, ki je manjša od tiste, ki jo uporabljate za "
+"skladiščenje izdelka. To lahko privede to težav z zaokroževanjem rezervirane"
+" količine. Za vrednotenje zaloge morate uporabiti manjšo možno mersko enoto "
+"ali pa spremeniti natančnost zaokroževanja na manjšo vrednost (primer: "
+"0,00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -8746,12 +8766,15 @@ msgid ""
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
 msgstr ""
+"Vrste izdelka, ki je trenutno rezerviran za premik zalog, ne morete "
+"spremeniti. Če želite spremeniti vrsto izdelka, morate najprej preklicati "
+"rezervacijo premika zalog."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
-msgstr ""
+msgstr "Vrste že uporabljenega izdelka ne morete spremeniti."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8814,6 +8837,8 @@ msgstr ""
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
+"Načrtovanega datuma pri opravljenem ali preklicanem prenosu ne morete "
+"spreminjati."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8821,6 +8846,8 @@ msgstr ""
 msgid ""
 "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
+"Ne morete spremeniti enoto mere za premik zaloge, ki ima status že "
+"opravljeno."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8846,6 +8873,8 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
+"Merske enote ne morete spreminjati, ker ima ta izdelek že zalogo. Če želite "
+"spremeniti enoto mere, morate ta izdelek arhivirati in ustvariti novega."
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -8892,6 +8921,8 @@ msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
 msgstr ""
+"Premik ni mogoč, ker ima merska enota drugačno kategorijo kot merska enota "
+"izdelka"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8904,6 +8935,8 @@ msgstr "Ne morete razdeliti osnutka premika. Najprej mora biti potrjen."
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
+"Ne morete razdeliti premika zaloge, ki je nastavljen na \"Končano\" ali "
+"\"Preklicano\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8992,6 +9025,8 @@ msgid ""
 "You have to select a product unit of measure that is in the same category as"
 " the default unit of measure of the product"
 msgstr ""
+"Izbrati morate mersko enoto izdelka, ki je v isti kategoriji kot privzeta "
+"merska enota izdelka"
 
 #. module: stock
 #. openerp-web
@@ -9060,12 +9095,14 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Za ta izdelek še vedno veljajo nekatera aktivna pravila za ponovno "
+"naročanje. Najprej jih arhivirajte ali izbrišite."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
 #, python-format
 msgid "You still have some product in locations %s"
-msgstr ""
+msgstr "Še vedno imate nekaj izdelkov na lokacijah %s"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -9079,7 +9116,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "Vaša zaloga je trenutno prazna"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
@@ -9106,7 +9143,7 @@ msgstr "_Preklic"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "below the inventory"
-msgstr ""
+msgstr "pod zalogo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
@@ -9196,7 +9233,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "minimum of"
-msgstr ""
+msgstr "najmanj"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -9225,14 +9262,14 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished"
-msgstr ""
+msgstr "je treba dopolniti"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "to reach the maximum of"
-msgstr ""
+msgstr "da bi dosegli največjo vrednost"
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
