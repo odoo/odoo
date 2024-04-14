@@ -94,11 +94,6 @@ msgid "2023-08-11"
 msgstr "2023-08-11"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "50%"
-msgstr "50%"
-
-#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
@@ -269,11 +264,6 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Conta analítica"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Analytic Account Name"
-msgstr "Nome da conta analítica"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
@@ -1782,6 +1772,13 @@ msgid "Scan"
 msgstr "Digitalizar"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "Escaneie este QR Code para baixar o app Odoo:"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -1955,8 +1952,8 @@ msgstr "Imposto"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Tax Name"
-msgstr "Nome do imposto"
+msgid "Tax 15%"
+msgstr "Imposto de 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2205,11 +2202,6 @@ msgstr "Use a trilha de navegação para volta à lista de despesas."
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "Usuário"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "VAT"
-msgstr "Imposto"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action

@@ -934,6 +934,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Lặp lại vào</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -954,7 +957,7 @@ msgstr "<span class=\"oi oi-arrow-right\"/><span> Tham gia cuộc gọi video</s
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> hoặc </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1235,7 +1238,7 @@ msgstr "Lịch Tính năng cấu hình nhà cung cấp"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Cài đặt lịch"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -1644,49 +1647,49 @@ msgstr "Thời gian Sự kiện"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Mỗi %(interval)s ngày"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "Mỗi %(interval)s ngày cho %(count)s sự kiện"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "Mỗi %(interval)s ngày cho đến %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tháng %(day)s ngày"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "Mỗi %(interval)s tháng %(day)s ngày cho %(count)s sự kiện"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tháng %(day)s ngày cho đến %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tháng vào %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1696,6 +1699,7 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"Mỗi %(interval)s tháng vào %(position)s %(weekday)s cho %(count)s sự kiện"
 
 #. module: calendar
 #. odoo-python
@@ -1703,49 +1707,49 @@ msgstr ""
 #, python-format
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tháng vào %(position)s %(weekday)s cho đến %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tuần vào %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "Mỗi %(interval)s tuần vào %(days)s cho %(count)s sự kiện"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "Mỗi %(interval)s tuần vào %(days)s cho đến %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "Mỗi %(interval)s năm"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "Mỗi %(interval)s năm cho %(count)s sự kiện"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "Mỗi %(interval)s năm cho đến %(until)s"
 
 #. module: calendar
 #. odoo-python
@@ -2946,7 +2950,7 @@ msgstr "vd Ăn trưa công việc"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "VD: 12/31/2023"
 
 #. module: calendar
 #. odoo-python

@@ -3,8 +3,8 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "600,00$"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(date_from)s - %(date_to)s"
-msgstr ""
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -91,11 +91,6 @@ msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "2023-08-11"
 msgstr "2023-08-11"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "50%"
-msgstr "50%"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -269,11 +264,6 @@ msgid "Analytic Account"
 msgstr "Tài khoản phân tích"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Analytic Account Name"
-msgstr "Tên tài khoản phân tích"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic Distribution"
@@ -379,7 +369,7 @@ msgstr "Tệp đính kèm"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
 msgid "Attachments of expenses"
-msgstr ""
+msgstr "Tệp đính kèm chi phí"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -1355,7 +1345,7 @@ msgstr "Tên"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "New Expense Report, paid by %(paid_by)s"
-msgstr ""
+msgstr "Báo cáo chi phí mới, được thanh toán bởi %(paid_by)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -1783,6 +1773,13 @@ msgid "Scan"
 msgstr "Quét"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
+#, python-format
+msgid "Scan this QR code to get the Odoo app:"
+msgstr "Quét mã QR này để tải ứng dụng Odoo:"
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
@@ -1845,7 +1842,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "Show missing work email employees"
-msgstr ""
+msgstr "Hiển thị nhân viên thiếu email công việc"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1886,7 +1883,7 @@ msgstr "Chia tách có thể"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
 msgid "Standard Price Update Warning"
-msgstr ""
+msgstr "Cảnh báo cập nhật giá tiêu chuẩn"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1954,8 +1951,8 @@ msgstr "Thuế"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "Tax Name"
-msgstr "Tên thuế"
+msgid "Tax 15%"
+msgstr "Thuế 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_amount
@@ -2062,6 +2059,8 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr ""
+"Email công việc của một số nhân viên bị thiếu. Vui lòng thêm email vào hồ sơ"
+" nhân viên."
 
 #. module: hr_expense
 #. odoo-python
@@ -2071,6 +2070,9 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
+"Có các khoản chi phí chưa được gửi liên quan đến danh mục này. Việc cập nhật"
+" chi phí danh mục sẽ thay đổi số tiền chi phí, nên hãy chắc chắn rằng đây là"
+" điều bạn muốn làm."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2201,11 +2203,6 @@ msgstr "Sử dụng thanh điều hướng để quay lại danh sách chi phí.
 #: model:ir.model,name:hr_expense.model_res_users
 msgid "User"
 msgstr "Người dùng"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
-msgid "VAT"
-msgstr "Thuế GTGT"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action

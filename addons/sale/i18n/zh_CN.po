@@ -3,9 +3,10 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
-# Chloe Wang, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
+# Chloe Wang, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-27 04:55+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -944,16 +945,14 @@ msgid ""
 "Quotation: the document will be sent to and accessible by customers at any time.\n"
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
 "允许您在销售中与客户共享文档。\n"
-"如果不想与销售客户共享此文档，请将其留空。\n"
-"报价： 文件将发送给客户，客户可随时访问。\n"
-"例如，该选项可用于共享产品描述文件。\n"
-"确认订单：该文件将发送给客户并供其访问。\n"
-"例如，此选项可用于共享用户手册或在电子商务上购买的数字内容。\n"
-"内部引用：文件将包含在报价单的 PDF 文件中，位于页眉和报价表之间。"
+"如果您不想与销售客户共享此文档，请将其留空。\n"
+"报价单：该文档将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享产品描述文件。\n"
+"确认订单：文件将发送给客户并供其访问。\n"
+"例如，此选项可用于共享用户手册或在电子商务上购买的数字内容。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1728,10 +1727,8 @@ msgstr "交付数量"
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
-"lead time of the order lines in case of Service products. In case of "
-"shipping, the shipping policy of the order will be taken into account to "
-"either use the minimum or maximum lead time of the order lines."
-msgstr "向客户承诺的交付日期，如果是服务产品，则根据订单行的最短提前期计算；如果是发货，则根据订单行的最短或最长提前期考虑发货政策。"
+"lead time of the order lines."
+msgstr "您可以向客户承诺的交货日期，由订单行的最短交货期计算得出。"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1908,6 +1905,12 @@ msgstr "预付款（百分比）"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment <br/>"
 msgstr "首付款<br/>"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+msgid "Down payment invoice"
+msgstr "预付定金开票"
 
 #. module: sale
 #. odoo-python
@@ -2698,11 +2701,6 @@ msgid "New Quotation"
 msgstr "新报价"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一活动日历事件"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活动截止日期"
@@ -3058,11 +3056,6 @@ msgstr "Oscar Morgan"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Info"
 msgstr "其他信息"
-
-#. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr "PDF 询价"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
@@ -3431,6 +3424,11 @@ msgid "Quotation #"
 msgstr "报价单#"
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr "报价单/订单"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr "报价单计数"
@@ -3511,11 +3509,6 @@ msgstr "报价单和销售"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
 msgstr "要审查的报价"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
-msgid "Ratings"
-msgstr "评分"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -3873,14 +3866,6 @@ msgstr "销售团队"
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
 msgstr "销售警告信息"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
-msgid ""
-"Sales order item to which the time spent will be added in order to be "
-"invoiced to your customer. Remove the sales order item for the timesheet "
-"entry to be non-billable."
-msgstr "添加所用时长、以便向客户开具发票的销售订单项目。移除工时表分录中不可计费的销售订单项目。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -5018,7 +5003,6 @@ msgstr "您无法取消锁定的订单。请先解锁。"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#, python-format
 msgid "You cannot change the pricelist of a confirmed order !"
 msgstr ""
 
