@@ -37,6 +37,7 @@
                 <field name="pregunta_ids"/>
                 <field name="competencia_ids"/>
                 <field name="usuario_ids"/>
+                <field name="template_id"/>
             </tree>
         </field>
     </record>
@@ -88,6 +89,27 @@
                 <field name="evaluacion_id"/>
                 <field name="usuario_id"/>
             </form>
+        </field>
+    </record>
+
+    <!-- TEMPLATES -->
+    <record id="clima_action" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="clima_tree" model="ir.ui.view">
+        <field name="name">template.tree</field>
+        <field name="model">template</field>
+
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre"/>
+                <field name="descripcion"/>
+                <field name="tipo"/>
+                <field name="pregunta_ids"/>
+            </tree>
         </field>
     </record>
 </odoo>
