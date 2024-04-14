@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-18 09:52+0000\n"
-"PO-Revision-Date: 2022-02-18 09:52+0000\n"
+"POT-Creation-Date: 2024-04-14 14:57+0000\n"
+"PO-Revision-Date: 2024-04-14 14:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,12 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "%d moves"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid "%s (%s)"
 msgstr ""
 
 #. module: account
@@ -874,11 +880,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
 msgstr ""
 
@@ -1080,14 +1081,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid ""
-"A tax should only use tags from its country. You should use another tax and "
-"a fiscal position if you wish to uses the tags from foreign tax reports."
 msgstr ""
 
 #. module: account
@@ -1488,6 +1481,11 @@ msgid "Account; Post draft entries with auto_post set to True up to today"
 msgstr ""
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Accountant"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -1642,6 +1640,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -1899,6 +1898,11 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Advanced Settings"
+msgstr ""
+
+#. module: account
+#: model:res.groups,name:account.group_account_manager
+msgid "Advisor"
 msgstr ""
 
 #. module: account
@@ -2434,14 +2438,6 @@ msgid "Associated Account Templates"
 msgstr ""
 
 #. module: account
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "Attach a file"
@@ -2463,6 +2459,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__attachment_ids
 msgid "Attachments"
+msgstr ""
+
+#. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Auditor"
 msgstr ""
 
 #. module: account
@@ -2898,11 +2899,6 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Billing"
-msgstr ""
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Billing Administrator"
 msgstr ""
 
 #. module: account
@@ -3876,6 +3872,11 @@ msgid "Counterpart Entries"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4239,6 +4240,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -4669,6 +4671,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5324,6 +5327,11 @@ msgid "Dynamic Reports"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr ""
@@ -5695,12 +5703,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
-msgid "Fiscal Country"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
-msgid "Fiscal Country Code"
+msgid "Fiscal Country"
 msgstr ""
 
 #. module: account
@@ -5733,6 +5737,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -5896,6 +5901,11 @@ msgid "Foreign Tax ID"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
 msgstr ""
@@ -6028,11 +6038,6 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Generated Entries"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
-msgid "Generic Statements"
 msgstr ""
 
 #. module: account
@@ -8230,6 +8235,11 @@ msgid "Memo:"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -9435,6 +9445,12 @@ msgid "Partner should be set"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr ""
@@ -9805,12 +9821,6 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid "The selected payment method is not available for this payment, please select the payment method again."
 msgstr ""
 
 #. module: account
@@ -11408,6 +11418,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -11480,11 +11491,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Show Accounting Features - Readonly"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
 msgstr ""
@@ -11492,11 +11498,6 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr ""
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Show Full Accounting Features"
 msgstr ""
 
 #. module: account
@@ -13511,6 +13512,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
@@ -14261,6 +14270,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
+msgid "US GAAP"
 msgstr ""
 
 #. module: account
@@ -15284,6 +15298,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15385,10 +15405,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
-msgid ""
-"You cannot switch the type of a posted document."
+msgid "You cannot switch the type of a posted document."
 msgstr ""
 
 #. module: account
@@ -15778,6 +15797,11 @@ msgstr ""
 msgid ""
 "reserves the right to request a fixed interest payment amounting to 10% of "
 "the sum remaining due."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
 msgstr ""
 
 #. module: account

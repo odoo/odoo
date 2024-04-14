@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 06:07+0000\n"
-"PO-Revision-Date: 2023-12-21 13:57+0000\n"
+"POT-Creation-Date: 2024-04-14 14:58+0000\n"
+"PO-Revision-Date: 2024-04-14 14:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
+msgstr ""
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
 msgstr ""
 
 #. module: website
@@ -492,6 +498,7 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
 msgstr ""
@@ -798,8 +805,8 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.contactus_page
 #: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
-"<i class=\"fa fa-map-marker fa-fw mr-2\"/><span "
-"class=\"o_force_ltr\">Chaussée de Namur 40</span>"
+"<i class=\"fa fa-map-marker fa-fw mr-2\"/><span class=\"o_force_ltr\">3575 "
+"Fake Buena Vista Avenue</span>"
 msgstr ""
 
 #. module: website
@@ -808,8 +815,8 @@ msgstr ""
 #: model_terms:website.page,arch_db:website.contactus_page
 #: model_terms:website.page,arch_db:website.contactus_thanks
 msgid ""
-"<i class=\"fa fa-phone fa-fw mr-2\"/><span class=\"o_force_ltr\">+ 32 81 81 "
-"37 00</span>"
+"<i class=\"fa fa-phone fa-fw mr-2\"/><span class=\"o_force_ltr\">+1 (650) "
+"555-0111</span>"
 msgstr ""
 
 #. module: website
@@ -1243,7 +1250,9 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:website.page,arch_db:website.contactus_page
-msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Question</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 
 #. module: website
@@ -1306,6 +1315,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -2019,6 +2029,7 @@ msgid "Autosizing"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -2711,6 +2722,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/menu/translate.js:0
 #: code:addons/website/static/src/js/menu/translate.js:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
@@ -3999,6 +4011,11 @@ msgid "Email"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_mail_thread
+msgid "Email Thread"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Email address"
@@ -4156,6 +4173,7 @@ msgid "Extension View"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5201,6 +5219,7 @@ msgid "ID"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -5300,6 +5319,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Image Cover"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
+#, python-format
+msgid "Image Gallery Dialog"
 msgstr ""
 
 #. module: website
@@ -5700,18 +5726,12 @@ msgid "Is not equal to"
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
-#, python-format
 msgid "Is not set"
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
-#, python-format
 msgid "Is set"
 msgstr ""
 
@@ -6417,6 +6437,7 @@ msgstr ""
 
 #. module: website
 #: code:addons/website/models/website.py:0
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -7821,6 +7842,11 @@ msgid "Qweb Field Contact"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr ""
@@ -7854,11 +7880,6 @@ msgstr ""
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Record Rule"
 msgstr ""
 
 #. module: website
@@ -8134,6 +8155,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__route_id
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Rule"
 msgstr ""
 
 #. module: website
@@ -9257,6 +9283,7 @@ msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -9520,14 +9547,14 @@ msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup_options
-msgid "This page"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "This operator is not supported"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid "This page"
 msgstr ""
 
 #. module: website
@@ -10616,6 +10643,7 @@ msgid "Website Pages"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10671,6 +10699,7 @@ msgid "Website URL"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11523,7 +11552,6 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "no value"
