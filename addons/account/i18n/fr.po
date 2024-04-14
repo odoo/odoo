@@ -1961,6 +1961,7 @@ msgstr "Activer pour créer un reçu de vente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2503,6 +2504,7 @@ msgstr "Comptabilité analytique"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Comptes analytiques"
 
@@ -2877,6 +2879,7 @@ msgstr "Le pourcentage du solde ne peut pas être égal à 0"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -3012,6 +3015,7 @@ msgstr "Compte d'attente de la banque"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "Compte d'attente de la banque"
@@ -3459,6 +3463,7 @@ msgstr "Lignes de report pour : %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4529,6 +4534,7 @@ msgstr "Créé le"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4633,6 +4639,7 @@ msgstr "Devises"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -5035,6 +5042,7 @@ msgstr "Jours après la date de facturation"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -7588,11 +7596,6 @@ msgid "Invalid fiscal year last day"
 msgstr "Dernier jour de l'exercice fiscal est invalide"
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "Valorisation des stocks"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Inverser les étiquettes"
@@ -8683,6 +8686,7 @@ msgstr "Liquidités"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "Transfert de liquidités"
@@ -9856,8 +9860,7 @@ msgstr "Ouverture d'une écriture comptabilisée"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Solde initial"
@@ -10020,6 +10023,7 @@ msgstr "Compte en suspens"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -10033,6 +10037,7 @@ msgstr "Comptes de paiements sortants en suspens"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -10661,17 +10666,6 @@ msgstr "Veuillez définir un mode de paiement sur votre paiement "
 #, python-format
 msgid "Please install Accounting for this feature"
 msgstr "Veuillez installer la Comptabilité pour cette fonctionnalité"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"Le mode de paiement sélectionné n'est pas disponible pour ce paiement. "
-"Veuillez à nouveau sélectionner le mode de paiement."
 
 #. module: account
 #. odoo-python
@@ -11531,6 +11525,7 @@ msgstr "Extourner et créer une facture"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12182,6 +12177,7 @@ msgstr ""
 "Mettre le champs actif à faux pour masquer le journal sans le supprimer."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr "Mettre le champ actif à faux pour cache la taxe sans la supprimer."
@@ -12762,6 +12758,7 @@ msgstr "Taxe"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax 15%"
 msgstr "Taxe 15%"
 
@@ -13250,14 +13247,6 @@ msgid ""
 msgstr ""
 "La séquence de pièces comptables n'est pas conforme au format actuel. Seul "
 "le comptable peut le modifier."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"Les lignes Mois et Jours des conditions de paiement doivent être positives."
 
 #. module: account
 #. odoo-python
@@ -14040,6 +14029,17 @@ msgid ""
 msgstr ""
 "Le compte de destination sélectionné est configuré pour utiliser une devise spécifique. Chaque écriture qui lui est transférée sera convertie dans cette devise, entraînant \n"
 "la perte de tout montant en devise étrangère préexistant."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Le mode de paiement sélectionné n'est pas disponible pour ce paiement. "
+"Veuillez à nouveau sélectionner le mode de paiement."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15040,6 +15040,7 @@ msgstr "Indéfini pour le moment"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Profits/pertes non distribués"
@@ -16167,6 +16168,15 @@ msgstr "Vous ne pouvez pas supprimer un élément lié à une écriture publiée
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16184,15 +16194,6 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account_tag.py:0
-#, python-format
-msgid ""
-"You cannot delete this account tag (%s), it is used on the chart of account "
-"definition."
 msgstr ""
 
 #. module: account
@@ -16286,17 +16287,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"Vous ne pouvez pas importer le \"opening_balance\" si l'écriture d'ouverture"
-" (%s) est déjà comptabilisée.                         Si vous êtes sûr que "
-"vous voulez modifier le solde d'ouverture de vos comptes, veuillez remettre "
-"l'écriture en brouillon."
 
 #. module: account
 #. odoo-python

@@ -1870,6 +1870,7 @@ msgstr "啟用以建立銷售收據"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2395,6 +2396,7 @@ msgstr "分析會計帳戶"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "分析帳戶"
 
@@ -2761,6 +2763,7 @@ msgstr "餘額百分比不能為 0"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -2893,6 +2896,7 @@ msgstr "銀行暫記"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "銀行暫記帳科目"
@@ -3319,6 +3323,7 @@ msgstr "結轉明細給: %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4346,6 +4351,7 @@ msgstr "建立於"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4450,6 +4456,7 @@ msgstr "幣別"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -4846,6 +4853,7 @@ msgstr "天(發票日期後)"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -7285,11 +7293,6 @@ msgid "Invalid fiscal year last day"
 msgstr "會計年度的最後一天無效"
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "庫存計價"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "反轉標籤"
@@ -8341,6 +8344,7 @@ msgstr "流動性"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "流動性轉移"
@@ -9472,8 +9476,7 @@ msgstr "期初傳票已過帳"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "期初餘額"
@@ -9631,6 +9634,7 @@ msgstr "未結項目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -9644,6 +9648,7 @@ msgstr "未結付款科目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -10261,15 +10266,6 @@ msgstr "請在您的付款中定義付款方式明細."
 #, python-format
 msgid "Please install Accounting for this feature"
 msgstr "請為此功能安裝會計"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr "所選付款方式不適用於本次付款，請重新選擇付款方式。"
 
 #. module: account
 #. odoo-python
@@ -11113,6 +11109,7 @@ msgstr "撤銷及建立發票"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -11729,6 +11726,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "設定為未啟用，可以隱藏日記帳而不用刪除它."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr "設定為未啟用，可以隱藏稅金而不用刪除."
@@ -12288,6 +12286,7 @@ msgstr "稅金"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax 15%"
 msgstr "稅 15%"
 
@@ -12755,13 +12754,6 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr "日記帳分錄順序不符合目前格式. 只有會計師可以更改它."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr "支付條款明細的月份和日期必須為正數."
 
 #. module: account
 #. odoo-python
@@ -13451,6 +13443,15 @@ msgid ""
 msgstr ""
 "選定的目標科目設定為使用特定貨幣. 轉移到它的每個分錄都將轉換為該貨幣，\n"
 "                        導致任何先前存在的外幣金額的損失."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr "所選付款方式不適用於本次付款，請重新選擇付款方式。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14368,6 +14369,7 @@ msgstr "尚未定義"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "未分配利潤/虧損"
@@ -15397,6 +15399,15 @@ msgstr "您不能刪除連結到已過帳分錄的項目."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr "你不可刪除此賬戶標籤（%s），因為它要用於賬目總表的定義內。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -15412,15 +15423,6 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr "你不可刪除此報告（%s），因為會計 PDF 生成引擎會使用。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account_tag.py:0
-#, python-format
-msgid ""
-"You cannot delete this account tag (%s), it is used on the chart of account "
-"definition."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15501,15 +15503,15 @@ msgstr "您不能有一個以上以\"年度營收\"為類型的科目. (科目: 
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"若開始記賬分錄 (%s) 已過賬，便不能再匯入「openning_balance」。                         "
-"若你絕對確定要修改賬戶的期初結餘，請將分錄重設為草稿。"
+"若期初分錄（%s）已完成過賬，便不可匯入 openning_balance。                 "
+"如果絕對肯定想修改賬戶的期初結餘，請將分錄重設為草稿。"
 
 #. module: account
 #. odoo-python

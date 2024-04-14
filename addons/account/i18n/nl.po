@@ -1947,6 +1947,7 @@ msgstr "Activeer om een verkoopbewijs te maken"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2487,6 +2488,7 @@ msgstr "Kostenplaatsen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Kostenplaatsen"
 
@@ -2860,6 +2862,7 @@ msgstr "Saldopercentage kan niet 0 zijn"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_bank_journal_default_account_38
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -2995,6 +2998,7 @@ msgstr "Bank Tussenrekening"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
 msgstr "Bank tussenrekening"
@@ -3437,6 +3441,7 @@ msgstr "Overdrachtsregels voor: %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_39
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4498,6 +4503,7 @@ msgstr "Aangemaakt op"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4604,6 +4610,7 @@ msgstr "Valuta"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__currency_id
@@ -5005,6 +5012,7 @@ msgstr "Dagen na factuurdatum"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -7548,11 +7556,6 @@ msgid "Invalid fiscal year last day"
 msgstr "Foutieve laatste dag voor boekjaar"
 
 #. module: account
-#: model:account.journal,name:account.1_inventory_valuation
-msgid "Inventory Valuation"
-msgstr "Voorraadwaardering"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Labels omkeren"
@@ -8645,6 +8648,7 @@ msgstr "Liquiditeit"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_transfer_account_id
 #, python-format
 msgid "Liquidity Transfer"
 msgstr "Liquiditeit overschrijving"
@@ -9815,8 +9819,7 @@ msgstr "Openingsbalans geboekt"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Openingssaldo"
@@ -9977,6 +9980,7 @@ msgstr "Openstaande rekening"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 #, python-format
 msgid "Outstanding Payments"
@@ -9990,6 +9994,7 @@ msgstr "Openstaande betalingsrekeningen"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 #, python-format
 msgid "Outstanding Receipts"
@@ -10618,17 +10623,6 @@ msgstr "Definieer een betaalmethoderegel op je betaling."
 #, python-format
 msgid "Please install Accounting for this feature"
 msgstr "Installeer de boekhouding voor deze functie"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"De geselecteerde betaalmethode is niet beschikbaar voor deze betaling. "
-"Selecteer de betaalmethode opnieuw."
 
 #. module: account
 #. odoo-python
@@ -11484,6 +11478,7 @@ msgstr "Terugboeken en factuur aanmaken"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12133,6 +12128,7 @@ msgstr ""
 "verwijderen."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
 msgstr ""
@@ -12709,6 +12705,7 @@ msgstr "BTW"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax 15%"
 msgstr "BTW 15%"
 
@@ -13196,14 +13193,6 @@ msgid ""
 msgstr ""
 "De boekingsvolgorde komt niet overeen met het huidige formaat. Alleen de "
 "accountant kan dit wijzigen."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
-msgid "The Months and Days of the Payment Terms lines must be positive."
-msgstr ""
-"De regels Maanden en Dagen van de betalingstermijnen moeten positief zijn."
 
 #. module: account
 #. odoo-python
@@ -13979,6 +13968,17 @@ msgid ""
 msgstr ""
 "De geselecteerde bestemmingsrekening is ingesteld om een specifieke valuta te gebruiken. Elke invoer die ernaar wordt overgebracht, wordt omgezet in deze valuta, resulterend\n"
 "in het verlies van een reeds bestaand bedrag in vreemde valuta."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"De geselecteerde betaalmethode is niet beschikbaar voor deze betaling. "
+"Selecteer de betaalmethode opnieuw."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14980,6 +14980,7 @@ msgstr "Nog niet gedefinieerd"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_unaffected_earnings_account
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Uitgekeerde winsten/verliezen"
@@ -16108,6 +16109,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Je kunt dit rekeninglabel (%s) niet verwijderen; deze wordt gebruikt in het "
+"grootboekschema."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16128,17 +16140,6 @@ msgid ""
 msgstr ""
 "Je kunt dit rapport niet verwijderen (%s), het wordt gebruikt door de "
 "boekhoudkundige PDF-generatie-engine."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account_tag.py:0
-#, python-format
-msgid ""
-"You cannot delete this account tag (%s), it is used on the chart of account "
-"definition."
-msgstr ""
-"Je kunt dit rekeninglabel (%s) niet verwijderen; deze wordt gebruikt in het "
-"grootboekschema."
 
 #. module: account
 #. odoo-python
@@ -16230,16 +16231,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"Je kan de \"openning_balance\" niet importeren als de openingsbeweging (%s) "
-"al is geboekt.                         Als je absoluut het openingssaldo van"
-" je rekeningen wilt wijzigen, zet dan de boeking terug naar concept."
 
 #. module: account
 #. odoo-python
